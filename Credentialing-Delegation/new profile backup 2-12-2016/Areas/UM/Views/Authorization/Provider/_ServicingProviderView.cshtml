@@ -1,0 +1,50 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PratianUI
+@using PortalTemplate.Helper
+
+@{
+    if (@Model != null && @Model.ServicingProvider != null && @Model.ServicingProvider.NPI!=null)
+    {
+        if(@Model.ServicingProvider!=null && @Model.ServicingProvider.IsUsePCP)
+        {
+            <div class="inline_block margin_right_1">
+            <nobr><span class="theme_label">@Html.LabelFor(e => e.ServicingProvider) </span></nobr>
+            <span class="plusbtnSign options_label mbr mbrLabelReqProvider btn btn-xs btn-success">
+                @Html.LabelFor(e => e.ServicingProvider.IsUsePCP)
+                @Html.CheckBoxFor(e => e.ServicingProvider.IsUsePCP, new { @class = "PCPRadioButtonAsTags",@checked="checked" })
+            </span>&nbsp;
+            @Html.TextBoxFor(e => e.ServicingProvider.FullName, new { @class = "form-control input-xs summaryDataChange ProviderSearchDropdown read_only_field variable_width_providername loser_field", @placeholder = "SERVICE PROVIDER", @tabindex = "10", data_bind_111 = "svcProvider" })
+            @Html.ValidationMessageFor(e => e.ServicingProvider.FullName)
+                <label class="label label-success INProvider INOONLabel">IN</label>
+                @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_ServicingProviderHiddenData.cshtml")
+           </div>
+        }
+        else
+        {
+            <div class="inline_block margin_right_1">
+            <nobr><span class="theme_label">@Html.LabelFor(e => e.ServicingProvider) </span></nobr>
+            <span class="plusbtnSign options_label mbr mbrLabelReqProvider btn btn-xs btn-ghost">
+                @Html.LabelFor(e => e.ServicingProvider.IsUsePCP)
+                @Html.CheckBoxFor(e => e.ServicingProvider.IsUsePCP, new { @class = "PCPRadioButtonAsTags"})
+            </span>&nbsp;
+            @Html.TextBoxFor(e => e.ServicingProvider.FullName, new { @class = "form-control input-xs ProviderSearchDropdown summaryDataChange variable_width_providername loser_field", @placeholder = "SERVICE PROVIDER", @tabindex = "10", data_bind_111 = "svcProvider" })
+            @Html.ValidationMessageFor(e => e.ServicingProvider.FullName)
+                <label class="label label-success INProvider INOONLabel">IN</label>
+                @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_ServicingProviderHiddenData.cshtml")
+           </div>
+        }
+    }
+    else
+    {
+        <div class="inline_block margin_right_1">
+            <nobr><span class="theme_label">@Html.LabelFor(e => e.ServicingProvider) </span></nobr>
+            <span class="plusbtnSign options_label mbr mbrLabelReqProvider btn btn-xs btn-ghost">
+             @Html.LabelFor(e => e.ServicingProvider.IsUsePCP)
+             @Html.CheckBoxFor(e => e.ServicingProvider.IsUsePCP, new { @class = "PCPRadioButtonAsTags" })
+            </span>&nbsp;
+            @Html.TextBoxFor(e => e.ServicingProvider.FullName, new { @class = "form-control input-xs summaryDataChange ProviderSearchDropdown variable_width_providername loser_field", @placeholder = "SERVICE PROVIDER", @tabindex = "10", data_bind_111 = "svcProvider" })
+            @Html.ValidationMessageFor(e => e.ServicingProvider.FullName)
+        </div>
+    }
+    
+}

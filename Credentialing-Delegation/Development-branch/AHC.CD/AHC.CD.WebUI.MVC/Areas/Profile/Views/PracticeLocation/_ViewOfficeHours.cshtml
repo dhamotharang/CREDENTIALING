@@ -1,0 +1,103 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.ProviderPracticeOfficeHourViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="form-style" ng-if="visibilitySecondControl != 'OfficeHoursEdit'">
+    <fieldset class="wrap-words">
+        <legend>
+            Office Hours
+        </legend>
+
+        <div class="legend2 pull-right" ng-if="PracticeLocationDetail.OfficeHour.AnyTimePhoneCoverage && !OfficeHoursEdit">
+            <button ng-click="operateSecondEditControl('OfficeHoursEdit', PracticeLocationDetail.OfficeHour);TemporaryDataForOfficeHour(PracticeLocationDetail,PracticeLocationDetail.OfficeHour);resetData();OfficeHourEdit=true" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Edit" tooltip><i class="fa fa-edit"></i></button>
+        </div>
+        <table ng-show="PracticeLocationDetail.OfficeHour.AnyTimePhoneCoverage == null && visibilityControl != 'OfficeHoursEdit' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+            <thead>
+                <tr>
+                    <td>
+                        No Data Available for Office Hours!
+
+                        <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateSecondViewAndAddControl('OfficeHoursEdit')" data-toggle="tooltip" data-placement="top" title="Add New" id="noDataAddNewPracticeInterest" tooltip><i class="fa fa-plus"></i></button> to add new Office Hours information.</span>
+
+                    </td>
+                </tr>
+            </thead>
+        </table>
+        <div class="col-md-12" ng-if="PracticeLocationDetail.OfficeHour.AnyTimePhoneCoverage">
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-md-2 form-group">
+                    <label class="control-label small">Day</label>
+                </div>
+                <div class="col-md-10">
+                    <div class="col-md-4 form-group">
+                        <label class="control-label small">Start Time</label>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label class="control-label small">End Time</label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-repeat="PracticeDay in PracticeLocationDetail.OfficeHour.PracticeDays">
+                <div class="col-md-2 form-group">
+                    <label class="control-label small">{{PracticeDay.DayName || 'Not Available'}}</label>
+                </div>
+                <div class="col-md-10">
+                    <!-- ngRepeat: t in Days[0].Times -->
+                    <div ng-repeat="DailyHour in PracticeDay.DailyHours" class="col-md-12 zero-padding-left-right-div ng-scope">
+                        <div class="col-md-4 form-group">
+                            <i>{{ changeTimeAmPm(DailyHour.StartTime)}}</i>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <i>{{ changeTimeAmPm(DailyHour.EndTime)}}</i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="col-md-2 remove-left-padding">
+                        @Html.LabelFor(model => model.AnyTimePhoneCoverageYesNoOption, new { @class = "control-label small" })
+                    </div>
+
+                    <div class="col-md-10">
+                        <i>{{PracticeLocationDetail.OfficeHour.AnyTimePhoneCoverage || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="PracticeLocationDetail.OfficeHour.AnyTimePhoneCoverage=='YES'">
+                <div class="form-group col-md-3">
+
+                    @Html.LabelFor(model => model.AnsweringServiceYesNoOption, new { @class = "control-label small" })
+                    <div>
+                        <i>{{PracticeLocationDetail.OfficeHour.AnsweringService || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.VoiceMailToAnsweringServiceYesNoOption, new { @class = "control-label small" })
+                    <div>
+                        <i>{{PracticeLocationDetail.OfficeHour.VoiceMailToAnsweringService || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.VoiceMailOtherYesNoOption, new { @class = "control-label small" })
+                    <div>
+                        <i>{{PracticeLocationDetail.OfficeHour.VoiceMailOther || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.AfterHoursTelephoneNumber, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i>{{PracticeLocationDetail.OfficeHour.AfterHoursTelephoneNumber || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='providerPracticeOfficeHoursSuccessMsg'" class="alert alert-success" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+    </fieldset>
+</div>

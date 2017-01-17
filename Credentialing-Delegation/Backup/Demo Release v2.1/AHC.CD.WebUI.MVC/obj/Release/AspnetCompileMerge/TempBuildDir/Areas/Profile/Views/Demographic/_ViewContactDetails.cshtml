@@ -1,0 +1,98 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.ContactDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="col-lg-12">
+    <table ng-if="!Provider.ContactDetails.ContactDetailID" class="table table-bordered table-condensed customtbodyStyle table-striped">
+        <thead>
+            <tr>
+                <td>
+                    No Data Available for Contact Details!
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                    {
+                        <span>Please click on <button id="addNewContactDetails" class="btn btn-xs btn-success" ng-click="ContactDetailsToggle('EditContactDetails')" data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Contact Details</span>
+                    }
+                </td>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<style>
+    
+</style>
+
+<div ng-if="Provider.ContactDetails.ContactDetailID">
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="form-group col-md-4">
+            <label class="control-label small">Home Phone</label>
+            <div ng-repeat="hp in filteredHomeNumberContactDetails = (getContactDetailsPhoneByPhoneTypeAndActiveStatus(Provider.ContactDetails.PhoneDetails,1,1)) track by $index">
+                <span class="ResultDataStyle">{{hp.CountryCode}}-{{hp.Number}} &nbsp;&nbsp; <i ng-if="hp.PreferenceType==1" tooltip data-toggle="tooltip" data-placement="right" title="Primary Home Phone" class="fa fa-check"></i></span>
+            </div>
+            <div ng-if="filteredHomeNumberContactDetails.length==0">
+                <i class="data-label">Not available</i>
+                   
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label class="control-label small">Home Fax</label>
+            <div ng-repeat="hf in filteredFaxContactDetails = (getContactDetailsPhoneByPhoneTypeAndActiveStatus(Provider.ContactDetails.PhoneDetails,2,1)) track by $index">
+                <span class="ResultDataStyle">{{hf.CountryCode}}-{{hf.Number}} &nbsp;&nbsp; <i ng-if="hf.PreferenceType==1" tooltip data-toggle="tooltip" data-placement="right" title="Primary Home Fax" class="fa fa-check"></i></span>
+            </div>
+            <div ng-if="filteredFaxContactDetails.length==0">
+                <i class="data-label">Not available</i>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label class="control-label small">Mobile Number</label>
+            <div ng-repeat="mn in filteredMobileContactDetails = (getContactDetailsPhoneByPhoneTypeAndActiveStatus(Provider.ContactDetails.PhoneDetails,3,1)) track by $index">
+                <span class="ResultDataStyle">{{mn.CountryCode}}-{{mn.Number}} &nbsp;&nbsp; <i ng-if="mn.PreferenceType==1" tooltip data-toggle="tooltip" data-placement="right" title="Primary Mobile Number" class="fa fa-check"></i></span>
+            </div>
+            <div ng-if="filteredMobileContactDetails.length==0">
+                <i class="data-label">Not available</i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-4 zero-padding-left-right-div">
+            <div class="col-lg-12 form-group" ng-init="contactPrefferedSearch.StatusType=1">
+                @Html.LabelFor(model => model.PreferredContacts, new { @class = "control-label small" })
+                <div>
+                    <table ng-if="Provider.ContactDetails.PreferredContacts.length > 0" class="table table-striped table-bordered table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Method Of Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="pc in filterdPreferedContact = (Provider.ContactDetails.PreferredContacts | filter:contactPrefferedSearch) track by $index">
+                                <td>{{$index+1}}</td>
+                                <td>{{pc.ContactType}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <span ng-if="Provider.ContactDetails.PreferredContacts.length == 0">Not Available</span>
+            </div>
+        </div>
+        <div class="col-lg-4 zero-padding-left-right-div" style="margin-bottom: 10px;">
+            <div class="col-lg-12">
+                <label class="control-label small">Email Id</label>
+                <div ng-repeat="email in Provider.ContactDetails.EmailIDs track by $index" ng-if="email.StatusType==1" class="wrap-words">
+                    <span class="ResultDataStyle">{{email.EmailAddress}} &nbsp;&nbsp; <i ng-if="email.PreferenceType==1" tooltip data-toggle="tooltip" data-placement="right" title="Primary Email Address" class="fa fa-check"></i></span>
+                </div>
+                <div ng-if="Provider.ContactDetails.EmailIDs.length == 0">
+                    <i class="data-label">Not available</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            @Html.LabelFor(model => model.PagerNumber, new { @class = "control-label small" })
+            <div>
+                <span ng-if="Provider.ContactDetails.PagerNumber">{{Provider.ContactDetails.CountryCode}} - {{Provider.ContactDetails.PagerNumber}}</span>
+                <span ng-if="!Provider.ContactDetails.PagerNumber"><i class="data-label">Not available</i></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,136 @@
+﻿@model List<PortalTemplate.Areas.Billing.Models.File_Management.File835EOBList>
+<br />
+<div class="x_content border_on_panel">
+    <div class="x_content">
+        <div class="table-responsive">
+            <table id="835EOBListTable" class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+                <thead class="theme_thead">
+                    <tr>
+
+                        <th>
+                            Primary Payer
+                        </th>
+                        <th>
+                            Secondary Payer
+                        </th>
+                        <th>
+                            Patient Name
+                        </th>
+                        <th>
+                            DOS
+                        </th>
+                        <th>
+                            CPT
+                        </th>
+                        <th>
+                            Billed
+                        </th>
+                        <th>
+                            Allowed
+                        </th>
+                        <th>
+                            ADJ
+                        </th>
+                        <th>
+                            DED
+                        </th>
+                        <th>
+                            COINS/PR
+                        </th>
+                        <th>
+                            PMT/AMT
+                        </th>
+                        <th>
+                            Penalty
+                        </th>
+                        <th>
+                            Paid
+                        </th>
+                        <th>
+                            Reason
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.PayerName
+                            </td>
+                            <td>
+                                @item.SecondaryPayerName
+                            </td>
+                            <td>
+                                @item.PatientName
+                            </td>
+                            <td>
+                                @item.DateOfService.Value.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.CPT
+                            </td>
+                            <td>
+                                $@item.Billed
+                            </td>
+                            <td>
+                                $@item.Allowed
+                            </td>
+                            <td>
+                                $@item.Adj
+                            </td>
+                            <td>
+                                $@item.Ded
+                            </td>
+                            <td>
+                                $@item.CoIns
+                            </td>
+                            <td>
+                                $@item.PaymentAmount
+                            </td>
+                            <td>
+                                $@item.Penalty
+                            </td>
+                            <td>
+                                $@item.Paid
+                            </td>
+                            <td>
+                                @*<a href="javascript:void(0)" title="">>@item.PenaltyAdjDetails.First().AdjustmentReasonCode - @item.PenaltyAdjDetails.First().AdjustmentReasonType</a>*@
+                                @*<a class="EOBReason" href="#" data-toggle="popover" data-trigger="hover" title="@item.Reason" data-content="@item.ReasonDescription" data-placement="left">@item.PenaltyAdjDetails.First().</a>*@
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div id="835EOBNavigationButtons" class="margin_top_20_px button-styles clearfix">
+            <button class="btn btn-warning btn-xs pull-left" id="GoTo835ProviderListBtn">Back</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('#835EOBListTable').prtGrid({
+        url: "/Billing/FileManagement/Get835EOBListByIndex",
+        dataLength: 50,
+        columns: [{ type: 'text', name: 'PayerName', text: 'Primary Payer', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'SecondaryPayerName', text: 'Secondary Payer', widthPercentage: 20, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'PatientName', text: 'Patient Name', widthPercentage: 15, sortable: { isSort: true, defaultSort: null } },
+        { type: 'date', name: 'DateOfService', text: 'DOS', widthPercentage: 5, sortable: { isSort: true, defaultSort: 'ASC' } },
+        { type: 'text', name: 'CPT', text: 'CPT', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'Billed', text: 'Billed', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'Allowed', text: 'Allowed', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'Adj', text: 'ADJ', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'Ded', text: 'DED', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'CoIns', text: 'COINS/PR', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'PMT/AMT', text: 'PaymentAmount', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'Penalty', text: 'Penalty', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'Paid', text: 'Paid', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'none', name: '', text: '', widthPercentage: 5, sortable: { isSort: false } }]
+    });
+</script>
+
+<script src="~/Areas/Billing/Scripts/AppJs/FileManagement/Unminified/File835EOBList.js"></script>

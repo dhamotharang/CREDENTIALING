@@ -1,0 +1,103 @@
+﻿@model AHC.CD.WebUI.MVC.Models.UsersList
+
+@{
+    ViewBag.Title = "ManageUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+    @*<link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />*@
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+    <script src="~/Areas/Initiation/Scripts/ManageUser.js"></script>
+    @*<script src="~/Areas/Credentialing/Scripts/CnD/PageSelectDirective.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>*@
+}
+
+<div id="page-wrapper" ng-app="managerUserApp" ng-controller="ManageUserController" ng-init="Getlist()" ng-cloak>
+    <toaster-container toaster-options="{'time-out': 1000,
+                'position-class': 'toast-top-right','close-button':true}"></toaster-container>
+    <div class="container-fluid">
+        <div class="row" style="margin-top:2px">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Activate/Deactivate User
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- Page Heading -->
+        <div ng-show="showLoading" class="row">
+            <div style="margin-left:45%;margin-top:15%">
+                <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+                <span>Loading...Please Wait</span>
+            </div>
+        </div>
+        <div ng-show="!showLoading" id="mydiv" class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <p id="para" style="color:red" hidden>Please enter valid Email ID</p>
+                    <p id="para1" style="color:red" hidden>No Details found with this Email ID</p>
+                    <table id="userstable" class='table table-striped table-bordered customtbodyStyle small wrap-words'>
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Email
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 '>
+                                    Name
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 '>
+                                    Status
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 '>
+                                    Activate User
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1  '>
+                                    Deactivate User
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'><input type="text" placeholder="Filter Email" class="form-control input-sm" ng-model="search.Email"></td>
+                                <td class='col-lg-1 col-md-1 col-sm-1 '><input type="text" placeholder="Filter Name" class="form-control input-sm" ng-model="search.Name" /></td>
+                                <td class='col-lg-1 col-md-1 col-sm-1 '><input type="text" placeholder="Filter status" class="form-control input-sm" ng-model="search.status" /></td>
+                                @*<td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></td>
+                                    <td class='col-lg-1 col-md-1 col-sm-1 '></td>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='p in UsersPagination | filter:{Email:search.Email,Name:search.Name,status:search.status } track by $index'>
+
+                                <td>{{p.Email}}</td>
+                                <td class="wraptext">{{p.Name}}</td>
+                                <td class="wraptext">
+                                    {{p.status}} <span ng-if="p.status=='Active'"><i class="fa fa-check" style="color:green"></i></span><span ng-if="p.status=='Inactive'"><i class="fa fa-close" style="color:red"></i></span>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;<button id="addbutton{{$index}}" class="tulasi btn btn-info btn-sm" ng-click="ActivateUser(p,$index)" ng-disabled="p.status=='Active'"><i class="fa fa-check" style="color:whitesmoke;"></i></button>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;<button id="PasswordReset" class="btn btn-warning btn-sm" ng-click="DeactivateUser(p,$index)" ng-disabled="p.status=='Inactive'"><i class="fa fa-close" style="color:white"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="clearfix"></div>
+                    <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                    <pagination ng-if="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

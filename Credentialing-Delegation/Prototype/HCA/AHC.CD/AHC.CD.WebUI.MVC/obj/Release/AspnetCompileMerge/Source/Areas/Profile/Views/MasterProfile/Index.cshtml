@@ -1,0 +1,296 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    profileId =@ViewBag.ProfileId;
+</script>
+
+
+
+<link href="~/Content/SharedCss/jquery.circliful.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/bootstrap-duallistbox.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/Lib/FoolProofValidation/mvcfoolproof.unobtrusive.min.js"></script>
+
+<!-- Country list and Country Code Json Data -->
+<script src="~/Scripts/Shared/Data/CountryList.js"></script>
+<script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+<script src="~/Scripts/Shared/Data/Languages.js"></script>
+<!-- End -->
+<script src="~/Scripts/Lib/Jquery/select2.min.js"></script>
+<link href="~/Content/Provider/select2.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jquery.bootstrap-duallistbox.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+
+
+<!-- please move all dependent partial java script in partial page-->
+<script src="~/Scripts/Custom/Profile/CreateProfile.js"></script>
+<script src="~/Scripts/Custom/Profile/MasterDataService.js"></script>
+<script src="~/Scripts/Shared/Data/disclosueQuestions.js"></script>
+@*<script src="~/Scripts/Custom/Profile/WorkHistory.js"></script>*@
+<script src="~/Scripts/Custom/Profile/ServiceInfo.js"></script>
+@*<script src="~/Scripts/Custom/Profile/ProfessionalReference.js"></script>
+    <script src="~/Scripts/Custom/Profile/IdentificationLicense.js"></script>
+        <script src="~/Scripts/Custom/Profile/ProfessionalReference.js"></script>*@
+@*<script src="~/Scripts/Custom/Profile/Education.js"></script>*@
+@*<script src="~/Scripts/Custom/Profile/Specialty.js"></script>*@
+
+<script src="~/Scripts/Custom/Profile/PracticeLocation.js"></script>
+@*<script src="~/Scripts/Custom/Profile/proffesionalAffli.js"></script>*@
+<script src="~/Scripts/Custom/Profile/OrganisationInfo.js"></script>
+<script src="~/Scripts/Custom/Profile/ViewPlan.js"></script>
+<script src="~/Scripts/Custom/Profile/Util.js"></script>
+
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/style.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/Profile/Util.css" rel="stylesheet" />
+
+<script src="~/Scripts/Custom/Validation/StartDate.js"></script>
+<script src="~/Scripts/Custom/Validation/EndDate.js"></script>
+@*<script src="~/Scripts/Custom/Profile/Liability.js"></script>*@
+<script src="~/Scripts/Custom/Profile/CredentialingContact.js"></script>
+
+@*================Autocomplete==================*@
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
+<script src="~/Scripts/Custom/Profile/parse-options.js"></script>
+
+
+<style>
+    /* styles for validation helpers */
+    .field-validation-error {
+        color: #b94a48;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    input.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    select.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    input[type="checkbox"].input-validation-error {
+        border: 0 none;
+    }
+
+    .validation-summary-errors {
+        color: #b94a48;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+
+    .select2-container {
+        display: block;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="profileApp">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-10">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="~/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Profile
+                    </li>
+                    <li class="active">
+                        Pariksith Singh
+                    </li>
+                    <li class="text-capitalize active">
+                        <span id="tabname">Demographics</span>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2 text-right breadcrumb">
+                @*<div class="col-lg-2"><a href="#" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="left" title="Save"><i class="fa fa-save"></i></a></div>*@
+                <a href="~/Content/Document/Brief_Profile.pdf" download="Pariksith_Singh_Brief_Profile.PDF" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Download Brief Profile"><i class="fa fa-file-pdf-o"></i></a>
+                @*<button class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Upload Docs" onclick="openChildControlDiv('uploadDiv')"><i class="fa fa-upload"></i></button>*@
+                @*<a href="~/Content/Document/DocPreview.pdf" download="Pariksith_Singh_Full_Profile.PDF" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Download Full Profile"><i class="fa fa-file-pdf-o"></i></a>*@
+                @*<div class="col-lg-2"><button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="right" title="Print"><i class="fa fa-print"></i></button></div>*@
+            </div>
+        </div>
+        <!-- /.row -->
+        <div class="row" id="loadingData" style="display:none; position: absolute; z-index: 100; background: rgba(226, 226, 226, 0.33); width: 96%; height: 100%;">
+            <div class="col-lg-12">
+                <div class="text-center">
+                    <span class="huge">Loading Profile Data Please Wait....</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">Loading ....</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Provider content form div -->
+        <div class="row" id="profileForm">
+            <div class="col-lg-12" ng-cloak>
+                <div class="panel panel-default">
+                    
+                    <div class="panel-body">
+
+                        <div role="tabpanel">
+                            <div>
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Demographics</a></li>
+                                    @*<li role="presentation"><a href="#ethnicity" aria-controls="messages" role="tab" data-toggle="tab">Ethnicity</a></li>*@
+                                    <li role="presentation"><a href="#identification" aria-controls="identification" role="tab" data-toggle="tab">Identification & Licenses</a></li>
+                                    <li role="presentation"><a href="#education" aria-controls="education" role="tab" data-toggle="tab">Education History</a></li>
+                                    <li role="presentation"><a href="#specialty" aria-controls="specialty" role="tab" data-toggle="tab">Specialty/Board</a></li>
+                                    <li role="presentation"><a href="#practice" aria-controls="practice" role="tab" data-toggle="tab">Practice Location</a></li>
+                                    <li role="presentation"><a href="#hospital" aria-controls="hospital" role="tab" data-toggle="tab">Hospital Privilege</a></li>
+                                    <li role="presentation"><a href="#liability" aria-controls="liability" role="tab" data-toggle="tab">Professional Liability</a></li>
+                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Work History</a></li>
+                                    <li role="presentation"><a href="#professionalreference" aria-controls="professionalreference" role="tab" data-toggle="tab">Professional Reference</a></li>
+                                    <li role="presentation"><a href="#Professional" aria-controls="Professional" role="tab" data-toggle="tab">Professional Affiliation</a></li>
+                                    @*<li role="presentation"><a href="#service" aria-controls="service" role="tab" data-toggle="tab">Service Information</a></li>*@
+
+
+                                    <li role="presentation"><a href="#disclosure" aria-controls="disclosure" role="tab" data-toggle="tab">Disclosure Questions</a></li>
+
+                                    <li role="presentation"><a href="#OrgInfo" aria-controls="OrgInfo" role="tab" data-toggle="tab">Contract Information</a></li>
+                                    @*<li role="presentation"><a href="#Plans" aria-controls="Plans" role="tab" data-toggle="tab">View All Plans</a></li>*@
+                                    <li role="presentation"><a href="#DocumentRepository" aria-controls="Plans" role="tab" data-toggle="tab">Document Repository</a></li>
+                                    @*<li role="presentation" data-toggle="tooltip" data-placement="right" title="Document Checklist"><a href="#document" aria-controls="document" role="tab" data-toggle="tab"><i class="fa fa-file-o"></i></a></li>*@
+                                    @* <li role="presentation" data-toggle="tooltip" data-placement="right" title="Timeline"><a href="#Timeline" aria-controls="Timeline" role="tab" data-toggle="tab"><i class="fa fa-history"></i></a></li>*@
+
+
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="home">
+                                        <!---Demographics partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/Demographic/_Demographics.cshtml")
+                                        <!---Demographics partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="profile">
+
+                                        <!---work history partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_Workhistory.cshtml")
+                                        <!---work history partial ends here-->
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="Professional">
+                                        <!---_ProfessionalAffilation partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/ProfessionalAffiliation/_ProfessionalAffilation.cshtml")
+                                        <!---_ProfessionalAffilation partial ends here-->
+                                    </div>
+                                    @*<div role="tabpanel" class="tab-pane" id="service">
+                                            <!---Service partial starts here-->
+                                            @Html.Partial("~/Areas/Profile/Views/ServiceInformation/_ServiceHistory.cshtml")
+                                            <!---Service partial ends here-->
+                                        </div>*@
+                                    <div role="tabpanel" class="tab-pane" id="identification">
+                                        <!---Licensing & Identification partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_IdentificationLicensing.cshtml")
+                                        <!---Licensing & Identification partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="education">
+                                        <!---Licensing & Identification partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_Education.cshtml")
+                                        <!---Licensing & Identification partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="specialty">
+                                        <!---Specialty partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/Specialty/_Specialty.cshtml")
+                                        <!---Specialty partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="practice">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_PracticeLocationInformation.cshtml")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="professionalreference">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_ProfessionalReference.cshtml")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="disclosure">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/DisclosureQuestion/_DisclosureQuestions.cshtml")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="hospital">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_HospitalPrivilegeInformation.cshtml")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="liability">
+                                        <!---Liability partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/Liability/_LiabilityInsurance.cshtml")
+                                        <!---Liability partial ends here-->
+                                    </div>
+
+                                    @*<div role="tabpanel" class="tab-pane" id="document">
+                                            <!---Documents partial starts here-->
+                                            @Html.Partial("_DocumentsChecklist")
+                                            <!---Documents partial ends here-->
+                                        </div>*@
+
+                                    <div role="tabpanel" class="tab-pane" id="OrgInfo">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/OrganisationInformation/_OrganisationInformation.cshtml")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="Plans">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/ProfilePlan/_ViewAllPlans.cshtml")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="DocumentRepository">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/DocumentRepository/_DocumentRepository.cshtml")
+
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="liability">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("~/Areas/Profile/Views/Liability/_LiabilityInsurance.cshtml")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="col-lg-3">
+                    <!---Info Div partial starts here-->
+                    @Html.Partial("_info_div")
+                    <!---Info Div partial ends here-->
+                </div>*@
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
+<script src="~/Scripts/Custom/Profile/Util.js"></script>

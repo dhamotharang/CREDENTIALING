@@ -1,0 +1,169 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.VisaDetailViewModel
+
+<script src="~/Scripts/Shared/Data/CountryOfIssue.js"></script>
+
+<form enctype="multipart/form-data" id="VisaDetailsForm">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="form-group col-lg-6">
+            @Html.LabelFor(model => model.IsResidentOfUSA, htmlAttributes: new { @class = "control-label small" })
+            &nbsp;&nbsp;
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.IsResidentOfUSA, "Yes", new { data_ng_model = "visaDetail.IsResidentOfUSA" }) Yes
+            </label>
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.IsResidentOfUSA, "No", new { data_ng_model = "visaDetail.IsResidentOfUSA" }) No
+            </label>
+            <br />
+            @Html.ValidationMessageFor(model => model.IsResidentOfUSA, "", new { @class = "text-danger" })
+        </div>
+        <div ng-if="visaDetail.IsResidentOfUSA=='No'" class="form-group col-md-6">
+            @Html.LabelFor(model => model.VisaInfo.IsAuthorizedToWorkInUS, htmlAttributes: new { @class = "control-label small" })
+            &nbsp;&nbsp;
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.VisaInfo.IsAuthorizedToWorkInUS, "Yes", new { data_ng_model = "visaDetail.VisaInfo.IsAuthorizedToWorkInUS" }) Yes
+            </label>
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.VisaInfo.IsAuthorizedToWorkInUS, "No", new { data_ng_model = "visaDetail.VisaInfo.IsAuthorizedToWorkInUS" }) No
+            </label>
+            <br />
+            @Html.ValidationMessageFor(model => model.VisaInfo.IsAuthorizedToWorkInUS, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
+    <div ng-if="visaDetail.IsResidentOfUSA=='No'">
+        <div class=" col-lg-12 zero-padding-left-right-div">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.VisaInfo.VisaNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.VisaInfo.VisaNumber, new { @class = "form-control input-sm", data_ng_model = "visaDetail.VisaInfo.VisaNumber" })
+                    @Html.ValidationMessageFor(model => model.VisaInfo.VisaNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaTypes, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.EnumDropDownListFor(model => model.VisaInfo.VisaTypes, new { @class = "form-control input-sm", data_ng_model = "visaDetail.VisaInfo.VisaTypes", placeholder = "--Select--" })
+                    @Html.ValidationMessageFor(model => model.VisaInfo.VisaTypes, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaStatus, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.DropDownListFor(model => model.VisaInfo.VisaStatus, new[] { new SelectListItem { Value = "Valid", Text = "Valid" }, new SelectListItem { Value = "InValid", Text = "InValid" } }, "-- Select --", new { @class = "form-control input-sm", data_ng_model = "visaDetail.VisaInfo.VisaStatus" })
+                    @Html.ValidationMessageFor(model => model.VisaInfo.VisaStatus, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class=" col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.VisaInfo.VisaSponsor, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.VisaInfo.VisaSponsor, new { @class = "form-control input-sm", data_ng_model = "visaDetail.VisaInfo.VisaSponsor" })
+                    @Html.ValidationMessageFor(model => model.VisaInfo.VisaSponsor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.VisaInfo.VisaExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.VisaInfo.VisaExpirationDate, new { type = "date", @class = "form-control input-sm", data_ng_model = "visaDetail.VisaInfo.VisaExpirationDate" })
+                    @Html.ValidationMessageFor(model => model.VisaInfo.VisaExpirationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-lg-11">
+                <div class="fileinput input-group fileinput-exists" data-provides="fileinput">
+                    <input type="hidden" value="" name="">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{visaDetail.VisaInfo.VisaCertificatePath}}</span></div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new">Select VISA Certificate</span><span class="fileinput-exists">Change</span><input type="file" name="VisaInfo.VisaCertificateFile" autocomplete="off"></span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+            <div class="form-group col-lg-1">
+                <a ng-show="visaDetail.VisaInfo.VisaCertificatePath!=''||" href="{{visaDetail.VisaInfo.VisaCertificatePath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Visa Certificate"><i class="fa fa-2x fa-file"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-lg-3">
+                @Html.LabelFor(model => model.VisaInfo.GreenCardNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.VisaInfo.GreenCardNumber, new { @placeholder = "Enter green card number", @class = "form-control input-sm", data_ng_model = "visaDetail.VisaInfo.GreenCardNumber" })
+                    @Html.ValidationMessageFor(model => model.VisaInfo.GreenCardNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-lg-8">
+                <label class="control-label small">Supporting Document</label>
+                <div class="fileinput input-group fileinput-exists" data-provides="fileinput">
+                    <input type="hidden" value="" name="">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{visaDetail.VisaInfo.GreenCardCertificatePath}}</span></div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new">Select GreenCard Certificate</span><span class="fileinput-exists">Change</span><input type="file" name="VisaInfo.GreenCardCertificateFile" autocomplete="off"></span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+            <div class="form-group col-lg-1">
+                <label class="control-label small"></label>
+                <div>
+                    <a href="{{visaDetail.VisaInfo.GreenCardCertificatePath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Green Card"><i class="fa fa-2x fa-file"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.VisaInfo.NationalIDNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.VisaInfo.NationalIDNumber, new { @placeholder = "Enter national id number", @class = "form-control input-sm", data_ng_model = "visaDetail.VisaInfo.NationalIDNumber" })
+                    @Html.ValidationMessageFor(model => model.VisaInfo.NationalIDNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div ng-if="Provider.VisaDetails.VisaInfo.NationalIDNumber" class="form-group col-lg-8">
+                @Html.LabelFor(model => model.VisaInfo.NationalIDCertificateFile, htmlAttributes: new { @class = "control-label small" })
+                <div class="fileinput input-group fileinput-exists" data-provides="fileinput">
+                    <input type="hidden" value="" name="">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{visaDetail.VisaInfo.NationalIDCertificatePath}}</span></div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new">National Identification Certificate</span><span class="fileinput-exists">Change</span><input type="file" name="VisaInfo.NationalIDCertificateFile" autocomplete="off"></span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+            <div ng-if="Provider.VisaDetails.VisaInfo.NationalIDNumber" class="form-group col-lg-1">
+                <label class="control-label small"></label>
+                <div>
+                    <a href="{{visaDetail.VisaInfo.NationalIDCertificatePath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="National Identification Certificate"><i class="fa fa-2x fa-file"></i></a>
+                </div>
+            </div>
+            <div ng-if="!Provider.VisaDetails.VisaInfo.NationalIDNumber" class="form-group col-lg-9">
+                @Html.LabelFor(model => model.VisaInfo.NationalIDCertificateFile, htmlAttributes: new { @class = "control-label small" })
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                    <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">National Identification Certificate</span><span class="fileinput-exists">Change</span><input type="file" name="VisaInfo.NationalIDCertificateFile"></span>
+                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.CountryOfIssue, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select id="selectNameTitle" name="VisaInfo.CountryOfIssue" data-ng-model="visaDetail.VisaInfo.CountryOfIssue" class="form-control input-sm">
+                        <option value="" disabled selected>--Select--</option>
+                        <option ng-repeat="country in CountryOfissue">{{country.name}}</option>
+                    </select>
+                </div>
+                @Html.ValidationMessageFor(model => model.VisaInfo.CountryOfIssue, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div ng-if="IsVisaDetailsHasError" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists : <br />
+            <span ng-repeat="err in VisaDetailsErrorList track by $index">{{err}}</span>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <button class="btn btn-warning btn-sm" ng-click="VisaDetailsToggle()">Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" ng-click="saveEthnicityVisaDetails('VisaDetailsForm')">Save</button>
+    </div>
+</form>

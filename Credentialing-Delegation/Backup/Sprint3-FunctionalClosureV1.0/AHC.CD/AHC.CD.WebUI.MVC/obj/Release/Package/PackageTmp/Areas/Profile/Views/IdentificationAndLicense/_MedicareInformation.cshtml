@@ -1,0 +1,117 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="panel-default">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Medicare Information
+            </legend>
+            <div class="legend2 pull-right">
+                <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="*If you have additional Medicare Number include here."><i class="fa fa-question"></i></button>
+            </div>
+            <div id="MedicareInfo" class="panel-body">
+                <table ng-hide="MedicareInformations.length > 0||newShowMedicareInformation" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td ng-hide="visibilityControl=='addMedicareInformation'">
+                                No Data Available For Medicare Information! 
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <span>
+                                        Please click on <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addMedicareInformation')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                    to add new Medicare Information</span> }
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+            
+                <table ng-hide="MedicareInformations.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                    <tr>
+                    <th>Medicare Number</th>
+                    <th>Issue Date</th>
+                    <th>Supporting Document</th>
+                    <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="MedicareInformation in MedicareInformations track by $index">
+                        <tr>
+                            <td>{{MedicareInformation.LicenseNumber}}</td>
+                            <td>{{MedicareInformation.IssueDate| date: "MM-dd-yyyy"}}</td>
+                            <td>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                                {
+                                    <a ng-if="MedicareInformation.CertificatePath" href="/Document/View?path={{MedicareInformation.CertificatePath}}" class="pointer" target="_blank" title="{{MedicareInformation.CertificatePath}}">
+                                        <i class="fa fa-file" title=""></i>
+                                    </a>
+                                }
+                                <i ng-if="!MedicareInformation.CertificatePath">Not available</i>
+                            </td>
+                            <td>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewMedicareInformation')" ng-hide="viewMedicare" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editMedicareInformation',MedicareInformation)" ng-hide="editShowMedicareInformation" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addMedicareInformation')" data-toggle="tooltip" data-placement="right" title="Add new" ng-hide="viewMedicare|| editShowMedicareInformation || newShowMedicareInformation || $index+1!=MedicareInformations.length"><i class="fa fa-plus"></i></button>
+                                }
+                            </td>
+                        </tr>
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                        {
+                            <tr ng-show="visibilityControl==($index+'_viewMedicareInformation')">
+                                <td colspan="6" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewMedicareInformation.cshtml")
+                                </td>
+                            </tr>
+                        }
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                        {
+                            <tr ng-show="visibilityControl==($index+'_editMedicareInformation')">
+                                <td colspan="6" id="MedicareInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                    <fieldset>
+                                        <legend>
+                                            Edit Medicare Information
+                                        </legend>
+                                        <div>
+                                            @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditMedicareInformation.cshtml")
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    </table>
+
+                    @*<div class="col-lg-12 clearfix" style="padding-bottom:15px;"></div>*@
+                    <div class="clearfix"></div>
+                    <div class="form-style">
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                        {
+                            <fieldset ng-show="visibilityControl=='addMedicareInformation'">
+                                <legend>
+                                    Add Medicare Information
+                                </legend>
+                                <div id="newShowMedicareInformationDiv">
+                                    @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditMedicareInformation.cshtml")
+                                </div>
+                            </fieldset>
+                        }
+                    </div>
+                <div ng-show="visibilityControl=='addedMedicare'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Medicare information saved successfully.!!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedMedicare'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Medicare information updated successfully. !!!!
+                </div>
+</div>
+        </fieldset>
+    </div>
+</div>

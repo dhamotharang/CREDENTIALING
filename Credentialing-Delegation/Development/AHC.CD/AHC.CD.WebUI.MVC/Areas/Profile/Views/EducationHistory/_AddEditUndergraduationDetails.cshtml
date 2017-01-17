@@ -1,0 +1,303 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.EducationDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+<div class="clearfix"></div>
+<form id="UGForm">
+    <div>
+        <div>
+            <fieldset>
+                <legend>
+                    <span ng-if="visibilityControl=='addeducationDetailViewModel'">Add Under Graduate/Professional School Details</span>
+                    <span ng-if="visibilityControl==($index+'_editeducationDetailViewModel')">Update Under Graduate/Professional School Details</span>
+                </legend>
+                <div class="legend2 pull-right">
+                    <button type="button" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="*Provide the appropriate information for the school that issued your undergraduate degree and all schools you attended"><i class="fa fa-question"></i></button>
+                </div>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+                <span ng-if="tempObject.EducationDetailID">
+                    @Html.HiddenFor(model => model.EducationDetailID, new { id = "EducationDetailID", ng_value = "tempObject.EducationDetailID", data_ng_model = "tempObject.EducationDetailID" })
+                </span>
+                @Html.HiddenFor(model => model.UpdateHistory, new { id = "UpdateHistoryHiddenUG" })
+                @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+                @Html.HiddenFor(model => model.EducationQualificationType, new { id = "EducationQualificationType", ng_value = "1", data_ng_model = "tempObject.EducationQualificationType" })
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="form-group col-lg-12">
+                        @Html.LabelFor(model => model.USGraduateYesNoOption, htmlAttributes: new { id = "UHUSGraduateYesNoOption", @class = "control-label small" })
+                        &nbsp;&nbsp;
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label ng-hide="value" class="radio-inline">
+                                @Html.RadioButtonFor(model => model.USGraduateYesNoOption, (int)value, new { data_ng_model = "tempObject.USGraduateYesNoOption" }) @value.ToString()
+                            </label>
+                        }
+                        <div>@Html.ValidationMessageFor(model => model.USGraduateYesNoOption, "", new { @class = "text-danger" })</div>
+                    </div>
+                </div>
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <span ng-if="tempObject.SchoolInformation.SchoolInformationID">
+                        @Html.HiddenFor(model => model.SchoolInformation.SchoolInformationID, new { id = "SchoolInformationID", ng_value = "tempObject.SchoolInformation.SchoolInformationID", data_ng_model = "tempObject.SchoolInformation.SchoolInformationID" })
+                        @Html.LabelFor(model => model.SchoolInformation.SchoolName, htmlAttributes: new { id = "UHSchoolName", @class = "control-label small hide" })
+                    </span>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.SchoolName, htmlAttributes: new { id = "SchoolName", @class = "control-label small" })
+                        <div>
+                            <input type="text" class="form-control input-sm" ng-focus="tempObject.SchoolInformation.SchoolNamefocus=true" ng-blur="tempObject.SchoolInformation.SchoolNamefocus=false" data-val="true" data-val-required="Please select the School Name*" name="SchoolInformation.SchoolName" ng-model="tempObject.SchoolInformation.SchoolName" ng-change="searchCumDropDown('ForSchoolName'+$index)" />
+                            <div ng-hide="!filterUgSchoolData.length" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForSchoolName{{$index}}">
+                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                        <tr ng-repeat="school in filterUgSchoolData=(masterSchools | filter : {Name:tempObject.SchoolInformation.SchoolName}) track by $index" ng-click="addIntoSchoolDropDown(school,'ForSchoolName'+$index)" class="pointer">
+                                            <td>{{school.Name}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div ng-if="!filterUgSchoolData.length" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" ng-hide="!tempObject.SchoolInformation.SchoolNamefocus">
+                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td>School Name not found</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.SchoolName, "", new { @class = "text-danger", ng_if = "!tempObject.SchoolInformation.SchoolName" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.QualificationDegree, htmlAttributes: new { id = "UHQualificationDegree", @class = "control-label small" })
+                        <div>
+                            <input type="text" class="form-control input-sm" ng-focus="tempObject.QualificationDegreefocus=true" data-searchdropdown="searchdropdown" ng-blur="tempObject.QualificationDegreefocus=false" name="QualificationDegree" ng-model="tempObject.QualificationDegree" ng-change="searchCumDropDown('ForDegree'+$index)" />
+                            <div ng-hide="!filterUgDegreeData.length" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForDegree{{$index}}">
+                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                        <tr ng-repeat="degree in filterUgDegreeData=(masterDegrees | filter : {Title:tempObject.QualificationDegree}) track by $index " ng-click="addIntoDegreeDropDown(degree.Title,'ForDegree'+$index)" class="pointer">
+                                            <td>{{degree.Title}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div ng-if="!filterUgDegreeData.length" ng-hide="!tempObject.QualificationDegreefocus" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td>Degree Name not found</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.QualificationDegree, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Location, htmlAttributes: new { id = "UHLocation", @class = "control-label small" })
+                        <input type="text" class="form-control input-sm" ng-model="tempObject.SchoolContactInfo.Location" name="SchoolInformation.Location" ng-focus="searchCumDropDown('ForUnderGraduationLocation'+$index);" ng-change="setErrorBitLocation(tempObject.SchoolContactInfo.LocationName);clearLocationLevel()" />
+                        @*<input type="hidden" name="SchoolContactInfoID" value="{{tempObject.SchoolContactInfo.SchoolContactInfoID}}" />*@
+                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForUnderGraduationLocation{{$index}}">
+                            <table class="table table-striped table-bordered table-hover table-condensed">
+
+                                <tbody>
+                                    <tr ng-repeat="location in filterLocationData = (tempObject.SchoolInformation.SchoolContactInfoes | filter:tempObject.SchoolContactInfo.Location) track by $index" ng-click="addIntoLocationDropDown(location,'ForUnderGraduationLocation'+parentIndex);setErrorBitLocation(tempObject.SchoolContactInfo.Location)" class="pointer">
+                                        <td>{{location.Location}}</td>
+                                    </tr>
+                                    <tr ng-if="!filterLocationData.length">
+                                        <td>Location Name not found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @*<span class="text-danger" ng-if="!isLocationError">Please Enter Location Name *.</span>*@
+                        @*@Html.ValidationMessageFor(model => model.HospitalContactInfoID, "", new { @class = "text-danger" })*@
+
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Street, htmlAttributes: new { id = "UHStreet", @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.SchoolInformation.Street, new { id = "Street", @class = "form-control input-sm", placeholder = "street", data_ng_model = "tempObject.SchoolContactInfo.Street" })
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.Street, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Building, htmlAttributes: new { id = "UHBuilding", @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.SchoolInformation.Building, new { id = "Building", @class = "form-control input-sm", placeholder = "building", data_ng_model = "tempObject.SchoolContactInfo.Building" })
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.Building, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.City, htmlAttributes: new { id = "UHCity", @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.SchoolInformation.City, new { @class = "form-control input-sm", data_ng_model = "tempObject.SchoolContactInfo.City", placeholder = "city name", data_ng_change = "addressAutocomplete(tempObject.SchoolContactInfo.City)", onfocus = "showLocationList(this)" })
+                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                            <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                                <tbody>
+                                    <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation(location)" class="pointer">
+                                        <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                                    </tr>
+                                    <tr ng-if="Locations.length == 0">
+                                        <td>Not Available..... </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SchoolInformation.City, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.State, htmlAttributes: new { id = "UHState", @class = "control-label small" })
+                        <div>
+                            @Html.EditorFor(model => model.SchoolInformation.State, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.SchoolContactInfo.State", placeholder = "state name" } })
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.State, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.ZipCode, htmlAttributes: new { id = "UHZipCode", @class = "control-label small" })
+                        <div>
+                            @Html.EditorFor(model => model.SchoolInformation.ZipCode, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.SchoolContactInfo.ZipCode", placeholder = "zip code" } })
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.ZipCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 zero-padding-left-right-div">
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Country, htmlAttributes: new { id = "UHCountry", @class = "control-label small" })
+                        <div>
+                            @Html.EditorFor(model => model.SchoolInformation.Country, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.SchoolContactInfo.Country", placeholder = "country" } })
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.Country, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.County, htmlAttributes: new { id = "UHCounty", @class = "control-label small" })
+                        <div>
+                            @Html.EditorFor(model => model.SchoolInformation.County, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.SchoolContactInfo.County", placeholder = "county" } })
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.County, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Email, htmlAttributes: new { id = "UHEmail", @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.SchoolInformation.Email, new { id = "Email", @class = "form-control input-sm", placeholder = "email", data_ng_model = "tempObject.SchoolContactInfo.Email" })
+                            @Html.ValidationMessageFor(model => model.SchoolInformation.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.LabelFor(model => model.SchoolInformation.Phone, htmlAttributes: new { id = "UHPhone", @class = "control-label small" })
+                        <div class="input-group">
+                            <span ng-if="!tempObject.SchoolContactInfo.PhoneCountryCode" ng-init="tempObject.SchoolContactInfo.PhoneCountryCode='+1'"></span>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('UgTelePhoneCountryCode'+$index)"> {{tempObject.SchoolContactInfo.PhoneCountryCode}} <span class="caret"></span></button>
+                            </div>
+                            <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="UgTelePhoneCountryCode{{$index}}">
+                                <div class="arrow"></div>
+                                <h3 class="popover-title">Select Country Dial Code</h3>
+                                <div class="popover-content">
+                                    <select name="SchoolInformation.PhoneCountryCode" ng-model="tempObject.SchoolContactInfo.PhoneCountryCode">
+                                        <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempObject.SchoolContactInfo.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                @Html.TextBoxFor(model => model.SchoolInformation.Phone, new { id = "Phone", @class = "form-control", placeholder = "phone number", data_ng_model = "tempObject.SchoolContactInfo.Phone", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" })
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SchoolInformation.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-12 zero-padding-left-right-div">
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Fax, htmlAttributes: new { id = "UHFax", @class = "control-label small" })
+                        <div class="input-group">
+                            <span ng-if="!tempObject.SchoolContactInfo.FaxCountryCode" ng-init="tempObject.SchoolContactInfo.FaxCountryCode='+1'"></span>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('UgFaxCountryCode'+$index)"> {{tempObject.SchoolContactInfo.FaxCountryCode}} <span class="caret"></span></button>
+                            </div>
+                            <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="UgFaxCountryCode{{$index}}">
+                                <div class="arrow"></div>
+                                <h3 class="popover-title">Select Country Dial Code</h3>
+                                <div class="popover-content">
+                                    <select name="SchoolInformation.FaxCountryCode" ng-model="tempObject.SchoolContactInfo.FaxCountryCode">
+                                        <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempObject.SchoolContactInfo.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                @Html.TextBoxFor(model => model.SchoolInformation.Fax, new { id = "Fax", @class = "form-control", placeholder = "fax number", data_ng_model = "tempObject.SchoolContactInfo.Fax" })
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SchoolInformation.Fax, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { id = "UHStartDate", @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.StartDate, new { id = "StartDate", @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format", data_ng_model = "tempObject.StartDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker" })
+                            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { id = "UHEndDate", @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.EndDate, new { id = "EndDate", @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format", data_ng_model = "tempObject.EndDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker" })
+                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.CompletedYesNoOption, htmlAttributes: new { id = "UHCompletedYesNoOption", @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.CompletedYesNoOption, (int)value, new
+                               { @*id = "IsCompleted",*@ data_ng_model = "tempObject.CompletedYesNoOption"
+                               }) @value.ToString()
+                        </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CompletedYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="form-group" ng-class="{'col-lg-11':tempObject.CertificatePath,'col-lg-12':!tempObject.CertificatePath}">
+                        @Html.HiddenFor(model => model.CertificatePath, new { ng_value = "tempObject.CertificatePath" })
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control jancyFileWrapTexts" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename wraptext"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new small">Supporting Document</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.CertificateDocumentFile, new { name = "CertificateDocumentFile", id = "CertificateDocumentFile", type = "file", data_ng_model = "tempObject.CertificateDocumentFile", onchange = "angular.element(this).scope().setFiles(this)" })</span>
+                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CertificateDocumentFile, "", new { @class = "text-danger" })
+                    </div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                    {
+                        <div ng-if="tempObject.CertificatePath" class="form-group col-md-1">
+                            <a href="{{tempObject.CertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                        </div>
+                    }
+                </div>
+                <div class="clearfix"></div>
+                <div ng-show="activeMessageDiv=='ErrorInUGDetails'+$index" class="col-lg-12">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        Error Lists :<br />
+                        <span ng-repeat="err in UGDetailsErrorList track by $index">{{err}}</span>
+                    </div>
+                </div>
+                <br />
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-md-12 form-group">
+                        <button id="UGPSD_Edit_CancelButton" ng-show="visibilityControl==($index+'_editeducationDetailViewModel')" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); datePickerReset();">Cancel</button>
+                        <button id="UGPSD_ADD_CancelButton" ng-show="visibilityControl=='addeducationDetailViewModel'" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); datePickerReset(); ">Cancel</button>
+                        <button id="UGPSD_ADD_AddButton" ng-show="visibilityControl=='addeducationDetailViewModel'" type="button" class="btn btn-primary btn-sm pull-right" ng-click="saveUG(tempObject)">Add</button>
+                        <button id="UGPSD_Edit_UpdateButton" ng-show="visibilityControl==($index+'_editeducationDetailViewModel')" type="button" class="btn btn-primary btn-sm pull-right" ng-click="saveUG(tempObject, $index)">Update</button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,108 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;" ng-if="TableView">
+            <div class="progress col-lg-12" ng-if="!progressbar" ng-cloak>
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    Loading...Please wait...
+                </div>
+            </div>
+            <div ng-if="progressbar">
+                <div ng-if="mc.displayed.length==0 && progressbar">
+                    <label>No Tasks Assigned.</label>
+                </div>
+                <table ng-if="mc.displayed.length>0 && progressbar" class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="mc.callServer" st-table="mc.displayed" st-safe-src="trackerItems">
+                    <thead>
+                        <tr>
+                            <th st-sort="ProviderName" st-ratio="14">
+                                Provider Name
+                            </th>
+                            <th st-sort="Subject" st-ratio="8">
+                                Subject
+                            </th>
+                            <th st-sort="SubSectionName" st-ratio="10">
+                                Sub Section Name
+                            </th>
+                            <th st-sort-default="false" st-sort="NextFollowUpDate" st-ratio="10">
+                                Next FollowUp Date
+                            </th>
+                            <th st-sort="AssignedTo" st-ratio="14">
+                                Assigned To
+                            </th>
+                            <th st-sort="CompleteStatus" st-ratio="8">
+                                Task Status
+                            </th>
+                            <th st-sort="InsuranceCompanyName" st-ratio="9">
+                                Insurance Company
+                            </th>
+                            <th st-ratio="12">
+                                Mode Of Follow Up
+                            </th>
+                            <th st-ratio="10">Action</th>
+                        </tr>
+                        <tr>
+                            <td st-ratio="14"><input st-search="ProviderName" type="text" placeholder="Filter Provider Name" class="form-control input-sm"></td>
+                            <td st-ratio="8"><input st-search="Subject" type="text" placeholder="Filter Subject" class="form-control input-sm" /></td>
+                            <td st-ratio="10"><input st-search="SubSectionName" type="text" placeholder="Filter Sub Section Name" class="form-control input-sm" /></td>
+                            <td st-ratio="10"><input st-search="NextFollowUpDate" type="text" placeholder="Filter Next FollowUp Date" class="form-control input-sm" /></td>
+                            <td st-ratio="14"><input st-search="AssignedTo" type="text" placeholder="Filter Assigned To" class="form-control input-sm" /></td>
+                            <td st-ratio="8"><input st-search="CompleteStatus" type="text" placeholder="Filter Task Status" class="form-control input-sm" /></td>
+                            <td st-ratio="8"><input st-search="InsuranceCompanyName" type="text" placeholder="Filter Insurance Company" class="form-control input-sm" /></td>
+                            <td st-ratio="12"><input st-search="ModeOfFollowUp" type="text" placeholder="Filter Follow Up Mode" class="form-control input-sm" /></td>
+                            <td st-ratio="10"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="c in mc.displayed">
+                            <td>{{c.ProviderName}}</td>
+                            <td>{{c.Subject}}</td>
+                            <td>{{c.SubSectionName}}</td>
+                            <td>{{c.NextFollowUpDate}}</td>
+                            <td>{{c.AssignedTo}}</td>
+                            <td>{{c.CompleteStatus}}</td>
+                            <td>{{c.InsuranceCompanyName||'Not Available'}}</td>
+                            <td><p ng-repeat="m in c.ModeOfFollowUp"><span class="label label-info">{{m.Name}}</span></p></td>
+                            <td>
+                                <a class="btn btn-xs btn-default" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{c.ProfileID}}{{c.TabID}}{{c.SubSectionID}}' tooltip data-toggle="tooltip" data-placement="top" title="Redirect"><i class="fa fa-repeat"></i></a>
+                                <button class="btn btn-xs btn-default" ng-click="showDetailViewforTab2(c)" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-warning" ng-click="showHistory(c)" tooltip data-toggle="tooltip" data-placement="top" title="Task Update History"><i class="fa fa-clock-o"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="showeditView(c,'editViewforTab2')" ng-hide="c.CompleteStatus=='Closed'" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot style="cursor:pointer">                        
+                        <tr>
+                            <td class=" text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+        <div ng-if="VisibilityControl == 'editViewforTab2'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style">
+            <fieldset>
+                <legend>
+                    Edit Task
+                </legend>
+                <div class="legend2 pull-right">
+                    <button ng-click="cancelEditViewforTab1()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="close"><i class="fa fa-close"></i></button>
+                </div>
+                <div id="editFormDiv">
+                    @Html.Partial("~/Views/TaskTracker/_AddEditTask.cshtml")
+                </div>
+            </fieldset>
+        </div>
+        <div ng-if="detailViewfortab2" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style">
+            <fieldset>
+                <legend>
+                    View Task
+                </legend>
+                <div class="legend2 pull-right">
+                    <button ng-click="cancelViewforTab2()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="close"><i class="fa fa-close"></i></button>
+                </div>
+                <div id="detailFormDiv">
+                    @Html.Partial("~/Views/TaskTracker/_ViewTask.cshtml")
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

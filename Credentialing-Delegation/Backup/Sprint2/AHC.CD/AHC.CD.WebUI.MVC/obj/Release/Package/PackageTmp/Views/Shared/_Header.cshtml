@@ -1,0 +1,114 @@
+﻿<!-- Navigation -->
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand header-logo" href="~/Dashboard/Index"><img src="~/Content/Images/logo2.png" style="width: 98px;height: 49px;" /></a>
+    </div>
+    <!-- /.navbar-header -->
+    @*<ul class="nav navbar-top-links navbar-left">
+            <li class="dropdown">
+                <a class="btn-sm btn-default" data-toggle="dropdown" href="#">
+                    <i class="fa fa-list fa-fw"></i>  <i class="fa fa-caret-left-"></i>
+                </a>
+                <!-- /.dropdown-messages -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>*@
+    <script>
+        var togglemenu = function () {
+            $("#sidemenu").toggle('fast', function () {
+                if ($("#sidemenu").css("display") == "none") {
+                    $("#page-wrapper").addClass("menuup");
+                }
+                else {
+                    $("#page-wrapper").removeClass("menuup");
+                }
+            });
+        }
+    </script>
+    <button id="menu-toggle" class="btn hidden-xs" onclick="togglemenu();"><i class="fa fa-bars"></i></button>
+
+
+    <ul class="nav navbar-top-links navbar-right">
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-messages">
+                <li class="divider"></li>
+                <li>
+                    <a class="text-center" href="#">
+                        <strong>Read All Messages</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-messages -->
+        </li>
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-tasks">
+                <li class="divider"></li>
+                <li>
+                    <a class="text-center" href="#">
+                        <strong>See All Tasks</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-tasks -->
+        </li>
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-bell fa-fw @(ViewContext.RouteData.Values["action"].Equals("Provider") ? "text-danger" : "")"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts">
+                <li style="@(ViewContext.RouteData.Values["action"].Equals("Provider") ? "" : "display:none")">
+                    <a href="#"><div><i class="fa fa-times-circle-o text-danger"></i> FREEDOM VIP CARE (HMO SNP) Credentialing Rejected</div></a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a class="text-center" href="#">
+                        <strong>See All Alerts</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-alerts -->
+        </li>
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-user fa-fw"></i> @*@User.Identity.GetUserName()*@ @Session["FullName"] <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li class="divider"></li>
+                @using Microsoft.AspNet.Identity
+                @if (Request.IsAuthenticated)
+                {
+                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <li class="text-center"><a class="text-danger" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-fw fa-power-off"></i>Log off</a></li>
+                    }
+                }
+            </ul>
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+    </ul>
+    <!-- /.navbar-top-links -->
+    @* Sidebar menu implementation *@
+    @Html.Partial("_Sidebar")
+    @* End Sidebar menu implementation *@
+
+</nav>

@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<script>
+    credId = @ViewBag.CredentialingInfoID;
+    var credInfo = @Html.Raw(Json.Encode(@ViewBag.CredentialingInfo));
+    var profileId = credInfo.ProfileID;
+
+</script>*@
+<link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+@*<script src="~/Scripts/Lib/Angular/angular-ui-router.js"></script>*@
+
+@*<script src="~/Areas/Credentialing/Scripts/CnDJS.js"></script>*@
+@*<script src="~/Areas/Credentialing/Scripts/app.js"></script>*@
+<script src="~/Areas/Credentialing/Scripts/CCM/CCM.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+@*<script src="~/Areas/Credentialing/Scripts/CCM/ApplicationFormController.js"></script>*@
+@*<script src="~/Areas/Credentialing/Scripts/CCM/Questions.js"></script>*@
+
+
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+
+
+
+<style>
+    .form-style fieldset {
+        padding: 15px 20px 5px 20px;
+    }
+
+    .grow {
+        transition: all .2s ease-in-out;
+    }
+
+        .grow:hover {
+            transform: scale(2.1);
+        }
+</style>
+
+<div id="page-wrapper" ng-app="CCMActionApp" ng-controller="CCMActionController" ng-init="LoadCredInfoData(@ViewBag.CredentialingInfo)">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-check-square-o"></i> <a href="/Credentialing/CCM/Index">Credentialing Action List</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-user"></i> {{temp.Profile.PersonalDetail.FirstName}} {{temp.Profile.PersonalDetail.LastName}}
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+
+        <div class="row col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-9 text-left alert alert-success alert-dismissible msgCred" role="alert" style="display:none;">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                The Submission is Successful and Email is Sent !!!!
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-9">
+                @Html.Partial("~/Areas/Credentialing/Views/CCM/_ViewContainer.cshtml")
+            </div>
+            <div class="col-lg-3">
+                <div class="col-lg-12 form-style zero-padding-left-right-div">
+                    <fieldset>
+                        <div class="legend2 pull-right">
+                            <a href="~/Profile/MasterProfile/ProviderProfile/{{temp.Profile.ProfileID}}" class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="View Profile" target="_blank"><i class="fa fa-eye"></i></a>
+                            <button class="btn btn-xs" onclick="toggleDiv('provider_detail_div');" toggle data-toggle="tooltip" data-placement="bottom" title="Expand/Collapse"><i class="fa fa-caret-down"></i></button>
+                        </div>
+                        <legend>
+                            Details
+                        </legend>
+                        @Html.Partial("~/Areas/Credentialing/Views/CCM/_Details.cshtml")
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /#page-wrapper -->

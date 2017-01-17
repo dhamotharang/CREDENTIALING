@@ -1,0 +1,101 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxisProduct.Models.ProviderProfileViewModel.WorkHistoryViewModel.PublicHealthServicesViewModel>
+@{
+    var PublicHealthServiceCount = 0;
+}
+<fieldset class="fsStyle" id="ViewPublicHeathService">
+    @*<span class="theme_depend text-uppercase TabHeading">PUBLIC HEALTH SERVICE</span>
+    <span class="text-uppercase pull-right">
+        <button class="btn btn-warning btn-xs historyBtnCSS" data-toggle="collapse" data-target="#PublicHealthService">
+            <i class="fa fa-history"></i>
+        </button>
+        <button class="btn btn-success btn-xs add_note_btn addBtnCSS" onclick="ShowHideAddView('AddEditPublicHeathService', 'ViewPublicHeathService')">
+            <i class="fa fa-plus"></i>
+        </button>
+    </span>*@
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            <span class="transparent-font-color">______________</span>
+             PUBLIC HEALTH SERVICE
+            <span class="transparent-font-color">______________</span>
+        </span>
+        &nbsp;&nbsp; <span class="text-uppercase ">
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-success btn-xs add_note_btn list-item" data-tab-path="/CredAxis/WorkHistory/GetPublicHealthServiceAddEditPartial?model=@Model&ActionType=Add" data-tab-container="PublicHealthServiceDiv">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/WorkHistory/GetPublicHealthServiceAddEditPartial?model=@Model&ActionType=Edit" data-tab-container="PublicHealthServiceDiv">
+                    <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn btn-warning btn-xs historyBtnCSS" data-toggle="collapse" data-target="#PublicHealthService">
+                    <i class="fa fa-history"></i>
+                </button>
+                <a class="print_button_for_PublicHealth hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                    <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                </a>
+            </span>
+        </span>
+    </legend>
+@foreach (var item in Model)
+{
+    PublicHealthServiceCount = PublicHealthServiceCount + 1;
+    if (PublicHealthServiceCount <= 2)
+    {
+
+        <div class="x_content zero-padding-left   mutiple-data">
+            <div class="SubHeaderSpacing1">
+                <span class="text-uppercase TableHeading">Public Health Service-@item.ID</span>&nbsp; <button onclick="groupmodalhistory('WorkHistory','RemovePublicHealthService','@item.ID','PublicHealthServiceDiv')" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</label>
+                <span class="theme_label_data">@item.StartDate</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</label>
+                <span class="theme_label_data">@item.EndDate</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.LastLocation) :</label>
+                <span class="theme_label_data">@item.LastLocation</span>
+            </div>
+        </div>
+
+        if (PublicHealthServiceCount == 2)
+        {
+            <span class="view-more pull-right" id="morePublicHealthService" data-toggle="collapse" data-target=".ViewMorePublicHealthService" onclick="ShowHideAddView('lessPublicHealthService', 'morePublicHealthService')">View More</span>
+        }
+    }
+    else
+    {
+
+        <div class="x_content zero-padding-left   mutiple-data collapse ViewMorePublicHealthService">
+            <div class="SubHeaderSpacing1">
+                <span class="text-uppercase TableHeading">Public Health Service-@item.ID</span>&nbsp; <button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</label>
+                <span class="theme_label_data">@item.StartDate</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</label>
+                <span class="theme_label_data">@item.EndDate</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.LastLocation) :</label>
+                <span class="theme_label_data">@item.LastLocation</span>
+            </div>
+        </div>
+    }
+    if (PublicHealthServiceCount == Model.Count())
+    {
+        <span class="view-more hidden pull-right" id="lessPublicHealthService" data-toggle="collapse" data-target=".ViewMorePublicHealthService" onclick="ShowHideAddView('lessPublicHealthService', 'morePublicHealthService')">View Less</span>
+    }
+
+}
+    <fieldset class="fsStyle collapse remove_shadow width-100" id="PublicHealthService">
+
+        @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/WorkHistory/PublicHealthService/_HistoryPublicHealthService.cshtml")
+
+    </fieldset>
+</fieldset>
+
+

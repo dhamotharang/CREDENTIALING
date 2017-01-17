@@ -1,0 +1,103 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Residency/Internship/Fellowship Details
+        </legend>
+        <div class="legend2 pull-right">
+            <button type="button" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="*List all training programs you attended, use one section per institution"><i class="fa fa-question"></i></button>
+        </div>
+        <div id="residency" class="panel-body">
+            <div class="form-style">
+                
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table ng-hide="ResidencyInternshipViewModel.length > 0 || visibilityControl == 'addresidencyInternshipViewModel'" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No Data Available for Residency/Internship/Fellowship Details! Please click on
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                    {
+                                        <button id="noDataAddNewInternshipDetails" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addresidencyInternshipViewModel')"><i class="fa fa-plus"></i></button>
+                                    }
+                                    to add new Residency/Internship/Fellowship Information
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-hide="ResidencyInternshipViewModel.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <th>Medical School Name</th>
+                                <th>Affiliated University/Hospital Name</th>
+                                <th>City</th>
+                                <th>Country</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="residencyInternshipViewModel in ResidencyInternshipViewModel track by $index">
+                            <tr>
+                                <td class="wrap-words">{{residencyInternshipViewModel.SchoolInformation.SchoolName}}</td>
+                                <td ng-if="residencyInternshipViewModel.HospitalName" class="wrap-words">{{residencyInternshipViewModel.HospitalName}}</td>
+                                <td ng-if="!residencyInternshipViewModel.HospitalName" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="residencyInternshipViewModel.SchoolInformation.City" class="wrap-words">{{residencyInternshipViewModel.SchoolInformation.City}}</td>
+                                <td ng-if="!residencyInternshipViewModel.SchoolInformation.City" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="residencyInternshipViewModel.SchoolInformation.Country" class="wrap-words">{{residencyInternshipViewModel.SchoolInformation.Country}}</td>
+                                <td ng-if="!residencyInternshipViewModel.SchoolInformation.Country" class="wrap-words"><i>Not Available</i></td>
+                                <td class="wrap-words">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                    {
+                                        <button tooltip data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewresidencyInternshipViewModel'); SetAddView('View')"><i class="fa fa-eye"></i></button>
+                                    }
+
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                    {
+                                        <button tooltip data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editresidencyInternshipViewModel',residencyInternshipViewModel); SetAddView('Add')"><i class="fa fa-edit"></i></button>
+                                    }
+
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                    {
+                                        <button id="addNewInternshipDetails" tooltip data-toggle="tooltip" data-placement="right" title="Add New" ng-hide="$index+1!=ResidencyInternshipViewModel.length" ng-click="operateViewAndAddControl('addresidencyInternshipViewModel')" class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button>
+                                    }
+
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                            {
+                                <tr ng-show="visibilityControl==($index+'_editresidencyInternshipViewModel')">
+                                    <td colspan="5" id="programEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditTrainingDetail.cshtml")
+                                    </td>
+                                </tr>
+                            }
+
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                            {
+                                <tr ng-show="visibilityControl==($index+'_viewresidencyInternshipViewModel')">
+                                    <td colspan="5" id="{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewTrainingDetail.cshtml")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @*<div ng-show="activeMessageDiv=='addedNewProgramDetails'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>*@  
+                </div>
+                <div class="clearfix"></div>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                {
+                    <div ng-show="visibilityControl=='addresidencyInternshipViewModel'">
+                        
+                        <div id="newProgramFormDiv">
+                            @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditTrainingDetail.cshtml")
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+</div>
+

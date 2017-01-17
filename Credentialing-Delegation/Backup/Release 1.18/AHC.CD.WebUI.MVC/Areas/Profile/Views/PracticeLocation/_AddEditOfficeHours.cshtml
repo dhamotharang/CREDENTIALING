@@ -1,0 +1,168 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.ProviderPracticeOfficeHourViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div ng-if="visibilitySecondControl == 'OfficeHoursEdit'" id="OfficeHourDiv">
+    <fieldset>
+        <legend>
+            Edit Office Hours
+        </legend>
+        <form id="OfficeHourForm{{$index}}">
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationDetailID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            <span ng-if="PracticeLocationDetail.OfficeHour.PracticeOfficeHourID">
+                @Html.HiddenFor(model => model.PracticeOfficeHourID, new { ng_value = "PracticeLocationDetail.OfficeHour.PracticeOfficeHourID" })
+            </span>
+            <div class="form-group ">
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <div class="col-md-2 form-group">
+                        <label class="control-label small">Day</label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="col-md-4 form-group">
+                            <label class="control-label small">Start Time</label>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label class="control-label small">End Time</label>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label class="control-label small">Actions</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="providerofficehoursdiv" class="col-md-12 zero-padding-left-right-div" ng-repeat="PracticeDay in PracticeLocationDetail.OfficeHour.PracticeDays">
+                    <input type="hidden" name="PracticeDays[{{$index}}].DayName" value="{{PracticeDay.DayName}}" />
+                    <input type="hidden" name="PracticeDays[{{$index}}].DayOfWeek" value="{{PracticeDay.DayOfWeek}}" />
+                    <div class="col-md-2 form-group">
+                        <label class="control-label small">{{PracticeDay.DayName}}</label>
+                    </div>
+                    <div class="col-md-10">
+                        <!-- ngRepeat: t in Days[0].Times -->
+                        <div ng-repeat="DailyHour in PracticeDay.DailyHours" class="col-md-12 zero-padding-left-right-div ng-scope">
+                            <div class="col-md-4 form-group">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control input-sm" name="PracticeDays[{{$parent.$index}}].DailyHours[{{$index}}].StartTime" id="startTime_{{$parent.$index}}{{$index}}" value="{{DailyHour.StartTime}}" samay-time-picker autocomplete="off" readonly="">
+                                    <span class="input-group-btn">
+                                        <button class="btn " type="button" samay-toggel>
+                                            <i class="fa fa-clock-o"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control input-sm" name="PracticeDays[{{$parent.$index}}].DailyHours[{{$index}}].EndTime" id="endTime_{{$parent.$index}}{{$index}}" value="{{DailyHour.EndTime}}" samay-time-picker autocomplete="off" readonly="">
+                                    <span class="input-group-btn">
+                                        <button class="btn" type="button" samay-toggel>
+                                            <i class="fa fa-clock-o"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label ng-show="$index==PracticeDay.DailyHours.length-1" class="btn btn-xs btn-success" ng-click="addDailyHour(PracticeDay.DailyHours)"><i class="fa fa-plus-circle"></i></label>
+                                <label ng-show="$index>0" class="btn btn-xs btn-danger" ng-click="removeDailyHour(PracticeDay.DailyHours, $index)">  <i class="fa fa-minus-circle"></i></label>
+                            </div>
+                            <span class="col-md-12 text-danger" id="msg_{{$parent.$index}}{{$index}}" ></span>
+                        </div><!-- end ngRepeat: t in Days[0].Times -->
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-2 remove-left-padding">
+                            @Html.LabelFor(model => model.AnyTimePhoneCoverageYesNoOption, new { @class = "control-label small" })
+                        </div>
+
+                        <div class="col-md-10">
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.AnyTimePhoneCoverageYesNoOption, (int)value, new { data_ng_model = "PracticeLocationDetail.OfficeHour.AnyTimePhoneCoverageYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AnyTimePhoneCoverageYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div ng-if="PracticeLocationDetail.OfficeHour.AnyTimePhoneCoverageYesNoOption=='1'" class="col-md-12 zero-padding-left-right-div">
+                    <div class="form-group col-md-3">
+
+                        @Html.LabelFor(model => model.AnsweringServiceYesNoOption, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.AnsweringServiceYesNoOption, (int)value, new { data_ng_model = "PracticeLocationDetail.OfficeHour.AnsweringServiceYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AnsweringServiceYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.VoiceMailToAnsweringServiceYesNoOption, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.VoiceMailToAnsweringServiceYesNoOption, (int)value, new { data_ng_model = "PracticeLocationDetail.OfficeHour.VoiceMailToAnsweringServiceYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.VoiceMailToAnsweringServiceYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.VoiceMailOtherYesNoOption, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.VoiceMailOtherYesNoOption, (int)value, new { data_ng_model = "PracticeLocationDetail.OfficeHour.VoiceMailOtherYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.VoiceMailOtherYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.AfterHoursTelephoneNumber, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <span ng-if="!tempObject.CountryCode" ng-init="tempObject.CountryDialCodes='+1'"></span>
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default countryCodeClass" ng-click="showContryCodeDiv('CountryCodeDiv')"> {{PracticeLocationDetail.OfficeHour.CountryCode||tempObject.CountryDialCodes}} <span class="caret"></span></button>
+                                </div>
+                                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='CountryCodeDiv'>
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select ng-model="tempObject.CountryDialCodes" name="CountryCode">
+                                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempObject.CountryCode">{{code.name}}({{code.dial_code}})</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @class = "form-control", data_ng_model = "PracticeLocationDetail.OfficeHour.Number" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CountryCode, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12"></div>
+
+                <div class="clearfix"></div>
+                <div ng-show="activeMessageDiv=='providerPracticeOfficeHoursErrorMsg'" class="alert alert-danger" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+                <div class="clearfix"></div>
+                
+                <div class="col-md-12 form-group">
+                    <button type="button" class="btn btn-warning btn-sm " ng-click="OfficeHoursEdit=false; operateSecondCancelControl('OfficeHourDiv'); hideClock();">Cancel</button>
+                    <button type="button" class="btn btn-success btn-sm pull-right " ng-click="validateDailyHours(PracticeLocationDetail.OfficeHour.PracticeDays, PracticeLocationDetail,'ProviderOfficeHour' , $index)">Save</button>
+                </div>
+
+            </div>
+        </form>
+    </fieldset>
+</div>

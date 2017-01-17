@@ -1,0 +1,584 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/SharedCss/jquery.circliful.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/bootstrap-duallistbox.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Jquery/select2.min.js"></script>
+<link href="~/Content/Provider/select2.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jquery.bootstrap-duallistbox.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Custom/Profile/CreateProfile.js"></script>
+<script src="~/Scripts/Custom/Profile/demographics.js"></script>
+<script src="~/Scripts/Shared/Data/disclosueQuestions.js"></script>
+<script src="~/Scripts/Custom/Profile/WorkHistory.js"></script>
+<script src="~/Scripts/Custom/Profile/Ethnicity.js"></script>
+<script src="~/Scripts/Custom/Profile/ServiceInfo.js"></script>
+<script src="~/Scripts/Custom/Profile/IdentificationLicense.js"></script>
+<script src="~/Scripts/Custom/Profile/ProfessionalReference.js"></script>
+<script src="~/Scripts/Custom/Profile/Education.js"></script>
+<script src="~/Scripts/Custom/Profile/hospital.js"></script>
+<script src="~/Scripts/Custom/Profile/PracticeLocation.js"></script>
+<script src="~/Scripts/Custom/Profile/proffesionalAffli.js"></script>
+<script src="~/Scripts/Custom/Profile/Util.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery.circliful.min.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/style.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/Profile/Util.css" rel="stylesheet" />
+<div id="page-wrapper" ng-app="profileApp">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="~/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Profile
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        
+        <div class="row" id="loadingData">
+            <div class="col-lg-12">
+                <div class="text-center">
+                    <span class="huge">Loading Profile Data Please Wait....</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">Loading ....</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Provider content form div -->
+        <div class="row" id="profileForm" style="display:none;">
+            <div class="col-lg-12">
+                Note: Only Demographics is been changed for DEMO.
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="form-group">
+                            <label class="control-label small col-lg-2">Profile Complete</label>
+                            <div class="col-lg-7">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                                        60%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3 text-right">
+                                <div class="col-lg-2"><a href="~/InitCredentialing/Index" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="left" title="Save"><i class="fa fa-save"></i></a></div>
+                                <div class="col-lg-2"><button class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Import & Update" onclick="openChildControlDiv('importDiv')"><i class="fa fa-download"></i></button></div>
+                                <div class="col-lg-2"><button class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Upload Docs" onclick="openChildControlDiv('uploadDiv')"><i class="fa fa-upload"></i></button></div>
+                                <div class="col-lg-2"><button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Download PDF"><i class="fa fa-cloud-download"></i></button></div>
+                                <div class="col-lg-2"><button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="right" title="Print"><i class="fa fa-print"></i></button></div>
+                            </div>
+                            <div class="col-lg-4" style="position: absolute;z-index: 1000;margin-top: 25px;right: 0px;">
+                                <div id="uploadDiv" class="form-group text-left contolDiv" style="display:none;">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <a class="pull-right text-danger" onclick="closeChildDiv('uploadDiv')"><i class="glyphicon glyphicon-remove"></i></a>
+                                            <h5 class="panel-title">Upload Documents</h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <div class="form-group-sm">
+                                                    <label class="control-label small">Upload Document</label>
+                                                    <div class="form-control text-center">
+                                                        <input type="file">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="control-label small">Select Document Type</label>
+                                                    <div class="text-center">
+                                                        <select class="form-control">
+                                                            <option>- Select Doc Type -</option>
+                                                            <option value="cv">CV</option>
+                                                            <option value="dea">DEA</option>
+                                                            <option value="BC">Birth Certificate</option>
+                                                            <option value="visa">Visa</option>
+                                                            <option value="visa">State License</option>
+                                                            <option value="visa">Medicare License</option>
+                                                            <option value="visa">Medicaid License</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <br />
+                                                <div class="form-group text-center">
+                                                    <button class="btn btn-xs btn-info"><i class="fa fa-upload"></i> Upload</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="importDiv" class="form-group text-left bg-gray contolDiv" style="display:none;">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading small">
+                                            <a class="pull-right text-danger" onclick="closeChildDiv('importDiv')"><i class="glyphicon glyphicon-remove"></i></a>
+                                            <h5 class="panel-title">Import & Update</h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="form-group-sm">
+                                                <label class="control-label small">CAQH Number</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control">
+                                                    <span class="btn input-group-addon"><i class="fa fa-download"></i></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group-sm">
+                                                <label class="control-label small">Upload Document</label>
+                                                <div class="input-group">
+                                                    <input type="file" class="form-control">
+                                                    <span class=" btn input-group-addon"><i class="fa fa-download"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <div role="tabpanel">
+                            @*<div class="col-lg-1 text-center">*@
+                            <!-- Nav tabs -->
+                            @*<ul class="nav nav-tabs-left nav-stacked" role="tablist" style="z-index:1000;">
+                                <li role="presentation" class="active" data-toggle="tooltip" data-placement="right" title="Demographics"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Ethnicity"><a href="#ethnicity" aria-controls="messages" role="tab" data-toggle="tab"><i class="fa fa-puzzle-piece"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Identification & Licenses"><a href="#identification" aria-controls="identification" role="tab" data-toggle="tab"><i class="fa fa-hospital-o"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Education History"><a href="#education" aria-controls="education" role="tab" data-toggle="tab"><i class="fa fa-mortar-board"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Practice Location Information"><a href="#practice" aria-controls="practice" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Hospital Privilege Information"><a href="#hospital" aria-controls="hospital" role="tab" data-toggle="tab"><i class="fa fa-h-square"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Professional Affiliation"><a href="#Professional" aria-controls="Professional" role="tab" data-toggle="tab"><i class="fa fa-medkit"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Service Information"><a href="#service" aria-controls="service" role="tab" data-toggle="tab"><i class="fa fa-medkit"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Work History"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-suitcase"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Professional Reference"><a href="#professionalreference" aria-controls="professionalreference" role="tab" data-toggle="tab"><i class="fa fa-user-md"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="Disclosure Questions"><a href="#disclosure" aria-controls="disclosure" role="tab" data-toggle="tab"><i class="fa fa-question-circle"></i></a></li>
+                                <li role="presentation" data-toggle="tooltip" data-placement="right" title="View All Plans"><a href="#Plans" aria-controls="Plans" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i></a></li>*@
+                            @*<li role="presentation" data-toggle="tooltip" data-placement="right" title="Document Checklist"><a href="#document" aria-controls="document" role="tab" data-toggle="tab"><i class="fa fa-file-o"></i></a></li>*@
+                            @* <li role="presentation" data-toggle="tooltip" data-placement="right" title="Timeline"><a href="#Timeline" aria-controls="Timeline" role="tab" data-toggle="tab"><i class="fa fa-history"></i></a></li>*@
+
+
+                            @*</ul>
+                                </div>*@
+
+                            <div class="col-lg-3 small" style="padding:0px;">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" name="search" placeholder="Search"><span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                </div>
+                                <div class="tree pre-scrollable bodyheight" style="padding:0px;max-height: 470px; overflow-y: auto;background-color: white;">
+                                    <ul>
+                                        <li>
+                                            <span data="demographics"><i class="fa fa-minus"></i> Demographic</span> <i class="text-success"> <i class="fa fa-check-circle fa-1x"></i></i>
+                                            <ul>
+                                                <li onclick="openSubSection(this, 'PersonalDetails')">
+                                                    <span class=""><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li onclick="openSubSection(this, 'OtherLegalNames')">
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li onclick="openSubSection(this, 'HomeAddress')">
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li onclick="openSubSection(this, 'ContactDetails')">
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li onclick="openSubSection(this, 'PersonalIdentification')">
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Ethinicity</span><i class="text-warning"> <i class="fa fa-warning fa-1x"></i></i>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Identification & Licenses</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Education History</span><i class="text-danger"> <i class="fa fa-minus-circle fa-1x"></i></i>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Practice Location Information</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Hospital Privilege Information</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Professional Affiliation</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Service Information</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Work History</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Professional Referrence</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> Disclosure Questions</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <span class=""><i class="fa fa-minus"></i> View All Plans</span>
+                                            <ul>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Other Legal Names</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Home Address</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Contact Details</span>
+                                                </li>
+                                                <li>
+                                                    <span><i class="fa fa-leaf"></i> Personal Identification</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9" style="position:relative;">
+                                <!-- Tab panes -->
+                                <div class="tab-content col-lg-12 pre-scrollable bodyheight" style="max-height: 500px; overflow-y: auto;">
+                                    <div role="tabpanel" class="tab-pane active" id="home">
+                                        <!---Demographics partial starts here-->
+                                        @Html.Partial("_Demographics")
+                                        <!---Demographics partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="profile">
+
+                                        <!---work history partial starts here-->
+                                        @Html.Partial("_Workhistory")
+                                        <!---work history partial ends here-->
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="Professional">
+                                        <!---_ProfessionalAffilation partial starts here-->
+                                        @Html.Partial("_ProfessionalAffilation")
+                                        <!---_ProfessionalAffilation partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="ethnicity">
+                                        <!---Ethnicity partial starts here-->
+                                        @Html.Partial("_Ethnicity")
+                                        <!---Ethnicity partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="service">
+                                        <!---Service partial starts here-->
+                                        @Html.Partial("_ServiceHistory")
+                                        <!---Service partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="identification">
+                                        <!---Licensing & Identification partial starts here-->
+                                        @Html.Partial("_IdentificationLicensing")
+                                        <!---Licensing & Identification partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="education">
+                                        <!---Licensing & Identification partial starts here-->
+                                        @Html.Partial("_Education")
+                                        <!---Licensing & Identification partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="practice">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("_PracticeLocationInformation")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="professionalreference">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("_ProfessionalReference")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="disclosure">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("_DisclosureQuestions")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="hospital">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("_HospitalPrivilegeInformation")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+
+                                    @*<div role="tabpanel" class="tab-pane" id="document">
+                                            <!---Documents partial starts here-->
+                                            @Html.Partial("_DocumentsChecklist")
+                                            <!---Documents partial ends here-->
+                                        </div>*@
+
+
+                                    <div role="tabpanel" class="tab-pane" id="Plans">
+                                        <!---Practice Location Information partial starts here-->
+                                        @Html.Partial("_ViewAllPlans")
+                                        <!---Practice Location Information partial ends here-->
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="col-lg-3">
+                    <!---Info Div partial starts here-->
+                    @Html.Partial("_info_div")
+                    <!---Info Div partial ends here-->
+                </div>*@
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
+
+
+<script type="text/javascript">
+
+    $('input').prop('autocomplete', 'off');
+
+    $(document).ready(function () {
+
+        $('.collapse').on('shown.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+        }).on('hidden.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+        $('[name=duallistbox_demo1]').bootstrapDualListbox();
+
+        //$("#sidemenu").slideUp();
+        //$("#page-wrapper").addClass("menuup");
+        $('#myStathalf').circliful();
+        $("#loadingData").hide("fast", function () { $("#profileForm").show() });
+    });
+    var specSub=true;
+    $(function () {
+        $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+        $('.parent_li').find(' > ul').find(' > li').find(' > span').addClass('child_li');
+        $('.parent_li').find(' > ul > li').hide('fast');
+        $('.parent_li').find(' > span').find(' > i').addClass('fa-plus').removeClass('fa-minus');
+        $('.tree li.parent_li > span').on('click', function (e) {
+            var children = $(this).parent('li.parent_li').find(' > ul > li');            
+            if (children.is(":visible") && specSub) {
+                children.hide('fast');
+                $(this).attr('title', 'Expand this branch').find(' > i').addClass('fa-plus').removeClass('fa-minus');
+            } else if (children.is(":visible") && !specSub) {                
+                $("#" + $(this).attr("data")).find(".subSection").show();
+            }
+            else {
+                $('.parent_li').find(' > ul > li').hide('fast');
+                $('.parent_li').find(' > span').find(' > i').addClass('fa-plus').removeClass('fa-minus');
+                children.show('fast');
+                $(this).attr('title', 'Collapse this branch').find(' > i').addClass('fa-minus').removeClass('fa-plus');
+            }
+            e.stopPropagation();
+        });
+
+        $('.subSection').on('focus', function (e) { 
+            console.log($(e).id()); 
+        });
+
+        $()
+    });
+
+
+    var openSubSection = function (e, val) {
+        $(".bg-info").removeClass("bg-info");
+        $(e).find(' > span').addClass("bg-info");
+        $(".subSection").hide("fast", function () { $("#" + val).show(); });
+        specSub = false;
+    };
+
+
+
+    //$(function(){
+    //$(".bodyheight")
+    //})
+</script>

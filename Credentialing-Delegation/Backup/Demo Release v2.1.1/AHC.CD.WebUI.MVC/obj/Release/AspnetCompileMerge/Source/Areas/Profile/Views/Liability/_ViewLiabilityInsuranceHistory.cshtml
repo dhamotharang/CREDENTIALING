@@ -1,0 +1,188 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalLiability.ProfessionalLiabilityInfoViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<fieldset class="wrap-words">
+    <legend>
+        Professional Liability
+    </legend>
+    <div class="form-style">
+        <div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-md-6 form-group" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                    @Html.LabelFor(p => p.InsuranceCarrierID, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrier.Name || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-md-6 form-group" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                    @Html.LabelFor(p => p.InsuranceCarrierAddressID, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.LocationName || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Street/P. O. Box No:</label>
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.Street || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Building</label>
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.Building || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">City</label>
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.City || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">State</label>
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.State || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Zip Code</label>
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.ZipCode || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Country</label>
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.Country || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">County</label>
+                    <div>
+                        <i class="data-label">{{LiHistory.InsuranceCarrierAddress.County || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.SelfInsuredYesNoOption, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.SelfInsured || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-3" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                    @Html.LabelFor(p => p.InsuranceCoverageType, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.CoverageType || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                    @Html.LabelFor(p => p.OriginalEffectiveDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.OriginalEffectiveDate| date:'MM-dd-yyyy'}}</i>
+                        <i ng-show="!LiHistory.OriginalEffectiveDate">Not Available</i>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                    @Html.LabelFor(p => p.EffectiveDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.EffectiveDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                    @Html.LabelFor(p => p.ExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.ExpirationDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div><br ng-if="LiHistory.HistoryStatus != 'Renewed'">
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                <div class="col-md-4 form-group">
+                    <div>
+                        @Html.LabelFor(p => p.PolicyNumber, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                            {
+                                <i class="data-label">#######</i>
+                            }
+                            else
+                            {
+                                <i class="data-label">{{LiHistory.PolicyNumber || 'Not Available'}}</i>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(p => p.AmountOfCoveragePerOccurance, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.AmountOfCoveragePerOccurance}}</i>
+                        <i ng-show="!LiHistory.AmountOfCoveragePerOccurance">Not Available</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(p => p.AmountOfCoverageAggregate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.AmountOfCoverageAggregate}}</i>
+                        <i ng-show="!LiHistory.AmountOfCoverageAggregate">Not Available</i>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div><br ng-if="LiHistory.HistoryStatus != 'Renewed'">
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="LiHistory.HistoryStatus != 'Renewed'">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(p => p.UnlimitedCoverageWithInsuranceCarrierOption, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.UnlimitedCoverageWithInsuranceCarrier}}</i>
+                        <i class="data-label" ng-show="!LiHistory.UnlimitedCoverageWithInsuranceCarrierOption">Not Available</i>
+                    </div>
+                </div>
+                <div class=" col-md-4 form-group">
+                    @Html.LabelFor(p => p.PolicyIncludesTailCoverageOption, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label" ng-hide="!LiHistory.PolicyIncludesTailCoverageOption">{{LiHistory.PolicyIncludesTailCoverage}}</i>
+                        <i class="data-label" ng-show="!LiHistory.PolicyIncludesTailCoverageOption">Not Available</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Phone Number </label>
+                    <div>
+                        <i class="data-label">{{LiHistory.PhoneNumber || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-md-3 form-group" ng-if="LiHistory.HistoryStatus == 'Renewed'">
+                    @Html.LabelFor(p => p.EffectiveDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.IssueDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group" ng-if="LiHistory.HistoryStatus == 'Renewed'">
+                    @Html.LabelFor(p => p.ExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{LiHistory.ExpiryDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+                <div class=" col-md-6 form-group">
+                    <label class="control-label small">Supporting Document</label>
+                    <br>
+                    <div ng-show="LiHistory.InsuranceCertificatePath!=null">
+                        <i class="data-label"><a href="/Document/View?path={{LiHistory.InsuranceCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Liability Insurance Certificate"><i class="fa fa-file"></i></a></i>
+                    </div>
+                    <div ng-show="!LiHistory.InsuranceCertificatePath">
+                        Not Available
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+                <button class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+            </div>
+        </div>
+    </div>
+</fieldset>

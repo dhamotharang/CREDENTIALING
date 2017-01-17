@@ -1,0 +1,178 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.ContactDetailViewModel
+
+<form id="DemographicsContactDetailsForm">
+    <div class="col-lg-12 text-right">
+        <span class="instruction-style">
+            Please select a mode of contact to change its priority.
+        </span>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="form-group col-md-4">
+            <label for="MobileNo" class="control-label small">Home Phone *</label>
+            <a ng-click="AddPhones(TempContactDetailsForEdit.PhoneDetails.HomePhones,'Home')" class="label label-primary pull-right pointer" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-plus-circle"></i> Add</a>
+            <div ng-repeat="thp in TempContactDetailsForEdit.PhoneDetails.HomePhones track by $index" class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('HomePhoneCountryCode'+$index)"> {{thp.CountryCode}} <span class="caret"></span></button>
+                </div>
+                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="HomePhoneCountryCode{{$index}}">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title">Select Country Dial Code</h3>
+                    <div class="popover-content">
+                        <select ng-model="thp.CountryCode" id="ContactContryCode">
+                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == thp.CountryCode">{{code.name}}({{code.dial_code}})</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="text" ng-model="thp.Number" class="form-control" placeholder="phone number">
+                <span class="input-group-addon">
+                    <a class="text-primary pointer" ng-click="ContactDetailsConditionFunction($index, TempContactDetailsForEdit.PhoneDetails.HomePhones, 'IsPrimary')">
+                        <i ng-if="thp.Preference=='Primary'" class="fa fa-arrow-up text-success" data-toggle="tooltip" data-placement="top" title="This is Primary"></i>
+                        <i ng-if="thp.Preference != 'Primary'" class="fa fa-arrow-down text-warning" data-toggle="tooltip" data-placement="top" title="This is Not Primary"></i>
+                    </a>
+                    <a ng-if="thp.Status=='Active' && thp.PhoneDetailID && TempContactDetailsForEdit.PhoneDetails.HomePhones.length > 1 && thp.Preference != 'Primary'" ng-click="showConfirmation()" data-toggle="tooltip" data-placement="top" title="Remove" class="text-danger pointer">
+                        <i class="fa fa-hand-o-up"></i>
+                    </a>
+                    <a ng-if="thp.Status=='Active' && !thp.PhoneDetailID && TempContactDetailsForEdit.PhoneDetails.HomePhones.length > 1 && thp.Preference != 'Primary'" ng-click="RemoveContactDetails($index,TempContactDetailsForEdit.PhoneDetails.HomePhones)" class="text-danger pointer" data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-minus-circle"></i></a>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="MobileNo" class="control-label small">Home Fax *</label>
+            <a ng-click="AddPhones(TempContactDetailsForEdit.PhoneDetails.HomeFaxes,'Fax')" class="label label-primary pull-right pointer" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-plus-circle"></i> Add</a>
+            <div ng-repeat="thf in TempContactDetailsForEdit.PhoneDetails.HomeFaxes track by $index" class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('HomeFaxCountryCode'+$index)"> {{thf.CountryCode}} <span class="caret"></span></button>
+                </div>
+                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="HomeFaxCountryCode{{$index}}">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title">Select Country Dial Code</h3>
+                    <div class="popover-content">
+                        <select ng-model="thf.CountryCode" id="ContactContryCode">
+                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == thf.CountryCode">{{code.name}}({{code.dial_code}})</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="text" ng-model="thf.Number" class="form-control" placeholder="fax number">
+                <span class="input-group-addon">
+                    <a class="text-primary pointer" ng-click="ContactDetailsConditionFunction($index, TempContactDetailsForEdit.PhoneDetails.HomeFaxes, 'IsPrimary')">
+                        <i ng-if="thf.Preference=='Primary'" class="fa fa-arrow-up text-success" data-toggle="tooltip" data-placement="top" title="This is Primary"></i>
+                        <i ng-if="thf.Preference != 'Primary'" class="fa fa-arrow-down text-warning" data-toggle="tooltip" data-placement="top" title="This is Not Primary"></i>
+                    </a>
+                    <a ng-if="thf.Status=='Active' && thf.PhoneDetailID && TempContactDetailsForEdit.PhoneDetails.HomeFaxes.length > 1 && thf.Preference != 'Primary'" ng-click="showConfirmation()" data-toggle="tooltip" data-placement="top" title="Remove" class="text-danger pointer">
+                        <i class="fa fa-hand-o-up"></i>
+                    </a>
+                    <a ng-if="thf.Status=='Active' && !thf.PhoneDetailID && TempContactDetailsForEdit.PhoneDetails.HomeFaxes.length > 1 && thf.Preference != 'Primary'" ng-click="RemoveContactDetails($index,TempContactDetailsForEdit.PhoneDetails.HomeFaxes)" class="text-danger pointer" data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-minus-circle"></i></a>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="MobileNo" class="control-label small">Mobile Number *</label>
+            <a ng-click="AddPhones(TempContactDetailsForEdit.PhoneDetails.HomeMobiles,'Mobile')" class="label label-primary pull-right pointer" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-plus-circle"></i> Add</a>
+            <div ng-repeat="hm in TempContactDetailsForEdit.PhoneDetails.HomeMobiles track by $index" class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('MobileNumberCountryCode'+$index)"> {{hm.CountryCode}} <span class="caret"></span></button>
+                </div>
+                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="MobileNumberCountryCode{{$index}}">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title">Select Country Dial Code</h3>
+                    <div class="popover-content">
+                        <select ng-model="hm.CountryCode" id="ContactContryCode">
+                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == hm.CountryCode">{{code.name}}({{code.dial_code}})</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="text" ng-model="hm.Number" class="form-control" placeholder="mobile number">
+                <span class="input-group-addon">
+                    <a class="text-primary pointer" ng-click="ContactDetailsConditionFunction($index, TempContactDetailsForEdit.PhoneDetails.HomeMobiles, 'IsPrimary')">
+                        <i ng-if="hm.Preference=='Primary'" class="fa fa-arrow-up text-success" data-toggle="tooltip" data-placement="top" title="This is Primary"></i>
+                        <i ng-if="hm.Preference != 'Primary'" class="fa fa-arrow-down text-warning" data-toggle="tooltip" data-placement="top" title="This is Not Primary"></i>
+                    </a>
+                    <a ng-if="hm.Status=='Active' && hm.PhoneDetailID && TempContactDetailsForEdit.PhoneDetails.HomeMobiles.length > 1 && hm.Preference != 'Primary'" ng-click="showConfirmation()" data-toggle="tooltip" data-placement="top" title="Remove" class="text-danger pointer">
+                        <i class="fa fa-hand-o-up"></i>
+                    </a>
+                    <a ng-if="hm.Status=='Active' && !hm.PhoneDetailID && TempContactDetailsForEdit.PhoneDetails.HomeMobiles.length > 1 && hm.Preference != 'Primary'" ng-click="RemoveContactDetails($index,TempContactDetailsForEdit.PhoneDetails.HomeMobiles)" class="text-danger pointer" data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-minus-circle"></i></a>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6 zero-padding-left-right-div">
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.PreferredWrittenContacts, new { @class = "control-label small" })
+                <div class="col-sm-8" style="height:90px; overflow-y:auto;">
+                    <table class="table-condensed col-lg-12" style="table-layout:fixed;">
+                        <tbody>
+                            <tr ng-repeat="pwc in TempPreferredWrittenContact" ng-click="selectedpwc(pwc,$index)">
+                                <td ng-class="{true:'label-warning'}[pwcIndex==$index]">{{pwc.ContactType}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-2">
+                    <i ng-if="pwcPriority" class="fa fa-arrow-circle-up btn btn-xs btn-primary" ng-click="ChangePreferredWrittenContactsPriority('increase')" data-toggle="tooltip" data-placement="top" title="Increase Priority"></i>
+                    <i ng-if="pwcPriority" class="fa fa-arrow-circle-down fa-align-center btn btn-xs btn-primary" ng-click="ChangePreferredWrittenContactsPriority('decrease')" data-toggle="tooltip" data-placement="top" title="Decrease Priority"></i>
+                </div>
+            </div>
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.PreferredContacts, new { @class = "control-label small" })
+                <div style="height:90px; overflow-y:auto;" class="col-sm-8">
+                    <table class="table-condensed col-lg-12" style="table-layout:fixed;">
+                        <tbody>
+                            <tr ng-repeat="pc in TempPreferredContact" ng-click="selectedpc(pc,$index)">
+                                <td ng-class="{true:'label-warning'}[pcIndex==$index]">{{pc.ContactType}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-2">
+                    <i ng-if="pcPriority" class="fa fa-arrow-circle-up btn btn-xs btn-primary" ng-click="ChangePreferredContactsPriority('increase')" data-toggle="tooltip" data-placement="top" title="Increase Priority"></i>
+                    <i ng-if="pcPriority" class="fa fa-arrow-circle-down fa-align-center btn btn-xs btn-primary" ng-click="ChangePreferredContactsPriority('decrease')" data-toggle="tooltip" data-placement="top" title="Decrease Priority"></i>
+                </div>
+                
+                @Html.ValidationMessageFor(model => model.PreferredContacts, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-6 zero-padding-left-right-div" style="margin-bottom: 10px;">
+            <div class="col-lg-12">
+                <label class="control-label small">Email Id *</label>
+                <a ng-click="AddEmail(TempContactDetailsForEdit.EmailIDs)" class="label label-primary pull-right pointer" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-plus-circle"></i> Add</a>
+                <div ng-repeat="email in TempContactDetailsForEdit.EmailIDs track by $index" class="input-group">
+                    <input type="email" ng-model="email.EmailAddress" class="form-control" placeholder="email-id">
+                    <span class="input-group-addon">
+                        <a class="text-primary pointer" ng-click="ContactDetailsConditionFunction($index, TempContactDetailsForEdit.EmailIDs, 'IsPrimary')">
+                            <i ng-if="email.Preference=='Primary'" class="fa fa-arrow-up text-success" data-toggle="tooltip" data-placement="top" title="This is Primary"></i>
+                            <i ng-if="email.Preference != 'Primary'" class="fa fa-arrow-down text-warning" data-toggle="tooltip" data-placement="top" title="This is Not Primary"></i>
+                        </a>
+                        <a ng-if="email.Status=='Active' && email.EmailDetailID && TempContactDetailsForEdit.EmailIDs.length > 1 && email.Preference != 'Primary'" ng-click="showConfirmation()" data-toggle="tooltip" data-placement="top" title="Remove" class="text-danger pointer">
+                            <i class="fa fa-hand-o-up"></i>
+                        </a>
+                        <a ng-if="email.Status=='Active' && !email.EmailDetailID && TempContactDetailsForEdit.EmailIDs.length > 1 && email.Preference != 'Primary'" ng-click="RemoveContactDetails($index,TempContactDetailsForEdit.EmailIDs)" class="text-danger pointer" data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-minus-circle"></i></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <button class="btn btn-sm btn-warning" ng-click="ContactDetailsToggle()">Cancel</button>
+        <button class="btn btn-sm btn-success pull-right" ng-click="saveContactDetails(TempContactDetailsForEdit)">Save</button>
+    </div>
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="ConfirmationContactDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure, want to remove Number - +1-7878765454
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>

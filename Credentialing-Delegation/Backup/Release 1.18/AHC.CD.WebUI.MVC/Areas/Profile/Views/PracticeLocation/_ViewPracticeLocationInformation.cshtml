@@ -1,0 +1,126 @@
+﻿@*Practice Location Facility Information Start*@
+<fieldset>
+    <legend>
+        Practice Location / Facility Details
+    </legend>
+    <div class="legend2 pull-right">
+        <button ng-if="visibilityControl!=('editPracticeLocation')" ng-click="operateEditControl('editPracticeLocation', PracticeLocationDetail.Facility); assignCityComponentForFacility();" class="btn btn-xs btn-primary" title="Edit" tooltip><i class="fa fa-edit"></i></button>
+        <button ng-if="visibilityControl==('editPracticeLocation')" ng-click="operateCancelControl(''); " class="btn btn-xs btn-default" title="Edit" tooltip><i class="fa fa-eye"></i></button>
+        <button ng-if="visibilityControl!=('editPracticeLocation')" class="btn btn-default btn-xs" ng-click="PanelToggle('practicefacilityview');" title="Toggle View" tooltip><i class="fa fa-th-list"></i></button>
+        <button ng-if="visibilityControl==('editPracticeLocation')" class="btn btn-default btn-xs" ng-click="PanelToggle('practicefacilityedit');" title="Toggle View" tooltip><i class="fa fa-th-list"></i></button>
+    </div>
+    <div id="practicefacilityview" ng-if="visibilityControl!=('editPracticeLocation')">
+        @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewFacilityInformation.cshtml")
+    </div>
+    <div id="practicefacilityedit" ng-if="visibilityControl==('editPracticeLocation')">
+        @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditFacilityData.cshtml")
+    </div>
+    <div class="clearfix"></div>
+    <div ng-show="activeMessageDiv=='updatedFacility'" class="alert alert-success" role="alert">
+        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+        {{messageDesc}}
+    </div>
+</fieldset>
+@*Practice Location Facility Information End*@
+
+@*Practice Location Other Information Start*@
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Other Information
+        </legend>
+        <div ng-hide="GeneralInformationEdit" class="legend2 pull-right">
+            <button ng-click="editGeneralInfo(PracticeLocationDetail)" class="btn btn-xs btn-primary" title="Edit" tooltip><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-show="!GeneralInformationEdit">
+            @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewGeneralInformation.cshtml")
+        </div>
+
+        <div ng-show="GeneralInformationEdit">
+            <form id="updatePracticeLocationDetails">
+                @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditGeneralInformation.cshtml")
+            </form>
+            <div class="col-lg-12">
+                <div class="control-group">
+                    <button class="btn btn-warning btn-sm" ng-click="editGeneralCancel()">Cancel</button>
+                    <button class="btn btn-success btn-sm pull-right" ng-click="updatePracticeLocationDetailInformaton($index)">Update</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='UpdatePracticeLocation'" class="alert alert-success" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+        </div>
+    </fieldset>
+</div>
+@*Practice Location Other Information End*@
+<!--Office manager-->
+<div class="form-style">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewOfficeManager.cshtml")
+
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditOfficeManager.cshtml")
+</div>
+
+<!--Office Hours-->
+<div class="form-style">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewOfficeHours.cshtml")
+
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditOfficeHours.cshtml")
+</div>
+
+<!--Open Practice Status-->
+<div class="form-style">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewOpenStatus.cshtml")
+
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditOpenStatus.cshtml")
+</div>
+
+<!--Billing Contact-->
+<div class="form-style">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewBillingContact.cshtml")
+
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditBillingContact.cshtml")
+</div>
+
+<!--Payment Remittance-->
+<div class="form-style">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewPayment.cshtml")
+
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditPayment.cshtml")
+</div>
+
+
+<div class="form-style" ng-if="providerLevel=='Physician'">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_MidLevelPractitioners.cshtml")
+</div>
+
+<div class="form-style" ng-if="providerLevel=='Mid-Level'">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_SupervisingProviders.cshtml")
+</div>
+
+<!--Partners-->
+ <div class="form-style">
+        @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_Partners.cshtml")
+    </div>
+
+
+    <!--Credentialing Contact-->
+    <div class="form-style">
+        @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_CredentialingContact.cshtml")
+    </div>
+
+<!--Workers compensation-->
+<div class="form-style">
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewWorkerCompensation.cshtml")
+
+    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditWorkerCompensation.cshtml")
+</div>
+
+<div class="clearfix"></div>
+<div ng-show="activeMessageDiv=='addedNewPracticeLocation'" class="alert alert-success" role="alert">
+    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+</div>
+<div class="clearfix"></div><br />
+<button type="button" class="btn btn-warning btn-sm pull-left" ng-click="operateViewControlPracLoc('');">Cancel</button>

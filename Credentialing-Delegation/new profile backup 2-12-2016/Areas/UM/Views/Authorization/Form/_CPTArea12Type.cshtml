@@ -1,0 +1,327 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PratianUI
+@using PortalTemplate.Helper
+
+<div class="x_panel border_on_panel CPTAreaPos12" id="CPTAreaContainer">
+    <div class="x_content zero_padding_bottom">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right">
+            <button class="btn btn-primary btn-xs addcptrangebtn bold_text pull-left" type="button">Add CPT Range</button>
+        </div>
+    </div>
+    <div class="x_content mozillamargintop">
+        <div class="CPTRowLabelHeader">
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 zero-padding-left-right">
+                <span class="theme_label"> <label> @Html.ShortNameFor(e => e.CPTCodes[0].CPTCode) </label> </span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 zero-padding-left-right">
+                <span class="theme_label">@Html.LabelFor(e => e.CPTCodes[0].Modifier)</span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-6 col-xs-3 zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].CPTDesc)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].Discipline)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].RequestedUnits)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].Range1)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].NumberPer)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].Range2)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].TotalUnits)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 pull-left button-styles-xs row-action zero-padding-left-right">
+                <span class="theme_label">@Html.Label("ACTION")</span><br />
+            </div>
+
+            <div class="clearfix">
+
+            </div>
+        </div>
+
+        <div id="CPTArea">
+            @{
+                int i = 0;
+            }
+            @if (Model != null && Model.CPTCodes != null && Model.CPTCodes.Count() > 0)
+            {
+                foreach (var item in Model.CPTCodes)
+                {
+                    <div class="CPTRow" id="0">
+                        <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4   zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.CPTCodes[@i].CPTCode, new { @class = "form-control input-xs mandatory_field_halo cptCode_search_cum_dropdown cptCodes summaryDataChange", @placeholder = "CPT Code" })
+                            @Html.ValidationMessageFor(e => e.CPTCodes[@i].CPTCode)
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4  zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.CPTCodes[@i].Modifier, new { @class = "form-control input-xs cptModifier", @placeholder = "MODIFIER" })
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-6 col-xs-3 zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.CPTCodes[@i].CPTDesc, new { @class = "form-control input-xs mandatory_field_halo cptDescription_search_cum_dropdown cptDescriptions summaryDataChange", @placeholder = "DESCRIPTION" })
+                            @Html.ValidationMessageFor(e => e.CPTCodes[@i].CPTDesc)
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-6 col-xs-3 zero-padding-left-right">
+                            @Html.DropDownListFor(e => e.CPTCodes[@i].Discipline, new SelectList((System.Collections.IEnumerable)ViewData["MasterDisciplineTypes"], "Name", "Name"), "SELECT", new { @class = "form-control input-xs cptDiscipline text-uppercase", @tabindex = "-1" })
+                        </div>
+                        <div class="col-lg-1 col-md-2 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.CPTCodes[@i].RequestedUnits, new { @class = "form-control input-xs cptReqUnits cptUnits", @placeholder = "REQ UNITS" })
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-6 col-xs-3 zero-padding-left-right">
+                            @Html.DropDownListFor(e => e.CPTCodes[@i].Range1, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs cptRange1 text-uppercase cptUnits" })
+                        </div>
+                        <div class="col-lg-1 col-md-2 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.CPTCodes[@i].NumberPer, new { @class = "form-control input-xs cptNoPer cptUnits", @placeholder = "No Per" })
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-6 col-xs-3 zero-padding-left-right">
+                            @Html.DropDownListFor(e => e.CPTCodes[@i].Range2, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs cptRange1 text-uppercase cptUnits" })
+                        </div>
+                        <div class="col-lg-1 col-md-2 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.CPTCodes[@i].TotalUnits, new { @class = "form-control input-xs cptTotalUnits summaryDataChange", @placeholder = "Total Units" })
+                        </div>
+                        @*<div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action  zero-padding-left-right">*@
+                        @if (Model.CPTCodes.Count() == i + 1 && Model.CPTCodes.Count() != 1)
+                        {
+                            <div class="col-lg-1 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action  zero-padding-left-right">
+                                <span class="cptButtonArea">
+                                    <button class="btn btn-danger btn-xs minusButton" type="button"><i class="fa fa-minus"></i></button>
+                                    <button class="btn btn-success btn-xs plusButton" type="button" style="margin-left:-3px"><i class="fa fa-plus"></i></button>
+                                </span>
+                            </div>
+                            <div class="col-lg-1 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action  zero-padding-left-right">
+                                <span>
+                                    @*@Html.PratianUiCheckboxFor(e => e.CPTCodes[@i].IncludeLetter, new { @class = "includeLetter", @tabindex = "-1", @value = "IncLetter" })*@
+                                    @*<button class="btn btn-success btn-xs bold_text loser_field plainLanguageLetter plain_language_btn" type="button">PL</button>*@
+                                    <button class="btn btn-danger btn-xs smartIntelligenceBtn bold_text calypso_ai_btn" type="button"> CALYPSO AI</button>
+                                </span>
+                            </div>
+
+                        }
+                        else if (Model.CPTCodes.Count() == 1)
+                        {
+                            <div class="col-lg-1 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action  zero-padding-left-right PlusBtnPos12_IndexZero_Div">
+                                <span class="cptButtonArea">
+                                    <button class="btn btn-success btn-xs plusButton" type="button"><i class="fa fa-plus"></i></button>
+                                </span>
+                            </div>
+                            <div class="col-lg-1 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action  zero-padding-left-right">
+                                <span>
+                                    @*@Html.PratianUiCheckboxFor(e => e.CPTCodes[@i].IncludeLetter, new { @class = "includeLetter", @tabindex = "-1", @value = "IncLetter" })*@
+                                    @*<button class="btn btn-success btn-xs  bold_text loser_field plainLanguageLetter plain_language_btn" type="button">PL</button>*@
+                                    <button class="btn btn-danger btn-xs smartIntelligenceBtn bold_text calypso_ai_btn" type="button"> CALYPSO AI</button>
+                                </span>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="col-lg-1 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action  zero-padding-left-right">
+                                <span class="cptButtonArea">
+                                    <button class="btn btn-danger btn-xs minusButton" type="button"><i class="fa fa-minus"></i></button>
+                                    @*<button class="btn btn-success btn-xs plusButton" type="button"><i class="fa fa-plus"></i></button>*@
+                                </span>
+                            </div>
+                            <div class="col-lg-1 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action  zero-padding-left-right">
+                                <span>
+                                    @*@Html.PratianUiCheckboxFor(e => e.CPTCodes[@i].IncludeLetter, new { @class = "includeLetter", @tabindex = "-1", @value = "IncLetter" })*@
+                                </span>
+                            </div>
+                        }
+                        @*</div>*@
+                        <div class="clearfix"></div>
+                    </div>
+                        i++;
+                }
+            }
+            else
+            {
+                <div class="CPTRow" id="0">
+                    <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.CPTCodes[0].CPTCode, new { @class = "form-control input-xs mandatory_field_halo cptCode_search_cum_dropdown cptCodes summaryDataChange", @placeholder = "CPT Code" })
+                        @Html.ValidationMessageFor(e => e.CPTCodes[0].CPTCode)
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4  zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.CPTCodes[0].Modifier, new { @class = "form-control input-xs cptModifier", @placeholder = "MODIFIER" })
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-3 zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.CPTCodes[0].CPTDesc, new { @class = "form-control input-xs mandatory_field_halo cptDescription_search_cum_dropdown cptDescriptions summaryDataChange", @placeholder = "DESCRIPTION" })
+                        @Html.ValidationMessageFor(e => e.CPTCodes[0].CPTDesc)
+                    </div>
+                    <div class="col-lg-1 col-md-3 col-sm-6 col-xs-3 zero-padding-left-right">
+                        @Html.DropDownListFor(e => e.CPTCodes[0].Discipline, new SelectList((System.Collections.IEnumerable)ViewData["MasterDisciplineTypes"], "Name", "Name"), "SELECT", new { @class = "form-control input-xs cptDiscipline text-uppercase", @tabindex = "-1" })
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.CPTCodes[0].RequestedUnits, new { @class = "form-control input-xs cptReqUnits cptUnits", @placeholder = "REQ UNITS" })
+                    </div>
+                    <div class="col-lg-1 col-md-3 col-sm-6 col-xs-3 zero-padding-left-right">
+                        @Html.DropDownListFor(e => e.CPTCodes[0].Range1, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs cptRange1 cptUnits text-uppercase" })
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.CPTCodes[0].NumberPer, new { @class = "form-control input-xs cptNoPer cptUnits", @placeholder = "Number Per" })
+                    </div>
+                    <div class="col-lg-1 col-md-3 col-sm-6 col-xs-3 zero-padding-left-right">
+                        @Html.DropDownListFor(e => e.CPTCodes[0].Range2, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs cptRange2 cptUnits text-uppercase" })
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.CPTCodes[0].TotalUnits, new { @class = "form-control input-xs cptTotalUnits summaryDataChange", @placeholder = "Total Units" })
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action cptButtonArea zero-padding-left-right">
+                        <span class="cptButtonArea">
+                            <button class="btn btn-success btn-xs plusButton" type="button"><i class="fa fa-plus"></i></button>
+                        </span>
+                        <span>
+                            @*@Html.PratianUiCheckboxFor(e => e.CPTCodes[0].IncludeLetter, new { @class = "includeLetter", @tabindex = "-1", @value = "IncLetter" })*@
+                            @*<button class="btn btn-success btn-xs  bold_text loser_field plainLanguageLetter plain_language_btn" type="button">PL</button>*@
+                            <button class="btn btn-danger btn-xs smartIntelligenceBtn bold_text calypso_ai_btn" type="button"> CALYPSO AI</button>
+                        </span>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            }
+
+        </div>
+
+        <!---------HHC Calculator For POS-12 -------->
+        @*<div id="HHCCalculatorArea" class="Margin_top_15px">
+                <table class="table table-bordered HHCLabelText">
+                    <thead>
+                        <tr class="TableHeaderColor">
+                            <th>
+                                REF NO.
+                            </th>
+                            <th>
+                                FROM
+                            </th>
+                            <th>
+                                TO
+                            </th>
+                            <th>
+                                FACILITY/AGENCY/SUPPLIER
+                            </th>
+                            <th>
+                                SN EVAL
+                            </th>
+                            <th>
+                                SN VISIT
+                            </th>
+                            <th>
+                                PT EVAL
+                            </th>
+                            <th>
+                                PT VISIT
+                            </th>
+                            <th>
+                                OT EVAL
+                            </th>
+                            <th>
+                                OT VISIT
+                            </th>
+                            <th>
+                                ST EVAL
+                            </th>
+                            <th>
+                                ST VISIT
+                            </th>
+                            <th>
+                                HHA
+                            </th>
+                            <th>
+                                MSW
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                160124234
+                            </td>
+                            <td>
+                                22/08/2016
+                            </td>
+                            <td>
+                                31/08/2016
+                            </td>
+                            <td>
+                                HORIZON HOME CARE
+                            </td>
+                            <td>
+                                10
+                            </td>
+                            <td>
+                                11
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                5
+                            </td>
+                            <td>
+                                4
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                4
+                            </td>
+                            <td>
+                                0
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="TableHeaderColor">
+                                <center>TOTAL</center>
+                            </td>
+                            <td>
+                                10
+                            </td>
+                            <td>
+                                11
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                5
+                            </td>
+                            <td>
+                                4
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                4
+                            </td>
+                            <td>
+                                0
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>*@
+        <!-----------End Of HHC Calculator----------->
+    </div>
+</div>
+
+
+<div class="clearfix"></div>
+

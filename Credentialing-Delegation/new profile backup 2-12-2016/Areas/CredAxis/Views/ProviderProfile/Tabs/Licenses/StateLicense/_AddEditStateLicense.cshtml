@@ -1,0 +1,225 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.StateLicense>
+
+@{
+    var EditStateLicense = 0;
+    bool IsEdit = true;
+}
+
+<!--label and value coming side by side-->
+
+<div>
+    @***************State License Edit*********************************@
+    <fieldset class="fsStyle" id="AddEditStateLicense">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                @foreach (var item in Model)
+                {
+                    if (item == null)
+                    {
+                        <span>Add STATE LICENSES</span>
+                        IsEdit = false;
+                        break;
+                    }
+                }
+                @if (IsEdit)
+                {
+                    <span>EDIT STATE LICENSES</span>
+                }
+            </span>
+        </legend>
+        @foreach (var item in Model)
+        {
+            using (Ajax.BeginForm("AddStateLicenseInfo", "Licenses", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "StateLicense" }))
+            {
+                EditStateLicense = EditStateLicense + 1;
+                <div class="x_content zero-padding-left mutiple-data">
+                    @if (item != null)
+                    {
+                        <div class="SubHeaderSpacing1">
+                            <span class="text-uppercase TableHeading">Edit State License-@EditStateLicense</span>
+                        </div>
+                    }
+                    else
+                    { }
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.LicenseID)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            @Html.TextBoxFor(m => item.LicenseID, new { @class = "form-control input-xs", placeholder = "LICENSE ID" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.LicenseType)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            @Html.TextBoxFor(m => item.LicenseType, new { @class = "form-control input-xs", placeholder = "LICENSE TYPE" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.LicenseStatus)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            @Html.TextBoxFor(m => item.LicenseStatus, new { @class = "form-control input-xs", placeholder = "LICENSE STATUS" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.IssueState)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            @Html.TextBoxFor(m => item.IssueState, new { @class = "form-control input-xs", placeholder = "ISSUE STATE" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.IssueDate)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            @Html.PratianUiDatePickerFor(e => item.IssueDate, new { @class = "form-control input-xs", placeholder = " ISSUE DATE" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.CurrentIssueDate)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            @Html.PratianUiDatePickerFor(e => item.IssueDate, new { @class = "form-control input-xs", placeholder = "CURRENT ISSUE DATE" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.ExpirationDate)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            @Html.PratianUiDatePickerFor(e => item.IssueDate, new { @class = "form-control input-xs", placeholder = "EXPIRY DATE " })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-7 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.IsThisState)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-4 nopadding font-bold">
+                            @Html.PratianUiRadioButtonFor(t => item.IsThisState, new { color = "green", @checked = "checked" }) YES
+                            @Html.PratianUiRadioButtonFor(t => item.IsThisState, new { color = "red" }) NO
+                            @*@Html.RadioButtonFor(e => item.IsThisState, true) Yes
+                                @Html.RadioButtonFor(e => item.IsThisState, false) No*@
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-7 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.IsLicenseGood)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-4 nopadding font-bold">
+                            @Html.PratianUiRadioButtonFor(t => item.IsLicenseGood, new { color = "green", @checked = "checked" }) YES
+                            @Html.PratianUiRadioButtonFor(t => item.IsLicenseGood, new { color = "red" }) NO
+                            @*@Html.RadioButtonFor(e => item.IsLicenseGood, true) Yes
+                                @Html.RadioButtonFor(e => item.IsLicenseGood, false) No*@
+                        </span>
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-3 nopadding">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.SupportingDocumentPath) </label>
+                        </span>
+                        @*<span class="col-lg-1"></span>*@
+                        <span class="col-lg-5 input-group  nopadding">
+                          
+                            @{
+                string InputId = "UploadLicense" + EditStateLicense;
+                string InputUploadId = "InputLicense" + EditStateLicense;
+                            }
+                            <input id=@InputId type="text" class="form-control input-xs" readonly placeholder="Document">
+                            <span class="input-group-addon File_uploadStyle" onclick="$(@InputUploadId).click();"><i class="fa fa-upload"></i></span>
+                            <input id=@InputUploadId style="display:none" onchange="$(@InputId).val(this.value);" type="file">
+
+
+                        </span>
+                    </div>
+
+                </div>
+
+            }
+        }
+
+        <div class="row col-lg-12 zero-padding-left-right margin-top-5px" id="StateButtons">
+            @*<input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save">*@
+            <button class="btn btn-success yahanClickKar btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetStateLicensePartial?model=@Model&ActionType=View" data-tab-container="StateLicense" value="">Save</button>
+            <button class="btn btn-danger yahanClickKar btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetStateLicensePartial?model=@Model&ActionType=View" data-tab-container="StateLicense" value="">Cancel</button>
+        </div>
+    </fieldset>
+</div>
+
+@*<div class="modal fade " tabindex="-1" role="dialog" id="StateLicenseHistoryView" style="overflow: auto; top: 8%;">
+        <div class="modal-dialog modal-lg ">
+            <form class="modal-content">
+                <div class="modal-header zero_padding_bottom">
+                    <div class="row" style="text-align: center;">
+                        <span class="modalTitle">STATE LICENSE HISTORY</span>
+                        <span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+                    </div>
+                </div>
+
+                <div class="modal-body modalbodyheight  ">
+                    <div class="x_content zero-padding-left">
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>License # :</label>
+                            </span>
+                            <span class="theme_label_data">PA91032015</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>License Type :</label>
+                            </span>
+                            <span class="theme_label_data">md</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>License Status :</label>
+                            </span>
+                            <span class="theme_label_data">active</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>Issue State :</label>
+                            </span>
+                            <span class="theme_label_data">alaska</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>Issue Date :</label>
+                            </span>
+                            <span class="theme_label_data">04-11-2012</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>Current Issue Date :</label>
+                            </span>
+                            <span class="theme_label_data">04-11-2012</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>Expiration Date :</label>
+                            </span>
+                            <span class="theme_label_data">04-11-2014</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>ARE YOU CURRENTLY PRACTICING IN THIS STATE?</label>
+                            </span>
+                            <span class="theme_label_data font-bold">yes</span>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label">
+                                <label>License in good standing?</label>
+                            </span>
+                            <span class="theme_label_data font-bold">yes</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>*@

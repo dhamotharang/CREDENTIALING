@@ -1,0 +1,59 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalAffiliation.ProfessionalAffiliationDetailViewModel
+
+
+<fieldset>
+     <form class="professionalAffiliationForm">
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <span ng-if="tempObject.ProfessionalAffiliationInfoID">
+                @Html.HiddenFor(model => model.ProfessionalAffiliationInfoID, new { ng_value = "tempObject.ProfessionalAffiliationInfoID", data_ng_model = "tempObject.ProfessionalAffiliationInfoID" })
+            </span>
+            <div class=" col-lg-12">
+                <div class="col-lg-12 form-group">
+                    @Html.LabelFor(model => model.OrganizationName, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.OrganizationName, new { @class = "form-control input-sm", data_ng_model = "tempObject.OrganizationName" })
+                    @Html.ValidationMessageFor(model => model.OrganizationName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class=" col-lg-12">
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.StartDate, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.StartDate, new { data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.StartDate" })
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.EndDate, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.EndDate, new { data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.EndDate" })
+                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.PositionOfficeHeld, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PositionOfficeHeld, new { @class = "form-control input-sm", data_ng_model = "tempObject.PositionOfficeHeld" })
+                    @Html.ValidationMessageFor(model => model.PositionOfficeHeld, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.Member, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.Member, new { @class = "form-control input-sm", data_ng_model = "tempObject.Member" })
+                    @Html.ValidationMessageFor(model => model.Member, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div ng-if="IsProfessionalAffiliationHasError" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists : <br />
+                    <span ng-repeat="err in ProfessionalAffiliationErrorList track by $index">{{err}}</span>
+                </div>
+            </div>
+            <div class="col-md-12 form-group">
+                <div class="col-md-12 form-group">
+                    <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                    <button ng-show="visibilityControl == 'addpa'" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalAffiliation(tempObject, $index)">{{submitButtonText}}</button>
+                    <button ng-show="visibilityControl == ($index + '_editpa')" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalAffiliation(tempObject,$index)">Update</button>
+                      
+                </div>
+            </div>
+        </div>
+    </form>
+ </fieldset>

@@ -1,0 +1,157 @@
+﻿<br /><hr />
+<div class="scrollable-division">
+    <div class="col-lg-12">
+        <div class="col-lg-4">
+            CATEGORY
+            <select class="form-control input-xs text-uppercase bolding">
+                <option value="">---SELECT---</option>
+                <option value="Comorbid">COMORBID</option>
+                <option value="Social Work">SOCIAK WORK</option>
+                <option value="Disease">DISEASE</option>
+            </select>
+            @*<span ng-if="ValidationForCat && !AddProblem.ProblemCategoryID" style="color:red">Please Enter Category </span>*@
+        </div>
+        <div class="col-lg-8">
+            <span class="text-uppercase"> Problem Description:</span><br />
+            <div>
+                <textarea autofocus id="AddNewPIGODescId" class="form-control input-xs bolding" rows="1" cols="102" onkeyup="Resize(this);" ng-model="AddProblem.Description" ng-disabled="AddProblem.DisableDescription"></textarea>
+            </div>
+
+            @*<span ng-if="ValidationForProb && !AddProblem.Description" style="color:red">Please Enter Problem</span>*@
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <ul style="list-style: none;" class="ULBorderInt" ng-repeat="intervention in AddProblem.AvailableInterventions track by $index">
+        INTERVENTION
+        <li>
+            <table class="table">
+                <tr class="well well-sm">
+                    <td @*ng-if="Template.AddNewPIGO.Name=='Problem'||Template.AddNewPIGO.Name=='Intervention'"*@>
+                        <textarea autofocus id="" class="form-control input-xs bolding" rows="1" cols="102" onkeyup="Resize(this);" ng-model="AddProblem.AvailableInterventions[$index].Description" ng-disabled="AddProblem.AvailableInterventions[$index].DisableDescription"></textarea>
+                    </td>
+                    <td style="width:1%" class="button-styles-xs">
+                        <button class="red-button"><i class="fa fa-minus"></i></button>
+                    </td>
+                    <td style="width:1%" class="button-styles-xs">
+                        <button class="light-green-button"><i class="fa fa-plus"></i></button>
+
+                    </td>
+                </tr>
+            </table>
+            <ul style="list-style: none;" class="ULBorderGoal" ng-repeat="goal in intervention.AvailableGoals track by $index">
+                GOAL
+                <li>
+                    <table class="table">
+                        <tr class="well well-sm">
+                            <td style="width:746px;" @*ng-if="Template.AddNewPIGO.Name!='Outcome'"*@>
+                                <textarea autofocus id="" class="form-control input-xs bolding" rows="1" cols="102" onkeyup="Resize(this);" ng-model="goal.Description" ng-disabled="goal.DisableDescription"></textarea>
+                            </td>
+
+                            <td style="width: 20px; padding-left: 0px; padding-right: 0px;" class="button-styles-xs">
+                                <button class="red-button"><i class="fa fa-minus"></i></button>
+                            </td>
+                            <td style="width: 20px; padding-left: 0px; padding-right: 0px; " class="button-styles-xs">
+                                <button class="light-green-button"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                    <ul style="list-style: none;" class="ULBorderOut" ng-repeat="outcome in goal.AvailableOutcomes track by $index">
+                        OUTCOME
+                        <li>
+                            <table class="table">
+                                <tr class="well well-sm">
+                                    <td style="width:656px;">
+                                        <textarea autofocus id="" class="form-control input-xs bolding" rows="1" cols="102" onkeyup="Resize(this);" ng-model="outcome.Description"></textarea>
+                                    </td>
+                                    <td style="width: 20px; padding-left: 0px;padding-right:0px; " class="button-styles-xs">
+                                        <button class="red-button"><i class="fa fa-minus"></i></button>
+                                    </td>
+                                    <td style="width: 20px; padding-left: 0px; padding-right: 0px;" class="button-styles-xs">
+                                        <button class="light-green-button"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<style>
+    .ULBorderInt {
+        border: 1px solid #2F71AA;
+    }
+
+    .ULBorderGoal {
+        border: 1px solid #2F71AA;
+        border-bottom: none;
+        border-right: none;
+    }
+
+    .ULBorderOut {
+        border: 1px solid #2F71AA;
+        border-bottom: none;
+        border-right: none;
+    }
+
+    /* to the body element */
+    .noscroll {
+        overflow: hidden;
+    }
+
+    .overlay {
+        position: fixed;
+        overflow-y: scroll;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    [aria-hidden="true"] {
+        display: none;
+    }
+
+    [aria-hidden="false"] {
+        display: block;
+    }
+
+
+
+
+    /* this is not used: still in progress */
+
+    .overlay div {
+        /*margin: 15vh auto;
+        width: 80%;
+        max-width: 650px;
+        padding: 30px;
+        min-height: 200vh;*/
+        background: rgba(255,255,255, .95);
+    }
+
+    .overlay {
+        background: rgba(40,40,40, .75);
+    }
+</style>
+<script>
+    /************  Resiging Text box ************/
+    function Resize(textbox) {
+        var maxrows = 1;
+        var txt = textbox.value;
+        var rows1 = textbox.rows;
+        var cols = textbox.cols;
+        var arraytxt = txt.split('\n');
+        var rows = arraytxt.length;
+        for (i = 0; i < arraytxt.length; i++)
+            rows += parseInt(arraytxt[i].length / cols);
+        if (rows > maxrows) textbox.rows = rows;
+        else textbox.rows = maxrows;
+    }
+
+</script>
+

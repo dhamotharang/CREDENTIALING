@@ -1,0 +1,378 @@
+﻿@{
+    ViewBag.Title = "EncounterTracker";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular-Chart/d3.min.js"></script>
+<script src="~/Scripts/Lib/Angular-Chart/angular-charts.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+<script src="~/Scripts/Custom/Credentialing/EncounterTracker.js"></script>
+<script src="~/Scripts/Custom/Credentialing/horizBarChart.js"></script>
+<script>
+
+</script>
+
+<style>
+    /* KRGLV Groups Form Custom Style*/
+
+    .form-style fieldset {
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        margin: 0px 0px 10px 0px;
+        border: 1px solid #DDDDDD;
+        padding: 15px 20px 20px 20px;
+        background: #FFFFFF;
+        box-shadow: inset 0px 0px 15px #F5F5F5;
+        -moz-box-shadow: inset 0px 0px 15px #F5F5F5;
+        -webkit-box-shadow: inset 0px 0px 15px #F5F5F5;
+    }
+
+        .form-style fieldset legend {
+            color: #337ab7;
+            border-top: 1px solid #DDDDDD;
+            border-left: 1px solid #DDDDDD;
+            border-right: 1px solid #DDDDDD;
+            border-radius: 5px 5px 0px 0px;
+            -webkit-border-radius: 5px 5px 0px 0px;
+            -moz-border-radius: 5px 5px 0px 0px;
+            background: #FFFFFF;
+            padding: 3px 8px 3px 8px;
+            box-shadow: -0px -1px 2px #F1F1F1;
+            -moz-box-shadow: -0px -1px 2px #F1F1F1;
+            -webkit-box-shadow: -0px -1px 2px #F1F1F1;
+            font-weight: normal;
+            font-size: 13px;
+            display: block;
+            width: auto;
+            margin-bottom: 0px;
+            line-height: inherit;
+            border-bottom: 0px solid #e5e5e5;
+        }
+
+    .droptabledata {
+        background-color: grey;
+        height: 200px;
+        border-radius: 10px;
+    }
+
+    .clearfix:after {
+        content: " ";
+        visibility: hidden;
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .chart-horiz .chart {
+        width: 90%;
+    }
+
+        .chart-horiz .chart li {
+            display: block;
+            height: 30px;
+            margin-top: 3px;
+            position: relative;
+        }
+
+            .chart-horiz .chart li:hover {
+                height: 31px;
+            }
+
+            .chart-horiz .chart li:before {
+                color: #fff;
+                content: attr(title);
+                left: 5px;
+                position: absolute;
+                padding-top: 5px;
+            }
+
+            .chart-horiz .chart li.title:before {
+                color: black;
+                font-weight: bold;
+                left: 0;
+            }
+
+            .chart-horiz .chart li:first-child {
+                margin-top: 0;
+            }
+
+            .chart-horiz .chart li .bar {
+                background: rgb(24, 51, 153);
+                height: 100%;
+                min-width: 164px;
+                padding: 5px 10px;
+                font-size: 12px;
+                line-height: 1.5;
+                border-radius: 3px;
+            }
+
+                .chart-horiz .chart li .bar:hover {
+                    background: rgb(45, 55, 238);
+                    border: 1px solid #5D54F1;
+                }
+
+            .chart-horiz .chart li .number {
+                color: rgb(15, 31, 194);
+                font-size: 12px;
+                font-weight: bold;
+                padding-left: 5px;
+                position: absolute;
+                top: 5px;
+            }
+
+            .chart-horiz .chart li.past .bar {
+                background: #aaaaaa;
+            }
+
+            .chart-horiz .chart li.past .number {
+                color: #aaaaaa;
+            }
+
+    .chart {
+        height: 290px;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="encounterTrackerApp" ng-controller="encounterTrackerController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Encounter Tracker
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="panel-title pull-right btn-link" onclick="PanelToggle('summary');"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                        <h3 class="panel-title">Encounter Monthly Report</h3>
+                    </div>
+                    <div class="panel-body" id="summary">
+                        <div class="col-md-12">
+                            <div class="col-md-4"><label>Date Of Report : 11/12/2014</label></div>
+                            <div class="col-md-4"><label>Plan : </label><select><option>All</option><option>Wellcare</option><option>Freedom </option><option>Optimum </option><option>Ultimate </option></select></div>
+                            <div class="col-md-4"><label>User : Mc Raylor</label></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="panel-title pull-right btn-link" onclick="PanelToggle('search');"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                        <h3 class="panel-title">Encounter Tracker</h3>
+                    </div>
+                    <div class="panel-body" id="search">
+                        <table ng-table="tableParams" show-filter="true" class="table ng-table-rowselected">
+                            <tbody ng-repeat="encounter in $data">
+                                <tr ng-click="changeSelection(encounter)"
+                                    ng-class="{'active': encounter.$selected}">
+                                    <td data-title="'Encounter Number'" header-class="text-left" sortable="'EncounterNumber'" filter="{ 'EncounterNumber': 'text' }">
+                                        {{encounter.EncounterNumber}}
+                                    </td>
+                                    <td data-title="'PCP'" header-class="text-right" class="text-right" sortable="'PCP'" filter="{ 'PCP': 'text' }">
+                                        {{encounter.PCP}}
+                                    </td>
+                                    <td data-title="'Provider Name'" header-class="text-right" class="text-right" sortable="'ProviderName'" filter="{ 'ProviderName': 'text' }">
+                                        {{encounter.ProviderName}}
+                                    </td>
+                                    <td data-title="'Patient ID'" header-class="text-right" class="text-right" sortable="'PatientID'" filter="{ 'PatientID': 'text' }">
+                                        {{encounter.PatientID}}
+                                    </td>
+                                    <td data-title="'Patient Name'" header-class="text-right" class="text-right" sortable="'PatientName'" filter="{ 'PatientName': 'text' }">
+                                        {{encounter.PatientName}}
+                                    </td>
+                                    <td data-title="'Patient DOB'" header-class="text-right" class="text-right" sortable="'PatientDOB'" filter="{ 'PatientDOB': 'text' }">
+                                        {{encounter.PatientDOB}}
+                                    </td>
+                                    <td data-title="'Patient ZIP'" header-class="text-right" class="text-right" sortable="'PatientZIP'" filter="{ 'PatientZIP': 'text' }">
+                                        {{encounter.PatientZIP}}
+                                    </td>
+                                    <td data-title="'Date Of Service'" header-class="text-right" class="text-right" sortable="'DateOfService'" filter="{ 'DateOfService': 'text' }">
+                                        {{encounter.DateOfService}}
+                                    </td>
+                                    <td data-title="'Date Of Submission'" header-class="text-right" class="text-right" sortable="'DateOfSubmission'" filter="{ 'DateOfSubmission': 'text' }">
+                                        {{encounter.DateOfSubmission}}
+                                    </td>
+                                    <td data-title="'Place Of Service Code'" header-class="text-right" class="text-right bg-gray" sortable="'PlaceOfServiceCode'" filter="{ 'PlaceOfServiceCode': 'text' }">
+                                        {{encounter.PlaceOfServiceCode}}
+                                    </td>
+                                </tr>
+                                <tr ng-show="encounter.sel">
+                                    <td colspan="10" class="droptabledata">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="col-lg-4">
+                                                    <div class="col-md-12 form-style">
+                                                        <fieldset>
+                                                            <legend>
+                                                                Access Codes
+                                                            </legend>
+                                                            <table class="table table-striped">
+                                                                <tr>
+                                                                    <th>S No.</th>
+                                                                    <th>Code</th>
+                                                                    <th>Desc</th>
+                                                                </tr>
+                                                                <tr ng-repeat="code in encounter.Codes">
+                                                                    <th>{{$index+1}}</th>
+                                                                    <th>{{code.Name}}</th>
+                                                                    <th>{{code.Decs}}</th>
+                                                                </tr>
+                                                            </table>
+                                                        </fieldset>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-lg-4">
+
+                                                    <div class="col-md-12 form-style">
+                                                        <fieldset>
+                                                            <legend>
+                                                                Plan Codes
+                                                            </legend>
+                                                            <table class="table table-striped">
+                                                                <tr>
+                                                                    <th>S No.</th>
+                                                                    <th>Code</th>
+                                                                    <th>Desc</th>
+                                                                </tr>
+                                                                <tr ng-repeat="code in encounter.ResponseCodes">
+                                                                    <th>{{$index+1}}</th>
+                                                                    <th>{{code.Name}}</th>
+                                                                    <th>{{code.Decs}}</th>
+                                                                </tr>
+                                                                <tr></tr>
+                                                            </table>
+                                                        </fieldset>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-lg-4">
+
+                                                    <div class="col-md-12 form-style">
+                                                        <fieldset>
+                                                            <legend>
+                                                                Response Codes
+                                                            </legend>
+                                                            <table class="table table-striped">
+                                                                <tr>
+                                                                    <th>S No.</th>
+                                                                    <th>Response Code</th>
+                                                                    <th>Desc</th>
+                                                                </tr>
+                                                                <tr ng-repeat="response in encounter.PlanResponse">
+                                                                    <th>{{$index+1}}</th>
+                                                                    <th>{{response.Name}}</th>
+                                                                    <th>{{response.Decs}}</th>
+                                                                </tr>
+                                                                <tr></tr>
+                                                            </table>
+                                                        </fieldset>
+                                                    </div>
+
+
+                                                </div>
+                                                <br />
+                                                <div class="col-lg-12">
+                                                    <label>Recommended Action</label>
+                                                    <textarea class="form-control"></textarea>
+                                                </div>
+                                                <br />
+                                                <div class="clearfix"></div>
+                                                <br />
+                                                <button class="pull-right btn btn-xs btn-success">Submit</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- content form div -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="panel-title pull-right btn-link" onclick="PanelToggle('graphs');"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                        <h3 class="panel-title">Encounter Tracker</h3>
+                    </div>
+                    <div class="panel-body" id="graphs">
+
+                        <div class="col-lg-6 form-style">
+                            <fieldset>
+                                <legend>
+                                    Approval and Rejected Status
+                                </legend>
+
+                                <label>Total Encounters : </label>
+                                <span>{{Encounters.total}}</span>
+                                <hr>
+                                <label>Total Approved : </label>
+                                <span>{{Encounters.Approved}}</span>
+                                <br />
+                                <label>Total Rejected : </label>
+                                <span>{{Encounters.Rejected}}</span>
+                                <br />
+                                <div class='charts pad'>
+                                    <div ac-chart="chartType" ac-data="dataStatus" ac-config="config" id='chart' class='chart'></div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 form-style">
+                            <fieldset>
+                                <legend>
+                                    Invalied Entries
+                                </legend>
+                                <!-- Code Start -->
+                                <div class="chart-horiz clearfix">
+                                    <!-- Actual bar chart -->
+                                    <ul class="chart">
+                                        <li class="title" title="Total Invalid Entries : 212"></li>
+                                        <li ng-repeat="bug in exampleData" class="current" title="{{bug.key}}"><span class="bar" data-number="{{bug.value}}" data-toggle="tooltip" data-placement="left" title="{{bug.key}} : {{bug.value}}"></span><span class="number">{{bug.value}}</span></li>
+                                    </ul>
+                                </div>
+                                <!-- Code End -->
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
+<script>
+    $(document).ready(function () {
+        $('.chart').horizBarChart({
+            selector: '.bar',
+            speed: 1000
+        });
+    });
+</script>

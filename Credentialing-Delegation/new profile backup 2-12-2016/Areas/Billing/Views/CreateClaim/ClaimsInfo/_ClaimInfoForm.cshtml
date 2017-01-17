@@ -1,0 +1,597 @@
+﻿@using PratianUI
+@model PortalTemplate.Areas.Billing.Models.CMS1500.New.BillingInfo
+@{
+    List<SelectListItem> ICDType = new List<SelectListItem>();
+    List<SelectListItem> Qual1 = new List<SelectListItem>();
+    List<SelectListItem> Qual2 = new List<SelectListItem>();
+    List<SelectListItem> PlaceOfService = new List<SelectListItem>();
+    ICDType.Add(new SelectListItem
+      {
+          Text = "ICD 10",
+          Value = "ICD10",
+          Selected = true
+      });
+    ICDType.Add(new SelectListItem
+     {
+         Text = "ICD 9",
+         Value = "ICD9",
+     });
+    Qual1.Add(new SelectListItem
+    {
+        Text = "431 - Onset of Current Symptoms or Illness",
+        Value = "431",
+        //Selected = true
+    });
+    Qual1.Add(new SelectListItem
+     {
+         Text = "484 - Last Menstrual Period",
+         Value = "484",
+     });
+    Qual2.Add(new SelectListItem
+    {
+        Text = "454 - Initial Treatment",
+        Value = "454",
+        //Selected = true
+    });
+    Qual2.Add(new SelectListItem
+     {
+         Text = "304 - Latest Visit or Consultation",
+         Value = "304",
+     });
+    Qual2.Add(new SelectListItem
+    {
+        Text = "453 - Acute Manifestation of a Chronic Condition",
+        Value = "453"
+
+    });
+    Qual2.Add(new SelectListItem
+     {
+         Text = "439 - Accident",
+         Value = "439",
+     });
+    Qual2.Add(new SelectListItem
+    {
+        Text = "455 - Last X-ray",
+        Value = "455",
+    });
+    Qual2.Add(new SelectListItem
+    {
+        Text = "471 - Prescription",
+        Value = "471"
+
+    });
+    Qual2.Add(new SelectListItem
+     {
+         Text = "090 - Report Start (Assumed Care Date)",
+         Value = "090",
+     });
+    Qual2.Add(new SelectListItem
+    {
+        Text = "091 - Report End (Relinquished Care Date)",
+        Value = "091",
+    });
+    Qual2.Add(new SelectListItem
+    {
+        Text = "444 - First Visit or Consultation",
+        Value = "444"
+
+    });
+    PlaceOfService.Add(new SelectListItem
+    {
+        Text = "11-Office",
+        Value = "11",
+        Selected = true
+    });
+    PlaceOfService.Add(new SelectListItem
+     {
+         Text = "21-Inpatient Hospital",
+         Value = "21",
+     });
+
+}
+
+<form id="claimInformationForm">
+    <div class="x_panel border_on_panel x_panel_claimsinfo ClaimsInformationPanel">
+        <div class="x_content">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                &nbsp;<br />
+                @Html.Label("Date of Current Illness/Injury/Pregnancy", new { @class = "cms_label" })
+                @Html.PratianUiDatePickerFor(model => model.DateOfCurrrentIllness.Date, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.DateOfCurrrentIllness.Date)
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                &nbsp;<br />
+                @Html.Label("Qual", new { @class = "cms_label" })
+                @Html.TextBoxFor(model => model.DateOfCurrrentIllness.DateQlfr.Title, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.DateOfCurrrentIllness.DateQlfr.Title)
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                &nbsp;<br />
+                @Html.Label("Other Date", new { @class = "cms_label" })
+                @Html.PratianUiDatePickerFor(model => model.OtherDate.Date, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.OtherDate)
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                &nbsp;<br />
+                @Html.Label("Qual", new { @class = "cms_label" })
+                @Html.TextBoxFor(model => model.OtherDate.DateQlfr.Title, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.OtherDate.DateQlfr.Title)
+            </div>
+        </div>
+        <div class="x_content">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.Label("Place of Service", new { @class = "cms_label" })
+                @Html.TextBoxFor(model => model.CodedEncounter.Encounter.PlaceOf, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.CodedEncounter.Encounter.PlaceOf)
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(model => model.OtherBillingInfo.PriorAuthorizationNumber, new { @class = "cms_label" })
+                @Html.TextBoxFor(model => model.OtherBillingInfo.PriorAuthorizationNumber, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.OtherBillingInfo.PriorAuthorizationNumber)
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(model => model.OtherBillingInfo.ResubmissionCode, new { @class = "cms_label" })
+                @Html.TextBoxFor(model => model.OtherBillingInfo.ResubmissionCode, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.OtherBillingInfo.ResubmissionCode)
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(model => model.OtherBillingInfo.ResubmissionReferenceNumber, new { @class = "cms_label" })
+                @Html.TextBoxFor(model => model.OtherBillingInfo.ResubmissionReferenceNumber, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.OtherBillingInfo.ResubmissionReferenceNumber)
+            </div>
+        </div>
+        <div class="x_content">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.Label("Claim Type", new { @class = "cms_label" })
+                <div class="x_content">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.EncounterType, "CAP", new { @checked = "checked", @value = "CAP" })
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.EncounterType, "FFS", new { @value = "FFS" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(model => model.OtherBillingInfo.AdditionalClaimInformation, new { @class = "cms_label" })
+                @Html.TextBoxFor(model => model.OtherBillingInfo.AdditionalClaimInformation, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                @Html.ValidationMessageFor(model => model.OtherBillingInfo.AdditionalClaimInformation)
+
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @*@Html.LabelFor(model => model.OutSideLab)
+                    <div class="x_content">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            @Html.PratianUiRadioButtonFor(model => model.OutSideLab, new { @value = "yes" })
+                            <label for="OutsideLabYes"><span></span>YES</label>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            @Html.PratianUiRadioButtonFor(model => model.OutSideLab, new { @checked = "checked", @value = "no" })
+                            <label for="OutsideLabNo"><span></span>NO</label>
+                        </div>
+                    </div>*@
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @*@Html.LabelFor(model => model.Charges)
+                    @Html.TextBoxFor(model => model.Charges, new { @class = "form-control input-xs non_mandatory_field_halo" })*@
+            </div>
+        </div>
+        <div class="x_content">
+            <div class="col-lg-4 ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    <label for="fullname" class="los_labels text-uppercase">date of service</label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left ">
+                    @Html.Label("From")
+                    @Html.PratianUiDatePickerFor(model => model.CodedEncounter.Encounter.DateOf_From, new { @class = "form-control input-xs non_mandatory_field_halo DateofserviceFrom" }, validationSwitch: Pratian.ValidationSwitch.Off)
+                    @Html.ValidationMessageFor(model => model.CodedEncounter.Encounter.DateOf_From)
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left zero-padding-right">
+                    @Html.Label("To")
+                    @Html.PratianUiDatePickerFor(model => model.CodedEncounter.Encounter.DateOf_To, new { @class = "form-control input-xs non_mandatory_field_halo DateofserviceTo", @onchange = "setICDIndicator()" })
+                    @Html.ValidationMessageFor(model => model.CodedEncounter.Encounter.DateOf_To)
+                </div>
+            </div>
+            <div class="col-lg-4 ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    <label for="fullname" class="los_labels">PATIENT UNABLE TO WORK IN CURRENT OCCUPATION</label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left ">
+                    @Html.Label("From", new { @class = "cms_label" })
+                    @Html.PratianUiDatePickerFor(model => model.DatePatientUnableToWorkFrom, new { @class = "form-control input-xs non_mandatory_field_halo dob_field", placeholder = "MM/DD/YYYY" })
+                    @Html.ValidationMessageFor(model => model.DatePatientUnableToWorkFrom)
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left zero-padding-right">
+                    @Html.Label("To", new { @class = "cms_label" })
+                    @Html.PratianUiDatePickerFor(model => model.DatePatientUnableToWorkTo, new { @class = "form-control input-xs non_mandatory_field_halo dob_field", placeholder = "MM/DD/YYYY" })
+                    @Html.ValidationMessageFor(model => model.DatePatientUnableToWorkTo)
+                </div>
+            </div>
+            <div class="col-lg-4 ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    <label for="fullname" class="los_labels">HOSPITALIZATION DATES RELATED TO CURRENT SERVICE</label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left ">
+                    @Html.Label("From", new { @class = "cms_label" })
+                    @Html.PratianUiDatePickerFor(model => model.HospitalisationAdmissionDateFrom, new { @class = "form-control input-xs non_mandatory_field_halo dob_field", placeholder = "MM/DD/YYYY" })
+                    @Html.ValidationMessageFor(model => model.HospitalisationAdmissionDateFrom)
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left zero-padding-right">
+                    @Html.Label("To", new { @class = "cms_label" })
+                    @Html.PratianUiDatePickerFor(model => model.HospitalisationAdmissionDateTo, new { @class = "form-control input-xs non_mandatory_field_halo dob_field", placeholder = "MM/DD/YYYY" })
+                    @Html.ValidationMessageFor(model => model.HospitalisationAdmissionDateTo)
+                </div>
+            </div>
+        </div>
+        <div class="x_content">
+            <div class="col-lg-12 ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section claims_section">
+                    <label for="fullname" class="los_labels">IS PATIENT'S CONDITION RELATED TO</label>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+
+                    &nbsp;<label>A. </label> @Html.LabelFor(model => model.CodedEncounter.Encounter.PatientCondition.IsEmployeement, new { @class = "cms_label" })
+                    <div class="x_content">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.PatientCondition.IsEmployeement, "YES", new { color = "green", @value = "yes" })
+
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.PatientCondition.IsEmployeement, "NO", new { color = "green", @checked = "checked", @value = "no" })
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CodedEncounter.Encounter.PatientCondition.IsEmployeement)
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                    <label>B. </label> @Html.LabelFor(model => model.CodedEncounter.Encounter.PatientCondition.IsAutAccident, new { @class = "cms_label" })
+                    <div class="x_content">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.PatientCondition.IsAutAccident, "Yes", new { color = "green", @value = "yes" })
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.PatientCondition.IsAutAccident, "No", new { color = "green", @checked = "checked", @value = "no" })
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CodedEncounter.Encounter.PatientCondition.IsAutAccident)
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                    <label>C. </label> @Html.LabelFor(model => model.CodedEncounter.Encounter.PatientCondition.IsOtherAccident, new { @class = "cms_label" })
+                    <div class="x_content">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.PatientCondition.IsOtherAccident, "Yes", new { color = "green", @value = "yes" })
+
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.Encounter.PatientCondition.IsOtherAccident, "No", new { color = "green", @checked = "checked", @value = "no" })
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CodedEncounter.Encounter.PatientCondition.IsOtherAccident)
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left zero-padding-right">
+                    <label class="cms_label">D. Claims Codes(designed by NUCC)</label>
+                    <input type="text" class="form-control input-xs non_mandatory_field_halo" />
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="x_content" id="addICDCodesPanel">
+            <div class="col-lg-8 ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section claims_section">
+                    <label for="fullname" class="los_labels">DIAGNOSIS OR NATURE OF ILLNESS OR INJURY</label>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right">
+                    <span class="pull-left">
+                        <button class="btn btn-xs btn-info" type="button" id="viewICDHistory">View History</button>
+                        @*<button class="btn btn-xs btn-info" type="button" id="viewMedicalReview">Medical Review</button>*@
+                    </span>
+                    <span class="pull-right">
+                        @*@Html.PratianUiRadioButtonFor(model => model.CodedEncounter.ICDCodeVersion, new { color = "green", @value = "ICD9" })
+                        <label for="ICD9"><span></span>ICD9</label>
+
+                        @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.ICDCodeVersion, new { color = "green", @checked = "checked", @value = "ICD10" })
+                        <label for="ICD10"><span></span>ICD10</label>*@
+
+                        @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.isICD10, "ICD9", Model.CodedEncounter.isICD10 ? null : new { @checked = "checked" })
+                        @Html.PratianUiRadioButtonFor(model => model.CodedEncounter.isICD10, "ICD10", Model.CodedEncounter.isICD10 ? new { @checked = "checked" } : null)
+
+                    </span>
+                </div>
+                <div id="viewDivActiveHistoryICDClaimsInfo"></div>
+                <div id="MedicalReviewClaimsInfo"></div>
+                <div class="dignosis_line clearfix">
+                    <div class="col-lg-12"><br /></div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[0].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "1" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[0].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "1" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[0].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[1].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "2" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[1].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "2" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[1].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[2].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "3" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[2].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "3" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[2].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left zero-padding-right">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[3].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "4" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[3].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "4" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[3].ICDCode)
+                    </div>
+                </div>
+                <div class="dignosis_line clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[4].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "5" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[4].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "5" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[4].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[5].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "6" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[5].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "6" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[5].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[6].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "7" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[6].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "7" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[6].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left zero-padding-right">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[7].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "8" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[7].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "8" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[7].ICDCode)
+                    </div>
+                </div>
+                <div class="dignosis_line clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[8].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "9" })
+                       @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[8].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "9" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[8].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[9].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "10" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[9].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "10" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[9].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left ">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[10].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "11" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[10].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "11" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[10].ICDCode)
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 zero-padding-left zero-padding-right">
+                        @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Diagnosis[11].ICDCode, "/Coding/CodingMasterData/GetICDCodesMasterData", "ICDCode", "ICDCode", new { @class = "form-control input-xs text-uppercase", placeholder = "12" })
+                        @*@Html.TextBoxFor(model => model.CodedEncounter.Diagnosis[11].ICDCode, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "12" })*@
+                        @Html.ValidationMessageFor(model => model.CodedEncounter.Diagnosis[11].ICDCode)
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section claims_section">
+                    <label for="fullname" class="los_labels">OTHER CLAIM ID (DESIGNATED BY NUCC)</label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left">
+                    @Html.Label("Qual")
+                    @*@Html.TextBoxFor(model => model.OtherClaimQual, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "" })*@
+                    <input type="text" class="form-control input-xs non_mandatory_field_halo" />
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left zero-padding-right">
+                    @Html.Label("Other Claim ID")
+                    @*@Html.TextBoxFor(model => model.OtherClaimId, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "Other Claim Id" })*@
+                    <input type="text" class="form-control input-xs non_mandatory_field_halo" />
+                </div>
+
+            </div>
+
+
+            <div class="x_content">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left zero-padding-right">
+                    <table id="serviceLine_table" class="table table-bordered margin_bottom_zero zero-padding-left-right alignLeftTable noBorderTable boldBody zeroPaddingBottomTh width_99 custom-thead-back custom-thead-font custom-tbody">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Sl No</th>
+                                <th colspan="5">Procedures, Services, Or Supplies</th>
+                                <th rowspan="2" colspan="4">Diagnosis Pointer</th>
+                                <th rowspan="2">Unit Charges($)</th>
+                                <th rowspan="2">Days and Unit</th>
+                                <th rowspan="2">Charges($)</th>
+                                <th rowspan="2" class="uppercase">Emg</th>
+                                <th rowspan="2" class="uppercase">Epsdt</th>
+                                <th rowspan="2"></th>
+                            </tr>
+                            <tr>
+                                <th class="uppercase CPTWidth">cpt/hcpcs <button type="button" id="viewCptCodesHistory" class="btn btn-primary btn-xs"><span class="fa fa-history"></span></button></th>
+                                <th colspan="4">Modifier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ServiceLineTbody">
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    @Html.PratianUISearchInputDropDown(model => model.CodedEncounter.Procedures[0].Code, "/Coding/CodingMasterData/GetCPTCodesMasterData", "Code", "Code", new { @class = "form-control input-xs text-uppercase EnMCode_width",placeholder = "CPT/HCPCS"})
+
+
+                                   @* @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].Code, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "CPT/HCPCS" })*@
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].Modifier1, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "1" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].Modifier2, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "2" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].Modifier3, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "3" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].Modifier4, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "4" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[0], new { @class = "form-control input-xs non_mandatory_field_halo" })
+                                    @Html.ValidationMessageFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[0])
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[1], new { @class = "form-control input-xs non_mandatory_field_halo" })
+                                    @Html.ValidationMessageFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[1])
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[2], new { @class = "form-control input-xs non_mandatory_field_halo" })
+                                    @Html.ValidationMessageFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[2])
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[3], new { @class = "form-control input-xs non_mandatory_field_halo" })
+                                    @Html.ValidationMessageFor(model => model.CodedEncounter.Procedures[0].DiagnosisPointers[3])
+                                </td>
+                               
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].Amount, new { @class = "form-control input-xs non_mandatory_field_halo UnitChargesInform", @type = "number" })
+                                    @Html.ValidationMessageFor(model => model.CodedEncounter.Procedures[0].Amount)
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.CodedEncounter.Procedures[0].Units, new { @class = "form-control input-xs non_mandatory_field_halo UnitChargesInform", @type = "number" })
+                                    @Html.ValidationMessageFor(model => model.CodedEncounter.Procedures[0].Units)
+                                </td>
+                                <td>
+                                    @*@Html.TextBoxFor(model => model.ServiceLines[0].UnitCharges, new { @class = "form-control input-xs non_mandatory_field_halo" })*@
+                                    <input type="text" disabled name="" class="form-control input-xs non_mandatory_field_halo UnitChargesValuesInform" />
+
+                                </td>
+                                <td>
+                                    @*@Html.TextBoxFor(model => model.ServiceLines[0].EMG, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "EMG" })*@
+                                </td>
+                                <td>
+                                    @*@Html.TextBoxFor(model => model.ServiceLines[0].EPSDT, new { @class = "form-control input-xs non_mandatory_field_halo", placeholder = "EPSDT" })*@
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-xs pull-right" type="button" id="AddNewServiceLineBtn"><i class="fa fa-plus"></i></button>
+                                </td>
+                            </tr>                       
+                        </tbody>
+                    </table>
+                    @*<div>
+                            <button class="btn btn-success btn-xs pull-right" id="AddNewServiceLineBtn"><i class="fa fa-plus"></i></button>
+                        </div>*@
+                </div>
+
+
+            </div>
+            <div class="x_content">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    @Html.Label("Total Charges ($)")
+                    @*@Html.TextBoxFor(model => model.TotalCharges, new { @class = "form-control input-xs non_mandatory_field_halo" })*@
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    @Html.LabelFor(model => model.AmountPaid)
+                    @Html.TextBoxFor(model => model.AmountPaid, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                </div>
+            </div>
+
+            <div class="x_content">
+                <div id="authChangeButtons" class="x_panel border_on_panel">
+                    <button class="btn btn-sm btn-warning pull-left" id="GoToCreateClaimsTempBtn">Back</button>
+                    <button type="submit" class="btn btn-sm btn-primary pull-right" id="GoToCMS1500Btn">Preview</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    @* ----------------------hidden fields------------------------------- *@
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.LastName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.MiddleName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.FirstName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.DateOfBirth)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Gender)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.PatientRelationShipCode)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.ContactInfo.Address.AddressLine1)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.ContactInfo.Address.AddressLine2)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.ContactInfo.Address.City)
+
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].LastName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].MiddleName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].FirstName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].DOB)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Gender)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].ContactInfo.Address.AddressLine1)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].ContactInfo.Address.AddressLine2)
+
+
+
+
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].PolicyNumber)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.PlanName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.PlanUniqueId)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.PlanName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.Address.AddressLine1)
+@Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.Address.AddressLine2)
+@Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.Address.City)
+@Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.Address.State)
+@Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].Plan.Address.ZipCode)
+
+
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].ContactInfo.Address.AddressLine1)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].ContactInfo.Address.AddressLine2)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].ContactInfo.Address.City)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].ContactInfo.Address.State)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[0].ContactInfo.Address.ZipCode)
+
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[1].LastName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[1].MiddleName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[1].FirstName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[1].PolicyNumber)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Member.Subscriber[1].Plan.PlanName)
+
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.LastName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.MiddleName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.FirstName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.ContactInfo.Address.AddressLine1)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.ContactInfo.Address.AddressLine2)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.ContactInfo.Address.City)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.ContactInfo.Address.State)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.BillingProvider.NPI)
+
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Facility.FacilityName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Facility.FacilityCode)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Facility.Address.AddressLine1)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Facility.Address.AddressLine2)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Facility.Address.City)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Facility.Address.State)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.Facility.Address.ZipCode)
+    
+
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.LastName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.MiddleName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.FirstName)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.ContactInfo.Address.AddressLine1)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.ContactInfo.Address.AddressLine2)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.ContactInfo.Address.City)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.ContactInfo.Address.State)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.ContactInfo.Phone)
+    @Html.HiddenFor(model => model.CodedEncounter.Encounter.EncounteredSchedule[0].Schedule.RenderingProvider.TaxonomyCode)
+
+
+</form>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="selectMedicalReviewCodes">
+    <div class="modal-dialog modal-md c-modaldialog">
+        <form class="modal-content" id="MedicalReviewICDCodespanel"></form>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="selectMemberActiveCodes">
+    <div class="modal-dialog modal-md c-modaldialog">
+        <form class="modal-content" id="MemberActiveICDCodespanel"></form>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="SelectCPTCodesFromHistory">
+    <div class="modal-dialog modal-md c-modaldialog">
+        <form class="modal-content" id="CPTCodesHistorypanel"></form>
+    </div>
+</div>
+
+<p-script filepath="~/Areas/Billing/Scripts/Common/Nonlib/RegularExpressionValidations.js"></p-script>
+<p-script filepath="~/Areas/Billing/Scripts/AppJs/CreateClaims/Unminified/new/claimInfo.js"></p-script>

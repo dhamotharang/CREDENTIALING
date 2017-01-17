@@ -1,0 +1,63 @@
+﻿@model PortalTemplate.Areas.MH.Models.ViewModels.SearchMember.SearchMemberFactorsViewModel
+
+<div id="spinner_wrapper">
+    @using (Ajax.BeginForm("SearchMember", "SearchMember", new { param = "Enrolled" }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "tableWrapper", OnSuccess = "getMembersOnSearch", InsertionMode = InsertionMode.Replace }))
+    {
+        <fieldset class="fsStyle" style="margin-top:15px">
+            <legend class="legendStyle"></legend>
+            <div class="legend2 advancedSearchOptions" style="margin-top: -18px;">
+                <button type="button" class="btn btn-danger btn-xs loser_field hidden" id="closeAdvancedsearchMembersButton"><i class="fa fa-times"></i></button>
+                <button type="button" class="btn btn-primary btn-xs loser_field" id="advancedsearchMembersButton"><i class="fa fa-search"></i></button>
+            </div>
+            <table class="table" id="inputFieldsTable" style="margin-bottom:1px">
+                <thead>
+                    <tr>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SubscriberID)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.LastName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.FirstName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.DOB)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.Gender)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.PhoneNumber)</th>
+                        <th class="theme_label_data"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.TextBoxFor(e => e.SubscriberID, new { @class = "form-control input-xs text-uppercase", @placeholder = "Subscriber ID", @id = "memberIdInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.LastName, new { @class = "form-control input-xs text-uppercase", @placeholder = "Last Name", @id = "lastNameInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.FirstName, new { @class = "form-control input-xs text-uppercase", @placeholder = "First Name", @id = "firstNameInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.DOB, new { @class = "form-control input-xs text-uppercase", @placeholder = "MM/DD/YYYY", @id = "dobInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.Gender, new { @class = "form-control input-xs text-uppercase", @placeholder = "Gender", @id = "genderInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.PhoneNumber, new { @class = "form-control input-xs text-uppercase", @placeholder = "Phone Number", @id = "phoneInput" })</td>
+                        <td id="searchActionItems" class="width_4">
+                            <button type="submit" class="btn btn-primary btn-sm" id="searchMembersButton" disabled><i class="fa fa-search"></i></button>
+                            <button type="button" class="btn btn-cancel btn-sm" id="clearSearchButton" disabled><i class="fa fa-remove"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table hidden" id="advancedInputFieldsTable" style="margin-bottom:10px">
+                <thead>
+                    <tr>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.PCPName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.PCPNPI)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.MedicareID)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.InsuranceCompany)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.PlanName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.EffectiveDate)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.TextBoxFor(e => e.PCPName, new { @class = "form-control input-xs text-uppercase", @placeholder = "PCP Name", @id = "pcpInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.PCPNPI, new { @class = "form-control input-xs text-uppercase", @placeholder = "PCP NPI", @id = "pcpNPI" })</td>
+                        <td>@Html.TextBoxFor(e => e.MedicareID, new { @class = "form-control input-xs text-uppercase", @placeholder = "Medicare ID", @id = "medicaidInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.InsuranceCompany, new { @class = "form-control input-xs text-uppercase", @placeholder = "Insurance Company", @id = "memberInsuranceCo" })</td>
+                        <td>@Html.TextBoxFor(e => e.PlanName, new { @class = "form-control input-xs text-uppercase", @placeholder = "Plan Name", @id = "memberPlanName" })</td>
+                        <td>@Html.TextBoxFor(e => e.EffectiveDate, new { @class = "form-control input-xs text-uppercase", @placeholder = "Effective Date", @id = "memberEffectiveDate" })</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    }
+</div>

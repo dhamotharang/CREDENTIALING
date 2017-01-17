@@ -1,0 +1,220 @@
+﻿@using PortalTemplate.Helper
+<p-link filepath="~/Areas/AM/Styles/Account/AccountList.css" rel="stylesheet"></p-link>
+<p-link filepath="~/Areas/AM/Resources/JSONData/AccountListData.js"></p-link>
+<p-link filepath="~/Areas/AM/Resources/JSONData/BusinessProcessesData.js"></p-link>
+<p-link filepath="~/Areas/AM/Resources/JSONData/AccountsData.js"></p-link>
+<p-link filepath="~/Areas/AM/Resources/JSONData/DepartmentsData.js"></p-link>
+<p-link filepath="~/Areas/AM/Resources/JSONData/Teams.js"></p-link>
+<p-link filepath="~/Areas/AM/Resources/JSONData/Roles.js"></p-link>
+<p-link filepath="~/Areas/AM/Resources/JSONData/Accounts.js"></p-link>
+<p-script filepath="~/Areas/AM/Scripts/Accounts/NonMinified/AccountList.js"></p-script>
+<p-script filepath="~/Areas/AM/Scripts/Accounts/NonMinified/d3.min.js"></p-script>
+@*<p-script filepath="~/Areas/AM/Scripts/bootstrap-multiselect.js"></p-script>
+<p-link filepath="~/Areas/AM/Styles/bootstrap-multiselect.css" />*@
+<p-script filepath="~/Areas/AM/Scripts/Accounts/NonMinified/jquery.multiselect.js"></p-script>
+<p-link filepath="~/Areas/AM/Styles/jquery.multiselect.css" rel="stylesheet" />
+@*<script src="~/Areas/AM/Scripts/Accounts/NonMinified/d3.min.js"></script>*@
+<style>
+    .nav-tabs > li > a {
+        background-color: lightgray;
+    } 
+    .modal-dialog-fullscreen {
+        width: 100%;
+        /*height: 100%;*/
+        margin: 0;
+        padding: 0;
+    }
+
+    .margin-bottom-10px {
+        margin-bottom: 10px;
+    }
+
+    .modal-content-fullscreen {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }
+    .box-shadow {
+        box-shadow: 1px 1px 10px #80c4ff;
+    }
+    .ui-notify {
+        width: 110%;
+    }
+    .work_menu {
+        top: 165px;
+    }
+    .work_menu2 {
+        width: 94%;
+        margin-top: 37px;
+        background: #203764;
+        margin-left: -8px;
+        z-index: 1;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        transition: all 500ms ease;
+        border-top: 1px solid #102c63;
+        border-left: 1px solid #102c63;
+        border-bottom: 1px solid #102c63;
+    }
+    /*svg {
+                border: 1px solid silver;
+            }*/
+    input.normal-checkbox:checked + label > span,
+    input.normal-radio:checked + label > span,
+    input.checkbox-radio:not(:disabled):checked + label > span {
+        background: #4CAF50;
+    }
+
+    .displayblock {
+        display: block;
+    }
+
+    .hideblock {
+        display: none;
+    }
+
+    span.tooltip {
+        position: absolute;
+        text-align: center;
+        width: auto;
+        height: auto;
+        font: 15px sans-serif;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        padding-left: 5px;
+        padding-right: 5px;
+        color: black;
+        background-color: lightblue;
+        pointer-events: none;
+        box-shadow: 2px 2px 10px;
+    }
+
+    .node {
+        cursor: pointer;
+    }
+
+        .node circle {
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+
+    .link {
+        fill: none;
+        stroke: lightgray;
+        stroke-width: 1.5px;
+    }
+
+    .modal-header {
+        padding: 10px 22px 2px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .modal-footer {
+        padding: 9px 29px 6px 30px;
+        text-align: right;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 51px;
+        height: 20px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 11%;
+            background-color: black;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #ccc;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #ccc;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+    .Active {
+        color: green;
+    }
+
+    .Inactive {
+        color: red;
+    }
+</style>
+<div class="tab-content" id="AllAccount" style="background-color: #f7f7f7">
+    
+    @Html.Partial("~/Areas/AM/Views/AccountManagement/_TopMenu.cshtml")
+    @Html.Partial("~/Areas/AM/Views/AccountManagement/_AddNewAccountModal.cshtml")
+    @Html.Partial("~/Areas/AM/Views/AccountManagement/_DeactivateAccountModal.cshtml")
+    @Html.Partial("~/Areas/AM/Views/AccountManagement/_ActivationAccountModal.cshtml")
+    @Html.Partial("~/Areas/AM/Views/AccountManagement/_AddNewUserModal.cshtml")
+  
+    <div id="AccountsListData" hidden>
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_AccountsList.cshtml")
+    </div>
+    <div id="BusinessProcessesData" hidden>
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_BusinessProcesses.cshtml")
+    </div>
+    <div id="ViewAccountData" hidden>
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_ViewAccount.cshtml")
+    </div>
+    @*<div id="EditAccountData" hidden>
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_EditAccount.cshtml")
+    </div>*@
+    <div id="ViewDepartmentsData" hidden>
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_Departments.cshtml")
+    </div>
+    <div id="ViewTeamsData" hidden>
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_Teams.cshtml")
+    </div>
+    <div id="ViewUsersData" >
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_UsersList.cshtml")
+    </div>
+    <div id="ViewUserRolesData" hidden>
+        @Html.Partial("~/Areas/AM/Views/AccountManagement/_UserRoles.cshtml")
+    </div>
+
+</div>
+@*<link href="~/Content/AppCss/EncounterList/encounterListDisplay.css" rel="stylesheet" />*@
+
+

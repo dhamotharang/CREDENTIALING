@@ -1,0 +1,89 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.MedicaidInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+<div>
+    <form class="MedicaidInformationForm">
+        <div class="form-style">
+            <div class="panel-body zero-padding-left-right-div">
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <span ng-if="tempObject.MedicaidInformationID">
+                        @Html.HiddenFor(model => model.MedicaidInformationID, new { ng_value = "tempObject.MedicaidInformationID" })
+                    </span>
+                    @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+                    <div class="col-md-12">
+                        <input type="checkbox" ng-click="isDeclined()" ng-model="tempObject.isDeclined" />&nbsp;<label class="control-label small" style="margin-bottom:20px;">Medicaid ID declined by Provider</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div ng-show="!tempObject.isDeclined">
+                        <div class="col-md-4">
+                            <label class=" control-label small">Medicaid Number*</label>
+                            @Html.TextBoxFor(model => model.LicenseNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.LicenseNumber" })
+                            @Html.ValidationMessageFor(model => model.LicenseNumber, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.State, new { @class = "  control-label small" })
+                            <select class="form-control input-sm" data-ng-model="tempObject.State" name="State" data-val="true" data-val-required="Please enter State*.">
+                                <option selected disabled value="">--select--</option>
+                                <option ng-repeat="state in States" value="{{state}}">{{state}}</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.IssueDate, new { @class = "  control-label small" })
+                            @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy" })
+                            @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div ng-show="!tempObject.isDeclined">
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div ng-class="{'col-lg-11':tempObject.CertificatePath,'col-lg-12':!tempObject.CertificatePath}">
+                            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                <div class="form-control jancyFileWrapTexts" data-trigger="fileinput">
+                                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                    <span class="fileinput-filename wraptext"></span>
+                                </div>
+                                <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                    <span class="fileinput-new small">Select Medicaid Document</span>
+                                    <span class="fileinput-exists">Change</span>
+                                    @Html.TextBoxFor(model => model.CertificateFile, new { name = "CertificateFile", ng_data_model = "tempObject.CertificateFile", type = "file", onchange = "angular.element(this).scope().setFiles(this)" })
+                                </span>
+                                <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                            @Html.HiddenFor(model => model.CertificatePath, new { ng_value = "tempObject.CertificatePath" })
+                            @Html.ValidationMessageFor(model => model.CertificateFile, "", new { @class = "text-danger" })
+                        </div>
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                        {
+                            <div ng-show="tempObject.CertificatePath" class="col-lg-1">
+                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.CertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                            </div>
+                        }
+                    </div>
+                    <div ng-show="activeMessageDiv=='MedicaidError'" class="col-lg-12">
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error List : <br />
+                            <span ng-repeat="err in MedicaidError track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-12">
+                        <div class="col-md-12 zero-padding-left-right-div">
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveMedicaidInformation(tempObject,$index)">{{buttonLabel}}</button>
+                        </div>
+                    </div>
+                
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </form>
+</div>

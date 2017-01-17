@@ -1,0 +1,125 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PratianUI
+@using PortalTemplate.Helper
+<div class="x_panel border_on_panel" id="CPTAreaContainer">
+    <div class="x_content zero_padding_bottom">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right">
+            <button class="btn btn-primary btn-xs addcptrangebtn bold_text pull-left" type="button">Add CPT Range</button>
+        </div>
+    </div>
+    <div class="x_content mozillamargintop">
+        <div class="CPTRowLabelHeader">
+            <div class="col-lg-2 col-md-2 col-sm-8 col-xs-4 zero-padding-left-right">
+                <span class="theme_label"> <label> @Html.ShortNameFor(e => e.CPTCodes[0].CPTCode) </label> </span>
+            </div>
+            <div class="col-lg-1 col-md-2 col-sm-8 col-xs-4 zero-padding-left-right">
+                <span class="theme_label">@Html.LabelFor(e => e.CPTCodes[0].Modifier)</span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3 zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].CPTDesc)</nobr></span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-8 col-xs-4 cptrequnits_rightmargin zero-padding-left-right">
+                <span class="theme_label"><nobr>@Html.LabelFor(e => e.CPTCodes[0].RequestedUnits)</nobr></span>
+            </div>
+            <div class="col-lg-2 col-md-1 col-sm-2 col-xs-1 pull-left button-styles-xs row-action zero-padding-left-right">
+                <span class="theme_label">@Html.Label("ACTION")</span><br />
+            </div>
+            <div class="col-lg-3 col-md-1 col-sm-2 col-xs-1 text-center cptInc_pullleft zero-padding-left-right">
+                <br />
+            </div>
+            <div class="clearfix">
+
+            </div>
+        </div>
+        <div id="CPTArea">
+@{
+                int i = 0;
+}
+@if (Model != null && Model.CPTCodes != null && Model.CPTCodes.Count() > 0)
+{
+    foreach (var item in Model.CPTCodes)
+            {
+            <div class="CPTRow">
+                <div class="col-lg-2 theme_label_data zero-padding-left-right">
+                    @Html.TextBoxFor(e => e.CPTCodes[@i].CPTCode, new { @class = "form-control input-xs cptCode_search_cum_dropdown cptCodes summaryDataChange", @placeholder = "CPT Code" })
+                </div>
+                <div class="col-lg-1 theme_label_data zero-padding-left-right">
+                    @Html.TextBoxFor(e => e.CPTCodes[@i].Modifier, new { @class = "form-control input-xs cptModifier", @placeholder = "MODIFIER" })
+                </div>
+                <div class="col-lg-3 theme_label_data zero-padding-left-right">
+                    @Html.TextBoxFor(e => e.CPTCodes[@i].CPTDesc, new { @class = "form-control input-xs cptDescription_search_cum_dropdown cptDescriptions summaryDataChange", @placeholder = "DESCRIPTION" })
+                    @Html.HiddenFor(e => e.CPTCodes[@i].Discipline, new { @class = "form-control input-xs cptDiscipline", @placeholder = "PLAIN LANGUAGE" })
+                </div>
+                <div class="col-lg-1 theme_label_data cptrequnits_rightmargin zero-padding-left-right">
+                    @Html.TextBoxFor(e => e.CPTCodes[@i].RequestedUnits, new { @class = "form-control input-xs cptReqUnits", @placeholder = "REQ UNITS" })
+                </div>
+@if (Model.CPTCodes.Count() == i + 1 && Model.CPTCodes.Count() != 1)
+{
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action theme_label_data cptButtonArea zero-padding-left-right">
+        <button class="btn btn-danger btn-xs minusButton" type="button"><i class="fa fa-minus"></i></button>
+        <button class="btn btn-success btn-xs plusButton" type="button"><i class="fa fa-plus"></i></button>
+    </div>
+    <div class="col-lg-3 col-md-1 col-sm-2 col-xs-1 cptInc_pullleft zero-padding-left-right pull-left">
+        @*<button class="btn btn-success btn-xs smartIntelligenceBtn bold_text loser_field plainLanguageLetter plain_language_btn">PL</button>*@
+        <button class="btn btn-danger btn-xs smartIntelligenceBtn bold_text calypso_ai_btn" type="button">CALYPSO AI</button>
+    </div>
+}
+else if (Model.CPTCodes.Count() == 1)
+{
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action theme_label_data cptButtonArea zero-padding-left-right">
+        <button class="btn btn-danger btn-xs minusButton hidden" type="button"><i class="fa fa-minus"></i></button>
+        <button class="btn btn-success btn-xs plusButton" type="button"><i class="fa fa-plus"></i></button>
+    </div>
+    <div class="col-lg-3 col-md-1 col-sm-2 col-xs-1 cptInc_pullleft zero-padding-left-right pull-left">
+        @*<button class="btn btn-success btn-xs smartIntelligenceBtn bold_text loser_field plainLanguageLetter plain_language_btn">PL</button>*@
+        <button class="btn btn-danger btn-xs smartIntelligenceBtn bold_text calypso_ai_btn" type="button">CALYPSO AI</button>
+    </div>
+
+}
+else
+{
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action theme_label_data cptButtonArea zero-padding-left-right">
+        <button class="btn btn-danger btn-xs minusButton" type="button"><i class="fa fa-minus"></i></button>
+    </div>
+                        
+    <div class="col-lg-3 col-md-1 col-sm-2 col-xs-1 cptInc_pullleft zero-padding-left-right pull-left">
+    </div>
+}
+                            
+
+                <div class="clearfix"></div>
+            </div>
+i++;
+            }
+}
+else
+{
+     <div class="CPTRow">
+         <div class="col-lg-2 theme_label_data zero-padding-left-right">
+             @Html.TextBoxFor(e => e.CPTCodes[0].CPTCode, new { @class = "form-control input-xs cptCode_search_cum_dropdown cptCodes summaryDataChange", @placeholder = "CPT Code" })
+         </div>
+         <div class="col-lg-1 theme_label_data zero-padding-left-right">
+             @Html.TextBoxFor(e => e.CPTCodes[0].Modifier, new { @class = "form-control input-xs cptModifier", @placeholder = "MODIFIER" })
+         </div>
+         <div class="col-lg-3 theme_label_data zero-padding-left-right">
+             @Html.TextBoxFor(e => e.CPTCodes[0].CPTDesc, new { @class = "form-control input-xs cptDescription_search_cum_dropdown cptDescriptions summaryDataChange", @placeholder = "DESCRIPTION" })
+             @Html.HiddenFor(e => e.CPTCodes[0].Discipline, new { @class = "form-control input-xs cptDiscipline", @placeholder = "PLAIN LANGUAGE" })
+         </div>
+         <div class="col-lg-1 theme_label_data cptrequnits_rightmargin zero-padding-left-right">
+             @Html.TextBoxFor(e => e.CPTCodes[0].RequestedUnits, new { @class = "form-control input-xs cptReqUnits", @placeholder = "REQ UNITS" })
+         </div>
+         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 pull-left button-styles-xs row-action theme_label_data cptButtonArea zero-padding-left-right">
+             <button class="btn btn-danger btn-xs minusButton" type="button"><i class="fa fa-minus"></i></button>
+         </div>
+         <div class="col-lg-3 col-md-1 col-sm-2 col-xs-1 cptInc_pullleft zero-padding-left-right pull-left">
+         </div>
+                <div class="clearfix"></div>
+            </div>
+}
+        </div>
+    </div>
+</div>
+
+
+<div class="clearfix"></div>
+

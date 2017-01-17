@@ -1,0 +1,36 @@
+﻿
+<div id="dis">
+    <form class="form-style">
+        <fieldset ng-repeat="QuestionCategory in masterQuestionCategories">
+            <legend>
+                {{QuestionCategory.Title}}
+            </legend>
+            <div class="zero-padding-left-right-div">
+                <div class="form-group col-md-12 zero-padding-left-right-div" ng-repeat="Question in masterQuestions" ng-if="QuestionCategory.QuestionCategoryID == Question.QuestionCategoryId">
+                    <label class="control-label small col-md-12">{{Question.QuestionID}}. {{Question.Title}}</label>
+                    <div class="col-md-12">
+                        <label class="control-label small">Answer</label>
+                        <div ng-show="disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].ProviderDisclousreAnswer == 'YES'">
+                            <i class="data-label" id="ans">Yes</i>
+                        </div>
+                        <div ng-show="disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].ProviderDisclousreAnswer == 'NO'">
+                            <i class="data-label" id="ans">No</i>
+                        </div>
+                        <div ng-show="!disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].ProviderDisclousreAnswer">
+                            <i class="data-label" id="ans">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="col-md-12 wrap-words" ng-show="disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption == '1'">
+                        <label class="control-label small">Reason</label>
+                        <div>
+                            <i class="data-label">{{disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].Reason || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <div class="clearfix"></div><br />
+            </div>
+        </fieldset>
+        <div class="clearfix"></div>
+    </form>
+</div>

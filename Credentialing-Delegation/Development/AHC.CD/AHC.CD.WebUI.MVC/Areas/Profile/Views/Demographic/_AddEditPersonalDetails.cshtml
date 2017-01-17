@@ -1,0 +1,156 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.PersonalDetailViewModel
+
+
+
+
+<form id="DemographicsPersonalDetailsForm">
+    <span ng-if="TempPersonalDetailsForEdit.PersonalDetailID">
+        @Html.HiddenFor(model => model.PersonalDetailID, new { ng_value = "TempPersonalDetailsForEdit.PersonalDetailID" })
+    </span>
+    @Html.HiddenFor(model => model.UpdateHistory, new { id = "UpdateHistoryHidden" })
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-2 form-group">
+            @Html.LabelFor(model => model.SalutationType, new { @class = "control-label small", id = "UHSalutationType" })
+            @Html.EnumDropDownListFor(Model => Model.SalutationType, "-- select a salutation --", new { @class = "form-control input-sm", data_ng_model = "TempPersonalDetailsForEdit.SalutationType" })
+            @Html.ValidationMessageFor(model => model.SalutationType, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.FirstName, new { @class = "control-label small", id = "UHFirstName" })
+            @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", placeholder = "first name", data_ng_model = "TempPersonalDetailsForEdit.FirstName" })
+            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.MiddleName, new { @class = "control-label small", id = "UHMiddleName" })
+            @Html.TextBoxFor(model => model.MiddleName, new { @class = "form-control input-sm", placeholder = "middle name", data_ng_model = "TempPersonalDetailsForEdit.MiddleName" })
+            @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.LastName, new { @class = "control-label small", id = "UHLastName" })
+            @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-sm", placeholder = "last name", data_ng_model = "TempPersonalDetailsForEdit.LastName" })
+            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-1 form-group" style="padding-left:0px;">
+            @Html.LabelFor(model => model.Suffix, new { @class = "control-label small", id = "UHSuffix" })
+            @Html.TextBoxFor(model => model.Suffix, new { @class = "form-control input-sm", placeholder = "suffix", data_ng_model = "TempPersonalDetailsForEdit.Suffix" })
+            @Html.ValidationMessageFor(model => model.Suffix, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-2 form-group">
+            @Html.LabelFor(model => model.GenderType, new { @class = "control-label small", id = "UHGenderType" })
+            <div>
+                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.GenderType)))
+                {
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.GenderType, (int)value, new { data_ng_model = "TempPersonalDetailsForEdit.GenderType" }) @value.ToString()
+                    </label>
+                }
+            </div>
+            @Html.ValidationMessageFor(model => model.GenderType, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group" ng-if="TempPersonalDetailsForEdit.GenderType==2">
+            @Html.LabelFor(model => model.MaidenName, new { @class = "control-label small", id = "UHMaidenName" })
+            @Html.TextBoxFor(model => model.MaidenName, new { @class = "form-control input-sm", placeholder = "maiden name", data_ng_model = "TempPersonalDetailsForEdit.MaidenName" })
+            @Html.ValidationMessageFor(model => model.MaidenName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">            
+            @*<span ng-if="!TempPersonalDetailsForEdit.MaritalStatusType" ng-init="TempPersonalDetailsForEdit.MaritalStatusType=null"></span>*@            
+            @Html.LabelFor(model => model.MaritalStatusType, new { @class = "control-label small", id = "UHMaritalStatusType" })
+            @Html.EnumDropDownListFor(model => model.MaritalStatusType, "-- select --", new { @class = "form-control input-sm", placeholder = "marital status", data_ng_model = "TempPersonalDetailsForEdit.MaritalStatusType"})            
+            @Html.ValidationMessageFor(model => model.MaritalStatusType, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group" ng-class="{1:'col-lg-3',2:'col-lg-4'}[TempPersonalDetailsForEdit.GenderType]" ng-if="TempPersonalDetailsForEdit.MaritalStatusType==1">
+            @Html.LabelFor(model => model.SpouseName, new { @class = "control-label small", id = "UHSpouseName" })
+            @Html.TextBoxFor(model => model.SpouseName, new { @class = "form-control input-sm", placeholder = "spouse name", data_ng_model = "TempPersonalDetailsForEdit.SpouseName" })
+            @Html.ValidationMessageFor(model => model.SpouseName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-2 form-group">
+            @Html.LabelFor(model => model.ProviderLevelID, new { @class = "control-label small", id = "UHProviderLevelID" })
+            <select class="form-control input-sm" data-ng-model="TempPersonalDetailsForEdit.ProviderLevelID" data-val="true" data-val-required="Please Select Provider Level." id="ProviderLevelID" name="ProviderLevelID">
+                <option value="" ng-selected="!TempPersonalDetailsForEdit.ProviderLevelID" style="display:none;">--Select--</option>
+                <option ng-repeat="providerLevel in ProviderLevels" value="{{providerLevel.ProviderLevelID}}" ng-selected="providerLevel.ProviderLevelID==TempPersonalDetailsForEdit.ProviderLevelID">{{providerLevel.Name}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.ProviderLevelID, "", new { @class = "text-danger" })
+        </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.ProviderTitles, new { @class = "control-label small", id = "UHProviderTitles" })
+                <div>
+                    <input id="providerTypesearch11" class="form-control input-sm" ng-class="{'input-validation-error':TempPersonalDetailsForEdit.ProviderTitles.length == 0 && isHasError}" ng-model="searchproviderType" ng-focus="shoLanguageList('DemographicsProviderTypesSearchResultDiv');searchproviderType='';" placeholder="title" />
+
+                    <span ng-if="TempPersonalDetailsForEdit.ProviderTitles.length == 0 && isHasError" class="text-danger field-validation-error">
+                        <span>Please select the Title.</span>
+                    </span>
+                    <span ng-show="titleCount==0">
+                        <span style="color:red">Please select the Title.</span>
+                    </span>                   
+
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="DemographicsProviderTypesSearchResultDiv">
+                        <table class="table table-striped table-bordered table-hover table-condensed">
+                            <tbody>
+                                <tr ng-repeat="providertype in filteredProviderTypeResults = (tempProviderTypes | filter:searchproviderType)" ng-click="SelectProviderType(providertype)" class="pointer">
+                                    <td>{{providertype.Title}}</td>
+                                </tr>
+                                <tr ng-if="tempProviderTypes.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="tempProviderTypes.length > 0 && filteredProviderTypeResults.length == 0">
+                                    <td>Title not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ProviderTitles, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div ng-if="TempPersonalDetailsForEdit.ProviderTitles.length > 0" class="col-lg-7 form-group">
+                <label class=""></label>
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-10">Title</th>
+                            <th class="col-lg-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="tpt in TempPersonalDetailsForEdit.ProviderTitles track by $index">
+                            <td ng-class="{'success':tpt.StatusType==1,'warning':tpt.StatusType==2}">
+                                <span>{{tpt.ProviderType.Title}}</span>
+                                <span ng-if="tpt.ProviderTitleID">
+                                    <input type="hidden" name="ProviderTitles[{{$index}}].ProviderTitleID" value="{{tpt.ProviderTitleID}}" />
+                                </span>
+                                <input type="hidden" name="ProviderTitles[{{$index}}].ProviderTypeId" value="{{tpt.ProviderTypeId}}" />
+                                <input type="hidden" name="ProviderTitles[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+                                
+                            </td>
+                            <td>
+                                <span ng-if="!tpt.ProviderTitleID" class="label label-danger pointer" ng-click="ActionProviderType(tpt,'remove')" tooltip data-toggle="tooltip" data-placement="left" title="Remove">
+                                    <i class="fa fa-minus-circle"></i> Remove
+                                </span>
+                                <span ng-if="tpt.StatusType==2 && tpt.ProviderTitleID" class="label label-warning pointer" ng-click="ActionProviderType(tpt,'activate')" tooltip data-toggle="tooltip" data-placement="left" title="Click to Activate Title">
+                                    <i id="Demographics_PersonalDetails_Title_Activate_InActivate" class="fa fa-minus-circle"></i> Deactivate
+                                </span>
+                                <span ng-if="tpt.StatusType==1 && tpt.ProviderTitleID" class="label label-success pointer" ng-click="ActionProviderType(tpt,'deactivate')" tooltip data-toggle="tooltip" data-placement="left" title="Click to Inactivate Title">
+                                    <i id="Demographics_PersonalDetails_Title_Activate_InActivate" class="fa fa-minus-circle"></i> Activate
+                                </span>
+                              
+                            </td>
+                            
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <div class="clearfix"></div>
+    <div ng-if="activeMessageDiv=='alertPersonalDetailsError'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+        Errors: <br />
+        <div ng-repeat="err in messageDesc track by $index">{{err}}</div>
+    </div>
+    <div class="col-lg-12">
+        <input id="Demographics_PersonalDetails_Edit_UpdateButton" class="btn btn-primary btn-sm pull-right" type="submit" ng-disabled="titleCount<=0" ng-click="DemographicsUpdatePersonalDetails('DemographicsPersonalDetailsForm')" value="Update" />
+        <button id="Demographics_PersonalDetails_Edit_CancelButton" class="btn btn-warning btn-sm" ng-click="PersonalDetailsToggle('')">Cancel</button>
+    </div>
+</form>

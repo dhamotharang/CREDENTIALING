@@ -1,0 +1,50 @@
+﻿
+<a ng-show="allProviders.length>10" class="btn btn-info btn-sm pull-right" ng-click="goToNextTab('PackageTab')" ng-disabled="selectedProviders.length == '0'">Proceed</a>
+<br />
+<table ng-table="SearchProviderTable" class="table table-bordered table-hover table-condensed alignTableStyle">
+    <thead>
+        <tr>
+            <th rowspan="2">Profile Pic</th>
+            <th>NPI Number</th>
+            <th>Title</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            @*<th>Plan</th>
+                <th>Group</th>*@
+            <th>Speciality</th>
+            <th rowspan="2">Select</th>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="Filter NPI" class="form-control input-sm" ng-model="search.NPI" ng-change="filterData()" /></td>
+            <td><input type="text" placeholder="Filter Title" class="form-control input-sm" ng-model="search.Titles" ng-change="filterData()" /></td>
+            <td><input type="text" placeholder="Filter First Name" class="form-control input-sm" ng-model="search.FirstName" ng-change="filterData()" /></td>
+            <td><input type="text" placeholder="Filter Last Name" class="form-control input-sm" ng-model="search.LastName" ng-change="filterData()" /></td>
+            @*<td><input type="text" placeholder="Filter Plan" class="form-control input-sm" ng-model="search.Plan" /></td>
+                <td><input type="text" placeholder="Filter Group" class="form-control input-sm" ng-model="search.Groups" /></td>*@
+            <td><input type="text" placeholder="Filter Speciality" class="form-control input-sm" ng-model="search.Specialties" ng-change="filterData()" /></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-class="{selectedProvider: p.IsSelected == true}" ng-repeat="p in $data | filter:{NPINumber:search.NPI,Title:search.Titles,FirstName:search.FirstName,LastName:search.LastName,Specialty:search.Specialties} track by $index" ng-show="IsValidIndex($index)">
+            <td class="col-lg-1 wrap-text">
+                <div ng-show="p.ProfilePhotoPath == null" class="thumbnail imageStyle">
+                    <img ng-src="/Content/Images/no_image.png" class="img-rounded" />
+                </div>
+                <div ng-hide="p.ProfilePhotoPath == null" class="thumbnail imageStyle">
+                    <img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{p.ProfilePhotoPath}}" class="img-rounded">
+                </div>
+            </td>
+            <td class="wrap-text">{{p.NPINumber}}</td>
+            <td class="wrap-text">{{p.Title}}</td>
+            <td class="wrap-text">{{p.FirstName}}</td>
+            <td class="wrap-text">{{p.LastName}}</td>
+            @*<td><span ng-repeat="s in p.Plan"><span ng-if="$index > 0">, </span>{{s}}</span></td>
+            <td><span ng-repeat="g in p.Groups"><span ng-if="$index > 0">, </span>{{g}}</span></td>*@
+            <td class="wrap-text">{{p.Specialty}}</td>
+            <td class="col-lg-1 wrap-text">
+                <input type="checkbox" ng-click="SelectProviders(p,$index)" ng-model="p.IsCkecked" name="select">
+            </td>
+        </tr>
+    </tbody>
+</table>
+<a class="btn btn-info btn-sm pull-right" ng-click="goToNextTab('PackageTab')" ng-disabled="selectedProviders.length == '0'">Proceed</a>

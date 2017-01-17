@@ -1,0 +1,447 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.StateLicense>
+
+<style>
+    #StateTable {
+        margin-left: 32px;
+        margin-right: 170px;
+        margin-top: -22px;
+    }
+</style>
+<span class="theme_depend text-uppercase TableHeading">State License History</span>
+<span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right " @*onclick="clearDiv(this)"*@ data-toggle="collapse" data-target="#StateLicenseHistory"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+<div class="x_content zero-padding-left">
+    @*<table class="table table-striped table-bordered claimlist_table dummy_table"><thead><tr></tr></thead></table>*@
+    <table class="table table-striped credAxisList_table custom-thead-back custom-thead-font custom-tbody custom-table-striped custom_margin" cellspacing="0">
+        <thead class="theme_thead text-uppercase">
+            <tr>
+                @*<th class="withfilter" rowspan="1" colspan="1">
+                        <span class="styled-input">
+                            <input type="text" class="filer-search" required /><label>Sl.No</label><span></span>
+                            <i class="fa fa-sort"></i>
+                        </span>
+                    </th>*@
+                <th class="withfilter" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>License Name</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>License#</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+
+                <th class="withfilter" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>License Type</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>Issue Date</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>Curr. Issue Date</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>Expiration Date</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>STATUS</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                    <span class="styled-input">
+                        <input type="text" class="filer-search" required /><label>ACTION</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>STATE LICENSE @item.StateLicenseID</td>
+                    <td>@item.LicenseID</td>
+                    <td>@item.LicenseType</td>
+                    <td>@item.IssueDate</td>
+                    <td>@item.IssueDate</td>
+                    <td>@item.ExpirationDate</td>
+                    @*  <td><a href="#" data-toggle="popover" data-trigger="hover" data-placement="left" data-html="true" data-content="On June 13,2014,Eduffin Made Changes -(1),Added <br /><b>License:-</b> ME6392">...</a></td>*@
+
+                    @{
+                if (item.StateLicenseID == 1)
+                {
+                    <td>Updated</td>
+                }
+                else if (item.StateLicenseID == 2)
+                {
+                    <td>Removed</td>
+                }
+                else
+                {
+                    <td>Renewed</td>
+                }
+
+
+                    }
+                    @*if(@item.LicenseID==1){
+                        <td class=" text-center"><button data-toggle="modal" data-target="#TempHistoryID_@item.StateLicenseID" class="btn btn-default btn-xs styleForViewEyeButton"><i class="fa fa-eye"></i></button> </td>
+                        }
+                        else if(@item.LicenseID==2){
+                        <td class=" text-center"><button data-toggle="modal" data-target="#TempHistoryID_@item.StateLicenseID" class="btn btn-default btn-xs styleForViewEyeButton"><i class="fa fa-eye"></i></button> </td>
+                        }
+                        else{
+                        <td class=" text-center"><button data-toggle="modal" data-target="#TempHistoryID_@item.StateLicenseID" class="btn btn-default btn-xs styleForViewEyeButton"><i class="fa fa-eye"></i></button> </td>
+                        }*@
+                    <td class=" text-center"><button data-toggle="modal" data-target="#TempHistoryID_@item.StateLicenseID" class="btn btn-default btn-xs styleForViewEyeButton"><i class="fa fa-eye"></i></button> </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+
+
+@*<div class="modal fade " tabindex="-1" role="dialog" id="TempHistoryID_1" style="overflow: auto; top: 8%;">
+        <div class="modal-dialog modal-lg ">
+            <form class="modal-content">
+                <div class="modal-header zero_padding_bottom">
+
+                    <div class="col-lg-12">
+                        <div class="col-lg-8" style="PADDING-LEFT: 245px;">
+                            <h4 style="color:white"> &nbsp;STATE LICENSE HISTORY DETAILS </h4>
+                        </div>
+                        <div class="col-lg-4" style=" top: 14px;">
+                            <button type="button" class="btn btn-danger btn-xs pull-right" data-dismiss="modal" id="closeModal">X</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body modalbodyheight  ">
+                    <div class="x_content zero-padding-left text-uppercase">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">LICNESE ID :</label>
+                            <span class="theme_label_data">PA654587985</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">LICENSE TYPE :</label>
+                            <span class="theme_label_data">MD</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">LICENSE STATUS :</label>
+                            <span class="theme_label_data">ACTIVE</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">ISSUE STATE :</label>
+                            <span class="theme_label_data">ALASKA</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">ISSUE DATE :</label>
+                            <span class="theme_label_data">04 - 11 - 2012</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">CURRENT ISSUE DATE :</label>
+                            <span class="theme_label_data">04 - 11 - 2012</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">EXPIRY DATE :</label>
+                            <span class="theme_label_data">04 - 11 - 2014</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">ARE YOU CURRENTLY PRACTICING IN THIS STATE ?  :</label>
+
+                            <span class="theme_label_data">YES</span>
+
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">LICENSE IN GOOD STANDING ? :</label>
+                            <span class="theme_label_data">YES</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">STATUS :</label>
+                            <span class="theme_label_data">MODIFIED</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">UPDATED BY :</label>
+                            <span class="theme_label_data">ELIZABETH</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">UPDATED DATE:</label>
+                            <span class="theme_label_data">12-12-2015</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>*@
+
+@*Update*@
+<div class="modal fade " tabindex="-1" role="dialog" id="TempHistoryID_1" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-lg ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+
+                <div class="col-lg-12">
+                    <div class="col-lg-8" style="PADDING-LEFT: 245px;">
+                        <h4 style="color:white"> &nbsp;STATE LICENSE HISTORY </h4>
+                    </div>
+                    <div class="col-lg-4" style=" top: 14px;">
+                        <button type="button" class="btn btn-danger btn-xs pull-right" data-dismiss="modal" id="closeModal">X</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+
+                <table id="EdwDatabaseTable" class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom table-striped">
+                    <thead class="theme_thead">
+                        <tr>
+                            <th>
+                                FIELD
+                            </th>
+                            <th>
+                                OLD VALUE
+                            </th>
+                            <th>
+                                NEW VALUE
+                            </th>
+                            <th>
+                                DATE
+                            </th>
+                            <th>
+                                OWNER
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>License Type</td>
+                            <td>John</td>
+                            <td>Johnson</td>
+                            <td>12-04-13</td>
+                            <td>Elizabeth</td>
+                        </tr>
+                        <tr>
+                            <td>Issue Date</td>
+                            <td>04-11-13</td>
+                            <td>04-10-13</td>
+                            <td>12-04-13</td>
+                            <td>Elizabeth</td>
+                        </tr>
+                        <tr>
+                            <td>Current Issue Date</td>
+                            <td>04-11-13</td>
+                            <td>06-11-13</td>
+                            <td>12-04-13</td>
+                            <td>Elizabeth</td>
+                        </tr>
+                        <tr>
+                            <td>Issue State</td>
+                            <td>Alaska</td>
+                            <td>Florida</td>
+                            <td>12-04-13</td>
+                            <td>Elizabeth</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@*Renew*@
+<div class="modal fade " tabindex="-1" role="dialog" id="TempHistoryID_2" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-lg ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                @*<div class="row" style="text-align: center;">
+                        <span class="modalTitle text-uppercase">REMOVE DETAIL</span>
+                        <span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+
+                    </div>*@
+                <div class="col-lg-12">
+                    <div class="col-lg-8" style="PADDING-LEFT: 245px;">
+                        <h4 style="color:white"> &nbsp;STATE LICENSE HISTORY DETAILS </h4>
+                    </div>
+                    <div class="col-lg-4" style=" top: 14px;">
+                        <button type="button" class="btn btn-danger btn-xs pull-right" data-dismiss="modal" id="closeModal">X</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                @* <span class="text-uppercase label" style="background-color: #C5CAE9; color: black;">Specialty Detail</span>*@
+                <div class="x_content zero-padding-left text-uppercase">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">LICNESE # :</label>
+                        <span class="theme_label_data">PA654587985</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">LICENSE TYPE :</label>
+                        <span class="theme_label_data">MD</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">LICENSE STATUS :</label>
+                        <span class="theme_label_data">ACTIVE</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">ISSUE STATE :</label>
+                        <span class="theme_label_data">ALASKA</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">ISSUE DATE :</label>
+                        <span class="theme_label_data">04 - 11 - 2012</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">CURRENT ISSUE DATE :</label>
+                        <span class="theme_label_data">04 - 11 - 2012</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">EXPIRATION DATE :</label>
+                        <span class="theme_label_data">04 - 11 - 2014</span>
+                    </div>
+                    @*<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">ARE YOU CURRENTLY PRACTICING IN THIS STATE ?  :</label>
+
+                            <span class="theme_label_data">YES</span>
+
+                        </div>*@
+                    @*<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">LICENSE IN GOOD STANDING ? :</label>
+                            <span class="theme_label_data">YES</span>
+                        </div>*@
+                    @*<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">STATUS :</label>
+                            <span class="theme_label_data">MODIFIED</span>
+                        </div>*@
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label uppercase">DOCUMENT :</label>
+                        <span class="theme_label_data"><i class="fa fa-file"></i></span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">REMOVED BY :</label>
+                        <span class="theme_label_data">ELIZABETH</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">REMOVED DATE:</label>
+                        <span class="theme_label_data">12-12-2015</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@*Remove*@
+<div class="modal fade " tabindex="-1" role="dialog" id="TempHistoryID_3" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-lg ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                @*<div class="row" style="text-align: center;">
+                        <span class="modalTitle text-uppercase">REMOVE DETAIL</span>
+                        <span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+
+                    </div>*@
+                <div class="col-lg-12">
+                    <div class="col-lg-8" style="PADDING-LEFT: 245px;">
+                        <h4 style="color:white"> &nbsp;STATE LICENSE HISTORY DETAILS </h4>
+                    </div>
+                    <div class="col-lg-4" style=" top: 14px;">
+                        <button type="button" class="btn btn-danger btn-xs pull-right" data-dismiss="modal" id="closeModal">X</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                @* <span class="text-uppercase label" style="background-color: #C5CAE9; color: black;">Specialty Detail</span>*@
+                <div class="x_content zero-padding-left text-uppercase">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">LICNESE ID :</label>
+                        <span class="theme_label_data">PA654587985</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">LICENSE TYPE :</label>
+                        <span class="theme_label_data">MD</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">LICENSE STATUS :</label>
+                        <span class="theme_label_data">ACTIVE</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">ISSUE STATE :</label>
+                        <span class="theme_label_data">ALASKA</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">RENEWED BY :</label>
+                        <span class="theme_label_data">ELIZABETH</span>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">RENEWED DATE:</label>
+                        <span class="theme_label_data">12-12-2015</span>
+                    </div>
+                </div>
+            </div>
+            <div id="StateTable">
+                <div class="x_content zero-padding-left">
+                    @*<table class="table table-striped table-bordered claimlist_table dummy_table"><thead><tr></tr></thead></table>*@
+                    <table class="table table-striped  custom-thead-back custom-thead-font custom-tbody custom-table-striped " cellspacing="0">
+                        <thead class="theme_thead text-uppercase">
+                            <tr>
+
+                                <th class="withfilter" rowspan="1" colspan="1">
+                                    <span class="styled-input">
+                                        <input type="text" class="filer-search" required /><label>FIELD NAME</label><span></span><i class="fa fa-sort"></i>
+                                    </span>
+                                </th>
+                                <th class="withfilter" rowspan="1" colspan="1">
+                                    <span class="styled-input">
+                                        <input type="text" class="filer-search" required /><label>OLD VALUE</label><span></span><i class="fa fa-sort"></i>
+                                    </span>
+                                </th>
+
+                                <th class="withfilter" rowspan="1" colspan="1">
+                                    <span class="styled-input">
+                                        <input type="text" class="filer-search" required /><label>NEW VALUE</label><span></span><i class="fa fa-sort"></i>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="theme_label_data">ISSUE DATE</td>
+                                <td class="theme_label_data">04-11-14</td>
+                                <td class="theme_label_data">04-11-16</td>
+                            </tr>
+                            <tr>
+                                <td class="theme_label_data">CURRENT ISSUE DATE</td>
+                                <td class="theme_label_data">08-11-14</td>
+                                <td class="theme_label_data">08-11-16</td>
+                            </tr>
+                            <tr>
+                                <td class="theme_label_data">EXPIRY DATE</td>
+                                <td class="theme_label_data">01-01-14</td>
+                                <td class="theme_label_data">01-10-16</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

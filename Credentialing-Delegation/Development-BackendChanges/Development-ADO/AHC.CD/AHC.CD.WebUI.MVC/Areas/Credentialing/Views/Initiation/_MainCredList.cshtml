@@ -1,0 +1,83 @@
+﻿
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+<script src="~/Areas/Credentialing/Scripts/SingleProviderJS.js"></script>
+
+<div ng-controller="credentialingListController" class="col-lg-12 zero-padding-left-right-div">
+
+    <div class="panel panel-default small">
+        <div class="panel-heading">
+            <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('SearchProviderPanel');"><i class="fa fa-th-list"></i></button>
+            <span class="badge bg-info pull-right" ng-show="ifFilter()">{{getIndexFirst()}} - {{getIndexLast()}} of {{data.length}}</span>
+            <a ng-if="tabID==1" style="margin-right:10px;" class="btn btn-xs btn-primary pull-right" ng-click="setActionID(1);clearAction();" href="/Credentialing/Initiation/Index/_Single_Provider_SearchByDetails.cshtml" data-toggle=" tooltip" data-placement="top" title="Initiate Credentialing">
+                <i class="fa"></i> Initiate Credentialing
+            </a>
+            <a ng-if="tabID==2" style="margin-right:10px;" class="btn btn-xs btn-primary pull-right" ng-click="setActionID(2);clearAction();" href="/Credentialing/Initiation/Index/_Single_Provider_SearchByDetails.cshtml" data-toggle=" tooltip" data-placement="top" title="Initiate ReCredentialing">
+                <i class="fa"></i> Initiate Re-Credentialing
+            </a>
+            <a ng-if="tabID==3" style="margin-right:10px;" class="btn btn-xs btn-primary pull-right" ng-click="setActionID(3);clearAction();" href="/Credentialing/Initiation/Index" data-toggle=" tooltip" data-placement="top" title="Initiate DeCredentialing">
+                <i class="fa"></i> Initiate De-Credentialing
+            </a>
+            <button ng-if="tabID==1 || tabID==2" type="button" style="margin-right:10px;" class="btn btn-xs btn-warning pull-right" ng-click="SelectData(); disableMe = true" ng-disabled="drop" data-toggle=" tooltip" data-placement="top" title="Drop">Drop</button>
+            <div>
+                @*Search Credentialing List &nbsp;&nbsp;*@
+
+                <a style="cursor: pointer; text-decoration: none;" ng-click="getCredList();setActionID(1);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==1}">Credentialing List</a> &nbsp;
+                <a style="cursor: pointer; text-decoration: none;" ng-click="getReCredList();setActionID(2);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==2}">Re-Credentialing List</a> &nbsp;
+                <a style="cursor: pointer; text-decoration: none;" ng-click="getDeCredList();setActionID(3);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==3}">De-Credentialing List</a>
+                
+            </div>
+
+        </div>
+        <div role="tabpanel">
+            <div id="SearchProviderPanel" class="panel-body closePanel">
+
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div ng-show="selectedAction==1" role=" tabpanel" class="tab-pane active" id="providerDetail">
+                            <!---Credentialing List starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_CredentialingList.cshtml")
+                            <!---Credentialing List ends here-->
+                        </div>
+                        <div ng-show="selectedAction==2" role="tabpanel" class="tab-pane active" id="providerDetail">
+                            <!---ReCredentialing List starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_ReCredentialingList.cshtml")
+                            <!---ReCredentialing List ends here-->
+                        </div>
+                        <div ng-show="selectedAction==3" role="tabpanel" class="tab-pane active" id="providerDetail">
+                            <!---DeCredentialing List starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_DeCredentialingList.cshtml")
+                            <!---DeCredentialing List ends here-->
+                        </div>
+                    </div>
+                    <div class="modal fade" id="WarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form id="removeStateLicense">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Do you really want to Drop this provider ?
+                                        @*<input type="hidden" name="StateLicenseInformationID" value="{{tempStateLicense.StateLicenseInformationID}}" />
+                            <input type="hidden" name="StatusType" value="2" />*@
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-primary" ng-click="initiateDrop()">Drop</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

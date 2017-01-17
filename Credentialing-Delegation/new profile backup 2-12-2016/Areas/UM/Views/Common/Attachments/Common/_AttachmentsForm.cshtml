@@ -1,0 +1,62 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Attachment.AttachmentViewModel
+@{
+    List<SelectListItem> DocumentTypeList = new List<SelectListItem>() {
+        new SelectListItem { Text = "CLINICAL", Value = "CLINICAL" },
+        new SelectListItem { Text = "PROGRESS NOTES", Value = "PROGRESS NOTES" },
+        new SelectListItem { Text = "FAX", Value = "FAX" },
+        new SelectListItem { Text = "LOA", Value = "LOA" },
+        new SelectListItem { Text = "PLAN AUTHORIZATION", Value = "PLAN AUTHORIZATION" },
+    };
+}
+<p-script filepath="~/Areas/UM/Scripts/Common/Attachments/Functional/NonMinified/AddAttachments.js"></p-script>
+<div class="container">
+</div>
+<div class="document_modal">
+    <div class="x_content doc_section">
+        <div class="row">
+            <div class="col-lg-6">
+                @Html.Label("DOCUMENT NAME")
+                @Html.TextBoxFor(e => e.Name, new { @class = "form-control  mandatory_field_halo", @placeholder = "DOCUMENT NAME" ,@id="DocumentName" })
+            </div>
+            <div class="col-lg-6">
+                @Html.Label("DOCUMENT TYPE")
+                @Html.DropDownListFor(e => e.AttachmentType, DocumentTypeList, new { @class = "form-control  mandatory_field_halo", @tabindex = "-1", @id="DocumenType" })
+            </div>
+        </div>
+        <br /><br />
+      <div class="row">
+          <div class="col-lg-12">
+              @Html.Label("ATTACH DOCUMENT")
+              <input class="form-control custom-file-input input-xs" type="file" id="DocumentFile">
+              <div class="noFile">NO FILE CHOSEN</div>
+          </div>
+      </div>
+    </div>
+</div>
+
+
+@*Remove this internal CSS later*@
+<style>
+    .custom-file-input[type='file'] {
+        padding-right: 92%;
+        border: none;
+        outline: none;
+        text-transform: uppercase;
+    }
+
+    .noFile {
+        margin-top: -19px;
+        margin-left: 62px;
+        color: #05205b;
+        font-weight: 900;
+    }
+
+    .custom-file-input {
+        border: 1px solid #3859a1 !important;
+        border-left: none !important;
+    }
+
+        .custom-file-input[disabled] {
+            background: linear-gradient(to right, rgb(227, 233, 247) 0%, rgb(184, 203, 233) 0%, rgb(204, 222, 254) 10%, rgba(254,254,254,1) 100%);
+        }
+</style>

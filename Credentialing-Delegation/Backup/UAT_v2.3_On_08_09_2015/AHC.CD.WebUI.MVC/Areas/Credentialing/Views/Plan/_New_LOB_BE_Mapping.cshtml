@@ -1,0 +1,72 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.LOBViewModel
+
+<div ng-if="AddNewPlanLOB">
+    <form id="LOB_BE_MappingForm" class="form-style">
+        <input type="hidden" ng-model="tempObject1.StatusType" value="1" />
+        <fieldset>
+            <legend>
+                General Details
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-md-4 form-group">
+                    <label class="control-label small">Line Of Business</label>
+                    <select data-ng-model="tempObject1.LOBID" class="form-control input-sm" ng-change="SetPlanLOB(tempObject1.LOBID);">
+                        <option selected disabled>-Select-</option>
+                        <option ng-repeat="lob in TempLOBs" value="{{lob.LOBID}}">{{lob.LOBName}}</option>
+                    </select>
+                </div>
+                @*<div class="col-md-4 form-group">
+                    <label class="control-label small">Business Entity</label>
+                    <div>
+                        <input class="form-control input-sm" ng-model="be1.Group.Name" placeholder="select BE" hideshowtoggle />
+                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" style="display:none;">
+                            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr ng-repeat="g1 in fbe1 = (TempBEsForLOB | filter:be1)" ng-click="SelectBusinessEntityForLOB(g1)" class="pointer">
+                                        <td>{{g1.Group.Name}}</td>
+                                    </tr>
+                                    <tr ng-if="TempBEsForLOB.length == 0">
+                                        <td>No data..... </td>
+                                    </tr>
+                                    <tr ng-if="TempBEsForLOB.length > 0 && fbe1.length == 0">
+                                        <td>Business Entity not found..... </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>*@
+                @*<div ng-if="tempObject1.BEs.length > 0" class="col-md-4 form-group">
+                    <label class="control-label small">Selected Business Entities</label>
+                    <div>
+                        <span ng-repeat="pbe1 in tempObject1.BEs" class="label label-primary" style="margin-left: 5px;">{{pbe1.Group.Name}} <span ng-click="RemoveBusinessEntityForLOB(pbe1);" class="pointer">&times;</span></span>
+                    </div>
+                </div>*@
+                <div class="col-lg-12 form-group zero-padding-left-right-div">
+                    <div ng-repeat="sp in tempObject1.SubPlans track by $index" class="col-md-3 form-group">
+                        <label @*ng-if="$index == 0"*@ class="control-label small">Sub Plans &nbsp;&nbsp;&nbsp;<span ng-click="AddSubPlan();" class="label label-primary pointer pull-right"><i class="fa fa-plus"></i> Add</span></label>
+                        <label ng-if="$index > 0" class="control-label small"></label>
+                        <input ng-if="$index == 0" type="text" class="form-control input-sm" data-ng-model="sp.SubPlanName" placeholder="sub plan">
+                        <div ng-if="$index > 0" class="input-group input-group-sm">
+                            <input type="text" class="form-control" data-ng-model="sp.SubPlanName" placeholder="sub plan">
+                            <span class="input-group-btn">
+                                <button ng-click="RemoveSubPlan($index);" class="btn btn-default" type="button"><i class="fa fa-remove"></i></button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        @*@Html.Partial("_LobAddressDetails")
+        @Html.Partial("_LobContactDetails")*@
+        <br />
+        <div class="col-lg-12">
+            <input type="button" value="Save" ng-click="ContractInfoForm('LOB_BE_MappingForm')" class="btn btn-primary btn-sm pull-right" />
+            <input type="button" value="Cancel" ng-click="cancelNewPlanLOB(0)" class="btn btn-warning btn-sm pull-left" />
+        </div>
+    </form>
+</div>
+
+<div ng-if="!AddNewPlanLOB">
+    @Html.Partial("_New_LOB_BE_Mapping_List")
+</div>

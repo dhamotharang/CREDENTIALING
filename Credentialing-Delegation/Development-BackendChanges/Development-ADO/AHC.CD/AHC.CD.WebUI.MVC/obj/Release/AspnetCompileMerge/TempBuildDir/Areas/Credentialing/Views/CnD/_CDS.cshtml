@@ -1,0 +1,95 @@
+﻿<div class="panel-body" ng-repeat="lisence in tab.Info">
+    <form id="PlanForm" class="form-style">
+        <fieldset>
+            <legend>
+                @*{{lisence.name}}*@
+                <strong>{{tab.Info[0].ProfileVerficationParameterObj.Title}}-{{$index+1}}</strong>
+            </legend>
+
+            <div class="col-lg-12">
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>License Number</th>
+                            <th>Issue Date</th>
+                            <th>Expiration Date</th>
+                            <th>Document</th>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div>
+                                    <i class="control-label small wrap-words">{{lisence.VerificationData.CertNumber}}</i>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <i class="control-label small" ng-if="lisence.VerificationData.IssueDate" ng-bind="reformatDate(lisence.VerificationData.IssueDate)"></i>
+                                    @*<i class="control-label small" ng-if="!lisence.VerificationData.IssueDate">Not Available</i>*@
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <i class="control-label small" ng-if="lisence.VerificationData.ExpiryDate" ng-bind="reformatDate(lisence.VerificationData.ExpiryDate)"></i>
+                                    @*<i class="control-label small" ng-if="!lisence.VerificationData.ExpiryDate">Not Available</i>*@
+
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a ng-if="lisence.VerificationData.CDSCCerificatePath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationData.CDSCCerificatePath}}" targ targe target="_blank"><i class="fa fa-file"></i></a>
+                                    @*<i ng-if="!lisence.VerificationData.CDSCCerificatePath">Not Available</i>*@
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-2 form-group">
+                    <label class="control-label small" for="SalutationType">Status</label>
+                    <div>
+                        <i class="data-label wrap-words">{{lisence.VerificationResultObj.VerificationResultStatus}}</i>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 form-group">
+                    @*<input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source" ng-model="lisence.source">*@
+
+                    <label class="control-label small" for="SalutationType">Source</label>
+                    <div>
+                        <a style="cursor:pointer" class="data-label wrap-words" ng-if="lisence.VerificationResultObj.Source" ng-click="checkForHttp(lisence.VerificationResultObj.Source)">{{lisence.VerificationResultObj.Source}}</a>
+                        @*<i class="data-label wrap-words" ng-if="!lisence.VerificationResultObj.Source">Not Available</i>*@
+
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label class="control-label small" for="SalutationType">Remarks</label>
+                        <div>
+                            <i class="data-label wrap-words">{{lisence.VerificationResultObj.Remark}}</i>
+                        </div>
+                        @*<input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks" ng-model="lisence.remarks">*@
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label class="control-label small" for="SalutationType">Verified Document</label>
+                        <div>
+                            <a ng-if="lisence.VerificationResultObj.VerificationDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationResultObj.VerificationDocumentPath}}" targ target="_blank"><i class="fa fa-file"></i></a>
+                            @*<i ng-if="!lisence.VerificationResultObj.VerificationDocumentPath">Not Available</i>*@
+                        </div>
+                        @*<input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks" ng-model="lisence.remarks">*@
+                    </div>
+                </div>
+                <div class="col-lg-2 form-group">
+                    <label class="control-label small" for="SalutationType">Verified Date</label>
+                    <div>
+                        <i class="data-label">{{lisence.VerificationDate | date:'MM-dd-yyyy'}}</i>
+                        @*<label ng-if="!lisence.VerificationResultObj.LastModifiedDate">Not Available</label>*@
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>

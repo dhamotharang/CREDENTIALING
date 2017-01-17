@@ -1,0 +1,104 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Contact.AuthorizationContactViewModel
+@using PortalTemplate.Helper
+@using PratianUI
+<p-script filepath="~/Areas/UM/Scripts/Common/Contacts/Common/NonMinified/ContactFormCommon.js"></p-script>
+<form id="contact_form" onsubmit="return false;">
+    <div class="ContactsModal">
+        <div class="row" id="Contacts">
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.LabelFor(e => e.ContactType)@*<label class="label label-success pull-right contactTypeCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                @Html.DropDownListFor(e => e.ContactType, new SelectList((System.Collections.IEnumerable)ViewData["MasterContactTypes"], "ContactTypeName", "ContactTypeName"), "--Select--", new { @class = "form-control text-uppercase inp Notes_Contact text-uppercase", @id = "Type" })
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.LabelFor(e => e.ContactEntity)@*<label class="label label-success pull-right contactEntityCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                @Html.DropDownListFor(e => e.ContactEntity, new SelectList((System.Collections.IEnumerable)ViewData["MasterContactEntityTypes"], "EntityName", "EntityName"),"--Select--", new { @class = "form-control text-uppercase inp Notes_Contact text-uppercase", @id = "Entity" })
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.LabelFor(e => e.ContactName)
+                @Html.TextBoxFor(e => e.ContactName, new { @class = "form-control inp Notes_Contact text-uppercase", @style = "font-size:14px;", @id = "ContactName", @placeholder = "CONTACT NAME" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4 col-sm-4 col-xs-12" id="ContactDetails">
+                <div id="contactNum">
+                    @Html.Label("CONTACT NUMBER")
+                    @Html.PratianUiPhoneFormatFor(e => e.EMailFaxOther, new { @class = "form-control inp Notes_Contact", @style = "font-size:14px;", @id = "ContactNumber", @placeholder = "CONTACT NUMBER" })
+                </div>
+                <div id="contactfax" style="display:none">
+                    @Html.Label("FAX NUMBER")
+                    @Html.PratianUiPhoneFormatFor(e => e.EMailFaxOther, new { @class = "form-control inp Notes_Contact", @style = "font-size:14px;", @id = "ContactNumber", @placeholder = "FAX NUMBER" })
+                </div>
+                <div id="contactemail" style="display:none">
+                    @Html.Label("EMAIL ID")
+                    @Html.TextBoxFor(e => e.EMailFaxOther, new { @class = "form-control inp Notes_Contact", @style = "font-size:14px;", @id = "ContactNumber", @placeholder = "EMAIL ID" })
+                </div>
+                <div id="contactother" style="display:none">
+                    @Html.Label("CONTACT INFORMATION")
+                    @Html.TextBoxFor(e => e.EMailFaxOther, new { @class = "form-control inp Notes_Contact", @style = "font-size:14px;", @id = "ContactNumber", @placeholder = "CONTACT INFORMATION" })
+                </div>
+                <div id="contactletter" style="display:none">
+                    @Html.Label("CONTACT INFORMATION")
+                    @Html.TextBoxFor(e => e.EMailFaxOther, new { @class = "form-control inp Notes_Contact", @style = "font-size:14px;", @id = "ContactNumber", @placeholder = "CONTACT INFORMATION", @Value="" })
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.LabelFor(e => e.Direction)@*<label class="label label-success pull-right directionCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                <div class="x_content zero_padding_bottom" style="padding-left:0">
+                    <div class="inline_block col-lg-5" style="padding-left:0">
+                        @Html.PratianUiRadioButtonFor(e => e.Direction, "OUTBOUND", new { @id = "outbound", @Value = "OUTBOUND" , @class="contactDirection"})
+                    </div>
+                    <div class="inline_block col-lg-5">
+                        @Html.PratianUiRadioButtonFor(e => e.Direction, "INBOUND", new { @id = "inbound", @Value = "INBOUND", @class = "contactDirection" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.LabelFor(e => e.Reason)@*<label class="label label-success pull-right reasonCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                @Html.DropDownListFor(e => e.Reason, new SelectList((System.Collections.IEnumerable)ViewData["MasterContactReasons"], "ReasonDescription", "ReasonDescription"), "--Select--", new { @class = "form-control text-uppercase inp Notes_Contact text-uppercase", @id = "Reason" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4 col-sm-4 col-xs-12" id="Datetime">
+                @Html.LabelFor(e => e.CallDateTime)
+                @Html.PratianUiDateTimePickerFor(t => t.CallDateTime, "bottom", new { @class = "form-control inp Notes_Contact ", @id = "date", @style = "font-size:14px;" })
+            </div>
+
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.LabelFor(e => e.OutcomeType)@*<label class="label label-success pull-right outcomeTypeCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                <div class="x_content zero_padding_bottom" style="padding-left:0">
+                    <div class="inline_block col-lg-5" style="padding-left:0">
+                        @Html.PratianUiRadioButtonFor(e => e.OutcomeType, "SUCCESSFUL", new { @id = "success", @Value = "SUCCESSFUL", @class = "contactOutcomeType" })
+                    </div>
+                    <div class="inline_block col-lg-7">
+                        @Html.PratianUiRadioButtonFor(e => e.OutcomeType, "UNSUCCESSFUL", new { @id = "unsuccess", @Value = "UNSUCCESSFUL", @class = "contactOutcomeType" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.LabelFor(e => e.Outcome)@*<label class="label label-success pull-right outcomeCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                @Html.DropDownListFor(e => e.Outcome, new SelectList((System.Collections.IEnumerable)ViewData["MasterContactOutcomes"], "OutcomeType", "OutcomeType"), "--Select--", new { @class = "form-control text-uppercase inp Notes_Contact text-uppercase", @id = "outcome" })
+            </div>
+            <input type="text" class="hidden" name="tempContactID" />
+            <input type="checkbox" class="hidden" name="IncludeFax" />
+            <input type="text" class="hidden" name="AuthorizationID" />
+            <input type="text" class="hidden" name="AuthorizationContactID" />
+            <input type="text" class="hidden" name="CreatedDate" />
+            <input type="text" class="hidden" name="Remarks" />
+            <input type="text" class="hidden" name="MemberID" />
+            <input type="text" class="hidden" name="ModuleName" />
+            <input type="text" class="hidden" name="ContactEntityType" />
+            <input type="text" class="hidden" name="PreviewFilePath" />
+            <input type="text" class="hidden" name="Status" />
+            <input type="text" class="hidden" name="ContactViewType" />
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                @Html.LabelFor(e => e.Description)
+                @Html.TextAreaFor(e => e.Description, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "NOTE HERE", @id = "note", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,59 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.WorkersCompensationInfoViewModel
+
+<div class="form-style" ng-if="visibilitySecondControl != 'WorkingCompEdit'">
+    <fieldset class="wrap-words">
+        <legend>
+            Workers Compensation Information
+        </legend>
+        <div class="legend2 pull-right" ng-if="PracticeLocationDetail.WorkersCompensationInformation && !WorkingCompEdit">
+            <button ng-click="WorkingCompEdit=true; operateSecondEditControl('WorkingCompEdit', PracticeLocationDetail.WorkersCompensationInformation); RenewHide();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+            <button ng-click="operateSecondEditControl('WorkingCompEdit', PracticeLocationDetail.WorkersCompensationInformation); RenewDiv();" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="Renew"><i class="fa fa-repeat"></i></button>
+        </div>
+        <table ng-show="PracticeLocationDetail.WorkersCompensationInformation == null && visibilityControl != 'WorkingCompEdit' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+            <thead>
+                <tr>
+                    <td>
+                        No Data Available for Worker's Compensation!
+                        <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateSecondViewAndAddControl('WorkingCompEdit')" data-toggle="tooltip" data-placement="top" title="Add New" id="noDataAddNewPracticeInterest" tooltip><i class="fa fa-plus"></i></button> to add new Worker's Compensation information.</span>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+        <div class="col-md-12" ng-if="PracticeLocationDetail.WorkersCompensationInformation">
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.WorkersCompensationNumber, htmlAttributes: new { @class = "control-label small" })
+                <div >
+                    <i class="data-label">{{PracticeLocationDetail.WorkersCompensationInformation.WorkersCompensationNumber || 'Not Available'}}</i>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.StatusType, htmlAttributes: new { @class = "control-label small" })
+                <div >
+                    <i class="data-label">{{PracticeLocationDetail.WorkersCompensationInformation.CertificationStatus || 'Not Available'}}</i>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.IssueDate, htmlAttributes: new { @class = "control-label small" })
+                <div >
+                    <i class="data-label">{{PracticeLocationDetail.WorkersCompensationInformation.IssueDate || 'Not Available' | date:'MM/dd/yyyy'}}</i>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.ExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                <div >
+                    <i class="data-label">{{PracticeLocationDetail.WorkersCompensationInformation.ExpirationDate || 'Not Available' | date:'MM/dd/yyyy'}}</i>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='workersCompensationInformationSuccessMsg'" class="alert alert-success" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            <div ng-hide="IsRenew">{{messageDesc}}</div>
+            <div ng-show="IsRenew"> Worker Compensation Renewed Successfully !!</div>
+        </div>
+        @*<div ng-show="IsRenew'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+
+            </div>*@
+    </fieldset>
+</div>

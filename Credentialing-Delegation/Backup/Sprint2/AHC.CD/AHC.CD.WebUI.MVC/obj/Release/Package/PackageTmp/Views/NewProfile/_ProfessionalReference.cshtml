@@ -1,0 +1,478 @@
+﻿<br />
+<div class="panel-group" id="professionalreference" role="tablist" aria-multiselectable="true" ng-controller="ProfessionalReference">
+    <div class="panel panel-default">
+        <div class="panel-heading text-right">
+            <button class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="left" title="Collapse All" onclick="collapseAll(this)"><i class="fa fa-minus-square-o"></i></button>
+            <button class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="right" title="Expand All" onclick="expandAll(this)"><i class="fa fa-plus-square-o"></i></button>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="professionalreferenceHeading">
+            <a class="collapsed" data-toggle="collapse" data-parent="#professionalreference" href="#profref" aria-expanded="false" aria-controls="primaryInfo">
+                Professional Reference
+                <span class="glyphicon glyphicon-minus pull-right"></span>
+            </a>
+        </div>
+        <div id="profref" class="panel-body panel-collapse collapse in" role="tabpanel" aria-labelledby="professionalreferenceHeading">
+            <div class="form-style">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table class="table table-bordered table-condensed customtbodyStyle">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Title</th>
+                                <th>Telephone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="pr in ProfessionalReferences">
+                            <tr>
+                                <td>{{pr.FirstName}}</td>
+                                <td>{{pr.MiddleName}}</td>
+                                <td>{{pr.LastName}}</td>
+                                <td>{{pr.Title}}</td>
+                                <td>{{pr.Telephone}}</td>
+                                <td>
+                                    <button class="btn btn-xs btn-primary" ng-click="editProfessionalReference($index,pr)"><i class="fa fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr ng-show="showingDetails && pr==professionalReference">
+                                <td colspan="6" id="professionalReferenceEditDiv{{$index}}" class="editTableDataStyle">Java Script or Jquery or Angular Error!!!!!!!!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                @*<div class="panel-body table-bordered">*@
+
+                @*<div class="col-lg-12" id="professionalContainer">
+                <div class="col-lg-12">
+                    <div class="col-lg-12 text-center table-bordered">
+                        <div class="col-lg-3"><strong>Employer Name</strong></div>
+                        <div class="col-lg-3"><strong>Title</strong></div>
+                        <div class="col-lg-3"><strong>Telephone</strong></div>
+                        <div class="col-lg-3"><strong>Edit</strong></div>
+                    </div>
+                </div>
+                <div class="col-lg-12" id="professionalData">
+                    <div class="col-lg-12 text-center table-bordered">
+                        <div class="col-lg-3">Employer 1</div>
+                        <div class="col-lg-3">MO</div>
+                        <div class="col-lg-3">8951205543</div>
+                        <div class="col-lg-3">
+                            <button class="btn btn-xs btn-primary" onclick="toggleChildDiv('professionalForm1', this)"><i class="fa fa-edit"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-lg-12" id="professionalForm1" style="display:none;">
+                        <div class="form-group">
+                            <div class="col-lg-12">
+
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">First Name *</label>
+                                    <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="first name">
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Middle Name</label>
+                                    <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="middle name">
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Last Name *</label>
+                                    <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="last name">
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Title *</label>
+                                    <div>
+                                        <select class="form-control input-sm" id="provider_code">
+                                            <option>MO</option>
+                                            <option>PO</option>
+                                            <option>MD</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label small">Number *</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" required />
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="control-label small">Street *</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-4">
+                                    <label class="control-label small">Suite/Building</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" required />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="control-label small">State *</label>
+                                    <div>
+                                        <select id="state" name="" class="form-control input-sm" required>
+                                            <option>Florida</option>
+                                            <option>California</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="control-label small">City *</label>
+                                    <div>
+                                        <select id="city" name="" class="form-control input-sm" required>
+                                            <option>Spring Hill</option>
+                                            <option>New York</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-4">
+                                    <label class="control-label small">ZIP Code *</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" required />
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="MobileNo" class="control-label small">Telephone *</label>
+                                    <div>
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                                            </div>
+                                            <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                                                <div class="arrow"></div>
+                                                <h3 class="popover-title">Select Country Dial Code</h3>
+                                                <div class="popover-content">
+                                                    <select id="ContactContryCode">
+                                                        <option>+91</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <input type="text" name="PhoneNo" class="form-control input-sm" id="PhoneNo" placeholder="Phone Number" required>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="MobileNo" class="control-label small">Fax</label>
+                                    <div>
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                                            </div>
+                                            <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                                                <div class="arrow"></div>
+                                                <h3 class="popover-title">Select Country Dial Code</h3>
+                                                <div class="popover-content">
+                                                    <select id="ContactContryCode">
+                                                        <option>+91</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <input type="text" name="PhoneNo" class="form-control input-sm" id="PhoneNo" placeholder="Fax Number" required>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12 panel-footer">
+                                <div class="col-md-12">
+                                    <button class="btn btn-success pull-right" onclick="closeChildDiv('professionalForm1')">Update</button>
+                                    <button class="btn btn-warning" onclick="closeChildDiv('professionalForm1')">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+                <div id="professionalReferenceForm" style="display:none;">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-3 form-group">
+                            <label class="control-label small">Title *</label>
+                            <div>
+                                <select class="form-control input-sm" id="provider_code">
+                                    <option>MO</option>
+                                    <option>PO</option>
+                                    <option>MD</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 form-group">
+                            <label class="control-label small">First Name *</label>
+                            <input type="text" ng-model="professionalReference.FirstName" class="form-control input-sm" id="exampleInputEmail1" placeholder="first name">
+                        </div>
+                        <div class="col-lg-3 form-group">
+                            <label class="control-label small">Middle Name</label>
+                            <input type="text" ng-model="professionalReference.MiddleName" class="form-control input-sm" id="exampleInputEmail1" placeholder="middle name">
+                        </div>
+                        <div class="col-lg-3 form-group">
+                            <label class="control-label small">Last Name *</label>
+                            <input type="text" ng-model="professionalReference.LastName" class="form-control input-sm" id="exampleInputEmail1" placeholder="last name">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">Unit Number *</label>
+                            <div>
+                                <input type="text" class="form-control input-sm" required />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">Suite/Building</label>
+                            <div>
+                                <input type="text" class="form-control input-sm" required />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">Street *</label>
+                            <div>
+                                <input type="text" class="form-control input-sm" required />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">State *</label>
+                            <div>
+                                <select id="state" name="" class="form-control input-sm" required>
+                                    <option>Florida</option>
+                                    <option>California</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">County *</label>
+                            <div>
+                                <select id="state" name="" class="form-control input-sm" required>
+                                    <option>Columbia</option>
+                                    <option>Putnam</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">City *</label>
+                            <div>
+                                <select id="city" name="" class="form-control input-sm" required>
+                                    <option>Spring Hill</option>
+                                    <option>New York</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">ZIP Code *</label>
+                            <div>
+                                <input type="text" class="form-control input-sm" required />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="MobileNo" class="control-label small">Telephone *</label>
+                            <div>
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                                    </div>
+                                    <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                                        <div class="arrow"></div>
+                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                        <div class="popover-content">
+                                            <select id="ContactContryCode">
+                                                <option>+91</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="text" name="PhoneNo" class="form-control input-sm" id="PhoneNo" placeholder="Phone Number" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="MobileNo" class="control-label small">Fax</label>
+                            <div>
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                                    </div>
+                                    <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                                        <div class="arrow"></div>
+                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                        <div class="popover-content">
+                                            <select id="ContactContryCode">
+                                                <option>+91</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="text" name="PhoneNo" class="form-control input-sm" id="PhoneNo" placeholder="Fax Number" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button ng-show="professionalReferenceFormStatus" type="button" class="btn btn-warning btn-sm" ng-click="cancelProfessionalReference('editCancel')">Cancel</button>
+                            <button ng-show="!professionalReferenceFormStatus" type="button" class="btn btn-warning btn-sm" ng-click="cancelProfessionalReference('saveCancel')">Cancel</button>
+                            <button ng-show="!professionalReferenceFormStatus" type="button" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalReference(professionalReference)">Add</button>
+                            <button ng-show="professionalReferenceFormStatus" type="button" class="btn btn-primary btn-sm pull-right" ng-click="updateProfessionalReference(professionalReference)">Update</button>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="form-group" ng-repeat="n in professionalReferenceList">
+                <i class="fa fa-times text-danger pull-right" ng-click="deleteProfessionalReference($index)"></i>
+
+                <div class="col-lg-12">
+
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">First Name *</label>
+                        <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="first name">
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">Middle Name</label>
+                        <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="middle name">
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">Last Name *</label>
+                        <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="last name">
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">Title *</label>
+                        <div>
+                            <select class="form-control input-sm" id="provider_code">
+                                <option>MO</option>
+                                <option>PO</option>
+                                <option>MD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">Number *</label>
+                        <div>
+                            <input type="text" class="form-control input-sm" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">Street *</label>
+                        <div>
+                            <input type="text" class="form-control input-sm" required />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">Suite/Building</label>
+                        <div>
+                            <input type="text" class="form-control input-sm" required />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">State *</label>
+                        <div>
+                            <select id="state" name="" class="form-control input-sm" required>
+                                <option>Florida</option>
+                                <option>California</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">City *</label>
+                        <div>
+                            <select id="city" name="" class="form-control input-sm" required>
+                                <option>Spring Hill</option>
+                                <option>New York</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">ZIP Code *</label>
+                        <div>
+                            <input type="text" class="form-control input-sm" required />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="MobileNo" class="control-label small">Telephone *</label>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                                </div>
+                                <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select id="ContactContryCode">
+                                            <option>+91</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="text" name="PhoneNo" class="form-control input-sm" id="PhoneNo" placeholder="Phone Number" required>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="MobileNo" class="control-label small">Fax</label>
+                        <div>
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                                </div>
+                                <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select id="ContactContryCode">
+                                            <option>+91</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="text" name="PhoneNo" class="form-control input-sm" id="PhoneNo" placeholder="Fax Number" required>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 panel-footer">
+                    <button class="btn btn-sm btn-warning pull-left">Save</button>
+                    <button class="btn btn-sm btn-success pull-right">Initiate Verification</button>
+                </div>
+            </div>*@
+
+                <div class="clearfix"></div>
+                <fieldset ng-show="newProfessionalReferenceForm && !professionalReferenceFormStatus">
+                    <legend>
+                        Add Professional Reference
+                    </legend>
+                    <div id="newProfessionalReferenceFormDiv">
+
+                    </div>
+                </fieldset>
+
+                <div ng-hide="professionalReferenceFormStatus || newProfessionalReferenceForm" class="col-md-12 text-right">
+                    <button class="btn btn-xs btn-primary" ng-click="addProfessionalReference()"><i class="fa fa-plus"></i> Add Professional Reference</button>
+                </div>
+                @*</div>*@
+            </div>
+        </div>
+    </div>
+
+</div>
+

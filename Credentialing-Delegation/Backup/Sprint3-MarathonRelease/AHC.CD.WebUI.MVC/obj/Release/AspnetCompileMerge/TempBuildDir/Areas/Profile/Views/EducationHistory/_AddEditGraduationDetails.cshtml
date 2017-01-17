@@ -1,0 +1,306 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.EducationDetailViewModel
+
+        <div class="clearfix"></div>
+<form id="PGForm">
+    <div id="graduationForm">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+        <span ng-if="tempObject.EducationDetailID">
+            @Html.HiddenFor(model => model.EducationDetailID, new { id = "EducationDetailID", ng_value = "tempObject.EducationDetailID", data_ng_model = "tempObject.EducationDetailID" })
+        </span>
+            @Html.HiddenFor(model => model.EducationQualificationType, new { id = "EducationQualificationType", ng_value = "2", data_ng_model = "tempObject.EducationQualificationType" })
+        
+        <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+            <label>*Provide the appropriate information for the school that issued your professional degree</label><br />
+        </div>
+        <div class=" col-lg-12 zero-padding-left-right-div">
+            <fieldset>
+                <legend>
+                    School & Address Details
+                </legend>
+                <span ng-if="tempObject.SchoolInformation.SchoolInformationID">
+                    @Html.HiddenFor(model => model.SchoolInformation.SchoolInformationID, new { id = "SchoolInformationID", ng_value = "tempObject.SchoolInformation.SchoolInformationID", data_ng_model = "tempObject.SchoolInformation.SchoolInformationID" })
+
+                </span>
+                <div class="col-lg-12">
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.GraduateType, htmlAttributes: new { @class = "control-label small" })
+                    &nbsp;&nbsp;
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.EducationGraduateType)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.GraduateType, (int)value, new { data_ng_model = "tempObject.GraduateType" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.GraduateType, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.USGraduateYesNoOption, htmlAttributes: new { @class = "control-label small" })
+                    @*<label class="control-label small">US Graduate ?</label>*@
+                    &nbsp;&nbsp;
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.USGraduateYesNoOption, (int)value, new { data_ng_model = "tempObject.USGraduateYesNoOption" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.USGraduateYesNoOption, "", new { @class = "text-danger" })
+                </div>
+        </div>
+        <div class="col-lg-12">
+            <div ng-hide="tempObject.USGraduateYesNoOption == 2" class="form-group col-md-6">
+
+                @Html.LabelFor(model => model.SchoolInformation.SchoolName, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select id="schoolName" class="form-control input-sm" name="SchoolInformation.SchoolName" ng-model="tempObject.SchoolInformation.SchoolName">
+                        <option>--Select--</option>
+                        <option ng-repeat="school in masterSchools" value="{{school.Name}}">{{school.Name}}</option>
+                    </select>
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.SchoolName, "", new { @class = "text-danger" })
+            </div>
+            <div ng-show="tempObject.USGraduateYesNoOption == '2'" class="form-group col-md-6">
+                @Html.LabelFor(model => model.SchoolInformation.SchoolName, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.SchoolInformation.SchoolName, new { @class = "form-control input-sm", placeholder = "School Name", data_ng_model = "tempObject.SchoolInformation.SchoolName" })
+                    @Html.ValidationMessageFor(model => model.SchoolInformation.SchoolName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.QualificationDegree, htmlAttributes: new { @class = "control-label small" })
+                <select class="form-control input-sm" name="QualificationDegree" ng-model="tempObject.QualificationDegree">
+                    <option>--Select--</option>
+                    <option ng-repeat="degree in masterDegrees" value="{{degree.Title}}">{{degree.Title}}</option>
+                </select>
+                @Html.ValidationMessageFor(model => model.QualificationDegree, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-12">
+            @*<div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.Number, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.SchoolInformation.Number, new { @class = "form-control input-sm", placeholder = "number", data_ng_model = "graduationDetailViewModel.SchoolInformation.Number" })
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.Number, "", new { @class = "text-danger" })
+            </div>*@
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.Building, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.SchoolInformation.Building, new { @class = "form-control input-sm", placeholder = "building", data_ng_model = "tempObject.SchoolInformation.Building" })
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.Building, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.Street, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.SchoolInformation.Street, new { @class = "form-control input-sm", placeholder = "street", data_ng_model = "tempObject.SchoolInformation.Street" })
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.Street, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.Country, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select id="Country" class="form-control input-sm" name="SchoolInformation.Country" ng-model="tempObject.SchoolInformation.Country" ng-change="getStates(tempObject.SchoolInformation.Country)">
+                        <option ng-repeat="country in Countries" value="{{country.Code}}" ng-selected="country.Code == tempObject.SchoolInformation.Country">{{country.Name}}</option>
+                    </select>
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.Country, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.State, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select id="State" class="form-control input-sm" name="SchoolInformation.State" ng-model="tempObject.SchoolInformation.State" ng-change="getCounties(tempObject.SchoolInformation.State)">
+                        <option>-- select --</option>
+                        <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}" ng-selected="state.State == tempObject.SchoolInformation.State">{{state.State}}</option>
+                    </select>
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.State, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.County, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select id="County" name="SchoolInformation.County" class="form-control input-sm ng-pristine ng-valid ng-touched" ng-model="tempObject.SchoolInformation.County" ng-change="getCities(tempObject.SchoolInformation.County)">
+                        <option>-- select --</option>
+                        <option ng-repeat="county in Counties | unique: 'County'" value="{{county.County}}" ng-selected="county.County == tempObject.SchoolInformation.County">{{county.County}}</option>
+                    </select>
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.County, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.City, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select id="City" name="SchoolInformation.City" class="form-control input-sm ng-pristine ng-valid ng-touched" ng-model="tempObject.SchoolInformation.City">
+                        <option>-- select --</option>
+                        <option ng-repeat="city in Cities | unique: 'City'" value="{{city.City}}" ng-selected="city.City == tempObject.SchoolInformation.City">{{city.City}}</option>
+                    </select>
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.SchoolInformation.Zipcode, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.SchoolInformation.Zipcode, new { @class = "form-control input-sm", placeholder = "Zip Code", data_ng_model = "tempObject.SchoolInformation.ZipCode" })
+                </div>
+                @Html.ValidationMessageFor(model => model.SchoolInformation.Zipcode, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.SchoolInformation.Phone, htmlAttributes: new { @class = "control-label small" })
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                    </div>
+                    <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                        <div class="arrow"></div>
+                        <h3 class="popover-title">Select Country Dial Code</h3>
+                        <div class="popover-content">
+                            <select id="ContactContryCode">
+                                <option>+91</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(model => model.SchoolInformation.Phone, new { @class = "form-control input-sm", placeholder = "phone number", data_ng_model = "tempObject.SchoolInformation.Phone" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.SchoolInformation.Phone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.SchoolInformation.Fax, htmlAttributes: new { @class = "control-label small" })
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                    </div>
+                    <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                        <div class="arrow"></div>
+                        <h3 class="popover-title">Select Country Dial Code</h3>
+                        <div class="popover-content">
+                            <select id="ContactContryCode">
+                                <option>+91</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(model => model.SchoolInformation.Fax, new { @class = "form-control input-sm", placeholder = "fax number", data_ng_model = "tempObject.SchoolInformation.Fax" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.SchoolInformation.Fax, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control input-sm", placeholder = "start date", data_ng_model = "tempObject.StartDate" })
+                </div>
+                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control input-sm", placeholder = "end date", data_ng_model = "tempObject.EndDate" })
+                </div>
+                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.CompletedYesNoOption, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                    {
+                        <label class="radio-inline">
+                            @Html.RadioButtonFor(model => model.CompletedYesNoOption, (int)value, new { data_ng_model = "tempObject.CompletedYesNoOption" }) @value.ToString()
+                        </label>
+                    }
+                </div>
+                @Html.ValidationMessageFor(model => model.CompletedYesNoOption, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="col-lg-11 form-group">
+                @Html.HiddenFor(model => model.CertificatePath, new { ng_value = "tempObject.CertificatePath" })
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{tempObject.CertificatePath}}</span></div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new">@Html.LabelFor(model => model.CertificateDocumentFile, htmlAttributes: new { @class = "control-label small" })</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.CertificateDocumentFile, new { name = "CertificateDocumentFile", id = "CertificateDocumentFile", type = "file", data_ng_model = "tempObject.CertificateDocumentFile" })</span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+            <div class="col-lg-1 form-group">
+                <div ng-show="tempObject.CertificatePath">
+                    <a href="{{tempObject.CertificatePath}}" target="_blank"><i class="fa fa-3x fa-file"></i></a>
+                </div>
+            </div>
+        </div>
+
+            </fieldset>
+
+        <div class="clearfix"></div>
+            <fieldset ng-if="tempObject.USGraduateYesNoOption == 2">
+                <legend>
+                    ECFMG Details
+                </legend>
+                <span ng-if="tempObject.ECFMGDetail.ECFMGDetailID">
+                    @Html.HiddenFor(model => model.ECFMGDetail.ECFMGDetailID, new { id = "SchoolInformationID", ng_value = "tempObject.ECFMGDetail.ECFMGDetailID", data_ng_model = "tempObject.ECFMGDetail.ECFMGDetailID" })
+                </span>
+                <div class="col-lg-12">
+                <div class="col-lg-6 form-group">
+
+                    @Html.LabelFor(model => model.ECFMGDetail.ECFMGNumber, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.ECFMGDetail.ECFMGNumber, new { @class = "form-control input-sm", placeholder = "ECFMG Number", data_ng_model = "tempObject.ECFMGDetail.ECFMGNumber" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ECFMGDetail.ECFMGNumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.ECFMGDetail.ECFMGIssueDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.ECFMGDetail.ECFMGIssueDate, new { type = "date", @class = "form-control input-sm", placeholder = "ECFMG Issue date", data_ng_model = "tempObject.ECFMGDetail.ECFMGIssueDate" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ECFMGDetail.ECFMGIssueDate, "", new { @class = "text-danger" })
+                </div>
+                    </div>
+                <div class="col-lg-12">
+                    <div class="col-md-11 form-group">
+                        @Html.HiddenFor(model => model.CertificatePath, new { ng_value = "tempObject.ECFMGDetail.ECFMGCertPath" })
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{tempObject.ECFMGDetail.ECFMGCertPath}}</span></div>
+                            <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new">@Html.LabelFor(model => model.ECFMGDetail.ECFMGCertificateDocumentFile, htmlAttributes: new { @class = "control-label small" })</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.ECFMGDetail.ECFMGCertificateDocumentFile, new { name = "tempObject.ECFMGDetail.ECFMGCertificateDocumentFile", type = "file", data_ng_model = "tempObject.ECFMGDetail.ECFMGCertificateDocumentFile" })</span>
+                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-1">
+                        <div ng-show="tempObject.ECFMGDetail.ECFMGCertPath" class="col-md-1">
+                            <a href="{{tempObject.ECFMGDetail.ECFMGCertPath}}" target="_blank"><i class="fa fa-3x fa-file"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="clearfix"></div><br />
+            <div class="col-md-12 form-group">
+                <button ng-show="visibilityControl==($index+'_editgraduationDetailViewModel')" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                <button ng-show="visibilityControl=='addgraduationDetailViewModel'" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                <button ng-show="visibilityControl=='addgraduationDetailViewModel'" type="button" class="btn btn-primary btn-sm pull-right" ng-click="saveGraduation(tempObject)">Add</button>
+                <button ng-show="visibilityControl==($index+'_editgraduationDetailViewModel')" type="button" class="btn btn-primary btn-sm pull-right" ng-click="saveGraduation(tempObject,$index)">Update</button>
+            </div>
+            <div ng-show="ErrorInPGDetails" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="pull-right" ng-click="ErrorInPGDetails=false"><i class="fa fa-times"></i></span>
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists : <br />
+                    <span ng-repeat="err in PGDetailsErrorList track by $index">{{err}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

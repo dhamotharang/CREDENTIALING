@@ -1,0 +1,292 @@
+﻿
+<script src="~/Scripts/Custom/Profile/demographics.js"></script>
+
+<style>
+    .instruction-style {
+        font-style: italic;
+        font-size: x-small;
+        color: red;
+    }
+</style>
+
+<br />
+<div class="form-style" ng-controller="profileDemographicsController">
+    <fieldset>
+        <legend>
+            Personal Details
+        </legend>
+        <div ng-if="visibilityControl!='_EditPersonalDetails'" class="legend2 pull-right">
+            <button ng-click="operateEditControl('_EditPersonalDetails',Provider.PersonalDetails)" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+        </div>
+        <div class="col-lg-12 text-right">
+            <span class="instruction-style">
+                Do not use nicknames or initials, unless they are part of your legal names
+            </span>
+        </div>        
+        <div ng-if="visibilityControl!='_PersonalDetailProfilePic'" ng-hide="!Provider.ProfilePhotoPath" class="col-lg-1 zero-padding-left-right-div pull-right text-center">
+            <img ng-src="{{Provider.ProfilePhotoPath}}" alt="Image 1" style="width: 83px; height: 83px;" class="img-thumbnail pull-right" />
+            <button ng-click="operateViewAndAddControl('_PersonalDetailProfilePic')" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-if="visibilityControl=='_PersonalDetailProfilePic' || !Provider.ProfilePhotoPath" class="col-lg-1 zero-padding-left-right-div pull-right text-center">
+            <div class="fileinput fileinput-exists" data-provides="fileinput">
+                <input type="hidden" value="" name="">
+                <div class="fileinput-preview thumbnail file_preview_upload" style="line-height: 83px; background-image: url('/Content/Images/a0.jpg'); background-size: 100% 97%;" data-trigger="fileinput"><img ng-src="{{Provider.ProfilePhotoPath}}"></div>
+                <div>
+                    <form id="ProfilePic" ng-submit="ProfileUpload('ProfilePic')">
+                        <span class="btn btn-primary btn-xs btn-file">
+                            <span class="fileinput-new">Profile Image</span>
+                            <span class="fileinput-exists" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></span>
+                            <input type="file" name="file" accept="image/x-png, image/jpg, image/jpeg, image/bmp" required>
+                        </span>
+                        <a class="btn btn-warning btn-xs fileinput-exists" ng-click="operateCancelControl()" data-toggle="tooltip" data-placement="top" title="Cancel"><i class="fa fa-remove"></i></a>
+                        <button class="btn btn-success btn-xs fileinput-exists" type="submit" data-toggle="tooltip" data-placement="top" title="Upload"><i class="fa fa-upload"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div ng-if="visibilityControl=='_EditPersonalDetails'" class="col-lg-11 zero-padding-left-right-div">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalDetails.cshtml")
+        </div>
+        <div ng-if="visibilityControl!='_EditPersonalDetails'" class="col-lg-11 zero-padding-left-right-div">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalDetails.cshtml")
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Other Legal Names
+        </legend>
+        <span ng-if="Provider.OtherLegalNames.length == 0">
+            Have You Ever Used Another Name ? * &nbsp;&nbsp;&nbsp;
+            <label class="radio-inline">
+                <input type="radio" name="newLegalNameFormYesNo" ng-checked="Provider.OtherLegalNames.length > 0" ng-click="operateViewAndAddControl('_NewOtherLegalName')"> Yes
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="newLegalNameFormYesNo" ng-checked="Provider.OtherLegalNames.length == 0" ng-click="operateCancelControl()"> No
+            </label>
+            <br/>
+            <br/>
+        </span>
+        <div ng-if="Provider.OtherLegalNames.length > 0" class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-12 text-right">
+                <span class="instruction-style">
+                    Do not use nicknames or initials, unless they are part of your legal names
+                </span>
+            </div>
+            <table class="table table-bordered table-condensed customtbodyStyle">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Suffix</th>
+                        <th>Start Using</th>
+                        <th>Stop Using</th>
+                        <th>Certificate</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="oln in Provider.OtherLegalNames">
+                    <tr>
+                        <td>{{oln.OtherFirstName}}</td>
+                        <td>{{oln.OtherMiddleName}}</td>
+                        <td>{{oln.OtherLastName}}</td>
+                        <td>{{oln.Suffix}}</td>
+                        <td>{{oln.StartDate | date: "MM-dd-yyyy"}}</td>
+                        <td>{{oln.EndDate | date: "MM-dd-yyyy"}}</td>
+                        <td>
+                            <a ng-if="oln.DocumentPath" href="{{oln.DocumentPath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Other Legal Name Certificate.pdf"><i class="fa fa-file"></i></a>
+                            <span ng-if="!oln.DocumentPath">Not Available</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewOtherLegalName')" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                            <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditOtherLegalName',oln)" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                            <button ng-if="$index == Provider.OtherLegalNames.length-1" ng-hide="visibilityControl=='_NewOtherLegalName'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewOtherLegalName')" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="visibilityControl==$index+'_EditOtherLegalName'">
+                        <td colspan="8" id="otherLegalNameEditDiv{{$index}}" class="editTableDataStyle">
+                            <fieldset>
+                                <legend>
+                                    Edit Other Legal Name
+                                </legend>
+                                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr ng-if="visibilityControl==$index+'_ViewOtherLegalName'">
+                        <td colspan="8" class="editTableDataStyle">
+                            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewOtherLegalName.cshtml")
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix"></div>
+
+        <fieldset id="newLegalNameForm" ng-if="visibilityControl=='_NewOtherLegalName'">
+            <legend>
+                Add Other Legal Name
+            </legend>
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Contact Information
+        </legend>
+        <fieldset>
+            <legend>
+                Home Address
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <span ng-if="HomeAddresses.length == 0">No Data Available ! Please Provide Home Address... <button class="btn btn-xs btn-primary pull-right" ng-click="operateViewAndAddControl('_NewHomeAddress')"><i class="fa fa-plus"></i> Home Address</button></span>
+                <br />
+                <table ng-if="HomeAddresses.length > 0" class="table table-bordered table-condensed customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>Street</th>
+                            <th>State</th>
+                            <th>County</th>
+                            <th>City</th>
+                            <th>Zip code</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="ha in HomeAddresses">
+                        <tr>
+                            <td>{{ha. UnitNumber+" " +ha.Street}}</td>
+                            <td>{{ha.State}}</td>
+                            <td>{{ha.County}}</td>
+                            <td>{{ha.City}}</td>
+                            <td>{{ha.ZipCode}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewHomeAddress')" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditHomeAddress',ha)" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button ng-if="$index == HomeAddresses.length-1" ng-hide="visibilityControl=='_NewHomeAddress'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewHomeAddress')" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="visibilityControl==$index+'_EditHomeAddress'">
+                            <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend>
+                                        Edit Home Address
+                                    </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr ng-if="visibilityControl==$index+'_ViewHomeAddress'">
+                            <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewHomeAddress.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+
+            <fieldset id="newHomeAddressForm" ng-if="visibilityControl=='_NewHomeAddress'">
+                <legend>
+                    Add Home Address
+                </legend>
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+            </fieldset>
+        </fieldset>
+
+        <fieldset>
+            <legend>
+                Contact Details
+            </legend>
+            <div ng-if="ViewContactDetails" ng-hide="!Provider.ContactDetails.ContactDetailID" class="legend2 pull-right">
+                <button class="btn btn-xs btn-primary" ng-click="ContactDetailsToggle()"><i class="fa fa-edit"></i></button>
+            </div>
+            <div ng-if="!ViewContactDetails">
+                <div class="col-lg-12 text-right">
+                    <span class="instruction-style">
+                        We will use this method for application follow-up.
+                    </span>
+                </div>
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditContactDetails.cshtml")
+            </div>
+            <div ng-if="ViewContactDetails">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewContactDetails.cshtml")
+            </div>
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Personal Identification
+        </legend>
+
+        <div ng-if="visibilityControl!='_EditPersonalIdentification'" ng-hide="!Provider.PersonalIdentification" class="legend2 pull-right">
+            <button class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditPersonalIdentification',Provider.PersonalIdentification)"><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-if="visibilityControl=='_EditPersonalIdentification'">
+            <div class="col-lg-12 text-right">
+                <span class="instruction-style">
+                    Only enter a Foreign Identification Number If you don't have SSN. Don't enter National Identification Number (NPI) here
+                </span>
+            </div>
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalIdentification.cshtml")
+        </div>
+        <div ng-if="visibilityControl!='_EditPersonalIdentification'">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalIdentification.cshtml")
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Birth Information
+        </legend>
+        <div ng-if="visibilityControl!='_EditBirthInformation'" ng-hide="!Provider.BirthInformation" class="legend2 pull-right">
+            <button class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditBirthInformation',Provider.BirthInformation)"><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-if="visibilityControl=='_EditBirthInformation'">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditBirthInformation.cshtml")
+        </div>
+        <div ng-if="visibilityControl!='_EditBirthInformation'">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewBirthInformation.cshtml")
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Visa Details
+        </legend>
+        <div ng-if="visibilityControl!='_EditVisaDetails'" ng-hide="!Provider.VisaDetails" class="legend2 pull-right">
+            <button ng-click="operateEditControl('_EditVisaDetails',Provider.VisaDetails)" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-if="visibilityControl=='_EditVisaDetails'">
+            <div class="col-lg-12 text-right">
+                <span class="instruction-style">
+                    Only enter a Foreign Identification Number If you don't have SSN
+                </span>
+            </div>
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditCitizenship.cshtml")
+        </div>
+        <div ng-if="visibilityControl!='_EditVisaDetails'">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewCitizenship.cshtml")
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Languages Known
+        </legend>
+        <div ng-if="ViewLanguageKnown" ng-hide="!Provider.LanguageInfo" class="legend2 pull-right">
+            <button class="btn btn-xs btn-primary" ng-click="LanguageKnownToggle()"><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-if="!ViewLanguageKnown">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditLanguageInfo.cshtml")
+        </div>
+        <div ng-if="ViewLanguageKnown">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewLanguageInfo.cshtml")
+        </div>
+    </fieldset>
+</div>
+
+
+

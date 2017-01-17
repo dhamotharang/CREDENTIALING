@@ -1,0 +1,220 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="form-style">
+    <fieldset>
+        <legend>
+@if (!ViewBag.Roles.Contains("CCO"))
+{
+                <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="UnderGraduateSchoolDetailPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+            }
+            Under Graduate/Professional Schools Details
+        </legend>
+        <div class="legend2 pull-right">
+            @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="MasterProfile.EducationHistory.UGEducationDetails.length <= 0" ng-click="downloadTableData('Profile_EducationHistory_UnderGraduate/ProfessionalSchoolsDetails', 'UnderGraduate/Professional Schools Details')"><i class="fa fa-download"></i></button>*@
+            <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="MasterProfile.EducationHistory.UGEducationDetails.length <= 0" ng-click="printData('Profile_EducationHistory_UnderGraduate/ProfessionalSchoolsDetails','UnderGraduate/Professional Schools Details')"><i class="fa fa-print"></i></button>
+            <button type="button" ng-click="showUnderGraduateDetailHistory('UGH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+            <div id="UGH" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+        </div>
+        <div id="under" class="panel-body">
+            <div class="form-style">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table ng-hide="MasterProfile.EducationHistory.UGEducationDetails.length > 0 || visibilityControl == 'addeducationDetailViewModel'" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No Data Available for Under Graduate/Professional Schools Details! Please click on
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                    {
+                                        <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addeducationDetailViewModel')" id="noDataAddNewUndergraduateDetails">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    }
+                                    to add new Under Graduate/Professional School Information
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-hide="MasterProfile.EducationHistory.UGEducationDetails.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_EducationHistory_UnderGraduate/ProfessionalSchoolsDetails">
+                        <thead>
+                            <tr>
+                                <th>School</th>
+                                <th>Degree Awarded</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th class="hideData">Supporting Document</th>
+                                <th class="hideData">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="educationDetailViewModel in MasterProfile.EducationHistory.UGEducationDetails track by $index">
+                            <tr>
+                                <td class="wrap-words">{{educationDetailViewModel.SchoolInformation.SchoolName}}</td>
+                                <td ng-if="educationDetailViewModel.QualificationDegree" class="wrap-words">{{educationDetailViewModel.QualificationDegree}}</td>
+                                <td ng-if="!educationDetailViewModel.QualificationDegree" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="educationDetailViewModel.StartDate" class="wrap-words">{{educationDetailViewModel.StartDate | date:'MM-dd-yyyy' }}</td>
+                                <td ng-if="!educationDetailViewModel.StartDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="educationDetailViewModel.EndDate" class="wrap-words">{{educationDetailViewModel.EndDate | date:'MM-dd-yyyy' }}</td>
+                                <td ng-if="!educationDetailViewModel.EndDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="educationDetailViewModel.CertificatePath" class="wrap-words hideData">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+{
+    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{educationDetailViewModel.CertificatePath}}" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Diploma"><i class="fa fa-file" title=""></i></a>
+}
+                                </td>
+                                <td ng-if="!educationDetailViewModel.CertificatePath" class="wrap-words hideData"><i>Not Available</i></td>
+                                <td class="wrap-words hideData">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                    {
+                                        <button tooltip data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_vieweducationDetailViewModel')"><i class="fa fa-eye"></i></button>
+                                    }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                    {
+                                        <button tooltip data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editeducationDetailViewModel',educationDetailViewModel)"><i class="fa fa-edit"></i></button>
+                                    }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                    {
+                                        <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initUGSchoolDetailWarning(educationDetailViewModel);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                        <button tooltip data-toggle="tooltip" data-placement="bottom" title="Add New" ng-hide="$index+1!=MasterProfile.EducationHistory.UGEducationDetails.length" ng-click="operateViewAndAddControl('addeducationDetailViewModel')" class="btn btn-xs btn-success" id="addNewUndergraduateDetails"><i class="fa fa-plus"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                            {
+                                <tr ng-show="visibilityControl==($index+'_editeducationDetailViewModel')" class="hideData">
+                                    <td colspan="6" id="ugEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditUndergraduationDetails.cshtml")
+                                    </td>
+                                </tr>
+                            }
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                            {
+                                <tr ng-show="visibilityControl==($index+'_vieweducationDetailViewModel')" class="hideData">
+                                    <td colspan="6" id="{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewUnderGraduationDetails.cshtml")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div ng-show="activeMessageDiv=='addedNewUGDetails'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div ng-show="activeMessageDiv=='removeUGDetails'">
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error Lists :<br />
+                            <span ng-repeat="err in errorUGDetails track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                {
+                    <div ng-show="visibilityControl=='addeducationDetailViewModel'">
+                        <div id="newUGFormDiv">
+                            @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditUndergraduationDetails.cshtml")
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+    <div class="modal fade" id="UGSchoolWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="removeUGSchool">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="col-lg-12 text-center" ng-show="isRemoved">
+                        <div style="margin-top:2%;">
+                            <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                        </div>
+                    </div>
+                    <div class="modal-body" ng-show="!isRemoved">
+                        Do you really want to remove <b>{{tempUGSchool.SchoolInformation.SchoolName}}</b> from your Under Graduate/Professional Schools Details list ?
+                        <input type="hidden" name="EducationDetailID" value="{{tempUGSchool.EducationDetailID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" ng-click="removeUGSchool(MasterProfile.EducationHistory.UGEducationDetails)">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <fieldset ng-if="showUnderGraduateDetailTable">
+        <legend>
+            Under Graduate/Professional Schools Details History
+        </legend>
+        <div class="legend2 pull-right">
+            @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="UndergraduateArray.length <= 0" ng-click="downloadTableData('UnderGraduate/Professional_Schools_Details_History', 'UnderGraduate/Professional Schools Details History')"><i class="fa fa-download"></i></button>*@
+            <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="UndergraduateArray.length <= 0" ng-click="printData('UnderGraduate/Professional_Schools_Details_History','UnderGraduate/Professional Schools Details History')"><i class="fa fa-print"></i></button>
+            <button type="button" ng-click="cancelUnderGraduateDetailHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+        </div>
+        <div id="under" class="panel-body">
+            <div class="form-style">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table ng-hide="UndergraduateArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No History Available for Under Graduate/Professional School Details!
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-hide="UndergraduateArray.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped" id="UnderGraduate/Professional_Schools_Details_History">
+                        <thead>
+                            <tr>
+                                <th>School</th>
+                                <th>Degree Awarded</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th class="hideData">Supporting Document</th>
+                                <th>Status</th>
+                                <th class="hideData">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="educationDetailViewModelHistory in UndergraduateArray track by $index">
+                            <tr>
+                                <td class="wrap-words">{{educationDetailViewModelHistory.SchoolInformation.SchoolName}}</td>
+                                <td ng-if="educationDetailViewModelHistory.QualificationDegree" class="wrap-words">{{educationDetailViewModelHistory.QualificationDegree}}</td>
+                                <td ng-if="!educationDetailViewModelHistory.QualificationDegree" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="educationDetailViewModelHistory.StartDate" class="wrap-words">{{educationDetailViewModelHistory.StartDate | date:'MM-dd-yyyy' }}</td>
+                                <td ng-if="!educationDetailViewModelHistory.StartDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="educationDetailViewModelHistory.EndDate" class="wrap-words">{{educationDetailViewModelHistory.EndDate | date:'MM-dd-yyyy' }}</td>
+                                <td ng-if="!educationDetailViewModelHistory.EndDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="educationDetailViewModelHistory.CertificatePath" class="wrap-words hideData">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+{
+    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{educationDetailViewModelHistory.CertificatePath}}" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Diploma"><i class="fa fa-file" title=""></i></a>
+}
+                                </td>
+                                <td ng-if="!educationDetailViewModelHistory.CertificatePath" class="wrap-words hideData"><i>Not Available</i></td>
+                                <td>{{educationDetailViewModelHistory.HistoryStatus}}</td>
+                                <td class="wrap-words hideData">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                    {
+                                        <button tooltip data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_vieweducationDetailViewModelHistory')"><i class="fa fa-eye"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                            {
+                                <tr ng-show="visibilityControl==($index+'_vieweducationDetailViewModelHistory')" class="hideData">
+                                    <td colspan="6" id="{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewUnderGraduationDetailsHistory.cshtml")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>

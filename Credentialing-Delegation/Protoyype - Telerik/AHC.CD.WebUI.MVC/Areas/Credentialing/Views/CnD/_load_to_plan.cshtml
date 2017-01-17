@@ -1,0 +1,630 @@
+﻿<script src="~/Scripts/Lib/FoolProofValidation/mvcfoolproof.unobtrusive.min.js"></script>
+<script src="~/Scripts/Lib/Jquery/select2.min.js"></script>
+<link href="~/Content/SharedCss/select2/select2.css" rel="stylesheet" />
+
+@model AHC.CD.WebUI.MVC.Models.EmailService.EmailServiceViewModel
+<ul class="pager small">
+    <li class="previous" ng-if="credentialingInfo.IsDelegated == 'NO'"><a href="" ng-click="goToNextTab('packagegenerator')"><<</a></li>
+    <li class="previous" ng-if="credentialingInfo.IsDelegated == 'YES'"><a href="" ng-click="goToNextTab('credentialing_action')"><<</a></li>
+    <li class="next"><a href="" ng-click="goToNextTab('PlanReport')">>></a></li>
+    <li class="next"><a href="" ng-click="goToNextTab('PlanReport')">Skip</a></li>
+</ul>
+
+<br />
+
+<style>
+    .label-provider-type {
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        /*padding: 4px 4px 5px 7px;*/
+    }
+
+        .label-provider-type > i {
+            padding-left: 10px;
+            color: #b94a48;
+        }
+
+        .label-provider-type:hover {
+            background-color: #eee;
+            text-decoration: none;
+        }
+
+    .modal.fade.in {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .ProviderTypeSelectAutoList.popover.bottom {
+        margin-top: 55px;
+    }
+
+    
+</style>
+
+<style>
+    .TemplateSelectAutoList.popover.bottom {
+        margin-top: 30px;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .TemplateSelectAutoList {
+        display: none;
+        left: 0%;
+        width: 90%;
+        margin-left: 15px;
+        // margin-left: 35px;
+        margin-right: 15px;
+        overflow-y: scroll;
+        max-height: 222px;
+    }
+
+    .TemplateSelectAutoList {
+        max-width: 100%;
+    }
+
+        .TemplateSelectAutoList.popover {
+            border-radius: 0px;
+        }
+
+        /*.TemplateSelectAutoList.popover.bottom {
+                margin-top: 56px;
+            }*/
+
+        .TemplateSelectAutoList > table > tbody > tr:hover {
+            background-color: #337FC1;
+            color: white;
+        }
+
+    .removeBorder {
+        border-top-color: white;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+</style>
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<div ng-if="ViewOnlyMode && credentialingInfo.CredentialingLogs[0].Credentialing!='ReCredentialing'">
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6">
+            <label class="control-label">Business Entity *:</label>
+            <div id="BEID">
+                <select class="form-control input-sm" data-val="true" data-val-required="Please select Business Entity" ng-model="tempObject.BusinessEntityID" name="BE">
+                    <option selected disabled hidden value="">-Select-</option>
+                    <option ng-repeat="be in BusinessEntities track by $index" value="{{be.OrganizationGroupID}}" ng-click="showBE(be.GroupName);">{{be.GroupName}}</option>
+                </select>
+            </div>
+            <span ng-if="tempObject.BusinessEntityID == null && isHasError" class="text-danger field-validation-error">
+                <span>Please select the Business Entity.</span>
+            </span>
+        </div>
+        @*<div ng-if="tempObject.BusinessEntityID != null" class="col-lg-6">
+                <label class=""></label>
+                <div class="zero-padding-left-right-div">
+                    <span>
+                        <span class="label label-provider-type">
+                            {{selectedBE}}
+
+                        </span>
+                    </span>
+                </div>
+            </div>*@
+    </div>
+    <div class="clearfix"></div>
+    <br />
+
+
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6">
+            <label class="control-label">Line of Business *:</label>
+
+            <div class="zero-padding-left-right-div">
+                <input class="form-control input-sm" ng-class="{'input-validation-error':tempObject.ContractLOBs.length == 0 && isHasError}" ng-model="LOBName" ng-focus="showContryCodeDiv('LOBdiv')" placeholder="Select LOB" />
+                <span ng-if="tempObject.ContractLOBs.length == 0 && isHasError" class="text-danger field-validation-error">
+                    <span>Please select the LOB.</span>
+                </span>
+                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="LOBdiv">
+                    <table class="table table-striped table-bordered table-hover table-condensed">
+                        <tbody>
+                            <tr ng-repeat="c in filteredContractLOBsList = (ContractLOBsList | filter:LOBName) track by $index" ng-click="SelectLOBName(c,'LOBdiv')" class="pointer">
+                                <td>{{c.LOBName}}</td>
+                            </tr>
+                            <tr ng-if="ContractLOBsList.length == 0">
+                                <td>No data..... </td>
+                            </tr>
+                            <tr ng-if="ContractLOBsList.length > 0 && filteredContractLOBsList.length == 0">
+                                <td>Title not found..... </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div ng-if="tempObject.ContractLOBs.length > 0" class="col-lg-6">
+            <label class=""></label>
+            <div class="zero-padding-left-right-div">
+                <span ng-repeat="tpt in tempObject.ContractLOBs track by $index">
+                    <span class="label label-provider-type">
+                        {{tpt.LOBName}}
+                        <i class="fa fa-close pointer" ng-click="RemoveCoveringPhysiciansType(tpt)"></i>
+                        <input type="hidden" name="tempObject.ContractLOBs[{{$index}}].LOBID" value="{{tpt.LOBID}}" />
+                        &nbsp;&nbsp;
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <br />
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6">
+            <label class="control-label">Specialty *:</label>
+            <div class="zero-padding-left-right-div">
+                <input class="form-control input-sm" ng-class="{'input-validation-error':tempObject.ContractSpecialties.length == 0 && isHasError}" ng-model="SpecialityName" ng-focus="showContryCodeDiv('Specialitydiv')" placeholder="Select Speciality" />
+                <span ng-if="tempObject.ContractSpecialties.length == 0 && isHasError" class="text-danger field-validation-error">
+                    <span>Please select the Specialty.</span>
+                </span>
+                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="Specialitydiv">
+                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                        <tbody>
+                            <tr ng-repeat="c in filteredContractSpecialityList = (ContractSpecialityList     | filter:SpecialityName)" ng-click="SelectSpecialityName(c,'Specialitydiv')" class="pointer">
+                                <td>{{c.Specialty.Name}}</td>
+                            </tr>
+                            <tr ng-if="ContractSpecialityList.length == 0">
+                                <td>No data..... </td>
+                            </tr>
+                            <tr ng-if="ContractSpecialityList.length > 0 && filteredContractSpecialityList.length == 0">
+                                <td>Title not found..... </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div ng-if="tempObject.ContractSpecialties.length > 0" class="col-lg-6">
+            <label class=""></label>
+            <div class="zero-padding-left-right-div">
+                <span ng-repeat="tpt in tempObject.ContractSpecialties track by $index">
+                    <span class="label label-provider-type">
+                        {{tpt.SpecialtyName}}
+                        <i class="fa fa-close pointer" ng-click="RemoveContractSpecialties(tpt)"></i>
+                        <input type="hidden" name="tempObject.ContractContractSpecialties[{{$index}}].ProfileSpecialtyID" value="{{tpt.ProfileSpecialtyID}}" />
+                        &nbsp;&nbsp;
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <br />
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6">
+            <label class="control-label">Locations *:</label>
+            <div class="zero-padding-left-right-div">
+                <input class="form-control input-sm" ng-class="{'input-validation-error':tempObject.ContractPracticeLocations.length == 0 && isHasError}" ng-model="LocationsName" ng-focus="showContryCodeDiv('Locationsdiv')" placeholder="Select Locations" />
+                <span ng-if="tempObject.ContractPracticeLocations.length == 0 && isHasError" class="text-danger field-validation-error">
+                    <span>Please select the Locations.</span>
+                </span>
+                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="Locationsdiv">
+                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                        <tbody>
+                            <tr ng-repeat="c in filteredContractLocationsList = (ContractLocationsList | filter:LocationsName)" ng-click="SelectLocationsName(c,'Locationsdiv')" class="pointer">
+                                <td>{{c.Facility.FacilityName}} - {{c.Facility.Street}}, {{c.Facility.City}}, {{c.Facility.State}}, {{c.Facility.Country}}</td>
+                            </tr>
+                            <tr ng-if="ContractLocationsList.length == 0">
+                                <td>No data..... </td>
+                            </tr>
+                            <tr ng-if="ContractLocationsList.length > 0 && filteredContractLocationsList.length == 0">
+                                <td>Title not found..... </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div ng-if="tempObject.ContractPracticeLocations.length > 0" class="col-lg-6">
+            <label class=""></label>
+            <div class="zero-padding-left-right-div">
+                <span ng-repeat="tpt in tempObject.ContractPracticeLocations track by $index">
+                    <span class="label label-provider-type">
+                        {{tpt.LocationsName}} - {{tpt.StreetName}}, {{tpt.CityName}}, {{tpt.StateName}}, {{tpt.CountryName}}
+                        <i class="fa fa-close pointer" ng-click="RemoveContractLocations(tpt)"></i>
+                        <input type="hidden" name="tempObject.ContractPracticeLocations[{{$index}}].ProfilePracticeLocationID" value="{{tpt.ProfilePracticeLocationID}}" />
+                        &nbsp;&nbsp;
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <br />
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 pull-right"><button class="btn btn-sm btn-primary pull-right" ng-click="ShowDetailTable(tempObject);">Add</button></div>
+    </div>
+    <div class="clearfix"></div>
+    <div ng-show="activeMessageDiv=='LoadedSuccess'" class="alert alert-success" role="alert">
+        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div ng-show="loadingAjax" class="progress col-lg-12" ng-cloak>
+    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+        Loading...Please wait...
+    </div>
+</div>
+<div class="col-lg-12 zero-padding-left-right-div" id="LoadPlan" ng-if="LoadedData != null && !loadingAjax">
+    <br />
+    <table ng-if="LoadedData.length == 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+        <thead>
+            <tr>
+
+                <td>
+                    No Plan Contract is loaded. !!
+                </td>
+            </tr>
+        </thead>
+    </table>
+
+    <table ng-if="LoadedData.length>0" class="table table-bordered table-striped table-hover">
+        <!-- ngInclude: templates.header -->
+        <thead>
+            <tr>
+                <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Business Entity</th>
+                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Line Of Business</th>
+                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Specialty</th>
+                <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Location</th>
+                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2" ng-show="credentialingInfo.IsDelegated == 'YES'">Initial Credentialing Date</th>
+                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2" ng-if="credentialingInfo.IsDelegated == 'YES'">Select Template</th>
+                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2" ng-if="credentialingInfo.IsDelegated == 'NO'">Select Package</th>
+                <th ng-if="ViewOnlyMode" class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Action</th>
+            </tr>
+            @*<tr>
+                    <th><input type="text" class="form-control input-sm"></th>
+                    <th><input type="text" class="form-control input-sm"></th>
+                    <th><input type="text" class="form-control input-sm"></th>
+                    <th><input type="text" class="form-control input-sm"></th>
+                    <th><input type="text" ng-show="credentialingInfo.IsDelegated == 'YES'" class="form-control input-sm"></th>
+                    <th></th>
+                    <th></th>
+                </tr>*@
+        </thead>
+        <tbody>
+            <tr ng-repeat="c in LoadedData track by $index">
+                <td>{{c.BusinessEntity.GroupName}}</td>
+                <td>
+                    <span ng-repeat="s in c.ContractLOBs">
+                        <i ng-if="$index>0">,</i><br ng-if="$index>0" />
+                        <span>
+                            {{s.LOB.LOBName}}
+                        </span>
+                    </span>
+                </td>
+                <td>
+                    <span ng-repeat="s in c.ContractSpecialties">
+                        <i ng-if="$index>0">,</i><br ng-if="$index>0" />
+                        {{s.ProfileSpecialty.Specialty.Name}}
+                    </span>
+                </td>
+                <td>
+                    <span ng-repeat="s in c.ContractPracticeLocations">
+                        <i ng-if="$index>0">,</i><br ng-if="$index>0" />
+                        {{s.ProfilePracticeLocation.Facility.FacilityName}} - {{s.ProfilePracticeLocation.Facility.Street}}, {{s.ProfilePracticeLocation.Facility.City}}, {{s.ProfilePracticeLocation.Facility.State}}, {{s.ProfilePracticeLocation.Facility.Country}}
+                    </span>
+                </td>
+                <td ng-show="credentialingInfo.IsDelegated == 'YES'">{{c.InitialCredentialingDate || 'Not Available' | date:'MM-dd-yyyy'}}</td>
+                <td ng-if="credentialingInfo.IsDelegated == 'YES'">
+                    @*<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#selectDoc">Select Document</button> <button class="btn btn-xs btn-default"><i class="fa fa-eye"></i></button>*@
+                    <a class="btn btn-info btn-xs" ng-if="ViewOnlyMode" data-toggle="modal" data-target="#selectTemplate" ng-click="SetRequestId(c)">Select Template</a> <button class="btn btn-xs btn-default" ng-disabled="errorTemplate[$index]" ng-click="SetRequestId(c);viewDocument(c.CredentialingContractRequestID,@ViewBag.CredentialingInfo,$index)"><i class="fa fa-eye"></i></button>
+                    <i ng-show="errorTemplate[$index]" class="text-danger">No document to show</i>
+                </td>
+                <td ng-if="credentialingInfo.IsDelegated == 'NO'">
+                    @*<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#selectDoc">Select Document</button> <button class="btn btn-xs btn-default"><i class="fa fa-eye"></i></button>*@
+                    <a class="btn btn-xs btn-primary" ng-if="ViewOnlyMode" data-toggle="modal" data-target="#selectPackage" ng-click="AddPackageToContractRequest(c)" tooltip="" data-toggle="tooltip" data-placement="right" title="" data-original-title="Add Package" ng-disabled="c.PackageGeneratorReport!=null">Add Package</a>
+                    <div ng-if="c.PackageGeneratorReport!=null">
+                        <a ng-repeat="p in c.PackageGeneratorReport.PackageGeneratorReportCode" href={{p.FilePath}} target="_blank"><i class="fa fa-file-archive-o fa-2x">&nbsp;&nbsp;</i></a>
+
+                    </div>
+                    <i ng-show="errorTemplate[$index]" class="text-danger">Select Package</i>
+
+                </td>
+                <td ng-if="ViewOnlyMode">
+                    <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="right" title="Remove" ng-click="loadedWarning(c);"><i class="fa fa-minus-circle"></i></button>
+                    <button ng-if="credentialingInfo.IsDelegated == 'NO'" ng-disabled="c.PackageGeneratorReport==null" ng-click="GenerateEmailPopUp(c.CredentialingContractRequestID)" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#composeMail" ><i class="fa fa-envelope" data-toggle="tooltip" data-placement="right" title="Add Email Template"></i></button>
+                </td>
+            </tr>
+            @*<tr ng-if="LoadedData.length != '0'" ng-repeat="c in LoadedData">
+                <td>{{c.BusinessEntity}}</td>
+                <td> <span ng-repeat="s in c.ContractLOBs"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{s.LOBName}}</span></td>
+                <td> <span ng-repeat="s in c.ContractSpecialties"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{s.SpecialtyName}}</span></td>
+                <td> <span ng-repeat="s in c.ContractPracticeLocations"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{s.LocationsName}}</span></td>
+                <td ng-show="credentialingInfo.IsDelegated == 'YES'">{{c.Date}}</td>
+                <td>
+                    <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#selectTemplate" ng-click="SetRequestId(c.CredentialingContractRequestID)">Select Document</a> <button class="btn btn-xs btn-default" ng-click="viewDocument(@ViewBag.CredentialingInfo)"><i class="fa fa-eye"></i></button>
+                 </td>
+                <td>
+                    <button class="btn btn-xs btn-danger" ng-click="loadedWarning(c);"><i class="fa fa-minus-circle"></i></button>
+
+                </td>
+                </tr>*@
+        </tbody>
+    </table>
+    &nbsp;&nbsp;
+</div>
+<div class="modal fade" id="loadedWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+            </div>
+            <div class="modal-body">
+                Do you really want to remove this record from loaded list ?
+                @*<input type="hidden" name="StateLicenseInformationID" value="{{tempStateLicense.StateLicenseInformationID}}" />
+                    <input type="hidden" name="StatusType" value="2" />*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="RemoveLoadedContract(tempRemoveLoadedData)">Remove</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*Modal for Email starts here*@
+<div class="modal fade" id="composeMail" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true" my-modal>
+    <div class="modal-dialog" style="width:90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" data-toggle="tooltip" data-placement="right" data-original-title="Close">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Compose Mail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="newEmailForm">
+                        <div class="col-lg-12 zero-padding-left-right-div ng-scope">
+                            @*@Html.HiddenFor(model => model.EmailServiceID, new { ng_value = "tempObject.EmailServiceID" })*@
+                            @Html.HiddenFor(model => model.StatusType, new { ng_value = "1" })
+                            <div class="col-md-3 form-group">
+                                <label class="control-label small">Use Existing Template</label>
+                                <div class="radio" ng-init="tempObject.SaveAsTemplateYesNoOption = '2'">
+                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                    {
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(model => model.SaveAsTemplateYesNoOption, (int)value, new { data_ng_model = "tempObject.SaveAsTemplateYesNoOption", data_ng_click = "changeYesNoOption(" + (int)value + ")" }) @value.ToString()
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-lg-4 form-group pull-right" ng-if="tempObject.SaveAsTemplateYesNoOption == 1">
+                                <label class="control-label small">Select Template</label>
+                                <input class="form-control input-sm" ng-model="tempObject.Title" data-searchdropdown="searchdropdown" placeholder="select Template" />
+                                <input type="hidden" data-ng-model="tempObject.EmailTemplateID" id="EmailTemplateID" name="EmailTemplateID" value="{{tempObject.EmailTemplateID}}" />
+                                <div class="TemplateSelectAutoList popover fade bottom in" role="tooltip" style="margin-top: 55px;" id="templatelist">
+                                    <table class="table table-striped table-bordered table-hover table-condensed" @*style="margin-top: 55px;"*@>
+                                        <tbody>
+                                            <tr ng-repeat="type in ftemplates = (templates | filter:tempObject.Title) track by $index" ng-click="hideDiv(); tempObject.Subject = type.Subject; tempObject.Body = type.Body;showContent();" class="pointer">
+                                                <td>{{type.Title}}</td>
+                                            </tr>
+                                            <tr ng-if="templates.length == 0">
+                                                <td>No data..... </td>
+                                            </tr>
+                                            <tr ng-if="templates.length > 0 && ftemplates.length == 0">
+                                                <td>Template not found..... </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div ng-if="templateSelected">
+                                <div class="col-lg-12 form-group">
+                                    @*<div ng-if="templateSelected || tempObject.UseExistingTemplate == 'NO'">
+                                        <div class="col-lg-12 form-group">*@
+                                    <label class="control-label small">To *</label>
+                                    @Html.TextBoxFor(model => model.To, new { @class = "form-control input-sm", type = "email", data_ng_model = "tempObject.To", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$" })
+
+                                    @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label class="control-label small">Cc</label>
+                                    @Html.TextBoxFor(model => model.CC, new { @class = "form-control input-sm", data_ng_model = "tempObject.CC", type = "email", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$", data_val = "true" })
+                                    @Html.ValidationMessageFor(model => model.CC, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label class="control-label small">Bcc</label>
+                                    @Html.TextBoxFor(model => model.BCC, new { @class = "form-control input-sm", type = "email", data_ng_model = "tempObject.BCC", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$", data_val = "true" })
+                                    @Html.ValidationMessageFor(model => model.BCC, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-md-12">
+                                    <label class="control-label small">Subject *</label>
+                                    <div>
+                                        @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm", data_ng_model = "tempObject.Subject" })
+                                        @Html.ValidationMessageFor(model => model.Subject, "Please provide details for 'Subject' field", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-12 form-group">
+                                    <label class="control-label small">Body*</label>
+                                    <wysiwyg textarea-id="wysiwygBody" textarea-class="form-control" textarea-height="400px" textarea-style="width:100%;resize: none;overflow-y: scroll;" textarea-name="wysiwygBody" textarea-required data-ng-model="tempObject.Body" enable-bootstrap-title="true"></wysiwyg>
+
+                                    @Html.HiddenFor(model => model.Body, new { @class = "form-control input-sm", ng_value = "tempObject.Body" })
+                                    @Html.ValidationMessageFor(model => model.Body, "Please provide details for 'Body' field", new { @class = "text-danger" })
+
+
+                                </div>
+                                <div class="col-md-3 form-group" style="width:20%">
+                                    <label class="control-label small">Schedule Recurrence *</label>
+                                    <div class="radio">
+                                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                        {
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.IsRecurrenceEnabledYesNoOption, (int)value, new { data_ng_model = "tempObject.IsRecurrenceEnabledYesNoOption", data_ng_click = "" }) @value.ToString()
+                                            </label>
+                                        }
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.IsRecurrenceEnabledYesNoOption, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-5 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1">
+                                    <label class="control-label small">Recurrence Type *</label>
+                                    <div class="radio">
+                                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.RecurrenceIntervalType)))
+                                        {
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.RecurrenceIntervalTypeCategory, (int)value, new { data_ng_model = "tempObject.RecurrenceIntervalTypeCategory", data_ng_click = "tempObject.IntervalFactor=null" }) @value.ToString()
+                                            </label>
+                                        }
+                                        <br />
+                                        @Html.ValidationMessageFor(model => model.RecurrenceIntervalTypeCategory, "", new { @class = "text-danger" })
+                                        <br />
+                                        <br />
+                                        <span ng-if="tempObject.RecurrenceIntervalTypeCategory != 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.IntervalFactor, new { @type = "number", @class = "form-control input-sm col-lg-3", data_ng_model = "tempObject.IntervalFactor", data_ng_init = 1, @placeholder = "Enter Interval" })</span>
+                                        @Html.ValidationMessageFor(model => model.IntervalFactor, "", new { @class = "text-danger" })
+                                        <span ng-if="tempObject.RecurrenceIntervalTypeCategory == 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.DateForCustomRecurrence, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm  col-lg-3", data_ng_model = "tempObject.DateForCustomRecurrence", placeholder = "mm/dd/yyyy" })</span>
+                                        @Html.ValidationMessageFor(model => model.DateForCustomRecurrence, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-md-4 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1 && tempObject.RecurrenceIntervalTypeCategory != '6'" style="width:38%">
+                                    <div class="col-lg-6 form-group">
+                                        <label class="control-label small" style="margin-bottom:20px;">From</label>
+                                        @Html.TextBoxFor(model => model.FromDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.FromDate", placeholder = "mm/dd/yyyy" })
+                                        @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-6 form-group">
+                                        <label class="control-label small" style="margin-bottom:20px;">To</label>
+                                        @Html.TextBoxFor(model => model.ToDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ToDate", placeholder = "mm/dd/yyyy" })
+                                        @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <button type="button" class="btn btn-warning btn-sm" ng-click="EditCancle(tempObject);" data-dismiss="modal">Cancel</button>
+                                    <button id="saveButton" type="submit" ng-click="AddOrSaveEmail('newEmailForm')" data-dismiss="modal" class="btn btn-primary btn-sm pull-right">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modal for Email ends here*@
+
+@* model *@
+<div class="modal fade" id="selectTemplate" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true" my-modal>
+    <div class="modal-dialog" style="width:90%;">
+        <div class="modal-content col-lg-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Template</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="container-fluid">
+
+                        <!-- Page Heading -->
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="col-lg-12">
+
+                                    <ul class="list-group pre-scrollable">
+                                        <li class="list-group-item" ng-repeat="temp in templateList"><label><input type="checkbox" ng-model="temp.check" ng-change="setSelectedTemplated($index)" />{{temp.name}}</label></li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-12" ng-show="showerror">
+                                    <label class="text-danger">* Select Template</label>
+                                </div>
+                            </div>
+                            <div  class="col-lg-9" style="height:450px;">
+                                <iframe ng-repeat="i in AvailableTemplates" ng-if="i.show" style="height:100%;width:100%" src={{i.path}}></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="SelectDocument(@ViewBag.CredentialingInfo)">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* model *@
+<div class="modal fade" id="selectPackage" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true" my-modal1>
+    <div class="modal-dialog" style="width:90%;">
+        <div class="modal-content col-lg-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancelPackagePanel()"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Package</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="container-fluid">
+
+                        <!-- Page Heading -->
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="col-lg-12">
+
+                                    <ul class="list-group pre-scrollable">
+                                        <li class="list-group-item" ng-repeat="Package in PackageTempList">
+                                            <label>
+                                                <input type="checkbox" ng-model="Package.Check" ng-change="toggleSelection(Package)" />
+                                                {{Package.Name}}
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-12" ng-show="showerrorforpackage">
+                                    <label class="text-danger">* Select Package</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-9" style="height:450px;">
+                                <iframe style="height:100%;width:100%" src="{{frameView}}"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="cancelPackagePanel()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="AddPackage()">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".ProviderTypeSelectAutoList").hide();
+        $(".TemplateSelectAutoList").hide()
+        window.focus();
+
+    });
+</script>

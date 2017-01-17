@@ -1,0 +1,93 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxisProduct.Models.ProviderProfileViewModel.WorkHistoryViewModel.WorkGapViewModel>
+@{
+    var WorkGapCount = 0;
+}
+<fieldset class="fsStyle" id="ViewWorkGap">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            <span class="transparent-font-color">_____________________</span>
+            WORK GAP
+            <span class="transparent-font-color">_____________________</span>
+        </span>
+        &nbsp;&nbsp; <span class="text-uppercase ">
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-success btn-xs add_note_btn list-item" data-tab-path="/CredAxis/WorkHistory/GetWorkGapAddEditPartial?model=@Model&ActionType=Add" data-tab-container="WorkGapDiv">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/WorkHistory/GetWorkGapAddEditPartial?model=@Model&ActionType=Edit" data-tab-container="WorkGapDiv">
+                    <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn btn-warning btn-xs historyBtnCSS" data-toggle="collapse" data-target="#WorkGapHistory" aria-expanded="false">
+                    <i class="fa fa-history"></i>
+                </button>
+                <button class="btn btn-default btn-xs helpBtnCSS" data-toggle="popover" data-trigger="hover" data-content="*If you have any work gap over 3 months." data-original-title="" title="">
+                    <i class="fa fa-question"></i>
+                </button>
+                <a class="print_button_for_WorkGap hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                    <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                </a>
+            </span>
+        </span>
+    </legend>
+    @foreach (var item in Model)
+    {
+        WorkGapCount = WorkGapCount + 1;
+        if (WorkGapCount <= 2)
+        {
+
+            <div class="x_content zero-padding-left  mutiple-data">
+                <div class="SubHeaderSpacing1">
+                    <span class="text-uppercase TableHeading">Work Gap-@item.ID</span>&nbsp; <button onclick="groupmodalhistory('WorkHistory','RemoveWorkGap','@item.ID','WorkGapDiv')" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate)  :</label>
+                    <span class="theme_label_data">@item.StartDate </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate)  :</label>
+                    <span class="theme_label_data">@item.EndDate</span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.Description)  :</label>
+                    <span class="theme_label_data">@item.Description</span>
+                </div>
+            </div>
+            if (WorkGapCount == 2)
+            {
+                <span class="view-more pull-right" id="moreWorkGap" data-toggle="collapse" data-target=".ViewMoreWorkGap" onclick="ShowHideAddView('lessWorkGap', 'moreWorkGap')">View More</span>
+            }
+        }
+        else
+        {
+
+            <div class="x_content zero-padding-left  mutiple-data collapse ViewMoreWorkGap">
+                <div class="SubHeaderSpacing1">
+                    <span class="text-uppercase TableHeading">Work Gap-@item.ID</span>&nbsp; <button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate)  :</label>
+                    <span class="theme_label_data">@item.StartDate </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate)  :</label>
+                    <span class="theme_label_data">@item.EndDate</span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.Description)  :</label>
+                    <span class="theme_label_data">@item.Description</span>
+                </div>
+            </div>
+        }
+        if (WorkGapCount == Model.Count())
+        {
+            <span class="view-more hidden pull-right" id="lessWorkGap" data-toggle="collapse" data-target=".ViewMoreWorkGap" onclick="ShowHideAddView('lessWorkGap', 'moreWorkGap')">View Less</span>
+        }
+
+    }
+</fieldset>
+        <fieldset class="fsStyle collapse width-100" id="WorkGapHistory " style="box-shadow: none !important; height: 8px;" aria-expanded="false">
+
+              @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/WorkHistory/WorkGap/_HistoryWorkGap.cshtml")
+
+        </fieldset>
+

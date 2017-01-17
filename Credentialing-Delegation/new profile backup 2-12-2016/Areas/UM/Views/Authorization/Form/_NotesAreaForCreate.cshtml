@@ -1,0 +1,182 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+<p-script filepath="~/Areas/UM/Scripts/Common/Note/Common/NonMinified/NoteCommon.js"></p-script>
+<div class="col-lg-12 zero-padding-left-right" id="NoteArea">
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                <span class="transparent-font-color">___________</span>
+                @Html.Label("Notes")
+                <span class="transparent-font-color">__________</span>
+            </span>
+            <span class="text-uppercase pull-right">
+                <span>
+                    <button class="btn btn-success btn-xs" type="button" style="margin-top: -3px;" tabindex="-1" onclick="AddNewNote()">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </span>
+            </span>
+        </legend>
+        <div class="x_content zero-padding-left">
+            <table class="table margin_bottom_zero table-white zero-padding-left-right @*alignLeftTable*@ noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Notes[0].Date)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Notes[0].NoteType)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Notes[0].CreatedBy)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Notes[0].Subject)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Notes[0].Description)</th>
+                        <th class="theme_label inc-fax">@Html.DisplayNameFor(e => e.Notes[0].IncludeFax)</th>
+                        <th class="theme_label">
+                            <span class="action_Class">Action</span>
+                            <a style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1" onclick="PrintNotes()">
+                                <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="NotesArea" onmouseover="initPop()">
+                    @{
+                        int i = 0;
+                    }
+                    @if (Model != null && Model.Notes != null && Model.Notes.Count>0)
+                    {
+                        foreach (var item in Model.Notes)
+                        {
+                            <tr>
+                                <td class="theme_label_data">
+                                    @Html.DisplayFor(e => item.Date)
+                                    @Html.TextBoxFor(e => e.Notes[@i].AuthorizationID, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].NoteID, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].NoteType, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].Date, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].UserName, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].Subject, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].Description, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].NoteStatus, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].Status, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].RationaleDescription, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].AlternatePlanDescription, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].CriteriaUsedDescription, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].ServiceSubjectToNotice, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].IsPrivate, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].MemberID, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Notes[@i].ModuleName, new { @class = "hidden" })
+                                    @{
+                                       int j = 0;
+                                    }
+                                    @foreach (var k in item.MedicalNecessaries)
+                                    {
+                                        @Html.TextBoxFor(e => e.Notes[@i].MedicalNecessaries[@j].Description, new { @class = "hidden" })
+                                        j++;
+                                    }
+                                </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.NoteType) </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.UserName) </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.Subject) </td>
+                                @if (item.Description != null)
+                                {
+                                    if(item.Subject!=null && item.Subject.ToUpper()=="UM NOTE" && item.Description.Length>10)
+                                    {
+                                        if (((item.NoteType != null && item.NoteType.ToUpper() == "NURSE REVIEW") || (item.NoteStatus != null && item.NoteStatus.ToUpper() == "DENIAL")) && item.MedicalNecessaries != null && item.MedicalNecessaries.Count() > 0)
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description).ToString().Substring(0, 10)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Rationale: @item.RationaleDescription<br />Alternate Plan:  @item.AlternatePlanDescription<br />Criteria Used: @item.CriteriaUsedDescription<br />Service Subject To Notice: @item.ServiceSubjectToNotice<br />List Of Medical Services: @item.MedicalNecessaries[0].Description" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else if ((item.NoteType != null && item.NoteType.ToUpper() == "NURSE REVIEW")||(item.NoteStatus!=null && item.NoteStatus.ToUpper()=="DENIAL"))
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description).ToString().Substring(0, 10)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Rationale: @item.RationaleDescription<br />Alternate Plan:  @item.AlternatePlanDescription<br />Criteria Used: @item.CriteriaUsedDescription<br />Service Subject To Notice: @item.ServiceSubjectToNotice<br />List Of Medical Services: -" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else if(item.NoteType != null && item.NoteType.ToUpper() == "MD REVIEW")
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description).ToString().Substring(0, 10)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Criteria Used: @item.CriteriaUsedDescription" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description).ToString().Substring(0,10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                    }
+                                    else if(item.Subject!=null && item.Subject.ToUpper()=="UM NOTE")
+                                    {
+                                        if (((item.NoteType != null && item.NoteType.ToUpper() == "NURSE REVIEW") || (item.NoteStatus != null && item.NoteStatus.ToUpper() == "DENIAL")) && item.MedicalNecessaries != null && item.MedicalNecessaries.Count() > 0)
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Rationale: @item.RationaleDescription<br />Alternate Plan:  @item.AlternatePlanDescription<br />Criteria Used: @item.CriteriaUsedDescription<br />Service Subject To Notice: @item.ServiceSubjectToNotice<br />List Of Medical Services: @item.MedicalNecessaries[0].Description" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else if ((item.NoteType != null && item.NoteType.ToUpper() == "NURSE REVIEW") || (item.NoteStatus != null && item.NoteStatus.ToUpper() == "DENIAL"))
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Rationale: @item.RationaleDescription<br />Alternate Plan:  @item.AlternatePlanDescription<br />Criteria Used: @item.CriteriaUsedDescription<br />Service Subject To Notice: @item.ServiceSubjectToNotice<br />List Of Medical Services: -" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else if(item.NoteType != null && item.NoteType.ToUpper() == "MD REVIEW")
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Criteria Used: @item.CriteriaUsedDescription" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="theme_label_data"> @Html.DisplayFor(e => item.Description) </td>
+                                        }
+                                    }
+                                    else if (item.Description.Length>10)
+                                    {
+                                        <td class="theme_label_data"> @Html.DisplayFor(e => item.Description).ToString().Substring(0,10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description" onmouseover="initPop()"><b>...</b></span> </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="theme_label_data"> @Html.DisplayFor(e => item.Description) </td>
+                                    }
+                                }
+                                else
+                                {
+                                    if(item.Subject!=null && item.Subject.ToUpper()=="UM NOTE")
+                                    {
+                                        if (((item.NoteType != null && item.NoteType.ToUpper() == "NURSE REVIEW") || (item.NoteStatus != null && item.NoteStatus.ToUpper() == "DENIAL")) && item.MedicalNecessaries != null && item.MedicalNecessaries.Count() > 0)
+                                        {
+                                            <td class="theme_label_data"> <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Rationale: @item.RationaleDescription<br />Alternate Plan:  @item.AlternatePlanDescription<br />Criteria Used: @item.CriteriaUsedDescription<br />Service Subject To Notice: @item.ServiceSubjectToNotice<br />List Of Medical Services: @item.MedicalNecessaries[0].Description" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else if ((item.NoteType != null && item.NoteType.ToUpper() == "NURSE REVIEW") || (item.NoteStatus != null && item.NoteStatus.ToUpper() == "DENIAL"))
+                                        {
+                                            <td class="theme_label_data"> <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Rationale: @item.RationaleDescription<br />Alternate Plan:  @item.AlternatePlanDescription<br />Criteria Used: @item.CriteriaUsedDescription<br />Service Subject To Notice: @item.ServiceSubjectToNotice<br />List Of Medical Services: -" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else if(item.NoteType != null && item.NoteType.ToUpper() == "MD REVIEW")
+                                        {
+                                            <td class="theme_label_data"> <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@item.Description<br />Criteria Used: @item.CriteriaUsedDescription" onmouseover="initPop()"><b>...</b></span> </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="theme_label_data"> - </td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td class="theme_label_data"> - </td>
+                                    }
+                                }
+                                @if (item.IncludeFax == true)
+                                {
+                                    <td class="theme_label_data"> <input type="checkbox" class="checkbox-radio noteincfax" name="Notes[@i].IncludeFax" value="true" checked="checked" /> <label><span></span></label> </td>
+                                }
+                                else
+                                {
+                                    <td> <input type="checkbox" class="checkbox-radio noteincfax" name="Notes[@i].IncludeFax" value="false" /> <label><span></span></label> </td>
+                                }
+                                <td class="theme_label_data">
+                                    <button class="btn btn-xs btn-success" type="button" onclick="ViewNote(this)"> <i class="fa fa-eye"></i> </button>
+                                    <button class="btn btn-xs btn-primary" type="button" onclick="EditNote(this)"> <i class="fa fa-pencil"></i> </button>
+                                    <button class="btn btn-xs btn-danger" type="button" onclick="DeleteNote(this)"> <i class="fa fa-trash-o"></i> </button>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        <tr id="emptyNoteTemplate" style="text-align:center">
+                            <td colspan="7" align="center" class="theme_label_data theme_a">No Data Available</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>
+
+@Html.Partial("~/Areas/UM/Views/Common/Note/Common/_PrintNote.cshtml")
+
+

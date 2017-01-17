@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/SpecialtyBoard.js"></script>
+
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> Specialty Board
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataSpecialtyBoards" ng-controller="masterDataSpecialtyBoardsController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Specialty Board Management
+                        <span class="pull-right">
+                            <button ng-disabled="disableAdd" ng-click="addSpecialtyBoards()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div ng-show="activeMessageDiv=='SpecialtyBoard'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div>
+                        <div ng-show="activeMessageDiv=='SpecialtyBoardError'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name *</th>
+                                    <th>Status</th>
+                                    <th>Last Modified Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="License in CurrentPage track by $index" ng-include="getTemplate(License)"></tr>
+                            </tbody>
+                        </table>
+
+                        <script type="text/ng-template" id="displaySpecialtyBoards">
+                            <td>{{License.Name}}</td>
+                            <td>{{License.Status}}</td>
+                            <td>{{License.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                            <td>
+                                @*<button ng-disabled="disableEdit" ng-click="editSpecialtyBoards(License)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editSpecialtyBoards">
+                            <td><input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempSpecialtyBoards.Name" />
+                                <span class="text-danger" name="title" ng-if="error && !tempSpecialtyBoards.Name">{{error}}</span>
+                                <span class="text-danger" name="title" ng-if="existErr">{{existErr}}</span></td>
+
+                            <td>{{tempSpecialtyBoard.Status}}</td>
+                            <td>{{tempSpecialtyBoard.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                            <td>
+                                <button ng-if="!tempSpecialtyBoards.SpecialtyBoardID" ng-click="saveSpecialtyBoards($index)" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-if="tempSpecialtyBoards.SpecialtyBoardID" ng-click="updateSpecialtyBoards($index)" class="btn btn-xs btn-primary">Update</button>
+                                <button ng-if="tempSpecialtyBoards.SpecialtyBoardID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                <button ng-if="!tempSpecialtyBoards.SpecialtyBoardID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                            </td>
+                        </script>
+                        <div class="clearfix"></div>
+                        <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                        <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+

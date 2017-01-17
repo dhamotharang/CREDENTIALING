@@ -1,0 +1,53 @@
+@using PratianUI
+@model PortalTemplate.Areas.CMS.Models.ProviderModeViewModel
+
+<legend class="legendStyle">
+    <span class="theme_depend text-initial title_heading">@ViewBag.FormTitle</span>
+</legend>
+
+<div class="c_panel_body" id="AddEditDiv">
+    @using (Ajax.BeginForm("SaveProviderMode", "ProviderMode", new AjaxOptions { HttpMethod = "POST", LoadingElementId = "progress", OnBegin = "validateForm", OnSuccess = "onSuccessProviderMode" }))
+    {
+        @Html.AntiForgeryToken()
+        <table class="table table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(p => p.Name)</th>
+                    <th>@Html.LabelFor(p => p.Description)</th>
+                    <th>@Html.LabelFor(p => p.Status)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.TextBoxFor(p => p.Name, new { @class = "form-control input-xs addeditinputclass" })
+                        @Html.ValidationMessageFor(p => p.Name)
+
+                        @if (Model.ProviderModeID != 0)
+                        {
+                            @Html.HiddenFor(p => p.ProviderModeID)
+                            @Html.HiddenFor(p => p.Code)
+                            @Html.HiddenFor(p => p.CreatedBy)
+                        }
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(p => p.Description, new { @class = "form-control input-xs addeditinputclass" })
+                        @Html.ValidationMessageFor(p => p.Description)
+                    </td>
+                    <td>
+                        @Html.PratianUiRadioButtonFor(p => p.Status, "Active", Model.Status ? new { @checked = "checked" } : null)
+                        @Html.PratianUiRadioButtonFor(p => p.Status, "Inactive", Model.Status ? null : new { @checked = "checked" })
+                        @Html.ValidationMessageFor(p => p.Status)
+                    </td>
+                    <td class="col-md-1">
+                        <button type="submit" class="btn btn-xs btn-success"><i class="fa fa-save"></i></button>
+                        <button id="ResetFormButton" type="button" class="btn btn-xs btn-warning refresh dynamic-content" data-targeturl="/CMS/ProviderMode/AddEditProviderMode" data-targetid="AddEditFieldset">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>

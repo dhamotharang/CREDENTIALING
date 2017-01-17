@@ -1,0 +1,24 @@
+﻿@Html.Partial("~/Views/ManageCarePlan/ManageCare/_ProgressTracker.cshtml")
+
+<div class="createtemplate-tabcontent x_panel border_on_panel">
+    <div class="createtemplate-conditions x_content">
+        <div class="col-lg-3">
+            CARE MANAGEMENT CATEGORY<br />
+            <select name="careManagementCategory" class="form-control input-xs" onchange="changeCareManagementCategory();">
+                <option value="">---SELECTED---</option>
+            </select>
+        </div>
+        <div class="col-lg-2">
+            PROGRAM<br />
+            <input name="program" onkeypress="selectProgram(event)" readonly id="careManagementProgram" type="text" placeholder="PROGRAM" style="position:absolute" class="form-control input-xs required-color text-uppercase bolding" ng-model="CarePlan.CMProgramID" typeahead="item.CMProgramID as item.Name  for item in customFilter($viewValue,'Name',AllCMPrograms,CarePlan.CareManagementCategoryID)| limitTo:15" typeahead_on_select="hidePanel('GeneralInformation','CreatePIGOPanelId');progressCount(48); selectProgram(CarePlan.CMProgramID);setClickedRowPIGOLibrary(ProblemsLibrary[0],'Problem',0);" ng-keyup="hidePanel('GeneralInformation', 'CreatePIGOPanelId',$event);">
+        </div>
+    </div>
+    <div class="createtemplate-careplan x_content">
+        <div class="x_content">
+            @Html.Partial("~/Views/ManageCarePlan/ManageCare/_CarePlanTemplate.cshtml")
+        </div>
+        <div class="x_content">
+            @Html.Partial("~/Views/ManageCarePlan/ManageCare/_CarePlanLibrary.cshtml")
+        </div>
+    </div>
+</div>

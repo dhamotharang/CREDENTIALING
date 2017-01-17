@@ -1,0 +1,73 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.PersonalDetailViewModel
+
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-2 form-group">
+        @Html.LabelFor(model => model.SalutationType, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.Salutation}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @Html.LabelFor(model => model.FirstName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.FirstName}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @Html.LabelFor(model => model.MiddleName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.MiddleName}}</i>
+        </div>
+    </div>
+    <div class="col-lg-2 form-group">
+        @Html.LabelFor(model => model.LastName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.LastName}}</i>
+        </div>
+    </div>
+    <div class="col-lg-2 form-group">
+        <label class="control-label small">Suffix (JR,III)</label>
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.Suffix}}</i>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-2 form-group">
+        @Html.LabelFor(model => model.GenderType, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.Gender}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group" ng-if="Provider.PersonalDetails.Gender=='Female'">
+        @Html.LabelFor(model => model.MaidenName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.MaidenName}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @Html.LabelFor(model => model.MaritalStatusType, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.MaritalStatus}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group" ng-if="Provider.PersonalDetails.MaritalStatus=='Married'">
+        @Html.LabelFor(model => model.SpouseName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.SpouseName}}</i>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12">
+    <div class="form-group" ng-init="searchTitleViewModel.StatusType = 1">
+        @Html.LabelFor(model => model.ProviderTitles, new { @class = "control-label small" })
+        <div ng-if="Provider.PersonalDetails.ProviderTitles.length > 0">
+            <span ng-repeat="pt in Provider.PersonalDetails.ProviderTitles | filter:searchTitleViewModel track by $index">
+                <span ng-if="$index > 1">&nbsp;&nbsp;</span><span class="label label-default">{{pt.ProviderType.Title}}</span>
+            </span>
+        </div>
+        <div ng-if="Provider.PersonalDetails.ProviderTitles.length == 0">
+            Not Available
+        </div>
+    </div>
+</div>

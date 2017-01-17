@@ -1,0 +1,287 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.WorkHistory.CVInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="form-style">
+    <fieldset>
+        <legend>
+            <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ProfessionalWorkExperiencesPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+            Professional Work Experience
+        </legend>
+        <div class="form-style">
+            <div class="legend2 pull-right">
+                @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="professionalWorkExperiences.length < 1" ng-click="downloadTableData('Profile_WorkHistory_ProfessionalWorkExperience', 'Professional Work Experience')"><i class="fa fa-download"></i></button>*@
+                <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="professionalWorkExperiences.length < 1" ng-click="printData('Profile_WorkHistory_ProfessionalWorkExperience','Professional Work Experience')"><i class="fa fa-print"></i></button>
+                <button type="button" ng-click="showProfessionalWorkExperienceHistory('PWEH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+                <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="*Minimum of 10 years of experience"><i class="fa fa-question"></i></button>
+                <div id="PWEH" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+            </div>
+            <div class="col-md-12 text-right">
+                <label>CV :</label>
+                <a ng-if="CVInformation.CVDocumentPath" href="/Document/View?path={{CVInformation.CVDocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="CV Information"><i class="fa fa-file"></i></a>
+                @*<span ng-if="!CVInformation.CVDocumentPath"><i>Not Available</i></span>*@
+                <a ng-if="!CVInformation.CVDocumentPath" ng-click="operateViewAndAddControl('_editCV');" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Upload CV"><i class="fa fa-plus"></i> Upload CV</a>
+                <a ng-hide="!CVInformation.CVDocumentPath" class="btn btn-xs btn-primary" ng-click="operateViewAndAddControl('_editCV');" tooltip data-toggle="tooltip" data-placement="top" title="Edit CV"><i class="fa fa-edit"></i>&nbsp;Edit CV</a>
+
+            </div>
+            
+            <div id="$index+'_editCV'" class="col-md-12 zero-padding-left-right-div" ng-if="visibilityControl==($index+'_editCV')">
+                <form id="CVUPLOAD" ng-submit="uploadCV('CVUPLOAD')">
+
+
+                    <fieldset>
+                        <legend>Upload/Edit CV</legend>
+                        <div ng-show="CVInformation.CVDocumentPath" class="form-group col-md-1">
+                            <a ng-if="CVInformation.CVDocumentPath" href="/Document/View?path={{CVInformation.CVDocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="CV Information"><i class="fa fa-file"></i></a>
+                        </div>
+                        <div class="form-group col-md-11">
+                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                    
+                                    <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                                    <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                        <span class="fileinput-new">Select Document</span><span class="fileinput-exists">Change</span>
+                                        @Html.TextBoxFor(model => model.CVFile, new { type = "file", @class = "fileinputtag", onchange = "setFileNameWith(this); angular.element(this).scope().setFiles(this)" })
+
+                                    </span>
+                                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="removeFile('ContractInfo_CVFile')">Remove</a>
+                                </div>
+                        </div>
+                        @*<div class="form-group col-md-1">
+                    <button class="btn btn-primary">Upload CV</button>
+                </div>
+                <div class="form-group col-md-1">
+                    <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+                </div>*@
+                        <div class="col-md-12 form-group">
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+                            <button type="submit" ng-disabled="fileName!=null" class="btn btn-primary btn-sm pull-right" ng-click="">Upload CV</button>
+                        </div>
+                    </fieldset>
+                </form>
+                <div ng-show="activeMessageDiv=='uploadedCVInformation'" class="alert alert-success" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='removeCVUpload'">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        Error Lists :<br />
+                        <span ng-repeat="err in errorCVUpload track by $index">{{err}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <table ng-hide="professionalWorkExperiences.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td ng-hide="visibilityControl=='addProfessionalWorkExperience'">
+                                No Data Available For Professional Work Experience !
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                <span>
+                                    Please click on <button id="noDataAddNewWorkExp" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addProfessionalWorkExperience')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                    to add new Professional Work Experience
+                                </span>
+                                }
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="professionalWorkExperiences.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_WorkHistory_ProfessionalWorkExperience">
+                    <thead>
+                        <tr>
+                            <th>Employer Name</th>
+                            <th>
+                                <a ng-click="reverse=!reverse;order('StartDate',reverse,1)" class="pointer">Start Date <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th>
+                                <a ng-click="reverse=!reverse;order('EndDate',reverse,2)" class="pointer">End Date <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th>Job Title</th>
+                            <th class="hideData">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="workExperience in professionalWorkExperiences track by $index">
+                        <tr>
+                            <td>{{workExperience.EmployerName}}</td>
+                            <td ng-show="!workExperience.StartDate"><i>Not Available</i></td>
+                            <td ng-show="workExperience.StartDate">{{workExperience.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td>
+                                <div ng-hide="workExperience.CurrentlyWorking==1">
+                                    <i class="data-label">{{workExperience.EndDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                                </div>
+
+                            </td>
+                            <td ng-show="!workExperience.JobTitle"><i>Not Available</i></td>
+                            <td ng-show="workExperience.JobTitle">{{workExperience.JobTitle}}</td>
+                            <td class="hideData"> 
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewProfessionalWorkExperience')" ng-hide="viewProfessionalWorkExperience" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editProfessionalWorkExperience',workExperience);" ng-hide="editShowStateLicense" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initProfessionalWorkExperienceWarning(workExperience);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                    <button id="addNewWorkExp" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addProfessionalWorkExperience');" ng-hide="$index+1!=professionalWorkExperiences.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                }
+                            </td>
+                        </tr>
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                        {
+                            <tr ng-if="visibilityControl==($index+'_viewProfessionalWorkExperience')" class="hideData">
+                                <td colspan="7">
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewProfessionalWorkExperience.cshtml")
+                                </td>
+                            </tr>
+                        }
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                        {
+                            <tr ng-if="visibilityControl==($index+'_editProfessionalWorkExperience')">
+                                <td colspan="7" id="professionalWorkExperienceEditDiv{{$index}}">
+                                    <fieldset>
+                                        <legend>
+                                            Edit Professional Work Experience
+                                        </legend>
+                                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditProfessionalWorkExperience.cshtml")
+                                        <div class="col-md-12 form-group">
+                                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+                                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalWorkExperience(tempObject, $index)">Update</button>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div ng-show="activeMessageDiv=='addedNewProfessionalWorkExperience'" class="alert alert-success" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='removeProfessionalWorkExperience'">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        Error Lists :<br />
+                        <span ng-repeat="err in errorProfessionalWorkExperience track by $index">{{err}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+            {
+            <fieldset ng-if="visibilityControl==('addProfessionalWorkExperience')">
+                <legend>
+                    Add Work History
+                </legend>
+                <div id="newProfessionalWorkExperienceFormDiv">
+                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditProfessionalWorkExperience.cshtml")
+                    <div ng-show="activeMessageDiv=='addedNewProfessionalWorkExperience'" class="alert alert-danger" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalWorkExperience(tempObject, $index)">Add</button>
+                    </div>
+                </div>
+            </fieldset>
+            }
+        </div>
+    </fieldset>
+    <div class="panel-default" ng-if="showProfessionalWorkExperienceHistoryTable">
+        <div class="form-style">
+            <fieldset>
+                <legend>
+                    Professional Work Experience History
+                </legend>
+                <div class="legend2 pull-right">
+                    @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="professionalWorkExperienceHistoryArray.length <= 0" ng-click="downloadTableData('Profile_WorkHistory_ProfessionalWorkExperienceHistory', 'Professional Work Experience History')"><i class="fa fa-download"></i></button>*@
+                    <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="professionalWorkExperienceHistoryArray.length <= 0" ng-click="printData('Profile_WorkHistory_ProfessionalWorkExperienceHistory','Professional Work Experience History')"><i class="fa fa-print"></i></button>
+                    <button type="button" ng-click="cancelProfessionalWorkExperienceHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+                </div>
+                <table ng-hide="professionalWorkExperienceHistoryArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No History Available for Professional Work Experience!
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="professionalWorkExperienceHistoryArray.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle" id="Profile_WorkHistory_ProfessionalWorkExperienceHistory">
+                    <thead>
+                        <tr>
+                            <th>Employer Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Job Title</th>
+                            <th>Status</th>
+                            <th class="hideData">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="pwxHistory in professionalWorkExperienceHistoryArray">
+                        <tr>
+                            <td ng-if="!pwxHistory.EmployerName"><i>Not Available</i></td>
+                            <td ng-if="pwxHistory.EmployerName">{{pwxHistory.EmployerName}}</td>
+                            <td ng-if="!pwxHistory.StartDate"><i>Not Available</i></td>
+                            <td ng-if="pwxHistory.StartDate">{{pwxHistory.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td ng-if="!pwxHistory.EndDate"><i>Not Available</i></td>
+                            <td ng-if="pwxHistory.EndDate">{{pwxHistory.EndDate | date:'MM-dd-yyyy'}}</td>
+                            <td ng-if="!pwxHistory.JobTitle"><i>Not Available</i></td>
+                            <td ng-if="pwxHistory.JobTitle">{{pwxHistory.JobTitle}}</td>
+                            <td>{{pwxHistory.HistoryStatus}}</td>
+                            <td class="hideData">
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewpwxHistory')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewpwxHistory')" class="hideData">
+                            <td colspan="6" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewProfessionalWorkExperienceHistory.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+    <div class="modal fade" id="professionalWorkExperienceWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="removeProfessionalWorkExperience">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="col-lg-12 text-center" ng-show="isRemoved">
+                        <div style="margin-top:2%;">
+                            <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                        </div>
+                    </div>
+                    <div class="modal-body" ng-show="!isRemoved">
+                        Do you really want to remove <b>{{tempProfessionalWorkExperience.City}}, {{tempProfessionalWorkExperience.State}}, {{tempProfessionalWorkExperience.Country}}</b> from your Professional Work Experience list ?
+                        <input type="hidden" name="ProfessionalWorkExperienceID" value="{{tempProfessionalWorkExperience.ProfessionalWorkExperienceID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" ng-click="removeProfessionalWorkExperience(professionalWorkExperiences)">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("input:file").change(function () {
+            var fileName = $(this).val();
+            $(".filename").html(fileName);
+        });
+    });
+</script>

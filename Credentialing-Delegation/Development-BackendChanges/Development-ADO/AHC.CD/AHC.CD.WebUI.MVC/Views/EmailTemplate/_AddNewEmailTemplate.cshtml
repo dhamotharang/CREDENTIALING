@@ -1,0 +1,95 @@
+﻿@model AHC.CD.WebUI.MVC.Models.EmailTemplate.EmailTemplateViewModel
+
+<div class="form-style">
+    <form id="AddEmailTemplate" ng-submit="AddingEmailTemplate('AddEmailTemplate')">
+        <fieldset class="">
+            <legend>
+                Add Email Template
+            </legend>
+            <div id="newOtherLegalFormDiv">
+                <div class="col-lg-12 zero-padding-left-right-div ng-scope">
+                    @Html.HiddenFor(model => model.EmailTemplateID, new { ng_value = "tempObject.EmailTemplateID" })
+                    @Html.HiddenFor(model => model.StatusType, new { ng_value = "1" })
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label small">Action</label>
+                        <select name="Action" id="Action" ng-model="tempObject.Action" class="form-control input-sm">
+                            <option selected disabled ng-if="!tempObject.Action" value="">--select--</option>
+                            <option value="Profile Management Updates">Profile Management Updates</option>
+                        </select>
+                        @*@Html.TextBoxFor(model => model.Action, new { @class = "form-control input-sm", data_ng_model = "tempObject.Action" })*@
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label small">Email Type</label>
+                        <select name="EmailNotificationTypeCategory" id="EmailNotificationTypeCategory" ng-model="tempObject.EmailNotificationTypeCategory" class="form-control input-sm">
+                            <option selected disabled ng-if="!tempObject.EmailNotificationTypeCategory" value="">--select--</option>
+                            <option value="1">Alert</option>
+                            <option value="2">Reminder</option>
+                        </select>
+                       @* @Html.EnumDropDownListFor(model => model.EmailNotificationTypeCategory, new { @class = "form-control input-sm", data_ng_model = "tempObject.EmailNotificationTypeCategory" })*@
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label small">Title *</label>
+                        @Html.TextBoxFor(model => model.Title, new { @class = "form-control input-sm", data_ng_model = "tempObject.Title" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label small">Description *</label>
+                        <div>
+                            @Html.TextAreaFor(model => model.Description, new { style = "width:100%;resize: vertical;" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label small">Cc</label>
+                        @Html.TextBoxFor(model => model.CC, new { @class = "form-control input-sm", data_ng_model = "tempObject.CC" })
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label small">Bcc</label>
+                        @Html.TextBoxFor(model => model.BCC, new { @class = "form-control input-sm", data_ng_model = "tempObject.BCC" })
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">Subject *</label>
+                        <div>
+                            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm", data_ng_model = "tempObject.Subject" })
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label class="control-label small">Set Interval *</label>
+                        <div class="radio">
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.IsRecurrenceEnabledYesNoOption, (int)value, new { data_ng_model = "tempObject.IsRecurrenceEnabledYesNoOption", data_ng_click = "" }) @value.ToString()
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1">
+                        <label class="control-label small">Recurrence Type *</label>
+                        <div class="radio">
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.RecurrenceIntervalType)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.RecurrenceIntervalTypeCategory, (int)value, new { data_ng_model = "tempObject.RecurrenceIntervalTypeCategory", data_ng_click = "tempObject.IntervalFactor=null" }) @value.ToString()
+                                </label>
+                            }
+                            <br />
+                            <br />
+                            @Html.TextBoxFor(model => model.IntervalFactor, new { @type = "number", @class = "form-control input-sm", data_ng_model = "tempObject.IntervalFactor", @placeholder = "Enter Interval" })
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 form-group">
+                        <label class="control-label small">Body *</label>
+                        <wysiwyg textarea-id="wysiwygBody" textarea-class="form-control" textarea-height="400px" textarea-style="width:100%;resize: none;overflow-y: scroll;" textarea-name="wysiwygBody" textarea-required ng-model="tempObject.Body" enable-bootstrap-title="true"></wysiwyg>
+                        @Html.HiddenFor(model => model.Body, new { ng_value = "tempObject.Body" })
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="Cancle();">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">Add</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

@@ -1,0 +1,126 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Initiation.Models.ProfileViewModel
+
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<form id="ContractInformationForm">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Contract Information
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.ContractInfoes[0].ProviderRelationshipOption, new { @class = "control-label small" })
+                    <div id="ProviderRelationCheckBox">
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.ProviderRelationshipOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.ContractInfoes[0].ProviderRelationshipOption, (int)value, new { data_ng_model = "ContractInfo.ProviderRelationshipOption", data_ng_change = "getProviderRelationTextValue(ContractInfo.ProviderRelationshipOption)" }) <span>@value.ToString()</span>
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ContractInfoes[0].ProviderRelationshipOption, "", new { @class = "text-danger" })
+
+                    @Html.HiddenFor(model => model.ContractInfoes[0].ContractStatusOption, new { ng_value = "1" })
+                    @Html.HiddenFor(model => model.ContractInfoes[0].OrganizationId, new { ng_value = "1" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.ContractInfoes[0].JoiningDate, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.ContractInfoes[0].JoiningDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_ng_model = "ContractInfo.JoiningDate" })
+                    @Html.ValidationMessageFor(model => model.ContractInfoes[0].JoiningDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.CVInformation.CVDocumentPath, htmlAttributes: new { @class = "control-label small" })
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                        <span class="input-group-addon btn btn-default btn-sm btn-file">
+                            <span class="fileinput-new">Select CV</span><span class="fileinput-exists">Change</span>
+                            @Html.TextBoxFor(model => model.CVInformation.CVFile, new { type = "file", @class = "fileinputtag", onchange = "setFileNameWith(this); angular.element(this).scope().setFiles(this)" })
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="removeFile('ContractInfo_CVFile')">Remove</a>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CVInformation.CVFile, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.ContractInfoes[0].IndividualTaxId, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.ContractInfoes[0].IndividualTaxId, new { @class = "form-control input-sm", placeholder = "individual tax id", data_ng_model = "ContractInfo.IndividualTaxId" })
+                    @Html.ValidationMessageFor(model => model.ContractInfoes[0].IndividualTaxId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.ContractInfoes[0].ContractFilePath, htmlAttributes: new { @class = "control-label small" })
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                        <span class="input-group-addon btn btn-default btn-sm btn-file">
+                            <span class="fileinput-new">Select Document</span><span class="fileinput-exists">Change</span>
+                            @Html.TextBoxFor(model => model.ContractInfoes[0].ContractFile, new { type = "file", @class = "fileinputtag", onchange = "setFileNameWith(this); angular.element(this).scope().setFiles1(this);" })
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="removeFile('ContractInfoes_0__ContractFile')">Remove</a>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ContractInfoes[0].ContractFile, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-3 form-group">
+                    @*@Html.LabelFor(model => model.ContractInfoes[0].ContractGroupInfoes, new { @class = "control-label small" })*@
+                    <label class="control-label small" for="ContractInfoes_0__ContractGroupInfoes">Are you a part of any {{GroupType}}?</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input type="radio" ng-model="IsPartOfGroup" name="PartOfGroup1" value="Yes"> Yes
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" ng-model="IsPartOfGroup" name="PartOfGroup1" value="No"> No
+                        </label>
+                    </div>
+                </div>
+                <div ng-if="IsPartOfGroup=='Yes'" class="col-lg-3 form-group">
+                    <label class="control-label small">{{GroupType}} Name</label>
+                    <div>
+                        <input class="form-control input-sm" ng-class="{'input-validation-error':ContractGroupInfoes.length == 0 && isHasError}" ng-model="searchGroupName" ng-focus="showContryCodeDiv('ProfileCreationGroupInfoResultDiv')" placeholder="Select {{GroupType}}" />
+
+                        <span ng-if="ContractGroupInfoes.length == 0 && isHasError" class="text-danger field-validation-error">
+                            <span>Please select the {{GroupType}}.</span>
+                        </span>
+
+                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ProfileCreationGroupInfoResultDiv">
+                            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr ng-repeat="group in filterGroups = (PracticingGroups | filter:searchGroupName)" ng-click="SelectPracticingGroup(group)" class="pointer">
+                                        <td>{{group.Group.Name}}</td>
+                                    </tr>
+                                    <tr ng-if="PracticingGroups.length == 0">
+                                        <td>No data..... </td>
+                                    </tr>
+                                    <tr ng-if="PracticingGroups.length > 0 && filterGroups.length == 0">
+                                        <td>{{GroupType}} not found..... </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ContractInfoes[0].ContractGroupInfoes, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div ng-if="ContractGroupInfoes.length > 0 && IsPartOfGroup=='Yes'" class="col-lg-6 form-group">
+                    <label class="control-label small">Selected {{GroupType}}</label>
+                    <div>
+                        <span ng-repeat="cg in ContractGroupInfoes track by $index">
+                            <span class="label label-provider-type">
+                                {{cg.PracticingGroup.Group.Name}}
+                                <i class="fa fa-close pointer" ng-click="RemoveContractGroupInfo(cg)"></i>
+                                <input type="hidden" name="ContractInfoes[0].ContractGroupInfoes[{{$index}}].PracticingGroupId" value="{{cg.PracticingGroupId}}" />
+                                <input type="hidden" name="ContractInfoes[0].ContractGroupInfoes[{{$index}}].ContractGroupStatusOption" value="1" />
+                                <input type="hidden" name="ContractInfoes[0].ContractGroupInfoes[{{$index}}].JoiningDate" value="{{ContractInfo.JoiningDate|date:'MM/dd/yyyy'}}" />
+                            </span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <input id="next1" type="button" value="Continue" ng-click="previewAddProvider('ContractInformationForm')" class="btn btn-primary btn-sm pull-right" />
+                <input id="next1" type="button" value="Previous" ng-click="nextForm(1)" class="btn btn-warning btn-sm pull-left" />
+            </div>
+        </fieldset>
+    </div>
+</form>

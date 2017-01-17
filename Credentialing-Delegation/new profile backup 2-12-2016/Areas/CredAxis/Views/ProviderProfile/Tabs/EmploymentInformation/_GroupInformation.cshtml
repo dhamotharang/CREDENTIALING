@@ -1,0 +1,123 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.EmploymentInformationVieModel.GroupInformationViewModel>
+@{
+    var Group = 0;
+}
+
+<fieldset class="fsStyle" id="viewGrpInfo">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            <span class="transparent-font-color">_____</span>
+            Group Information
+            <span class="transparent-font-color">______</span>
+        </span>
+        &nbsp;&nbsp; <span class="text-uppercase ">
+
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Employment/Addgroupinformation?model=@Model&value=Add" data-tab-container="ViewGroupInformation">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/Employment/Addgroupinformation?model=@Model&value=Edit" data-tab-container="ViewGroupInformation">
+                    <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn btn-warning btn-xs historyBtnCSS list-item" data-tab-path="/CredAxis/Employment/ViewGrouphistory?value=Group3" data-tab-container="GroupHistoryGroup3">
+                    <i class="fa fa-history"></i>
+                </button>
+                <a class="print_button_for_GroupInfo hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                    <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                </a>
+            </span>
+        </span>
+    </legend>
+@foreach (var item in Model)
+{
+    Group = Group + 1;
+    if (Group <= 2)
+    {
+        <div class="x_content zero-padding-left mutiple-data"@*class="@(Group % 2 == 0 ? " x_content mutiple-data zero-padding-left"
+             "classblue x_content mutiple-data zero-padding-left" )"*@>
+            <div>
+                <span class="text-uppercase TableHeading">Group Information-@Group</span>&nbsp; <button onclick="groupmodalhistory('Employment','removegroupinfo','@item.GroupInformationViewID','ViewGroupInformation')" @*data-toggle="modal" data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal "><i class="fa fa-minus"></i></button> &nbsp; 
+                     @*<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Employment/ViewGrouphistory?value=@item.GroupInformationViewID" data-tab-container="@item.GroupInformationViewID">
+    <i class="fa fa-history"></i>
+</button>*@
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.IpaGroupName) :</label>
+                <span class="theme_label_data">@item.IpaGroupName</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</label>
+                <span class="theme_label_data">@item.StartDate</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</label>
+                <span class="theme_label_data">@item.EndDate</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.Status) :</label>
+                <span class="theme_label_data">@item.Status</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.GroupTaxId) :</label>
+                <span class="theme_label_data">@item.GroupTaxId</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.GroupNPI) :</label>
+                <span class="theme_label_data">@item.GroupNPI</span>
+            </div>
+            <div id="@item.GroupInformationViewID">
+            </div>
+        </div>
+        if (Group == 2 && Model.Count()>2)
+        {
+            <span class="view-more pull-right" id="groupmore" data-toggle="collapse" data-target=".ViewMoregroup" onclick="ShowHideAddView('groupless', 'groupmore')">View More</span>
+        }
+    }
+    else
+    {
+        <div class="x_content mutiple-data zero-padding-left ViewMoregroup collapse" @*class="@(Group % 2 == 0 ? "x_content mutiple-data zero-padding-left ViewMoregroup collapse" : "classblue x_content mutiple-data zero-padding-left ViewMoregroup collapse")"*@>
+    <div>
+        <span class="text-uppercase TableHeading">Group Information-@Group</span>&nbsp;<button onclick="groupmodalhistory('Employment','removegroupinfo','@item.GroupInformationViewID','ViewGroupInformation')" @*data-toggle="modal" data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>&nbsp;
+         @*<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Employment/ViewGrouphistory?value=@item.GroupInformationViewID" data-tab-container="@item.GroupInformationViewID">
+    <i class="fa fa-history"></i>
+</button>*@
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+        <label class="theme_label">@Html.DisplayNameFor(e => e.IpaGroupName) :</label>
+        <span class="theme_label_data">@item.IpaGroupName</span>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+        <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</label>
+        <span class="theme_label_data">@item.StartDate</span>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+        <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</label>
+        <span class="theme_label_data">@item.EndDate</span>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+        <label class="theme_label">@Html.DisplayNameFor(e => e.Status) :</label>
+        <span class="theme_label_data">@item.Status</span>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+        <label class="theme_label">@Html.DisplayNameFor(e => e.GroupTaxId) :</label>
+        <span class="theme_label_data">@item.GroupTaxId</span>
+    </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.GroupNPI) :</label>
+                <span class="theme_label_data">@item.GroupNPI</span>
+            </div>
+            <div id="@item.GroupInformationViewID">
+            </div>
+</div>
+    }
+    if (Group == Model.Count())
+    {
+        <span class="view-more hidden pull-right" id="groupless" data-toggle="collapse" data-target=".ViewMoregroup" onclick="ShowHideAddView('groupmore', 'groupless')">View Less</span>
+    }
+}
+    <div id="GroupHistoryGroup3">
+
+    </div>
+</fieldset>
+<!--Add-->
+@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/_RemoveModal.cshtml")

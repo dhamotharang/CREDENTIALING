@@ -1,0 +1,116 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.PracticeProviderViewModel
+
+@*ng-if="visibilitySecondControl == 'MidLevelPractitionerEdit'"*@
+
+
+<div id="MidLevelPractitionerDiv">
+    <div class="col-lg-12"><label class="control-label small">Please Select Supervising Practioners</label></div>
+    <div class="col-lg-12">
+        <table ng-if="PracticeLocationDetail.MidlevelPractioners.length<1 || !PracticeLocationDetail.MidlevelPractioners" class="table table-bordered table-condensed customtbodyStyle table-striped">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Middle name</th>
+                    <th>Last Name</th>
+                    <th>NPI Number </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="practitioner in PracticeLocationDetail.Facility.FacilityDetail.FacilityPracticeProviders">
+                <tr ng-if="practitioner.Status != 'Inactive'">
+                    <td>{{practitioner.FirstName || 'Not Available'}}</td>
+                    <td>{{practitioner.MiddleName || 'Not Available'}}</td>
+                    <td>{{practitioner.LastName || 'Not Available'}}</td>
+                    <td>{{practitioner.NPINumber || 'Not Available'}}</td>
+                    <td>
+                        <button class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="left" title="Select" ng-click="addMidLevelToTempList(practitioner);" ng-if="tempMidLevelPractitionersList.indexOf(practitioner)<0" tooltip><i class="fa fa-check"></i></button>
+                        <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="left" title="Remove" ng-click="removeFromMidLevelTempList(practitioner);" ng-if="tempMidLevelPractitionersList.indexOf(practitioner)>=0" tooltip><i class="fa fa-close"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <form id="MidLevelPractitionerForm{{$index}}">
+        <div ng-if="PracticeLocationDetail.MidlevelPractioners.length<1 || !PracticeLocationDetail.MidlevelPractioners">
+            <div ng-repeat="practitioner in tempMidLevelPractitionersList">
+                <input type="hidden" name="practiceProviders[{{$index}}].PracticeLocationID" value="{{PracticeLocationDetail.PracticeLocationDetailID}}" />
+                @*<input type="hidden" name="PracticeLocationDetail.MidlevelPractioners[{{$index}}].PracticeProviderID" value="{{practitioner.PracticeProviderID}}" />*@
+
+                <input type="hidden" name="practiceProviders[{{$index}}].PracticeType" value="Midlevel" />
+                <input type="hidden" name="practiceProviders[{{$index}}].RelationType" value="Internal" />
+                <input type="hidden" name="practiceProviders[{{$index}}].FirstName" value="{{practitioner.FirstName}}" />
+                <input type="hidden" name="practiceProviders[{{$index}}].MiddleName" value="{{practitioner.MiddleName}}" />
+                <input type="hidden" name="practiceProviders[{{$index}}].LastName" value="{{practitioner.LastName}}" />
+                <input type="hidden" name="practiceProviders[{{$index}}].NPINumber" value="{{practitioner.NPINumber}}" />
+            </div>
+        </div>
+        <div ng-if="PracticeLocationDetail.MidlevelPractioners.length>0">
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            <span ng-if="tempThirdObject.PracticeProviderID">
+                @Html.HiddenFor(model => model.PracticeProviderID, new { ng_value = "tempThirdObject.PracticeProviderID" })
+                @Html.HiddenFor(model => model.RelationType, new { ng_value = "tempThirdObject.RelationType" })
+            </span>
+            @Html.HiddenFor(model => model.PracticeType, new { Value = @AHC.CD.Entities.MasterData.Enums.PracticeType.Midlevel })
+            <div ng-if="!tempThirdObject.PracticeProviderID">
+                <div class="col-md-12 form-group zero-padding-left-right-div">
+                    <div class="form-group col-md-4 pull-left">
+                        <label class="control-label small">Select Mid-Level Practitioner </label>
+                        <input type="text" class="form-control input-sm" name="midLevelPractioner" data-practitioners="PracticeLocationDetail.Facility.FacilityDetail.FacilityPracticeProviders" data-onselect="setMidLevelPractitioner" data-msg="Mid-Level Practitioners" data-autocomplete="practitioner" midlevelpractitionersearch />
+                        @Html.HiddenFor(model => model.RelationType, new { @class = "form-control input-sm", data_ng_model = "tempThirdObject.RelationType" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 " ng-if="tempThirdObject.FirstName || tempThirdObject.LastName || tempThirdObject.NPINumber || tempThirdObject.RelationType == 'External'">
+
+                <table class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Middle name</th>
+                            <th>Last Name</th>
+                            <th>NPI Number </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{tempThirdObject.FirstName || 'Not Available'}}
+                                @Html.HiddenFor(model => model.FirstName, new { @class = "form-control input-sm", Value = "{{tempThirdObject.FirstName}}" })
+                            </td>
+                            <td>
+                                {{tempThirdObject.MiddleName || 'Not Available'}}
+                                @Html.HiddenFor(model => model.MiddleName, new { @class = "form-control input-sm", Value = "{{tempThirdObject.MiddleName}}" })
+                            </td>
+                            <td>
+                                {{tempThirdObject.LastName || 'Not Available'}}
+                                @Html.HiddenFor(model => model.LastName, new { @class = "form-control input-sm", Value = "{{tempThirdObject.LastName}}" })
+                            </td>
+                            <td>
+                                {{tempThirdObject.NPINumber || 'Not Available'}}
+                                @Html.HiddenFor(model => model.NPINumber, new { @class = "form-control input-sm", Value = "{{tempThirdObject.NPINumber}}" })
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="clearfix"></div><br />
+            </div>
+            <div>
+                <input type="hidden" name="StatusType" value="1" />
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='midlevelPractionersErrorMsg'" class="alert alert-danger" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 form-group">
+            <button class="btn btn-warning btn-sm" ng-click="MidLevelPractitionerEdit=false; operateThirdCancelControl('MidLevelPractitionerDiv'); resetMidLevelPractitioner();">Cancel</button>
+            <button class="btn btn-success btn-sm pull-right" ng-if="PracticeLocationDetail.MidlevelPractioners.length>0" ng-disabled="!(tempThirdObject.FirstName || tempThirdObject.LastName || tempThirdObject.NPINumber)" ng-click="addMidlevelPractioners(PracticeLocationDetail, $index)"><span ng-if="!tempThirdObject.PracticeProviderID">Add</span><span ng-if="tempThirdObject.PracticeProviderID">Update</span></button>
+            <button class="btn btn-success btn-sm pull-right" ng-if="tempMidLevelPractitionersList.length>0" ng-click=" addMultipleMidlevelPractioners(PracticeLocationDetail, $index)"><span>Add</span></button>
+        </div>
+    </form>
+</div>

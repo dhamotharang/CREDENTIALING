@@ -1,0 +1,139 @@
+﻿@model AHC.CD.WebUI.MVC.Models.UsersList
+@{
+    ViewBag.Title = "ViewUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+    <script src="~/Scripts/Custom/ResetPassword.js"></script>
+}
+<div id="page-wrapper" ng-app="Resetpasswordapp" ng-controller="ResetPasswordController" ng-init="Getlist()" ng-cloak>
+    <toaster-container toaster-options="{'time-out': 3000,
+                'position-class': 'toast-top-right','close-button':true}"></toaster-container>
+    <div class="container-fluid">
+        <div class="row" style="margin-top:2px">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Change Role of an Existing User/ Reset Password
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- Page Heading -->
+        <div ng-show="showLoading" class="row">
+            <div style="margin-left:45%;margin-top:15%">
+                <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+                <span>Loading...Please Wait</span>
+            </div>
+        </div>
+        <div ng-show="!showLoading" id="mydiv" class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <table id="userstable" class='table table-striped table-bordered customtbodyStyle small wrap-words'>
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Email
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 '>
+                                    Name
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 '>
+                                    Role
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 '>
+                                    Remove Role
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Change Role
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Add Role
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 '>
+                                    Reset Password
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'><input type="text" placeholder="Filter Email" class="form-control input-sm" ng-model="search.Email"></td>
+                                <td class='col-lg-1 col-md-1 col-sm-1 '><input type="text" placeholder="Filter Name" class="form-control input-sm" ng-model="search.Name" /></td>
+                                <td class='col-lg-1 col-md-1 col-sm-1 '><input type="text" placeholder="Filter Role" class="form-control input-sm" ng-model="search.Role" /></td>
+                                <td class='col-lg-1 col-md-1 col-sm-1 '></td>
+                                <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></td>
+                                <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></td>
+                                <td class='col-lg-1 col-md-1 col-sm-1 '></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='p in UsersPagination | filter:{Email:search.Email,Name:search.Name,Role:search.Role,NextFollowUpDate:search.NextFollowUpDate,CompleteStatus:search.CompleteStatus}   track by $index'>
+
+                                <td>{{p.Email}}</td>
+                                <td class="wraptext">{{p.Name}}</td>
+                                <td>{{p.Role}}</td>
+                                <td ng-if="p.NumberofRoles ==1"></td>
+                                <td ng-if="p.NumberofRoles >1">
+                                    <label style="font-size:13px" class="text-success active">
+                                        {{p.Role}}
+                                        <i style="color:red;font-size:16px" class="fa fa-close pointer" ng-click="RemoveRole(p.Role,p.Email,p.AuthenticateUserId)"></i>
+                                    </label>
+                                </td>
+                                @*<td ng-if="p.NumberofRoles >1"><button ng-click="RemoveRole(p.Role,p.Email,p.AuthenticateUserId)" class="btn btn-sm btn-primary">Remove Role {{p.Role}}</button></td>*@
+                                <td class="col-lg-2 input-group">
+                                    <select name="RoleCode" ng-model="role" class="selectchangerole col-lg-9 input-sm" ng-change="changerolefun(p.AuthenticateUserId,$index)">
+                                        <option class="wrap-words" value="">Change Role</option>
+                                        <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="role == role.Code">{{role.Name}}</option>
+                                    </select> &nbsp;
+                                    <button id="updatebutton{{$index}}" class="tulasi updatebtn btn btn-info btn-sm " data-placement="bottom" title="Update Role" ng-click="ChangeRole(role,p.Email,p.AuthenticateUserId,p.Role)" disabled><i class="fa fa-chevron-circle-right"></i></button>
+                                </td>
+                                <td class="col-lg-2 input-group">
+                                    @*<button type="button" id="updatebutton{{$index}}" data-toggle="tooltip" data-placement="bottom" title="Update" class="btn btn-sm btn-info updatebtn" ng-click="ChangeRole(role,p.Email)"><i class="fa fa-chevron-circle-right"></i></button>*@
+                                    @*<button id="updatebutton{{$index}}" class="tulasi btn btn-info btn-sm " data-placement="bottom" title="Update Role" ng-click="ChangeRole(role,p.Email,p.AuthenticateUserId,p.Role)" data-toggle="modal" data-target="#myModal" disabled><i class="fa fa-chevron-circle-right"></i></button>*@
+                                    <select name="RoleCode" ng-model="addrole" class="selectaddrole col-lg-9 input-sm" ng-change="addrolefun(p.AuthenticateUserId,$index)">
+                                        <option value="">Add New Role</option>
+                                        <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="addrole == role.Code">{{role.Name}}</option>
+                                    </select> &nbsp;
+                                    <button id="addbutton{{$index}}" class="tulasi btn btn-info btn-sm " data-placement="bottom" title="Add Role" ng-click="AddRole(addrole,p.Email,p.AuthenticateUserId)" disabled><i class="fa fa-chevron-circle-right"></i></button>
+                                </td>
+                                <td>
+                                    <button id="PasswordReset" data-placement="bottom" title="Reset Password" class="btn btn-sm btn-info" ng-click="PasswordReset(p.Email)"><i class="fa fa-fire"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="clearfix"></div>
+                    <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                    <pagination ng-if="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+            
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p><b>{{errormessage}}</b></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+</div>
+

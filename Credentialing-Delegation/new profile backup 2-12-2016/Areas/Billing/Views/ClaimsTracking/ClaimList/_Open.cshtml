@@ -1,0 +1,64 @@
+﻿@model List<PortalTemplate.Areas.Billing.Models.Claims_Tracking.OpenClaimViewModel>
+
+<div class="table-responsive">
+    <table id="CTOpenClaimListTable" class="table table-striped table-hover custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+        <thead class="theme_thead">
+            <tr>
+                <th>Claim Number </th>
+                <th>Payer</th>
+                <th>Member</th>
+                <th>DOS Range</th>
+                <th>Provider </th>
+                <th>Claimed Amount</th>
+                <th>Claimed Type</th>
+                <th>Created On</th>
+                <th>Age</th>
+                <th>Created By</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.ClaimNumber</td>
+                    <td>@item.PayerName</td>
+                    <td>@item.MemLastName @item.MemFirstName</td>
+                    <td>
+                        @item.DOSFrom - @item.DOSTo
+                        @*@(item.DOSFrom != null ? item.DOSTo.Value.ToShortDateString() : "") - @(item.DOSTo != null ? item.DOSTo.Value.ToShortDateString())*@
+                    </td>
+                    <td>@item.ProviderLastName @item.ProviderFirstName</td>
+                    <td>@item.Amount</td>
+                    <td>@item.ClaimType</td>
+                    <td>@(item.DateCreated != null ? item.DateCreated.Value.ToShortDateString() : "")</td>
+                    <td>@item.AgeOfDOC</td>
+                    <td>@item.CreatedBy</td>
+                    <td>
+                        <button class="btn btn-info btn-xs margin_left_12px editBtn"><i class="fa fa-edit"> </i></button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $('#CTOpenClaimListTable').prtGrid({
+        url: "/Billing/ClaimsTracking/GetOpenCListByIndex",
+        dataLength: 50,
+        columns: [{ type: 'text', name: 'ClaimNumber', text: 'Claim Number', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'PayerName', text: 'Payer', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'MemLastName', text: 'Member', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'date', name: 'DOSFrom', text: 'DOS Range', widthPercentage: 15, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'ProviderLastName', text: 'Provider', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'date', name: 'DateOfCreation', text: 'Date Of Creation', widthPercentage: 10, sortable: { isSort: true, defaultSort: 'ASC' } },
+        { type: 'text', name: 'Amount', text: 'Claimed Amount', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'date', name: 'DateCreated', text: 'Created On', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'AgeOfDOC', text: 'Age', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'CreatedBy', text: 'Created By', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'none', name: '', text: '', widthPercentage: 5, sortable: { isSort: false } }]
+    });
+</script>

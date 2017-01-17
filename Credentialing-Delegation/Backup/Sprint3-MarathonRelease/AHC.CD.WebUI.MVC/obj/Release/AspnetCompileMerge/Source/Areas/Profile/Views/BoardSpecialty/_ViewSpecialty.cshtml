@@ -1,0 +1,122 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.BoardSpecialty.SpecialtyDetailViewModel
+
+<div>
+    <div class=" col-lg-12 zero-padding-left-right-div">    
+        
+        <fieldset>
+            <legend>
+                Specialty
+            </legend>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.PreferenceType, new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">{{boardSpecialty.SpecialtyPreference}}</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.SpecialtyID, new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">{{boardSpecialty.Specialty.Name}}</i>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                @Html.LabelFor(model => model.PercentageOfTime, new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">{{boardSpecialty.PercentageOfTime}} %</i>
+                </div>
+            </div>
+            <div class="clearfix"></div><br />
+            <div class="col-lg-6">
+                <label class="control-label small">Do you wish to be listed in the directory under this specialty? *</label>
+                <div>
+                    <table class="col-lg-6">
+                        <tr>
+                            <th>@Html.LabelFor(model => model.ListedInHMOYesNoOption, new { @class = "control-label small" })</th>
+                            <th>@Html.LabelFor(model => model.ListedInPOSYesNoOption, new { @class = "control-label small" })</th>
+                            <th>@Html.LabelFor(model => model.ListedInPPOYesNoOption, new { @class = "control-label small" })</th>
+                        </tr>
+                        <tr>
+                            <td><i class="data-label">{{boardSpecialty.ListedInHMO}}</i></td>
+                            <td><i class="data-label">{{boardSpecialty.ListedInPOS}}</i></td>
+                            <td><i class="data-label">{{boardSpecialty.ListedInPPO}}</i></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+                       
+        <fieldset>
+            <legend>
+                Board Details
+            </legend>
+            <div class="col-lg-4">
+                @Html.LabelFor(model => model.BoardCertifiedYesNoOption, new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">{{boardSpecialty.IsBoardCertified}}</i>
+                </div>
+            </div>
+            <div ng-if="boardSpecialty.IsBoardCertified == 'Yes'">
+                <div class="col-lg-4">
+                    @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardID, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{boardSpecialty.SpecialtyBoardCertifiedDetail.SpecialtyBoard.Name}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.InitialCertificationDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{boardSpecialty.SpecialtyBoardCertifiedDetail.InitialCertificationDate | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.LastReCerificationDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{boardSpecialty.SpecialtyBoardCertifiedDetail.LastReCerificationDate | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.ExpirationDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{boardSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificatePath, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label"><a href="{{boardSpecialty.SpecialtyBoardCertifiedDetail.BoardCertificatePath}}" c cla class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Board Certificate"><i class="fa fa-file"> Board Certificate</i></a></i>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="boardSpecialty.IsBoardCertified == 'No'">
+                <div class="col-lg-4">
+                    @Html.LabelFor(model => model.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus, new { @class = "control-label small" })
+                    <div ng-show="boardSpecialty.SpecialtyBoardNotCertifiedDetail.ExamStatus == 'ResultPending'">
+                        <i class="data-label">I have taken exam, result pending</i>
+                    </div>
+                    <div ng-show="boardSpecialty.SpecialtyBoardNotCertifiedDetail.ExamStatus == 'IntendToSit'">
+                        <i class="data-label">I intend to sit for exam</i>
+                    </div>
+                    <div ng-show="boardSpecialty.SpecialtyBoardNotCertifiedDetail.ExamStatus == 'DoNotIntendToSit'">
+                        <i class="data-label">I do not intend to take exam</i>
+                    </div>
+                </div>
+                <div class="col-lg-4" ng-if="boardSpecialty.SpecialtyBoardNotCertifiedDetail.ExamStatus == 'IntendToSit'">
+                    @Html.LabelFor(model => model.SpecialtyBoardNotCertifiedDetail.ExamDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{boardSpecialty.SpecialtyBoardNotCertifiedDetail.ExamDate | date:'MM-dd-yyyy'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-4" ng-if="boardSpecialty.SpecialtyBoardNotCertifiedDetail.ExamStatus == 'DoNotIntendToSit'">
+                    @Html.LabelFor(model => model.SpecialtyBoardNotCertifiedDetail.ReasonForNotTakingExam, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{boardSpecialty.SpecialtyBoardNotCertifiedDetail.ReasonForNotTakingExam}}</i>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="operateEditControl($index+'_editboardSpecialty', boardSpecialty)">Edit</button>
+        </div>
+    </div>
+</div>

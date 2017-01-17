@@ -1,0 +1,919 @@
+﻿<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<script src="~/Scripts/Lib/pdfGeneration/jspdf.min.js"></script>
+<script src="~/Scripts/Lib/pdfGeneration/jspdf.plugin.autotable.js"></script>
+<script type="text/javascript">
+
+    function PrintElem() {
+        Popup($("#render_me").html());
+        //$('#message1').hide();
+    }
+
+    function myFunction() {
+        window.print();
+    }
+
+    function Popup(data) {
+
+        var params = [
+        'height=' + screen.height,
+        'width=' + screen.width,
+        'fullscreen=yes' // only works in IE, but here for completeness
+        ].join(',');
+        // and any other options from
+
+
+        var mywindow = window.open('', data, params);
+        mywindow.moveTo(0, 0);
+
+        mywindow.document.write('<html><head><title>Provder List</title>');
+        mywindow.document.write('<link rel="stylesheet" href="/Content/bootstrap.min.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10
+
+        setTimeout(function () {
+            mywindow.print();
+            mywindow.close();
+        }, 500);
+        return true;
+    }
+
+</script>
+
+<script>
+    function myFunction() {
+        window.print();
+    }
+</script>
+<ul class="pager small">
+    <li class="previous"><a href="" ng-click="goToNextTab('SUMMARY')"><<</a></li>
+    <li class="next"><a href="" ng-click="goToNextTab('credentialing_action')">>></a></li>
+    <li class="next"><a href="" ng-click="goToNextTab('credentialing_action')">Skip</a></li>
+</ul>
+<div ng-init="GetProfileVerificationParameter()"></div>
+<div class="col-lg-12" ng-init="loadData(@ViewBag.CredentialingInfoID)"></div>
+<div class="col-lg-12">
+    @Html.Partial("~/Areas/Credentialing/Views/CnD/_FloatingAction.cshtml")
+</div>
+
+@*<div id="PrinData">
+    <div class="col-lg-12 text-center">
+        <div class="col-md-12"><strong>Verification Report</strong></div>
+
+    </div>
+    <div ng-if="showPsvError" class="col-lg-12 text-center" role="alert">*@
+@*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+@*Primary Source Verification is not completed
+    </div>
+
+    <div class="col-lg-12 table-bordered" ng-repeat="tab in FormattedData">
+        <div class="col-lg-4"><strong>{{tab.Info[0].ProfileVerficationParameterObj.Title}}</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small" ng-if="tab.Id==StateLicenseParameterID">{{tab.Info.length}}</div>
+        <div class="col-lg-4 small" ng-if="tab.Id==DEAParameterID">{{tab.Info.length}}</div>
+        <div class="col-lg-4 small" ng-if="tab.Id==CDSParameterID">{{tab.Info.length}}</div>
+        <div class="col-lg-4 small" ng-if="tab.Id==BoardCertificationParameterID">{{tab.Info.length}}</div>
+        <div class="col-lg-4 small" ng-if="tab.Id==NPDBParameterID || tab.Id==MOPTParameterID || tab.Id==OIGParameterID">1</div>
+        <div class="col-lg-2">*@
+@*<button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>*@
+@*<a class="text-success"><i class="fa fa-check-circle-o"></i></a>
+                <button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" ng-click="toggleDiv('tabId'+tab.Id,'psvDiv')"><i class="fa fa-sort-down"></i></button>
+            </div>
+            <div class="col-lg-12 psvDiv" id="tabId{{tab.Id}}" style="display:none;">
+                <div ng-if="tab.Id==StateLicenseParameterID">
+                    @Html.Partial("~/Areas/Credentialing/Views/CnD/_StateLisence.cshtml")
+                </div>
+                <div ng-if="tab.Id==DEAParameterID">
+                    @Html.Partial("~/Areas/Credentialing/Views/CnD/_DEA.cshtml")
+                </div>
+                <div ng-if="tab.Id==CDSParameterID">
+                    @Html.Partial("~/Areas/Credentialing/Views/CnD/_CDS.cshtml")
+                </div>
+                <div ng-if="tab.Id==BoardCertificationParameterID">
+                    @Html.Partial("~/Areas/Credentialing/Views/CnD/_BoardCertifications.cshtml")
+                </div>
+                <div ng-if="tab.Id==NPDBParameterID || tab.Id==MOPTParameterID || tab.Id==OIGParameterID">
+                    @Html.Partial("~/Areas/Credentialing/Views/CnD/_Remarks.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>*@
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Primary Source Verification
+        </legend>
+        <div ng-repeat="tab in FormattedData track by $index" style="margin:10px">
+            @* state license *@
+            <table class='table table-striped table-bordered small wrap-words' ng-if="tab.Id==StateLicenseParameterID">
+                <thead>
+                    <tr style="background-color:#ddd">
+                        <th colspan="6">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</th>
+                    </tr>
+                    @*<tr ng-show="tempData[0].Licenses.length == '0'">
+                            <th colspan="6" class="danger"><span class="control-label danger">No State Licenses Available !!!</span></th>
+                        </tr>*@
+                    <tr @*ng-show="tempData[0].Licenses.length > '0'"*@>
+                        <th>
+                            License Number
+                        </th>
+                        <th>
+                            Document
+                        </th>
+                        <th>
+                            Source
+                        </th>
+                        <th>
+                            Remarks
+                        </th>
+                        <th>
+                            Verified Date
+                        </th>
+                        <th>
+                            Verified Document
+                        </th>
+                        @*<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='lisence in tab.Info track by $index' ng-class='{danger:license.dayLeft < -1, warning:license.dayLeft < 90, info:license.dayLeft < 180}'>
+                        <td class="wrap-words">{{lisence.VerificationData.LicenseNumber}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationData.StateLicenseDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationData.StateLicenseDocumentPath}}" targ target="_blank"><i class="fa fa-file"></i></a></td>
+                        <td class="wrap-words"><a style="cursor:pointer" class="data-label wrap-words" ng-if="lisence.VerificationResultObj.Source" ng-click="checkForHttp(lisence.VerificationResultObj.Source)">{{lisence.VerificationResultObj.Source}}</a></td>
+                        <td class="wrap-words">{{lisence.VerificationData.Remark}}</td>
+                        <td class="wrap-words">{{lisence.VerificationDate | date:'MM/dd/yyyy'}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationResultObj.VerificationDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationResultObj.VerificationDocumentPath}}" targ target="_blank"><i class="fa fa-file"></i></a></td>
+                        @*<td><a class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Perform PSV'><i class='fa fa-repeat'></i></a></td>*@
+                    </tr>
+                </tbody>
+            </table>
+
+
+            @* DEA *@
+            <table class='table table-striped table-bordered small wrap-words' ng-if="tab.Id==DEAParameterID">
+                <thead>
+                    <tr style="background-color:#ddd">
+                        <th colspan="6">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</th>
+                    </tr>
+                    @*<tr ng-show="tempData[1].Licenses.length == '0'">
+                            <th colspan="5" class="danger"><span class="control-label danger">No Federal DEA Available !!!</span></th>
+                        </tr>*@
+                    <tr @*ng-show="tempData[1].Licenses.length > '0'"*@>
+                        <th>
+                            DEA Number
+                        </th>
+                        <th>
+                            Document
+                        </th>
+                        <th>
+                            Source
+                        </th>
+                        <th>
+                            Remarks
+                        </th>
+                        <th>
+                            Verified Date
+                        </th>
+                        <th>
+                            Verified Document
+                        </th>
+                        @*<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='lisence in tab.Info track by $index' ng-class='{danger:license.dayLeft < -1, warning:license.dayLeft < 90, info:license.dayLeft < 180}'>
+                        <td class="wrap-words">{{lisence.VerificationData.DEANumber}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationData.DEALicenceCertPath" data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationData.DEALicenceCertPath}}" target="_blank"><i class="fa fa-file"></i></a></td>
+                        <td class="wrap-words"><a style="cursor:pointer" class="data-label wrap-words" ng-if="lisence.VerificationResultObj.Source" ng-click="checkForHttp(lisence.VerificationResultObj.Source)">{{lisence.VerificationResultObj.Source}}</a></td>
+                        <td class="wrap-words">{{lisence.VerificationData.Remark}}</td>
+                        <td class="wrap-words">{{lisence.VerificationDate | date:'MM/dd/yyyy'}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationResultObj.VerificationDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationResultObj.VerificationDocumentPath}}" targ target="_blank"><i class="fa fa-file"></i></a></td>
+                        @*<td><a class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Perform PSV'><i class='fa fa-repeat'></i></a></td>*@
+                    </tr>
+                </tbody>
+            </table>
+
+            @* CDS *@
+            <table class='table table-striped table-bordered small wrap-words' ng-if="tab.Id==CDSParameterID">
+                <thead>
+                    <tr style="background-color:#ddd">
+                        <th colspan="6">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</th>
+                    </tr>
+                    @*<tr ng-show="tempData[2].Licenses.length == '0'">
+                            <th colspan="5" class="danger"><span class="control-label danger">No CDS Information Available !!!</span></th>
+                        </tr>*@
+                    <tr @*ng-show="tempData[2].Licenses.length > '0'"*@>
+                        <th>
+                            CDS Number
+                        </th>
+                        <th>
+                            Document
+                        </th>
+                        <th>
+                            Source
+                        </th>
+                        <th>
+                            Remarks
+                        </th>
+                        <th>
+                            Verified Date
+                        </th>
+                        <th>
+                            Verified Document
+                        </th>
+                        @*<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='lisence in tab.Info track by $index' ng-class='{danger:license.dayLeft < -1, warning:license.dayLeft < 90, info:license.dayLeft < 180}'>
+                        <td class="wrap-words">{{lisence.VerificationData.CertNumber}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationData.CDSCCerificatePath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationData.CDSCCerificatePath}}" targ targe target="_blank"><i class="fa fa-file"></i></a></td>
+                        <td class="wrap-words"><a style="cursor:pointer" class="data-label wrap-words" ng-if="lisence.VerificationResultObj.Source" ng-click="checkForHttp(lisence.VerificationResultObj.Source)">{{lisence.VerificationResultObj.Source}}</a></td>
+                        <td class="wrap-words">{{lisence.VerificationData.Remark}}</td>
+                        <td class="wrap-words">{{lisence.VerificationDate | date:'MM/dd/yyyy'}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationResultObj.VerificationDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationResultObj.VerificationDocumentPath}}" targ target="_blank"><i class="fa fa-file"></i></a></td>
+                        @*<td><a class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Perform PSV'><i class='fa fa-repeat'></i></a></td>*@
+                    </tr>
+                </tbody>
+            </table>
+
+            @* Board certificates *@
+            <table class='table table-striped table-bordered small wrap-words' ng-if="tab.Id==BoardCertificationParameterID">
+                <thead>
+                    <tr style="background-color:#ddd">
+                        <th colspan="6">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</th>
+                    </tr>
+                    @*<tr ng-show="tempData[3].Licenses.length == '0'">
+                            <th colspan="6" class="danger"><span class="control-label danger">No Specialty/Board Available !!!</span></th>
+                        </tr>*@
+                    <tr @*ng-show="tempData[3].Licenses.length > '0'"*@>
+                        <th>
+                            Speciality Board Name
+                        </th>
+                        <th>
+                            Document
+                        </th>
+                        <th>
+                            Source
+                        </th>
+                        <th>
+                            Remarks
+                        </th>
+                        <th>
+                            Verified Date
+                        </th>
+                        <th>
+                            Verified Document
+                        </th>
+                        @*<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='lisence in tab.Info track by $index' ng-class='{danger:license.dayLeft < -1, warning:license.dayLeft < 90, info:license.dayLeft < 180}'>
+                        <td class="wrap-words">{{lisence.VerificationData.SpecialtyBoardCertifiedDetail.SpecialtyBoard.Name}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationData.SpecialtyBoardCertifiedDetail.BoardCertificatePath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationData.SpecialtyBoardCertifiedDetail.BoardCertificatePath}}" tar target="_blank"><i class="fa fa-file"></i></a></td>
+                        <td class="wrap-words"><a style="cursor:pointer" class="data-label wrap-words" ng-if="lisence.VerificationResultObj.Source" ng-click="checkForHttp(lisence.VerificationResultObj.Source)">{{lisence.VerificationResultObj.Source}}</a></td>
+                        <td class="wrap-words">{{lisence.VerificationData.Remark}}</td>
+                        <td class="wrap-words">{{lisence.VerificationDate | date:'MM/dd/yyyy'}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationResultObj.VerificationDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationResultObj.VerificationDocumentPath}}" targ target="_blank"><i class="fa fa-file"></i></a></td>
+                        @*<td><a class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Perform PSV'><i class='fa fa-repeat'></i></a></td>*@
+                    </tr>
+                </tbody>
+            </table>
+
+            @* last 3 *@
+            <table class="table table-striped table-bordered small wrap-words" ng-if="tab.Id==NPDBParameterID || tab.Id==MOPTParameterID || tab.Id==OIGParameterID">
+                <thead>
+                    <tr style="background-color:#ddd">
+                        <th colspan="5">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</th>
+                    </tr>
+                    @*<tr ng-show="tempData[3].Licenses.length == '0'">
+                            <th colspan="6" class="danger"><span class="control-label danger">No Specialty/Board Available !!!</span></th>
+                        </tr>*@
+                    <tr @*ng-show="tempData[3].Licenses.length > '0'"*@>
+                        <th>
+                            Source
+                        </th>
+                        <th>
+                            Remarks
+                        </th>
+                        <th>
+                            Verified Date
+                        </th>
+                        <th>
+                            Verified Document
+                        </th>
+                        @*<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='lisence in tab.Info track by $index' ng-class='{danger:license.dayLeft < -1, warning:license.dayLeft < 90, info:license.dayLeft < 180}'>
+                        <td class="wrap-words"><a style="cursor:pointer" class="data-label wrap-words" ng-if="lisence.VerificationResultObj.Source" ng-click="checkForHttp(lisence.VerificationResultObj.Source)">{{lisence.VerificationResultObj.Source}}</a></td>
+                        <td class="wrap-words">{{lisence.VerificationResultObj.Remark}}</td>
+                        <td class="wrap-words">{{lisence.VerificationDate | date:'MM/dd/yyyy'}}</td>
+                        <td class="wrap-words"><a ng-if="lisence.VerificationResultObj.VerificationDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.VerificationResultObj.VerificationDocumentPath}}" targ target="_blank"><i class="fa fa-file"></i></a></td>
+                        @*<td><a class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Perform PSV'><i class='fa fa-repeat'></i></a></td>*@
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>
+
+
+
+
+@*<div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>State License</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small">1</div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+            <a class="text-success"><i class="fa fa-check-circle-o"></i></a>
+            <button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('statediv', this)"><i class="fa fa-sort-down"></i></button>
+        </div>
+        <div class="col-md-12" id="statediv" style="display:none;">
+
+            @Html.Partial("~/Areas/Credentialing/Views/CnD/_StateLisence.cshtml")
+
+            <div class="col-lg-12 text-center table-bordered">
+                <div class="col-lg-3">Licence Number</div>
+                <div class="col-lg-3">License Type</div>
+                <div class="col-lg-3">License Status</div>
+                <div class="col-lg-3">Document</div>
+                <div class="col-lg-2">Review</div>
+            </div>
+            <div id="StateData">
+                <div class="col-lg-12 text-center table-bordered">
+                    <div class="col-lg-3 small">MM19237</div>
+                    <div class="col-lg-3 small">ME</div>
+                    <div class="col-lg-2 small">Active</div>
+                    <div class="col-lg-2 small">
+                        <a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-eye"></i></a>
+                    </div>
+                    <div class="col-lg-2 small">
+                        <button class="btn btn-xs btn-primary" onclick="toggleDiv('SL1', this)"><i class="fa fa-edit"></i></button>
+                    </div>
+                </div>
+                <div class="col-lg-12" id="SL1" style="display:none;">
+
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+@*<div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>CDS License</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small">1</div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+            <a class="text-success"><i class="fa fa-check-circle-o"></i></a>
+            <button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('cdsdiv', this)"><i class="fa fa-sort-down"></i></button>
+        </div>
+        <div class="col-lg-12" id="cdsdiv" style="display:none;">
+           @Html.Partial("~/Areas/Credentialing/Views/CnD/_DEA.cshtml")
+        </div>
+    </div>*@
+
+@*<div class="col-lg-12 table-bordered">
+    <div class="col-lg-4"><strong>Medicare OTP</strong></div>
+    <div class="col-lg-2 text-center"><strong>:</strong></div>
+    <div class="col-lg-4 small">1</div>
+    <div class="col-lg-2">
+        <a class="text-success"><i class="fa fa-check-circle-o"></i></a>*@
+@*<button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>*@
+@*<button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('medicarediv', this)"><i class="fa fa-sort-down"></i></button>*@
+@*</div>
+    <div class="col-lg-12" id="medicarediv" style="display:none;">
+        <div class="col-lg-12 text-center table-bordered">
+            <div class="col-lg-3">Licence Number</div>
+            <div class="col-lg-3">Issue Date</div>
+            <div class="col-lg-3">Expiry Date</div>
+            <div class="col-lg-3">Document</div>*@
+@*<div class="col-lg-2">Review</div>*@
+@*</div>
+    <div id="MedicareData">
+        <div class="col-lg-12 text-center table-bordered">
+            <div class="col-lg-3 small">MA123000897</div>
+            <div class="col-lg-3 small">4-3-2008</div>
+            <div class="col-lg-3 small">4-3-2019</div>
+            <div class="col-lg-3 small">
+                <a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-eye"></i></a>
+            </div>*@
+@*<div class="col-lg-2 small">
+        <button class="btn btn-xs btn-primary" onclick="toggleDiv('McareForm1', this)"><i class="fa fa-edit"></i></button>
+    </div>*@
+@*</div>
+                <div class="col-lg-12" id="McareForm1" style="display:none;">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*<div class="col-lg-12 table-bordered">
+    <div class="col-lg-4"><strong>NPDB Issues</strong></div>
+    <div class="col-lg-2 text-center"><strong>:</strong></div>
+    <div class="col-lg-4 small">NPDB Issues 1</div>
+    <div class="col-lg-2">
+        <a class="text-success"><i class="fa fa-check-circle-o"></i></a>*@
+@*<button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>*@
+@*<a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-sort-down"></i></a>*@
+@*<button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('npdbdiv', this)"><i class="fa fa-sort-down"></i></button>*@
+@*</div>
+        <div id="npdbdiv" style="display:none;">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-6 form-group">
+                    <label class="control-label small">Status</label>
+                    <select class="form-control input-sm">
+                        <option>Valid</option>
+                        <option>Invalid</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-6 form-group">
+                    <label class="control-label small">Remarks</label>
+                    <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label class="control-label small">Source</label>
+                    <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="control-label small">Verified Document</label>
+                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@*<div class="col-lg-12 table-bordered">
+    <div class="col-lg-4"><strong>Board Certification</strong></div>
+    <div class="col-lg-2 text-center"><strong>:</strong></div>
+    <div class="col-lg-4 small">Malpractice Issues 1</div>
+    <div class="col-lg-2">
+        <a class="text-success"><i class="fa fa-check-circle-o"></i></a>*@
+@*<button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>*@
+@*<a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-sort-down"></i></a>*@
+@*<button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('maldiv', this)"><i class="fa fa-sort-down"></i></button>
+        </div>
+        <div id="maldiv" style="display:none;">
+           @Html.Partial("~/Areas/Credentialing/Views/CnD/_BoardCertifications.cshtml")
+        </div>
+    </div>*@
+
+
+@*<div class="col-lg-12 table-bordered">
+    <div class="col-lg-4"><strong>OIG</strong></div>
+    <div class="col-lg-2 text-center"><strong>:</strong></div>
+    <div class="col-lg-4 small">Issue 1</div>
+    <div class="col-lg-2">
+        <a class="text-success"><i class="fa fa-check-circle-o"></i></a>*@
+@*<button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>*@
+@*<a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-sort-down"></i></a>*@
+@*<button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('sitediv', this)"><i class="fa fa-sort-down"></i></button>*@
+@*</div>
+        <div id="sitediv" style="display:none;">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-6 form-group">
+                    <label class="control-label small">Status</label>
+                    <select class="form-control input-sm">
+                        <option>Valid</option>
+                        <option>Invalid</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-6 form-group">
+                    <label class="control-label small">Remarks</label>
+                    <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label class="control-label small">Source</label>
+                    <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="control-label small">Verified Document</label>
+                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+@*<div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Name</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small"><strong>Pariksith Singh</strong></div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>*@
+
+@*<div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Practice Type</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small">Solo Practice</div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>*@
+
+@*<div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>County</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small">Los Angels</div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>*@
+
+@*<div class="col-lg-12 table-bordered">
+    <div class="col-lg-4"><strong>Specialty</strong></div>
+    <div class="col-lg-2 text-center"><strong>:</strong></div>
+    <div class="col-lg-4 small">2</div>
+    <div class="col-lg-2">
+        <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        <button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('BOARDdiv', this)"><i class="fa fa-edit"></i></button>
+
+    </div>
+    <div class="col-md-12" id="BOARDdiv" style="display:none;">
+        <div class="col-lg-12" id="SpecialtyContainer">
+            <br />
+            <div class="col-lg-12">
+                <div class="col-lg-12 text-center table-bordered">
+                    <div class="col-lg-3">Specialty Name</div>
+                    <div class="col-lg-3">Board Name</div>
+                    <div class="col-lg-3">Expiry Date</div>
+                    <div class="col-lg-3">Document</div>*@
+@*@*<div class="col-lg-2">Review</div>*@
+@*</div>
+    </div>
+    <div class="col-lg-12" id="SpecialtyData">
+        <div class="col-lg-12 text-center table-bordered">
+            <div class="col-lg-3 small">Sports Physician</div>
+            <div class="col-lg-3 small">-</div>
+            <div class="col-lg-3 small">-</div>
+            <div class="col-lg-3 small">
+                <a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-eye"></i></a>
+            </div>*@
+@*<div class="col-lg-2 small">
+        <button class="btn btn-xs btn-primary" onclick="toggleDiv('SForm1', this)"><i class="fa fa-edit"></i></button>
+    </div>*@
+@*</div>
+    <div class="col-lg-12" id="SForm1" style="display:none;">
+        <br />
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-6 form-group">
+                <label class="control-label small">Status</label>
+                <select class="form-control input-sm">
+                    <option>Valid</option>
+                    <option>Invalid</option>
+                </select>
+            </div>
+
+            <div class="col-lg-6 form-group">
+                <label class="control-label small">Remarks</label>
+                <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label class="control-label small">Source</label>
+                <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label small">Verified Document</label>
+                <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                    <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*<div class="col-lg-12 text-center table-bordered">
+    <div class="col-lg-3 small">Internal Medicine</div>
+    <div class="col-lg-3 small">American Board of Nutrition</div>
+    <div class="col-lg-3 small">15-3-2014</div>
+    <div class="col-lg-3 small">
+        <a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-eye"></i></a>
+    </div>*@
+@*<div class="col-lg-2 small">
+        <button class="btn btn-xs btn-primary" onclick="toggleDiv('sform2', this)"><i class="fa fa-edit"></i></button>
+    </div>*@
+@*</div>
+                    <div class="col-lg-12" id="sform2" style="display:none;">
+                        <br />
+                        <div class="col-lg-12 zero-padding-left-right-div">
+                            <div class="col-lg-6 form-group">
+                                <label class="control-label small">Status</label>
+                                <select class="form-control input-sm">
+                                    <option>Valid</option>
+                                    <option>Invalid</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-6 form-group">
+                                <label class="control-label small">Remarks</label>
+                                <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label small">Source</label>
+                                <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label small">Verified Document</label>
+                                <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                    <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>*@
+
+
+@*<div class="col-lg-12 table-bordered">
+    <div class="col-lg-4"><strong>Hospital Privileges</strong></div>
+    <div class="col-lg-2 text-center"><strong>:</strong></div>
+    <div class="col-lg-4 small">2</div>
+    <div class="col-lg-2">
+        <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        <button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('HPdiv', this)"><i class="fa fa-edit"></i></button>
+    </div>
+    <div class="col-lg-12" id="HPdiv" style="display:none;">
+        <div class="col-lg-12 text-center table-bordered">
+            <div class="col-lg-3">Hospital Name</div>
+            <div class="col-lg-3">Speciality</div>
+            <div class="col-lg-3">Street Address</div>
+            <div class="col-lg-3">Document</div>*@
+@*<div class="col-lg-2">Review</div>*@
+@*</div>
+    <div id="hospitalData">
+        <div class="col-lg-12 text-center table-bordered">
+            <div class="col-lg-3 small">Florida Hospital De-Land</div>
+            <div class="col-lg-3 small">Internal Medicine</div>
+            <div class="col-lg-3 small">Street 1</div>
+            <div class="col-lg-3 small">
+                <a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-eye"></i></a>
+            </div>*@
+@*<div class="col-lg-2 small">
+        <button class="btn btn-xs btn-primary" onclick="toggleDiv('hForm1',this)"><i class="fa fa-edit"></i></button>
+    </div>*@
+@*</div>
+    <div class="col-lg-12" id="hForm1" style="display:none;">
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-6 form-group">
+                <label class="control-label small">Status</label>
+                <select class="form-control input-sm">
+                    <option>Valid</option>
+                    <option>Invalid</option>
+                </select>
+            </div>
+
+            <div class="col-lg-6 form-group">
+                <label class="control-label small">Remarks</label>
+                <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label class="control-label small">Source</label>
+                <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label small">Verified Document</label>
+                <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                    <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 text-center table-bordered">
+        <div class="col-lg-3 small">Oakhill Hospital</div>
+        <div class="col-lg-3 small">Urology</div>
+        <div class="col-lg-3 small">Street 2</div>
+        <div class="col-lg-3 small">
+            <a class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" data-toggle="modal" href="~/Content/Document/DocPreview.pdf" target="_blank"><i class="fa fa-eye"></i></a>
+        </div>*@
+@*<div class="col-lg-2 small">
+        <button class="btn btn-xs btn-primary" onclick="toggleDiv('hForm2', this)"><i class="fa fa-edit"></i></button>
+    </div>*@
+@*</div>
+                <div class="col-lg-12" id="hForm2" style="display:none;">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Gaps in practice</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small">0 years 1 months</div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>*@
+
+
+
+@*<div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Medicaid License</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small">-</div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+            <button class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="Review" onclick="toggleDiv('medicaiddiv', this)"><i class="fa fa-edit"></i></button>
+        </div>
+        <div class="col-lg-12" id="medicaiddiv" style="display:none;">
+            <i class="data-label">Not Medicaid Approved</i>
+        </div>
+    </div>*@
+
+
+
+@*<div class="col-lg-12 table-bordered">
+                <div class="col-lg-4"><strong>Years in practice</strong></div>
+                <div class="col-lg-2 text-center"><strong>:</strong></div>
+                <div class="col-lg-4 small">1</div>
+                <div class="col-lg-2">
+                    <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+                </div>
+            </div>
+
+            <div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Approved By</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small"><input type="text" class="form-control input-sm" placeholder="name" /></div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>
+
+    <div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Level</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small radio">
+
+                <label>
+                    <input type="radio" name="radio2"> Level 1
+                </label>
+                <label>
+                    <input type="radio" name="radio2"> Level 2
+                </label>
+                <label>
+                    <input type="radio" name="radio2"> Level 3
+                </label>
+
+        </div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>
+
+    <div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Date</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small"><input type="text" class="form-control input-sm" placeholder="MM/dd/yyyy" /></div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>
+
+    <div class="col-lg-12 table-bordered">
+        <div class="col-lg-4"><strong>Welcome Letter Mailed Date</strong></div>
+        <div class="col-lg-2 text-center"><strong>:</strong></div>
+        <div class="col-lg-4 small"><input type="text" class=" form-control input-sm" placeholder="MM/dd/yyyy" /></div>
+        <div class="col-lg-2">
+            <button data-toggle="popover" title="Remark" data-placement="left" data-trigger="focus" data-content="This is a Remark"><i class="fa fa-check"></i></button>
+        </div>
+    </div>
+        </div>*@
+

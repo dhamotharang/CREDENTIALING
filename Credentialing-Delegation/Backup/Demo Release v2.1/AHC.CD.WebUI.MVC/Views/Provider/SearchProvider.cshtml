@@ -1,0 +1,237 @@
+﻿@{
+    ViewBag.Title = "ViewProviders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+
+<div id="page-wrapper">
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-search"></i> Search Providers
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12" ng-app="ProviderApp" ng-controller="ProviderCtrl">
+                <div class="panel panel-default content-panel">
+                    <div class="panel-heading">
+                        <span class="panel-title pull-right btn-link" onclick="SearchProviderPanelToggle();"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                        <h3 class="panel-title">Search Providers</h3>
+                    </div>
+                    <div id="SearchProviderPanel" class="panel-body">
+                        <div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-10">
+                                    <div class="col-lg-12 text-center form-group">
+                                        <label class="col-lg-3 control-label">Category</label>
+                                        <div class="col-lg-9">
+                                            <select class="form-control">
+                                                <option>Individual</option>
+                                                <option>Facility</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 text-center form-group">
+                                        <label class="col-lg-3 control-label">Provider Status</label>
+                                       <div class="col-lg-9">
+                                            <select class="form-control">
+                                                <option>Active</option>
+                                                <option>Terminated</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="col-lg-12 text-center"><label></label></div>
+                                    <div class="col-lg-12 text-center" ng-click="new_search();"><button class="btn btn-info"><i class="fa fa-search"></i> Search</button></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-lg-12 text-center" ng-cloak>
+                            <span class="text-danger">{{error_message}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress" ng-show="progressbar" ng-cloak>
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        Loading...
+                    </div>
+                </div>
+
+                <div ng-cloak data-ng-show="data.length!=0" class="panel panel-default content-panel">
+                    <div class="panel-heading">
+                        <span class="badge bg-info pull-right" ng-show="ifFilter()">{{getIndexFirst()}} - {{getIndexLast()}} of {{data.length}}</span>
+                        <h3 class="panel-title">Search Results</h3>
+                    </div>
+                    <div class="panel-body">
+                        @*<div class="col-lg-12">
+                                <button id="advanceSearchBtn" class="label label-default pull-right" ng-click="animateAdvanceSearch();">Advance Search <span class="fa" ng-class="{ true:'fa-caret-right', false:'fa-caret-down' }[advancesearchcaret]"></span></button>
+                                <div id="advanceSearchPanel" class="col-lg-12 table-bordered dker" style="display:none;">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="active"><a href="#columnfilter">Hide Columns</a></li>
+                                        <li><a href="#groupBy">Group By</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div id="columnfilter">
+                                            <div class="form-group-sm">
+                                                <div class="col-lg-9 radio">
+                                                    <label class="radio-inline"><input type="checkbox" checked="checked" ng-model="CityCol" />City</label>
+                                                    <label class="radio-inline"><input type="checkbox" checked="checked" ng-model="CountyCol" />County</label>
+                                                    <label class="radio-inline"><input type="checkbox" checked="checked" ng-model="StateCol" />State</label>
+                                                    <label class="radio-inline"><input type="checkbox" checked="checked" ng-model="ProviderTypeCol" />Provider Type</label>
+                                                    <label class="radio-inline"><input type="checkbox" checked="checked" ng-model="ProviderRelationCol" />Provider Relation</label>
+                                                    <label class="radio-inline"><input type="checkbox" checked="checked" ng-model="GroupCol" />Group</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="groupBy">
+                                            <div class="form-group-sm">
+                                                <div class="col-lg-9 radio">
+                                                    <label class="radio-inline"><input type="radio" checked="checked" ng-model="groupBySelected" name="groupby" value="none" />None</label>
+                                                    <label class="radio-inline"><input type="radio" ng-model="groupBySelected" name="groupby" value="City" />City</label>
+                                                    <label class="radio-inline"><input type="radio" ng-model="groupBySelected" name="groupby" value="County" />County</label>
+                                                    <label class="radio-inline"><input type="radio" ng-model="groupBySelected" name="groupby" value="State" />State</label>
+                                                    <label class="radio-inline"><input type="radio" ng-model="groupBySelected" name="groupby" value="ProviderType" />Provider Type</label>
+                                                    <label class="radio-inline"><input type="radio" ng-model="groupBySelected" name="groupby" value="ProviderRelation" />Provider Relation</label>
+                                                    <label class="radio-inline"><input type="radio" ng-model="groupBySelected" name="groupby" value="Group" />Group</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="clearfix"></div>
+                        <div ng-show="groupBySelected=='none'" class="col-lg-12" style="overflow-x:auto;">
+                            <table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                                <tr ng-repeat="user in $data"
+                                    ng-click="call_for_profile_update($index)"
+                                    ng-class="{'active': user.$selected}">
+                                    <td data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }">
+                                        {{user.Title}}
+                                    </td>
+                                    <td data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }">
+                                        {{user.FirstName}}
+                                    </td>
+                                    <td data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }">
+                                        {{user.LastName}}
+                                    </td>
+                                    <td data-title="'City'" ng-hide="CityCol" header-class="text-left" sortable="'City'" filter="{ 'City': 'text' }">
+                                        {{user.City}}
+                                    </td>
+                                    <td data-title="'County'" ng-hide="CountyCol" header-class="text-left" sortable="'County'" filter="{ 'County': 'text' }">
+                                        {{user.County}}
+                                    </td>
+                                    <td data-title="'State'" ng-hide="StateCol" header-class="text-left" sortable="'State'" filter="{ 'State': 'text' }">
+                                        {{user.State}}
+                                    </td>
+                                    <td data-title="'Provider Type'" ng-hide="ProviderTypeCol" header-class="text-left" sortable="'ProviderType'" filter="{ 'ProviderType': 'text' }">
+                                        {{user.ProviderType}}
+                                    </td>
+                                    <td data-title="'Provider Relation'" ng-hide="ProviderRelationCol" header-class="text-left" sortable="'ProviderRelation'" filter="{ 'ProviderRelation': 'text' }">
+                                        {{user.ProviderRelation}}
+                                    </td>
+                                    <td data-title="'Group'" ng-hide="GroupCol" header-class="text-left" sortable="'Group'" filter="{ 'Group': 'text' }">
+                                        {{user.Group}}
+                                    </td>
+                                    <td class="overlaytd" id="divval{{$index}}" style="display:none;">
+                                        <div class="col-lg-6">
+                                            <a href="~/Profile/MasterProfile/Index" class="btn btn-sm btn-success pull-right">View Profile</a>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            @using Microsoft.AspNet.Identity
+                                            @if (true)
+                                            {
+                                                using (Html.BeginForm("Index", "Credentialing", FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="providerID" value="{{user.ProviderID}}" />
+                                                   
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div ng-show="groupBySelected!='none'" class="col-lg-12" style="overflow-x:auto;">
+                            <table ng-table="tableParams2" class="table table-hover">
+                                <tbody ng-repeat="group in $groups">
+                                    <tr class="ng-table-group">
+                                        <td colspan="{{$columns.length}}">
+                                            <a href="" ng-click="group.$hideRows = !group.$hideRows">
+                                                <span class="fa" ng-class="{ 'fa-caret-right': group.$hideRows, 'fa-caret-down': !group.$hideRows }"></span>
+                                                <strong>{{ group.value }}</strong>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr ng-hide="group.$hideRows" ng-repeat="user in group.data">
+                                        <td data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }">
+                                            {{user.Title}}
+                                        </td>
+                                        <td data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }">
+                                            {{user.FirstName}}
+                                        </td>
+                                        <td data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }">
+                                            {{user.LastName}}
+                                        </td>
+                                        <td data-title="'City'" header-class="text-left" sortable="'City'" filter="{ 'City': 'text' }">
+                                            {{user.City}}
+                                        </td>
+                                        <td data-title="'County'" header-class="text-left" sortable="'County'" filter="{ 'County': 'text' }">
+                                            {{user.County}}
+                                        </td>
+                                        <td data-title="'State'" header-class="text-left" sortable="'State'" filter="{ 'State': 'text' }">
+                                            {{user.State}}
+                                        </td>
+                                        <td data-title="'Provider Type'" header-class="text-left" sortable="'ProviderType'" filter="{ 'ProviderType': 'text' }">
+                                            {{user.ProviderType}}
+                                        </td>
+                                        <td data-title="'Provider Relation'" header-class="text-left" sortable="'ProviderRelation'" filter="{ 'ProviderRelation': 'text' }">
+                                            {{user.ProviderRelation}}
+                                        </td>
+                                        <td data-title="'Group'" header-class="text-left" sortable="'Group'" filter="{ 'Group': 'text' }">
+                                            {{user.Group}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+    </div>
+</div>
+<!-- /#page-wrapper -->
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Custom/Provider/SearchProvider.js"></script>
+<script>
+    $('#myTab a').click(function (e) {
+        if ($(this).parent('li').hasClass('active')) {
+            $($(this).attr('href')).hide();
+        }
+        else {
+            e.preventDefault();
+            $(this).tab('show');
+        }
+    });
+</script>

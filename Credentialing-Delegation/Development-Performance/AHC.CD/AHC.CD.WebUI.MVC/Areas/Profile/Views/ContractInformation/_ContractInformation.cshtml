@@ -1,0 +1,241 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="panel-group">
+    <div class="panel-default">
+        <div class="form-style">
+            <fieldset>
+                <legend>
+                    Employment Information
+                </legend>
+                <div class="legend2 pull-right">
+                    <button type="button" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Please make the current contract inactive to add a new contract"><i class="fa fa-question"></i></button>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+{
+    <button ng-if="MasterProfile.ContractInformation.ContractInfoes[0]" class="btn btn-xs btn-primary" ng-click=" EditContract($index+'_editci',MasterProfile.ContractInformation.ContractInfoes[0])" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ><i class="fa fa-edit"></i></button>
+}
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+{
+    <button type="button" class="btn btn-xs btn-success" id="AddContractButton" ng-click="AddContract('addci')" tooltip data-toggle="tooltip" data-placement="top" title="Add new"><i class="fa fa-plus"></i></button>
+}
+                </div>
+
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                {
+                    <span ng-hide="MasterProfile.ContractInformation.ContractInfoes[0]!=null || visibilityControl=='addci'">Please click on <button id="noDataAddNewProfessionalAffiliation" class="btn btn-xs btn-success" ng-click="AddContract('addci')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button> to add new Contract Information</span>
+                }
+                else
+                {
+                    <span ng-hide="MasterProfile.ContractInformation.ContractInfoes[0]!=null || visibilityControl=='addci'">No Data Available for Employment Information! </span>
+                }
+                
+                
+                <div ng-if="MasterProfile.ContractInformation.ContractInfoes[0] && visibilityControl!=($index+'_editci')&&visibilityControl!='addci'" class="col-lg-12 zero-padding-left-right-div">
+                    @Html.Partial("~/Areas/Profile/Views/ContractInformation/_ViewContractInformation.cshtml")
+                </div>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                {
+                    <div ng-if="visibilityControl==('_editci')" class="col-lg-12 zero-padding-left-right-div" id="ContractInformationEditDiv">
+                        @Html.Partial("~/Areas/Profile/Views/ContractInformation/_EditContractInformation.cshtml")
+                    </div>
+                }
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                {
+                    <div ng-if="visibilityControl=='addci'" class="col-lg-12 zero-padding-left-right-div" id="ContractInformationAddDiv">
+                         @Html.Partial("~/Areas/Profile/Views/ContractInformation/_EditContractInformation.cshtml")
+                    </div>
+                }
+            </fieldset>
+            <fieldset>
+                <legend>
+                    Group Information
+                </legend>
+                <div class="legend2 pull-right">
+                    @*<button type="button" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-if="MasterProfile.ContractInformation.ContractInfoes[0].ContractGroupInfoes.length> 0" ng-click="downloadTableData('Profile_GroupInformation','Group Information')"><i class="fa fa-download"></i></button>*@
+                    <button type="button" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-if="MasterProfile.ContractInformation.ContractInfoes[0].ContractGroupInfoes.length> 0" ng-click="printData('Profile_GroupInformation','Group Information')"><i class="fa fa-print"></i></button>
+                    <button type="button" ng-click="showGroupHistory('CIH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+                    <div id="CIH" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table ng-if="showAddGroup && MasterProfile.ContractInformation.ContractInfoes[0].ContractGroupInfoes.length == 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No Data Available for Employment Group Information!
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                                    {
+                                        <span>Please click on <button class="btn btn-xs btn-success" ng-click="AddGroup('addgi',MasterProfile.ContractInformation.ContractInfoes[0].ContractInfoID)" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Employment Group Information</span>
+                                    }
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-if="MasterProfile.ContractInformation.ContractInfoes[0].ContractGroupInfoes.length> 0" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_GroupInformation">
+                        <thead>
+                            <tr>
+                                <th>IPA Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th class="hideData">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="gi in MasterProfile.ContractInformation.ContractInfoes[0].ContractGroupInfoes">
+                            <tr>
+                                <td ng-show="gi.PracticingGroup.Group.Name">{{gi.PracticingGroup.Group.Name}}</td>
+                                <td ng-show="!gi.PracticingGroup.Group.Name">Not Available</td>
+                                <td ng-show="gi.JoiningDate">{{gi.JoiningDate| date:'MM-dd-yyyy'}}</td>
+                                <td ng-show="!gi.JoiningDate">Not Available</td>
+                                <td ng-show="gi.ExpiryDate">{{gi.ExpiryDate| date:'MM-dd-yyyy'}}</td>
+                                <td ng-show="!gi.ExpiryDate">Not Available</td>
+                                <td ng-show="gi.ContractGroupStatus">{{gi.ContractGroupStatus}}</td>
+                                <td ng-show="!gi.ContractGroupStatus">Not Available</td>
+                                <td class="hideData">
+                                    <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewgi')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                                    {
+                                        <button class="btn btn-xs btn-primary" ng-click="EditGroup($index+'_editgi',gi, MasterProfile.ContractInformation.ContractInfoes[0].ContractInfoID)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                    }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                                    {
+                                        <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initGroupInfoWarning(gi);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                    }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                                    {
+                                        <button ng-if="$index == MasterProfile.ContractInformation.ContractInfoes[0].ContractGroupInfoes.length-1" class="btn btn-xs btn-success" ng-click="AddGroup('addgi',MasterProfile.ContractInformation.ContractInfoes[0].ContractInfoID)" tooltip data-toggle="tooltip" data-placement="left" title="Add New"><i class="fa fa-plus"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                            {
+                                <tr ng-if="visibilityControl==($index+'_editgi')" class="hideData">
+                                    <td colspan="6" id="ContractGroupInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                        <fieldset>
+                                            <legend>
+                                                Edit Group Information
+                                            </legend>
+                                            @Html.Partial("~/Areas/Profile/Views/ContractInformation/_EditGroupInformation.cshtml")
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            }
+                            <tr ng-if="visibilityControl==($index+'_viewgi')" class="editTableDataStyle hideData">
+                                <td colspan="6">
+                                    @Html.Partial("~/Areas/Profile/Views/ContractInformation/_ViewGroupInformation.cshtml")
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="activeMessageDiv=='addedNewContractGroupInformation'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div ng-if="activeMessageDiv=='removeContractGroupInformation'" >
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error Lists :<br />
+                            <span ng-repeat="err in errorContractGroupInformation track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                    <div ng-if="isRemoved" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i ng-if="isRemoved" class="fa fa-2x fa-arrow-up"></i>Group Information Removed successfully.
+                    </div>
+                </div>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false) && !(ViewBag.Roles as List<string>).Contains("PRO"))
+                {
+                    <fieldset ng-if="visibilityControl=='addgi'">
+                        <legend>
+                            Add Group Information
+                        </legend>
+                        <div id="newContractInformationDiv">
+                            @Html.Partial("~/Areas/Profile/Views/ContractInformation/_EditGroupInformation.cshtml")
+                        </div>
+                    </fieldset>
+                }
+            </fieldset>
+            <div class="panel-default" ng-if="showGroupHistoryTable">
+                <div class="form-style">
+                    <fieldset>
+                        <legend>
+                           Group Information History
+                        </legend>
+                        <div class="legend2 pull-right">
+                            @*<button type="button" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="groupHistoryArray.length <= 0" ng-click="downloadTableData('Profile_GroupInformationHistory','Group Information History')"><i class="fa fa-download"></i></button>*@
+                            <button type="button" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="groupHistoryArray.length <= 0" ng-click="printData('Profile_GroupInformationHistory','Group Information History')"><i class="fa fa-print"></i></button>
+                            <button type="button" ng-click="cancelGroupHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>                                                      
+                         </div>
+                        <table ng-hide="groupHistoryArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No History Available for Group Information!
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="groupHistoryArray.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle" id="Profile_GroupInformationHistory">
+                            <thead>
+                                <tr>
+                                    <th>IPA Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>History Status</th>
+                                    <th class="hideData">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="groupHistory in groupHistoryArray">
+                                <tr>
+                                    <td ng-show="groupHistory.PracticingGroup.Group.Name">{{groupHistory.PracticingGroup.Group.Name}}</td>
+                                    <td ng-show="!groupHistory.PracticingGroup.Group.Name">Not Available</td>
+                                    <td ng-show="groupHistory.JoiningDate">{{groupHistory.JoiningDate| date:'MM-dd-yyyy'}}</td>
+                                    <td ng-show="!groupHistory.JoiningDate">Not Available</td>
+                                    <td ng-show="groupHistory.ExpiryDate">{{groupHistory.ExpiryDate| date:'MM-dd-yyyy'}}</td>
+                                    <td ng-show="!groupHistory.ExpiryDate">Not Available</td>
+                                    <td ng-show="groupHistory.ContractGroupStatus">{{groupHistory.ContractGroupStatus}}</td>
+                                    <td ng-show="!groupHistory.ContractGroupStatus">Not Available</td>
+                                    <td>{{groupHistory.HistoryStatus}}</td>
+                                    <td class="hideData">
+                                        <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewGroupHistory')" ng-hide="showViewGroup" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="visibilityControl==($index+'_viewGroupHistory')" class="hideData">
+                                    <td colspan="6" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/ContractInformation/_ViewGroupInfoHistory.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="modal fade" id="groupInfoWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="removeGroupInfo">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                            </div>
+                            <div class="col-lg-12 text-center" ng-show="isRemoved">
+                                <div style="margin-top:2%;">
+                                    <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                                </div>
+                            </div>
+                            <div class="modal-body" ng-show="!isRemoved">
+                                Do you really want to remove <b>{{tempGroupInfo.PracticingGroup.Group.Name}}</b> from your Group Information list ?
+                                <input type="hidden" name="ContractGroupInfoId" value="{{tempGroupInfo.ContractGroupInfoId}}" />
+                                <input type="hidden" name="StatusType" value="2" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" ng-click="removeGroupInfo(MasterProfile.ContractInformation.ContractInfoes[0].ContractGroupInfoes, MasterProfile.ContractInformation.ContractInfoes[0].ContractInfoID)">Remove</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+﻿@using PratianUI
+@model PortalTemplate.Areas.Portal.Models.Facility.FacilityPracticeTypeViewModel
+<div class="c_panel_body" id="AddEditDiv">
+    @using (Ajax.BeginForm("AddEditFacilityPracticeType", "FacilityPracticeType", new AjaxOptions { HttpMethod = "POST", LoadingElementId = "progress", OnBegin = "validateForm", OnSuccess = "onSuccessFacilityPracticeType" }))
+    {
+        @Html.AntiForgeryToken()
+        <table class="table table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(p => p.Title)</th>
+                    <th>@Html.LabelFor(p => p.Status)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.TextBoxFor(p => p.Title, new { @class = "form-control input-xs addeditinputclass" })
+                        @Html.ValidationMessageFor(p => p.Title)
+                    </td>
+                    <td>
+                        <label>@Html.PratianUiFlatRadioFor(p => p.Status, new { color = "green", @checked = "checked", id = "Active", value = "Active" }) Active</label>
+                        <label>@Html.PratianUiFlatRadioFor(p => p.Status, new { color = "red", id = "Inactive", value = "Inactive" }) Inactive</label>
+                        @Html.ValidationMessageFor(p => p.Status)
+                    </td>
+                    <td class="col-md-1">
+                        <button type="submit" class="btn btn-xs btn-success"><i class="fa fa-save"></i></button>
+                        <button type="button" class="btn btn-xs btn-warning refresh"><i class="fa fa-refresh"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>
+
+

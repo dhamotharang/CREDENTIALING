@@ -1,0 +1,243 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular-resource.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular-mocks.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/Lib/FoolProofValidation/mvcfoolproof.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Custom/Validation/EndDate.js"></script>
+    <script src="~/Scripts/Custom/Validation/NumberGreaterThan.js"></script>
+    <script src="~/Scripts/Custom/Validation/PostedFileExtension.js"></script>
+    <script src="~/Scripts/Custom/Validation/PostedFileSize.js"></script>
+    <script src="~/Scripts/Custom/Validation/ProfileRemote.js"></script>
+    <script src="~/Scripts/Custom/Validation/RequiredIfMonthGreaterThan.js"></script>
+    <script src="~/Scripts/Custom/Validation/StartDate.js"></script>
+    <script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+
+    <script src="~/Areas/Credentialing/Scripts/Plan/plans.js"></script>
+}
+
+<style>
+    .loading-container {
+        position: relative;
+    }
+
+        .loading-container .loading:before, .loading-container .loading:after {
+            content: " ";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            min-height: 50px;
+            min-width: 50px;
+        }
+
+        .loading-container .loading:before {
+            background-color: white;
+            opacity: 0.5;
+        }
+</style>
+<div id="page-wrapper" ng-app="planApp" ng-controller="planController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index"><i class="fa fa-dashboard"></i>DashBoard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Plans
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-if="planckeck">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-list"></i> {{HeadTitle}}
+                    <a ng-click="AddNewPlanFunction();" ng-hide="AddNewPlan || EditPlan || ViewPlan" class="btn btn-xs btn-primary pull-right" tooltip data-toggle="tooltip" data-placement="top" title="Add New Plan">
+                        <i class="fa fa-plus"></i> Add New
+                    </a>
+                    <a ng-click="EditSelectedPlan(plan1);" ng-show="ViewPlan && planckeckcondition" class="btn btn-xs btn-primary pull-right" tooltip data-toggle="tooltip" data-placement="top" title="Edit Plan">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                    <a ng-disabled="InactivePlanData.length <= 0" ng-hide="AddNewPlan || EditPlan || ViewPlan" ng-click="GoToPlanListHistory();" class="btn btn-xs btn-warning" tooltip data-toggle="tooltip" data-placement="top" title="View History">
+                        <i class="fa fa-list"></i> View History
+                    </a>
+                </div><br />
+                <div class="panel-body">
+                    <div class="progress col-lg-12" ng-show="progressbar" ng-cloak>
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+                    <div ng-if="AddNewPlan != true && EditPlan != true && ViewPlan != true" ng-show="!progressbar" @*loading-container="tableParams1.settings().$loading"*@>
+                        <table ng-hide="Plans.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No Plan Available !!<span>Please click on <button class="btn btn-xs btn-success" ng-click="AddNewPlanFunction();" tooltip data-toggle="tooltip" data-placement="top" title="Add New Plan"><i class="fa fa-plus"></i></button> to add new Plan.</span>
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="data.length <= 0" ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                            <tr ng-repeat="plan in $data | filter:{PlanName:search.PlanName,ContactPersonName:search.ContactPersonName,EmailAddress:search.EmailAddress,Address:search.Address}">
+                                <td class="col-md-2 wrap-words" data-title="'Plan Logo'" @*sortable="'PlanName'" filter="{ 'PlanName': 'text' }"*@>
+                                    <img ng-if="plan.PlanLogoPath" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{plan.PlanLogoPath}}" style=" width:100px;" class="fileinput-preview thumbnail file_preview_upload " />
+                                    <img ng-if="!plan.PlanLogoPath" style=" width: 100px; " class="fileinput-preview thumbnail file_preview_upload " />
+                                </td>
+                                <td class="col-md-2 wrap-words" data-title="'Plan Name'" sortable="'PlanName'" filter="{ 'PlanName': 'text' }">
+                                    {{plan.PlanName}}
+                                </td>
+                                <td class="col-md-2 wrap-words" data-title="'Contact Person Name'" filter="{ 'ContactPersonName': 'text' }" sortable="'ContactPersonName'">
+                                    {{plan.ContactDetails[0].ContactPersonName}}
+                                </td>
+                          
+                                <td class="col-md-2 wrap-words" data-title="'Contact Person Email'" filter="{ 'EmailAddress': 'text' }" sortable="'EmailAddress'" >
+                                    @*{{plan.EmailAddress}}*@
+                                     <ul ng-repeat="e in plan.Emaill">                       
+                                          {{e}}
+                                    </ul>
+                                </td>
+                              <td class="col-md-2 wrap-words" data-title="'Address Detail'" @*filter="{ 'Address': 'text' }"*@ sortable="'Address'">
+                                    {{plan.Locations[0].Street}} {{plan.Locations[0].Appartment}} {{plan.Locations[0].City}}
+                                    {{plan.Locations[0].State}} {{plan.Locations[0].ZipCode}}  {{plan.Locations[0].Country}}
+                                    {{plan.Locations[0].County}}
+                                </td>
+                                <td class="col-md-6" data-title="'Action'">
+                                    <a class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="left" title="View" ng-click="ViewSelectedPlan(plan)"><i class=" fa fa-eye"></i></a>
+                                    <a class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-click="EditSelectedPlan(plan)"><i class="fa fa-edit"></i></a>
+                                    <a class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="confirmationRemovePlan(plan)"><i class="fa fa-minus"></i></a>
+                                    <a class="btn btn-xs b tn-warning" tooltip data-toggle="tooltip" data-placement="right" title="View Plan Contract" ng-click="ViewPlanContract(plan)"><i class=" fa fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- Form for new plan add-->
+                    <div ng-if="AddNewPlan == true" class="col-lg-12 col-md-12 col-sm-12 zero-padding-left-right-div">
+                        @Html.Partial("~/Areas/Credentialing/Views/Plan/_AddNewPlan.cshtml")
+                    </div>
+                    @*<div ng-if="EditPlan==true" class ="col-lg-12 col-md-12 col-sm-12 zero-padding-left-right-div">
+                            @Html.Partial("~/Areas/Credentialing/Views/Plan/_EditPlanForm.cshtml")
+                        </div>*@
+                    <div ng-if="ViewPlan==true" class="col-lg-12 col-md-12 col-sm-12 zero-padding-left-right-div">
+                        @Html.Partial("~/Areas/Credentialing/Views/Plan/_NewViewPlan.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row" ng-if="!planckeck">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-list"></i> {{HeadTitle}}
+                    <a ng-click="BackToPlanList();" class="btn btn-xs btn-primary pull-right" tooltip data-toggle="tooltip" data-placement="top" title="Back To Plan List">
+                        <i class="fa fa-list"></i> Plan List
+                    </a>
+                </div><br />
+                <div class="panel-body">
+                    <div class="progress col-lg-12" ng-show="progressbar" ng-cloak>
+                        <div class="progress-bar progress-bar-striped active" role="progressbar1" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+                    <div ng-show="!progressbar1">
+                        <table ng-hide="InactivePlanData.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No Plan Available In History !!
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                       
+                                <table ng-hide="InactiveData.length <= 0" ng-table="tableParams2" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                            <tr ng-repeat="plan in $data | filter:{PlanName:search.PlanName,ContactPersonName:search.ContactPersonName,EmailAddress:search.EmailAddress,Address:search.Address}">
+                                <td class="col-md-2 wrap-words" data-title="'Plan Logo'" @*sortable="'PlanName'" filter="{ 'PlanName': 'text' }"*@>
+                                    <img ng-if="plan.PlanLogoPath" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{plan.PlanLogoPath}}" style=" width:100px;" class="fileinput-preview thumbnail file_preview_upload " />
+                                    <img ng-if="!plan.PlanLogoPath" style=" width: 100px; " class="fileinput-preview thumbnail file_preview_upload " />
+                                </td>
+                                <td class="col-md-2 wrap-words" data-title="'Plan Name'" sortable="'PlanName'" filter="{ 'PlanName': 'text' }">
+                                    {{plan.PlanName}}
+                                </td>
+                                <td class="col-md-2 wrap-words" data-title="'Contact Person Name'" filter="{ 'ContactPersonName': 'text' }" sortable="'ContactPersonName'">
+                                    {{plan.ContactDetails[0].ContactPersonName}}
+                                </td>
+
+                                <td class=" col-md-2 wrap-words" data-title="'Contact Person Email'" filter="{ 'EmailAddress': 'text' }" sortable="'EmailAddress'">
+                       @*{{plan.EmailAddress}}*@
+                                    <ul ng-repeat="e in plan.Emaill">
+                                        {{e}}
+                                    </ul>
+                    </td>
+                               
+                                <td class="col-md-2 wrap-words" data-title="'Address Detail'" @*filter="{ 'Address': 'text' }"*@ sortable="'Address'">
+                                    {{plan.Locations[0].Street}} {{plan.Locations[0].Appartment}} {{plan.Locations[0].City}}
+                                    {{plan.Locations[0].State}} {{plan.Locations[0].ZipCode}}  {{plan.Locations[0].Country}}
+                                    {{plan.Locations[0].County}}
+                                </td>
+                                <td class="col-md-2" data-title="'Action'">
+                                    <a class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="left" title="View" ng-click="ViewInactiveSelectedPlan(plan)"><i class=" fa fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div ng-if="ViewPlan==true" class="col-lg-12 col-md-12 col-sm-12 zero-padding-left-right-div">
+                        @Html.Partial("~/Areas/Credentialing/Views/Plan/_NewViewPlan.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    <!-- Modal -->
+    <div class="modal fade" id="planListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Confirm - Remove Plan
+                    <button type="button" ng-disabled="saving" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="panel-body">
+                    Are you sure, you want to Remove Plan?
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <a class="btn btn-primary btn-sm pull-right" ng-click="saving = true; RemoveSelectedPlan(plan);" ng-disabled="saving">Yes</a>
+                        <button type="button" class="btn btn-default btn-sm pull-right" style="margin-right: 6px;" data-dismiss="modal" ng-disabled="saving">No</button>
+                        <div class="pull-right" style="margin: 3px;">
+                            <saving></saving>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal div -->
+</div>
+
+

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.DocumentRepoViewModel.GeneratedFormsViewModel>
+ @{
+var UniqueCategoryObjects = Model.GroupBy(m => m.IsSubmit).Select(g => g.First()).ToList();
+}
+
+    <div class="x_panel">
+        <div class="x_title">
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up chevron"></i></a>
+                </li>
+            </ul>
+            <h2>GENERATED FORMS &nbsp;&nbsp;</h2>
+
+            <hr />
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content">
+         
+
+                @foreach (var file in Model)
+                {
+                    if (file.IsSubmit)
+                    {
+                          var iconSrc = file.IsSubmit ? Url.Content("~/Resources/Images/File/" + file.FileType + ".png") : Url.Content("~/Resources/Images/File/unavailable.png");
+
+                            <div class="filecss col-lg-1" onclick="OpenPreviewPanel('#')">
+                                <div class="thumbnail">
+                                    <div class="image view view-first">
+                                        <img style="width: 100%; display: block;" src="@iconSrc" alt="Doc Icon">
+                                        <div class="mask">
+                                            <p>
+                                                <a href="#" onclick="viewFile('@file.ProfileId', '@file.Region', event)"><i class="fa fa-eye smallFont"></i></a> |
+                                                <a href="#" onclick="editFile('@file.ProfileId', '@file.Region', event)"><i class="fa fa-edit smallFont"></i></a> |
+                                                <a href="#" onclick="removeFile('@file.ProfileId', '@file.Region', event)"><i class="fa fa-remove smallFont"></i></a>
+                                            </p>
+                                            @*<div class="tools tools-bottom">
+                                            <a href="#"><i class="fa fa-link"></i></a>
+                                            <a href="#"><i class="fa fa-pencil"></i></a>
+                                            <a href="#"><i class="fa fa-times"></i></a>
+                                        </div>*@
+                                        </div>
+                                    </div>
+                                    <div class="caption">
+                                        <p>@file.FileName</p>
+                                    </div>
+                                </div>
+                            </div>
+                     
+
+                    }
+                }
+            
+            <div class="col-md-1 filecss" onclick="alert('To Be Continued!')">
+                <div class="thumbnail">
+                    <div class="image view view-first">
+                        <img style="width: 97%; display: block;" src="@Url.Content("~/Resources/Images/File/add3.png")" alt="Doc Icon">
+                        <div class="mask">
+                            <p>Add New</p>
+
+                        </div>
+
+                    </div>
+                    <div class="caption">
+                        <p>New</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

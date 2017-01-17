@@ -1,0 +1,107 @@
+﻿@model PortalTemplate.Areas.Coding.Models.CreateCoding.ICDCodeDetailsViewModel
+
+<div class="col-lg-12 ICDCodesMainPanel">
+    <fieldset class="fieldsetStyle">
+        <legend class="legendstyle">Diagnosis Codes </legend>
+        <div class="row">
+            <div class="col-lg-12">
+                <a class="pull-right btn btn-xs btn-info DiagnosisActiveHistory">Active Diagnosis Codes</a>
+            </div>
+        </div>
+        <div>
+            <input class="normal-radio" id="icd9" name="ICDIndicator" type="radio" value="ICD9" checked>
+            <label for="ICD9" style="font-weight:normal;"><span></span>ICD9</label>
+            <input class="normal-radio" id="icd10" name="ICDIndicator" type="radio" value="ICD10">
+            <label for="ICD10" style="font-weight:normal;"><span></span>ICD10</label>
+        </div>
+
+        <div class="col-lg-12 padding_icd zero-padding-left-right" hidden id="HistoryDiagnosisICD">
+        </div> 
+
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+                    <thead class="theme_thead">
+                        <tr>
+                            <th>Code </th>
+                            <th>Description </th>
+                            <th>HCC Code</th>
+                            <th>HCC Type</th>
+                            <th>HCC Version</th>
+                            <th>HCC Description </th>
+                            <th>HCC Weight</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="icdCodeBody">
+                        @for (var i = 0; i < Model.ICDCodes.Count; i++)
+                        {
+                            var RowSpan = Model.ICDCodes[i].HCCCodes.Count;
+                            <tr>
+                                <td rowspan="@RowSpan">
+                                    @Html.TextBoxFor(model => model.ICDCodes[i].ICDCode, new { @class = "form-control input-xs text-uppercase" })
+                                    @Html.ValidationMessageFor(m => m.ICDCodes[i].ICDCode)
+                                </td>
+                                <td rowspan="@RowSpan">
+                                    @Html.TextBoxFor(model => model.ICDCodes[i].Description, new { @class = "form-control input-xs text-uppercase" })
+                                    @Html.ValidationMessageFor(m => m.ICDCodes[i].Description)
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[0].Code, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                    @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[0].Code)
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[0].Type, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                    @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[0].Type)
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[0].Version, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                    @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[0].Version)
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[0].Description, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                    @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[0].Description)
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[0].Weight, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                    @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[0].Weight)
+                                </td>
+                                <td></td>
+                            </tr>
+                            for (var j = 1; j < Model.ICDCodes[i].HCCCodes.Count; j++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[j].Code, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                        @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[j].Code)
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[j].Type, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                        @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[j].Type)
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[j].Version, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                        @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[j].Version)
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[j].Description, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                        @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[j].Description)
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => Model.ICDCodes[i].HCCCodes[j].Weight, new { @class = "form-control input-xs text-uppercase bottom-lowMargin" })
+                                        @Html.ValidationMessageFor(m => m.ICDCodes[i].HCCCodes[j].Weight)
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                        
+                    </tbody>
+                </table>
+                <button type="button" class="light-green-button pull-right" id="AddNewRowInICDTable"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<p-script filepath="~/Areas/Coding/Scripts/AppJs/CreateCoding/NonMinified/ICDCodesInfo.js"></p-script>
+<p-link filepath="~/Areas/Coding/Contents/CSS/AppCss/EditCoding/NonMinified/ICDCodeDetails.css" rel="stylesheet"></p-link>

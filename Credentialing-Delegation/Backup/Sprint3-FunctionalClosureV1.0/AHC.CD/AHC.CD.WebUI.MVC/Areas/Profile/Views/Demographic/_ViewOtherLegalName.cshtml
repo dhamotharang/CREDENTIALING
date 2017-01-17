@@ -1,0 +1,81 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.OtherLegalNameViewModel
+
+<fieldset>
+    <legend>
+        Other Legal Name
+    </legend>
+    <div ng-show="alertMessage=='alertOtherLegalNameSuccess'+$index" class="alert alert-{{message.status}}" role="alert">
+        <button ng-click="closeAlert('alertOtherLegalNameSuccess'+$index)" class="close"><span>&times;</span></button>
+        {{message.desc}}
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.OtherFirstName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">{{oln.OtherFirstName}}</i>
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.OtherMiddleName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">{{oln.OtherMiddleName}}</i>
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.OtherLastName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">{{oln.OtherLastName}}</i>
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            <label class="control-label small">Suffix</label>
+            <div>
+                <i class="data-label">{{oln.Suffix}}</i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <span ng-if="oln.StartDate">
+                        {{oln.StartDate | date: "MM/dd/yyyy"}}
+                    </span>
+                    <span ng-if="!oln.StartDate">
+                        Not Available
+                    </span>
+                </i>
+            </div>
+        </div>
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <span ng-if="oln.EndDate">
+                        {{oln.EndDate | date: "MM/dd/yyyy"}}
+                    </span>
+                    <span ng-if="!oln.EndDate">
+                        Not Available
+                    </span>
+                </i>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.DocumentPath, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <a ng-if="oln.DocumentPath" href="/Document/View?path={{oln.DocumentPath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Other Legal Name Certificate"><i class="fa fa-file"></i></a>
+                    <span ng-if="!oln.DocumentPath">Not Available</span>
+                </i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 form-group">
+        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl()">Cancel</button>
+        @if (AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionValidator.IsAuthorized(AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <button class="btn btn-sm btn-primary pull-right" ng-click="operateEditControl($index+'_EditOtherLegalName',oln)">Edit</button>
+        }
+    </div>
+</fieldset>

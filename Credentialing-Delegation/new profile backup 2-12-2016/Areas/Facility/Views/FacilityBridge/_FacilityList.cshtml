@@ -1,0 +1,147 @@
+﻿@model IEnumerable<PortalTemplate.Areas.Facility.Models.FacilityBridgeQueueViewModel>
+@*@model PortalTemplate.Areas.Facility.Models.OrganizationViewModel*@
+@using PortalTemplate.Helper
+@using PratianUI
+<p-script filepath="~/Areas/Facility/Scripts/NonMinified/Facility.js"></p-script>
+<style>
+    .select2-container--default .select2-selection--single {
+        /* border: 1px solid rgba(232, 46, 0, 0.72); */
+        /* box-shadow: 0 0 2px rgba(232, 46, 0, 0.72); */
+        background: url(../../Resources/Images/Buttons/Ghost.png) !important;
+        background-repeat: no-repeat !important;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        border: 1px solid #3859a1 !important;
+        border-top: 4px solid #3859a1 !important;
+    }
+
+    .width145 {
+        width: 145px !important;
+    }
+
+    .facility-modal .mandatory_field_halo {
+        margin-bottom: 5px !important;
+    }
+    .facility-modal label {
+        margin-bottom: 0px !important;
+    }
+    .facility-modal .select2-container:first-child {
+        margin-top: -11px !important;
+    }
+
+    .legendStyle {
+        margin-bottom: 0px;
+    }
+
+    .account-mapping-btn {
+        height: 34px;
+        margin-top: 4px;
+        padding: 9px 10px;
+    }
+
+    .info-badge {
+        position: absolute;
+        margin-top: -28px;
+        margin-left: 100px;
+        background: #90c4d4;
+        height: 24px;
+        width: 24px;
+        color: black;
+        font-weight: bold;
+    }
+
+    .success-badge {
+        position: absolute;
+        margin-top: -28px;
+        margin-left: 100px;
+        background: #30872d;
+        height: 24px;
+        width: 24px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .danger-badge {
+        position: absolute;
+        margin-top: -28px;
+        margin-left: 100px;
+        background: #ff0000;
+        height: 24px;
+        width: 24px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .custom-legend-font-style {
+        font-size: 13px;
+        font-weight: bold;
+    }
+</style>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  zero-padding-left-right" id="">
+
+    <ul class="tabs outerTabsArea" id="outerTabsArea">
+        <li class="outertabs active width145"><a href="#Request" class="outerTabsLinks tab " role="tab" onclick="Show('AssignToDivinList')" data-toggle="tab" style="width:100%;text-align:left" @*data-targeturl="/Facility/FacilityBridge/Index" data-targetid="RequestQueue"*@ aria-expanded="true" id="" data-tabtype="true"><b>Request</b></a> <div class="info-badge">@ViewBag.RequestedCount</div></li>
+        <li class="outertabs width145"><a href="#Approved" class="outerTabsLinks tab dynamic-content" onclick="Hide('AssignToDivinList')" role="tab" data-toggle="tab" style="width: 100%; text-align: left" aria-expanded="true" data-targeturl="/Facility/FacilityBridge/GetApprovedQueueData" data-targetid="ApprovedQueue" id="" data-tabtype="true"><b>Approved</b></a><div class="success-badge">@ViewBag.ApprovedCount</div></li>
+        <a class="btn btn-success account-mapping-btn" data-toggle="tooltip" data-placement="right" title="Add New Facility" id="AddFacilityModal"><i class="fa fa-plus"></i></a>
+        <div class="col-lg-3 pull-right" style="margin-top:6px">@Html.ExportOptions("excel", "print", "PDF", "filter")</div>
+    </ul>
+
+    <div class="tab-content p_background zero-padding-left-right" id="AccountTabDataForAddUser">
+        <div id="Request" class="tab-pane fade in active p_background">
+            <div id="" style="margin-top: -14px;margin-left: -2px;">
+                <ul class="tabs outerTabsArea" id="outerTabsArea">
+                    <li class="outertabs active width145"><a href="#Open" class="outerTabsLinks tab" role="tab" data-toggle="tab" aria-expanded="true" data-tabtype="true" style="width: 100%; text-align: left"><b>Open</b></a> <div class="info-badge">@ViewBag.OpenedCount</div></li>
+                    <li class="outertabs width145"><a href="#Assigned" class="outerTabsLinks tab dynamic-content" role="tab" data-targeturl="/Facility/FacilityBridge/GetAssignedQueueData" data-targetid="AssignedQueue" data-toggle="tab" aria-expanded="true" data-tabtype="true" style="width: 100%; text-align: left"><b>Assigned</b></a> <div class="success-badge">@ViewBag.AssignedCount</div></li>
+                    <li class="outertabs width145"><a href="#Pending" class="outerTabsLinks tab dynamic-content" role="tab" data-targeturl="/Facility/FacilityBridge/GetPendingQueueData" data-targetid="PendingQueue" data-toggle="tab" aria-expanded="true" data-tabtype="true" style="width: 100%; text-align: left"><b>Pending</b></a><div class="danger-badge">@ViewBag.PendingCount</div></li>
+                </ul>
+
+                <div class="tab-content p_background zero-padding-left-right">
+                    <div id="Open" class="tab-pane fade in active p_background">
+                        <div id="OpenedQueue">
+                            @Html.Partial("~/Areas/Facility/Views/FacilityBridge/_FacilityOpenedQueue.cshtml")
+                        </div>
+                    </div>
+                    <div id="Assigned" class="tab-pane fade p_background">
+                        <div id="AssignedQueue">
+
+                        </div>
+                    </div>
+                    <div id="Pending" class="tab-pane fade p_background">
+                        <div id="PendingQueue">
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="Approved" class="tab-pane fade p_background">
+            <div id="ApprovedQueue">
+
+            </div>
+        </div>
+        @{
+            List<string> assignDropdown = new List<string>();
+            assignDropdown.Add("ELIZABETH [5] - ELIZABETH@AHC.COM");
+            assignDropdown.Add("JEANINE [7] - JEANINE@AHC.COM");
+            assignDropdown.Add("JOCYLENE [2] - JOCYLENE@AHC.COM");
+            assignDropdown.Add("CATHERINE [3] - CATHERINE@AHC.COM");
+            assignDropdown.Add("SHERRY [4] - SHERRY@AHC.COM");
+        }
+        <div class="col-lg-offset-7 col-lg-5  zero-padding-left-right" id="AssignToDivinList">
+            <label class="col-lg-3 theme_label">ASSIGN TO&nbsp;&nbsp;</label>
+
+            <div class="col-lg-7 ">
+                @*  @Html.PratianUiDropDownListFor(e => e, "/Facility/FacilityBridge/GetAllOrganizations", 1, "100%", "Organization Name", "500", "OrganizationID", "OrganizationName", new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })*@
+                @Html.PratianUiDropDownList(assignDropdown)
+            </div>
+            <div class="col-lg-2 zero-padding-left-right">
+                <label class="pull-right  theme_label_data"><button class="btn btn-xs btn-primary" onclick="AssignFacility()"><i class="fa fa-user">&nbsp;<b style="font-size:0.9em;">ASSIGN</b></i></button></label>
+            </div>
+
+        </div>
+          
+    </div>
+</div>

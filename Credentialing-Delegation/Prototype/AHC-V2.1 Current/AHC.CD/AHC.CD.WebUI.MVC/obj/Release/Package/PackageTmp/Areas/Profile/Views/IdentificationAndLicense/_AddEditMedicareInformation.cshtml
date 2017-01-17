@@ -1,0 +1,70 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.MedicareInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div>
+    <form class="MedicareInformationForm">
+        <div class="form-style">
+            <div class="panel-body zero-padding-left-right-div">
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <span ng-if="tempObject.MedicareInformationID">
+                        @Html.HiddenFor(model => model.MedicareInformationID, new { ng_value = "tempObject.MedicareInformationID" })
+                    </span>
+                    @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.LicenseNumber, new { @class = "  control-label small" })
+                        @Html.TextBoxFor(model => model.LicenseNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.LicenseNumber" })
+                        @Html.ValidationMessageFor(model => model.LicenseNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.IssueDate, new { @class = "  control-label small" })
+                        @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <div ng-class="{'col-lg-11':tempObject.CertificatePath,'col-lg-12':!tempObject.CertificatePath}">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                <span class="fileinput-new small">Select Medicare Document</span>
+                                <span class="fileinput-exists">Change</span>
+                                @Html.TextBoxFor(model => model.CertificateFile, new { name = "CertificateFile", ng_data_model = "tempObject.CertificateFile", type = "file" })
+                                @* <input type="file" name="CertificateFile" ng-model="tempObject.CertificateFile" autocomplete="off">*@
+                            </span>
+                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                        @Html.HiddenFor(model => model.CertificatePath, new { ng_value = "tempObject.CertificatePath" })
+                        @Html.ValidationMessageFor(model => model.CertificateFile, "", new { @class = "text-danger" })
+                    </div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                    {
+                        <div ng-show="tempObject.CertificatePath" class="col-lg-1">
+                            <a href="/Document/View?path={{tempObject.CertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                        </div>
+                    }
+                </div>
+                <div ng-show="activeMessageDiv=='MedicareError'" class="col-lg-12">
+                    <div class="alert alert-danger" role="alert">
+                        @*    <span class="pull-right" ng-click="MedicareError=''"><i class="fa fa-times"></i></span>*@
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        Error List : <br />
+                        <span ng-repeat="err in MedicareError track by $index">{{err}}</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveMedicareInformation(tempObject,$index)">{{buttonLabel}}</button>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </form>
+</div>

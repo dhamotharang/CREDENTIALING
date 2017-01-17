@@ -1,0 +1,141 @@
+﻿<!-- sidebar menu -->
+<script src="~/Resources/Data/Menu%20_Data.js"></script>
+<script src="~/Scripts/AppScripts/Home/Home.js"></script>
+
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu affix glayycolor">
+    @*<div class="customTab">
+            <input type="checkbox" checked data-toggle="toggle" data-on="App" data-off="Work" data-onstyle="tabOn" data-offstyle="tabOff" data-width="90" data-size="mini" id="appWorkToggle">
+        </div>
+        <p id="menu_toggle" class="menu_toggle pull-right"><i class="fa fa-align-left toggleBtn" data-role="tooltip" data-placement="bottom" title="Menu Toggle"></i></p>*@
+    <div class="float_menu_toggle bg-orange" data-role="tooltip" data-placement="left" title="Click to View Float Menu" data-original-title="Click to View Float Menu" hidden>
+        <i class="fa fa-outdent" style="cursor:pointer"></i>
+    </div>
+    <div class="menu_section">
+        <div class="paper-input__wrapper">
+            <input class="paper-input paper-input--floating" ng-model="Search" type="text" />
+            <label>Search</label>
+        </div>
+        <div id="menu-container" class="menu_container">
+            <ul class="nav side-menu app_menu">
+                <li class="collapsed_click" ng-repeat="menu in menuItem | filter:Search">
+                    <a class="expand_click menu_click_expanded">
+                        <i ng-class="menu.IconClass"></i><span class="text_beside_icon">{{menu.Heading}}</span>
+                        <span ng-if="menu.childMenu.length>0" class="fa fa-chevron-down"></span>
+                    </a>
+                    <ul class="nav child_menu" style="display: none;" ng-if="menu.childMenu.length>0">
+                        <li ng-repeat="childMenuItem in menu.childMenu">
+                            <a class="inner_menu_item" href="{{childMenuItem.href}}">{{childMenuItem.title}}</a>
+                            @*<a class="inner_menu_item" href="" onclick="getTabContent(this);" action="{{childMenuItem.action}}">{{childMenuItem.title}}</a>*@
+                        </li>
+                    </ul>
+                    <span class="label_on_collapsed">{{menu.collapsedLabel}}</span>
+                </li>
+            </ul>
+            @if (("Home").Equals(HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString()))
+            {
+                <div class="work_menu_overlay"></div>
+                <div class="work_menu">
+                    @*<div class="RealestateBreadCrum text-center">
+                        <h2><b id="Realestatelabel">INTAKE</b></h2>
+                    </div>*@
+                    <div class="clearfix"></div>
+                    <ul class="nav side-menu memberinnermenu">
+                        <li class="">
+                        </li>
+                        <li class="">
+                            <a @*onclick="openContainer(this,'DataContainer','CREATE AUTH')"*@>
+                                <i class="fa fa-home"></i><span class="text_beside_icon">Home</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Home</span>
+                        </li>
+                        <li class="">
+                            <a>
+                                <i class="fa fa-user"></i><span class="text_beside_icon">Profile</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Profile</span>
+                        </li>
+                        <li class="info-number">
+                            <a class="" data-tab-val="authHistory" data-tab-realestate="INTAKE" onclick="openContainer(this, 'authHistory', 'AUTH HISTORY')">
+                                <i class="fa fa-history"></i><span class="text_beside_icon">Auth History </span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Auths</span>
+                        </li>
+                        <li class="info-number anchorselected">
+                            <a class="active" data-tab-val="createauth" data-tab-realestate="INTAKE" title="CREATE NEW AUTH" onclick="openContainer(this, 'createauth', 'CREATE NEW AUTH')">
+                                <i class="fa fa-plus-circle"></i><span class="text_beside_icon">Create New Auth</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Create Auth</span>
+                        </li>
+                        <li class="info-number">
+                            <a data-tab-val="claimListContainer" data-tab-realestate="CLAIMS" data-placement="top" onclick="openContainer(this, 'claimListContainer','CLAIMS')">
+                                <i class="fa fa-dollar"></i><span class="text_beside_icon">Claims History</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Claims</span>
+                        </li>
+                        <li class="info-number">
+                            <a>
+                                <i class="fa fa-plus-circle"></i><span class="text_beside_icon">Create Claim</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Create Claim</span>
+                        </li>
+                        <li class="">
+                            <a>
+                                <i class="fa fa-heartbeat"></i><span class="text_beside_icon">CM History</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">CM History</span>
+                        </li>
+                        <li class="">
+                            <a>
+                                <i class="fa fa-hospital-o"></i><span class="text_beside_icon">Admissions</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Admissions</span>
+                        </li>
+                        <li class="">
+                            <a>
+                                <i class="fa fa-sticky-note-o"></i><span class="text_beside_icon">Notes</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Notes</span>
+                        </li>
+                        @*<li class="">
+                            <a>
+                                <i class="fa fa-plus-square"></i><span class="text_beside_icon">Plan Benefits</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Plan Benefits</span>
+                        </li>*@
+                        <li class="">
+                            <a>
+                                <i class="fa fa-list-ol"></i><span class="text_beside_icon">Activity Log</span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Activity Log</span>
+                        </li>
+                        <li class="">
+                            <a>
+                                <i class="fa fa-newspaper-o"></i><span class="text_beside_icon">Reports </span>
+                            </a>
+                            <span class="label_on_collapsed floating_menu_label">Reports </span>
+                        </li>
+                    </ul>
+                </div>
+            }
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- /sidebar menu -->
+<!-- /menu footer buttons -->
+@*<div class="sidebar-footer hidden-small" style="display: block;">
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="FullScreen">
+            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Lock">
+            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Logout">
+            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+        </a>
+    </div>*@
+<!-- /menu footer buttons -->

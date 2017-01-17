@@ -1,0 +1,644 @@
+﻿@model AHC.CD.WebUI.MVC.Models.EmailService.EmailServiceViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+<style>
+    /* custom inclusion of right, left and below tabs */
+
+    .tabs-below > .nav-tabs,
+    .tabs-right > .nav-tabs,
+    .tabs-left > .nav-tabs {
+        border-bottom: 0;
+    }
+
+    .tab-content > .tab-pane,
+    .pill-content > .pill-pane {
+        display: none;
+    }
+
+    .tab-content > .active,
+    .pill-content > .active {
+        display: block;
+    }
+
+    .tabs-below > .nav-tabs {
+        border-top: 1px solid #ddd;
+    }
+
+        .tabs-below > .nav-tabs > li {
+            margin-top: -1px;
+            margin-bottom: 0;
+        }
+
+            .tabs-below > .nav-tabs > li > a {
+                -webkit-border-radius: 0 0 4px 4px;
+                -moz-border-radius: 0 0 4px 4px;
+                border-radius: 0 0 4px 4px;
+            }
+
+                .tabs-below > .nav-tabs > li > a:hover,
+                .tabs-below > .nav-tabs > li > a:focus {
+                    border-top-color: #ddd;
+                    border-bottom-color: transparent;
+                }
+
+        .tabs-below > .nav-tabs > .active > a,
+        .tabs-below > .nav-tabs > .active > a:hover,
+        .tabs-below > .nav-tabs > .active > a:focus {
+            border-color: transparent #ddd #ddd #ddd;
+        }
+
+    .tabs-left > .nav-tabs > li,
+    .tabs-right > .nav-tabs > li {
+        float: none;
+    }
+
+        .tabs-left > .nav-tabs > li > a,
+        .tabs-right > .nav-tabs > li > a {
+            min-width: 74px;
+            margin-right: 0;
+            margin-bottom: 3px;
+        }
+
+    .tabs-left > .nav-tabs {
+        float: left;
+        margin-right: 19px;
+        border-right: 1px solid #ddd;
+    }
+
+        .tabs-left > .nav-tabs > li > a {
+            margin-right: -1px;
+            -webkit-border-radius: 4px 0 0 4px;
+            -moz-border-radius: 4px 0 0 4px;
+            border-radius: 4px 0 0 4px;
+        }
+
+            .tabs-left > .nav-tabs > li > a:hover,
+            .tabs-left > .nav-tabs > li > a:focus {
+                border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+            }
+
+        .tabs-left > .nav-tabs .active > a,
+        .tabs-left > .nav-tabs .active > a:hover,
+        .tabs-left > .nav-tabs .active > a:focus {
+            border-color: #ddd transparent #ddd #ddd;
+            *border-right-color: #ffffff;
+        }
+
+    .tabs-right > .nav-tabs {
+        float: right;
+        margin-left: 19px;
+        border-left: 1px solid #ddd;
+    }
+
+        .tabs-right > .nav-tabs > li > a {
+            margin-left: -1px;
+            -webkit-border-radius: 0 4px 4px 0;
+            -moz-border-radius: 0 4px 4px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+            .tabs-right > .nav-tabs > li > a:hover,
+            .tabs-right > .nav-tabs > li > a:focus {
+                border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+            }
+
+        .tabs-right > .nav-tabs .active > a,
+        .tabs-right > .nav-tabs .active > a:hover,
+        .tabs-right > .nav-tabs .active > a:focus {
+            border-color: #ddd #ddd #ddd transparent;
+            *border-left-color: #ffffff;
+        }
+</style>
+
+<style>
+    .TemplateSelectAutoList.popover.bottom {
+        margin-top: 30px;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .TemplateSelectAutoList {
+        display: inherit;
+        left: 0%;
+        width: 90%;
+        margin-left: 15px;
+        // margin-left: 35px;
+        margin-right: 15px;
+        overflow-y: scroll;
+        max-height: 222px;
+    }
+
+    .TemplateSelectAutoList {
+        max-width: 100%;
+    }
+
+        .TemplateSelectAutoList.popover {
+            border-radius: 0px;
+        }
+
+        /*.TemplateSelectAutoList.popover.bottom {
+                margin-top: 56px;
+            }*/
+
+        .TemplateSelectAutoList > table > tbody > tr:hover {
+            background-color: #337FC1;
+            color: white;
+        }
+
+    .removeBorder {
+        border-top-color: white;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+</style>
+@section AddToHead{
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/Lib/FoolProofValidation/mvcfoolproof.unobtrusive.min.js"></script>
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/Colorpicker.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/bootstrap-colorpicker-module.js"></script>
+    <script src="~/Scripts/Lib/angular-wysiwyg.js"></script>
+    <script src="~/Scripts/Custom/EmailService/EmailService.js"></script>
+<script src="~/Scripts/Lib/Angular/textAngular.min.js"></script>
+}
+@if (HttpContext.Current.User.Identity.IsAuthenticated)
+{
+    var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+
+    <br />
+    <div id="page-wrapper" style="margin-top:30px;" ng-app="EmailServiceApp">
+        <div class="container-fluid" ng-controller="EmailServiceController" ng-cloak>
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-search"></i> Emails
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="panel panel-default content-panel">
+                <div class="panel-heading">
+                    My Emails
+                </div>
+                <div class="panel-body">
+                    <div style="clear:both;"></div>
+                    <br />
+                    <div>
+                        <div ng-show="compose" id="newOtherLegalFormDiv">
+                            <form id="newEmailForm">
+                                <div class="col-lg-12 zero-padding-left-right-div ng-scope">
+                                    @*@Html.HiddenFor(model => model.EmailServiceID, new { ng_value = "tempObject.EmailServiceID" })*@
+                                    @Html.HiddenFor(model => model.StatusType, new { ng_value = "1" })
+                                    <div class="col-md-3 form-group">
+                                        <label class="control-label small">Use Existing Template</label>
+                                        <div class="radio" ng-init="tempObject.SaveAsTemplateYesNoOption = '2'">
+                                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                            {
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.SaveAsTemplateYesNoOption, (int)value, new { data_ng_model = "tempObject.SaveAsTemplateYesNoOption", data_ng_click = "changeYesNoOption(" + (int)value + ")" }) @value.ToString()
+                                            </label>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 form-group pull-right" ng-if="tempObject.SaveAsTemplateYesNoOption == 1">
+                                        <label class="control-label small">Select Template</label>
+                                        <input class="form-control input-sm" ng-model="tempObject.Title" data-searchdropdown="searchdropdown" placeholder="select Template" />
+                                        <input type="hidden" data-ng-model="tempObject.EmailTemplateID" id="EmailTemplateID" name="EmailTemplateID" value="{{tempObject.EmailTemplateID}}" />
+                                        <div class="TemplateSelectAutoList popover fade bottom in" role="tooltip" style="margin-top: 55px;">
+                                            <table class="table table-striped table-bordered table-hover table-condensed" @*style="margin-top: 55px;"*@>
+                                                <tbody>
+                                                    <tr ng-repeat="type in ftemplates = (templates | filter:tempObject.Title) track by $index" ng-click="hideDiv(); tempObject.Subject = type.Subject;tempObject.Title = type.Title; tempObject.Body = type.Body;showContent();" class="pointer">
+                                                        <td>{{type.Title}}</td>
+                                                    </tr>
+                                                    <tr ng-if="templates.length == 0">
+                                                        <td>No data..... </td>
+                                                    </tr>
+                                                    <tr ng-if="templates.length > 0 && ftemplates.length == 0">
+                                                        <td>Template not found..... </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div ng-if="templateSelected">
+                                        <div class="col-lg-12 form-group">
+                                            <label class="control-label small">To *</label>
+                                            @Html.TextBoxFor(model => model.To, new { @class = "form-control input-sm", type = "email", data_ng_model = "tempObject.To", data_val_regex="Mail ID Not found.",data_val_regex_pattern="^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$",data_val="true" })
+                                            
+                                            @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+                                            
+                                        </div>
+                                        <div class="col-lg-6 form-group">
+                                            <label class="control-label small">Cc</label>
+                                            @Html.TextBoxFor(model => model.CC, new { @class = "form-control input-sm", data_ng_model = "tempObject.CC",type = "email", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$",data_val="true"})
+                                            @Html.ValidationMessageFor(model => model.CC, "", new { @class = "text-danger" })
+
+                                           
+                                        </div>
+                                        <div class="col-lg-6 form-group">
+                                            <label class="control-label small">Bcc</label>
+                                            @Html.TextBoxFor(model => model.BCC, new { @class = "form-control input-sm", type= "email", data_ng_model = "tempObject.BCC", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$", data_val = "true" })
+                                            @Html.ValidationMessageFor(model => model.BCC, "", new { @class = "text-danger" })
+                                           
+                                           
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group col-md-12">
+                                            <label class="control-label small">Subject *</label>
+                                            <div>
+                                                @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm", data_ng_model = "tempObject.Subject" })
+                                                @Html.ValidationMessageFor(model => model.Subject, "Please provide details for 'Subject' field", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-md-12 form-group">
+                                            <label class="control-label small">Body*</label>
+                                            <wysiwyg textarea-id="wysiwygBody" textarea-class="form-control" textarea-height="400px" textarea-style="width:100%;resize: none;overflow-y: scroll;" textarea-name="wysiwygBody" textarea-required ng-model="tempObject.Body" enable-bootstrap-title="true" ></wysiwyg>
+                                            @Html.HiddenFor(model => model.Body, new { ng_value = "tempObject.Body" })
+                                            @Html.ValidationMessageFor(model => model.Body, "Please provide details for 'Body' field", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-3 form-group" style="width:20%">
+                                            <label class="control-label small">Schedule Recurrence *</label>
+                                            <div class="radio">
+                                                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                                {
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.IsRecurrenceEnabledYesNoOption, (int)value, new { data_ng_model = "tempObject.IsRecurrenceEnabledYesNoOption", data_ng_click = "" }) @value.ToString()
+                                                </label>
+                                                }
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsRecurrenceEnabledYesNoOption, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-5 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1">
+                                            <label class="control-label small">Recurrence Type *</label>
+                                            <div class="radio">
+                                                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.RecurrenceIntervalType)))
+                                                {
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.RecurrenceIntervalTypeCategory, (int)value, new { data_ng_model = "tempObject.RecurrenceIntervalTypeCategory", data_ng_click = "tempObject.IntervalFactor=null" }) @value.ToString()
+                                                </label>
+                                                }
+                                                <br />
+                                                @Html.ValidationMessageFor(model => model.RecurrenceIntervalTypeCategory, "", new { @class = "text-danger" })
+                                                <br />
+                                                <br />
+                                                <span ng-if="tempObject.RecurrenceIntervalTypeCategory != 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.IntervalFactor, new { @type = "number", @class = "form-control input-sm col-lg-3", data_ng_model = "tempObject.IntervalFactor", data_ng_init = 1, @placeholder = "Enter Interval" })</span>
+                                                @Html.ValidationMessageFor(model => model.IntervalFactor, "", new { @class = "text-danger" })
+                                                <span ng-if="tempObject.RecurrenceIntervalTypeCategory == 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.DateForCustomRecurrence, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm  col-lg-3", data_ng_model = "tempObject.DateForCustomRecurrence", placeholder = "mm/dd/yyyy" })</span>
+                                                @Html.ValidationMessageFor(model => model.DateForCustomRecurrence, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="col-md-4 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1 && tempObject.RecurrenceIntervalTypeCategory != '6'" style="width:38%">
+                                            <div class="col-lg-6 form-group">
+                                                <label class="control-label small" style="margin-bottom:20px;">From</label>
+                                                @Html.TextBoxFor(model => model.FromDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.FromDate", placeholder = "mm/dd/yyyy" })
+                                                @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-6 form-group">
+                                                <label class="control-label small" style="margin-bottom:20px;">To</label>
+                                                @Html.TextBoxFor(model => model.ToDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ToDate", placeholder = "mm/dd/yyyy" })
+                                                @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <button type="button" class="btn btn-warning btn-sm" ng-click="EditCancle(tempObject);">Cancel</button>
+                                            <button id="saveButton" type="submit" ng-click="AddOrSaveEmail('newEmailForm')" class="btn btn-primary btn-sm pull-right">Send</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <ul class="nav nav-tabs" ng-show="!compose">
+                            @if (!roles.Contains("PRO"))
+                            {
+                                <li><button type="button" ng-click="showCompose()" class="btn btn-info"><a href="#compose" style="color:white;text-decoration:none;">Compose</a></button>&nbsp;&nbsp;&nbsp;</li>
+                            }
+                            @if (roles.Contains("PRO"))
+                            {
+                            <li class=""><a data-toggle="tab" href="#inbox" ng-click="list = true; getTabData('Inbox')">Inbox</a></li>
+                            }
+                            @if (!roles.Contains("PRO"))
+                            {
+                            <li class="active"><a data-toggle="tab" href="#sent" ng-click="list = true; getTabData('Sent')">Sent Mail</a></li>
+                            }
+                            @if (!roles.Contains("PRO"))
+                            {
+                            <li><a data-toggle="tab" href="#outbox" ng-click="list = true; getTabData('outbox')">Outbox</a></li>
+                            }
+                             @*@if (!roles.Contains("PRO"))
+                            {
+                            <li><button type="button" ng-click="rand()" class="btn btn-info">Random</button></li>
+                            }*@
+
+                            @*<li><a data-toggle="tab" href="#all">All Mail</a></li>*@
+                            <i class="pull-right col-lg-6">
+                                <input class="form-control input-sm pull-right" ng-model="tempObject.From" data-searchdropdown="searchdropdown" placeholder="search Mail" />
+                                <input type="hidden" data-ng-model="tempObject.EmailInfoID" id="EmailInfoID" name="EmailInfoID" value="{{tempObject.EmailInfoID}}" />
+                                <div class="TemplateSelectAutoList popover fade bottom in" role="tooltip" style="margin-right:0px;width:480px;">
+                                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                        <tbody>
+                                            <tr ng-repeat="type in sEmails = (searchData | filter:{From:tempObject.From} ) track by $index" ng-click="hideDiv(); tempObject.From = type.From; tempObject.EmailInfoID = type.EmailInfoID" class="pointer">
+                                                <td>{{type.From}}</td>
+                                            </tr>
+                                            <tr ng-if="Emails.length == 0">
+                                                <td>No data..... </td>
+                                            </tr>
+                                            <tr ng-if="Emails.length > 0 && sEmails.length == 0">
+                                                <td>Type not found..... </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </i>
+                        </ul>
+                        <div class="clearfix"></div><br ng-show="activeMessageDiv" />
+                        <div ng-show="activeMessageDiv=='successMsgDiv'" class="alert alert-success" role="alert">
+                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                        <div ng-show="activeMessageDiv=='errorMsgDiv'" class="col-lg-12">
+                            <div class="alert alert-danger" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                <span class="sr-only">Error:</span>
+                                Error Lists :<br />
+                                <span ng-repeat="err in errorMsg track by $index">{{err}}</span>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="tab-content" ng-show="!compose">
+                            @if (roles.Contains("PRO"))
+                            {
+                                <div id="inbox" class="tab-pane fade in active panel-body">
+                                    <div ng-show="loadingInboxAjax" class="progress col-lg-12">
+                                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            Loading Inbox...Please wait...
+                                        </div>
+                                    </div>
+                                    <div ng-hide="loadingInboxAjax">
+                                        <div ng-class="{'false':'col-lg-5','true':'col-lg-12'}[list]" style="padding-left:10px; padding-right:0px;">
+                                            <div class="panel-default form-style">
+                                                <br />
+                                                <fieldset ng-if="recievedEmails.length > 0">
+                                                    <table ng-table="tableParamsInbox" show-filter="false" class="table table-condensed ng-table-resizable-columns ng-table-rowselected">
+                                                        <thead style="display:none;"></thead>
+                                                        <tbody ng-repeat="mail in recievedEmails = ($data | filter:tempObject.From) track by $index" >
+                                                            <tr>
+                                                                <td colspan="2" class="wrap-words text-left" style="border-top:none;">{{mail.From}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="wrap-words text-left col-lg-10" style="border-top:none;"><a href="" ng-click="viewDetails(mail)">{{mail.Subject}}</a></td>
+                                                                <td class="wrap-words text-right col-lg-2" style="border-top:none;">{{mail.SendingDate | date:'MMM dd'}}</td>
+                                                            </tr>
+                                                            
+                                                        </tbody>
+                                                    </table>
+                                                </fieldset>
+                                                <fieldset ng-if="!(recievedEmails.length > 0)">
+                                                    <table>
+                                                        <thead>No Messages in your Inbox...</thead>
+                                                    </table>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                        <div ng-show="!list">
+                                            <div class="panel-default form-style">
+                                                <br />
+                                                <fieldset>
+                                                    <div class="legend2 pull-right">
+                                                        <button class="btn btn-xs btn-default" ng-click="closeList()" tooltip data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                    <br />
+                                                    <div class="col-lg-2 text-right">
+                                                        <div><p class="muted" style="margin-bottom:15px;">From:</p></div>
+                                                        <div><p class="muted" style="margin-bottom:15px;">To:</p></div>
+                                                        <div><p class="muted" style="margin-bottom:15px;">Date:</p></div>
+                                                        <div><p class="muted" style="margin-bottom:15px;">Subject:</p></div>
+                                                        @*<div><p class="muted" style="margin-bottom:15px;">CC:</p></div>
+                            <div><p class="muted" style="margin-bottom:15px;">BCC:</p></div>*@
+                                                    </div>
+                                                    <div class="text-left">
+                                                        <div><p><label>{{Details.From}}</label></p></div>
+                                                        <div><p><label ng-repeat="recipient in Details.EmailRecipients track by $index" ng-if="recipient.RecipientType == 'To'">{{recipient.Recipient}} </label></p></div>
+                                                        <div><p><label>{{Details.LastModifiedDate | date:'medium'}}</label></p></div>
+                                                        <div><p><label>{{Details.Subject}}</label></p></div>
+                                                        @*<div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'CC'">{{recipient.Recipient || 'Not Available'}} </label></p></div>
+                            <div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'BCC'">{{recipient.Recipient}} </label></p></div>*@
+                                                        <div style="padding-left:25px;" ng-bind-html="renderHtml(Details.Body)" class="bodyForMail">
+
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (!roles.Contains("PRO"))
+                            {
+                                <div id="sent" class="tab-pane fade in active panel-body">
+                                    <div ng-show="loadingSentboxAjax" class="progress col-lg-12">
+                                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            Loading Sent Mails...Please wait...
+                                        </div>
+                                    </div>
+                                    <div ng-hide="loadingSentboxAjax">
+                                        <div ng-class="{'false':'col-lg-5','true':'col-lg-12'}[list]" style="padding-left:10px; padding-right:0px;">
+                                            <div class="panel-default form-style">
+                                                <br />
+                                                <fieldset ng-if="Emails.length > 0 && sEmails.length > 0">
+
+                                                    <table ng-table="tableParamsSent" show-filter="false" class="table table-condensed ng-table-resizable-columns ng-table-rowselected">
+                                                        <thead style="display:none;"></thead>
+
+                                                        <tbody ng-repeat="mail in $data | filter:{From:tempObject.From} track by $index">
+                                                            <tr>
+                                                                <td colspan="2" class="wrap-words text-left" style="border-top:none;">{{mail.From}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="wrap-words text-left col-lg-10" style="border-top:none;"><a href="" ng-click="viewDetails(mail)">{{mail.Subject}}</a></td>
+                                                                <td class="wrap-words text-right col-lg-2" style="border-top:none;">{{mail.SendingDate | date:'MMM dd'}}</td>
+                                                            </tr>
+                                                        </tbody>
+
+                                                    </table>
+                                                </fieldset>
+                                                <div ng-if="sEmails.length==0" ng-filter="false">
+                                                    No Messages Found....
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                        <div ng-show="!list">
+                                            <div class="panel-default form-style">
+                                                <br />
+                                                <fieldset>
+                                                    <div class="legend2 pull-right">
+                                                        <button class="btn btn-xs btn-default" ng-click="closeList()" tooltip data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                    <br />
+                                                    <div class="col-lg-3 text-right">
+                                                        
+                                                        <div><p class="muted" style="margin-bottom:15px;">From:</p></div>
+                                                        <div><p class="muted" style="margin-bottom:15px;">To:</p></div>
+                                                        <div><p class="muted" style="margin-bottom:15px;">Date:</p></div>
+                                                        <div><p class="muted" style="margin-bottom:15px;">Subject:</p></div> 
+                                                        <div ng-if="Details.EmailAttachments.length > 0"><p class="muted" style="margin-bottom:15px;">Attachment(s):</p></div><br />
+                                                        
+                                                        @*<div><p class="muted" style="margin-bottom:15px;">CC:</p></div>
+                            <div><p class="muted" style="margin-bottom:15px;">BCC:</p></div>*@
+                                                    </div>
+                                                   
+                                                    <div class="text-left col-lg-7">
+                                                        <div><p><label>{{Details.From}}</label></p></div>
+                                                        <div><p><label ng-repeat="recipient in Details.EmailRecipients track by $index" ng-if="recipient.RecipientType == 'To'">{{recipient.Recipient}} </label></p></div>
+                                                        <div><p><label>{{Details.LastModifiedDate | date:'medium'}}</label></p></div>
+                                                        <div><p><label>{{Details.Subject}}</label></p></div>
+                                                        <div ng-if="Details.EmailAttachments.length > 0"><span ng-repeat="att in Details.EmailAttachments track by $index">&nbsp;<a target="_blank" href="/Document/View?path={{att.AttachmentRelativePath}}" title="{{att.AttachmentRelativePath}}"><i class="fa fa-file" title=""></i></a></span></div>
+                                                        @*<div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'CC'">{{recipient.Recipient || 'Not Available'}} </label></p></div>
+                            <div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'BCC'">{{recipient.Recipient}} </label></p></div>*@
+                                                    </div>
+                                                    <hr />
+                                                    <div class="col-lg-12">
+                                                        <p class="muted col-lg-3 text-right" style="margin-bottom:15px;">Body:</p>
+                                                        <p style="padding-left: 0px; overflow: auto;overflow-wrap:break-word;" class="col-lg-9 text-left bodyForMail" ng-bind-html="renderHtml(Details.Body)"></p>
+                                                    </div>
+                                                    
+                                                    
+                                                   
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (!roles.Contains("PRO"))
+                            {
+                                <div id="outbox" class="tab-pane fade in panel-body">
+                                    <div ng-show="loadingOutboxAjax" class="progress col-lg-12">
+                                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            Loading Outbox...Please wait...
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div ng-hide="loadingOutboxAjax" ng-class="{'false':'col-lg-5','true':'col-lg-12'}[list]" style="padding-left:10px; padding-right:0px;">
+                                            <div class="panel-default form-style">
+                                                <br />
+                                                <fieldset ng-if="followUpEmails.length > 0">
+                                                    <table ng-table="tableParamsFollowUp" show-filter="false" class="table table-condensed ng-table-resizable-columns ng-table-rowselected">
+                                                        <thead style="display:none;"></thead>
+                                                        <tbody ng-repeat="mail in $data | filter:{From:tempObject.From} track by $index">
+                                                            <tr>
+                                                                <td class="wrap-words text-left" style="border-top:none;">{{mail.From}}</td>
+                                                                <td class="pull-right" style="border-top:none;"><button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Stop Follow Up" ng-click="stopFollowUP(mail.EmailInfoID)" tooltip><i class="fa fa-minus-circle"></i></button></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="wrap-words text-left col-lg-8" style="border-top:none;"><a target="_blank" href="" ng-click="viewDetails(mail) ">{{mail.Subject}}</a></td>
+                                                                <td class="wrap-words text-right col-lg-4" style="border-top:none;">Next Follow Up Date: {{mail.EmailRecurrenceDetail.NextMailingDate | date:'MMM dd yyyy'}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </fieldset>
+                                                <div ng-if="followUpEmails.length == 0">
+                                                    
+                                                        No Follow Ups scheduled...
+                                                   
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div ng-show="!list">
+                                            <div class="panel-default form-style">
+                                                <br />
+                                                <fieldset>
+                                                    <div class="legend2 pull-right">
+                                                        <button class="btn btn-xs btn-default" ng-click="closeList()" tooltip data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                    <div>
+                                                        <div class="col-lg-12">
+                                                            <p class="muted text-right col-lg-3" style="margin-bottom:15px;">From:</p>
+                                                            <p class="muted text-left col-lg-9"><label>{{Details.From}}</label></p>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <p class="muted col-lg-3 text-right" style="margin-bottom:15px;">To:</p>
+                                                            <p class="col-lg-9 text-left" ng-repeat="recipient in Details.EmailRecipients track by $index" ng-if="recipient.RecipientType == 'To' && recipient.Status != 'Inactive'">
+                                                                <label class="pull-left">{{recipient.Recipient}} </label>
+                                                                <button class="btn btn-xs btn-danger pull-right" data-toggle="tooltip" data-placement="top" title="Stop Follow Up For This Reciever" ng-click="stopFollowUpForRecipient(Details.EmailInfoID, recipient.EmailRecipientDetailID)" tooltip><i class="fa fa-minus-circle"></i></button>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <p class="muted col-lg-3 text-right" style="margin-bottom:15px;">Next Follow Up Date:</p>
+                                                            <br />
+                                                            <p class="col-lg-9 text-left"><label>{{Details.EmailRecurrenceDetail.NextMailingDate | date:'MMM dd yyyy'}}</label></p>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <p class="muted col-lg-3 text-right" style="margin-bottom:15px;">Attachment(s):</p>
+                                                            <div class="col-lg-9 text-left" ng-if="Details.EmailAttachments.length > 0"><span ng-repeat="att1 in Details.EmailAttachments track by $index">&nbsp;<a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{att1.AttachmentRelativePath}}" target="_blank" title="{{att.AttachmentRelativePath}}"><i class="fa fa-file" title=""></i></a></span></div>                                                        
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <p class="muted col-lg-3 text-right" style="margin-bottom:15px;">Subject:</p>
+                                                            <p class="col-lg-9 text-left"><label>{{Details.Subject}}</label></p>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <p class="muted col-lg-3 text-right" style="margin-bottom:15px;">Body:</p>
+                                                            <p style="padding-left:25px;overflow:auto;overflow-wrap:break-word" class="col-lg-9 text-left ng-binding bodyForMail" ng-bind-html="renderHtml(Details.Body)"></p>
+                                                        </div>
+                                                        
+                                                        
+                                                         
+                                                        @*<div><p class="muted" style="margin-bottom:15px;">CC:</p></div>
+                            <div><p class="muted" style="margin-bottom:15px;">BCC:</p></div>*@
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div id="all" class="tab-pane fade panel-body">
+                                <table class="table table-bordered table-condensed customtbodyStyle table-striped">
+                                    <thead>
+                                        <tr>
+                                            <td>No Data Available</td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

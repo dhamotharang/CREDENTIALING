@@ -1,0 +1,78 @@
+﻿
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Work Gap
+        </legend>
+        <div class="form-style">
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:red">
+                <label>*If you have any work gap over 3 months</label>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide="workGaps.length > 0 || newShowWorkGap" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No Data Available ! To Add New Click
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addWorkGap')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="workGaps.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="workGap in workGaps">
+                        <tr>
+                            <td>{{workGap.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td>{{workGap.EndDate | date:'MM-dd-yyyy'}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewWorkGap')" ng-hide="viewWorkGap" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editWorkGap',workGap);changeButtonText()" ng-hide="editWorkGap" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addWorkGap');changeButtonText()" ng-hide="viewWorkGap|| editShowWorkGap || newShowWorkGap || $index+1!=workGaps.length" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewWorkGap')">
+                            <td colspan="7" class="editTableDataStyle">                                
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewWorkGap.cshtml")                                
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_editWorkGap')">
+                            <td colspan="7" id="workGapEditDiv{{$index}}" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend>
+                                        Edit Work Gap
+                                    </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditWorkGap.cshtml")
+                                </fieldset> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-show="visibilityControl=='addedNewWorkGap'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>New Work Gap Added Successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedWorkGap'" class="alert alert-warning" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <fieldset ng-show="visibilityControl==('addWorkGap')">
+                <legend>
+                    Add Work Gap
+                </legend>
+                <div id="newWorkGapFormDiv">
+                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditWorkGap.cshtml")
+                </div>
+            </fieldset>
+        </div>
+    </fieldset>
+</div>

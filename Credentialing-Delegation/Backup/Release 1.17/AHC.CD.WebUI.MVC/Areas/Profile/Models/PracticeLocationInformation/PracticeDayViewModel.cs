@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation
+{
+    public class PracticeDayViewModel
+    {
+        public int PracticeDailyHourID { get; set; }
+
+        
+        public string DayName { get; set; }
+
+        public DayOfWeek? DayOfWeek { get; set; }
+
+        public ICollection<PracticeDailyHourViewModel> DailyHours { get; set; }
+    }
+}

@@ -1,0 +1,83 @@
+﻿
+<script src="~/Scripts/Custom/DashBoard/CCODashboardController.js"></script>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-check fa-fw"></i> Upcoming Renewals
+    </div>
+    <div class="panel-body">
+        <div ng-controller="CCODashboardController" ng-cloak class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-4 zero-padding-left-right-div" style="border-right: 1px solid #eeeeee;">
+                <div class="col-lg-12">
+                    <span class="h4">Total Count : {{GrandTotalLicenses}}</span>
+                    <span class="pull-right">
+                        <select ng-model="filterDays" ng-change="getDataAccordingDays(filterDays)" class="form-control input-sm">
+                            <option value="" ng-selected="true">days</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                            <option value="55">55</option>
+                            <option value="60">60</option>
+                            <option value="70">70</option>
+                            <option value="80">80</option>
+                            <option value="90">90</option>
+                            <option value="180">180</option>
+                        </select>
+                    </span>
+                    <hr />
+                </div>
+                <div class="col-lg-12">
+                    <div class="list-group">
+                        <a ng-repeat="ld in LicenseData track by $index" ng-click="getLicensTypeData(ld)" class="list-group-item pointer" ng-class="{active:LicenseType == ld.LicenseType, 'license-validation-expired':ld.LicenseStatus.ExpiredLicense > 0, 'license-validation-warning':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense > 0), 'license-validation-success':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense == 0 && ld.LicenseStatus.ValidLicense > 0)}">
+                            {{ld.LicenseType}}
+                            <span ng-if="ld.LicenseStatus.ValidLicense > 0" class="badge license-validation-success" tooltip data-toggle="tooltip" data-placement="right" title="Upcoming Renewals">{{ld.LicenseStatus.ValidLicense}}</span>
+                            <span ng-if="ld.LicenseStatus.PendingDaylicense > 0" class="badge license-validation-warning" tooltip data-toggle="tooltip" data-placement="top" title="Renewal Needed">{{ld.LicenseStatus.PendingDaylicense}}</span>
+                            <span ng-if="ld.LicenseStatus.ExpiredLicense > 0" class="badge license-validation-expired" tooltip data-toggle="tooltip" data-placement="left" title="Expired">{{ld.LicenseStatus.ExpiredLicense}}</span>
+                            <span ng-if="ld.TotalLicenses == 0" class="badge" tooltip data-toggle="tooltip" data-placement="right" title="No Upcoming Renewals">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 form-style">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div>
+                        <span class="pull-left" style="margin-right: 10px;">
+                            <select ng-model="providerType" ng-change="getDataAccordingProviderTypeAndProviderLevel(providerType, providerLevel)" class="form-control input-sm">
+                                <option value="" ng-selected="true">Provider Type</option>
+                                <option ng-repeat="pt in ProviderTypes track by $index" value="{{pt.Title}}">{{pt.Title}}</option>
+                            </select>
+                        </span>
+                        <span class="pull-left">
+                            <select ng-model="providerLevel" ng-change="getDataAccordingProviderTypeAndProviderLevel(providerType, providerLevel)" class="form-control input-sm">
+                                <option value="" ng-selected="true">Level</option>
+                                <option ng-repeat="pl in ProviderLevels track by $index" value="{{pl.Name}}">{{pl.Name}}</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <hr style=" margin-top: 11px;"/>
+                    </div>
+                </div>
+                <fieldset>
+                    <legend>
+                        {{LicenseType}}
+                    </legend>
+                    <div ng-if="CurrentPageProviders.length > 0" ccolicensedetailstable></div>
+
+                    <pagination ng-if="CurrentPageProviders.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                    @*<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>*@
+
+                    <div ng-if="CurrentPageProviders.length == 0">No provider with upcoming {{LicenseType}} expiries</div>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>

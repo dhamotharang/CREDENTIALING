@@ -1,0 +1,172 @@
+﻿@model PortalTemplate.Areas.Facility.Models.FacilityBridgeQueueViewModel
+@using PratianUI
+@using (Ajax.BeginForm("AddFacilityData", "Facility/FacilityBridge", new AjaxOptions { HttpMethod = "POST", OnSuccess = "CloseModal('SharedFloatingModal','Add','ApproveFacility','PendingFacility')" }))
+{
+    <fieldset class="facility-modal" id="">
+        <fieldset class="fsStyle">
+            <div class="row">
+
+                <div class="col-md-3 col-lg-3 col-sm-6">
+                    <label>@Html.LabelFor(e => e.SourceName)</label>
+                    @Html.TextBoxFor(e => e.SourceName, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "SOURCE NAME" })
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6">
+                    <label>@Html.LabelFor(e => e.OrganizationName)</label>
+                    @Html.PratianUiDropDownListFor(e => e.OrganizationName, "/Facility/FacilityBridge/GetAllOrganizations", 1, "100%", "Organization Name", "500", "OrganizationID", "OrganizationName", new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })
+                    @*       @Html.PratianUiDropDownList(OrganizationDropdown, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })*@
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6">
+                    <label>@Html.LabelFor(e => e.OrganizationType)</label>
+                    @Html.TextBoxFor(e => e.OrganizationType, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "ORGANIZATION TYPE" })
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6">
+                    <label>@Html.LabelFor(e => e.OrganizationNPI)</label>
+                    @Html.TextBoxFor(e => e.OrganizationNPI, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "ORGANIZATION NPI" })
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="fsStyle">
+            <legend class="legendStyle">
+                <span class="theme_depend text-uppercase create-auth-legends custom-legend-font-style">General Info</span>
+            </legend>
+            <div class="row">
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.FacilityName)</label>
+                    @Html.TextBoxFor(e => e.FacilityName, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "FACILITY NAME" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.FacilityType)</label>
+                    @Html.TextBoxFor(e => e.FacilityType, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "FACILITY TYPE" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.CorporateName)</label>
+                    @Html.TextBoxFor(e => e.CorporateName, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "CORPORATE NAME" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.TaxID)</label>
+                    @Html.TextBoxFor(e => e.TaxID, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "TAX ID" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.PhoneNumber)</label>
+                    @Html.PratianUiPhoneFormatFor(e => e.PhoneNumber, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "PHONE NUMBER" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.Fax)</label>
+                    @Html.TextBoxFor(e => e.Fax, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "FAX NAME" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.Email)</label>
+                    @Html.TextBoxFor(e => e.Email, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "EMAIL" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.AddressLine1)</label>
+                    @Html.TextBoxFor(e => e.AddressLine1, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "Address Line 1" })
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.AddressLine2)</label>
+                    @Html.TextBoxFor(e => e.AddressLine2, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "Address Line 2" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.City)</label>
+                    @Html.PratianUiDropDownListFor(e => e.City, "/Facility/FacilityBridge/GetAllCities", 1, "100%", "City", "500", "CityID", "Name", new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })
+                    @*  @Html.PratianUiDropDownList(ViewBag.Cities.ToList(), new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })*@
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.State)</label>
+                    @Html.PratianUiDropDownListFor(e => e.State, "/Facility/FacilityBridge/GetAllStates", 1, "100%", "State", "500", "StateID", "Name", new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })
+                    @*@Html.TextBoxFor(e => e.State, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "STATE" })*@
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.County)</label>
+                    @Html.PratianUiDropDownListFor(e => e.County, "/Facility/FacilityBridge/GetAllCounties", 1, "100%", "County", "500", "CountyID", "Name", new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })
+                    @*  @Html.TextBoxFor(e => e.County, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "COUNTY" })*@
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.Country)</label>
+                    @Html.PratianUiDropDownListFor(e => e.Country, "/Facility/FacilityBridge/GetAllCountries", 1, "100%", "Country", "500", "CountryID", "CountryName", new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable" })
+                    @*@Html.TextBoxFor(e => e.Country, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "COUNTRY" })*@
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.ZipCode)</label>
+                    @Html.TextBoxFor(e => e.ZipCode, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "ZIP CODE" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.PrintOnClaim)</label>
+                    @Html.TextBoxFor(e => e.PrintOnClaim, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "PRINT ON CLAIM" })
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="fsStyle">
+            <legend class="legendStyle">
+                <span class="theme_depend  custom-legend-font-style text-uppercase create-auth-legends">Contact Person Info</span>
+            </legend>
+            <div class="row">
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.CFirstName)</label>
+                    @Html.TextBoxFor(e => e.CFirstName, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "FIRST NAME" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.CLastName)</label>
+                    @Html.TextBoxFor(e => e.CLastName, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "LAST NAME" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.CPhoneNumber)</label>
+                    @Html.PratianUiPhoneFormatFor(e => e.CPhoneNumber, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable", @placeholder = "PHONE NUMBER" })
+                </div>
+                <div class="col-md-3 col-md-3 col-sm-12">
+                    <label>@Html.LabelFor(e => e.CFax)</label>
+                    @Html.TextBoxFor(e => e.CFax, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable ", @placeholder = "FAX NUMBER" })
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        @if (Model != null && Model.Status != "Approved")
+        {
+            <fieldset class="fsStyle">
+                <div class="row" onclick="ShowAssignTo('AssignToDropdown')">
+
+                    <div class="col-md-6 col-lg-3 col-sm-12">
+                        <label>Request Status </label>
+                        <div>
+                            @Html.PratianUiRadioButton("Approve", new { @class = "input-md", @name = "Type", @id = "ApproveFacility" })
+                            @if (Model.Status != "Pending")
+                            {  
+                                @Html.PratianUiRadioButton("Pending", new { @class = "input-md AssignToDropdown", @name = "Type", @id = "PendingFacility" })
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-9 col-sm-12 zero-padding-left-right" id="AssignToDiv" hidden>
+                        <div class="col-lg-5">
+                            <label>Reason </label>
+                            <select class="form-control input-xs  mandatory_field_halo text-uppercase editable ">
+                                <option selected disabled>Select Reason</option>
+                                <option>Invalid Details</option>
+                                <option>Participated in Malpractice</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-7">
+                            <label>Note</label> @Html.TextBoxFor(e => e.ReasonDescription, new { @class = "form-control input-xs  mandatory_field_halo text-uppercase editable ", @placeholder = "REASON DESCRIPTION" })
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+        }
+        @if (Model == null)
+        {
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 button-styles text-right">
+                <span><button data-dismiss="modal" class="btn btn-danger">CANCEL</button></span>
+                <input type="submit" class="btn btn-success" value="REQUEST" />
+            </div>
+        }
+    </fieldset>
+}
+

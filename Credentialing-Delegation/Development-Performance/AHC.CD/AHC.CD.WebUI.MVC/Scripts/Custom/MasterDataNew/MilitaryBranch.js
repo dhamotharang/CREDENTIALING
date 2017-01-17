@@ -1,0 +1,300 @@
+﻿//--------------------- Angular Module ----------------------
+var masterDataMilitaryBranchs = angular.module("masterDataMilitaryBranchs", ['ui.bootstrap']);
+
+masterDataMilitaryBranchs.service('messageAlertEngine', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
+
+    $rootScope.messageDesc = "";
+    $rootScope.activeMessageDiv = "";
+    $rootScope.messageType = "";
+
+    var animateMessageAlertOff = function () {
+        $rootScope.closeAlertMessage();
+    };
+
+
+    this.callAlertMessage = function (calledDiv, msg, msgType, dismissal) { //messageAlertEngine.callAlertMessage('updateHospitalPrivilege' + IndexValue, "Data Updated Successfully !!!!", "success", true);                            
+        $rootScope.activeMessageDiv = calledDiv;
+        $rootScope.messageDesc = msg;
+        $rootScope.messageType = msgType;
+        if (dismissal) {
+            $timeout(animateMessageAlertOff, 5000);
+        }
+    }
+
+    $rootScope.closeAlertMessage = function () {
+        $rootScope.messageDesc = "";
+        $rootScope.activeMessageDiv = "";
+        $rootScope.messageType = "";
+    }
+}])
+
+//=========================== Controller declaration ==========================
+masterDataMilitaryBranchs.controller('masterDataMilitaryBranchsController', ['$scope', '$http', '$filter', 'messageAlertEngine', function ($scope, $http, $filter, messageAlertEngine) {
+
+    $http.get(rootDir + "/MasterDataNew/GetAllMilitaryBranches").then(function (value) {
+        
+        for (var i = 0; i < value.data.length ; i++) {
+            if (value.data[i] != null) {
+                value.data[i].LastModifiedDate = $scope.ConvertDateFormat(value.data[i].LastModifiedDate);
+            }
+        }
+
+        $scope.MilitaryBranchs = angular.copy(value.data);
+    });
+
+    //Convert the date from database to normal
+    $scope.ConvertDateFormat = function (value) {
+        var returnValue = value;
+        var dateData = "";
+
+        try {
+            if (value.indexOf("/Date(") == 0) {
+                returnValue = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+                var day = returnValue.getDate() < 10 ? '0' + returnValue.getDate() : returnValue.getDate();
+                var tempo = returnValue.getMonth() + 1;
+                var month = tempo < 10 ? '0' + tempo : tempo;
+                var year = returnValue.getFullYear();
+                dateData = month + "-" + day + "-" + year;
+            }
+            return dateData;
+        } catch (e) {
+            return dateData;
+        }
+        return dateData;
+    };
+    
+
+    $scope.tempMilitaryBranchs = {};
+
+    //------------ gets the template to ng-include for a table row / item -------------------
+    $scope.getTemplate = function (MilitaryBranchs) {
+        if (MilitaryBranchs.MilitaryBranchID === $scope.tempMilitaryBranchs.MilitaryBranchID) return 'editMilitaryBranchs';
+        else return 'displayMilitaryBranchs';
+    };
+
+    //-------------------- Edit MilitaryBranch ----------
+    $scope.editMilitaryBranchs = function (MilitaryBranch) {
+        $scope.tempMilitaryBranchs = angular.copy(MilitaryBranch);
+    };
+
+    //------------------- Add MilitaryBranch ---------------------
+    $scope.addMilitaryBranchs = function (MilitaryBranch) {
+        $scope.disableAdd = true;
+        var Month = new Date().getMonth() + 1;
+        var _month = Month < 10 ? '0' + Month : Month;
+        var _date = new Date().getDate() < 10 ? '0' + new Date().getDate() : new Date().getDate();
+        var _year = new Date().getFullYear();
+        var temp = {
+            MilitaryBranchID: 0,
+            Title: "",
+            Status: "Active",
+            LastModifiedDate: _month + "-" + _date + "-" + _year
+        };
+        $scope.MilitaryBranchs.splice(0, 0, angular.copy(temp));
+        $scope.tempMilitaryBranchs = angular.copy(temp);
+    };
+
+    //------------------- Save MilitaryBranch ---------------------
+    $scope.saveMilitaryBranchs = function (idx) {
+         
+        var addData = {
+            MilitaryBranchID: 0,
+            Title: $scope.tempMilitaryBranchs.Title,
+            StatusType: 1,
+            LastModifiedDate: new Date()
+        };
+
+        var isExist = true;
+        //var isExist1 = true;
+
+        for (var i = 0; i < $scope.MilitaryBranchs.length; i++) {
+
+            if (addData.Title && $scope.MilitaryBranchs[i].Title.replace(" ", "").toLowerCase() == addData.Title.replace(" ", "").toLowerCase()) {
+
+                isExist = false;
+                $scope.existErr = "The Title is Exist";
+                break;
+            }
+            //if (addData.Code && $scope.ProviderTypes[i].Code.replace(" ", "").toLowerCase() == addData.Code.replace(" ", "").toLowerCase()) {
+
+            //    isExist1 = false;
+            //    $scope.existErr1 = "The Code is Exist";
+            //    break;
+            //}
+        }
+
+
+
+
+        if (!addData.Title) { $scope.branchError = "Please enter the Title"; };
+
+        if (addData.Title) {
+            $http.post(rootDir + '/MasterDataNew/AddMilitaryBranch', addData).
+                success(function (data, status, headers, config) {
+                    try {
+                        //----------- success message -----------
+                        if (data.status == "true") {
+                            messageAlertEngine.callAlertMessage("MilitaryBranch", "New Military Branch Details Added Successfully !!!!", "success", true);
+                            data.militaryBranchDetails.LastModifiedDate = $scope.ConvertDateFormat(data.militaryBranchDetails.LastModifiedDate);
+                            for (var i = 0; i < $scope.MilitaryBranchs.length; i++) {
+
+                                if ($scope.MilitaryBranchs[i].MilitaryBranchID == 0) {
+                                    $scope.MilitaryBranchs[i] = angular.copy(data.militaryBranchDetails);
+                                }
+                            }
+                            $scope.reset();
+                        }
+                    } catch (e) {
+                      
+                    }
+                }).
+                error(function (data, status, headers, config) {
+                    //----------- error message -----------
+                    messageAlertEngine.callAlertMessage("MilitaryBranchError", "Sorry Unable To Add Military Branch !!!!", "danger", true);
+                    $scope.MilitaryBranchs.splice(0, 1);
+                });
+        }
+    };
+
+    //------------------- Update MilitaryBranch ---------------------
+    $scope.updateMilitaryBranchs = function (idx) {
+
+        var updateData = {
+            MilitaryBranchID: $scope.tempMilitaryBranchs.MilitaryBranchID,
+            Title: $scope.tempMilitaryBranchs.Title,
+            StatusType: 1,
+            
+        };
+
+        var isExist = true;
+        //var isExist1 = true;
+
+        for (var i = 0; i < $scope.MilitaryBranchs.length; i++) {
+
+            if (addData.Title && $scope.MilitaryBranchs[i].Title.replace(" ", "").toLowerCase() == addData.Title.replace(" ", "").toLowerCase()) {
+
+                isExist = false;
+                $scope.existErr = "The Title is Exist";
+                break;
+            }
+            //if (addData.Code && $scope.ProviderTypes[i].Code.replace(" ", "").toLowerCase() == addData.Code.replace(" ", "").toLowerCase()) {
+
+            //    isExist1 = false;
+            //    $scope.existErr1 = "The Code is Exist";
+            //    break;
+            //}
+        }
+
+        if (!updateData.Title) { $scope.branchError = "Please enter the Title"; };
+        if (updateData.Title) { 
+            $http.post(rootDir + '/MasterDataNew/UpdateMilitaryBranch', updateData).
+            success(function (data, status, headers, config) {
+                try {
+                    //----------- success message -----------
+                    if (data.status == "true") {
+                        messageAlertEngine.callAlertMessage("MilitaryBranch", "Military Branch Details Updated Successfully !!!!", "success", true);
+                        data.militaryBranchDetails.LastModifiedDate = $scope.ConvertDateFormat(data.militaryBranchDetails.LastModifiedDate);
+                        for (var i = 0; i < $scope.MilitaryBranchs.length; i++) {
+
+                            if ($scope.MilitaryBranchs[i].MilitaryBranchID == data.militaryBranchDetails.MilitaryBranchID) {
+                                $scope.MilitaryBranchs[i] = angular.copy(data.militaryBranchDetails);
+                            }
+                        }
+                        $scope.reset();
+                    }
+                } catch (e) {
+                  
+                }
+            }).
+            error(function (data, status, headers, config) {
+                //----------- error message -----------
+                messageAlertEngine.callAlertMessage("MilitaryBranchError", "Sorry Unable To Update Military Branch !!!!", "danger", true);
+            });
+        }
+    };
+
+    //----------------- MilitaryBranch new add cancel ---------------
+    $scope.cancelAdd = function () {
+        $scope.disableAdd = false;
+        $scope.MilitaryBranchs.splice(0, 1);
+        $scope.tempMilitaryBranchs = {};
+        $scope.branchError = "";
+        $scope.existErr = "";
+    };
+
+    //-------------------- Reset MilitaryBranch ----------------------
+    $scope.reset = function () {
+        $scope.disableAdd = false;
+        $scope.tempMilitaryBranchs = {};
+        $scope.branchError = "";
+        $scope.existErr = "";
+
+    };
+
+    $scope.CurrentPage = [];
+
+    //-------------------------- angular bootstrap pagger with custom-----------------
+    $scope.maxSize = 5;
+    $scope.bigTotalItems = 0;
+    $scope.bigCurrentPage = 1;
+
+    //-------------------- page change action ---------------------
+    $scope.pageChanged = function (pagnumber) {
+        $scope.bigCurrentPage = pagnumber;
+    };
+
+    //-------------- current page change Scope Watch ---------------------
+    $scope.$watch('bigCurrentPage', function (newValue, oldValue) {
+        $scope.CurrentPage = [];
+        var startIndex = (newValue - 1) * 10;
+        var endIndex = startIndex + 9;
+        if ($scope.MilitaryBranchs) {
+            for (startIndex; startIndex <= endIndex ; startIndex++) {
+                if ($scope.MilitaryBranchs[startIndex]) {
+                    $scope.CurrentPage.push($scope.MilitaryBranchs[startIndex]);
+                } else {
+                    break;
+                }
+            }
+        }
+    });
+    //-------------- License Scope Watch ---------------------
+    $scope.$watchCollection('MilitaryBranchs', function (newValue, oldValue) {
+        if (newValue) {
+            $scope.bigTotalItems = newValue.length;
+
+            $scope.CurrentPage = [];
+            $scope.bigCurrentPage = 1;
+
+            var startIndex = ($scope.bigCurrentPage - 1) * 10;
+            var endIndex = startIndex + 9;
+
+            for (startIndex; startIndex <= endIndex ; startIndex++) {
+                if ($scope.MilitaryBranchs[startIndex]) {
+                    $scope.CurrentPage.push($scope.MilitaryBranchs[startIndex]);
+                } else {
+                    break;
+                }
+            }
+        }
+    });
+    $scope.filterData = function () {
+        $scope.pageChanged(1);
+    }
+
+    $scope.IsValidIndex = function (index) {
+
+        var startIndex = ($scope.bigCurrentPage - 1) * 10;
+        var endIndex = startIndex + 9;
+
+        if (index >= startIndex && index <= endIndex)
+            return true;
+        else
+            return false;
+
+    }
+
+
+
+    //------------------- end ------------------
+}]);

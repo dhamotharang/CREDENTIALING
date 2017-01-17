@@ -1,0 +1,115 @@
+﻿@using System.Web.Script.Serialization
+
+@*<p-script filepath="~/Areas/MH/Scripts/Member/SearchMember/NonMinified/MemberSearchResultGrid.js"></p-script>*@
+
+@foreach (var item in Model.Members)
+{
+    <tr>
+        <td>@item.SubscriberID</td>
+        <td>@item.LastName</td>
+        <td>@item.FirstName</td>
+        <td>@item.DOB</td>
+        <td>@item.Gender</td>
+        <td>@item.PCP</td>
+        @if (@item.Status == "Enrolled")
+        {
+            <td class="text-success">@item.Status</td>
+        }
+        else
+        {
+            <td style="color: #337ab7">@item.Status</td>
+        }
+        @if (@item.Status == "Enrolled")
+        {
+            <td>
+                <button class="btn btn-primary btn-xs tab-navigation member-actions"
+                        data-tab-action="Member Profile"
+                        data-tab-title="Profile"
+                        data-tab-floatmenu="true"
+                        data-tab-issubtab="true"
+                        data-tab-defaultparenttab="Member"
+                        data-tab-autoflush="true"
+                        data-tab-usertype="Member"
+                        data-tab-userid=@item.SubscriberID
+                        data-tab-path="/Portal/MemberManage/GetMemberDetails?SubscriberID=@item.SubscriberID"
+                        data-tab-container="innerTabContainer"
+                        data-tab-parentcontainer="partialBodyContainer"
+                        data-tab-parenttabtitle="@item.LastName @item.FirstName"
+                        data-tab-hassubtabs="false"
+                        data-tab-parenttabpath="/MH/SearchMember/GetMemberHeader?subscriberId=@item.SubscriberID&type=View&status=Enrolled"
+                        data-tab-parenttabrenderingarea="headerArea"
+                        data-tab-float-menu-path="~/Areas/MH/Views/Shared/_MHFloatMenu.cshtml">
+                    View
+                </button>
+                <button class="btn btn-primary btn-xs tab-navigation member-actions"
+                        data-tab-action="Member Profile"
+                        data-tab-title="Profile"
+                        data-tab-floatmenu="true"
+                        data-tab-issubtab="true"
+                        data-tab-defaultparenttab="Member"
+                        data-tab-autoflush="true"
+                        data-tab-usertype="Member"
+                        data-tab-userid=@item.SubscriberID
+                        data-tab-path="/Portal/MemberManage/GetMemberDetails?SubscriberID=@item.SubscriberID"
+                        data-tab-container="innerTabContainer"
+                        data-tab-parentcontainer="partialBodyContainer"
+                        data-tab-parenttabtitle="@item.LastName @item.FirstName"
+                        data-tab-hassubtabs="false"
+                        data-tab-parenttabpath="/MH/SearchMember/GetMemberHeader?subscriberId=@item.SubscriberID&type=View&status=Enrolled"
+                        data-tab-parenttabrenderingarea="headerArea"
+                        data-tab-float-menu-path="~/Areas/MH/Views/Shared/_MHFloatMenu.cshtml"
+                        disabled="disabled">
+                    Edit
+                </button>
+            </td>
+        }
+        else
+        {
+            <td>
+                <button class="btn btn-primary btn-xs tab-navigation member-actions"
+                        data-tab-action="Member Profile"
+                        data-tab-title="View - @item.LastName @item.FirstName"
+                        data-tab-floatmenu="false"
+                        data-tab-issubtab="false"
+                        data-tab-defaultparenttab="Member"
+                        data-tab-autoflush="true"
+                        data-tab-usertype="Member"
+                        data-tab-userid=@item.SubscriberID
+                        data-tab-path="/MH/MemberProfile/GetMemberById?SubscriberID=@item.SubscriberID&type=view&client=claims"
+                        data-tab-container="fullBodyContainer"
+                        data-tab-parentcontainer="partialBodyContainer"
+                        data-tab-parenttabtitle=""
+                        data-tab-hassubtabs="false"
+                        data-tab-parenttabpath=""
+                        data-tab-parenttabrenderingarea="">
+                    View
+                </button>
+                <button class="btn btn-primary btn-xs tab-navigation member-actions"
+                        data-tab-action="Member Profile"
+                        data-tab-title="Edit - @item.LastName @item.FirstName"
+                        data-tab-floatmenu="false"
+                        data-tab-issubtab="false"
+                        data-tab-defaultparenttab="Member"
+                        data-tab-autoflush="true"
+                        data-tab-usertype="Member"
+                        data-tab-userid=@item.SubscriberID
+                        data-tab-path="/MH/MemberProfile/GetMemberById?SubscriberID=@item.SubscriberID&type=edit&client=claims"
+                        data-tab-container="fullBodyContainer"
+                        data-tab-parentcontainer="partialBodyContainer"
+                        data-tab-parenttabtitle=""
+                        data-tab-hassubtabs="false"
+                        data-tab-parenttabpath=""
+                        data-tab-parenttabrenderingarea="">
+                    Edit
+                </button>
+            </td>
+        }
+
+    </tr>
+}
+
+
+
+
+
+

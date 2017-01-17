@@ -1,0 +1,92 @@
+﻿<br />
+<form id="providerSearchForPackageGeneration" name="providerData">
+    <div class="col-lg-12">
+        <div class="col-lg-4 form-group">
+            <label class="control-label small">NPI Number</label>
+            <input type="text" placeholder="NPI Number" name="NPINumber" ng-disabled="((tempObject.FirstName) || (tempObject.LastName) || (tempObject.CAQH) || (tempObject.IPAGroupName) || (tempObject.Specialty) || (tempObject.ProviderType))" class="form-control input-sm" ng-model="tempObject.NPINumber" required ng-pattern="/^[0-9]{10}$/" />
+            <span class="text-danger" ng-show="providerData.NPINumber.$error.pattern">Please enter valid 10 digit number</span>
+        </div>
+        <div class="col-lg-4 form-group">
+            <label class="control-label small">First Name</label>
+            <input type="text" placeholder="First Name" name="fName" ng-disabled="((tempObject.NPINumber) || (tempObject.LastName) || (tempObject.CAQH) || (tempObject.IPAGroupName) || (tempObject.Specialty) || (tempObject.ProviderType))" class=" form-control input-sm" ng-model="tempObject.FirstName" ng-pattern="/^[a-zA-Z ,-.]{1,50}$/" />
+            <span class="text-danger" ng-show="providerData.fName.$error.pattern">Please enter Only alphabets, spaces, comma and hyphen. Maximum length is 50 characters.</span>
+        </div>
+        <div class="col-lg-4 form-group">
+            <label class="control-label small">Last Name</label>
+            <input type="text" placeholder="Last Name" name="lName" ng-disabled="((tempObject.FirstName) || (tempObject.NPINumber) || (tempObject.CAQH) || (tempObject.IPAGroupName) || (tempObject.Specialty) || (tempObject.ProviderType))" class=" form-control input-sm" ng-model="tempObject.LastName" ng-pattern="/^[a-zA-Z ,-.]{1,50}$/" />
+            <span class="text-danger" ng-show="providerData.lName.$error.pattern">Please enter Only alphabets, spaces, comma and hyphen. Maximum length is 50 characters.</span>
+        </div>
+    </div>
+    <div class="col-lg-12" id="providerType">
+        <div class="col-lg-6 form-group">
+            <label class="control-label small">CAQH Number</label>
+            <input type="text" placeholder="CAQH Number" name="CAQ" ng-disabled="((tempObject.FirstName) || (tempObject.LastName) || (tempObject.NPINumber) || (tempObject.IPAGroupName) || (tempObject.Specialty) || (tempObject.ProviderType))" class="form-control input-sm" ng-model="tempObject.CAQH" ng-pattern="/^[0-9]{1,8}$/" />
+            <span class="text-danger" ng-show="providerData.CAQ.$error.pattern">Please enter valid 8 digit number</span>
+        </div>
+        <div class="col-lg-6 form-group">
+            <label class="control-label small">Provider Type</label>
+            <input type="text" class="form-control input-sm" placeholder="Provider Type" name="ProviderType" ng-model="tempObject.ProviderType" ng-click="searchCumDropDown('ForType'+$index);tempObject.ProviderType='';showSearchByTypeDiv('ForType'+$index)" data-searchdropdown="searchdropdown" ng-disabled="((tempObject.NPINumber) || (tempObject.FirstName) || (tempObject.LastName) || (tempObject.CAQH) || (tempObject.Specialty) || (tempObject.IPAGroupName))" />
+            <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForType{{$index}}">
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr ng-repeat="providertype in filteredProviderTypeResults = (masterProviderTypes | filter:tempObject.ProviderType)" ng-click="addIntoTypeDropDown(providertype, 'ForType')" class="pointer">
+                            <td ng-if="providertype.Status=='Active'">{{providertype.Title}}</td>
+                        </tr>
+                        <tr ng-if="filteredProviderTypeResults.length == 0">
+                            <td>Provider Type not found..... </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" id="ipaspecialty">
+        <div class="col-lg-6 form-group" id="ipa">
+            <label class="control-label small">IPA</label>
+            <input type="text" class="form-control input-sm" data-searchdropdown="searchdropdown" placeholder="IPA" name="IPAGroupName" ng-model="tempObject.IPAGroupName" ng-click="searchCumDropDown('ForIPA'+$index);tempObject.IPAGroupName='';showSearchByTypeDiv('ForIPA'+$index)" ng-disabled="((tempObject.NPINumber) || (tempObject.FirstName) || (tempObject.LastName) || (tempObject.CAQH) || (tempObject.Specialty) || (tempObject.ProviderType))" />
+            <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForIPA{{$index}}">
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr ng-repeat="ipa in filterIPAData=(PracticingGroups | filter : tempObject.IPAGroupName) track by $index" ng-click="addIntoIPADropDown(ipa.Group.Name,'ForIPA')" class="pointer">
+                            <td ng-if="ipa.Status=='Active'">{{ipa.Group.Name}}</td>
+                        </tr>
+                        <tr ng-if="!filterIPAData.length">
+                            <td>IPA Name Not Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6 form-group" id="specialty">
+            <label class="control-label small">Specialty</label>
+            <input type="text" class="form-control input-sm" placeholder="Specialty" name="Specialty" data-searchdropdown="searchdropdown" ng-model="tempObject.Specialty" ng-click="searchCumDropDown('ForSpecialty'+$index);tempObject.Specialty='';showSearchByTypeDiv('ForSpecialty'+$index)" ng-disabled="((tempObject.NPINumber) || (tempObject.FirstName) || (tempObject.LastName) || (tempObject.CAQH) || (tempObject.IPAGroupName) || (tempObject.ProviderType))" />
+            <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForSpecialty{{$index}}">
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr ng-repeat="s in filterSpecialtyData=(masterSpecialities | filter : tempObject.Specialty) track by $index" ng-click="addIntoSpecialtyDropDown(s.Name,'ForSpecialty')" class="pointer">
+                            <td ng-if="s.Status=='Active'">{{s.Name}}</td>
+                        </tr>
+                        <tr ng-if="!filterSpecialtyData.length">
+                            <td>Specialty Name Not Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-12">
+        <div class="col-md-12 form-group">
+            <button type="reset" class="btn btn-sm btn-warning" ng-click="tempObject=null;providerData.NPINumber.$error.pattern=false;providerData.fName.$error.pattern=false;providerData.lName.$error.pattern=false;providerData.CAQ.$error.pattern=false " @*ng-click="clearSearch(tempObject);*@ ">Clear</button>
+            <button type="button" class="btn btn-sm btn-info pull-right" id="searchbtn" ng-disabled="((!tempObject.NPINumber) && (!tempObject.FirstName) && (!tempObject.LastName) && (!tempObject.CAQH)) && (!tempObject.IPAGroupName) && (!tempObject.Specialty) && (!tempObject.ProviderType) || progressbar" ng-click="new_search(selectedAction);"><i class=" fa fa-search"></i> Search</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            $("#searchbtn").click();
+        }
+    });
+</script>
+

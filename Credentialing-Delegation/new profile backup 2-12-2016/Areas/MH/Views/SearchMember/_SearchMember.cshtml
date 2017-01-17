@@ -1,0 +1,137 @@
+﻿@using PortalTemplate.Helper
+@using PratianUI
+@model PortalTemplate.Areas.MH.Models.ViewModels.SearchMember.SearchMemberViewModel
+@{
+    List<SelectListItem> Genders = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Male" , Text = "Male" },
+        new SelectListItem { Value = "Female" , Text = "Female" },
+        new SelectListItem { Value = "Others" , Text = "Others" },
+    };
+}
+<link href="~/Areas/MH/Styles/SearchMember/SearchMemberResultGrid.css" rel="stylesheet" />
+<link href="~/Areas/MH/Styles/CustomCss/Select2CustomStyle.css" rel="stylesheet" />
+<p-script filepath="~/Areas/MH/Scripts/Member/SearchMember/NonMinified/SearchMember.js"></p-script>
+<p-script filepath="~/Areas/MH/Scripts/Common/CommonMethods/CommonMethods.js"></p-script>
+
+<style>
+    .theme1_table > tr > th >input{
+        color:black;
+    }
+</style>
+
+<div id="spinner_wrapper">
+    @using (Ajax.BeginForm("SearchMember", "SearchMember", new { param = "Potential" }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "tableWrapper", OnSuccess = "getMembersOnSearch", InsertionMode = InsertionMode.Replace }))
+    {
+        <fieldset class="fsStyle" style="margin-top:15px">
+            <legend class="legendStyle"></legend>
+            <div class="legend2 advancedSearchOptions" style="margin-top: -18px;">
+                <button type="button" class="btn btn-danger btn-xs loser_field hidden" id="closeAdvancedsearchMembersButton"><i class="fa fa-times"></i></button>
+                <button type="button" class="btn btn-primary btn-xs loser_field" id="advancedsearchMembersButton"><i class="fa fa-search"></i></button>
+            </div>
+            <table class="table" id="inputFieldsTable" style="margin-bottom:1px">
+                <thead>
+                    <tr>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.SubscriberID)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.LastName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.FirstName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.DOB)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.Gender)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.PhoneNumber)</th>
+                        <th class="theme_label_data"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.TextBoxFor(e => e.SearchFactors.SubscriberID, new { @class = "form-control input-xs text-uppercase", @placeholder = "Subscriber ID", @id = "memberIdInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.SearchFactors.LastName, new { @class = "form-control input-xs text-uppercase", @placeholder = "Last Name", @id = "lastNameInput" })</td>
+                        <td>@Html.TextBoxFor(e => e.SearchFactors.FirstName, new { @class = "form-control input-xs text-uppercase", @placeholder = "First Name", @id = "firstNameInput" })</td>
+                        <td>@Html.PratianUiDatePickerFor(e => e.SearchFactors.DOB, new { @class = "form-control input-xs", @placeholder = "MM/DD/YYYY", @id = "dobInput" })</td>
+                        <td>@Html.DropDownListFor(e => e.SearchFactors.Gender, Genders, new { @class = "form-control input-xs text-uppercase variable_width_select", @placeholder = "Gender", @id = "genderInput" })@*@Html.TextBoxFor(e => e.SearchFactors.Gender, new { @class = "form-control input-xs text-uppercase", @placeholder = "Gender", @id = "genderInput" })*@</td>
+                        <td>@Html.PratianUiPhoneFormatFor(e => e.SearchFactors.PhoneNumber, new { @class = "form-control input-xs", @placeholder = "Phone Number", @id = "phoneInput" })@*@Html.TextBoxFor(e => e.SearchFactors.PhoneNumber, new { @class = "form-control input-xs text-uppercase", @placeholder = "Phone Number", @id = "phoneInput" })*@</td>
+                        <td id="searchActionItems" class="width_4">
+                            <button type="submit" class="btn btn-primary btn-sm" id="searchMembersButton" disabled><i class="fa fa-search"></i></button>
+                            <button type="button" class="btn btn-cancel btn-sm" id="clearSearchButton" disabled><i class="fa fa-remove"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table hidden" id="advancedInputFieldsTable" style="margin-bottom:10px">
+                <thead>
+                    <tr>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.PCPName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.PCPNPI)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.MedicareID)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.InsuranceCompany)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.PlanName)</th>
+                        <th class="theme_label_data">@Html.DisplayNameFor(e => e.SearchFactors.EffectiveDate)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.PratianUiDropDownListFor(e => e.SearchFactors.PCPName, "/ExternalData/GetAllProviders", 1, "100%", "MBR PCP", "500", "NPI", "ProviderName", new { @class = "form-control input-xs text-uppercase", @id = "pcpInput" })@*@Html.TextBoxFor(e => e.SearchFactors.PCPName, new { @class = "form-control input-xs text-uppercase", @placeholder = "PCP Name", @id = "pcpInput" })*@</td>
+                        <td>@Html.PratianUiDropDownListFor(e => e.SearchFactors.PCPNPI, "/ExternalData/GetAllProviders", 1, "100%", "PCP NPI", "500", "NPI", "NPI", new { @class = "form-control input-xs text-uppercase", @id = "pcpNPI" })@*@Html.TextBoxFor(e => e.SearchFactors.PCPNPI, new { @class = "form-control input-xs text-uppercase", @placeholder = "PCP NPI", @id = "pcpNPI" })*@</td>
+                        <td>@Html.TextBoxFor(e => e.SearchFactors.MedicareID, new { @class = "form-control input-xs text-uppercase", @placeholder = "Medicare ID", @id = "medicaidInput" })</td>
+                        <td>@Html.PratianUiDropDownListFor(e => e.SearchFactors.InsuranceCompany, "/MH/MasterData/GetAllInsuranceCompanies",1,"100%","Insurance Company","500", "CompanyID", "CompanyName", new { @class = "form-control input-xs text-uppercase", @id = "memberInsuranceCo"})@*@Html.TextBoxFor(e => e.SearchFactors.InsuranceCompany, new { @class = "form-control input-xs text-uppercase", @placeholder = "Insurance Company", @id = "memberInsuranceCo" })*@</td>
+                        <td>@Html.PratianUiDropDownListFor(e => e.SearchFactors.PlanName, "/MH/MasterData/GetAllPlansForInsuranceCompany", 1, "100%", "Plan Name", "500", "PlanID", "PlanName", new { @class = "form-control input-xs text-uppercase", @id = "memberPlanName" })@*@Html.TextBoxFor(e => e.SearchFactors.PlanName, new { @class = "form-control input-xs text-uppercase", @placeholder = "Plan Name", @id = "memberPlanName" })*@</td>
+                        <td>@Html.PratianUiDatePickerFor(e => e.SearchFactors.EffectiveDate, new { @class = "form-control input-xs", @placeholder = "MM/DD/YYYY", @id = "memberEffectiveDate" })</td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    }
+</div>
+
+<div class="gridFeatures hidden">
+    <div>
+        <span class="theme_label_data pull-left" id="initailCountSection">Displaying 50 Members out of 500</span>
+        <span id="exportOptionsForAdvanceUMSearch" class="pull-right">
+            @Html.ExportOptions("excel", "print", "filter")
+        </span>
+        <button class="btn btn-success btn-xs tab-navigation pull-right"
+                data-tab-action="Add Member"
+                data-tab-title="Add Member"
+                data-tab-floatmenu="false"
+                data-tab-issubtab="false"
+                data-tab-defaultparenttab="Member"
+                data-tab-autoflush="true"
+                data-tab-usertype=""
+                data-tab-userid=""
+                data-tab-path="/MH/AddMember/GetAddforAddingMember"
+                data-tab-container="fullBodyContainer"
+                data-tab-parentcontainer="partialBodyContainer"
+                data-tab-parenttabtitle=""
+                data-tab-hassubtabs="false"
+                data-tab-parenttabpath="~/Areas/SharedView/Views/MemberHouse/_MemberProfileHeader.cshtml"
+                data-tab-parenttabrenderingarea="headerArea"
+                data-tab-float-menu-path="~/Areas/MH/Views/Shared/_MHFloatMenu.cshtml"
+                style="margin-top: 5px;margin-bottom: 0px;">
+            Add New Member
+        </button>
+    </div>
+    <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom table-striped" id="SearchResultGrid" style="border: 2px solid #11316f;">
+        <thead class="theme1_table">
+            <tr>
+                <th>Subscriber ID</th>
+                <th>LAST NAME</th>
+                <th>FIRST NAME</th>
+                <th>DOB</th>
+                <th>Gender</th>
+                <th>PCP</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tableWrapper">
+
+            @*  @Html.Partial("~/Areas/MH/Views/SearchMember/SearchResultGrid/_SearchMemberResultGrid.cshtml")*@
+        </tbody>
+    </table>
+</div>
+
+@*<div class="clearfix" style="height:10px"></div>*@
+
+<div id="noResultFound" style="display:none;"><h5>No Data Available</h5></div>
+
+<br />
+<p-link filepath="~/Areas/MH/Styles/AddMember/AddMember.css" rel="stylesheet" />

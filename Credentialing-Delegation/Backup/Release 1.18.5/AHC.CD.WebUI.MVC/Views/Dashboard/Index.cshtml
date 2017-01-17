@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/DashBoard/DashboardController.js"></script>
+
+<script>
+    var expiredLicenses = @Html.Raw(Json.Encode(@ViewBag.expiresData));
+</script>
+
+<style>
+    /* Expired License Validation CSS */
+    .list-group-item > .badge.license-validation-expired {
+        text-shadow: 0 -1px 0 #F47878;
+        background-image: -webkit-linear-gradient(top, #F4444A 0, #F53939 100%);
+        background-image: -o-linear-gradient(top, #F4444A 0, #F53939 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #F4444A), to(#F53939));
+        background-image: linear-gradient(to bottom, #F4444A 0, #F53939 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F4444A', endColorstr='#F53939', GradientType=0);
+        border-color: #F53939;
+    }
+
+    .list-group-item.active > .badge.license-validation-expired {
+        color: #E04D4D;
+        background-image: none;
+        text-shadow: none;
+    }
+
+    .list-group-item.active.license-validation-expired {
+        text-shadow: 0 -1px 0 #F47878;
+        background-image: -webkit-linear-gradient(top, #F4444A 0, #F53939 100%);
+        background-image: -o-linear-gradient(top, #F4444A 0, #F53939 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #F4444A), to(#F53939));
+        background-image: linear-gradient(to bottom, #F4444A 0, #F53939 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F4444A', endColorstr='#F53939', GradientType=0);
+        border-color: #F53939;
+        background-color: #F4444A;
+    }
+
+    /* Warning License Validation CSS */
+    .list-group-item > .badge.license-validation-warning {
+        text-shadow: 0 -1px 0 #D27B19;
+        background-image: -webkit-linear-gradient(top, #D2670E 0, #D2670E 100%);
+        background-image: -o-linear-gradient(top, #D2670E 0, #D2670E 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #D2670E), to(#D2670E));
+        background-image: linear-gradient(to bottom, #D2670E 0, #D2670E 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#D2670E', endColorstr='#D2670E', GradientType=0);
+        border-color: #D2670E;
+    }
+
+    .list-group-item.active > .badge.license-validation-warning {
+        color: #C07827;
+        background-image: none;
+        text-shadow: none;
+    }
+
+    .list-group-item.active.license-validation-warning {
+        text-shadow: 0 -1px 0 #D27B19;
+        background-image: -webkit-linear-gradient(top, #D2670E 0, #D2670E 100%);
+        background-image: -o-linear-gradient(top, #D2670E 0, #D2670E 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #D2670E), to(#D2670E));
+        background-image: linear-gradient(to bottom, #D2670E 0, #D2670E 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#D2670E', endColorstr='#D2670E', GradientType=0);
+        border-color: #D2670E;
+        background-color: #F4444A;
+    }
+    /* Success License Validation CSS */
+    .list-group-item > .badge.license-validation-success {
+        text-shadow: 0 -1px 0 #369028;
+        background-image: -webkit-linear-gradient(top, #33B749 0, #2B9A35 100%);
+        background-image: -o-linear-gradient(top, #33B749 0, #2B9A35 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #33B749), to(#2B9A35));
+        background-image: linear-gradient(to bottom, #33B749 0, #2B9A35 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33B749', endColorstr='#2B9A35', GradientType=0);
+        border-color: #2B9A35;
+    }
+
+    .list-group-item.active > .badge.license-validation-success {
+        color: #369028;
+        background-image: none;
+        text-shadow: none;
+    }
+
+    .list-group-item.active.license-validation-success {
+        text-shadow: 0 -1px 0 #369028;
+        background-image: -webkit-linear-gradient(top, #33B749 0, #2B9A35 100%);
+        background-image: -o-linear-gradient(top, #33B749 0, #2B9A35 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #33B749), to(#2B9A35));
+        background-image: linear-gradient(to bottom, #33B749 0, #2B9A35 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33B749', endColorstr='#2B9A35', GradientType=0);
+        border-color: #2B9A35;
+        background-color: #2B9A35;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="dashboardApp">
+    <div class="row">
+        <br />
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-check fa-fw"></i> Upcoming Renewals
+            </div>
+            <div class="panel-body">
+                <!-- Render Dashboard according to role base -->
+                <!-- Provider Dashboard-->
+                @if (ViewBag.Roles[0] != null && ViewBag.Roles[0] == "PRO")
+                {
+                    @Html.Partial("~/Views/Dashboard/_ProviderDashboard.cshtml")
+                     <!-- End provider Dashboard-->
+                }
+                else if (ViewBag.Roles[0] != null && ViewBag.Roles[0] == "CCO")
+                {
+                    <!-- CCO Dashboard-->
+                    @Html.Partial("~/Views/Dashboard/_CCODashboard.cshtml")
+                <!-- End provider Dashboard-->
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>

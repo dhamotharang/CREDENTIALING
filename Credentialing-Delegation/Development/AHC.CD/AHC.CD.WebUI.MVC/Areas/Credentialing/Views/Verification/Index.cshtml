@@ -1,0 +1,167 @@
+﻿@{
+    ViewBag.Title = "ProvidersList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/verification.js"></script>
+}
+<div id="page-wrapper" ng-app="VerificationApp" ng-cloak>
+    <div class="container-fluid" ng-controller="VerificationCtrl" ng-init="LoadData()">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                    </li>
+                   @* <li><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Verification/AutomatedVerificationPrototype">Dv</a></li>*@
+                    @*<li class="active">
+                            <i class="fa fa-list-alt"></i> Verfications
+                        </li>*@
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="progress col-lg-12" ng-show="progressbar" ng-cloak>
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    Loading...Please wait...
+                </div>
+            </div>
+            <div class="panel panel-default content-panel" id="HideDiv">
+                <div class="panel-heading">
+                    <h3 class="panel-title">List of Primary Source Verification</h3>
+                </div>
+               
+                <div class="panel-body">
+                    <p>
+                        <table ng-table="tableParams" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                            <tr ng-repeat="user in $data track by $index">
+                                <td data-title="'Title'" sortable="'Title'" filter="{ 'Title': 'text' }">
+                                    {{user.Title}}
+                                </td>
+                                <td data-title="'First Name'" sortable="'FirstName'" filter="{ 'FirstName': 'text' }">
+                                    {{user.FirstName}}
+                                </td>
+                                <td data-title="'Last Name'" sortable="'LastName'" filter="{ 'LastName': 'text' }">
+                                    {{user.LastName}}
+                                </td>
+                                <td data-title="'Plan'" sortable="'PlanName'" filter="{ 'PlanName': 'text' }">
+
+                                    @*<a href="/Credentialing/Verification/InitiateNewPSV?credinfoId={{user.CredentialingInfoID}}">*@ {{user.PlanName}}</a>
+
+                                </td>
+                                <td data-title="'Initiation Date'" sortable="'InitiationDate'" filter="{ 'InitiationDate': 'text' }">{{user.InitiationDate | date:'MM-dd-yyyy'}}</td>
+                                <td data-title="'Action'">
+                                    <a class="btn btn-xs btn-success" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Verification/InitiateNewPSV?profileId={{user.ProfileID}}&credinfoId={{user.CredentialingInfoID}}" tooltip data-toggle="tooltip" data-placement="top" title="PSV"><i class="fa fa-caret-right"></i></a>
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Verification/InitiatePSVPrototype?profileId={{user.ProfileID}}&credinfoId={{user.CredentialingInfoID}}"><i class="fa fa-caret-right"></i></a>
+                                    @*<a class="btn btn-xs btn-info" href="/Credentialing/Verification/GetPendingPSVList?credinfoId={{user.CredentialingInfoID}}" tooltip data-toggle="tooltip" data-placement="top" title="Continue PSV"><i class="fa fa-forward"></i></a>*@
+                                </td>
+                            </tr>
+                            <tr ng-if="showNoData">
+                                <td>No data Available</td>
+                            </tr>
+                        </table>
+
+
+
+
+                        @*<table ng-table="tableParams1" show-filter="true" class="text-capitalize table table-hover ng-table-resizable-columns ng-table-rowselected ng-scope ng-table">*@
+                        <!-- ngInclude: templates.header -->
+                        @*<thead ng-include="templates.header" class="ng-scope"><tr class="ng-scope"> <!-- ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header text-left sortable"> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope">Title</div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header text-left sortable"> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope">First Name</div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header text-left sortable"> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope">Last Name</div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header text-left sortable"> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope">Location</div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header text-left sortable"> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope">Plan</div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header text-left sortable"> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope">Date of Submission</div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header text-left sortable"> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope">Status</div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-class="{ 'sortable': parse(column.sortable), 'sort-asc': params.sorting()[parse(column.sortable)]=='asc', 'sort-desc': params.sorting()[parse(column.sortable)]=='desc' }" ng-click="sortBy(column, $event)" ng-show="column.show(this)" ng-init="template=column.headerTemplateURL(this)" class="header "> <!-- ngIf: !template --><div ng-if="!template" ng-show="!template" ng-bind="parse(column.title)" class="ng-binding ng-scope"> </div><!-- end ngIf: !template --> <!-- ngIf: template --> </th><!-- end ngRepeat: column in $columns --> </tr> <tr ng-show="show_filter" class="ng-table-filters ng-scope"> <!-- ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --><div ng-repeat="(name, filter) in column.filter" class="ng-scope"> <!-- ngIf: column.filterTemplateURL --> <!-- ngIf: !column.filterTemplateURL --><div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL" class="ng-scope"> <!-- ngInclude: 'ng-table/filters/' + filter + '.html' --><div ng-include="'ng-table/filters/' + filter + '.html'" class="ng-scope"><!-- ngIf: filter=='text' --><input type="text" name="false" ng-model="params.filter()[name]" ng-if="filter=='text'" class="input-filter form-control ng-pristine ng-untouched ng-valid ng-scope"><!-- end ngIf: filter=='text' --></div> </div><!-- end ngIf: !column.filterTemplateURL --> </div><!-- end ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --><div ng-repeat="(name, filter) in column.filter" class="ng-scope"> <!-- ngIf: column.filterTemplateURL --> <!-- ngIf: !column.filterTemplateURL --><div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL" class="ng-scope"> <!-- ngInclude: 'ng-table/filters/' + filter + '.html' --><div ng-include="'ng-table/filters/' + filter + '.html'" class="ng-scope"><!-- ngIf: filter=='text' --><input type="text" name="false" ng-model="params.filter()[name]" ng-if="filter=='text'" class="input-filter form-control ng-pristine ng-untouched ng-valid ng-scope"><!-- end ngIf: filter=='text' --></div> </div><!-- end ngIf: !column.filterTemplateURL --> </div><!-- end ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --><div ng-repeat="(name, filter) in column.filter" class="ng-scope"> <!-- ngIf: column.filterTemplateURL --> <!-- ngIf: !column.filterTemplateURL --><div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL" class="ng-scope"> <!-- ngInclude: 'ng-table/filters/' + filter + '.html' --><div ng-include="'ng-table/filters/' + filter + '.html'" class="ng-scope"><!-- ngIf: filter=='text' --><input type="text" name="false" ng-model="params.filter()[name]" ng-if="filter=='text'" class="input-filter form-control ng-pristine ng-untouched ng-valid ng-scope"><!-- end ngIf: filter=='text' --></div> </div><!-- end ngIf: !column.filterTemplateURL --> </div><!-- end ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --><div ng-repeat="(name, filter) in column.filter" class="ng-scope"> <!-- ngIf: column.filterTemplateURL --> <!-- ngIf: !column.filterTemplateURL --><div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL" class="ng-scope"> <!-- ngInclude: 'ng-table/filters/' + filter + '.html' --><div ng-include="'ng-table/filters/' + filter + '.html'" class="ng-scope"><!-- ngIf: filter=='text' --><input type="text" name="false" ng-model="params.filter()[name]" ng-if="filter=='text'" class="input-filter form-control ng-pristine ng-untouched ng-valid ng-scope"><!-- end ngIf: filter=='text' --></div> </div><!-- end ngIf: !column.filterTemplateURL --> </div><!-- end ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --><div ng-repeat="(name, filter) in column.filter" class="ng-scope"> <!-- ngIf: column.filterTemplateURL --> <!-- ngIf: !column.filterTemplateURL --><div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL" class="ng-scope"> <!-- ngInclude: 'ng-table/filters/' + filter + '.html' --><div ng-include="'ng-table/filters/' + filter + '.html'" class="ng-scope"><!-- ngIf: filter=='text' --><input type="text" name="false" ng-model="params.filter()[name]" ng-if="filter=='text'" class="input-filter form-control ng-pristine ng-untouched ng-valid ng-scope"><!-- end ngIf: filter=='text' --></div> </div><!-- end ngIf: !column.filterTemplateURL --> </div><!-- end ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --><div ng-repeat="(name, filter) in column.filter" class="ng-scope"> <!-- ngIf: column.filterTemplateURL --> <!-- ngIf: !column.filterTemplateURL --><div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL" class="ng-scope"> <!-- ngInclude: 'ng-table/filters/' + filter + '.html' --><div ng-include="'ng-table/filters/' + filter + '.html'" class="ng-scope"><!-- ngIf: filter=='text' --><input type="text" name="false" ng-model="params.filter()[name]" ng-if="filter=='text'" class="input-filter form-control ng-pristine ng-untouched ng-valid ng-scope"><!-- end ngIf: filter=='text' --></div> </div><!-- end ngIf: !column.filterTemplateURL --> </div><!-- end ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --><div ng-repeat="(name, filter) in column.filter" class="ng-scope"> <!-- ngIf: column.filterTemplateURL --> <!-- ngIf: !column.filterTemplateURL --><div ng-if="!column.filterTemplateURL" ng-show="!column.filterTemplateURL" class="ng-scope"> <!-- ngInclude: 'ng-table/filters/' + filter + '.html' --><div ng-include="'ng-table/filters/' + filter + '.html'" class="ng-scope"><!-- ngIf: filter=='text' --><input type="text" name="false" ng-model="params.filter()[name]" ng-if="filter=='text'" class="input-filter form-control ng-pristine ng-untouched ng-valid ng-scope"><!-- end ngIf: filter=='text' --></div> </div><!-- end ngIf: !column.filterTemplateURL --> </div><!-- end ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --><th ng-repeat="column in $columns" ng-show="column.show(this)" class="filter ng-scope"> <!-- ngRepeat: (name, filter) in column.filter --> </th><!-- end ngRepeat: column in $columns --> </tr></thead>*@
+                        @*<thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Plan</th>
+                                    <th>Initiation Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>*@
+                        <!-- ngRepeat: user in $data -->
+                        @*<tr ng-repeat="user in PrimarySourceVerfication" ng-click="call_for_profile_update($index)" ng-class="{'active': user.$selected}" class="ng-scope">
+                            <td data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }" data-title-text="Title" class="ng-binding">{{user.Profile.PersonalDetail.ProviderTitles[0].ProviderType.Title}}</td>
+                            <td data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }" data-title-text="First Name" class="ng-binding">{{user.Profile.PersonalDetail.FirstName}}</td>
+                            <td data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }" data-title-text="Last Name" class="ng-binding">{{user.Profile.PersonalDetail.LastName}}</td>
+                            <td data-title="'State'" ng-hide="StateCol" header-class="text-left" sortable="'State'" filter="{ 'State': 'text' }" data-title-text="State" class="ng-binding">{{user.Plan.PlanName}}</td>
+                            <td data-title="'Provider Relation'" ng-hide="ProviderRelationCol" header-class="text-left" sortable="'ProviderRelation'" filter="{ 'ProviderRelation': 'text' }" data-title-text="Provider Relation" class="ng-binding" ng-bind="ConvertDateFormat(user.InitiationDate)"></td>
+                            <td><a class="btn btn-xs btn-info" href="/Credentialing/Verification/InitiateNewPSV?credinfoId={{user.CredentialingInfoID}}"><i class="fa fa-caret-right"></i></a>*@
+                        @*<a class="btn btn-xs btn-info" href="/Credentialing/Verification/InitiateNewPSV?credinfoId={{user.CredentialingInfoID}}"><i class="fa fa-caret-right"></i></a></td>*@
+                        <!--</tr> end ngRepeat: user in $data -->
+                        @*<tr ng-repeat="user in $data" ng-click="call_for_profile_update($index)" ng-class="{'active': user.$selected}" class="ng-scope">
+                                <td data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }" data-title-text="Title" class="ng-binding">
+                                    MD
+                                </td>
+                                <td data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }" data-title-text="First Name" class="ng-binding">QAHTAN A.</td>
+                                <td data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }" data-title-text="Last Name" class="ng-binding">ABDULFATTAH</td>
+
+                                <td data-title="'County'" ng-hide="CountyCol" header-class="text-left" sortable="'County'" filter="{ 'County': 'text' }" data-title-text="County" class="ng-binding">BROOKSVILLE</td>
+                                <td data-title="'State'" ng-hide="StateCol" header-class="text-left" sortable="'State'" filter="{ 'State': 'text' }" data-title-text="State" class="ng-binding">FREEDOM VIP CARE COPD (HMO SNP)</td>
+
+                                <td data-title="'Provider Relation'" ng-hide="ProviderRelationCol" header-class="text-left" sortable="'ProviderRelation'" filter="{ 'ProviderRelation': 'text' }" data-title-text="Provider Relation" class="ng-binding">2nd Dec, 2014</td>
+                                <td data-title="'Group'" ng-hide="GroupCol" header-class="text-left" sortable="'Group'" filter="{ 'Group': 'text' }" data-title-text="Group" class="ng-binding">Open</td>
+                                <td>
+                                    <a class="btn btn-xs btn-info" href="/Credentialing/Verification/PrimarySource"><i class="fa fa-caret-right"></i></a>
+                                </td>
+                            </tr><!-- end ngRepeat: user in $data -->
+                            <tr ng-repeat="user in $data" ng-click="call_for_profile_update($index)" ng-class="{'active': user.$selected}" class="ng-scope">
+                                <td data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }" data-title-text="Title" class="ng-binding">
+                                    MD
+                                </td>
+                                <td data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }" data-title-text="First Name" class="ng-binding">IAN</td>
+                                <td data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }" data-title-text="Last Name" class="ng-binding">ADAM</td>
+
+                                <td data-title="'County'" ng-hide="CountyCol" header-class="text-left" sortable="'County'" filter="{ 'County': 'text' }" data-title-text="County" class="ng-binding">SPRING HILL</td>
+                                <td data-title="'State'" ng-hide="StateCol" header-class="text-left" sortable="'State'" filter="{ 'State': 'text' }" data-title-text="State" class="ng-binding">OPTIMUM GOLD REWARDS PLAN (HMO-POS)</td>
+
+                                <td data-title="'Provider Relation'" ng-hide="ProviderRelationCol" header-class="text-left" sortable="'ProviderRelation'" filter="{ 'ProviderRelation': 'text' }" data-title-text="Provider Relation" class="ng-binding">25th Nov, 2014</td>
+                                <td data-title="'Group'" ng-hide="GroupCol" header-class="text-left" sortable="'Group'" filter="{ 'Group': 'text' }" data-title-text="Group" class="ng-binding">Open</td>
+                                <td>
+                                    <a class="btn btn-xs btn-info" href="/Credentialing/Verification/PrimarySource"><i class="fa fa-caret-right"></i></a>
+                                </td>
+                            </tr><!-- end ngRepeat: user in $data -->
+                            <tr ng-repeat="user in $data" ng-click="call_for_profile_update($index)" ng-class="{'active': user.$selected}" class="ng-scope">
+                                <td data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }" data-title-text="Title" class="ng-binding">
+                                    DO
+                                </td>
+                                <td data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }" data-title-text="First Name" class="ng-binding">MARC A</td>
+                                <td data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }" data-title-text="Last Name" class="ng-binding">ALESSANDRONI</td>
+
+                                <td data-title="'County'" ng-hide="CountyCol" header-class="text-left" sortable="'County'" filter="{ 'County': 'text' }" data-title-text="County" class="ng-binding">SPRING HILL</td>
+                                <td data-title="'State'" ng-hide="StateCol" header-class="text-left" sortable="'State'" filter="{ 'State': 'text' }" data-title-text="State" class="ng-binding">OPTIMUM DIAMOND REWARDS (HMO-POS SNP)</td>
+
+                                <td data-title="'Provider Relation'" ng-hide="ProviderRelationCol" header-class="text-left" sortable="'ProviderRelation'" filter="{ 'ProviderRelation': 'text' }" data-title-text="Provider Relation" class="ng-binding">30th Nov, 2014</td>
+                                <td data-title="'Group'" ng-hide="GroupCol" header-class="text-left" sortable="'Group'" filter="{ 'Group': 'text' }" data-title-text="Group" class="ng-binding">Open</td>
+                                <td>
+                                    <a class="btn btn-xs btn-info" href="/Credentialing/Verification/PrimarySource"><i class="fa fa-caret-right"></i></a>
+                                </td>
+                            </tr><!-- end ngRepeat: user in $data -->
+                            <tr ng-repeat="user in $data" ng-click="call_for_profile_update($index)" ng-class="{'active': user.$selected}" class="ng-scope">
+                                <td data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }" data-title-text="Title" class="ng-binding">
+                                    MD
+                                </td>
+                                <td data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }" data-title-text="First Name" class="ng-binding">CRIDER</td>
+                                <td data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }" data-title-text="Last Name" class="ng-binding">NORMA</td>
+
+                                <td data-title="'County'" ng-hide="CountyCol" header-class="text-left" sortable="'County'" filter="{ 'County': 'text' }" data-title-text="County" class="ng-binding">NEW PRT RCHY</td>
+                                <td data-title="'State'" ng-hide="StateCol" header-class="text-left" sortable="'State'" filter="{ 'State': 'text' }" data-title-text="State" class="ng-binding">OPTIMUM PLATINUM PLAN (HMO-POS)</td>
+                                <td data-title="'Provider Type'" ng-hide="ProviderTypeCol" header-class="text-left" sortable="'ProviderType'" filter="{ 'ProviderType': 'text' }" data-title-text="Provider Type" class="ng-binding">10th Dec, 2014</td>
+
+                                <td data-title="'Group'" ng-hide="GroupCol" header-class="text-left" sortable="'Group'" filter="{ 'Group': 'text' }" data-title-text="Group" class="ng-binding">Open</td>
+                                <td>
+                                    <a class="btn btn-xs btn-info" href="/Credentialing/Verification/PrimarySource"><i class="fa fa-caret-right"></i></a>
+                                </td>
+                            </tr>*@<!-- end ngRepeat: user in $data -->
+                     <!--   </tbody>
+                        </table>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

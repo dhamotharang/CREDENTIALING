@@ -1,0 +1,57 @@
+﻿<div class="col-lg-12">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th class="col-md-4">LOB Name</th>
+                <th class="col-md-4">Sub Plan</th>
+                <th class="col-md-4">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="plob in tempEditObject.PlanLOBs track by $index" ng-init="parentindex=$index">
+                <td>
+                    <span ng-if="visibilityControl != parentindex+'EditLOB'">
+                        {{plob.LOB.LOBName}}
+                    </span>
+                    <div ng-if="visibilityControl == parentindex+'EditLOB'" class="form-group">
+                        <label class="control-label small">Line Of Business</label>
+                        <select data-ng-model="tempLob.LOBID" class="form-control input-sm" ng-change="SetPlanLOB(tempLob.LOBID, tempLob);">
+                            <option selected disabled>-Select-</option>
+                            <option ng-repeat="lob in TempLOBs" value="{{lob.LOBID}}">{{lob.LOBName}}</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <span ng-if="visibilityControl != parentindex+'EditLOB'">
+                        <span ng-if="plob.SubPlans.length > 0" ng-repeat="subPlan in plob.SubPlans" class="label label-primary" style="margin-left: 5px;">
+                            {{subPlan.SubPlanName}}
+                        </span>
+                        <span ng-if="plob.SubPlans.length == 0">
+                            No Sub Plans
+                        </span>
+                    </span>
+
+                    <div ng-if="visibilityControl == parentindex+'EditLOB'">
+                        <label class="control-label small">Sub Plans &nbsp;&nbsp;&nbsp;<span ng-click="AddSubPlan(tempLob.SubPlans);" class="label label-primary pointer pull-right"><i class="fa fa-plus"></i> Add</span></label>
+                        <div ng-repeat="sp in tempLob.SubPlans track by $index" class="form-group">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" data-ng-model="sp.SubPlanName" placeholder="sub plan">
+                                <span class="input-group-btn">
+                                    <button ng-click="RemoveSubPlan($index, tempLob.SubPlans);" class="btn btn-default" type="button"><i class="fa fa-remove"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <a ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="EditLOB(parentindex+'EditLOB', plob);" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
+                    <a ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="RemoveLOB($index, plob);CancelLOBEdit()" class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="right" title="Remove"><i class="fa fa-remove"></i></a>
+                    <a ng-if="$index == tempObject.PlanLOBs.length - 1" ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="AddNewLOB(tempObject.PlanLOBs.length+'EditLOB')" class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></a>
+                    <a ng-if="visibilityControl == parentindex+'EditLOB' && IsNewLOB" ng-click="CancelNewLOBEdit();" class="btn btn-xs btn-warning">cancel</a>
+                    <a ng-if="visibilityControl == parentindex+'EditLOB' && !IsNewLOB" ng-click="CancelLOBEdit();" class="btn btn-xs btn-warning">cancel</a>
+                    <a ng-if="visibilityControl == parentindex+'EditLOB'" ng-click="SaveLOB(parentindex ,tempLob);" class="btn btn-xs btn-primary">Save</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,32 @@
+﻿@model PortalTemplate.Areas.Encounters.Models.EncounterViewModel
+<fieldset class="fieldsetStyle">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+       @Html.LabelFor(m => m.EncounterID, new { @class = "enlabelheader" })
+        <div><label class="uppercase">@Model.EncounterID</label></div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        @Html.LabelFor(m => m.EncounterType, new { @class = "enlabelheader" })
+        @{
+            var type = Model.EncounterType;
+            var hmoStatus = type == PortalTemplate.Areas.Encounters.Models.EncounterType.HMO ? "checked" : "";
+            var medicareStatus = type == PortalTemplate.Areas.Encounters.Models.EncounterType.MEDICARE ? "checked" : "";
+        }
+        <div>
+            <input type="radio" name="EncounterTypeHMOPPO" class="normal-radio" id="HMO" value="0" @hmoStatus>
+            <label for="HMO"><span></span>HMO</label>
+            <input type="radio" name="EncounterTypeHMOPPO" class="normal-radio" value="1" id="Medicare" @medicareStatus>
+            <label for="Medicare"><span></span>Medicare</label>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        @Html.LabelFor(m => m.EncounterStatus, new { @class = "enlabelheader" })
+        <div>
+            @Html.DropDownListFor(m => m.EncounterStatus, new SelectList(new List<string>() { "Open", "Active", "No Show", "Re-Schedule", "Ready to Code" }, new { @class = "non_mandatory_field_halo uppercase" }))
+          
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-bottom: 5px;">
+       @Html.LabelFor(m => m.EncounterNotes, new { @class = "enlabelheader" })
+        <div>@Html.TextAreaFor(m => m.EncounterNotes, new { @class = "form-control input-xs non_mandatory_field_halo uppercase enctextarea" })</div>
+    </div>
+</fieldset>

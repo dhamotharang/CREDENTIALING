@@ -1,0 +1,46 @@
+﻿
+<style>
+    .subsection {
+        display:none;
+    }
+</style>
+<br />
+<div class="form-style" ng-controller="summaryAppCtrl">
+    <div ng-show="showUpdateError">
+        <div class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error List : <br />
+                <span>No updates available!!!</span>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="showUpdateError" class="panel panel-default small" ng-repeat="tab in FormattedDataForSection track by $index">
+        <div class="panel-heading">
+            <label class="control-label">{{tab.SectionName}}</label><i class="pull-right"><a href="#" ng-click="GetAllProfileUpdates(tab.UpdateData);openDiv('subsection','subsection'+$index)">Updates:</a><i class="badge">{{tab.UpdateCnt}}</i></i><i class="pull-right"><a href="#" ng-click="GetAllProfileUpdates(tab.RenewalData);openDiv('subsection','subsection'+$index)">Renewals:</a><i class="badge">{{tab.RenewalCnt}}</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
+        </div>
+        <div class="subsection panel-body" id="subsection{{$index}}">
+            <table class="table table-responsive table-condensed table-bordered wrap-words">
+                <thead>
+                    <tr>
+                        <th>Sub-Section Name</th>
+                        <th>Field Name</th>
+                        <th>Old Value</th>
+                        <th>New Value</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="row in SectionDisplayData track by $index">
+                    <tr ng-repeat="field in row.fields" @*ng-class='{danger:field.ApprovalStatus =="Rejected", warning:field.ApprovalStatus =="Pending", success:field.ApprovalStatus == "Approved"}'*@>
+                        <td ng-if="$index==0" rowspan="{{row.fields.length}}">{{row.subsectionName}}</td>
+                        <td ng-class='{danger:field.ApprovalStatus =="Rejected", warning:field.ApprovalStatus =="Pending", success:field.ApprovalStatus == "Approved"}'>{{field.FieldName || 'Not Available'}}</td>
+                        <td ng-class='{danger:field.ApprovalStatus =="Rejected", warning:field.ApprovalStatus =="Pending", success:field.ApprovalStatus == "Approved"}'>{{field.OldValue || 'Not Available'}}</td>
+                        <td ng-class='{danger:field.ApprovalStatus =="Rejected", warning:field.ApprovalStatus =="Pending", success:field.ApprovalStatus == "Approved"}'>{{field.NewValue || 'Not Available'}}</td>
+                        <td ng-class='{danger:field.ApprovalStatus =="Rejected", warning:field.ApprovalStatus =="Pending", success:field.ApprovalStatus == "Approved"}'>{{field.ApprovalStatus}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

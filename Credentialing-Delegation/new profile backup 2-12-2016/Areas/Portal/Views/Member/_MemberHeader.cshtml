@@ -1,0 +1,57 @@
+﻿@model PortalTemplate.Areas.Portal.Models.Member.MemberHeaderViewModel
+@using PortalTemplate.Areas.Portal.CustomHelpers
+<table class="table responsive-utilities table-condensed table-responsive">
+    <thead class="memberheader">
+        <tr class="headings">
+            <th class="column-title">@Html.DisplayNameFor(e => e.REFID)</th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.SubscriberID) </th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.MemberName)</th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.DateOfBirth)</th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.MBRPHONE)</th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.Gender)</th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.Age)</th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.PlanSubGroup) </th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.COUNTY) </th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.EffDate) </th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.EligibilityDate) </th>
+            <th class="column-title">@Html.DisplayNameFor(e => e.PCPNAME) </th>
+            <th class="column-title">@Html.DisplayNameFor(e=>e.PCPPHONE) </th>
+        </tr>
+    </thead>
+    <tbody class="boldbody">
+        <tr>
+            <td class="theme_label_data" id="Refnum">@Html.DisplayFor(e => e.REFID)</td>
+            <td class="theme_label_data" id="MemberID">@Html.DisplayFor(e => e.SubscriberID)</td>
+            <td class="theme_label_data" id="MemberName">@Html.DisplayFor(e => e.MemberName)</td>
+            <td class="theme_label_data" id="MemberDob">@Html.DisplayFor(e => e.DateOfBirth)</td>
+            <td class="theme_label_data" id="MemberPhone">@Html.ConvertToPhoneString(@Model.MBRPHONE)</td>
+            <td class="theme_label_data" id="MemberGender">@Html.DisplayFor(e => e.Gender)</td>
+            <td class="theme_label_data" id="MemberAge">@Html.DisplayFor(e => e.Age)</td>
+            <td class="theme_label_data" id="MemberSubGrp">
+                <span id="member-plan-name-um" hidden class="displayNone" >@Html.DisplayFor(e=>e.PlanName)</span>
+                @if (Model != null && Model.PlanSubGroup != null && Model.PlanSubGroup != "")
+                {
+                    <a href="@Model.PlanSubGroupLink" target="_blank" class="text-primary">  @Html.DisplayFor(e => e.PlanSubGroup)</a>
+                }
+                else
+                {
+                  <span>-</span>
+                }
+                          
+            </td>
+            <td class="theme_label_data" id="MemberEffDate">@Html.DisplayFor(e => e.COUNTY)</td>
+            <td class="theme_label_data" id="MemberEffDate">@Html.DisplayFor(e => e.EffDate)</td>
+            <td class="theme_label_data" style="white-space:nowrap;"><span id="MemberEligibility">@Html.DisplayFor(e => e.EligibilityDate) </span>
+                @if(Model.IsEligible){ <i class="fa fa-check-square text-lightgreen"></i>}
+                else
+                {<i class="fa fa-exclamation-triangle text-orange"></i>}</td>
+            <td class="theme_label_data" id="MemberPCP">@if (Model != null && Model.PCPNAME != null) { 
+                                                        <span>DR.</span>
+                                                        }@Html.DisplayFor(e => e.PCPNAME)</td>
+            <td class="theme_label_data" id="MemberPCPPhone">@Html.ConvertToPhoneString(@Model.PCPPHONE)</td>
+        </tr>
+    </tbody>
+</table>
+
+
+

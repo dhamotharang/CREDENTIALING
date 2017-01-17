@@ -1,0 +1,95 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.FacilityLanguageViewModel
+
+<script>
+    $(".LanguageSelectAutoList").hide();
+</script>
+<fieldset>
+    <legend>
+        Add Language
+    </legend>
+    <form id="languageInfoForm" class="languageInfo">
+        <div class="col-md-12 zero-padding-left-right-div">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+            <span ng-if="TempLanguageForEdit.LanguageInfoID">
+                @Html.HiddenFor(model => model.FacilityLanguageID, new { ng_value = "tempObject.FacilityLanguageID" })
+            </span>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NonEnglishLanguages, htmlAttributes: new { @class = "control-label small" })
+                    <br />
+                    <span>Select Languages:</span>
+                    <div>
+                        <input class="form-control input-sm" ng-model="searchLang" id="searchLanguageKnow" ng-focus="showLanguageList('FacilityLanguageDiv')" />
+                        <div class="LanguageSelectAutoList popover fade bottom in" role="tooltip" id="FacilityLanguageDiv">
+                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                <tbody>
+                                    <tr ng-repeat="lang in filteredLangResults = (tempLanguages | filter:searchLang) track by $index" ng-click="SelectLanguage(lang)" class="pointer">
+                                        <td>{{lang.name}} ({{lang.nativeName}})</td>
+                                    </tr>
+                                    <tr ng-if="tempLanguages.length == 0">
+                                        <td>No data..... </td>
+                                    </tr>
+                                    <tr ng-if="tempLanguages.length > 0 && filteredLangResults.length == 0">
+                                        <td>Match not found..... </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5  remove-rigth-padding" ng-if="tempObject.NonEnglishLanguages.length > 0">
+                Selected Languages ({{tempObject.NonEnglishLanguages.length}}) : <br />
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Language</th>
+                            <th>Interpreters Available?</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="lang in tempObject.NonEnglishLanguages track by $index" ng-click="selectedLanguage(kl,$index);">
+                            <td>
+                                <span>{{lang.Language}}</span>
+                                <span ng-if="lang.KnownLanguageID"><input type="hidden" name="NonEnglishLanguages[{{$index}}].NonEnglishLanguageID" value="{{lang.NonEnglishLanguageID}}" /></span>
+                                <input type="hidden" name="NonEnglishLanguages[{{$index}}].Language" value="{{lang.Language}}" />
+                            </td>
+                            <td>
+                                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+	                            {
+                                    <input type="radio" name="NonEnglishLanguages[{{$index}}].InterpretersAvailableYesNoOption" value="@value" /> @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+	                            }
+                            </td>
+                            <td ng-class="{true:'label-warning'}[selectedIndex==$index]"><i ng-if="!lang.NonEnglishLanguageID" class="fa fa-minus-circle pointer" style="color:#d9534f;" ng-click="DeselectLanguage(lang)"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-12 clearfix" style="padding-bottom:15px;"></div>
+        <div class="col-lg-12 ">
+            @Html.LabelFor(model => model.AmericanSignLanguageYesNoOption, htmlAttributes: new { @class = "control-label small" })
+            &nbsp;&nbsp;
+            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+            {
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.AmericanSignLanguageYesNoOption, (int)value, new { data_ng_model = "tempObject.AmericanSignLanguageYesNoOption" }) @value.ToString()
+                </label>
+            }
+            <br />
+            @Html.ValidationMessageFor(model => model.AmericanSignLanguageYesNoOption, "", new { @class = "text-danger" })
+        </div>
+        <div class="clearfix"></div>
+        <div ng-if="activeMessageDiv=='alertLanguageKnownError'" class="col-md-12 alert alert-{{messageType}}" role="alert">
+            <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+            Errors: <br />
+            <div ng-repeat="err in messageDesc track by $index">{{err}}</div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <button class="btn btn-warning btn-sm" ng-click="LanguageKnownToggle()">Cancel</button>
+            <button class="btn btn-success btn-sm pull-right" ng-click="saveFacilityLanguage()">Save</button>
+        </div>
+    </form>
+</fieldset>

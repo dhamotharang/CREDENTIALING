@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "Documentation CheckList";
+}
+
+@*<div class="panel-group" ng-controller="DocumentationchecklistController">
+        <div class="row">
+            <div class="panel-body">
+                <div class="form-style">
+                    <fieldset>
+                        <legend>
+                            Document CheckList
+                        </legend>
+                        <table class=" table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2' style="text-align:center">Section</th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>Required Documents</th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat-start="t in sections">
+                                    <td rowspan="{{t.length}}" align="center" style="vertical-align:middle"><h4><b>{{t.name}}</b></h4></td>
+                                </tr>
+                                <tr ng-repeat-end ng-repeat="(key,value) in t.docs track by $index">
+                                    <td>{{key}}</td>
+                                    <td ng-if="value==true"><i class="fa fa-check fa-fw" style="color:green"></i></td>
+                                    <td ng-if="value==false"><i class="fa fa-exclamation-circle fa-fw" style="color:red"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+
+            </div>
+        </div>
+    </div>*@
+
+@*Sharath*@
+
+@*<style>
+        /*.checkbox-custom {
+            opacity: 0;
+            position: absolute;
+        }*/
+
+        .checkbox-custom, .checkbox-custom-label {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-custom-label {
+            position: relative;
+        }
+
+        .checkbox-custom + .checkbox-custom-label:before {
+            content: '';
+            background: #fff;
+            border: 2px solid #ddd;
+            display: inline-block;
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+            padding: 2px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .checkbox-custom:checked + .checkbox-custom-label:before {
+            content: "\f00c";
+            font-family: 'FontAwesome';
+            background: green;
+            color: #fff;
+        }
+        .checkbox-custom:focus + .checkbox-custom-label {
+            outline: 1px solid #ddd;
+        }
+    </style>*@
+
+<div class="panel-group" ng-controller="DocumentationchecklistController">
+    <div class="row">
+        <div class="panel-body">
+            <div class="form-style">
+                <fieldset>
+                    <legend>
+                        Document CheckList
+                    </legend>
+                    <div class="btn-group pull-right legend2 ng-scope">
+                        <button class="dropdown-toggle btn btn-xs btn-primary" popover="" data-toggle="dropdown" aria-hidden="true"><span data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" ng-click="printDCData('Documentation Checklist')" data-content=" print" data-original-title="" title="" class="fa fa-print"></span></button>
+                        <div ng-show="LoadForDCPdf" class=" pull-right "><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+                    </div>
+                    <div class="form-group" id="Documentation">
+                        <div ng-repeat="t in sections">
+                            <h4>{{t.name}}</h4>
+                            <div ng-repeat="(key,value) in t.docs track by $index">
+                                <span ng-if="value==false"><input type="checkbox" checked /> </span>
+                                <span ng-if="value==true"><input type="checkbox" /> </span>
+                                {{key}}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="hiddenPrintDiv1" style="display:none;">
+
+
+</div>
+@*Sharath*@

@@ -1,0 +1,218 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<br />
+<div class="panel-group" ng-controller="SpecialtyController">
+    <div class="form-style">
+        @*Section for Specialty Detail starts here*@
+        <fieldset>
+            <legend>
+                Specialty Details
+            </legend>
+            <div id="Specialty" class="panel-body">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        @*This table is to display that there is no data available currently and can Add New details*@
+                        <table ng-hide="Specialties.length > 0 || visibilityControl=='addboardSpecialty' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No Data Available for Specialty Details!
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                        {
+                                            <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addboardSpecialty')" tooltip data-toggle="tooltip" data-placement="top" title="Add New" id="noDataAddNewSpecialty"><i class="fa fa-plus"></i></button> to add new Specialty information.</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        @*This table is to display that there is no data available currently and can Add New details*@
+
+                        @*This table is to display the data if it is present in the database. The data comes from the Script*@
+                        <table ng-hide="Specialties.length <= 0" class="table table-bordered table-condensed customtbodyStyle">
+                            <thead>
+                                <tr>
+                                    <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Primary</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Specialty</th>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Board Name</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Expiration Date</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Supporting Document</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="boardSpecialty in Specialties track by $index">
+                                <tr ng-class="{'1':'isprimary', '2':''}[boardSpecialty.PreferenceType]">
+                                    <td><i class="data-label " ng-class="{'1':'fa fa-check', '2':'fa fa-times'}[boardSpecialty.PreferenceType]"></i></td>
+                                    <td>{{boardSpecialty.Specialty.Name}}</td>
+                                    <td ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail == null"><i>Not Board Certified</i></td>
+                                    <td ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail != null">{{boardSpecialty.SpecialtyBoardCertifiedDetail.SpecialtyBoard.Name}}</td>
+                                    <td ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail == null"><i>Not Board Certified</i></td>
+                                    <td ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail != null && boardSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate == null"><i>Not Available</i></td>
+                                    <td ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail != null && boardSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate != null">{{boardSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate | date:'MM-dd-yyyy'}}</td>
+                                    <td ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail == null"><i>Not Board Certified</i></td>
+                                    <td ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail != null && boardSpecialty.SpecialtyBoardCertifiedDetail.BoardCertificatePath == null"><i>Not Available</i></td>
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                                    {
+                                        <td class="col-lg-1" ng-show="boardSpecialty.SpecialtyBoardCertifiedDetail != null && boardSpecialty.SpecialtyBoardCertifiedDetail.BoardCertificatePath != null"><a href="/Document/View?path={{boardSpecialty.SpecialtyBoardCertifiedDetail.BoardCertificatePath}}" target="_blank" title="{{boardSpecialty.SpecialtyBoardCertifiedDetail.BoardCertificatePath}}"><i class="fa fa-file" title=""></i></a></td>
+                                    }
+                                    <td class="col-lg-2">
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                        {
+                                            <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewboardSpecialty')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                        {
+                                            <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index +'_editboardSpecialty', boardSpecialty)" tooltip data-toggle="tooltip" data-placement="top" title="Edit" id="editspecialityDetails{{$index}}"><i class="fa fa-edit"></i></button>
+                                        }
+
+                                        <button class="btn btn-xs btn-default" ng-show="boardSpecialty.BoardCertifiedYesNoOption == 1" ng-click="operateRenewControl($index +'_renewboardSpecialty', boardSpecialty); RenewDiv(boardSpecialty);" tooltip data-toggle="tooltip" data-placement="top" title="Renew" id="renewspecialityDetails{{$index}}"><i class="fa fa-repeat"></i></button>
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                        {
+                                            <button class="btn btn-xs btn-danger" ng-disabled="boardSpecialty.PreferenceType == '1'" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initSpecialtyWarning(boardSpecialty);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                            <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addboardSpecialty')" ng-hide="$index+1!=Specialties.length" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus" id="addNewSpecialty"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                    @*This row is to render the View for the respected data*@
+                                    <tr ng-show="visibilityControl==($index+'_viewboardSpecialty')">
+                                        <td colspan="6" class="editTableDataStyle">
+                                            @Html.Partial("~/Areas/Profile/Views/BoardSpecialty/_ViewSpecialty.cshtml")
+                                        </td>
+                                    </tr>
+                                    @*This row is to render the View partial for the respected data*@
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                {
+                                    @*This row is to render the AddEdit partial for the respected data*@
+                                    <tr ng-show="visibilityControl==($index+'_editboardSpecialty')">
+                                        <td colspan="6" id="specialtyEditDiv{{$index}}" class="editTableDataStyle">
+                                            @Html.Partial("~/Areas/Profile/Views/BoardSpecialty/_AddEditSpecialty.cshtml")
+                                        </td>
+                                    </tr>
+                                    @*This row is to render the AddEdit partial for the respected data*@
+                                }
+                                <tr ng-show="visibilityControl==($index+'_renewboardSpecialty')">
+                                    <td colspan="6" id="specialtyRenewDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/BoardSpecialty/_RenewSpecialty.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @*This table is to display the data if it is present in the database*@
+                    </div>
+                    <div class="clearfix"></div>
+                    @*Success message for Specialty Details*@
+                    <div ng-show="activeMessageDiv=='addedNewBoardSpecialty'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    @*Success message for Specialty Details*@
+                    @*Error message for Specialty Details Removal*@
+                    <div ng-show="activeMessageDiv=='removeSpecialty'" >
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error Lists :<br />
+                            <span ng-repeat="err in errorSpecialty track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    @*Error message for Specialty Details Removal*@
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                    {
+                        @*This section is to Add New Specialty Details*@
+                        <fieldset ng-show="visibilityControl=='addboardSpecialty'">
+                            <legend>
+                                Add Specialty
+                            </legend>
+                            @*This row is to render the AddEdit partial for the respected data*@
+                            <div id="newShowSpecialtyDiv">
+                                @Html.Partial("~/Areas/Profile/Views/BoardSpecialty/_AddEditSpecialty.cshtml")
+                            </div>
+                            @*This row is to render the AddEdit partial for the respected data*@
+                        </fieldset>
+                        @*This section is to Add New Specialty Details*@
+                    }
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            @*This section defines the modal for removal of Specialty record*@
+            <div class="modal fade" id="specialtyWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="removeSpecialty">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                            </div>
+                            <div class="modal-body">
+                                Do you really want to remove <b>{{tempSpecialty.Specialty.Name}}</b> from your Specialty Details list ?
+                                <input type="hidden" name="SpecialtyDetailID" value="{{tempSpecialty.SpecialtyDetailID}}" />
+                                <input type="hidden" name="StatusType" value="2" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" ng-click="removeSpecialty(Specialties)">Remove</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @*This section defines the modal for removal of Specialty record*@
+            @*This section is for Practice Interest and will render the View partial by default*@
+            <fieldset>
+                <legend>
+                    Practice Interest
+                </legend>
+                <div class="col-lg-12">
+                    <table ng-show="practiceInterest == null && visibilityControl != 'editpracticeInterest' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No Data Available for Practice Interest!
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                    {
+                                        <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('editpracticeInterest')" tooltip data-toggle="tooltip" data-placement="top" title="Add New" id="noDataAddNewPracticeInterest"><i class="fa fa-plus"></i></button> to add new Practice Interest information.</span>
+                                    }
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                    {
+                        @*This is where the Practice Interest View partial is rendered*@
+                        <div ng-show="visibilityControl!='editpracticeInterest'">
+                            @Html.Partial("~/Areas/Profile/Views/BoardSpecialty/_ViewPracticeInterest.cshtml")
+                        </div>
+                        @*This is where the Practice Interest View partial is rendered*@
+                    }
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                    {
+                        @*This is where the Practice Interest AddEdit partial is rendered*@
+                        <div ng-show="visibilityControl=='editpracticeInterest'">
+                            <div id="editShowPracticeInterest">
+                                @Html.Partial("~/Areas/Profile/Views/BoardSpecialty/_AddEditPracticeInterest.cshtml")
+                            </div>
+                        </div>
+                        @*This is where the Practice Interest AddEdit partial is rendered*@
+                    }
+                    <div class="clearfix"></div>
+                    @*This is where the success messages for Practice Interest are rendered*@
+                    <div class="clearfix"></div><br ng-show="activeMessageDiv" />
+                    <div ng-show="activeMessageDiv=='addedNewPracticeInterest'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div ng-show="activeMessageDiv=='updatedPracticeInterest'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                    @*This is where the success messages for Practice Interest are rendered*@
+                </div>
+            </fieldset>
+            @*This section is for Practice Interest and will render the View partial by default*@
+        </fieldset>
+        @*Section for Specialty Detail ends here*@
+    </div>
+</div>

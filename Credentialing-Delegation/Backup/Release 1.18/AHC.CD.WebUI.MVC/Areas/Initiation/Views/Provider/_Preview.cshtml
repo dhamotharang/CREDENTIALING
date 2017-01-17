@@ -1,0 +1,307 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfileViewModel
+
+<!-- Safari Browser issue Solving for Add Group edit button height fixing -->
+@*<style>
+        .input-group-sm > .input-group-addon {
+            height: 18px !important;
+            border-radius: 0px 3px 3px 0px;
+        }
+    </style>*@
+
+<!-- Safari Browser issue End -->
+
+<style>
+    /* Fieldset Legend Error List Custom Style*/
+    .form-style fieldset.submit-error {
+        color: #E26D6D;
+        border: 1px solid #EDD2D2;
+        padding: 15px 20px 20px 20px;
+        box-shadow: inset 0px 0px 15px #EDCBCB;
+        -moz-box-shadow: inset 0px 0px 15px #EDCBCB;
+        -webkit-box-shadow: inset 0px 0px 15px #EDCBCB;
+    }
+        .form-style fieldset.submit-error legend {
+            color: #E26D6D;
+            border-top: 1px solid #EDCBCB;
+            border-left: 1px solid #EDCBCB;
+            border-right: 1px solid #EDCBCB;
+            box-shadow: -0px -1px 2px #EDCBCB;
+            -moz-box-shadow: -0px -1px 2px #EDCBCB;
+            -webkit-box-shadow: -0px -1px 2px #EDCBCB;
+            border-bottom: 0px;
+        }
+    .legend2.submit-error {
+        color: #E26D6D;
+        border-top: 1px solid #EDCBCB;
+        border-left: 1px solid #EDCBCB;
+        border-right: 1px solid #EDCBCB;
+        box-shadow: -0px -1px 2px #EDCBCB;
+        -moz-box-shadow: -0px -1px 2px #EDCBCB;
+        -webkit-box-shadow: -0px -1px 2px #EDCBCB;
+    }
+    /* END - Fieldset Legend Error List Custom Style*/
+</style>
+
+<div id="ProviderInitiationErrorList" class="form-style">
+    <fieldset class="submit-error">
+        <legend>
+            Error List
+        </legend>
+        <div class="legend2 submit-error pull-right"><i id="ProviderInitiationErrorListClose" class="fa fa-close pointer"></i></div>
+        <div ng-if="dataIsArray(ProviderInitiationErrorList)" class="col-lg-12">
+            <div ng-repeat="err in ProviderInitiationErrorList track by $index">{{err}}</div>
+        </div>
+        <div ng-if="!dataIsArray(ProviderInitiationErrorList)" class="col-lg-12">
+            {{ProviderInitiationErrorList}}
+        </div>
+    </fieldset>
+</div>
+
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Basic Information
+        </legend>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.OtherIdentificationNumber.NPINumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{Profile.OtherIdentificationNumber.NPINumber}}</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.OtherIdentificationNumber.NPIUserName, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="Profile.OtherIdentificationNumber.NPIUserName" class="data-label wrap-words">{{Profile.OtherIdentificationNumber.NPIUserName}}</i>
+                    <i ng-if="!Profile.OtherIdentificationNumber.NPIUserName" class="data-label">Not Available</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.OtherIdentificationNumber.NPIPassword, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="Profile.OtherIdentificationNumber.NPIPassword" class="data-label">**********</i>
+                    <i ng-if="!Profile.OtherIdentificationNumber.NPIPassword" class="data-label">Not Available</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.OtherIdentificationNumber.CAQHNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="Profile.OtherIdentificationNumber.CAQHNumber" class="data-label wrap-words">{{Profile.OtherIdentificationNumber.CAQHNumber}}</i>
+                    <i ng-if="!Profile.OtherIdentificationNumber.CAQHNumber" class="data-label">Not Available</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.OtherIdentificationNumber.CAQHUserName, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="Profile.OtherIdentificationNumber.CAQHUserName" class="data-label wrap-words">{{Profile.OtherIdentificationNumber.CAQHUserName}}</i>
+                    <i ng-if="!Profile.OtherIdentificationNumber.CAQHUserName" class="data-label">Not Available</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.OtherIdentificationNumber.CAQHPassword, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="Profile.OtherIdentificationNumber.CAQHPassword" class="data-label">***********</i>
+                    <i ng-if="!Profile.OtherIdentificationNumber.CAQHPassword" class="data-label">Not Available</i>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>
+            Personal Information
+        </legend>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-2 form-group">
+                @Html.LabelFor(model => model.PersonalDetail.SalutationType, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{SelectedSalutation}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.PersonalDetail.FirstName, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{PersonalDetail.FirstName}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.PersonalDetail.MiddleName, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="PersonalDetail.MiddleName" class="data-label wrap-words">{{PersonalDetail.MiddleName}}</i>
+                    <i ng-if="!PersonalDetail.MiddleName" class="data-label">Not Available</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.PersonalDetail.LastName, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{PersonalDetail.LastName}}</i>
+                </div>
+            </div>
+            <div class="col-lg-1 form-group" style="padding-left:0px;">
+                @Html.LabelFor(model => model.PersonalDetail.Suffix, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="PersonalDetail.Suffix" class="data-label wrap-words">{{PersonalDetail.Suffix}}</i>
+                    <i ng-if="!PersonalDetail.Suffix" class="data-label">Not Available</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-2 form-group">
+                @Html.LabelFor(model => model.PersonalDetail.GenderType, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="PersonalDetail.GenderType==1" class="data-label">Male</i>
+                    <i ng-if="PersonalDetail.GenderType==2" class="data-label">Female</i>
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <div class="form-group">
+                    <label class="control-label small">Titles *</label>
+                    <div>
+                        <span ng-repeat="tpt in PersonalDetail.ProviderTitles track by $index">
+                            <span class="label label-default wrap-words">
+                                {{tpt.ProviderType.Title}}
+                            </span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>
+            Home Contact Information
+        </legend>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.HomeAddresses[0].Street, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{HomeAddresses.Street}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.HomeAddresses[0].UnitNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="HomeAddresses.UnitNumber" class="data-label wrap-words">{{HomeAddresses.UnitNumber}}</i>
+                    <i ng-if="!HomeAddresses.UnitNumber" class="data-label">Not Available</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.HomeAddresses[0].City, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{HomeAddresses.City}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.HomeAddresses[0].State, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{HomeAddresses.State}}</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.HomeAddresses[0].ZipCode, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{HomeAddresses.ZipCode}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.HomeAddresses[0].Country, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{HomeAddresses.Country}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.HomeAddresses[0].County, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i ng-if="HomeAddresses.County" class="data-label wrap-words">{{HomeAddresses.County}}</i>
+                    <i ng-if="!HomeAddresses.County" class="data-label">Not Available</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.ContactDetail.EmailIDs[0].EmailAddress, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{ContactDetail.EmailAddress}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.ContactDetail.PhoneDetails[0].Number, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{ContactDetail.CountryCode}}-{{ContactDetail.MobileNumber}}</i>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>
+            Contract Information
+        </legend>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.ContractInfoes[0].ProviderRelationshipOption, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label wrap-words">{{SelectedProviderRelation}}</i>
+                </div>
+            </div>
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.ContractInfoes[0].JoiningDate, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">{{ContractInfo.JoiningDate|date:'MM/dd/yyyy'}}</i>
+                </div>
+            </div>
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.CVInformation.CVDocumentPath, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @*<i ng-if="selectedCV.name" class="data-label"><a href="{{selectedCV.name}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Document"><i class="fa fa-file"></i></a></i>*@                    
+                    <i ng-if="selectedCV.name" class="data-label wrap-words">{{selectedCV.name}}</i>
+                    <i ng-if="!selectedCV.name" class="data-label">Not Available</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.ContractInfoes[0].IndividualTaxId, new { @class = "control-label small" })
+                <div>
+                    <i ng-if="ContractInfo.IndividualTaxId" class="data-label wrap-words">{{ContractInfo.IndividualTaxId}}</i>
+                    <i ng-if="!ContractInfo.IndividualTaxId" class="data-label">Not Available</i>
+                </div>
+            </div>
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.ContractInfoes[0].ContractFilePath, htmlAttributes: new { @class = "control-label small" })
+                <div>                    
+                    @*<i ng-if="selectedContract.name" class="data-label"><a href="{{selectedContract.name}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Document"><i class="fa fa-file"></i></a></i>*@                    
+                    <i ng-if="selectedContract.name" class="data-label wrap-words">{{selectedContract.name}}</i>
+                    <i ng-if="!selectedContract.name" class="data-label">Not Available</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-3 form-group">
+                @Html.LabelFor(model => model.ContractInfoes[0].ContractGroupInfoes, new { @class = "control-label small" })
+                <div>
+                    <i ng-if="IsPartOfGroup" class="data-label">{{IsPartOfGroup}}</i>
+                    <i ng-if="!IsPartOfGroup" class="data-label">Not Available</i>
+                </div>
+            </div>
+            <div ng-if="IsPartOfGroup=='Yes'" class="col-lg-9 form-group">
+                <label class="control-label small">Group Names</label>
+                <div>
+                    <span ng-repeat="cg in ContractGroupInfoes track by $index">
+                        <span class="label label-default wrap-words">
+                            {{cg.PracticingGroup.Group.Name}}
+                        </span>
+                        &nbsp;&nbsp;
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <input id="next1" type="button" value="Confirm" ng-click="confirmationAddProvider()" class="btn btn-primary btn-sm pull-right" />
+            <input id="next1" type="button" value="Previous" ng-click="nextForm(2)" class="btn btn-warning btn-sm pull-left" />
+        </div>
+    </fieldset>
+</div>

@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "Provider Types";
+}
+@section AddToHead{
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/ProviderTypesController.js"></script>
+    }
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> Provider Type
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataProviderType" ng-controller="masterDataProviderTypeController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Provider Types Management
+                        <span class="pull-right">                            
+                            <button ng-disabled="disableAdd" ng-click="addProviderType()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div ng-show="activeMessageDiv=='ProviderType'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div><br />
+                        <div ng-show="activeMessageDiv=='ProviderTypeError'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title *</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Last Modified Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="Filter Title" class="form-control input-sm" ng-model="search.Title" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter Code" class="form-control input-sm" ng-model="search.Code" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter Description" class="form-control input-sm" ng-model="search.Description" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.Status" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter LastModifiedDate" class="form-control input-sm" ng-model="search.LastModifiedDate" ng-change="filterData()" /></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="pt in ProviderTypes |filter:{Title:search.Title,Code:search.Code,Description:search.Description,Status:search.Status,LastModifiedDate:search.LastModifiedDate} track by $index" ng-include="getTemplate(pt)" ng-show="IsValidIndex($index)"></tr>
+                            </tbody>
+                        </table>
+
+                        <script type="text/ng-template" id="displayProviderType">
+                            <td>{{pt.Title}}</td>
+                            <td>{{pt.Code || 'Not Avaliable'}}</td>
+                            <td>{{pt.Description || 'Not Available'}}</td>
+                            <td>{{pt.Status}}</td>
+                            <td>{{pt.LastModifiedDate @*| date : 'MM-dd-yyyy'*@}}</td>
+                            <td>                                
+                                @*<button ng-disabled="disableEdit" ng-click="editProviderType(pt)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@                              
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editProviderType">
+                            <td>
+                                <input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempProviderType.Title" />
+                                <span class="text-danger" ng-if="error && !tempProviderType.Title">{{error}}</span>
+                                <span class="text-danger" ng-if="existErr">{{existErr}}</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempProviderType.Code" />                                
+                                <span class="text-danger" ng-if="existErr1">{{existErr1}}</span>
+                            </td>
+                            <td><input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempProviderType.Description" /></td>
+                            <td>{{tempProviderType.Status}}</td>
+                            <td>{{tempProviderType.LastModifiedDate @*| date : 'MM-dd-yyyy'*@}}</td>
+                            <td>
+                                <button ng-if="!tempProviderType.ProviderTypeID" ng-click="saveProviderType($index)" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-if="tempProviderType.ProviderTypeID" ng-click="updateProviderType($index)" class="btn btn-xs btn-primary">Update</button>
+                                <button ng-if="tempProviderType.ProviderTypeID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                <button ng-if="!tempProviderType.ProviderTypeID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                            </td>
+                        </script>
+                        <div class="clearfix"></div>
+                        <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+
+                        <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>

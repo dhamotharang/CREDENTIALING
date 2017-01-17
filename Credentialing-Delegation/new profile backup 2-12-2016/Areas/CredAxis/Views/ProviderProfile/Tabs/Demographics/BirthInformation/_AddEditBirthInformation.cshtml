@@ -1,0 +1,92 @@
+﻿@using PratianUI
+@model PortalTemplate.Areas.CredAxis.Models.DemographisViewModels.BirthInformationViewModel
+
+@{
+    bool IsEdit = true;
+}
+
+@*************** Birth Information Edit*********************************@
+<div class="col-lg-12 nopadding">
+    <fieldset class="fsStyle " id="EditBirthInfo">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                @if (Model == null)
+                {
+                    <span>ADD Birth Information</span>
+                    IsEdit = false;
+                }
+                @if (IsEdit)
+                {
+                    <span><span class="transparent-font-color">___</span>EDIT Birth Information<span class="transparent-font-color">___</span></span>
+                }
+            </span>
+        </legend>
+        @using (Ajax.BeginForm("AddBirthInfo", "Demographics", new AjaxOptions { HttpMethod = "POST", OnBegin = "validateForm(saveBirthInformationDetailsForm)", OnSuccess = "ValidateScheduleDetails", UpdateTargetId = "BirthInformationDiv" }, new { id = "saveBirthInformationDetailsForm" }))
+        {
+            <div class="x_content zero-padding-left">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.DateOfBirth)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.PratianUiDatePickerFor(m => m.DateOfBirth, new { @class = "form-control input-xs", placeholder = "DATE OF BIRTH" })
+                        @Html.ValidationMessageFor(m => m.DateOfBirth)
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.StateOfBirth)</label>
+                    </span>
+                    <span class="col-lg-1 "></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.StateOfBirth, new { @class = "form-control input-xs", placeholder = "STATE OF BIRTH" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.CityOfBirth)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.CityOfBirth, new { @class = "form-control input-xs", placeholder = "CITY OF BIRTH" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.County)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.County, new { @class = "form-control input-xs", placeholder = "COUNTY" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.Country)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.Country, new { @class = "form-control input-xs", placeholder = "COUNTRY" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.BirthCertificate)</label>
+                    </span><span class="col-lg-1"></span>
+                    @*<span class="col-lg-7 nopadding">
+                            <span class="theme_label_data"><input type="file" class="form-control input-xs" placeholder="Certificate" value="" name="Certificate" /></span>
+                        </span>*@
+                    <span class="col-lg-7 input-group  nopadding">
+                        <input id="UploadBirthInfo" type="text" class="form-control input-xs" readonly placeholder="Document">
+                        <span class="input-group-addon File_uploadStyle" onclick="$('#file-input').click();"><i class="fa fa-upload"></i></span>
+                        <input id="file-input" style="display:none" onchange="document.getElementById('UploadBirthInfo').value = this.value" type="file">
+                    </span>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row col-lg-12 zero-padding-left-right">
+                    @*<input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save">*@
+                    <button type="button" class="btn btn-success btn-xs list-item yahanClickKar buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Demographics/CancelBirthInfoEdit" data-tab-container="BirthInformationDiv">Save</button>
+                    <button type="button" class="btn btn-danger btn-xs list-item yahanClickKar  buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Demographics/CancelBirthInfoEdit" data-tab-container="BirthInformationDiv">Cancel</button>
+                </div>
+            </div>
+
+        }
+    </fieldset>
+</div>

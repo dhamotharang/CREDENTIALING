@@ -1,0 +1,885 @@
+﻿@{
+    ViewBag.Title = "Hospitals";
+}
+@section AddToHead{
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/HospitalsController.js"></script>
+}
+
+
+
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-hospital-o"></i> Hospital
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataHospitals" ng-controller="masterDatamasterDataHospitalsController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a ng-click="showHospitals()" class="pointer"><i class="fa fa-hospital-o"></i> Hospitals Management</a>
+                        &nbsp;&nbsp;<a ng-click="showHospitalContacts()" class="pointer"><i class="fa fa-location-arrow"></i> Hospital Contact Information</a>
+                        &nbsp;&nbsp;<a ng-click="showHospitalContactPersons()" class="pointer"><i class="fa fa-users"></i> Hospital Contact Person</a>
+
+                        <span ng-if="viewHospitals" class="pull-right">
+                            <button ng-disabled="disableAdd" ng-if="!AddNewHospital" ng-click="addHospital()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                        <span ng-if="viewHospitalContacts" class="pull-right">
+                            <button ng-if="!AddNewHospitalContact" ng-disabled="!hspId" ng-click="addHospitalContacts()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                        <span ng-if="viewHospitalContactPersons" class="pull-right">
+                            <button ng-disabled="!hspId1 || !personId" ng-if="!AddNewHCP" ng-click="addHCP()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div ng-show="activeMessageDiv=='Hospital'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            {{messageDesc}}
+                        </div>
+                        <div ng-show="activeMessageDiv=='HospitalUpdateError'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            {{messageDesc}}
+                        </div>
+                        <div ng-if="viewHospitals">
+                            <div id="newHospitalInfo" ng-if="AddNewHospital" class="form-style">
+                                <form>
+                                    <fieldset>
+                                        <legend>
+                                            Hospital Details
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-6 form-group">
+                                                <label class="control-label small">Hospital Name*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Hospital Name*" name="HospitalName" ng-model="tempHospital.HospitalName" class="form-control input-sm" />
+                                                <span class="text-danger">{{hospitalExist}}</span>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="HospitalName" data-valmsg-replace="true">
+                                                    <span for="HospitalName" class=""></span>
+                                                </span>
+                                                <input type="hidden" ng-model="tempHospital.statustype" value="1" />
+                                            </div>
+                                            <div class="col-lg-6 form-group">
+                                                <label class="control-label small">Hospital Code</label>
+                                                <input type="text" ng-model="tempHospital.Code" class="form-control input-sm" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend>
+                                            Hospital Contact
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Location Name*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Location Name*" name="LocationName" ng-model="tempHospital.HospitalContactInfoes[0].LocationName" class="form-control input-sm" />
+                                                <span class="text-danger">{{locationExist}}</span>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="LocationName" data-valmsg-replace="true">
+                                                    <span for="LocationName" class=""></span>
+                                                </span>
+                                                <input type="hidden" ng-model="tempHospital.HospitalContactInfoes[0].statustype" value="1" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Street*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Street*" name="Street" ng-model="tempHospital.HospitalContactInfoes[0].Street" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Street" data-valmsg-replace="true">
+                                                    <span for="Street" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Unit Number</label>
+                                                <input type="text" ng-model="tempHospital.HospitalContactInfoes[0].UnitNumber" class="form-control input-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">City*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempHospital.HospitalContactInfoes[0].City" ng-change="addressAutocomplete1(tempHospital.HospitalContactInfoes[0].City)" onfocus="showLocationList(this)" class="form-control input-sm" />
+                                                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                    <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                                                        <tbody>
+                                                            <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation1(location)" class="pointer">
+                                                                <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                                                            </tr>
+                                                            <tr ng-if="Locations.length == 0">
+                                                                <td>Not Available..... </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                    <span for="City" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">State*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the State*" name="State" ng-model="tempHospital.HospitalContactInfoes[0].State" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="State" data-valmsg-replace="true">
+                                                    <span for="State" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Country*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Country*" name="Country" ng-model="tempHospital.HospitalContactInfoes[0].Country" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Country" data-valmsg-replace="true">
+                                                    <span for="Country" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">County</label>
+                                                <input type="text" name="State" ng-model="tempHospital.HospitalContactInfoes[0].County" class="form-control input-sm" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Zip Code*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Zip code*" name="ZipCode" ng-model="tempHospital.HospitalContactInfoes[0].ZipCode" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="ZipCode" data-valmsg-replace="true">
+                                                    <span for="ZipCode" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Phone Number*</label>
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHospital.HospitalContactInfoes[0].PhoneCountryCode" ng-init="tempHospital.HospitalContactInfoes[0].PhoneCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('HospitalTelePhoneCountryCode'+$index)"> {{tempHospital.HospitalContactInfoes[0].PhoneCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="HospitalTelePhoneCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="PhoneCountryCode" ng-model="tempHospital.HospitalContactInfoes[0].PhoneCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempObject.SchoolInformation.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="Phone" ng-model="tempHospital.HospitalContactInfoes[0].Phone" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Phone" data-valmsg-replace="true">
+                                                    <span for="Phone" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Email Address</label>
+                                                <input type="text" ng-model="tempHospital.HospitalContactInfoes[0].Email" class="form-control input-sm" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Fax Number</label>
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHospital.HospitalContactInfoes[0].FaxCountryCode" ng-init="tempHospital.HospitalContactInfoes[0].FaxCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('HospitalTeleFaxCountryCode'+$index)"> {{tempHospital.HospitalContactInfoes[0].FaxCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="HospitalTeleFaxCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="FaxCountryCode" ng-model="tempHospital.HospitalContactInfoes[0].FaxCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempObject.SchoolInformation.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" ng-model="tempHospital.HospitalContactInfoes[0].Fax" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>
+                                            Hospital Contact - Person Contact
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Contact Person Name*</label>
+                                                <span class="text-danger">{{personExist}}</span>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Contact Person Name*" name="Person" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].ContactPersonName" class="form-control input-sm" />
+                                                <input type="hidden" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].StatusType" value="1" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Person" data-valmsg-replace="true">
+                                                    <span for="Person" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Phone Number*</label>
+                                                @*<input type="text" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].PhoneCountryCode" class="form-control input-sm" />*@
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].PhoneCountryCode" ng-init="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].PhoneCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('PersonTelePhoneCountryCode'+$index)"> {{tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].PhoneCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="PersonTelePhoneCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="PhoneCountryCode" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].PhoneCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempObject.SchoolInformation.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="Phone" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].Phone" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Phone" data-valmsg-replace="true">
+                                                    <span for="Phone" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Fax Number</label>
+                                                @*<input type="text" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].FaxCountryCode" class="form-control input-sm" />*@
+
+
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].FaxCountryCode" ng-init="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].FaxCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('PersonTeleFaxCountryCode'+$index)"> {{tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].FaxCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="PersonTeleFaxCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="FaxCountryCode" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].FaxCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempObject.SchoolInformation.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" ng-model="tempHospital.HospitalContactInfoes[0].HospitalContactPersons[0].Fax" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="clearfix"></div>
+                                    <div ng-show="activeMessageDiv=='HospitalAddError'" class="alert alert-danger" role="alert">
+                                        @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                        {{messageDesc}}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-lg-12">
+                                        <input id="next1" type="button" ng-disabled="LoadingAjax" value="Save" ng-click="saveHospital()" class="btn btn-primary btn-sm pull-right" /><img src="~/Content/Images/ajax-loader.gif" ng-show="LoadingAjax" style="width:28px" class="pull-right" />
+                                        <input id="next1" type="button" value="Cancel" ng-click="reset(); Hospitals.splice(0, 1);" class="btn btn-warning btn-sm pull-left" />
+                                    </div>
+                                </form>
+                            </div>
+                            
+
+
+                            <table ng-if="!AddNewHospital" class="table table-striped table-bordered table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-lg-3">Hospital Name</th>
+                                        <th class="col-lg-2">Code</th>
+                                        <th class="col-lg-2">Number of Locations</th>
+                                        <th class="col-lg-2">Status</th>
+                                        <th class="col-lg-2">Date Modified</th>
+                                        <th class="col-lg-1">Action</th>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" placeholder="Filter HospitalName" class="form-control input-sm" ng-model="search.HospitalName" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Code" class="form-control input-sm" ng-model="search.Code" ng-change="filterData()" /></td>
+                                        <td><input type="number" placeholder="Filter Number of Locations" class="form-control input-sm" ng-model="search.HospitalContactInfoes" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.Status" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Date Modified" class="form-control input-sm" ng-model="search.Date" ng-change="filterData()" /></td>
+                                        <td></td>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="hospital in Hospitals | filter:{HospitalName:search.HospitalName, Code:search.Code, HospitalContactInfoes:search.HospitalContactInfoes,Status:search.Status,LastModifiedDate:search.Date} track by $index" ng-include="getHospitalTemplate(hospital)" ng-show="IsValidIndex($index)"></tr>
+                                </tbody>
+                            </table>
+
+                            <script type="text/ng-template" id="displayHospital">
+                                <td>{{hospital.HospitalName}}</td>
+                                <td>{{hospital.Code || 'Not Available'}}</td>
+                                <td>            
+                                    {{hospital.HospitalContactInfoes.length}}                        
+                                    @*<i ng-if="!hospital.HospitalContactInfoes" class="pointer"><a ng-click="addHospital()">Add Location</a></i>*@
+                                    
+                                </td>
+                                <td>{{hospital.Status}}</td>
+                                <td>{{hospital.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td>
+                                  @*  <button ng-click="editHospital(hospital)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                                </td>
+                            </script>
+                            <script type="text/ng-template" id="editHospital">
+                                <td>
+                                    <input type="text" ng-model="tempHospital.HospitalName" class="form-group form-control input-sm inputMarginBottoomZero" />
+                                    <span class="text-danger">{{hospitalExist}}</span>
+                                    <span class="text-danger">{{hospitalError}}</span>
+                                </td>
+                                <td><input type="text" ng-model="tempHospital.Code" class="form-group form-control input-sm inputMarginBottoomZero" /></td>
+                                <td>{{hospital.HospitalContactInfoes.length}}</td>
+                                <td>{{tempHospital.Status}}</td>
+                                <td>{{tempHospital.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td>
+                                    <button ng-click="updateHospital($index)" class="btn btn-xs btn-primary">Update</button>
+                                    <button ng-if="tempHospital.HospitalID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                </td>
+                            </script>
+                            <div class="clearfix"></div>
+                            <div ng-hide="AddNewHospital" ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-hide="AddNewHospital" ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                        <div ng-if="viewHospitalContacts">
+                            <div ng-show="activeMessageDiv=='Contact'" class="alert alert-success" role="alert">
+                                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                {{messageDesc}}
+                            </div>
+                            <div ng-show="activeMessageDiv=='ContactUpdateError'" class="alert alert-danger" role="alert">
+                                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                {{messageDesc}}
+                        </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-6 form-group zero-padding-left-right-div">
+                                    <label class="control-label small">Hospital Name</label>
+                                    <select ng-model="SelectedHospitalID" class="form-control input-sm" ng-change="getHospitalContacts(SelectedHospitalID, false)">
+                                        <option value="">---- select ----</option>
+                                        <option ng-repeat="h in Hospitals track by $index" value="{{h.HospitalID}}" ng-selected="h.HospitalID == SelectedHospitalID">{{h.HospitalName}}</option>
+                                    </select>
+                                    <span class="text-danger">{{hospNameError}}</span>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div id="newHospitalContactInfo" ng-if="AddNewHospitalContact" class="form-style">
+                                <form>
+                                    <fieldset>
+                                        <legend>
+                                            Hospital Contact
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Location Name *</label>
+                                                <span class="text-danger">{{locationExist}}</span>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Location Name*" name="LocationName" ng-model="tempHC.LocationName" class="form-control input-sm" />
+                                                <input type="hidden" ng-model="tempHC.statustype" value="1" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="LocationName" data-valmsg-replace="true">
+                                                    <span for="LocationName" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Street *</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Street*" name="Street" ng-model="tempHC.Street" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Street" data-valmsg-replace="true">
+                                                    <span for="Street" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Unit Number</label>
+                                                <input type="text" ng-model="tempHC.UnitNumber" class="form-control input-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">City *</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempHC.City" ng-change="addressAutocomplete(tempHC.City)" onfocus="showLocationList(this)" class="form-control input-sm" />
+                                                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                    <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                                                        <tbody>
+                                                            <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation(location)" class="pointer">
+                                                                <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                                                            </tr>
+                                                            <tr ng-if="Locations.length == 0">
+                                                                <td>Not Available..... </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                    <span for="City" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">State *</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the State*" name="State" ng-model="tempHC.State" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="State" data-valmsg-replace="true">
+                                                    <span for="State" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Country *</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Country*" name="Country" ng-model="tempHC.Country" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Country" data-valmsg-replace="true">
+                                                    <span for="Country" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">County</label>
+                                                <input type="text" ng-model="tempHC.County" class="form-control input-sm" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Zip Code *</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Zip code*" name="ZipCode" ng-model="tempHC.ZipCode" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="ZipCode" data-valmsg-replace="true">
+                                                    <span for="ZipCode" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Phone Number *</label>
+                                                @*<input type="text" ng-model="tempHC.PhoneCountryCode" class="form-control input-sm" />*@
+
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHC.PhoneCountryCode" ng-init="tempHC.PhoneCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactTelePhoneCountryCode'+$index)"> {{tempHC.PhoneCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactTelePhoneCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="PhoneCountryCode" ng-model="tempHC.PhoneCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHC.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="PhoneNumber" ng-model="tempHC.PhoneNumber" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="PhoneNumber" data-valmsg-replace="true">
+                                                    <span for="PhoneNumber" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Email Address</label>
+                                                <input type="text" ng-model="tempHC.Email" class="form-control input-sm" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Fax Number</label>
+                                                @*<input type="text" ng-model="tempHC.FaxCountryCode" class="form-control input-sm" />*@
+
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHC.FaxCountryCode" ng-init="tempHC.FaxCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactTeleFaxCountryCode'+$index)"> {{tempHC.FaxCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactTeleFaxCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="FaxCountryCode" ng-model="tempHC.FaxCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHC.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" ng-model="tempHC.FaxNumber" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>
+                                            Hospital Contact - Person Contact
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Contact Person Name *</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Contact Person Name*" name="Person" ng-model="tempHC.HospitalContactPersons[0].ContactPersonName" class="form-control input-sm" />
+                                                <span class="text-danger">{{personExist}}</span>
+                                                <input type="hidden" ng-model="tempHC.HospitalContactPersons[0].StatusType" value="1" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Person" data-valmsg-replace="true">
+                                                    <span for="Person" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Phone Number *</label>
+                                                @*<input type="text" ng-model="tempHC.HospitalContactPersons[0].PhoneCountryCode" class="form-control input-sm" />*@
+
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHC.HospitalContactPersons[0].PhoneCountryCode" ng-init="tempHC.HospitalContactPersons[0].PhoneCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactPersonTelePhoneCountryCode'+$index)"> {{tempHC.HospitalContactPersons[0].PhoneCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactPersonTelePhoneCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="PhoneCountryCode" ng-model="tempHC.HospitalContactPersons[0].PhoneCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHC.HospitalContactPersons[0].PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="Phone" ng-model="tempHC.HospitalContactPersons[0].Phone" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Phone" data-valmsg-replace="true">
+                                                    <span for="Phone" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Fax Number</label>
+                                                @*<input type="text" ng-model="tempHC.HospitalContactPersons[0].FaxCountryCode" class="form-control input-sm" />*@
+
+                                                <div class="input-group">
+                                                    <span ng-if="!tempHC.HospitalContactPersons[0].FaxCountryCode" ng-init="tempHC.HospitalContactPersons[0].FaxCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactPersonTeleFaxCountryCode'+$index)"> {{tempHC.HospitalContactPersons[0].FaxCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactPersonTeleFaxCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="FaxCountryCode" ng-model="tempHC.HospitalContactPersons[0].FaxCountryCode">
+                                                                <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHC.HospitalContactPersons[0].FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" ng-model="tempHC.HospitalContactPersons[0].Fax" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="clearfix"></div>
+                                    <div ng-show="activeMessageDiv=='ContactAddError'" class="alert alert-danger" role="alert">
+                                        @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                        {{messageDesc}}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-lg-12">
+                                        <input id="next1" type="button" value="Save" ng-click="saveHC()" class="btn btn-primary btn-sm pull-right" />
+                                        <input id="next1" type="button" value="Cancel" ng-click="reset();" class="btn btn-warning btn-sm pull-left" />
+                                    </div>
+                                </form>
+                                
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <table ng-if="!AddNewHospitalContact" class="table table-striped table-bordered table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Location Name</th>
+                                        <th>Unit Number</th>
+                                        <th>Street</th>
+                                        <th>State</th>
+                                        <th>Country</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="hc in HospitalContacts track by $index" ng-include="getHCTemplate(hc)"></tr>
+                                </tbody>
+                                <tbody ng-if="HospitalContacts.length == 0 || !HospitalContacts">
+                                    <tr>
+                                        <td colspan="6">No Hospital</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <script type="text/ng-template" id="displayHC">
+                                <td>{{hc.LocationName}}</td>
+                                <td>{{hc.UnitNumber}}</td>
+                                <td>{{hc.Street}}</td>
+                                <td>{{hc.State}}</td>
+                                <td>{{hc.Country}}</td>
+                                <td>
+                                  @*  <button ng-click="editHC(hc)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                                </td>
+                            </script>
+                            <script type="text/ng-template" id="editHC">
+
+                                <td id="editHospitalContactInfo" colspan="6">
+                                    <form class="form-style">
+                                        <fieldset>
+                                            <legend>
+                                                Hospital Contact
+                                            </legend>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Location Name</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Location Name*" name="LocationName" ng-model="tempHC.LocationName" class="form-control input-sm" />
+                                                    <span class="text-danger">{{locationExist}}</span>
+                                                    <input type="hidden" ng-model="tempHC.statustype" value="1" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="LocationName" data-valmsg-replace="true">
+                                                        <span for="LocationName" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Street</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Street*" name="Street" ng-model="tempHC.Street" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="Street" data-valmsg-replace="true">
+                                                        <span for="Street" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Unit Number</label>
+                                                    <input type="text" ng-model="tempHC.UnitNumber" class="form-control input-sm" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">City</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempHC.City" ng-change="addressAutocomplete(tempHC.City)" onfocus="showLocationList(this)" class="form-control input-sm" />
+                                                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                        <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                                                            <tbody>
+                                                                <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation(location)" class="pointer">
+                                                                    <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                                                                </tr>
+                                                                <tr ng-if="Locations.length == 0">
+                                                                    <td>Not Available..... </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                        <span for="City" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">State</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the State*" name="State" ng-model="tempHC.State" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="State" data-valmsg-replace="true">
+                                                        <span for="State" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Country</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Country*" name="Country" ng-model="tempHC.Country" class="form-control input-sm" />
+
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="Country" data-valmsg-replace="true">
+                                                        <span for="Country" class=""></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">County</label>
+                                                    <input type="text" ng-model="tempHC.County" class="form-control input-sm" />
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Zip Code</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Zip code*" name="ZipCode" ng-model="tempHC.ZipCode" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="ZipCode" data-valmsg-replace="true">
+                                                        <span for="ZipCode" class=""></span>
+                                                    </span>
+                                                </div>
+
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Phone Number</label>
+                                                    @*<input type="text" ng-model="tempHC.PhoneCountryCode" class="form-control input-sm" />*@
+
+                                                    <div class="input-group">
+                                                        <span ng-if="!tempHC.PhoneCountryCode" ng-init="tempHC.PhoneCountryCode='+1'"></span>
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactEditTelePhoneCountryCode'+$index)"> {{tempHC.PhoneCountryCode}} <span class="caret"></span></button>
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactEditTelePhoneCountryCode{{$index}}">
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select name="PhoneCountryCode" ng-model="tempHC.PhoneCountryCode">
+                                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHC.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="Phone" ng-model="tempHC.PhoneNumber" class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="Phone" data-valmsg-replace="true">
+                                                        <span for="Phone" class=""></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Email Address</label>
+                                                    <input type="text" ng-model="tempHC.Email" class="form-control input-sm" />
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Fax Number</label>
+                                                    @*<input type="text" ng-model="tempHC.FaxCountryCode" class="form-control input-sm" />*@
+
+                                                    <div class="input-group">
+                                                        <span ng-if="!tempHC.FaxCountryCode" ng-init="tempHC.FaxCountryCode='+1'"></span>
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactEditTeleFaxCountryCode'+$index)"> {{tempHC.FaxCountryCode}} <span class="caret"></span></button>
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactEditTeleFaxCountryCode{{$index}}">
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select name="FaxCountryCode" ng-model="tempHC.FaxCountryCode">
+                                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHC.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <input type="text" ng-model="tempHC.FaxNumber" class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <div class="col-lg-12">
+                                            <input id="next1" type="button" value="Save" ng-click="updateHC($index)" class="btn btn-primary btn-sm pull-right" />
+                                            <input id="next1" type="button" value="Cancel" ng-click="reset()" class="btn btn-warning btn-sm pull-left" />
+                                        </div>
+                                    </form>
+                                </td>
+                            </script>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <div ng-if="viewHospitalContactPersons">
+                            <div ng-show="activeMessageDiv=='Person'" class="alert alert-success" role="alert">
+                                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                {{messageDesc}}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div ng-show="activeMessageDiv=='PersonError'" class="alert alert-danger" role="alert">
+                                {{messageDesc}}
+                            </div>
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-6 form-group zero-padding-left-right-div">
+                                    <label class="control-label small">Hospital Name</label>
+                                    <select ng-model="SelectedHospitalID" class="form-control input-sm" ng-change="getHospitalContacts1(SelectedHospitalID, true)">
+                                        <option value="">---- select ----</option>
+                                        <option ng-repeat="h in Hospitals track by $index" value="{{h.HospitalID}}" ng-selected="h.HospitalID == SelectedHospitalID">{{h.HospitalName}}</option>
+                                    </select>
+                                    <span class="text-danger">{{hospitalNameError}}</span>
+                                </div>
+                                <div ng-if="SelectedHospitalID" class="col-lg-6 form-group">
+                                    <label class="control-label small">Location</label>
+                                    <select ng-model="SelectedLocationID" class="form-control input-sm" ng-change="getHospitalContactPersons(SelectedLocationID)">
+                                        <option value="">---- select ----</option>
+                                        <option ng-repeat="hc in HospitalContacts track by $index" value="{{hc.HospitalContactInfoID}}" ng-selected="hc.HospitalContactInfoID == SelectedLocationID">{{hc.LocationName}}</option>
+                                    </select>
+                                    <span class="text-danger">{{locationnError}}</span>
+                                </div>
+                            </div>
+
+                            <table class="table table-striped table-bordered table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Person Name *</th>
+                                        <th>Phone Number *</th>
+                                        <th>Fax Number</th>
+                                        <th>Status</th>
+                                        <th>Date Modified</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="hcp in HospitalContactPersons track by $index" ng-include="getHCPTemplate(hcp)"></tr>
+                                </tbody>
+                            </table>
+                            <script type="text/ng-template" id="displayHCP">
+                                <td>{{hcp.ContactPersonName}}</td>
+                                <td>{{hcp.ContactPersonPhone}}</td>
+                                <td>{{hcp.ContactPersonFax || 'Not Available'}}</td>
+                                <td>{{hcp.Status}}</td>
+                                <td>{{hcp.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td>
+                                 @*   <button ng-disabled="disablePersonEdit" ng-click="editHCP(hcp)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                                </td>
+                            </script>
+                            <script type="text/ng-template" id="editHCP">
+                                <td class="col-lg-2">
+                                    <input type="text" ng-model="tempHCP.ContactPersonName" class="form-group form-control input-sm inputMarginBottoomZero" />
+                                    <span class="text-danger">{{personExist}}</span>
+                                    <span class="text-danger">{{personError}}</span>
+                                </td>
+                                <td class="col-lg-3">
+                                    <div class="input-group">
+                                        <span ng-if="!tempHCP.PhoneCountryCode" ng-init="tempHCP.PhoneCountryCode='+1'"></span>
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactPersonAddTelePhoneCountryCode'+$index)"> {{tempHCP.PhoneCountryCode}} <span class="caret"></span></button>
+                                        </div>
+                                        <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactPersonAddTelePhoneCountryCode{{$index}}">
+                                            <div class="arrow"></div>
+                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                            <div class="popover-content">
+                                                <select name="PhoneCountryCode" ng-model="tempHCP.PhoneCountryCode">
+                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHC.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="Phone" ng-model="tempHCP.Phone" class="form-group form-control input-sm " />
+                                        </div>
+                                    </div>
+                                    <span class="text-danger">{{phoneError}}</span>
+                                </td>
+                                <td class="col-lg-3">
+                                    <div class="input-group">
+                                        <span ng-if="!tempHCP.FaxCountryCode" ng-init="tempHCP.FaxCountryCode='+1'"></span>
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('ContactFaxEditTeleFaxCountryCode'+$index)"> {{tempHCP.FaxCountryCode}} <span class="caret"></span></button>
+                                        </div>
+                                        <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="ContactFaxEditTeleFaxCountryCode{{$index}}">
+                                            <div class="arrow"></div>
+                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                            <div class="popover-content">
+                                                <select name="FaxCountryCode" ng-model="tempHCP.FaxCountryCode">
+                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempHCP.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <input type="text" ng-model="tempHCP.Fax" class="form-group form-control input-sm" />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-lg-1">{{tempHCP.Status}}</td>
+                                <td class="col-lg-1">{{tempHCP.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td class="col-lg-2">
+                                    <button ng-if="!tempHCP.HospitalContactPersonID" ng-click="saveHCP($index)" class="btn btn-xs btn-primary">Save</button>
+                                    <button ng-if="tempHCP.HospitalContactPersonID" ng-click="updateHCP($index)" class="btn btn-xs btn-primary">Update</button>
+                                    <button ng-if="tempHCP.HospitalContactPersonID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                    <button ng-if="!tempHCP.HospitalContactPersonID" ng-click="cancelAdd(); HospitalContactPersons.splice(0, 1);" class="btn btn-xs btn-warning">Cancel</button>
+                                </td>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>

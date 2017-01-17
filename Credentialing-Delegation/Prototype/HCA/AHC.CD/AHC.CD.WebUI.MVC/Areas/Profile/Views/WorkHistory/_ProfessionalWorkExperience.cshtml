@@ -1,0 +1,227 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.WorkHistory.ProfessionalWorkExperienceViewModel
+
+<div class="col-md-12">
+    <div class="form-group col-md-12">
+        @Html.LabelFor(p => p.EmployerName, htmlAttributes: new { @class = "control-label small" })
+        <div>
+
+            @Html.EditorFor(model => model.EmployerName, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.EmployerName" } })
+            @Html.ValidationMessageFor(model => model.EmployerName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.Country, htmlAttributes: new { @class = "control-label small" })
+        <div>
+
+            <select id="mycontry" class="form-control input-sm" ng-model="workHistory.Country" ng-change="getStates(workHistory.Country)" required>
+                <option ng-repeat="country in Countries" value="{{country.Code}}" ng-selected="country.Code == workHistory.Country">{{country.Name}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.State, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <select id="mystate" name="State" class="form-control input-sm" data-ng-model="workHistory.State" data-ng-change="getCounties(workHistory.State)" data-val="true" data-val-required="The State * field is required.">
+
+                <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}" ng-selected="state.State == workHistory.State">{{state.State}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.County, htmlAttributes: new { @class = "control-label small" })
+        <div>
+
+            <select class="form-control input-sm ng-pristine ng-valid ng-touched" data-ng-model="workHistory.County" data-ng-change="getCities(workHistory.County)" data-val="true" data-val-required="The County * field is required.">
+
+                <option ng-repeat="county in Counties | unique: 'County'" value="{{county.County}}" ng-selected="county.County == workHistory.County">{{county.County}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.County, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.City, htmlAttributes: new { @class = "control-label small" })
+        <div>
+
+            <select class="form-control input-sm ng-pristine ng-valid ng-touched" data-ng-model="workHistory.City" data-val="true" data-val-required="The City * field is required.">
+
+                <option ng-repeat="city in Cities | unique: 'City'" value="{{city.City}}" ng-selected="city.City == workHistory.City">{{city.City}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+</div>
+
+
+<div class="col-md-12">
+
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.Number, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.Number" } })
+            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.Building, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            @Html.EditorFor(model => model.Building, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.Building" } })
+            @Html.ValidationMessageFor(model => model.Building, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.Street, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.Street" } })
+            @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(p => p.Zipcode, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            @Html.EditorFor(model => model.Zipcode, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.Zipcode" } })
+            @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+</div>
+
+<div class="col-md-12">
+
+    <div class="form-group col-md-4">
+        @Html.LabelFor(p => p.EmployerMobile, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <div class="input-group">
+               
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('EmpMobCountryCode'+$index)"> {{workHistory.CountryCodeMobile}} <span class="caret"></span></button>
+                </div>
+                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='EmpMobCountryCode{{$index}}'>
+                    <div class="arrow"></div>
+                    <h3 class="popover-title">Select Country Dial Code</h3>
+                    <div class="popover-content">
+                        <select ng-model="workHistory.CountryCodeMobile">
+                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == workHistory.CountryCodeMobile">{{code.name}}({{code.dial_code}})</option>
+                        </select>
+                    </div>
+                </div>
+                @Html.EditorFor(model => model.EmployerMobile, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.EmployerMobile" } })
+                @Html.ValidationMessageFor(model => model.EmployerMobile, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group col-md-4">
+        @Html.LabelFor(p => p.EmployerFax, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-sm"><span class="caret"></span></button>
+                </div>
+                <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title">Select Country Dial Code</h3>
+                    <div class="popover-content">
+                        <select id="ContactContryCode">
+                            <option>+91</option>
+                        </select>
+                    </div>
+                </div>
+                @Html.EditorFor(model => model.EmployerFax, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.EmployerFax" } })
+                @Html.ValidationMessageFor(model => model.EmployerFax, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group col-md-4">
+        @Html.LabelFor(p => p.JobTitle, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            @Html.EditorFor(model => model.JobTitle, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.JobTitle" } })
+            @Html.ValidationMessageFor(model => model.JobTitle, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+</div>
+
+<div class="col-md-12">
+    <div class="form-group col-md-4">
+        @Html.LabelFor(p => p.SupervisorName, htmlAttributes: new { @class = "control-label small" })
+        <div>
+
+            @Html.EditorFor(model => model.SupervisorName, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.SupervisorName" } })
+            @Html.ValidationMessageFor(model => model.SupervisorName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group col-md-4">
+        @Html.LabelFor(p => p.Department, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            @Html.EditorFor(model => model.Department, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.Department" } })
+            @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group col-md-4">
+        @Html.LabelFor(p => p.Title, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            @Html.DropDownListFor(model => model.Title, new[] { new SelectListItem { Value = "PO", Text = "PO" }, new SelectListItem { Value = "MO", Text = "MO" } }, "-- select --", new { @class = "form-control input-sm input-sm", data_ng_model = "workHistory.Title" })
+        </div>
+    </div>
+</div>
+
+
+<div class="col-md-12">
+
+    <div class="form-group col-md-4">
+        @Html.LabelFor(p => p.CanContactEmployer, htmlAttributes: new { @class = "control-label small" })
+        <div class="radio">
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.CanContactEmployer, true, new { data_ng_model = "workHistory.CanContactEmployer" }) Yes
+            </label>
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.CanContactEmployer, false, new { data_ng_model = "workHistory.CanContactEmployer" }) No
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group col-md-4">
+        <label class="control-label small">Start Date *</label>
+        <div>
+            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control input-sm", type = "date", data_ng_model = "workHistory.StartDate" } })
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group col-md-4">
+        <label class="control-label small">End Date *</label>
+        <div>
+            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control input-sm", type = "date", data_ng_model = "workHistory.EndDate" } })
+            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="form-group col-md-6">
+        <label class="control-label small">Reason For Departure</label>
+        @Html.EditorFor(model => model.DepartureReason, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "workHistory.DepartureReason" } })
+        @Html.ValidationMessageFor(model => model.DepartureReason, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-6">
+        <label class="control-label small">Supporting Document *</label>
+        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+            <div class="form-control input-sm" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new"> Upload Supporting Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+        </div>
+    </div>
+</div>

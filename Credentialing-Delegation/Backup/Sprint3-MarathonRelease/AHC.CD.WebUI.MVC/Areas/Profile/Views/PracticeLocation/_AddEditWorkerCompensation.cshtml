@@ -1,0 +1,58 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocation.WorkersCompensationInformationViewModel
+
+<div class="form-style" ng-hide="!WorkingCompEdit">
+    <fieldset>
+        <legend>
+            Workers Compensation Information
+        </legend>
+        <div id="practice12" class="panel-body">
+            <div class="col-md-12">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.WorkersCompensationNumber, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.WorkersCompensationNumber, new { type = "Number", @class = "form-control input-sm", placeholder = "Workers Compensation Number", data_ng_model = "WorkersCompensationInformation.WorkersCompensationNumber" })
+                        @Html.ValidationMessageFor(model => model.WorkersCompensationNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.CertificationStatus, htmlAttributes: new { @class = "control-label small" })
+                    <select class="form-control input-sm" data_ng_model="WorkersCompensationInformation.CertificationStatus">
+                        <option>Select</option>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.StatusType)))
+                        {
+                            <option value="@value.ToString()">
+                                @value.ToString()
+                            </option>
+                        }
+                    </select>
+                    @*<div>
+                        @Html.EnumDropDownListFor(model => model.CertificationStatus, "-- select --", new { @class = "form-control input-sm", data_ng_model = "WorkersCompensationInformation.CertificationStatus" })
+                    </div>*@
+                    @Html.ValidationMessageFor(model => model.CertificationStatus, "", new { @class = "text-danger" })                 
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.IssueDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.IssueDate, new { type = "date", @class = "form-control input-sm", placeholder = "Issue Date", data_ng_model = "WorkersCompensationInformation.IssueDate" })
+                        @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.ExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.ExpirationDate, new { type = "date", @class = "form-control input-sm", placeholder = "Expiration Date", data_ng_model = "WorkersCompensationInformation.ExpirationDate" })
+                        @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-12 form-group">
+                    <button class="btn btn-warning btn-sm" ng-click="WorkingCompEdit=false">Cancel</button>
+                    <button class="btn btn-success btn-sm pull-right" ng-click="SaveWorkersCompensationInformation(WorkersCompensationInformation)">Save</button>
+                </div>
+            </div>
+
+        </div>
+
+    </fieldset>
+</div>

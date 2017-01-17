@@ -1,0 +1,99 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.ResidencyInternshipDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Specialty *</label>*@
+        @Html.LabelFor(model => model.PreferenceType, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.Preference}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Program Type *</label>*@
+        @Html.LabelFor(model => model.ResidencyInternshipProgramType, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i ng-if="residency.ResidencyInternshipProgramType!= 3" class="data-label">{{residency.ProgramType}}</i>
+            <i ng-if="residency.ResidencyInternshipProgramType== 3" class="data-label">Residency</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Specialty *</label>*@
+        @Html.LabelFor(model => model.SpecialtyID, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.Specialty.Name || 'Not Available'}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+
+            @Html.LabelFor(model => model.DirectorName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words">{{residency.DirectorName || 'Not Available'}}</i>
+            </div>
+        </div>
+    
+    </div>
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Department *</label>*@
+        @Html.LabelFor(model => model.Department, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label wrap-words">{{residency.Department || 'Not Available'}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Start Date *</label>*@
+        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.StartDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">End Date *</label>*@
+        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.EndDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+        </div>
+    </div>
+    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+    {
+        <div class="form-group col-md-3">
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                @Html.LabelFor(model => model.DocumentPath, htmlAttributes: new { @class = "control-label small" })
+                <div ng-if="residency.DocumentPath">
+                    <i class="data-label"><a href="/Document/View?path={{residency.DocumentPath}}" cl class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Certificate"><i class="fa fa-file"></i></a></i>
+                </div>
+                <div ng-if="!residency.DocumentPath">
+                    <i class="data-label"> Not available</i>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="clearfix"></div>
+    <div ng-show="activeMessageDiv=='updatedResidencyDetailsForView'+$index" class="alert alert-success" role="alert">
+        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+        {{messageDesc}}
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="clearfix"></div>
+    <div ng-show="activeMessageDiv=='updatedResidencyDetails'+$index" class="alert alert-success" role="alert">
+        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+        {{messageDesc}}
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="operateSecondCancelControl('')">Cancel</button>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <button type="button" class="btn btn-primary btn-sm pull-right" ng-show="visibilitySecondControl == ($index+'_viewresidencyForView')" ng-click="operateSecondEditControl($index+'_editresidencyForView',residency)">Edit</button>
+                <button type="button" class="btn btn-primary btn-sm pull-right" ng-show="visibilitySecondControl == ($index+'_viewresidency')" ng-click="operateSecondEditControl($index+'_editresidency',residency)">Edit</button>
+            }
+
+        </div>
+    </div>
+
+
+</div>

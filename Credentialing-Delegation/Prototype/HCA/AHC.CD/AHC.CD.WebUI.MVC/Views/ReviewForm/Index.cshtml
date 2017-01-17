@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+
+<script src="~/Scripts/Custom/Checklist/ChecklistIndex.js"></script>
+<script src="~/Scripts/Custom/InitiateCredentialing/Provider.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+
+
+<link href="~/Content/SharedCss/style.css" rel="stylesheet" />
+
+
+
+<style>
+    label.small {
+        color: #337ab7;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="appList" ng-controller="listController">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="~/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Form Review
+                    </li>
+
+                </ol>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="panel panel-default content-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">List for Providers Initiated</h3>
+                </div>
+                <table class="table table-bordered table-hover table-condensed alignTableStyle">
+                    <thead>
+                        <tr>
+                           
+                            <th>NPI Number</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>CAQH Number</th>
+                            <th>Provider Type</th>
+                            <th>Group</th>
+                            <th>Specialty</th>
+                            <th rowspan="2">Review</th>
+                        </tr>
+                        <tr>
+                            <td><input type="text" placeholder="Filter NPI" class="form-control input-sm" ng-model="search.NPI" /></td>
+                            <td><input type="text" placeholder="Filter First Name" class="form-control input-sm" ng-model="search.FirstName" /></td>
+                            <td><input type="text" placeholder="Filter Last Name" class="form-control input-sm" ng-model="search.LastName" /></td>
+                            <td><input type="text" placeholder="Filter CAQH" class="form-control input-sm" ng-model="search.CAQH" /></td>
+                            <td><input type="text" placeholder="Filter Type" class="form-control input-sm" ng-model="search.Type" /></td>
+                            <td><input type="text" placeholder="Filter Group" class="form-control input-sm" ng-model="search.Groups" /></td>
+                            <td><input type="text" placeholder="Filter Speciality" class="form-control input-sm" ng-model="search.Specialities" /></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-class="{selectedProvider: p.IsSelected == true}" ng-repeat="p in allProviders | filter:{NPI:search.NPI,FirstName:search.FirstName,LastName:search.LastName,CAQH: search.CAQH,Type:search.Type,Groups:search.Groups,Specialities:search.Specialities}">
+                            <td>{{p.NPI}}</td>
+                            <td>{{p.FirstName}}</td>
+                            <td>{{p.LastName}}</td>
+                            <td>{{p.CAQH}}</td>
+                            <td>{{p.Type}}</td>
+                            <td><span ng-repeat="g in p.Groups"><span ng-if="$index > 0">, </span>{{g}}</span></td>
+                            <td><span ng-repeat="s in p.Specialities"><span ng-if="$index > 0">, </span>{{s}}</span></td>
+                            <td>
+                                @* <a class="btn btn-primary btn-sm" href="~/Profile/MasterProfile/Index" data-toggle="tooltip" data-placement="right" title="View Profile" target="_blank"><i class="fa fa-search-plus"></i></a>*@
+                                <a class="btn btn-primary btn-sm" href="~/ReviewForm/ReviewForm"><i class="fa fa-hand-o-up"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+

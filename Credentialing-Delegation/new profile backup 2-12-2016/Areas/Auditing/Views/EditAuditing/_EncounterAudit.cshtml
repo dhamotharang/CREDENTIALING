@@ -1,0 +1,120 @@
+﻿@model PortalTemplate.Areas.Auditing.Models.CreateAuditing.EncounterInfoViewModel
+@using PratianUI
+@{
+    List<SelectListItem> Categories = new List<SelectListItem>();
+    Categories.Add(new SelectListItem
+      {
+          Text = "Chief Complaint",
+          Value = "000",
+          Selected = true
+      });
+    Categories.Add(new SelectListItem
+    {
+        Text = "History of present illness",
+        Value = "001"
+
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Review of Systems",
+        Value = "002"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Past, Family and/or Social History",
+        Value = "003"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "History References",
+        Value = "004"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Examination",
+        Value = "005"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Medical Decision Making Level",
+        Value = "006"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Modifier",
+        Value = "007"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Incomplete Notes",
+        Value = "008"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Missing Signature",
+        Value = "009"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "No E&M Code",
+        Value = "100"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Sign and E&M Missing",
+        Value = "101"
+    });
+    Categories.Add(new SelectListItem
+    {
+        Text = "Others",
+        Value = "102"
+    });
+}
+<div class="row ViewEncounter" id="ViewEncounter">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+        <div class="x_panel border_on_panel">
+            <div class="x_content">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 top_on_panel">
+                    <label class="title_text">Encounter Details</label>
+                    <a onclick="toggleCollapseEncounter()" class="btn btn-xs btn-info pull-right"><span class="fa fa-list"></span></a>
+                </div>
+                @Html.Partial("~/Areas/SharedView/Views/Encounter/_EncounterEdit.cshtml", Model.EncounterDetails)
+                <div class="row auditdetails">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <fieldset class="fieldsetStyle">
+                            <legend class="legendstyle">Encounter Audit</legend>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 eisagreed">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 zero-padding-left-right">
+                                    @*@Html.PratianUiSquareCheckboxFor(m => m.IsAgree, new { color = "purple", @checked = "checked" })*@
+                                    @Html.RadioButtonFor(model => model.IsAgree, true, new { @class = "normal-radio agreeCheck" })
+                                    <label><span></span>Agree</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    @Html.RadioButtonFor(model => model.IsAgree, false, new { @class = "normal-radio disagreeCheck" })
+                                    <label><span></span>DisAgree</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 audit-valid disagreedetails" id="encdecisiondiv">
+                                <label class="font-normal">Category</label>
+                                <div>
+                                    @Html.DropDownListFor(model => model.Categories, Categories, new { @class = "input-xs non_mandatory_field_halo Encountercategory" })
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 audit-valid disagreedetails">
+                                <label class="font-normal">Remarks</label>
+                                <div>
+                                    @foreach (var remark in Model.Categories)
+                                    {
+                                        <label>@remark.CategoryName</label>
+                                        @Html.TextAreaFor(m => remark.Remarks, new { @class = "form-control input-xs non_mandatory_field_halo" })
+                                    }
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-script filepath="~/Areas/Auditing/Scripts/AppJs/EditAuditing/NonMinified/_EncounterAudit.js"></p-script>

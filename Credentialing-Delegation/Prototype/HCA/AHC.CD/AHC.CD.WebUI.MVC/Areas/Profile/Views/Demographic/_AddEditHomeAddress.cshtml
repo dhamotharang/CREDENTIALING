@@ -1,0 +1,122 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.HomeAddressViewModel
+
+@Html.HiddenFor(model => model.HomeAddressID, new { data_ng_model = "HomeAddress.HomeAddressID", value = "1" })
+
+<form>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            <label class="control-label small">Number</label>
+            <input type="text" class="form-control input-sm" placeholder="number" ng-model="HomeAddress.Number" />
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.UnitNumber, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.UnitNumber, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddress.UnitNumber", placeholder = "apartment/unit #" } })
+            @Html.ValidationMessageFor(model => model.UnitNumber, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddress.Street", placeholder = "street address" } })
+            @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            <label class="control-label small">Country *</label>
+            <select id="HomeAddressCountry" class="form-control input-sm" ng-model="HomeAddress.Country" ng-change="getStates(HomeAddress.Country)">
+                <option ng-repeat="country in Countries" value="{{country.Code}}" ng-selected="country.Code == HomeAddress.Country">{{country.Name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label small" })
+            <select id="HomeAddressCountry" name="State" class="form-control input-sm" data-ng-model="HomeAddress.State" data-ng-change="getCounties(HomeAddress.State)" data-val="true" data-val-required="The State * field is required.">
+                <option>-- select --</option>
+                <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}" ng-selected="state.State == HomeAddress.State">{{state.State}}</option>
+            </select>
+            @*@Html.DropDownListFor(model => model.State, new[] { new SelectListItem { Value = "Florida", Text = "Florida" }, new SelectListItem { Value = "Alaska", Text = "Alaska" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "HomeAddress.State" })*@
+            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.County, htmlAttributes: new { @class = "control-label small" })
+            <select id="HomeAddressCounty" name="County" class="form-control input-sm ng-pristine ng-valid ng-touched" data-ng-model="HomeAddress.County" data-ng-change="getCities(HomeAddress.County)" data-val="true" data-val-required="The County * field is required.">
+                <option>-- select --</option>
+                <option ng-repeat="county in Counties | unique: 'County'" value="{{county.County}}" ng-selected="county.County == HomeAddress.County">{{county.County}}</option>
+            </select>
+
+            @*@Html.DropDownListFor(model => model.County, new[] { new SelectListItem { Value = "Putname", Text = "Putname" }, new SelectListItem { Value = "Raipur", Text = "Raipur" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "HomeAddress.County" })*@
+            @Html.ValidationMessageFor(model => model.County, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label small" })
+            <select id="HomeAddressCity" name="City" class="form-control input-sm ng-pristine ng-valid ng-touched" data-ng-model="HomeAddress.City" data-val="true" data-val-required="The City * field is required.">
+                <option>-- select --</option>
+                <option ng-repeat="city in Cities | unique: 'City'" value="{{city.City}}" ng-selected="city.City == HomeAddress.City">{{city.City}}</option>
+            </select>
+            @*@Html.DropDownListFor(model => model.City, new[] { new SelectListItem { Value = "Putname", Text = "Putname" }, new SelectListItem { Value = "Raipur", Text = "Raipur" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "HomeAddress.City" })*@
+            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddress.ZipCode", placeholder = "zip code" } })
+            @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-4 form-group">
+            @Html.LabelFor(model => model.IsPresentlyStaying, new { @class = "control-label small" })
+            <div>
+                <label class="radio-inline">
+                    <input type="radio" checked="checked" /> Yes
+                   @* @Html.RadioButtonFor(model => model.IsPresentlyStaying, true, new { data_ng_model = "HomeAddress.IsPresentlyStaying", data_ng_checked = "HomeAddress.IsPresentlyStaying" }) Yes*@
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.IsPresentlyStaying, false, new { data_ng_model = "HomeAddress.IsPresentlyStaying" }) No
+                </label>
+            </div>
+            @Html.ValidationMessageFor(model => model.IsPresentlyStaying, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4 form-group">
+            @Html.LabelFor(model => model.LivingFromDate, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.LivingFromDate, new { htmlAttributes = new { @class = "form-control input-sm", type = "date", data_ng_model = "HomeAddress.LivingFromDate" } })
+            @Html.ValidationMessageFor(model => model.LivingFromDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4 form-group" ng-if="HomeAddress.IsPresentlyStaying=='False'">
+            @Html.LabelFor(model => model.LivingEndDate, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.LivingEndDate, new { htmlAttributes = new { @class = "form-control input-sm", type = "date", data_ng_model = "HomeAddress.LivingEndDate" } })
+            @Html.ValidationMessageFor(model => model.LivingEndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-4 form-group">
+            @Html.LabelFor(model => model.IsPrimary, new { @class = "control-label small" }) &nbsp;&nbsp;&nbsp;
+            <label class="radio-inline">
+                <input type="radio" checked="checked" /> Yes
+                @*@Html.RadioButtonFor(model => model.IsPrimary, true, new { data_ng_model = "HomeAddress.IsPrimary" }) Yes*@
+            </label>
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.IsPrimary, false, new { data_ng_model = "HomeAddress.IsPrimary" }) No
+            </label>
+            <br />
+            @Html.ValidationMessageFor(model => model.IsPrimary, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div ng-if="IsHomeAddressHasError" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists : <br />
+            <span ng-repeat="err in HomeAddressErrorList track by $index">{{err}}</span>
+        </div>
+    </div>
+    <div ng-if="newHomeAddressForm" class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="cancelHomeAddress('newHomeAddressForm1')">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveHomeAddress('newHomeAddressForm1',HomeAddress)">Add</button>
+        </div>
+    </div>
+    <div ng-if="!newHomeAddressForm" class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="cancelHomeAddress('homeAddressEditDiv'+$index)">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="updateHomeAddress('homeAddressEditDiv'+$index,HomeAddress, $index)">Update</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,78 @@
+﻿<!-- Confirmation Mail Send panel -->
+
+<div class="spinner"></div>
+<div ng-show="isAdded && !isEmailSent" class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    {{ProviderAddedMsg}}
+</div>
+
+<div class="panel panel-default" ng-show="!isEmailSent && isAdded">
+    <div class="panel-heading">
+        <div>Provider Information</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-4"><label>First Name :</label> <span>{{Provider.Personal.FirstName}}</span></div>
+        <div class="col-lg-4"><label>Middle Name :</label> <span>{{Provider.Personal.MiddleName}}</span></div>
+        <div class="col-lg-4"><label>Last Name :</label> <span>{{Provider.Personal.LastName}}</span></div>
+        <div class="col-lg-12">
+            <hr>
+        </div>
+        <div class="col-lg-4"><label>Provider Category :</label> <span>{{selectedCategory.categoryName}}</span></div>
+        <div class="col-lg-8"><label>Provider Relationship :</label> <span>{{ProviderRelationName}}</span></div>
+    </div>
+</div>
+<!-- Confirmation Mail Send panel -->
+<!-- email input field panel -->
+
+<div class="panel panel-default" ng-show="!isEmailSent">
+    <div class="panel-heading">
+        <div>Email Confirmation</div>
+    </div>
+    <div class="panel-body form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 control-label">To</label>
+            <div class="col-md-10">
+                <input type="text" name="name" value="{{Provider.Personal.Email}}" class="form-control input-sm" readonly />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Subject</label>
+            <div class="col-md-10 input-group input-group-sm" editable-text="EmailSubject" e-required>
+                <input type="text" ng-model="EmailSubject" name="subject" class="form-control" readonly />
+                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+        </div>
+        <div text-angular="text-angular" name="HTMLContent" ng-model="EmailBody"></div>
+    </div>
+    <div class="panel-footer clearfix">
+
+        <input id="next1" type="button" value="Send Email" ng-click="sendMailProvider()" class="btn btn-success btn-sm pull-right" />
+    </div>
+</div>
+<!-- end email input field panel -->
+<!-- Success Message Alert Type Div -->
+<div ng-show="isEmailSent" class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    {{EmailAddedMsg}}
+</div>
+
+<div ng-show="isEmailSent" class="panel panel-default">
+    <div class="panel-heading">
+        <div>Provider Information</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-4"><label>First Name :</label> <span>{{Provider.Personal.FirstName}}</span></div>
+        <div class="col-lg-4"><label>Middle Name :</label> <span>{{Provider.Personal.MiddleName}}</span></div>
+        <div class="col-lg-4"><label>Last Name :</label> <span>{{Provider.Personal.LastName}}</span></div>
+        <div class="col-lg-12">
+            <hr>
+        </div>
+        <div class="col-lg-4"><label>Provider Email-Id :</label> <span>{{Provider.Personal.Email}}</span></div>
+        <div class="col-lg-4"><label>Provider Category :</label> <span>{{selectedCategory.categoryName}}</span></div>
+        <div class="col-lg-4"><label>Provider Relationship :</label> <span>{{ProviderRelationName}}</span></div>
+    </div>
+    <div class="panel-footer clearfix">
+        <a class="btn btn-primary btn-sm" href="/Provider/CreateProvider">Add New Provider</a>
+        <a class="btn btn-primary btn-sm pull-right" href="/Profile/Index">View Profile</a>
+    </div>
+</div>

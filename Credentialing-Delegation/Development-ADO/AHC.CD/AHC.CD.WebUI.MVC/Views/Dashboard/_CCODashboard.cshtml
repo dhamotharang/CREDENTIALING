@@ -1,0 +1,362 @@
+﻿
+<script src="~/Scripts/Custom/DashBoard/CCODashboardController.js"></script>
+
+<div class="panel panel-default" ng-controller="CCODashboardController" ng-cloak>
+    <div class="panel-heading">
+        <i class="fa fa-check fa-fw"></i> Upcoming Renewals
+        <button class="btn btn-xs btn-primary pull-right" ng-click="controlpanel=true;"><i class="fa fa-cog"></i></button>
+        <div ng-show="controlpanel" class="affix bg-gray col-lg-2 table-bordered" style="z-index:1000; right:3%; background-color:white">
+            <br />
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Tab Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="ld in LicenseData track by $index">
+                        <td><input type="checkbox" ng-model="ld.Show" ng-click="newSelection($index, ld.Show)" /></td>
+                        <td>{{ld.LicenseType}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-lg-12 text-center" style="margin-bottom:5px;">
+                <button class="btn btn-xs btn-success" ng-click="saveIt()">Save</button>
+                <button class="btn btn-xs btn-danger" ng-click="revertIt()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div">
+            <div class="col-lg-10 col-md-10 col-sm-10">
+                <ul class="nav nav-tabs" style="border-bottom: 0px;">
+                    <li ng-repeat="ld in LicenseData track by $index" ng-if="ld.Show">
+                        <a ng-click="getLicensTypeData(ld)" class="renewals pointer" ng-class="{active:LicenseType == ld.LicenseType, 'license-validation-expired':ld.LicenseStatus.ExpiredLicense > 0, 'license-validation-warning':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense > 0), 'license-validation-success':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense == 0 && ld.LicenseStatus.ValidLicense > 0)}">
+                            {{ld.LicenseType}}
+                            <span ng-if="ld.LicenseStatus.ValidLicense > 0" class="label label-info" tooltip data-toggle="tooltip" data-placement="right" title="Upcoming Renewals">{{ld.LicenseStatus.ValidLicense}}</span>
+                            <span ng-if="ld.LicenseStatus.PendingDaylicense > 0" class="label label-warning" tooltip data-toggle="tooltip" data-placement="top" title="Renewal Needed">{{ld.LicenseStatus.PendingDaylicense}}</span>
+                            <span ng-if="ld.LicenseStatus.ExpiredLicense > 0" class="label label-danger" tooltip data-toggle="tooltip" data-placement="left" title="Expired">{{ld.LicenseStatus.ExpiredLicense}}</span>
+                            <span ng-if="ld.TotalLicenses == 0" class="label label-default" tooltip data-toggle="tooltip" data-placement="right" title="No Upcoming Renewals">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <span class="h4">Total Count : {{GrandTotalLicenses}}</span>
+                <div>
+                    <span class="col-lg-6 col-md-6 col-sm-6 control-label pull-left">Filter</span>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <!-- Extra small button group -->
+                        <div class="btn-group">
+                            <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                {{filterDays || 'days'}}<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a ng-click="getDataAccordingDays(0)" class="pointer">select day</a></li>
+                                <li class="divider"></li>
+                                <li ng-repeat="day in days track by $index"><a ng-click="getDataAccordingDays(day)" class="pointer">{{day}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
+                <div>
+                    <span class="pull-left" style="margin-right: 10px;">
+                        <select ng-model="providerType" ng-change="getDataAccordingProviderTypeAndProviderLevel(providerType, providerLevel)" class="form-control input-sm">
+                            <option value="" ng-selected="true">Provider Type</option>
+                            <option ng-repeat="pt in ProviderTypes track by $index" value="{{pt.Title}}">{{pt.Title}}</option>
+                        </select>
+                    </span>
+                    <span class="pull-left">
+                        <select ng-model="providerLevel" ng-change="getDataAccordingProviderTypeAndProviderLevel(providerType, providerLevel)" class="form-control input-sm">
+                            <option value="" ng-selected="true">Level</option>
+                            <option ng-repeat="pl in ProviderLevels track by $index" value="{{pl.Name}}">{{pl.Name}}</option>
+                        </select>
+                    </span>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div">
+                    <hr style=" margin-top: 11px;" />
+                </div>
+                <div class="clearfix"></div>
+                <fieldset>
+                    <legend>
+                        {{LicenseType}}
+                    </legend>
+                    <div class="pull-right legend2" ng-if="CurrentPageLicenses.length > 0">
+                        <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-click="downloadData()" ><i class="fa fa-download"></i></button>
+                         <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-click="printData()"><i class="fa fa-print"></i></button>
+                     </div>
+                    <div ng-if="CurrentPageLicenses.length > 0" ng-include="LicenseTypeCode"></div>
+                    <pagination ng-show="CurrentPageLicenses.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                    @*<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>*@
+
+                    <div ng-if="CurrentPageLicenses.length == 0">No provider with upcoming {{LicenseType}} expiries</div>
+                </fieldset>
+            </div>
+
+            <!-- angular template for access data selected license type -->
+            <script type="text/ng-template" id="StateLicense">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="State License">
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.LicenseNumber',reverse,3)" class="pointer">License Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.IssueState',reverse,4)" class="pointer">State <i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.StateLicenseStatus.Title',reverse,7)" class="pointer">Status <i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in CurrentPageLicenses track by $index' ng-class='{danger:p.License.dayLeft < -1, warning:p.License.dayLeft < 90, info:p.License.dayLeft < 180}'>
+                            <td>{{p.NPINumber}}</td>
+                            <td>{{p.FirstName}} {{p.LastName}}</td>
+                            <td>{{p.License.LicenseNumber}}</td>
+                            <td>{{p.License.IssueState}}</td>
+                            <td>{{p.License.StateLicenseStatus.Title}}</td>
+                            <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{p.License.dayLeft}}</td>
+                            <td><a href='/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Renew'><i class='fa fa-repeat'></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </script>
+            <script type="text/ng-template" id="FederalDEA">
+
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Federal DEA">
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.DEANumber',reverse,3)" class="pointer">DEA Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.StateOfReg',reverse,4)" class="pointer">State <i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in CurrentPageLicenses track by $index' ng-class='{danger:p.License.dayLeft < -1, warning:p.License.dayLeft < 90, info:p.License.dayLeft < 180}'>
+                            <td>{{p.NPINumber}}</td>
+                            <td>{{p.FirstName}} {{p.LastName}}</td>
+                            <td>{{p.License.DEANumber}}</td>
+                            <td>{{p.License.StateOfReg}}</td>
+                            <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{p.License.dayLeft}}</td>
+                            <td><a href='/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Renew'><i class='fa fa-repeat'></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </script>
+            <script type="text/ng-template" id="CDSInformation">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="CDS Information">
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.CertNumber',reverse,3)" class="pointer">CDS Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.State',reverse,4)" class="pointer">State <i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in CurrentPageLicenses track by $index' ng-class='{danger:p.License.dayLeft < -1, warning:p.License.dayLeft < 90, info:p.License.dayLeft < 180}'>
+                            <td>{{p.NPINumber}}</td>
+                            <td>{{p.FirstName}} {{p.LastName}}</td>
+                            <td>{{p.License.CertNumber}}</td>
+                            <td>{{p.License.State}}</td>
+                            <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{p.License.dayLeft}}</td>
+                            <td><a href='/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Renew'><i class='fa fa-repeat'></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </script>
+            <script type="text/ng-template" id="SpecialityBoard">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Specialty/Board">
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-4 col-md-4 col-sm-4 col-xs-4'>
+                                <a ng-click="reverse=!reverse;order('License.SpecialtyBoardName',reverse,3)" class="pointer">Specialty Board Name <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in CurrentPageLicenses track by $index' ng-class='{danger:p.License.dayLeft < -1, warning:p.License.dayLeft < 90, info:p.License.dayLeft < 180}'>
+                            <td>{{p.NPINumber}}</td>
+                            <td>{{p.FirstName}} {{p.LastName}}</td>
+                            <td>{{p.License.SpecialtyBoardName}}</td>
+                            <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{p.License.dayLeft}}</td>
+                            <td><a href='/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Renew'><i class='fa fa-repeat'></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </script>
+            <script type="text/ng-template" id="HospitalPrivilages">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Hospital Privileges">
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-4 col-md-4 col-sm-4 col-xs-4'>
+                                <a ng-click="reverse=!reverse;order('License.HospitalName',reverse,3)" class="pointer">Hospital Name <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.AffiliationEndDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in CurrentPageLicenses track by $index' ng-class='{danger:p.License.dayLeft < -1, warning:p.License.dayLeft < 90, info:p.License.dayLeft < 180}'>
+                            <td>{{p.NPINumber}}</td>
+                            <td>{{p.FirstName}} {{p.LastName}}</td>
+                            <td>{{p.License.HospitalName}}</td>
+                            <td>{{p.License.AffiliationEndDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{p.License.dayLeft}}</td>
+                            <td><a href='/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Renew'><i class='fa fa-repeat'></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </script>
+            <script type="text/ng-template" id="ProfessionalLiability">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Professional Liability">
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.PolicyNumber',reverse,3)" class="pointer">Policy Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.InsuranceCarrier',reverse,4)" class="pointer">Insurance Carrier <i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.ExpirationDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in CurrentPageLicenses track by $index' ng-class='{danger:p.License.dayLeft < -1, warning:p.License.dayLeft < 90, info:p.License.dayLeft < 180}'>
+                            <td>{{p.NPINumber}}</td>
+                            <td>{{p.FirstName}} {{p.LastName}}</td>
+                            <td>{{p.License.PolicyNumber}}</td>
+                            <td>{{p.License.InsuranceCarrier}}</td>
+                            <td>{{p.License.ExpirationDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{p.License.dayLeft}}</td>
+                            <td><a href='/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Renew'><i class='fa fa-repeat'></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </script>
+            <script type="text/ng-template" id="WorkerCompensation">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Worker Compensation">
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-4 col-md-4 col-sm-4 col-xs-4'>
+                                <a ng-click="reverse=!reverse;order('License.WorkersCompensationNumber',reverse,3)" class="pointer">Workers Compensation Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('License.ExpirationDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in CurrentPageLicenses track by $index' ng-class='{danger:p.License.dayLeft < -1, warning:p.License.dayLeft < 90, info:p.License.dayLeft < 180}'>
+                            <td>{{p.NPINumber}}</td>
+                            <td>{{p.FirstName}} {{p.LastName}}</td>
+                            <td>{{p.License.WorkersCompensationNumber}}</td>
+                            <td>{{p.License.ExpirationDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{p.License.dayLeft}}</td>
+                            <td><a href='/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' class='btn btn-xs btn-default' tooltip data-toggle='tooltip' data-placement='right' title='Renew'><i class='fa fa-repeat'></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </script>
+        </div>
+    </div>
+</div>

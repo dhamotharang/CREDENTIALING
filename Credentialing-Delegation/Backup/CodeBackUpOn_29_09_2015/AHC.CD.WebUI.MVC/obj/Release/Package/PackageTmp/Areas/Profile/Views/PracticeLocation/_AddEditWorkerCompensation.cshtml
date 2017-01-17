@@ -1,0 +1,77 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.WorkersCompensationInfoViewModel
+
+<div ng-if="visibilitySecondControl == 'WorkingCompEdit'" id="WorkersCompensationDiv">
+    <fieldset>
+        <legend>
+            Workers Compensation Information
+        </legend>
+        <form id="WorkerCompensationForm{{$index}}">
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationDetailID, new {ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            <span ng-if="PracticeLocationDetail.WorkersCompensationInformation.WorkersCompensationInformationID">
+                @Html.HiddenFor(model => model.WorkersCompensationInformationID, new { ng_value = "PracticeLocationDetail.WorkersCompensationInformation.WorkersCompensationInformationID" })
+            </span>
+            <div id="practice12" class="panel-body col-md-12 zero-padding-left-right-div">
+
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.WorkersCompensationNumber, htmlAttributes: new { @class = "control-label small" })
+                    <div ng-hide="IsRenew">
+                        @Html.TextBoxFor(model => model.WorkersCompensationNumber, new { @class = "form-control input-sm", placeholder = "Workers Compensation Number", data_ng_model = "tempSecondObject.WorkersCompensationNumber" })
+                        @Html.ValidationMessageFor(model => model.WorkersCompensationNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div ng-show="IsRenew">
+                        <i class="data-label wrap-words">{{tempSecondObject.WorkersCompensationNumber}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.StatusType, htmlAttributes: new { @class = "control-label small" })
+                    <select ng-hide="IsRenew" class="form-control input-sm" data_ng_model="tempSecondObject.CertificationStatus" name="StatusType">
+                        <option value="" ng-selected="!tempSecondObject.CertificationStatus" style="display:none;">Select</option>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.StatusType)))
+                        {
+                            <option value="@value">
+                                @value.ToString()
+                            </option>
+                        }
+                    </select>
+                    <div ng-show="IsRenew">
+                        <i class="data-label wrap-words">{{tempSecondObject.CertificationStatus}}</i>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.StatusType, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.IssueDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @*@Html.TextBoxFor(model => model.IssueDate, new { type = "date", @class = "form-control input-sm", placeholder = "Issue Date", data_ng_model = "WorkersCompensationInformation.IssueDate" })*@
+                        @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempSecondObject.IssueDate", data_ng_change = "tempSecondObject.ExpirationDate = autoFillExpiryDate(PracticeLocationDetail.WorkersCompensationInformation.WorkersCompensationInformationID, tempSecondObject.IssueDate, tempSecondObject.ExpirationDate)" })
+                        @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.ExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @*@Html.TextBoxFor(model => model.ExpirationDate, new { type = "date", @class = "form-control input-sm", placeholder = "Expiration Date", data_ng_model = "WorkersCompensationInformation.ExpirationDate" })*@
+                        @Html.TextBoxFor(model => model.ExpirationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempSecondObject.ExpirationDate" })
+                        @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div ng-show="activeMessageDiv=='workersCompensationInformationErrorMsg'" class="alert alert-danger" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 form-group">
+                <button class="btn btn-warning btn-sm" ng-click="WorkingCompEdit=false; operateSecondCancelControl('WorkersCompensationDiv');">Cancel</button>
+                <button class="btn btn-success btn-sm pull-right" ng-click="updateWorkersCompensationInformation(PracticeLocationDetail, $index)">
+                    <span ng-if="IsRenew">Renew</span>
+                    <span ng-if="!IsRenew">Save</span>
+                </button>
+            </div>
+        </form>
+    </fieldset>
+</div>

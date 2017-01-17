@@ -1,0 +1,76 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Plan.LOBContactDetailViewModel
+
+<fieldset>
+    <legend>
+        Contact Details
+    </legend>
+   @*<div class="pull-right legend2">
+        <button type="button" class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="top" title="Add More" ng-click="AddLobContact();"><i class="fa fa-plus"></i></button>
+    </div>*@
+    <div ng-repeat="lobcon in tempObject1.ContactDetails track by $index" class="col-lg-12 zero-padding-right-right-div">
+        @*<fieldset>
+            <div ng-if="$index > 0" class="pull-right legend2">
+                <button type="button" class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="RemoveLobContact($index);"><i class=" fa fa-minus"></i></button>
+            </div>*@
+        <div class="col-lg-12">
+            <input type="checkbox" ng-init="lobcon.IsSameContatcPerson=true" ng-model="lobcon.IsSameContatcPerson" ng-change="GetContactPerson(lobcon.IsSameContatcPerson)" /><label class="control-label">&nbsp;Same As Plan Contact Detail</label>
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.ContactPersonName, new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.ContactPersonName, new { @class = "form-control input-sm", data_ng_model = "lobcon.ContactPersonName", placeholder = "contact person name" })
+            @Html.ValidationMessageFor(model => model.ContactPersonName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <span ng-if="!lobcon.PhoneCountryCode" ng-init="lobcon.PhoneCountryCode='+1'"></span>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('LobPhoneCountryCode'+parentindex+$index)"> {{lobcon.PhoneCountryCode}} <span class="caret"></span></button>
+                    </div>
+                    <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='LobPhoneCountryCode{{parentindex}}{{$index}}'>
+                        <div class="arrow"></div>
+                        <h3 class="popover-title">Select Country Dial Code</h3>
+                        <div class="popover-content">
+                            <select ng-model="lobcon.PhoneCountryCode" name="PhoneCountryCode">
+                                <option ng-repeat="code in CountryDailCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == lobcon.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                            </select>
+                        </div>
+                    </div>
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", data_ng_model = "lobcon.PhoneNumber", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.PhoneCountryCode, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.FaxNumber, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <span ng-if="!lobcon.FaxCountryCode" ng-init="lobcon.FaxCountryCode='+1'"></span>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('LobFaxCountryCode'+parentindex+$index)"> {{lobcon.FaxCountryCode}} <span class="caret"></span></button>
+                    </div>
+                    <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='LobFaxCountryCode{{parentindex}}{{$index}}'>
+                        <div class="arrow"></div>
+                        <h3 class="popover-title">Select Country Dial Code</h3>
+                        <div class="popover-content">
+                            <select ng-model="lobcon.FaxCountryCode" name="FaxCountryCode">
+                                <option ng-repeat="code in CountryDailCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == lobcon.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                            </select>
+                        </div>
+                    </div>
+                    @Html.EditorFor(model => model.FaxNumber, new { htmlAttributes = new { @class = "form-control", data_ng_model = "lobcon.FaxNumber", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.FaxCountryCode, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.FaxNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.EmailAddress, new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control input-sm", data_ng_model = "lobcon.EmailAddress", placeholder = "email address" })
+            @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+        </div>
+        @*</fieldset>*@
+    </div>
+</fieldset>

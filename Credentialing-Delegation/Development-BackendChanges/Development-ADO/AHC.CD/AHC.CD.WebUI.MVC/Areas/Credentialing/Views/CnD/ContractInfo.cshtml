@@ -1,0 +1,425 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Loading.ContractGridViewModel
+
+@{
+    ViewBag.Title = "ContractInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<script src="~/Areas/Credentialing/Scripts/CnD/Contractinfo.js"></script>
+
+@*<link href="~/Content/SharedCss/app.css" rel="stylesheet" />*@
+<link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+<script src="~/Scripts/Lib/jsPdf/jspdf.min.js"></script>
+<script src="~/Scripts/Lib/jsPdf/jspdf.plugin.autotable.js"></script>
+
+<div id="page-wrapper">
+    <div class="container-fluid" ng-app="Contractinfo" ng-controller="ContractinfoController">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> Contract Information
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row" ng-cloak>
+            <div class="panel-default form-style">
+                <fieldset>
+                    <legend>
+                        Contract Information
+                    </legend>
+                    <div class="pull-right legend2" ng-if="data">
+
+                        <button class="btn btn-xs btn-warning" tooltip data-toggle="tooltip" data-placement="left" title="Download" ng-click="GeneratePDF()"><span class="glyphicon glyphicon-download-alt"></span></button>
+
+                    </div>
+                    <div ng-show="loadingAjax" class="progress col-lg-12">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+
+                    <div ng-class="{'false':'col-lg-12','true':'col-lg-7'}[IsDetails]" class=" zero-padding-left-right-div" ng-show="!loadingAjax">
+
+                        <div ng-if="!data">
+
+                            <label>No Data Available</label>
+
+                        </div>
+
+                        <div ng-if="data">
+                            <table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                                <tbody ng-repeat="c in $data track by $index">
+                                    <tr>
+
+                                        <td class="wrap-words text-left" data-title="'Name'" header-class="text-center" sortable="'Name'" filter="{ 'Name': 'text' }">{{c.Name}}</td>
+                                        @*<td class="col-md-2 wrap-words" data-title="'Title'" header-class="text-center" sortable="'Title'" filter="{ 'Title': 'text' }">{{c.Title}}</td>*@
+                                        <td class="wrap-words text-center" data-title="'Plan'" header-class="text-center" sortable="'PlanName'" filter="{ 'PlanName': 'text' }">{{c.PlanName}}</td>
+                                        <td class="wrap-words text-center" data-title="'Location'" header-class="text-center" sortable="'Location'" filter="{ 'Location': 'text' }">{{c.Location}}</td>
+                                        <td class="wrap-words text-center" data-title="'Provider ID'" header-class="text-center" sortable="'ProviderID'" filter="{ 'ProviderID': 'text' }"><span ng-if="c.ProviderID">{{c.ProviderID}}</span><span ng-if="!c.ProviderID">_</span></td>
+                                        <td class="wrap-words text-center" data-title="'Panel Status'" header-class="text-center" sortable="'PanelStatus'" filter="{ 'PanelStatus': 'text' }"><span ng-if="c.PanelStatus">{{c.PanelStatus}}</span><span ng-if="!c.PanelStatus">_</span></td>
+                                        <td class="wrap-words text-center" data-title="'Effective Date'" header-class="text-center" sortable="'LastModifiedDate'" filter="{ 'LastModifiedDate': 'text' }">{{c.EffectiveDate | date:'MM-dd-yyyy'}}</td>
+                                        <td class="col-lg-2 wrap-words text-center" data-title="'Action'" header-class="text-center">
+
+                                            <div class="pull-right">
+                                                <button class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="left" title="View" ng-click="viewContractInfo(c, $index)"><i class=" fa fa-eye"></i></button>
+                                                <button class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-click="editContractInfo(c, $index)"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initWarning(c, $index);"><i class="fa fa-minus-circle"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-if="IsDetails">
+
+                        <fieldset>
+
+                            @*<div class="legend2 pull-right">
+                                    <button type="button" ng-click="closeContractInfo()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Close"><i class="fa fa-times text-danger"></i></button>
+                                </div>*@
+                            <div class="alert alert-success" role="alert" ng-if="updated">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                Updated Successfuly !!!!
+                            </div>
+                            <div class="panel-default form-style" id="ContractForm" ng-if="!updated">
+                                <form enctype="multipart/form-data" class="form-style">
+                                    <fieldset>
+                                        <legend>
+                                            Location Participation Details
+                                        </legend>
+                                        <div class="pull-right legend2">
+                                            <button ng-click="editContractInfo()" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History" data-original-title="" title="" ng-if="editMe"><i class="fa fa-edit"></i></button>
+                                            <button type="button" ng-click="closeContractInfo()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Close"><i class="fa fa-times text-danger"></i></button>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            @Html.HiddenFor(model => model.ContractGridID, new { ng_value = "Details.ContractGridID" })
+                                            @Html.HiddenFor(model => model.Report.CredentialingContractInfoFromPlanID, new { ng_value = "Details.Report.CredentialingContractInfoFromPlanID", data_ng_model = "Details.Report.CredentialingContractInfoFromPlanID" })
+                                            <div class="form-group col-md-6">
+                                                <label class="control-label small">Address</label>
+                                                <div ng-if="Details.ProfilePracticeLocation.Facility">
+                                                    <span class="ResultDataStyle">{{Details.Address}}</span>
+                                                </div>
+                                                <div ng-if="!Details.ProfilePracticeLocation.Facility">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Plan</label>
+                                                <div ng-if="Details.CredentialingInfo.Plan.PlanName">
+                                                    <span class="ResultDataStyle">{{Details.CredentialingInfo.Plan.PlanName}}</span>
+                                                </div>
+                                                <div ng-if="!Details.CredentialingInfo.Plan.PlanName">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Business Entity</label>
+                                                <div ng-if="Details.BusinessEntity.GroupName">
+                                                    <span class="ResultDataStyle">{{Details.BusinessEntity.GroupName}}</span>
+                                                </div>
+                                                <div ng-if="!Details.BusinessEntity.GroupName">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Line Of Business</label>
+                                                <div ng-if="Details.LOB.LOBName">
+                                                    <span class="ResultDataStyle">{{Details.LOB.LOBName}}</span>
+                                                </div>
+                                                <div ng-if="!Details.LOB.LOBName">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label class="control-label small" style="margin-bottom:20px;">Speciality</label>
+                                                <div ng-if="Details.ProfileSpecialty.Specialty.Name">
+                                                    <span class="ResultDataStyle">{{Details.ProfileSpecialty.Specialty.Name}}</span>
+                                                </div>
+                                                <div ng-if="!Details.ProfileSpecialty.Specialty.Name">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small" style="margin-bottom:20px;">Group ID</label>
+                                                <div ng-if="display && Details.Report.GroupID">
+                                                    <span class="ResultDataStyle">{{Details.Report.GroupID}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.GroupID">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    @Html.TextBoxFor(model => model.Report.GroupID, new { @class = "form-control input-sm", data_ng_model = "Details.Report.GroupID" })
+                                                </div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Provider ID</label>
+                                                <div ng-if="display && Details.Report.ProviderID">
+                                                    <span class="ResultDataStyle">{{Details.Report.ProviderID}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.ProviderID">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    @Html.TextBoxFor(model => model.Report.ProviderID, new { @class = "form-control input-sm", data_ng_model = "Details.Report.ProviderID" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                <label class="control-label small">Credentialing Status</label>
+                                                <div ng-if="display && Details.Report.CredentialingApprovalStatusType">
+                                                    <i ng-if="Details.Report.CredentialingApprovalStatusType == 1" class="data-label">Approved</i>
+                                                    <i ng-if="Details.Report.CredentialingApprovalStatusType == 2" class="data-label">Rejected</i>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.CredentialingApprovalStatusType">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    <label class="radio-inline">
+                                                        @Html.RadioButtonFor(model => model.Report.CredentialingApprovalStatusType, (int)(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.Approved), new { data_ng_model = "Details.Report.CredentialingApprovalStatusType" })Approved
+                                                    </label>
+                                                    <label class="radio-inline" style="margin-left:0px;">
+                                                        @Html.RadioButtonFor(model => model.Report.CredentialingApprovalStatusType, (int)(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.Rejected), new { data_ng_model = "Details.Report.CredentialingApprovalStatusType" })Rejected
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small">Panel Status</label>
+                                                <div ng-if="display && Details.Report.PanelStatus">
+                                                    <span class="ResultDataStyle">{{Details.Report.PanelStatus}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.PanelStatus">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    <label class="radio-inline">
+                                                        @Html.RadioButtonFor(model => model.Report.PanelStatusType, (int)(AHC.CD.Entities.MasterData.Enums.OpenCloseOption.Open), new { data_ng_model = "Details.Report.PanelStatusType" })Open
+                                                    </label>
+                                                    <label class="radio-inline" style="margin-left:0px;">
+                                                        @Html.RadioButtonFor(model => model.Report.PanelStatusType, (int)(AHC.CD.Entities.MasterData.Enums.OpenCloseOption.Close), new { data_ng_model = "Details.Report.PanelStatusType" })Close
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small">Phone</label>
+                                                <div ng-if="Details.ProfilePracticeLocation.Facility.MobileNumber">
+                                                    <span class="ResultDataStyle">{{Details.ProfilePracticeLocation.Facility.MobileNumber}}</span>
+                                                </div>
+                                                <div ng-if="!Details.ProfilePracticeLocation.Facility.MobileNumber">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small">Fax</label>
+                                                <div ng-if="Details.ProfilePracticeLocation.Facility.FaxNumber">
+                                                    <span class="ResultDataStyle">{{Details.ProfilePracticeLocation.Facility.FaxNumber}}</span>
+                                                </div>
+                                                <div ng-if="!Details.ProfilePracticeLocation.Facility.FaxNumber">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small">Office Manager</label>
+                                                <div ng-if="Details.ProfilePracticeLocation.BusinessOfficeManagerOrStaff">
+                                                    <span class="ResultDataStyle">{{Details.OfficeManager}}</span>
+                                                </div>
+                                                <div ng-if="!Details.ProfilePracticeLocation.BusinessOfficeManagerOrStaff">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small" style="margin-bottom:20px;">Initiated Date</label>
+                                                <div ng-if="display && Details.CredentialingInfo.InitiationDate">
+                                                    <span class="ResultDataStyle">{{Details.CredentialingInfo.InitiationDate | date:'MM-dd-yyyy'}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.CredentialingInfo.InitiationDate">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    @Html.TextBoxFor(model => model.Report.InitiatedDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "Details.Report.InitiatedDate", placeholder = "mm/dd/yyyy" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small">Initial Credentialing Date</label>
+                                                <div ng-if="display && Details.InitialCredentialingDate">
+                                                    <span class="ResultDataStyle">{{Details.InitialCredentialingDate | date:'MM-dd-yyyy'}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.InitialCredentialingDate">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    @Html.TextBoxFor(model => model.InitialCredentialingDate, new { data_val = "true", data_val_date = "Please enter date in mm/dd/yyyy format.", data_val_required = "Initial Credentialing Date is required.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "Details.InitialCredentialingDate", placeholder = "mm/dd/yyyy" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small">Re Credentialing Date</label>
+                                                <div ng-if="display && Details.Report.ReCredentialingDate">
+                                                    <span class="ResultDataStyle">{{Details.Report.ReCredentialingDate | date:'MM-dd-yyyy'}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.ReCredentialingDate">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    @Html.TextBoxFor(model => model.Report.ReCredentialingDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "Details.Report.ReCredentialingDate", placeholder = "mm/dd/yyyy" })
+                                                </div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small">Welcome Letter Mailed Date</label>
+                                                <div ng-if="display && Details.Report.CredentialedDate">
+                                                    <span class="ResultDataStyle">{{Details.Report.CredentialedDate | date:'MM-dd-yyyy'}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.CredentialedDate">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    @Html.TextBoxFor(model => model.Report.CredentialedDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "Details.Report.CredentialedDate", placeholder = "mm/dd/yyyy" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="control-label small" style="margin-bottom:20px;">Termination Date</label>
+                                                <div ng-if="display && Details.Report.TerminationDate">
+                                                    <span class="ResultDataStyle">{{Details.Report.TerminationDate | date:'MM-dd-yyyy'}}</span>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.TerminationDate">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                                <div ng-if="edit">
+                                                    @Html.TextBoxFor(model => model.Report.TerminationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "Details.Report.TerminationDate", placeholder = "mm/dd/yyyy" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label small">Welcome Letter</label>
+                                                <div style="clear:both;"></div>
+                                                <div ng-if="edit" ng-class="{'col-lg-11':Details.Report.WelcomeLetterPath,'col-lg-11':!Details.Report.WelcomeLetterPath}" class="zero-padding-left-right-div col-lg-11">
+                                                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput">
+                                                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                            <span class="fileinput-filename"></span>
+                                                        </div>
+                                                        <span class="input-group-addon btn btn-default btn-file">
+                                                            <span class="fileinput-new small">Select Document</span>
+                                                            <span class="fileinput-exists">Change</span>
+                                                            @Html.TextBoxFor(model => model.Report.WelcomeLetter, new { type = "file", onchange = "setFileNameWith(this);" })
+                                                        </span>
+                                                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                    @Html.HiddenFor(model => model.Report.WelcomeLetterPath, new { ng_value = "Details.Report.WelcomeLetterPath" })
+                                                </div>
+                                                <div ng-if="Details.Report.WelcomeLetterPath" class="col-lg-1" style="float:left">
+                                                    <a href="/Document/View?path={{Details.Report.WelcomeLetterPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                                                </div>
+                                                <div ng-if="display && !Details.Report.WelcomeLetterPath">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12" ng-if="!editMe">
+                                            <button type="button" class="btn btn-warning btn-sm" ng-click="closeContractInfo()">Cancel</button>
+                                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="SaveReport(Details,ContractForm)">Update</button>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            @*<div class="panel-default form-style">
+                                    <fieldset>
+                                        <legend>
+                                            Fee Schedule Details
+                                        </legend>
+                                        <div class="pull-right legend2">
+                                            <button class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History" data-original-title="" title=""><i class="fa fa-edit"></i></button>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Fee Schedule</label>
+                                                <div>
+                                                    <span class="ResultDataStyle">{{c.FeeDetails.FeeSchedule}}</span>
+                                                </div>
+                                                <div ng-if="c.FeeDetails==null||c.FeeDetails.FeeSchedule==null">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Effective Date</label>
+                                                <div>
+                                                    <span class="ResultDataStyle">{{c.FeeDetails.EffectiveDate}}</span>
+                                                </div>
+                                                <div ng-if="c.FeeDetails==null||c.FeeDetails.EffectiveDate==null">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Termination Date</label>
+                                                <div>
+                                                    <span class="ResultDataStyle">{{c.FeeDetails.TermDate}}</span>
+                                                </div>
+                                                <div ng-if="c.FeeDetails==null||c.FeeDetails.TermDate==null">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="control-label small">Supporting Document</label>
+                                                <div ng-if="c.FeeDetails.SupportingDocument">
+                                                    <i class="fa fa-file"></i>
+                                                </div>
+                                                <div ng-if="c.FeeDetails==null||!c.FeeDetails.SupportingDocument">
+                                                    <i class="data-label">Not available</i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>*@
+                        </fieldset>
+                    </div>
+                </fieldset>
+                <div class="modal fade" id="WarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form id="removeStateLicense">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                                </div>
+                                <div class="modal-body">
+                                    Do you really want to remove this record from list ?
+                                    @*<input type="hidden" name="StateLicenseInformationID" value="{{tempStateLicense.StateLicenseInformationID}}" />
+                                        <input type="hidden" name="StatusType" value="2" />*@
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" ng-click="RemoveReport(tempRemoveReportData)">Remove</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

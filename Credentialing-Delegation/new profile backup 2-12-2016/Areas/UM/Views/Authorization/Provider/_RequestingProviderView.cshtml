@@ -1,0 +1,82 @@
+﻿@{ PortalTemplate.Areas.UM.Models.ViewModels.Authorization.MemberViewModel memberData = @ViewBag.MemberData;}
+@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PratianUI
+@using PortalTemplate.Helper
+
+@{
+    if (@Model != null && @Model.RequestingProvider != null && (@Model.RequestingProvider.NPI!=null || @Model.RequestingProvider.IsUseMember) )
+    {
+        if (@Model.RequestingProvider != null && @Model.RequestingProvider.IsUsePCP)
+        {
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider)</span>
+                <span class="plusbtnSign btn btn-success btn-xs options_label pcpLabelReqProvider">
+                    @Html.LabelFor(e => e.RequestingProvider.IsUsePCP)
+                    @Html.CheckBoxFor(e => e.RequestingProvider.IsUsePCP, new { @class = "PCPRadioButtonAsTags", @checked = "checked" })
+                </span>&nbsp;
+                <span class="plusbtnSign options_label mbr mbrLabelReqProvider btn btn-ghost btn-xs">
+                    @Html.LabelFor(e => e.RequestingProvider.IsUseMember)
+                    @Html.CheckBoxFor(e => e.RequestingProvider.IsUseMember, new { @class = "PCPRadioButtonAsTags" })
+                </span>
+                @Html.TextBoxFor(e => e.RequestingProvider.FullName, new { @class = "form-control summaryDataChange  input-xs ProviderSearchDropdown variable_width_providername read_only_field mandatory_input_field loser_field", @readonly = "readonly", @tabindex = "-1" })
+                @Html.ValidationMessageFor(e => e.RequestingProvider.FullName)
+                <label class="label label-success INProvider INOONLabel">IN</label>
+                @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_RequestProviderHiddenData.cshtml")
+            </div>
+        }
+        else if (@Model.RequestingProvider != null && @Model.RequestingProvider.IsUseMember)
+        {
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider)</span>
+                <span class="plusbtnSign btn btn-ghost btn-xs options_label pcpLabelReqProvider">
+                    @Html.LabelFor(e => e.RequestingProvider.IsUsePCP)
+                    @Html.CheckBoxFor(e => e.RequestingProvider.IsUsePCP, new { @class = "PCPRadioButtonAsTags" })
+                </span>&nbsp;
+                <span class="plusbtnSign options_label mbr mbrLabelReqProvider btn btn-success btn-xs">
+                    @Html.LabelFor(e => e.RequestingProvider.IsUseMember)
+                    @Html.CheckBoxFor(e => e.RequestingProvider.IsUseMember, new { @class = "PCPRadioButtonAsTags", @checked = "checked" })
+                </span>
+                @Html.TextBoxFor(e => e.RequestingProvider.FullName, new { @class = "form-control summaryDataChange  input-xs ProviderSearchDropdown variable_width_providername read_only_field mandatory_input_field loser_field", @readonly = "readonly", @tabindex = "-1" })
+                @Html.ValidationMessageFor(e => e.RequestingProvider.FullName)
+                <label class="label label-success INProvider INOONLabel">IN</label>
+                @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_RequestProviderHiddenData.cshtml")
+            </div>
+        }
+        else
+        {
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider)</span>
+                <span class="plusbtnSign btn btn-ghost btn-xs options_label pcpLabelReqProvider">
+                    @Html.LabelFor(e => e.RequestingProvider.IsUsePCP)
+                    @Html.CheckBoxFor(e => e.RequestingProvider.IsUsePCP, new { @class = "PCPRadioButtonAsTags" })
+                </span>&nbsp;
+                <span class="plusbtnSign options_label mbr mbrLabelReqProvider btn btn-ghost btn-xs">
+                    @Html.LabelFor(e => e.RequestingProvider.IsUseMember)
+                    @Html.CheckBoxFor(e => e.RequestingProvider.IsUseMember, new { @class = "PCPRadioButtonAsTags" })
+                </span>
+                @Html.TextBoxFor(e => e.RequestingProvider.FullName, new { @class = "form-control input-xs summaryDataChange  ProviderSearchDropdown variable_width_providername  mandatory_input_field loser_field" })
+                @Html.ValidationMessageFor(e => e.RequestingProvider.FullName)
+                <label class="label label-success INProvider INOONLabel">IN</label>
+                @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_RequestProviderHiddenData.cshtml")
+            </div>
+        }
+    }
+    else
+    {
+        <div class="inline_block margin_right_1">
+            <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider)</span>
+            <span class="plusbtnSign btn btn-success btn-xs options_label pcpLabelReqProvider">
+                @Html.LabelFor(e => e.RequestingProvider.IsUsePCP)
+                @Html.CheckBoxFor(e => e.RequestingProvider.IsUsePCP, new { @class = "PCPRadioButtonAsTags", @checked = "checked" })
+            </span>&nbsp;
+            <span class="plusbtnSign options_label mbr mbrLabelReqProvider btn btn-ghost btn-xs">
+                @Html.LabelFor(e => e.RequestingProvider.IsUseMember)
+                @Html.CheckBoxFor(e => e.RequestingProvider.IsUseMember, new { @class = "PCPRadioButtonAsTags" })
+            </span>
+            @Html.TextBoxFor(e => e.RequestingProvider.FullName, new { @class = "form-control input-xs summaryDataChange  ProviderSearchDropdown variable_width_providername read_only_field mandatory_input_field loser_field", Value = @ViewBag.MemberData.PCP.FirstName + " " + @ViewBag.MemberData.PCP.LastName, @readonly = "readonly", @tabindex = "-1" })
+            @Html.ValidationMessageFor(e => e.RequestingProvider.FullName)
+            <label class="label label-success INProvider INOONLabel">IN</label>
+            @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_RequestProviderHiddenData.cshtml")
+        </div>
+    }
+}

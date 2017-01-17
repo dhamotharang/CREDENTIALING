@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Cities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+    <script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+    <script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="~/Scripts/Custom/MasterDataNew/CitiesController.js"></script>
+}
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-hospital-o"></i> Cities
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataCities" ng-controller="masterDataCitiesController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Manage Cities
+                        <span class="pull-right">
+                            <button ng-disabled="disableAdd || !SelectedStateID" ng-click="addCity()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+
+                    <div class="panel-body">
+                        <div ng-show="activeMessageDiv=='addedCity'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            {{messageDesc}}
+                        </div>
+                        <div ng-show="activeMessageDiv=='errorCity'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            {{messageDesc}}
+                        </div>
+                        <div class="col-lg-12 zero-padding-left-right-div">
+                            <div class="col-lg-6 form-group zero-padding-left-right-div">
+                                <label class="control-label small">Country <img src="~/Content/Images/ajax-loader.gif" ng-show="CountriesLoaded" style="width:15px" /></label>
+                                <select ng-model="SelectedCountryID" class="form-control input-sm" ng-change="getStates(SelectedCountryID)">
+                                    <option value="">---- select ----</option>
+                                    <option ng-repeat="h in Countries track by $index" value="{{h.CountryID}}" ng-selected="h.CountryID == SelectedCountryID">{{h.Name}} - {{h.Code}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="control-label small">State</label>
+                                <select ng-model="SelectedStateID" class="form-control input-sm" ng-change="getCities(SelectedStateID);disableAdd=false;">
+                                    <option value="">---- select ----</option>
+                                    <option ng-repeat="hc in States track by $index" value="{{hc.StateID}}" ng-selected="hc.StateID == SelectedStateID">{{hc.Name}} - {{hc.Code}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th ng-if="disableAdd">City Code</th>
+                                    <th ng-if="disableAdd">City Name *</th>
+                                    <th ng-if="!disableAdd">
+                                        <a ng-click="reverse=!reverse;order('Code',reverse,1)" class="pointer">City Code <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                    </th>
+                                    <th ng-if="!disableAdd">
+                                        <a ng-click="reverse=!reverse;order('Name',reverse,2)" class="pointer">City Name * <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr>
+
+                                    <td><input type="text" placeholder="Filter CityCode" class="form-control input-sm" ng-model="search.CityCode" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter CityName" class="form-control input-sm" ng-model="search.CityName" ng-change="filterData()" /></td>
+                                <td></td>   
+                                 </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="city in AllCities | filter:{Code:search.CityCode,Name:search.CityName} track by $index" ng-include="getTemplate(city)" ng-show="IsValidIndex($index)"></tr>
+                            </tbody>
+                        </table>
+
+                        <script type="text/ng-template" id="displayCities">
+                            <td>{{city.Code || 'Not Available'}}</td>
+                            <td>{{city.Name}}</td>
+                            <td>
+                                @*    <button ng-disabled="true" ng-click="editCities(city)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editCities">
+                            <td>
+                                <input type="text" class="form-control input-sm" ng-model="tempCities.Code" />
+                                <span class="text-danger" name="Code" ng-if="error && !tempCities.Code">{{errorCode}}</span>
+                                <span class="text-danger" name="Code" ng-if="existErr && tempCities.Code">{{existErr}}</span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control input-sm" ng-model="tempCities.Name" />
+                                <span class="text-danger" name="Name" ng-if="error && !tempCities.Name">{{errorName}}</span>
+                                <span class="text-danger" name="Name" ng-if="existErr && tempCities.Name">{{existErr}}</span>
+                            </td>
+                            <td>
+                                &nbsp;<button ng-click="saveCity(tempCities, $index)" ng-disabled="LoadingAjaxforaddingcity" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-click="cancelAdd()" ng-disabled="LoadingAjaxforaddingcity" class="btn btn-xs btn-warning">Cancel</button><img src="../Content/Images/ajax-loader.gif" ng-show="LoadingAjaxforaddingcity" style="width:25px" class="pull-left" />
+                            </td>
+                        </script>
+                        <div class="clearfix"></div>
+
+                        <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                        <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+

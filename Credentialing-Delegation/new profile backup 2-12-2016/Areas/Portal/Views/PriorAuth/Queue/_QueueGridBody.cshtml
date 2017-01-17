@@ -1,0 +1,67 @@
+﻿
+@model IEnumerable<PortalTemplate.Areas.Portal.Models.PriorAuth.Queue.QueueViewModel>
+
+@foreach (var item in Model)
+{
+    var startcolor = String.Concat(item.RowColor, "_start");
+    <tr class="tab-navigation cursor_pointer" data-tab-action="View Authorization" data-tab-usertype="Member" data-tab-title="View Auth" data-tab-parentcontainer="partialBodyContainer" data-tab-floatmenu="true" data-tab-container="innerTabContainer" data-tab-autoflush="false" data-tab-defaultparenttab="Member" data-tab-userid="UL0001127" data-tab-parenttabtitle=@item.MemberName data-tab-path="/Portal/PriorAuthView/GetViewAuth?ID=20" data-tab-float-menu-path="/UM/Menu/GetMenu?SubscriberID=UL0001127" data-tab-parenttabpath="/Portal/MemberManage/GetMemberHeaderById?IDs=UL0001127" data-tab-parenttabrenderingarea="headerArea">
+        <td class="@startcolor"></td>
+        <td onclick="event.stopPropagation()"><div><input id="checkBox  index  " type="checkbox" name="mainCheckBox  index  " class="normal-checkbox" value="all"><label for="mainCheckBox  index  "><span></span></label></div></td>
+        <td><label class="singleElemQueue theme_label_data"><span class="label label-primary">  @item.Abbrevation </span></label></td>
+        <td><label class="singleElemQueue theme_label_data"> @item.ReferenceNumber </label></td>
+        <td><label class="singleElemQueue theme_label_data"> @item.MemberID</label></td>
+        @if (ViewBag.QueueTab.ToLower() == "completed")
+        {
+            <td><label class="singleElemQueue theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-content="View History"><a class="tab-navigation cursor_pointer" data-tab-action="History" data-tab-title="History" data-tab-parentcontainer="partialBodyContainer" data-tab-floatmenu="true" data-tab-container="innerTabContainer" data-tab-float-menu-path="~/Areas/UM/Views/Shared/_UMFloatMenu.cshtml" data-tab-parenttabpath="/Portal/MemberManage/GetMemberHeaderById?IDs=UL0001127" data-tab-autoflush="false" data-tab-path="~/Areas/UM/Views/History/UMHistory/HistoryList/_UMAuthHistory.cshtml" data-tab-parenttabrenderingarea="headerArea" data-tab-defaultparenttab="Member" data-tab-userid="UL0001127" data-tab-parenttabtitle="@item.MemberName">@item.MemberName </a></div></label></td>
+        }
+        else
+        {
+            <td><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="MEMBER" data-content=@item.MemberName.ToUpper()>  @item.MemberName </div></label></td>
+        }
+        <td><label class="singleElemQueue theme_label_data">@item.FromDate </label></td>
+        <td><label class="singleElemQueue theme_label_data"> @item.ToDate</label></td>
+        <td><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="PROVIDER" data-content=@item.ProviderID> @item.ProviderID</div></label></td>
+        <td><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="PROVIDER" data-content=@item.ProviderName> @item.ProviderName</div></label></td>
+        <td><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="FACILITY" data-content=@item.FacilityName>@item.FacilityName</div></label></td>
+        <td><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="SVC PROVIDER" data-content=@item.SVCAttProviderName.ToUpper()>@item.SVCAttProviderName</div></label></td>
+        @if (@item.RequestType.ToLower() == "expedited")
+        {
+            <td class="text-center"><label class="singleElemQueue red-color">EX</label></td>
+        }
+        else
+        {
+            <td class="text-center"><label class="singleElemQueue green-color">ST</label></td>
+        }
+        <td class="text-center"><label class="singleElemQueue theme_label_data">  @item.AuthorizationType  </label></td>
+        <td class="text-center"><label class="singleElemQueue theme_label_data"> @item.TypeOfCare  </label></td>
+
+        @if (@item.DurationLeft == "0D 00:00")
+        {
+            <td><label class="singleElemQueue red-color">  @item.DurationLeft  </label></td>
+        }
+        else
+        {
+            <td><label class="singleElemQueue theme_label_data">  @item.DurationLeft   </label></td>
+        }
+        <td><label class="singleElemQueue theme_label_data">@item.ExpectedDOS </label></td>
+        @*@if (ViewBag.QueueType.ToLower() == "qcapproval" || ViewBag.QueueType.ToLower() == "qcdenial")
+            {
+                <td class="maxWidthtdX">
+                    <label class=" singleElemQueue theme_label_data">
+                        -@item.DateofConversion
+
+                    </label>
+                </td>
+            }*@
+        <td class="text-center"><label class="singleElemQueue theme_label_data">  @item.RequestedUnit  </label></td>
+        <td><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="STATUS" data-content=@item.AuthStatus.ToUpper()>@item.AuthStatus </div></label></td>
+        <td class="text-center"><label class="singleElemQueue theme_label_data">@item.PosAbb </label></td>
+        <td><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="DX" data-content=@item.PrimaryDx.ToUpper()>@item.PrimaryDx </div></label></td>
+        @if (ViewBag.QueueType.ToLower() != "qcapproval" && ViewBag.QueueType.ToLower() != "qcdenial")
+        {
+            <td><label class=" singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="ASSIGNED" data-content=@item.Assigned.ToUpper()> @item.Assigned</div></label></td>
+        }
+        <td><label class=" singleElemQueue theme_label_data">@item.Entry</label></td>
+        <td><label class="singleElemQueue theme_label_data">@item.AuthNote</label></td>
+    </tr>
+}

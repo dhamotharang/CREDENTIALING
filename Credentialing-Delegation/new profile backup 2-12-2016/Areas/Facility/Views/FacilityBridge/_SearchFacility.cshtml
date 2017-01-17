@@ -1,0 +1,80 @@
+﻿@using PortalTemplate.Helper
+@using PratianUI
+@model PortalTemplate.Areas.Facility.Models.FacilityBridgeQueueViewModel
+<p-script filepath="~/Areas/Facility/Scripts/NonMinified/SearchFacility.js"></p-script>
+<style>
+    .select2-container--default .select2-selection--single {
+        /* border: 1px solid rgba(232, 46, 0, 0.72); */
+        /* box-shadow: 0 0 2px rgba(232, 46, 0, 0.72); */
+        background: url(../../Resources/Images/Buttons/Ghost.png) !important;
+        background-repeat: no-repeat !important;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        border: 1px solid #3859a1 !important;
+        border-top: 4px solid #3859a1 !important;
+    }
+
+    .width145 {
+        width: 145px !important;
+    }
+
+    .facility-modal .mandatory_field_halo {
+        margin-bottom: 5px !important;
+    }
+
+    .facility-modal label {
+        margin-bottom: 0px !important;
+    }
+
+    .facility-modal .select2-container:first-child {
+        margin-top: -11px !important;
+    }
+
+    .legendStyle {
+        margin-bottom: 0px;
+    }
+
+    .custom-legend-font-style {
+        font-size: 13px;
+        font-weight: bold;
+    }
+</style>
+<div id="spinner_wrapper">
+  @using (Ajax.BeginForm("GetFacility", "FacilityBridge", new AjaxOptions { HttpMethod = "POST", OnSuccess = "Show('FacilitySearchResult')", UpdateTargetId = "FacilitySearchResult" }))
+{
+     <table class="table" id="inputFieldsTable">
+        <thead>
+            <tr>
+                <th class="theme_label_data">FACILITY ID</th>
+                <th class="theme_label_data">FACILITY NAME</th>
+                <th class="theme_label_data">FACILITY TYPE</th>
+                <th class="theme_label_data">TAX ID</th>
+                <th class="theme_label_data">PHONE</th>
+                <th class="theme_label_data">ORGANIZATION NAME</th>
+                <th class="theme_label_data"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.TextBoxFor(e => e.FacilityID, new { @class = "form-control input-xs text-uppercase", @placeholder = "FACILITY ID", @id = "fId" })</td>
+                <td>@Html.TextBoxFor(e => e.FacilityName, new { @class = "form-control input-xs text-uppercase", @placeholder = "FACILITY NAME", @id = "fNameInput" })</td>
+                <td>@Html.TextBoxFor(e => e.FacilityType, new { @class = "form-control input-xs text-uppercase", @placeholder = "FACILITY TYPE", @id = "fTypeInput" })</td>
+                <td>@Html.TextBoxFor(e => e.TaxID, new { @class = "form-control input-xs text-uppercase", @placeholder = "TAX ID", @id = "taxIdInput" })</td>
+                <td>@Html.PratianUiPhoneFormatFor(e => e.PhoneNumber, new { @class = "form-control input-xs text-uppercase", @placeholder = "PHONE", @id = "phoneInput" })</td>
+                <td>@Html.TextBoxFor(e => e.OrganizationName, new { @class = "form-control input-xs text-uppercase", @placeholder = "ORGANIZATION NAME", @id = "orgNameInput" })</td>
+                <td id="searchActionItems" class="width_4">
+                    <button type="submit" class=" btn btn-primary btn-sm" id="searchFacilityButton" disabled><i class="fa fa-search"></i></button>
+                    <button class="btn btn-cancel btn-sm" id="clearSearchButton" disabled onclick="Hide('FacilitySearchResult')"><i class="fa fa-remove"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+   }
+    <div id="FacilitySearchResult" style="display: none;">
+        
+    </div>
+   
+</div>

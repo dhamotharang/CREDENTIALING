@@ -1,0 +1,154 @@
+﻿@using AHC.CD.WebUI.MVC.Models
+@model LoginViewModel
+
+@{
+    Layout = null;
+}
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+
+<link href="~/Content/SharedCss/bootstrap.min.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<!--login modal-->
+@if (@System.Configuration.ConfigurationManager.AppSettings["FlashScreen"] == "true")
+{
+    <div class="col-lg-12 text-center brand-gif">
+        <img src="~/Content/Images/CredAxisGif.gif">
+    </div>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () { $(".brand-gif").hide(50); }, 2900);
+        });
+    </script>
+
+}
+<div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true" style="position: inherit">
+    <div class="modal-dialog">
+        <div class="modal-content col-lg-12">
+            <div class="modal-header">
+                <h1 class="text-center">
+                    <img src="~/Content/Images/logo.png" class="login-logo" />
+                </h1>
+                <h4 class="text-center">Login</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <div class="form col-md-12 center-block">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" name="Email" placeholder="Email">
+                            @Html.ValidationMessageFor(m => m.Email, "")
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control input-lg" name="Password" placeholder="Password">
+                            @Html.ValidationMessageFor(m => m.Password, "")
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="checkbox pull-right">
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    @Html.LabelFor(m => m.RememberMe)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Sign In" class="btn btn-primary btn-lg btn-block" />
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-12">
+                    @*<span class="pull-right">@Html.ActionLink("Register as a new user", "Register", new { @class=""})</span>*@
+                    @*<span class="pull-left">@Html.ActionLink("Forgot your password?", "ForgotPassword")</span>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/Lib/Bootstrap/bootstrap.min.js"></script>
+
+
+@*@using AHC.CD.WebUI.MVC.Models
+        @model LoginViewModel
+
+        @{
+            ViewBag.Title = "Log in";
+        }
+
+        <h2>@ViewBag.Title.</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <h4>Use a local account to log in.</h4>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    @Html.LabelFor(m => m.RememberMe)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Log in" class="btn btn-default" />
+                            </div>
+                        </div>
+                        <p>
+                            @Html.ActionLink("Register as a new user", "Register")
+                        </p>
+                        @* Enable this once you have account confirmation enabled for password reset functionality
+                        <p>
+                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                        </p>
+                }
+            </section>
+        </div>
+    <div class="col-md-4">
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
+        </section>
+    </div>
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+<div class="footer navbar-fixed-bottom">
+    <hr />
+    <div class="col-lg-7">
+
+    </div>
+    <div class="col-lg-5 text-right">
+        <ul class="list-inline">
+            <li>@System.Configuration.ConfigurationManager.AppSettings["FooterStamp"]</li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+</div>
+

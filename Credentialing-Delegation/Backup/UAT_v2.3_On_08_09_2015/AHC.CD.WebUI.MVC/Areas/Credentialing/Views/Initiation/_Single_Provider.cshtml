@@ -1,0 +1,186 @@
+﻿
+@*<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+<script src="~/Areas/Credentialing/Scripts/SingleProviderJS.js"></script>*@
+
+<div ng-controller="singleProviderCtrl" class="col-lg-12 zero-padding-left-right-div">
+
+
+    <!--Search provider starts-->
+
+    <div class="panel panel-default small">
+        <div class="panel-heading">
+            <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('SearchProviderPanel');"><i class="fa fa-th-list"></i></button>
+            <div>
+                Search Provider &nbsp;&nbsp;
+                <a style="cursor: pointer; text-decoration: none;" ng-click="setActionID2(1);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==1}">Credentialing</a> &nbsp;
+                <a style="cursor: pointer; text-decoration: none;" ng-click="setActionID2(2);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==2}">Re-Credentialing</a> &nbsp;
+                <a style="cursor: pointer; text-decoration: none;" ng-click="setActionID2(3);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==3}">De-Credentialing</a>
+            </div>
+        </div>
+        <div role="tabpanel">
+            <div id="SearchProviderPanel" class="panel-body closePanel">
+
+
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="providerDetail">
+                            <!---Provider partial starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_Single_Provider_SearchByDetails.cshtml")
+                            <!---Provider partial ends here-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Search provider ends-->
+    <!--Loading starts-->
+
+    <div ng-show="loadingAjax" class="progress col-lg-12" ng-cloak>
+
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            Loading...Please wait...
+        </div>
+
+    </div>
+    <!--Loading ends-->
+    <div class="clearfix"></div>
+    <div ng-cloak ng-show="activeMessageDiv=='noProviderDetails'" class="col-lg-12 form-group">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span>{{messageDesc}}</span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <!--Search result starts-->
+    <div class="panel panel-default small" ng-show="result">
+        <div class="panel-heading">
+            <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('SearchProviderResultPanel');"><i class="fa fa-th-list"></i></button>
+            <div>Search Result</div>
+
+
+        </div>
+        <div role="tabpanel">
+            <div id="SearchProviderResultPanel" class="panel-body closePanel">
+
+
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        @*<div ng-show="selectedAction==1" role="tabpanel" class="tab-pane active" id="SearchResult">
+                                <!---Provider partial starts here-->
+                                @Html.Partial("~/Areas/Credentialing/Views/Initiation/_Single_Search_Result.cshtml")
+                                <!---Provider partial ends here-->
+                            </div>*@
+                        <div ng-show="selectedAction==1" role="tabpanel" class="tab-pane active" id="SearchResult">
+                            <!---Provider partial starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_CredSearchResult.cshtml")
+                            <!---Provider partial ends here-->
+                        </div>
+                        <div ng-show="selectedAction==2" role="tabpanel" class="tab-pane active" id="SearchResult">
+                            <!---Provider partial starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_ReCredSearchResult.cshtml")
+                            <!---Provider partial ends here-->
+                        </div>
+
+                        <div ng-show="selectedAction==3" role="tabpanel" class="tab-pane active" id="SearchResult">
+                            <!---Provider partial starts here-->
+                            <div ng-show="!isFound">
+                                No Results Found
+                            </div>
+
+                            <div ng-show="isFound">
+                                @Html.Partial("~/Areas/Credentialing/Views/Initiation/_DecredentialingSearchResult.cshtml")
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!--Search result ends-->
+    <div class="panel panel-default small" ng-show="initiate">
+        <div class="panel-heading">
+            <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('ProfileDetailPanel');"><i class="fa fa-th-list"></i></button>
+            <div>Initiate De-Credentialing</div>
+        </div>
+        <div role="tabpanel">
+            <div id="ProfileDetailPanel" class="panel-body closePanel">
+
+                <div class="col-md-12" ng-show="profileDetail.length==0">
+
+                    <label>
+
+                        No Data Available
+
+                    </label>
+
+                </div>
+
+                <div class="col-md-12" ng-show="profileDetail.length>0 && !initiateComplete">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="planDetail">
+                            <!---Provider partial starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_PlanDetailTable.cshtml")
+                            <!---Provider partial ends here-->
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="alert alert-success" role="alert" ng-show="IsMessage">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    Decredentialing Initiated Successfuly !!!!
+                </div>
+
+                <div ng-show="initiateComplete">
+                    <span class="col-lg-4"><hr /></span>
+                    <span class="col-lg-4 text-center h4">What would you like to do?</span>
+                    <span class="col-lg-4"><hr /></span>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div" ng-show="initiateComplete">
+                    <div class="col-lg-6 text-left"><button class="btn btn-warning btn-sm" ng-click="SearchProviderPanelToggleDown('SearchProviderResultPanel'); tempObject.PlanId = '';"> Back to Search Result</button></div>
+                    <div class="col-lg-6 text-right"><a class="btn btn-success btn-sm" href="~/Credentialing/Initiation/DecredentialingSummary/{{ProfileID}}" @*target="_blank"*@> View Application </a></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Initiation ends-->
+    <!--Initiation starts-->
+    <div class="panel panel-default small" ng-show="showInit">
+        <div class="panel-heading">
+            <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('InitiationPanel');"><i class="fa fa-th-list"></i></button>
+            <div ng-show="selectedAction==1">Initiate Credentialing</div>
+            <div ng-show="selectedAction==2">Initiate Re-Credentialing</div>
+            <div ng-show="selectedAction==3">Initiate De-Credentialing</div>
+        </div>
+        <div role="tabpanel">
+            <div id="InitiationPanel" class="panel-body closePanel">
+
+
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="Initiation">
+                            <!---Provider partial starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Initiation/_Single_Provider_InitCredentialing.cshtml")
+
+                            <!---Provider partial ends here-->
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Initiation ends-->
+
+</div>

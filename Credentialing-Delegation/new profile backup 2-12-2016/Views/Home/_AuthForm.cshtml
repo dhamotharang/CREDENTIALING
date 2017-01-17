@@ -1,0 +1,1425 @@
+﻿@model PortalTemplate.Models.UM.CreateNewAuthViewModel
+@{
+    List<SelectListItem> PlaceOfServiceList = new List<SelectListItem>() {
+        new SelectListItem { Text = "11-OFFICE", Value = "11-OFFICE" },
+        new SelectListItem { Text = "12- PATIENT HOME", Value = "12- PATIENT HOME" },
+        new SelectListItem { Text = "21- IP HOSPITAL", Value = "21- IP HOSPITAL" },
+        new SelectListItem { Text = "22- OP HOSPITAL", Value = "22- OP HOSPITAL" },
+        new SelectListItem { Text = "23-EMERGENCY ROOM - HOSPITAL", Value = "23-EMERGENCY ROOM - HOSPITAL" },
+        new SelectListItem { Text = "24- ASC", Value = "24- ASC" },
+        new SelectListItem { Text = "31- SNF", Value = "31- SNF" },
+        new SelectListItem { Text = "41-AMBULANCE - LAND", Value = "41-AMBULANCE - LAND" },
+        new SelectListItem { Text = "42-AMBULANCE – AIR OR WATER", Value = "42-AMBULANCE – AIR OR WATER" },
+        new SelectListItem { Text = "49-INDEPENDENT CLINIC", Value = "49-INDEPENDENT CLINIC" },
+        new SelectListItem { Text = "50-FEDERALLY QUALIFIED HEALTH CENTER", Value = "50-FEDERALLY QUALIFIED HEALTH CENTER" },
+        new SelectListItem { Text = "60-MASS IMMUNIZATION CENTER", Value = "60-MASS IMMUNIZATION CENTER" },
+        new SelectListItem { Text = "61(A)-IRF", Value = "61(A)-IRF" },
+        new SelectListItem { Text = "61(B)-LTAC", Value = "61(B)-LTAC" },
+        new SelectListItem { Text = "62- CORF", Value = "62- CORF" },
+        new SelectListItem { Text = "65-END-STAGE RENAL DISEASE TREATMENT FACILITY", Value = "65-END-STAGE RENAL DISEASE TREATMENT FACILITY" },
+        new SelectListItem { Text = "71-STATE OR LOCAL PUBLIC HEALTH CLINIC", Value = "71-STATE OR LOCAL PUBLIC HEALTH CLINIC" },
+        new SelectListItem { Text = "72-RURAL HEALTH CLINIC", Value = "72-RURAL HEALTH CLINIC" },
+        new SelectListItem { Text = "81-INDEPENDENT LAB", Value = "81-INDEPENDENT LAB" },
+    };
+
+    List<SelectListItem> RequestList = new List<SelectListItem>() {
+        new SelectListItem { Text = "EXPEDITED", Value = "EXPEDITED" },
+        new SelectListItem { Text = "STANDARD", Value = "STANDARD" },
+    };
+
+    List<SelectListItem> AuthTypeList = new List<SelectListItem>() {
+        new SelectListItem { Text = "CONCURRENT INITIAL", Value = "CONCURRENT INITIAL" },
+        new SelectListItem { Text = "CONCURRENT", Value = "CONCURRENT" },
+        new SelectListItem { Text = "PRESERVICE", Value = "PRESERVICE" },
+        new SelectListItem { Text = "RETROSPECTIVE", Value = "RETROSPECTIVE" },
+    };
+
+    List<SelectListItem> TOCList = new List<SelectListItem>() {
+        new SelectListItem { Text = "ELECTIVE", Value = "ELECTIVE" },
+        new SelectListItem { Text = "EMERGENCY", Value = "EMERGENCY" },
+    };
+
+    List<SelectListItem> OPTypeList = new List<SelectListItem>() {
+        new SelectListItem { Text = "OP PROCEDURE", Value = "OP PROCEDURE" },
+        new SelectListItem { Text = "OP DIAGNOSTIC", Value = "OP DIAGNOSTIC" },
+        new SelectListItem { Text = "OP OBSERVATION", Value = "OP OBSERVATION" },
+        new SelectListItem { Text = "OP IN A BED", Value = "OP IN A BED" },
+    };
+
+    List<SelectListItem> UMSvcGroupList = new List<SelectListItem>() {
+        new SelectListItem { Text = "ANGC", Value = "ANGC" },
+        new SelectListItem { Text = "CEDG", Value = "CEDG" },
+        new SelectListItem { Text = "COLONOSCOPY", Value = "COLONOSCOPY" },
+        new SelectListItem { Text = "EDG", Value = "EDG" },
+        new SelectListItem { Text = "RADIATION", Value = "RADIATION" },
+    };
+
+    List<SelectListItem> RoomTypeList = new List<SelectListItem>() {
+        new SelectListItem { Text = "MED", Value = "MED" },
+        new SelectListItem { Text = "SURG", Value = "SURG" },
+        new SelectListItem { Text = "ICU", Value = "ICU" },
+        new SelectListItem { Text = "CCU", Value = "CCU" },
+        new SelectListItem { Text = "CICU", Value = "CICU" },
+        new SelectListItem { Text = "TELE", Value = "TELE" },
+        new SelectListItem { Text = "CDU", Value = "CDU" },
+        new SelectListItem { Text = "CV-ICU", Value = "CV-ICU" },
+        new SelectListItem { Text = "NS-ICU", Value = "NS-ICU" },
+        new SelectListItem { Text = "ER HOLD", Value = "ER HOLD" },
+    };
+
+    List<SelectListItem> LevelOfCareList = new List<SelectListItem>() {
+        new SelectListItem { Text = "MATERNITY", Value = "MATERNITY" },
+        new SelectListItem { Text = "MEDICAL", Value = "MEDICAL" },
+        new SelectListItem { Text = "SURGICAL", Value = "SURGICAL" },
+    };
+
+    List<SelectListItem> DocumentTypeList = new List<SelectListItem>() {
+        new SelectListItem { Text = "CLINICAL", Value = "CLINICAL" },
+        new SelectListItem { Text = "PROGRESS NOTES", Value = "PROGRESS NOTES" },
+        new SelectListItem { Text = "FAX", Value = "FAX" },
+        new SelectListItem { Text = "LOA", Value = "LOA" },
+        new SelectListItem { Text = "PLAN AUTHORIZATION", Value = "PLAN AUTHORIZATION" },
+    };
+
+}
+
+
+
+@*================================================= Razor Code ===============================================*@
+@*<p-script filepath="~/Scripts/AppScripts/Authorization/CreateNewAuth.js"></p-script>*@
+<div class="clearfix"></div>
+<form id="UM_auth_form" class="zero-padding-left-right form_22 auth_form" onsubmit="return false;">
+    <div class="x_panel border_on_panel zero-padding-left-right">
+        <div class="x_content zero-padding-left-right">
+            <div class="field_width_medium">
+                @Html.Label("POS")
+                @Html.DropDownListFor(e => e.PlaceOfService, PlaceOfServiceList, new { @class = "form-control input-xs mandatory_field_halo", data_ng_model = "UMObject.PlaceOfServiceID", @tabindex = "-1" })
+
+            </div>
+            <div class="field_width_short">
+                @Html.Label("REQUEST")
+                @Html.DropDownListFor(e => e.RequestType, RequestList, new { @class = "form-control input-xs mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="field_width_medium">
+                @Html.Label("AUTH TYPE")
+                @Html.DropDownListFor(e => e.AuthorizationType, AuthTypeList, new { @class = "form-control input-xs mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="field_width_short">
+                @Html.Label("TYPE OF CARE")
+                @Html.DropDownListFor(e => e.TypeOfCare, TOCList, new { @class = "form-control input-xs mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="field_width_med_long">
+                @Html.Label("OUTPATIENT TYPE")
+                @Html.DropDownListFor(e => e.OutPatientType, OPTypeList, new { @class = "form-control input-xs mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="field_width_medium">
+                @Html.Label("RECEIVED")
+                @Html.TextBoxFor(e => e.ReceivedDate, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "MM/DD/YYYY HH:MM:SS", @tabindex = "-1" })
+            </div>
+            <div class="field_width_short">
+                @Html.Label("FROM")
+                @Html.TextBoxFor(e => e.FromDate, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "MM/DD/YYYY" })
+            </div>
+            <div class="field_width_short">
+                @Html.Label("TO")
+                @Html.TextBoxFor(e => e.ToDate, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "MM/DD/YYYY" })
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_content">
+            <div class="field_width_20">
+                @Html.Label("PCP")
+                @Html.TextBoxFor(e => e.PCP, new { @class = "form-control input-xs mandatory_input_field mandatory_field_halo", @Value = "Dr. Pariksith Singh" })
+            </div>
+            <div class="field_width_20">
+                @Html.Label("FACILITY")<br />
+                @Html.TextBoxFor(e => e.Facility, new { @class = "form-control input-xs mandatory_field_halo", ng_model = "UMObject.Facility", @Value = "OAK HILL HOSPITAL" })
+                <a class="label label-success pull-right in_label">IN</a>
+            </div>
+            <div class="field_width_20">
+                <nobr>@Html.Label("REQ PROVIDER")</nobr>
+                <label class="selected pull-right options_label">
+                    PCP
+                    <input name="state" type="radio" value="working" checked />
+                </label>&nbsp;
+                <label class="pull-right options_label mbr">
+                    MBR
+                    <input name="state" type="radio" value="off" />
+                </label>
+                @Html.TextBoxFor(e => e.RequestingProvider, new { @class = "form-control input-xs mandatory_field_halo", @Value = "Dr. Pariksith Singh" })
+                <a class="label label-success pull-right in_label">IN</a>
+            </div>
+            <div class="field_width_20">
+                @Html.Label("ATT PROVIDER")
+                <label class="selected pull-right  options_label">
+                    PCP
+                    <input name="state" type="radio" value="working" checked="">
+                </label>
+                @Html.TextBoxFor(e => e.AttendingProvider, new { @class = "form-control input-xs mandatory_field_halo", @Value = "Dr. Pariksith Singh" })
+                <a class="label label-success pull-right in_label">IN</a>
+            </div>
+            <div class="field_width_20">
+                @Html.Label("SURGEON")
+                @Html.TextBoxFor(e => e.Surgeon, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "SURGEON" })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content">
+            <div class="field_width_20">
+                @Html.Label("ADM PROVIDER")
+                <label class="selected pull-right options_label">
+                    PCP
+                    <input name="state" type="radio" value="working" checked />
+                </label>
+                @Html.TextBoxFor(e => e.AdmissionProvider, new { @class = "form-control input-xs mandatory_field_halo", @Value = "Dr. Dalton Benson" })
+                <a class="label label-success pull-right out_label">OON</a>
+            </div>
+            <div class="field_width_13">
+                @Html.Label("TOS")<br />
+                @Html.TextBoxFor(e => e.TypeOfService, new { @class = "form-control input-xs", @placeholder = "TOS", @readonly = "readonly" })
+            </div>
+            <div class="field_width_13">
+                @Html.Label("UM SVC GRP")<br />
+                @Html.DropDownListFor(e => e.UMServiceGroup, UMSvcGroupList, new { @class = " form-control input-xs non_mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="field_width_13">
+                @Html.Label("ROOM TYPE")<br />
+                @*@Html.TextBoxFor(e => e.RoomType, new { @class = "form-control input-xs", @placeholder = "ROOM TYPE", @readonly = "readonly" })*@
+                @Html.DropDownListFor(e => e.RoomType, RoomTypeList, new { @class = "form-control input-xs non_mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="field_width_13">
+                @Html.Label("LEVEL OF CARE")<br />
+                @Html.DropDownListFor(e => e.LevelOfCare, LevelOfCareList, new { @class = "form-control input-xs non_mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="field_width_13">
+                @Html.Label("DRG")<br />
+                @Html.TextBoxFor(e => e.DRGCode, new { @class = "form-control input-xs", @placeholder = "DRG CODE", @readonly = "readonly" })
+            </div>
+            <div class="field_width_13">
+                @Html.Label("DRG DESC")<br />
+                @Html.TextBoxFor(e => e.DRGDescription, new { @class = "form-control input-xs", @placeholder = "DESCRIPTION", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content">
+            <div class="field_width_16">
+                @Html.Label("LEVEL OF CARE")<br />
+                @Html.TextBoxFor(e => e.LevelOfCare, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "EXPECTED CHARGES" })
+            </div>
+            <div class="field_width_16">
+                @Html.Label("EXPECTED DOS")<br />
+                @Html.TextBoxFor(e => e.ExpectedDOS, new { @class = "form-control input-xs important_field_halo datePicker", @placeholder = "MM/DD/YYYY" })
+            </div>
+            <div class="field_width_16">
+                @Html.Label("MDC")<br />
+                @Html.TextBoxFor(e => e.MDCCode, new { @class = "form-control input-xs", @placeholder = "MDC CODE", @readonly = "readonly" })
+            </div>
+            <div class="field_width_16">
+                @Html.Label("MDC CLASSIFICATION DESC")<br />
+                @Html.TextBoxFor(e => e.MDCDescription, new { @class = "form-control input-xs", @placeholder = "DESCRIPTION", @readonly = "readonly" })
+            </div>
+            <div class="field_width_16">
+                @Html.Label("REVIEW")
+                @Html.TextBoxFor(e => e.ReviewType, new { @class = "form-control input-xs", @placeholder = "REVIEW", @readonly = "readonly" })
+            </div>
+            <div class="field_width_16">
+                @Html.Label("NEXT REVIEW DATE")<br />
+                @Html.TextBoxFor(e => e.NextReviewDate, new { @class = "form-control input-xs", @placeholder = "REVIEW DATE", @readonly = "readonly" })
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel" style="margin-top:8px;">
+        <div class="x_content">
+            <div class="col-lg-4 divider-dashed-right zero-padding-left-right">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    @Html.Label("SVC DATES", new { @class = "los_labels" })
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 zero-padding-left">
+                    @Html.Label("REQ DT")<br />
+                    @Html.TextBoxFor(e => e.AdmissionRequestedDate, new { @class = "form-control input-xs non_mandatory_field_halo", @Value = "05/29/2016", @placeholder = "MM/DD/YYYY" })
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 zero-padding-left">
+                    @Html.Label("FROM DT")<br />
+                    @Html.TextBoxFor(e => e.AdmissionFromDate, new { @class = "form-control input-xs non_mandatory_field_halo", @Value = "06/27/2016", @placeholder = "MM/DD/YYYY" })
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 zero-padding-left-right">
+                    @Html.Label("APPROVED DAYS")<br />
+                    @Html.TextBoxFor(e => e.AdmissionApprovedDays, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "APPROVED DAYS" })
+                </div>
+            </div>
+            <div class="col-lg-4 divider-dashed-right zero-padding-left-right">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    @Html.Label("SVC TO DATES", new { @class = "los_labels" })
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left">
+                    @Html.Label("EXPECTED DC DT")<br />
+                    @Html.TextBoxFor(e => e.ExpectedDischargeDate, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "MM/DD/YYYY" })
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left-right">
+                    @Html.Label("TO DT")<br />
+                    @Html.TextBoxFor(e => e.DischargeToDate, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "MM/DD/YYYY" })
+                </div>
+            </div>
+            <div class="col-lg-4 margin_left_half_percent">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    @Html.Label("LOS DETAILS", new { @class = "los_labels" })
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6 zero-padding-left">
+                    @Html.Label("REQ LOS")<br />
+                    @Html.TextBoxFor(e => e.TotalRequestedLOS, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "REQ LOS" })
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6 zero-padding-left">
+                    @Html.Label("ACTUAL LOS")<br />
+                    @Html.TextBoxFor(e => e.TotalActualLOS, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "ACTUAL LOS" })
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 zero-padding-left">
+                    @Html.Label("CO-MANAGEMENT OBTAINED")<br />
+                    <input type="checkbox" name="coMagChk" class="form-control input-xs flat" id="coMagChk">
+                    <input class="form-control input-xs non_mandatory_field_halo co_mag_provider" name="coMagProvider" placeholder="CO-MGMT PROVIDER">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_content zero_padding_bottom">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <label for="fullname">ICD VERSION</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <input type="radio" name="ICD" class="form-control input-xs flat" id="ver10" checked="checked">
+                <label for="ver10">Version-10</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <input type="radio" name="ICD" class="form-control input-xs flat" id="ver9">
+                <label for="ver9">Version-9</label>
+            </div>
+        </div>
+
+        <div class="x_content">
+            <div class="col-lg-2 col-md-2 col-sm-8 col-xs-4">
+                @Html.Label("PRIMARY DX")
+                @Html.TextBoxFor(e => e.ICDCode, new { @class = "form-control input-xs mandatory_field_halo", data_ng_model = "UMObject.primaryDX", @placeholder = "ICD CODE", @Value = "M05.051" })
+            </div>
+            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-7">
+                @Html.Label("DIAG DESC")<br />
+                @Html.TextBoxFor(e => e.ICDDesc, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "DESCRIPTION", @Value = "FELTY'S SYNDROME, RIGHT HIP" })
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 text-center button-styles-xs">
+                @Html.Label("ACTION")<br />
+                &nbsp;<button class="light-green-button"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content zero_padding_bottom button-styles-md addcptrangebtn">
+            <button class="copy-button margin_left_12px">Add CPT Range</button>
+        </div>
+        <div id="plRows">
+            <div class="x_content" id="plrow0">
+               
+                <div class="col-lg-2 col-md-2 col-sm-8 col-xs-4">
+                    @Html.Label("PROC")
+                    @*@Html.DropDownListFor(e => e.CPTCode, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "CPT CODE" })*@
+                    <select id="cptcodeselect" name="standard" class="form-control input-xs mandatory_field_halo custom-select cptcodedropdown">
+                        <option value="">PROC</option>
+                        <option value="0001F-Heart Failure Composite">0001F-Heart Failure Composite</option>
+                        <option value="0001M-Infectious Disc HCV6 Assays">0001M-Infectious Disc HCV6 Assays</option>
+                        <option value="0002M-Liver Dis 10 Assays Wash">0002M-Liver Dis 10 Assays Wash</option>
+                        <option value="00215-Anesth Skull Repair/Fract">00215-Anesth Skull Repair/Fract</option>
+                        <option value="00350-Anesth Neck Vessel Surgery">00350-Anesth Neck Vessel Surgery</option>
+                    </select>
+
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-6 col-xs-3">
+                    @Html.Label("MODIFIER")<br />
+                    @Html.TextBoxFor(e => e.Modifier, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "MODIFIER" })
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3">
+                    @Html.Label("PROC DESC")<br />
+                    @Html.TextBoxFor(e => e.CPTDesc, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "DESCRIPTION" })
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-4 col-xs-2">
+                    @Html.Label("REQ UNITS")
+                    @Html.TextBoxFor(e => e.RequestedUnits, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "REQ UNITS" })
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 text-center button-styles-xs row-action">
+                    @Html.Label("ACTION")<br />
+                    &nbsp;<button class="light-green-button plusButton"><i class="fa fa-plus "></i></button>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 text-center pull_to_left">
+                    @Html.Label("INC LETTER")<br />
+                    @Html.CheckBoxFor(e => e.IncludeLetter, new { @class = "form-control input-xs flat" })
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 button-styles-md">
+                    @Html.Label("")<br />
+                    <button class="light-blue-button zero-padding-left-right plain_language_btn">Plain Language</button>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 button-styles-md">
+                    <button class="red-button smartIntelligenceBtn calypso_ai_btn">
+                        CALYPSO ARTIFICIAL&nbsp;<br>INTELLIGENCE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_content">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
+                @Html.Label("DOCUMENT NAME")
+                @Html.TextBoxFor(e => e.Name, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "DOCUMENT NAME" })
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2">
+                @Html.Label("DOCUMENT TYPE")
+                @Html.DropDownListFor(e => e.DocumentType, DocumentTypeList, new { @class = "form-control input-xs mandatory_field_halo", @tabindex = "-1" })
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-3 col-xs-2">
+                @Html.Label("ATTACH DOCUMENT")
+                <input class="form-control custom-file-input input-xs" type="file" style="border:none;outline:none">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                @Html.Label("INC FAX")<br />
+                @Html.CheckBoxFor(e => e.IncludeFax, new { @class = "form-control input-xs flat" })
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center button-styles-xs">
+                @Html.Label("ACTION")<br />
+                &nbsp;<button class="light-green-button"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <a href="javascript:void(0)" class="custom-button print_button_beside_table" data-toggle="tooltip" data-placement="top" title="" onclick="printNotesData()" data-original-title="Print Auth Notes">
+            <img src="/Resources/Images/Icons/print_icon.png">
+        </a>
+        <div class="x_content zero-padding-left">
+            <table class="table margin_bottom_zero table-white zero-padding-left-right alignLeftTable noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th style=" width: 12%;">Date Time</th>
+                        <th style=" width: 18%;">Note Type</th>
+                        <th style="width: 10%;">Username</th>
+                        <th style="width: 10%;">Subject</th>
+                        <th>Note</th>
+                        <th style="width: 7%;">Inc Fax</th>
+                        <th style=" width: 8%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="AppendNoteData"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <a href="javascript:void(0)" class="custom-button print_button_beside_table" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print Auth Contacts">
+            <img src="/Resources/Images/Icons/print_icon.png">
+        </a>
+        <div class="x_content zero-padding-left">
+            <table class="table margin_bottom_zero table-white alignLeftTable noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Entity</th>
+                        <th>Contact Name</th>
+                        <th>Type</th>
+                        <th>Contact Details</th>
+                        <th>Direction</th>
+                        <th>Outcome Type</th>
+                        <th>Note</th>
+                        <th>Date Time</th>
+                        <th>Created By</th>
+                        <th>Inc Fax</th>
+                        <th style="width:8%">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="contactTbody">
+                    <tr>
+                        <td>MD</td>
+                        <td>DR. PARIKSITH SINGH</td>
+                        <td>EMAIL</td>
+                        <td>-</td>
+                        <td>OUTBOUND</td>
+                        <td>SUCCESSFUL</td>
+                        <td>DISCUSSED ABOUT THE PATIENT</td>
+                        <td>06/30/2016 13:25:51</td>
+                        <td>BARBARA JOY</td>
+                        <td><input type="checkbox" name="incLetter" class="form-control input-xs flat"></td>
+                        <td class="text-uppercase button-styles-xs"><button class="copy-button"><i class="fa fa-pencil"></i></button> <button onclick="ShowModal('~/Views/Home/Modal/Contact/GetModelView.cshtml', 'Add New Contact');" class="light-green-button"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="x_panel border_on_panel">
+        <div class="x_content zero-padding-left">
+            <table class="table margin_bottom_zero table-white alignLeftTable noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>FROM DATE</th>
+                        <th>TO DATE</th>
+                        <th>SVC PROVIDER</th>
+                        <th>FACILITY NAME</th>
+                        <th>PRIMARY DX</th>
+                        <th>PRIMARY DESC</th>
+                        <th>PROCEDURE CODE</th>
+                        <th>PROCEDURE DESC</th>
+                        <th>TYPE OF SERVICE</th>
+                        <th>UM SVC GROUP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>06/10/2016</td>
+                        <td>09/08/2016</td>
+                        <td>-</td>
+                        <td>OAK HILL HOSPITAL</td>
+                        <td>M05.051</td>
+                        <td>FELTY'S SYNDROME, RIGHT HIP</td>
+                        <td>00124</td>
+                        <td>ANESTH EAR EXAM</td>
+                        <td>-</td>
+                        <td>ANGC</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_title odag-style">
+            <ul class="nav navbar-left panel_toolbox">
+                <li>
+                    <a class="collapse-link odagClicker"><i class="fa fa-chevron-down"></i>&nbsp;<span class="h4">ODAG Questionnaire</span></a>
+                </li>
+            </ul>
+            <div class="clearfix">
+
+            </div>
+        </div>
+        <div class="x_content" style="display:none;">
+            <div id="ODAGmainDiv" class="ODAGMainClass">
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Has PCP Approved this Request?</b><br />
+                        <input type="radio" name="PCP" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="PCP" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="PCP" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">I AM THE PCP</label>
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Beneficiary Request Expedited?</b><br />
+                        <input type="radio" name="Beneficiary" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Beneficiary" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Beneficiary" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Provider Request Expedited?</b><br />
+                        <input type="radio" name="Provider" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Provider" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Provider" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Process Expedited?</b><br />
+                        <input type="radio" name="Process" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Process" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Process" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Did Plan Extend Time Frame?</b><br />
+                        <input type="radio" name="Extend" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Extend" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Extend" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was time frame extension taken?</b><br />
+                        <input type="radio" name="taken" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="taken" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="taken" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was member notified by Phone?</b><br />
+                        <input type="radio" name="notified" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="notified" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="notified" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was member notified by letter?</b><br />
+                        <input type="radio" name="letter" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="letter" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="letter" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Case Disposition</b><br />
+                        <input type="radio" name="Disposition" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">APPROVED</label>
+                        <input type="radio" name="Disposition" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">DENIED</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Date and Time Disposition</b><br />
+                        <input type="text" class="form-control input-xs odagtext" placeholder="MM/DD/YYYY HH:MM" />
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was request denied for LOMN?</b><br />
+                        <input type="radio" name="LOMN" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="LOMN" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="LOMN" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was Case received by Medical Doctor?</b><br />
+                        <input type="radio" name="MD" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="MD" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="MD" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was reconsideration reviewed by Medical Director?</b><br />
+                        <input type="radio" name="MDreviewed" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="MDreviewed" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="MDreviewed" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Date and Time Effectuation</b><br />
+                        <input type="text" class="form-control input-xs odagtext" placeholder="MM/DD/YYYY HH:MM" />
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Member Notified Orally?</b><br />
+                        <input type="radio" name="Orally" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="Orally" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="Orally" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Member Written Notification?</b><br />
+                        <input type="radio" name="Notification" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="Notification" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="Notification" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>AOR Receipt Date</b><br />
+                        <input type="text" class="form-control input-xs odagtext" placeholder="MM/DD/YYYY HH:MM" />
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Name of Plan</b><br />
+                        <input type="text" class="form-control input-xs bolding text-uppercase ng-scope odagtext" value="ULTIMATE" readonly="" disabled="" style="font-weight:bold;color:black;" autocomplete="off">
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div id="authChangeButtons" class="margin_top_20_px button-styles">
+        <div class="col-lg-offset-1 col-lg-1 col-md-1 col-sm-2 col-xs-1">
+            <button class="edit-button" onclick="createAuthorizations();">Refer</button>
+        </div>
+        <div class="col-lg-offset-3 col-md-2 col-sm-4 col-xs-2">
+            <button class="view-button" onclick="showModal('authPreviewModal');">Approve</button>
+        </div>
+        <div class=" col-lg-offset-3 col-lg-2 col-md-2 col-sm-4 col-xs-2">
+            <button class="red-button">Pend</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+@*<p-link filepath="~/Content/AppCss/CreateAuth/CreateAuth.css"/>*@
+
+
+@*<p-bundle identity="createAuthBundle">
+        @Scripts.Render("~/bundles/createauthscripts");
+        @Styles.Render("~/Content/createauthcss");
+    </p-bundle>*@
+
+
+
+@*<div class="clearfix"></div>
+    <div class="x_panel border_on_panel zero-padding-left-right">
+        <div class="x_content zero-padding-left-right">
+            <div class="field_width_medium">
+                <label for="fullname">POS </label>
+                <select class=" form-control input-xs mandatory_field_halo" name="pos" tabindex="-1">
+                    <option value="AK">11-OFFICE</option>
+                    <option value="HI">21-IP HOSPITAL</option>
+                    <option value="OP" selected>22-OP HOSPITAL</option>
+                </select>
+            </div>
+            <div class="field_width_medium">
+                <label for="fullname">AUTH TYPE </label>
+                <select class="form-control input-xs non_mandatory_field_halo" name="authType" tabindex="-1">
+                    <option>PRESERVICE</option>
+                    <option>CONCURENT INITITAL</option>
+                    <option>CONCURENT</option>
+                    <option>RETROSPECTIVE</option>
+                </select>
+            </div>
+            <div class="field_width_short">
+                <label for="fullname">REQUEST </label>
+                <select class="form-control input-xs non_mandatory_field_halo" name="requestType" tabindex="-1">
+                    <option>STANDARD</option>
+                    <option>EXPIEDITED</option>
+                </select>
+            </div>
+            <div class="field_width_short">
+                <label for="fullname">TYPE OF CARE </label>
+                <select class="form-control input-xs non_mandatory_field_halo" name="typeOfCare" tabindex="-1">
+                    <option>ELECTIVE</option>
+                    <option>EMERGENCY</option>
+                </select>
+            </div>
+            <div class="field_width_med_long">
+                <label for="fullname">OUTPATIENT TYPE </label>
+                <select class="form-control input-xs non_mandatory_field_halo" name="opType" tabindex="-1">
+                    <option>OP PROCEDURE</option>
+                    <option>OP DIAGNOSTIC</option>
+                    <option>OP OBSERVATION</option>
+                    <option>OP IN A BED</option>
+                </select>
+            </div>
+            <div class="field_width_medium">
+                <label for="fullname">RECEIVED </label>
+                <input class="form-control input-xs mandatory_field_halo" name="receivedDate" tabindex="-1" value="12/12/2016 18:24:12" placeholder="MM/DD/YYYY HH:MM:SS">
+            </div>
+            <div class="field_width_short">
+                <label for="fullname">FROM</label>
+                <input class="form-control input-xs mandatory_field_halo" name="fromDate" value="05/29/2016" placeholder="MM/DD/YYYY">
+            </div>
+            <div class="field_width_short">
+                <label for="fullname">TO</label>
+                <input class="form-control input-xs mandatory_field_halo" name="ToDate" value="07/27/2016" placeholder="MM/DD/YYYY">
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_content">
+            <div class="field_width_20">
+                <label for="fullname">PCP </label>
+                <input class="form-control input-xs mandatory_input_field mandatory_field_halo" name="pcpName" value="Dr. Pariksith Singh">
+            </div>
+            <div class="field_width_20">
+                <label for="fullname">FACILITY </label><br />
+                <input class="form-control input-xs mandatory_field_halo" name="facilityName" placeholder="FACILITY" value="OAK HILL HOSPITAL">
+                <a class="label label-success pull-right in_out_label">IN</a>
+            </div>
+            <div class="field_width_20">
+                <nobr><label>REQ PROVIDER</label></nobr>
+                <label class="selected pull-right options_label">
+                    PCP
+                    <input name="state" type="radio" value="working" checked />
+                    </label>
+                <label class="pull-right options_label mbr">
+                    MBR
+                    <input name="state" type="radio" value="off" />
+                </label>
+                <input class="form-control input-xs mandatory_field_halo" placeholder="REQ PROVIDER" value="Dr. Pariksith Singh">
+                <a class="label label-success pull-right in_out_label">IN</a>
+            </div>
+            <div class="field_width_20">
+                <label class="">ATT PROVIDER</label>
+                <label class="selected pull-right  options_label">
+                    PCP
+                    <input name="state" type="radio" value="working" checked="">
+                </label>
+                <input class="form-control input-xs non_mandatory_field_halo" name="attName" placeholder="ATTENDING PROVIDER" value="Dr. Pariksith Singh">
+                <a class="label label-success pull-right in_out_label">IN</a>
+            </div>
+            <div class="field_width_20">
+                <label for="fullname">SURGEON</label>
+                <input class="form-control input-xs non_mandatory_field_halo" name="surgeonName" placeholder="SURGEON">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content">
+            <div class="field_width_20">
+                <label>ADM PROVIDER</label>
+                <label class="selected pull-right options_label">
+                    PCP
+                    <input name="state" type="radio" value="working" checked />
+                </label>
+                <input class="form-control input-xs non_mandatory_field_halo" name="admName" placeholder="ADMITTING PROVIDER" value="Dr. Pariksith Singh">
+                <a class="label label-success pull-right in_out_label">IN</a>
+            </div>
+            <div class="field_width_13">
+                <label>TOS</label><br />
+                <input class="form-control input-xs" name="tos" readonly>
+            </div>
+            <div class="field_width_13">
+                <label>UM SVC GRP</label><br />
+                <select class=" form-control input-xs non_mandatory_field_halo" name="umSvcGrp" tabindex="-1">
+                    <option value="AK">ANGC</option>
+                    <option value="HI">CEDG</option>
+                </select>
+            </div>
+            <div class="field_width_13">
+                <label>ROOM TYPE </label><br />
+                <input class="form-control input-xs " readonly>
+            </div>
+            <div class="field_width_13">
+                <label>LEVEL OF CARE </label><br />
+                <select class=" form-control input-xs non_mandatory_field_halo" name="levelOfCare" tabindex="-1">
+                    <option value="AK">MATERNITY</option>
+                    <option value="HI">MEDICAL</option>
+                    <option value="HI">SURGICAL</option>
+                </select>
+            </div>
+            <div class="field_width_13">
+                <label>DRG  </label><br />
+                <input class="form-control input-xs" name="drgCode" readonly>
+            </div>
+            <div class="field_width_13">
+                <label>DRG DESC  </label><br />
+                <input class="form-control input-xs" name="drgDesc" readonly>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content">
+            <div class="field_width_16">
+                <label>EXPECTED CHARGES $</label><br />
+                <input class="form-control input-xs non_mandatory_field_halo" name="expectedCharges" placeholder="EXPECTED CHARGES">
+            </div>
+            <div class="field_width_16">
+                <label>EXPECTED DOS </label><br />
+                <input class="form-control input-xs important_field_halo" name="expectedDos" placeholder="MM/DD/YYYY">
+            </div>
+            <div class="field_width_16">
+                <label>MDC </label><br />
+                <input class="form-control input-xs" name="mdcCode" readonly>
+            </div>
+            <div class="field_width_16">
+                <label>MDC CLASSIFICATION DESC </label><br />
+                <input class="form-control input-xs" name="mdcDesc" readonly>
+            </div>
+            <div class="field_width_16">
+                <label>REVIEW</label><br />
+                <input class="form-control input-xs" name="reviewType" readonly>
+            </div>
+            <div class="field_width_16">
+                <label>NEXT REVIEW DATE</label><br />
+                <input class="form-control input-xs" name="nextReviewDate" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel" style="margin-top:8px;">
+        <div class="x_content">
+            <div class="col-lg-4 divider-dashed-right zero-padding-left-right">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    <label for="fullname" class="los_labels">SVC DATES</label>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 zero-padding-left">
+                    <label>REQ DT</label><br />
+                    <input class="form-control input-xs non_mandatory_field_halo" name="reqDate" value="05/29/2016" placeholder="MM/DD/YYYY">
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 zero-padding-left">
+                    <label>FROM DT</label><br />
+                    <input class="form-control input-xs non_mandatory_field_halo" name="fromDate" value="06/27/2016" placeholder="MM/DD/YYYY">
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-6 zero-padding-left-right">
+                    <label>APPROVED DAYS</label><br />
+                    <input class="form-control input-xs non_mandatory_field_halo" name="appDays" placeholder="APPROVED DAYS">
+                </div>
+            </div>
+            <div class="col-lg-4 divider-dashed-right zero-padding-left-right">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    <label for="fullname" class="los_labels">SVC TO DATES</label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left">
+                    <label>EXPECTED DC DT</label><br />
+                    <input class="form-control input-xs non_mandatory_field_halo" name="expDcDate" placeholder="MM/DD/YYYY">
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-6 zero-padding-left-right">
+                    <label>TO DT</label><br />
+                    <input class="form-control input-xs non_mandatory_field_halo" name="svcToDate" placeholder="MM/DD/YYYY">
+                </div>
+            </div>
+            <div class="col-lg-4 margin_left_half_percent">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center admission_section">
+                    <label for="fullname" class="los_labels">LOS DETAILS</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-6 col-xs-3 zero-padding-left">
+                    <label>REQ LOS</label><br />
+                    <input class="form-control input-xs non_mandatory_field_halo" name="reqLos" placeholder="REQ LOS">
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-4 zero-padding-left">
+                    <label>ACTUAL LOS</label><br />
+                    <input class="form-control input-xs non_mandatory_field_halo" name="actLos" placeholder="ACTUAL LOS">
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-5 col-xs-5 zero-padding-left">
+                    <label><nobr>CO-MANAGEMENT OBTAINED</nobr></label><br />
+                    <input type="checkbox" name="coMagChk" class="form-control input-xs flat" id="coMagChk">
+                    <input class="form-control input-xs non_mandatory_field_halo co_mag_provider" name="coMagProvider" placeholder="CO-MGMT PROVIDER">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_content zero_padding_bottom">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <label for="fullname">ICD VERSION</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <input type="radio" name="ICD" class="form-control input-xs flat" id="ver10" checked="checked">
+                <label for="ver10">Version-10</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <input type="radio" name="ICD" class="form-control input-xs flat" id="ver9">
+                <label for="ver9">Version-9</label>
+            </div>
+        </div>
+
+        <div class="x_content">
+            <div class="col-lg-2 col-md-2 col-sm-8 col-xs-4">
+                <label for="fullname">PRIMARY DX </label>
+                <input class="form-control input-xs mandatory_field_halo" name="icdCode" placeholder="ICD CODE">
+            </div>
+            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-7">
+                <label>DIAG DESC </label><br />
+                <input class="form-control input-xs mandatory_field_halo" name="icdDesc" placeholder="DESCRIPTION">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 text-center button-styles-xs">
+                <label for="fullname">ACTION</label><br />
+                &nbsp;<button class="light-green-button"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="x_content zero_padding_bottom button-styles-md">
+            <button class="copy-button margin_left_12px">Add CPT Range</button>
+        </div>
+        <div class="x_content">
+            <div class="col-lg-2 col-md-2 col-sm-8 col-xs-4">
+                <label for="fullname">PROC</label>
+                <input class="form-control input-xs mandatory_field_halo" name="cptCode" placeholder="CPT CODE">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-6 col-xs-3">
+                <label>MODIFIER</label><br />
+                <input class="form-control input-xs non_mandatory_field_halo" name="modifier" placeholder="MODIFIER">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3">
+                <label>PROC DESC </label><br />
+                <input class="form-control input-xs mandatory_field_halo" name="cptDesc" placeholder="DESCRIPTION">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-2">
+                <label for="fullname">REQ UNITS</label>
+                <input class="form-control input-xs non_mandatory_field_halo" name="reqUnits" value="05">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 text-center button-styles-xs">
+                <label for="fullname">ACTION</label><br />
+                &nbsp;<button class="light-green-button">
+                    <i class="fa fa-plus "></i>
+                </button>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 text-center pull_to_left">
+                <label for="fullname">INC LETTER</label><br />
+                <input type="checkbox" name="incLetter" class="form-control input-xs flat">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 button-styles-md">
+                <label for="fullname"></label><br />
+                <button class="light-blue-button zero-padding-left-right plain_language_btn">Plain Language</button>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1 button-styles-md">
+                <button class="red-button smartIntelligenceBtn">
+                    CALYPSO ARTIFICIAL&nbsp;<br>INTELLIGENCE
+                </button>
+            </div>
+
+        </div>
+    </div>*@
+@*<div class="x_panel2">
+        <div class="x_content2">
+            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-7">
+                <a><label><i class="fa fa-fz fa-file" style="margin-right: 5px" aria-hidden="true"></i>Attach Document</label></a>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-8 col-xs-4">
+
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1">
+                <a ng-click="clickableCreate()" style="cursor:pointer"><i class="fa fa-chevron-down pull-right" id="downCreate" style="margin-right: 5px; font-size: 1em" aria-hidden="true"></i></a>
+
+            </div>
+        </div>
+    </div>*@
+
+@*<div class="x_panel2">
+        <div class="x_content2">
+            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-7">
+                <a><label><i class="fa fa-fz fa-sticky-note" style="margin-right: 5px" aria-hidden="true"></i>Notes</label></a>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3">
+
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
+                    <a ng-click="clickableCreate()" style="cursor:pointer"><i class="fa fa-chevron-down pull-right" id="downCreate" style="margin-right: 5px; font-size: 1em" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="x_panel2">
+        <div class="x_content2">
+            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-7">
+                <a><label><i class="fa fa-fz fa-phone" style="margin-right: 5px" aria-hidden="true"></i>Contacts</label></a>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-3">
+
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
+                    <a ng-click="clickableCreate()" style="cursor:pointer"><i class="fa fa-chevron-down pull-right" id="downCreate" style="margin-right: 5px; font-size: 1em" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>*@
+@*<div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_content">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
+                <label for="fullname">DOCUMENT NAME </label>
+                <input class="form-control input-xs mandatory_field_halo" placeholder="DOCUMENT NAME">
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
+                <label for="fullname">DOCUMENT TYPE  </label>
+                <select class=" form-control input-xs mandatory_field_halo" tabindex="-1">
+                    <option value="AK">CLINICAL</option>
+                    <option value="HI">PROGRESS NOTES</option>
+                    <option value="HI">FAX</option>
+                </select>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-4 col-xs-2">
+                <label for="fullname">ATTACH DOCUMENT </label>
+                <input class="form-control custom-file-input input-xs" type="file" style="border:none;outline:none">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-1 text-center button-styles-xs">
+                <label for="fullname">ACTION</label><br />
+                &nbsp;<button class="light-green-button"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <a href="javascript:void(0)" class="custom-button print_button_beside_table" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print Auth Notes">
+            <img src="/Resources/Images/Icons/print_icon.png">
+        </a>
+        <div class="x_content zero-padding-left">
+                <table class="table margin_bottom_zero table-white zero-padding-left-right alignLeftTable noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th style=" width: 12%;">Date Time</th>
+                        <th style=" width: 18%;">Note Type</th>
+                        <th style="width: 10%;">Username</th>
+                        <th style="width: 10%;">Subject</th>
+                        <th>Note</th>
+                        <th style="width: 7%;">Inc Fax</th>
+                        <th style=" width: 8%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>06/30/2016 13:22:57</td>
+                        <td>AUTH NOTE</td>
+                        <td>BARBARA JOY</td>
+                        <td>UM NOTE</td>
+                        <td>PATIENT WAS TREATED FOR SAME CONDITION 2 YEARS AGO.</td>
+                        <td><input type="checkbox" name="incLetter" class="form-control input-xs flat"></td>
+                        <td class="text-uppercase button-styles-xs"><button class="copy-button"><i class="fa fa-pencil"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>06/30/2016 13:22:57</td>
+                        <td>ADDITTIONAL INFORMATION</td>
+                        <td>BARBARA JOY</td>
+                        <td>UM NOTE</td>
+                        <td>THIS CASE REQUIRES IMMEDIATE MEDICAL ATTENTION OF MD.</td>
+                        <td><input type="checkbox" name="incLetter" class="form-control input-xs flat"></td>
+                        <td class="text-uppercase button-styles-xs"><button class="copy-button"><i class="fa fa-pencil"></i></button> <button class="light-green-button"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <a href="javascript:void(0)" class="custom-button print_button_beside_table" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print Auth Contacts">
+            <img src="/Resources/Images/Icons/print_icon.png">
+        </a>
+        <div class="x_content zero-padding-left">
+            <table class="table margin_bottom_zero table-white alignLeftTable noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Entity</th>
+                        <th>Contact Name</th>
+                        <th>Type</th>
+                        <th>Contact Details</th>
+                        <th>Direction</th>
+                        <th>Outcome Type</th>
+                        <th>Note</th>
+                        <th>Date Time</th>
+                        <th>Created By</th>
+                        <th>Inc Fax</th>
+                        <th style="width:8%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MD</td>
+                        <td>DR. PARIKSITH SINGH</td>
+                        <td>EMAIL</td>
+                        <td>-</td>
+                        <td>OUTBOUND</td>
+                        <td>SUCCESSFUL</td>
+                        <td>DISCUSSED ABOUT THE PATIENT</td>
+                        <td>06/30/2016 13:25:51</td>
+                        <td>BARBARA JOY</td>
+                        <td><input type="checkbox" name="incLetter" class="form-control input-xs flat"></td>
+                        <td class="text-uppercase button-styles-xs"><button class="copy-button"><i class="fa fa-pencil"></i></button> <button class="light-green-button"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="x_panel border_on_panel">
+        <div class="x_content zero-padding-left">
+            <table class="table margin_bottom_zero table-white alignLeftTable noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>FROM DATE</th>
+                        <th>TO DATE</th>
+                        <th>SVC PROVIDER</th>
+                        <th>FACILITY NAME</th>
+                        <th>PRIMARY DX</th>
+                        <th>PRIMARY DESC</th>
+                        <th>PROCEDURE CODE</th>
+                        <th>PROCEDURE DESC</th>
+                        <th>TYPE OF SERVICE</th>
+                        <th>UM SVC GROUP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>06/10/2016</td>
+                        <td>09/08/2016</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>ANGC</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="x_panel border_on_panel">
+        <div class="x_title odag-style">
+            <ul class="nav navbar-left panel_toolbox">
+                <li>
+                    <a class="collapse-link odagClicker"><i class="fa fa-chevron-down"></i>&nbsp;<span class="h4">ODAG Questionnaire</span></a>
+                </li>
+            </ul>
+            <div class="clearfix">
+
+            </div>
+        </div>
+        <div class="x_content" style="display:none;">
+                <div id="ODAGmainDiv" class="ODAGMainClass padding_top_20px">
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Has PCP Approved this Request?</b><br />
+                        <input type="radio" name="PCP" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="PCP" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="PCP" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">I AM THE PCP</label>
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Beneficiary Request Expedited?</b><br />
+                        <input type="radio" name="Beneficiary" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Beneficiary" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Beneficiary" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Provider Request Expedited?</b><br />
+                        <input type="radio" name="Provider" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Provider" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Provider" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Process Expedited?</b><br />
+                        <input type="radio" name="Process" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Process" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Process" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Did Plan Extend Time Frame?</b><br />
+                        <input type="radio" name="Extend" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="Extend" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="Extend" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was time frame extension taken?</b><br />
+                        <input type="radio" name="taken" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="taken" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="taken" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was member notified by Phone?</b><br />
+                        <input type="radio" name="notified" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="notified" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="notified" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was member notified by letter?</b><br />
+                        <input type="radio" name="letter" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="letter" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="letter" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Case Disposition</b><br />
+                        <input type="radio" name="Disposition" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">APPROVED</label>
+                        <input type="radio" name="Disposition" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">DENIED</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Date and Time Disposition</b><br />
+                        <input type="text" class="form-control input-xs odagtext" placeholder="MM/DD/YYYY HH:MM" />
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was request denied for LOMN?</b><br />
+                        <input type="radio" name="LOMN" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">Y</label>
+                        <input type="radio" name="LOMN" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">N</label>
+                        <input type="radio" name="LOMN" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was Case received by Medical Doctor?</b><br />
+                        <input type="radio" name="MD" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="MD" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="MD" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Was reconsideration reviewed by Medical Director?</b><br />
+                        <input type="radio" name="MDreviewed" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="MDreviewed" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="MDreviewed" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Date and Time Effectuation</b><br />
+                        <input type="text" class="form-control input-xs odagtext" placeholder="MM/DD/YYYY HH:MM" />
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Member Notified Orally?</b><br />
+                        <input type="radio" name="Orally" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="Orally" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="Orally" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Member Written Notification?</b><br />
+                        <input type="radio" name="Notification" class="form-control input-xs flat" style="position: absolute; opacity: 0;" checked>
+                        <label class="">Y</label>
+                        <input type="radio" name="Notification" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N</label>
+                        <input type="radio" name="Notification" class="form-control input-xs flat" style="position: absolute; opacity: 0;">
+                        <label class="">N/A</label>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>AOR Receipt Date</b><br />
+                        <input type="text" class="form-control input-xs odagtext" placeholder="MM/DD/YYYY HH:MM" />
+
+                    </div>
+                    <div class="col-lg-3 zero-padding-left-right">
+                        <b>Name of Plan</b><br />
+                        <input type="text" class="form-control input-xs bolding text-uppercase ng-scope odagtext" value="ULTIMATE" readonly="" disabled="" style="font-weight:bold;color:black;" autocomplete="off">
+                    </div>
+                </div>
+                <div class="clearfix"></div><br />
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div id="authChangeButtons" class="margin_top_20_px button-styles">
+        <div class="col-lg-offset-1 col-lg-1 col-md-1 col-sm-2 col-xs-1">
+            <button class="edit-button" onclick="showModal('authPreviewModal');">Refer</button>
+        </div>
+        <div class="col-lg-offset-3 col-md-2 col-sm-4 col-xs-2">
+            <button class="view-button" onclick="showModal('authPreviewModal');">Approve</button>
+        </div>
+        <div class=" col-lg-offset-3 col-lg-2 col-md-2 col-sm-4 col-xs-2">
+            <button class="red-button">Pend</button>
+        </div>
+        </div>
+    </div>*@
+<div id="NotePrintDiv" hidden>   
+    <div style="margin-bottom:0.95cm;margin-top:0cm;margin-left:1.27cm;margin-right:1.27cm;">
+        <div class="row col-lg-12">
+            <p class="col-lg-3 col-md-3 col-sm-3 col-xs-3 pull-left" style="margin-bottom:0px;">
+                <img id="noteLogo" src="~/Resources/Images/Common/ahc_logo.png">
+            </p>
+            <p class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right" style="padding-right:0px;margin-bottom:0px;text-align:right">
+                <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12 downspace" style="padding-bottom:5px;">
+                    Patient Name: <b class="text-uppercase">HARRY ROSE</b>
+                </span><br />
+
+                <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    ID #: <b>5470534DC</b>
+                </span><br />
+                <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    Ref #: <b>-</b>
+                </span><br />
+                <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    DOB: <b>07/09/1992</b>
+                </span><br />
+                <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    Age: <b>23</b>
+                </span>
+            </p>
+        </div>
+        <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+            <h2>Patient Contacts</h2>
+        </div>
+        <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12" id="DetailsNote">
+
+        </div>
+    </div>
+</div>
+<div id="HiddenPrintDiv" hidden>
+
+</div>

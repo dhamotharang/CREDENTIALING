@@ -1,0 +1,36 @@
+﻿
+<div id="dis" class="panel-body">
+    <div class="form-style">
+        <fieldset ng-repeat="category in disclosureQuestions">
+            <legend>
+                {{category.catName}}
+            </legend>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:red">
+                <label>{{category.instruction}}</label>
+            </div>
+            <br />
+            <div class="panel-body">
+                <div class="form-group col-md-12 zero-padding-left-right-div" ng-repeat="question in category.questions">
+                    <label class="control-label small">{{question.questionText}}</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input type="radio" onclick="disclosureQuestionFeedBack(this);" name="{{category.catName+$index}}" value="Yes" ng-model="question.answerText"> Yes
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" onclick="disclosureQuestionFeedBack(this);" name="{{category.catName+$index}}" value="No" ng-model="question.answerText"> No
+                        </label>
+                    </div>
+                    <br />
+                    <div ng-if="question.answerText == 'Yes'" id="textDiv">
+                        <input type="text" class="form-control small" ng-model="question.reasonText" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+            <button class="btn btn-success pull-right" ng-click="saveQuestions(disclosureQuestions)">Save</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ContractInformation.ContractGroupInfoViewModel
+
+<form class="form-style">
+    <div class="col-md-12 zero-padding-left-right-div">
+        <span ng-if="tempObject.ContractGroupInfoId">
+            @Html.HiddenFor(model => model.ContractGroupInfoId, new { ng_value = "tempObject.ContractGroupInfoId", data_ng_model = "tempObject.ContractGroupInfoId" })
+        </span>
+        @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+        <div class="col-md-3">
+            <label class="control-label small">IPA Name *</label>
+            <div ng-if="tempObject.ContractGroupInfoId">
+                <span ng-if="tempObject.ContractGroupInfoId">
+                    @Html.HiddenFor(model => model.PracticingGroupId, new { ng_value = "tempObject.PracticingGroupId", data_ng_model = "tempObject.PracticingGroupId" })
+                </span>
+                <i class="data-label">{{gi.PracticingGroup.Group.Name}}</i>
+            </div>
+            <div ng-hide="tempObject.ContractGroupInfoId">
+                <select id="PracticingGroupID" data-val="true" data-val-required="Please select IPA name " class="form-control input-sm" name="PracticingGroupId" ng-model="tempObject.PracticingGroupId">
+                    <option selected disabled hidden value="">--select--</option>
+                    <option ng-repeat="group in masterGroups" value="{{group.PracticingGroupID }}">{{group.Group.Name }}</option>
+                </select>
+            </div>
+            @Html.ValidationMessageFor(model => model.PracticingGroupId, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3 form-group">           
+            <label class="control-label small">Start Date *</label>
+            @Html.TextBoxFor(model => model.JoiningDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.JoiningDate" })
+            @Html.ValidationMessageFor(model => model.JoiningDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.ExpiryDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.ExpiryDate" })
+            @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3 form-group">          
+            <label class="control-label small">Status *</label>
+            @Html.EnumDropDownListFor(Model => Model.ContractGroupStatusOption, "-- select a status --", new { @class = "form-control input-sm", data_ng_model = "tempObject.ContractGroupStatusOption" })
+            @Html.ValidationMessageFor(model => model.ContractGroupStatusOption, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div ng-show="activeMessageDiv=='errorContractGroupInformation'" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists :<br />
+            <span ng-repeat="err in errorContractGroupInformation track by $index">{{err}}</span>
+        </div>
+    </div>
+    <div class="col-md-12 form-group zero-padding-left-right-div">
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="cancelGroup()">Cancel</button>
+            <button ng-show="0 < tempObject.ContractGroupInfoId" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveGroupInformation(tempObject,'ContractGroupInformationEditDiv'+$index, $index)">Update</button>
+            <button ng-show="!tempObject.ContractGroupInfoId" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveGroupInformation(tempObject,'ContractGroupInformationEditDiv'+$index, $index)">Add</button>         
+        </div>
+    </div>
+</form>

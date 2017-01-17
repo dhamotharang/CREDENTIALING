@@ -1,0 +1,67 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.FederalDea>
+
+@{
+    var FederalDea = 2;
+}
+
+@foreach (var item in Model)
+    {
+
+        FederalDea = FederalDea + 1;
+            <div class="x_content zero-padding-left">
+                <div>
+                    <span class="text-uppercase TableHeading">Federal DEA Information-@FederalDea</span>&nbsp; <button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                    &nbsp;  <button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Licenses/getFederalDEAHistory?value=@item.FederalDeaID" data-tab-container="@item.FederalDeaID">
+                        <i class="fa fa-history"></i>
+                    </button>
+                   </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.DEA) :</label>
+                    <span class="theme_label_data">@item.DEA</span>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.StateOfRegistration) :</label>
+                    <span class="theme_label_data">@item.StateOfRegistration</span>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.IsLicenseGood) :</label>
+                    @if (item.IsLicenseGood)
+                    {
+                        <span class="theme_label_data">YES</span>
+                    }
+                    else
+                    {
+                        <span class="theme_label_data">NO</span>
+                    }
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.IssueDate) :</label>
+                    <span class="theme_label_data">@item.IssueDate</span>
+
+                </div>
+
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+                    <span class="theme_label_data">@item.ExpirationDate</span>
+                </div>
+                <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                    <label class="theme_label">@Html.DisplayNameFor(e => e.SCHEDULE) :</label>
+                    <span class="theme_label_data">
+                        <span:if class="@item.SCHEDULE.One == false ? : hidden">@*<input type="checkbox"        checked="@item.SCHEDULE.One" name="IPA" class="normal-checkbox" disabled value="1">*@<label for="IPA"><span></span>1</label></span:if>&nbsp;&nbsp;
+                        <span class="@item.SCHEDULE.Two == false ? : hidden">@*<input type="checkbox" name="2" checked="@item.SCHEDULE.Two" class="normal-checkbox" disabled value="2">*@<label for="2"><span></span>2</label></span>&nbsp;&nbsp;
+                        <span class="@item.SCHEDULE.TwoN == false ? : hidden">@*<input type="checkbox" name="2N" checked="@item.SCHEDULE.TwoN" class="normal-checkbox" disabled value="2N">*@<label for="2N"><span></span>2N</label></span>&nbsp;&nbsp;
+                        <span>@*<input type="checkbox" name="3" checked="@item.SCHEDULE.Three" class="normal-checkbox" disabled value="3">*@<label for="3"><span></span>3</label></span>&nbsp;&nbsp;
+                        <span>@*<input type="checkbox" name="3N" checked="@item.SCHEDULE.ThreeN" class="normal-checkbox" disabled value="3N">*@<label for="3N"><span></span>3N</label></span>&nbsp;&nbsp;
+                        <span>@*<input type="checkbox" name="4N" checked="@item.SCHEDULE.FourN" class="normal-checkbox" disabled value="4N">*@<label for="4N"><span></span>4N</label></span>&nbsp;&nbsp;
+                        <span>@*<input type="checkbox" name="5N" checked="@item.SCHEDULE.FiveN" class="normal-checkbox" disabled value="5N">*@<label for="5N"><span></span>5N</label></span>
+                    </span>
+                </div>
+                
+            </div>
+    <div id="@item.FederalDeaID">
+                </div>
+
+}
+
+<span class="view-more pull-right" id="lessFederalDEA" data-toggle="collapse" data-target=".ViewMoreFederalDEA" onclick="ShowHideAddView('moreFederalDEA', 'lessFederalDEA')">View Less</span>

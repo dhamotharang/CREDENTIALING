@@ -1,0 +1,95 @@
+﻿@*@model PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.CdnInfo*@
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.CdsInfo>
+
+@{
+    var CDS = 0;
+
+}
+<div class="target profilediv col-lg-12 nopadding">
+    <fieldset class="fsStyle" id="ViewCDSInfo">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                <span class="transparent-font-color">_______</span>
+                CDS Information
+                <span class="transparent-font-color">________</span>
+            </span>
+            &nbsp;&nbsp; <span class="text-uppercase ">
+                <span class="fstyleBtnStyle">
+                    <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetCDSInformationPartial?model=@Model&ActionType=Add" data-tab-container="CDSInfo">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetCDSInformationPartial?model=@Model&ActionType=Edit" data-tab-container="CDSInfo">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </span>
+                <span class="fstyleBtnStyle">
+                    <button class="btn btn-warning btn-xs historyBtnCSS add_note_btn" data-toggle="collapse" data-target="#CDSInformations">
+                        <i class="fa fa-history historyBtnCSS"></i>
+                    </button>
+                </span>
+                <span class="fstyleBtnStyle">
+                    <button class="btn btn-default btn-xs helpBtnCSS" data-toggle="popover" data-trigger="hover" data-content="*If you have additional CDS Information include here." data-original-title="" title="">
+                        <i class="fa fa-question"></i>
+                    </button>
+                </span>
+                <a class="print_button_for_CDSInfo hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                    <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                </a>
+            </span>
+        </legend>
+
+
+        @foreach (var item in Model)
+        {
+
+            CDS = CDS + 1;
+           
+                <div class="x_content zero-padding-left mutiple-data CDSInfo_@CDS collapse in">
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">CDS Information- @CDS</span>&nbsp; <button onclick="groupmodalhistory('Licenses','removeCDSInfo','@item.CdsInfoID','CDSInfo')" @*data-toggle="modal" data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal "><i class="fa fa-minus"></i></button>
+                        &nbsp; <button class="btn btn-primary btn-xs RemoveButtonStyleModal "><i class="fa fa-refresh"></i></button>
+                        @*&nbsp;  <button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Licenses/getCDSHistory?value=@item.CdsInfoID" data-tab-container="CDSHistory_@item.CdsInfoID">
+                            <i class="fa fa-history"></i>
+                        </button>*@
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.CDS) :</label>
+                        <span class="theme_label_data">@item.CDS</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.StateOfRegistration) :</label>
+                        <span class="theme_label_data">@item.StateOfRegistration</span>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.IssueDate) :</label>
+                        <span class="theme_label_data">@item.IssueDate</span>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+                        <span class="theme_label_data">@item.ExpirationDate</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">SUPPORTING DOCUMENT:</label>
+                        <span class="theme_label_data">N/A</span>
+                    </div>
+                </div>
+               
+
+        }
+
+
+        @*************** History CDS Information *********************************@
+
+        <span class="view-more pull-right" id="lessCDS" data-toggle="collapse" data-target=".CDSInfo_2" onclick="ShowHideAddView('moreCDS', 'lessCDS')">View Less</span>
+        <span class="view-more pull-right hidden" id="moreCDS" data-toggle="collapse" data-target=".CDSInfo_2" onclick="ShowHideAddView('lessCDS', 'moreCDS')">View More</span>
+        <fieldset class="fsStyle collapse remove_shadow width-100" id="CDSInformations">
+
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/Licenses/CDSInfo/_HistoryCDSInfo.cshtml")
+
+        </fieldset>
+
+    </fieldset>
+</div>
+@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/_RemoveModal.cshtml")

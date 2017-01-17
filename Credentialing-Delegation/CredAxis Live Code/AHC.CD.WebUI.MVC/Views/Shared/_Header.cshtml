@@ -1,0 +1,178 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+
+
+<script src="~/Scripts/Custom/DashBoard/notifications.js"></script>
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top small" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand header-logo" href="~/Dashboard/Index"><img src="~/Content/Images/logo2.png" style="width: 98px;height: 49px;" /></a>
+    </div>
+    <script>
+        var togglemenu = function () {
+            $("#sidemenu").toggleClass("menu-in");
+            $("#page-wrapper").toggleClass("menuup");
+            $("#menu-toggle").toggleClass("btn-menuup");
+        }
+       
+        //$('#alertNotifications').append();
+    </script>
+    @*<div class="col-lg-3">*@
+    <button id="menu-toggle" class="btn btn-xs navbar-toggle" onclick="togglemenu()">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+
+    @*</div>*@
+
+    <!-- /.navbar-header -->
+    @*<ul class="nav navbar-top-links navbar-left hidden">
+            <li class="dropdown">
+                <a class="btn-sm btn-default" data-toggle="dropdown" href="#">
+                    <i class="fa fa-list fa-fw"></i>  <i class="fa fa-caret-left-"></i>
+                </a>
+                <!-- /.dropdown-messages -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>*@
+
+
+    @*<script src="~/Scripts/Custom/DashBoard/NotificationApp.js"></script>*@
+    <ul class="nav navbar-top-links navbar-right">
+        @*@if (Session["LoggedInUserView"] != null)
+            {*@
+
+        <li class="dropdown ringMyBell" id="alerts">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="bell">
+                <span class="label label-info" id="numberOfNotifications"></span>
+                <i class="fa fa-bell fa-fw" tooltip data-toggle="tooltip" data-placement="bottom" title="Notifications"></i> <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-messages pre-scrollable" id="alertArea">
+                <li class="pull-right" style="background-color:#ddd"><input class="checkMe" type="checkbox" id="ViewAll" />View All</li>
+
+                @*<li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>Read All Messages</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>*@
+            </ul>
+            <!-- /.dropdown-messages -->
+        </li>
+
+
+
+        @if (HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CRA"))
+            {
+                <span><a id="expired_Task" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/TaskTracker/Index" class="btn btn-xs btn-circle newCountButtonsExpired " tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title=" Expired Tasks" style="color:white;font-weight:bolder;"></a></span>
+
+                <span><a id="expiring_Task" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/TaskTracker/Index" class="btn btn-xs btn-circle newCountButtonExpiringSoon " tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Task expiring Today" style="color: white; font-weight: bolder;"></a></span>
+
+                <span><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/Verification/Verification" class="btn btn-xs btn-circle btn-default" tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verification Links"><i class="fa fa-link"></i></a></span>
+            }
+            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CRA"))
+            {
+                if (System.Configuration.ConfigurationManager.AppSettings["SupportsDelegatedPlans"] == "true")
+                {
+                    <span><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Verification/Index" class="btn btn-xs btn-circle btn-default" tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="PSV"><i class="small">PSV</i></a></span>
+                }
+            }
+        }
+
+
+
+        @*}*@<!-- /.dropdown -->
+        @*<li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-tasks">
+                    <li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>See All Tasks</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                 /.dropdown-tasks
+            </li>*@
+        <!-- /.dropdown -->
+        @*@if (Session["LoggedInUserView"] != null)
+            {*@
+        @*<li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-alerts" style="width:auto;"></ul>
+                /.dropdown-alerts
+            </li>*@
+        @*}*@
+
+        <!--Task Notification Expiry dropdown starts here-->
+        <!--Change Requested by client, do not remove the code-->
+        @*<li>
+                <div class="dropdown">
+                    <button class="btn btn-default btn-circle dropdown-toggle"  data-toggle="dropdown">
+                        <span tooltip data-toggle="tooltip" data-placement="bottom" title="Task Expiry Notification">T</span>
+                    </button>
+                    <span id="count"></span>
+                    <div class="dropdown-menu taskTracker" style="padding-left: 2px; right: auto;">
+                        <div class="row">
+                            <span id="AllNotification" class="col-lg-6 text-center" onclick="Expired_Ending_Tasks('Expired')">Notification</span>
+                            <span id="ImpNotification" class="col-lg-6" onclick="Expired_Ending_Tasks('Imp')">Important Tasks</span>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-lg-12">
+                                <ul id="Ending_Expired_Tab" class="taskPanel nav nav-pills ">
+                                    <li id="ExpiredTask" class="text-center active"><a onclick="Expired_Ending_Tasks('Expired')" style=" padding-left: 3px; padding-right: 9px;">Expired Tasks</a></li>
+                                    <li id="EndingSoon" class="text-center "><a onclick="Expired_Ending_Tasks('Ending')">Ending Soon</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ul id="ExpiredNotificationArea" class="TaskScroll " style=" padding: 0px; "></ul>
+                        <ul id="EndingNotificationArea" class="TaskScroll " style=" padding: 0px; "></ul>
+                        <ul id="ImportantNotificationArea" class="TaskScroll " style=" padding: 0px; "></ul>
+                        <p id="NoData"> No Assigned Tasks for the Day</p>
+                    </div>
+                </div>
+
+            </li>*@
+        <!--Task Notification Expiry dropdown ends here-->
+        <li class="dropdown">
+
+            @if (Session["LoggedInUserView"] == null)
+            {
+                Session["LoggedInUserView"] = @Html.Partial("_LoggedInUserView");
+            }
+            @Session["LoggedInUserView"]
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+    </ul>
+    <div class="clearfix onlymedia"></div>
+    <!-- /.navbar-top-links -->
+    @* Sidebar menu implementation *@
+
+    @if (Session["SideBarMenu"] == null)
+    {
+        Session["SideBarMenu"] = @Html.Partial("_Sidebar");
+    }
+    @Session["SideBarMenu"]
+    @* End Sidebar menu implementation *@
+
+</nav>

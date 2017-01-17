@@ -1,0 +1,72 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.ResidencyInternshipDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="col-lg-12">
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Program Type *</label>*@
+        @Html.LabelFor(model => model.ResidencyInternshipProgramType, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.ProgramType}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Specialty *</label>*@
+        @Html.LabelFor(model => model.SpecialtyID, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.Specialty.Name}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+
+            @Html.LabelFor(model => model.DirectorName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">{{residency.DirectorName}}</i>
+            </div>
+        </div>
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Department *</label>*@
+        @Html.LabelFor(model => model.Department, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.Department}}</i>
+        </div>
+    </div>
+    </div>
+<div class="col-lg-12">
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">Start Date *</label>*@
+        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.StartDate | date:'MM-dd-yyyy'}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @*<label class="control-label small">End Date *</label>*@
+        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{residency.EndDate | date:'MM-dd-yyyy'}}</i>
+        </div>
+    </div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+        {
+            <div class="form-group col-md-3">
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    @Html.LabelFor(model => model.DocumentPath, htmlAttributes: new { @class = "control-label small" })
+                    <div ng-show="residency.CertificatePath!=''">
+                        <i class="data-label"><a href="/Document/View?path={{residency.DocumentPath}}" cl class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Document"><i class="fa fa-file">  Document</i></a></i>
+                    </div>
+                    <div ng-show="residency.DocumentPath==''">
+                        <i class="data-label"> Not available</i>
+                    </div>
+                </div>
+            </div>
+        }
+    
+    <div class="col-md-12 form-group">
+        <button type="button" class="btn btn-warning btn-sm"  ng-click="operateSecondCancelControl('')">Cancel</button>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <button type="button" class="btn btn-primary btn-sm pull-right" ng-hide="visibilitySecondControl == ($index+'_viewresidency') && visiblitySecondControl == ('onlyViewresidency')" ng-click="operateSecondEditControl($index+'_editresidency',residency)">Edit</button>
+        }
+        
+    </div>
+</div>

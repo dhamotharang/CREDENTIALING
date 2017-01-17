@@ -1,0 +1,42 @@
+﻿@model List<PortalTemplate.Areas.Encounters.Models.CreateEncounter.ProviderViewModel>
+
+<span id="provider_result_title"></span><span class="pull-right"><button class="btn btn-success btn-xs" id="ProceedToNextFromProToMem" disabled>Proceed</button></span>
+<table id="ProviderResult" class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+    <thead class="theme_thead">
+        <tr>
+            <th>NPI</th>
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Taxonomy</th>
+            <th><input type="checkbox" class="normal-checkbox selectAllProvider" value="selectAll" /><label><span></span></label> </th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr data-container="@item.ProviderUniqueId">
+                <td>
+                    @item.ProviderNPI
+                </td>
+                <td>
+                    @item.ProviderLastName @item.ProviderMiddleName @item.ProviderFirstName
+                </td>
+                <td>
+                    @item.FacilityName
+                </td>
+                <td>
+                    @item.Taxonomy
+                </td>
+                <td>
+                   @*@Html.PratianUiSquareCheckboxFor(m => item.IsProviderChecked, new { color = "green", value = item.RenderingProviderNPI  })*@
+                    <input type="checkbox" class="normal-checkbox individualCheckProvider" value="@item.ProviderNPI" /><label><span></span></label>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+<script src="~/Areas/Encounters/Scripts/AppJs/CreateEncounter/Unminified/ProviderResult.js"></script>

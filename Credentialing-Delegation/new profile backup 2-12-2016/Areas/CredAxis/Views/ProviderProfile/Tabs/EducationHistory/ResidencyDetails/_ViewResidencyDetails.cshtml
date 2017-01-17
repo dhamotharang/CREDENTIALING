@@ -1,0 +1,302 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.EducationViewModel.ResidencyViewModel>
+@{
+    var ResidencyIndex = 0;
+}
+<div class="target profilediv col-lg-12 nopadding">
+    <fieldset class="fsStyle" id="ViewResidency">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                <span class="transparent-font-color">__</span>
+                Residency/Internship/Fellowship Details
+                <span class="transparent-font-color">__</span>
+            </span>
+            &nbsp;&nbsp; <span class="text-uppercase ">
+                <span class="fstyleBtnStyle">
+
+                    <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Education/GetResidencyAddEditView?model=@Model&type=Add" data-tab-container="ResidencyDetails">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/Education/GetResidencyAddEditView?model=@Model&type=Edit" data-tab-container="ResidencyDetails">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-warning btn-xs add_note_btn historyBtnCSS" data-toggle="collapse" data-target="#ResidencyInformations">
+                        <i class="fa fa-history"></i>
+                    </button>
+                    <a class="print_button_for_Residency hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                        <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                    </a>
+                </span>
+            </span>
+        </legend>
+        @*<span class="theme_depend text-uppercase TabHeading">Residency/Internship/Fellowship Details</span>
+            <span class="text-uppercase pull-right ">
+                <span>
+                    <button class="btn btn-warning btn-xs add_note_btn historyBtnCSS" data-toggle="collapse" data-target="#ResidencyInformations">
+                        <i class="fa fa-history"></i>
+                    </button>
+                    <button class="btn btn-success btn-xs add_note_btn" onclick="ShowHideAddView('addResidency', 'ViewResidency')">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </span>
+            </span>*@
+        @foreach (var item in Model)
+        {
+            ResidencyIndex = ResidencyIndex + 1;
+            if (ResidencyIndex <= 2)
+            {
+                <div class="x_content mutiple-data  zero-padding-left">
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">Residency/Internship/Fellowship Detail - @ResidencyIndex</span>&nbsp; <button onclick="groupmodalhistory('Education','RemoveResidencyDetails','@item.Id','ResidencyDetails')" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                        @*&nbsp;<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Education/ViewResidencyDetailshistory?value=@item.Id" data-tab-container="ResidencyDetails_@item.Id">
+                            <i class="fa fa-history"></i>
+                        </button>*@
+                    </div>
+                    <div class="col-lg-12"><br /></div><div class="col-lg-12 zero-padding-left SubHeaderSpacing2">
+                        <span class="text-uppercase label TabSubHeading" style="border-radius: 0;">Program Details</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.PreferenceType) :</label>
+                        <span class="theme_label_data">@item.PreferenceType</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ProgramType) :</label>
+                        <span class="theme_label_data">@item.ProgramType</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Speciality) :</label>
+                        <span class="theme_label_data">@item.Speciality</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.DirectorName) :</label>
+                        <span class="theme_label_data">@item.DirectorName</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Department) :</label>
+                        <span class="theme_label_data">@item.Department</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</label>
+                        <span class="theme_label_data">@item.StartDate</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</label>
+                        <span class="theme_label_data">@item.EndDate</span>
+                    </div>
+                    <div class="col-lg-1 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Document) :</label>
+                        <span class="theme_label_data"><i class="fa fa-file"></i></span>
+                    </div>
+                    <div class="col-lg-12 zero-padding-left">
+                        <span class="text-uppercase label TabSubHeading" style="border-radius: 0;">School Details</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle marginTop-5">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.SchoolName) :</label>
+                        <span class="theme_label_data">@item.SchoolName</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.AffiliatedHospital) :</label>
+                        <span class="theme_label_data">@item.AffiliatedHospital</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Location) :</label>
+                        <span class="theme_label_data">@item.Location</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.SuitNumber) :</label>
+                        <span class="theme_label_data">@item.SuitNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.StreetNumber) :</label>
+                        <span class="theme_label_data">@item.StreetNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.City) :</label>
+                        <span class="theme_label_data">@item.City</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.State) :</label>
+                        <span class="theme_label_data">@item.State</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.County) :</label>
+                        <span class="theme_label_data">@item.County</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Country) :</label>
+                        <span class="theme_label_data">@item.Country</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ZipCode):</label>
+                        <span class="theme_label_data">@item.ZipCode</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Email) :</label>
+                        <span class="theme_label_data">@item.Email</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.TelephoneNumber) :</label>
+                        <span class="theme_label_data">@item.TelephoneNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.FaxNumber) :</label>
+                        <span class="theme_label_data">@item.FaxNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.IsTrainingSchool) :</label>
+                        @if (item.IsTrainingSchool)
+                        {
+                            <span class="theme_label_data">
+                                Yes
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">
+                                No
+                            </span>
+                        }
+                    </div>
+                </div>
+                <div id="ResidencyDetails_@item.Id">
+                    @*  @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/EducationHistory/PostGraduationCMEDetails/_HistoryGraduateSchoolDetails.cshtml", Model)*@
+                </div>
+                if (ResidencyIndex == 2)
+                {
+                    <span class="view-more pull-right" id="ResidencyMore" data-toggle="collapse" data-target=".ViewMoreResidency" onclick="ShowHideAddView('ResidencyLess', 'ResidencyMore')">View More</span>
+                }
+            }
+            else
+            {
+                <div class="x_content mutiple-data  zero-padding-left collapse ViewMoreResidency">
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">Residency/Internship/Fellowship Details - @ResidencyIndex</span>&nbsp; <button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                    </div>
+                    <div class="col-lg-12"><br /></div> <div class="col-lg-12 zero-padding-left SubHeaderSpacing2">
+                        <span class="text-uppercase label TabSubHeading">Program Details</span>
+                    </div>
+                    <div class="col-lg-12"><br /></div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.PreferenceType) :</label>
+                        <span class="theme_label_data">@item.PreferenceType</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ProgramType) :</label>
+                        <span class="theme_label_data">@item.ProgramType</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Speciality) :</label>
+                        <span class="theme_label_data">@item.Speciality</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.DirectorName) :</label>
+                        <span class="theme_label_data">@item.DirectorName</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Department) :</label>
+                        <span class="theme_label_data">@item.Department</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</label>
+                        <span class="theme_label_data">@item.StartDate</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</label>
+                        <span class="theme_label_data">@item.EndDate</span>
+                    </div>
+                    <div class="col-lg-8 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Document) :</label>
+                        <span class="theme_label_data"><i class="fa fa-file"></i></span>
+                    </div>
+                    <div class="col-lg-12 zero-padding-left">
+                        <span class="text-uppercase label TabSubHeading">School Details</span>
+                    </div>
+                    <div class="col-lg-12"><br /></div>
+                    <div class="col-lg-1 text_adjust boxstyle marginTop-5">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.SchoolName) :</label>
+                        <span class="theme_label_data">@item.SchoolName</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.AffiliatedHospital) :</label>
+                        <span class="theme_label_data">@item.AffiliatedHospital</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Location) :</label>
+                        <span class="theme_label_data">@item.Location</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.SuitNumber) :</label>
+                        <span class="theme_label_data">@item.SuitNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.StreetNumber) :</label>
+                        <span class="theme_label_data">@item.StreetNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.City) :</label>
+                        <span class="theme_label_data">@item.City</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.State) :</label>
+                        <span class="theme_label_data">@item.State</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ZipCode):</label>
+                        <span class="theme_label_data">@item.ZipCode</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Country) :</label>
+                        <span class="theme_label_data">@item.Country</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.County) :</label>
+                        <span class="theme_label_data">@item.County</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Email) :</label>
+                        <span class="theme_label_data">@item.Email</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.TelephoneNumber) :</label>
+                        <span class="theme_label_data">@item.TelephoneNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.FaxNumber) :</label>
+                        <span class="theme_label_data">@item.FaxNumber</span>
+                    </div>
+                    <div class="col-lg-1 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.IsTrainingSchool) :</label>
+                        @if (item.IsTrainingSchool)
+                        {
+                            <span class="theme_label_data">
+                                Yes
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">
+                                No
+                            </span>
+                        }
+                    </div>
+                </div>
+                <div id="ResidencyDetails_@item.Id">
+                    @*  @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/EducationHistory/PostGraduationCMEDetails/_HistoryResidencyDetails.cshtml", Model)*@
+                </div>
+            }
+            if (ResidencyIndex == Model.Count())
+            {
+                <span class="view-more hidden pull-right" id="ResidencyLess" data-toggle="collapse" data-target=".ViewMoreResidency" onclick="ShowHideAddView('ResidencyMore', 'ResidencyLess')">View Less</span>
+            }
+        }
+
+        <fieldset class="fsStyle collapse remove_shadow width-100" id="ResidencyInformations">
+
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/EducationHistory/ResidencyDetails/_HistoryResidencyDetails.cshtml")
+
+        </fieldset>
+    </fieldset>
+</div>
+
+@* Remove Modal *@
+@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/_RemoveModal.cshtml")
+

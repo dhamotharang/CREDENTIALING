@@ -1,0 +1,65 @@
+﻿@using PratianUI
+@model PortalTemplate.Areas.Billing.Models.Clearing_House.ClearingHouseViewModel
+
+@using (Ajax.BeginForm("AddClearingHouse", "ClearingHouse", new AjaxOptions { HttpMethod = "POST", LoadingElementId = "progress", OnBegin = "validateForm", OnSuccess = "onSuccessFn" },new {id="ClearingHouseSaveForm"}))
+{
+    <div class="x_panel border_on_panel x_panel_claimsinfo">
+        <div class="row">
+            <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6">
+                <div class="x_content">
+                    <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6">
+                        @Html.LabelFor(m => m.ClearingHouseId)
+                        @Html.TextBoxFor(model => model.ClearingHouseId, new { @class = "form-control input-xs non_mandatory_field_halo ", placeholder = "Clearing House Id" })
+                        @Html.ValidationMessageFor(model => model.ClearingHouseId)
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6">
+                        @Html.LabelFor(m => m.ClearingHouseName)
+                        @Html.TextBoxFor(model => model.ClearingHouseName, new { @class = "form-control input-xs non_mandatory_field_halo ", placeholder = "Clearing House Name" })
+                        @Html.ValidationMessageFor(model => model.ClearingHouseName)
+                    </div>
+                </div>
+                <div class="x_content">
+                    <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6">
+                        @Html.LabelFor(m => m.ClearingHouseAddressLine1)
+                        @Html.TextBoxFor(model => model.ClearingHouseAddressLine1, new { @class = "form-control input-xs non_mandatory_field_halo ", placeholder = "AddressLine2" })
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6">
+                        @Html.LabelFor(m => m.ClearingHouseAddressLine2)
+                        @Html.TextBoxFor(model => model.ClearingHouseAddressLine2, new { @class = "form-control input-xs non_mandatory_field_halo ", placeholder = "AddressLine2" })
+                    </div>
+                </div>
+                <div class="x_content">
+                    <div class="col-lg-4 col-sm-4 col-xs-4 col-md-4">
+                        @Html.LabelFor(m => m.ClearingHouseCity)
+                        @Html.TextBoxFor(model => model.ClearingHouseCity, new { @class = "form-control input-xs non_mandatory_field_halo ", placeholder = "City" })
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-xs-4 col-md-4">
+                        @Html.LabelFor(m => m.ClearingHouseState)
+                        @Html.TextBoxFor(model => model.ClearingHouseState, new { @class = "form-control input-xs non_mandatory_field_halo ", placeholder = "State" })
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-xs-4 col-md-4">
+                        @Html.LabelFor(m => m.ClearingHouseZip)
+                        @Html.TextBoxFor(model => model.ClearingHouseZip, new { @class = "form-control input-xs non_mandatory_field_halo ", placeholder = "Zip" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6">
+                <div class="col-lg-12 col-sm-12 col-xs-12 col-md-12">
+                    <div class="x_content">
+                        @Html.LabelFor(m => m.ClearingHousePayers)
+                        @Html.PratianUiDualListFor(m => m.ClearingHousePayers, "/Billing/ClearingHouse/GetAllPayer", "PayerId", "PayerName", "NonSelectedHeaderName", "SelectedHeaderName", new { @class = "DualList", @multiple = "multiple" })
+                        @Html.ValidationMessageFor(model => model.ClearingHousePayers)
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="x_content margin_top_20_px button-styles clearfix">
+            <button class="btn btn-warning btn-xs pull-left previous_clearingHouse_btn" data-toggle="tooltip" title="Back">Back</button>
+            <button class="btn btn-success btn-xs pull-right save_clearingHouse_btn" type="submit" data-toggle="tooltip" title="Save">Save</button>
+        </div>
+    </div>
+}
+
+<script src="~/Areas/Billing/Scripts/Common/Lib/jquery.bootstrap-duallistbox.js"></script>
+<script src="~/Areas/Billing/Scripts/AppJs/ClearingHouse/Unminifed/ClearingHouseAddEdit.js"></script>

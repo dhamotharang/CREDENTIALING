@@ -1,0 +1,435 @@
+﻿@model PortalTemplate.Areas.Encounters.Models.CreateEncounter.PrimaryEncounterViewModel
+
+@{
+    List<SelectListItem> Status = new List<SelectListItem>();
+    Status.Add(new SelectListItem
+      {
+          Text = "Open",
+          Value = "Open",
+          Selected = true
+      });
+    Status.Add(new SelectListItem
+    {
+        Text = "Active",
+        Value = "Active"
+
+    });
+    Status.Add(new SelectListItem
+    {
+        Text = "No Show",
+        Value = "NoShow"
+    });
+    Status.Add(new SelectListItem
+    {
+        Text = "Re-Schedule",
+        Value = "ReSchedule"
+    });
+    Status.Add(new SelectListItem
+    {
+        Text = "Ready To Code",
+        Value = "ReadyToCode"
+    });
+}
+
+<form id="EncounterForm">
+    <div class="row ViewEncounter" id="ViewEncounter">
+        <div class="col-lg-12">
+
+            <div class="x_panel border_on_panel">
+                <div class="x_content">
+
+                    <div class="col-lg-12">
+                        <label class="title_text">Encounter Details</label>
+                        @*<a onclick="toggleCollapseEncounter()" class="btn btn-xs btn-info pull-right encounterCollapseShow"><span class="fa fa-list"></span></a>*@
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <fieldset class="fieldsetStyle">
+                                <legend class="legendstyle">
+                                    Rendering Provider
+                                    <a class="btn btn-xs btn-info" id="revertProviderEncounterPage" data-toggle="tooltip" title="Change Provider"><i class="fa fa-reply"></i> Change</a>
+                                </legend>
+                                @*<label class="p_legendHeader">Rendering Provider</label>*@
+                                <div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Provider NPI
+                                        <div>
+                                            @Html.HiddenFor(model => model.RenderingProviderNPI)
+                                            <label class="uppercase">@Model.RenderingProviderNPI</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Provider First Name
+                                        <div>
+                                            @Html.HiddenFor(model => model.RenderingProviderFirstName)
+                                            <label class="uppercase">@Model.RenderingProviderFirstName</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Provider Last Name
+                                        <div>
+                                            @Html.HiddenFor(model => model.RenderingProviderLastOrOrganizationName)
+                                            <label class="uppercase">@Model.RenderingProviderLastOrOrganizationName</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Specialty
+                                        <div>
+                                            @Html.HiddenFor(model => model.RenderingProviderSpeciality)
+                                            <label class="uppercase">@Model.RenderingProviderSpeciality</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Taxonomy Code
+                                        <div>
+                                            @Html.HiddenFor(model => model.RenderingProviderTaxonomy)
+                                            <label class="uppercase">@Model.RenderingProviderTaxonomy</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <fieldset class="fieldsetStyle">
+                                <legend class="legendstyle">
+                                    Member
+                                    <a class="btn btn-xs btn-info" id="revertMemberEncounterPage" data-toggle="tooltip" title="Change Member"><i class="fa fa-reply"></i> Change</a>
+                                </legend>
+                                <div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Subscriber Id
+                                        <div>
+                                            @Html.HiddenFor(model => model.SubscriberID)
+                                            <label class="uppercase">@Model.SubscriberID</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Member First Name
+                                        <div>
+                                            @Html.HiddenFor(model => model.PatientFirstName)
+                                            <label class="uppercase">@Model.PatientFirstName</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Member Last Name
+                                        <div>
+                                            @Html.HiddenFor(model => model.PatientLastOrOrganizationName)
+                                            <label class="uppercase">@Model.PatientLastOrOrganizationName</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        Gender
+                                        <div>
+                                            @Html.HiddenFor(model => model.PatientGender)
+                                            <label class="uppercase">@Model.PatientGender</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        DOB
+                                        <div>
+                                            @Html.HiddenFor(model => model.RenderingProviderTaxonomy)
+                                            <label class="uppercase">@Model.PatientBirthDate</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Address
+                                        <div>
+                                            @Html.HiddenFor(model => model.PatientFirstAddress)
+                                            @Html.HiddenFor(model => model.PatientSecondAddress)
+                                            <label class="uppercase">@Model.PatientFirstAddress @Model.PatientSecondAddress</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        Plan Name
+                                        <div>
+                                            @Html.HiddenFor(model => model.PayerName)
+                                            <label class="uppercase">@Model.PayerName</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <fieldset class="fieldsetStyle">
+                                @*<div class="row">
+                                        <div class="col-lg-12">
+                                    <label class="p_legendHeader">Service Information</label>
+                                        </div>
+                                    </div>*@
+                                <legend class="legendstyle">Service Information</legend>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Referring Provider
+                                            <div class="ProviderLabel">
+                                                <label class="uppercase" id="SelectedReferingProvider">Pariksith Singh</label>
+                                                <a class="refprov_edit_link btn btn-xs btn-info ProviderEditBtn" data-url="#ReferingProviderSearch"><i class="fa fa-edit"></i> Edit</a>
+                                            </div>
+                                            <div id="ReferingProviderSearch" class="ProviderSearch row">
+                                                <div class="col-lg-9">
+                                                    <input name="ReferringProvider" placeholder="Referring Provider Name" class="form-control input-xs non_mandatory_field_halo refprovelement">
+                                                </div>
+                                                <div class="col-lg-3 zero-padding-left-right">
+                                                    <button class="btn btn-xs btn-primary selectReferprovider" id="ReferingProviderSearchBtn">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Billing Provider
+                                            <div class="ProviderLabel">
+                                                <label class="uppercase" id="SelectedBillingProvider">Pariksith Singh</label>
+                                                <a class="refprov_edit_link btn btn-xs btn-info ProviderEditBtn" data-url="#BillingProviderSearch"><i class="fa fa-edit"></i> Edit</a>
+                                            </div>
+                                            <div id="BillingProviderSearch" class="ProviderSearch row">
+                                                <div class="col-lg-9">
+                                                    <input name="BillingProvider" placeholder="Billing Provider Name" class="form-control input-xs non_mandatory_field_halo refprovelement">
+                                                </div>
+                                                <div class="col-lg-3 zero-padding-left-right">
+                                                    <button class="btn btn-xs btn-primary selectReferprovider" id="BillingProviderSearchBtn">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Service Facility
+                                            <div class="ProviderLabel">
+                                                <label class="uppercase" id="SelectedFacility">1094 North Cliffe Dlve</label>
+                                                <a class="refprov_edit_link btn btn-xs btn-info ProviderEditBtn" data-url="#FacilitySearch"><i class="fa fa-edit"></i> Edit</a>
+                                            </div>
+                                            <div id="FacilitySearch" class="ProviderSearch row">
+                                                <div class="col-lg-9">
+                                                    <input name="Facility" placeholder="Facility Name" class="form-control input-xs non_mandatory_field_halo refprovelement">
+                                                </div>
+                                                <div class="col-lg-3 zero-padding-left-right">
+                                                    <button class="btn btn-xs btn-primary selectReferprovider" id="FacilitySearchBtn">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div id="ProviderList"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top:5px;">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            DOS From
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.DOSFrom, new { @class = "form-control input-xs non_mandatory_field_halo uppercase", placeholder = "mm/dd/yyyy" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            DOS To
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.DOSTo, new { @class = "form-control input-xs non_mandatory_field_halo uppercase", placeholder = "mm/dd/yyyy" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Place of Service
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.PlaceOfService, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+                                                <datalist id="pos" class="uppercase">
+                                                    <option value="21-Inpatient Hospital">
+                                                    <option value="11-Office">
+                                                    <option value="22-Outpatient Hospital">
+                                                    <option value="31-SNF">
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Next Appointment Date
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.NextAppointmentDate, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top:5px;">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Check In Time
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.CheckInTime, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Check Out Time
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.CheckOutTime, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Visit Length
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.VisitLength, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+                                                <datalist id="Visitlength" class="uppercase">
+                                                    <option value="15 minutes">
+                                                    <option value="30 minutes">
+                                                    <option value="45 minutes">
+                                                    <option value="60 minutes">
+                                                </datalist>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            Visit Reason
+                                            <div class="editelements">
+                                                @Html.TextBoxFor(model => model.VisitReason, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*<div class="row viewelements" style="margin-top:5px;margin-bottom:-5px;padding-right:15px;">
+                                        <a class="btn btn-xs btn-info pull-right"><i class="fa fa-eye"></i> Claims History</a>
+                                    </div>*@
+
+                                <div class="row editelements hideOnCollapse">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <fieldset class="fieldsetStyle">
+
+                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                                Encounter Type
+                                                <div>
+                                                    @Html.RadioButtonFor(model => model.EncounterType, "HMO", new { @class = "normal-radio", @id = "HMO" })
+                                                    <label for="HMO"><span></span>HMO</label>
+                                                    @Html.RadioButtonFor(model => model.EncounterType, "Medicare", new { @class = "normal-radio", @id = "Medicare", @checked = "checked" })
+                                                    <label for="Medicare"><span></span>Medicare</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                                Status
+                                                <div>
+                                                    @Html.DropDownListFor(model => model.EncounterStatus, Status, new { @class = "form-control input-xs non_mandatory_field_halo dropdown_selector text-uppercase" })
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                Notes
+                                                <div>
+                                                    @Html.TextAreaFor(model => model.EncounterNotes, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <fieldset class="fieldsetStyle">
+                                <legend class="legendstyle">Document List</legend>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-xs-12">
+                                        <a class="btn btn-xs btn-info pull-right" id="DocumentHistoryBtn"><i class="fa fa-history"></i> Document History</a>
+                                        <a class="btn btn-xs btn-info pull-right" id="ClaimHistoryBtn"><i class="fa fa-history"></i> Claim History</a>
+                                    </div>
+                                </div>
+
+                                <div id="DocumentHistoryContainer"></div>
+
+                                <div id="DocumentList">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            Document Name
+                                            @Html.TextBoxFor(model => model.DocumentDetails[0].DocumentName, new { @class = "form-control input-xs non_mandatory_field_halo uppercase" })
+
+                                        </div>
+                                        <div class="col-lg-3">
+                                            Document Category
+                                            @Html.TextBoxFor(model => model.DocumentDetails[0].DocumentName, new { @class = "form-control input-xs non_mandatory_field_halo uppercase", @list = "DocumentCategory" })
+                                            @*<input type="text" class="form-control input-xs non_mandatory_field_halo uppercase" list="DocumentCategory">*@
+                                            <datalist id="DocumentCategory">
+                                                <option value="PROGRESS NOTES"></option>
+                                                <option value="LAB REPORT"></option>
+                                                <option value="IMAGE"></option>
+                                                <option value="CONSULTATION"></option>
+                                                <option value="HOSPITAL"></option>
+                                                <option value="CHART"></option>
+                                                <option value="PRESCRIPTION"></option>
+                                                <option value="REFERENCE NOTES"></option>
+                                                <option value="HOSPITAL DISCHARGE"></option>
+                                                <option value="ECW PHYSICIAN TO PHYSICIAN"></option>
+                                                <option value="SPECIALITY FORMS"></option>
+                                                <option value="MISCELLANEOUS"></option>
+                                                <option value="EXAMINATION"></option>
+                                                <option value="PHYSICAL EXAM DRAWING"></option>
+                                                <option value="PROCEDURE DRAWING"></option>
+                                                <option value="PROCEDURE DOCUMENT"></option>
+                                                <option value="EOB"></option>
+                                                <option value="ADVANCE DIRECTORY"></option>
+                                                <option value="OTHERS"></option>
+                                            </datalist>
+                                        </div>
+                                        <div class="col-lg-3 docTypeSelector">
+                                            <div>
+                                                <input type="radio" name="FileTypeUploadCreate-0" class="normal-radio" id="uploaddata-0" value="0-0" checked="checked">
+                                                <label for="uploaddata-0" style="font-weight:normal;"><span></span>Upload</label>
+                                                <input type="radio" name="FileTypeUploadCreate-0" class="normal-radio" value="0-1" id="createfile-0">
+                                                <label for="createfile-0" style="font-weight:normal;"><span></span>Create</label>
+                                            </div>
+                                            <div class="fileBox" data-stampid="0" style="margin-top: -5px;">
+                                                <input class="form-control input-xs non_mandatory_field_halo" type="file" name="DocumentDetails[0].Document">
+                                            </div>
+                                            <div class="textBox" data-stampid="0" style="margin-top: -5px; display: none;">
+                                                <textarea class="expandableNotesBox form-control input-xs non_mandatory_field_halo textToPdfFile"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            Actions
+                                            <div class="Actions">
+                                                <button class="btn btn-xs btn-primary"><i class="fa fa-upload"></i> Upload</button>
+                                                <button class="btn btn-xs btn-info addFileButton"><i class="fa fa-plus"> Add</i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    @*<a class="view-button pull-right tab-navigation member-actions" data-tab-val="Edit Encounter" data-tab-action="Edit Encounter" data-tab-title="Edit Encounter" data-tab-container="fullBodyContainer" data-tab-autoflush="false" data-tab-path="~/Views/PBAS/CreateEncounter/_EditEncounter.cshtml">Edit</a>*@
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <a class="btn btn-sm btn-warning pull-left">Back</a>
+            <a class="btn btn-sm btn-primary pull-right">Save</a>
+            <a class="btn btn-sm btn-primary pull-right encounterTemplateItem proceedToCoding">Proceed To Coding</a>
+        </div>
+    </div>
+
+</form>
+
+
+<p-script filepath="~/Areas/Encounters/Scripts/AppJs/CreateEncounter/Unminified/EncounterTemplate.js"></p-script>

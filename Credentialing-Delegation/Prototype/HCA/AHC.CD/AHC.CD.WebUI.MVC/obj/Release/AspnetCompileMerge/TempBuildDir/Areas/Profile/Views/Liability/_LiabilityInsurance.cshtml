@@ -1,0 +1,70 @@
+﻿<script src="~/Scripts/Custom/Profile/Liability.js"></script>
+
+<br />
+<div class="panel-group" ng-controller="LiabilityCtrl">
+    <div class="panel-default">
+        <div class="form-style">
+            <fieldset>
+                <legend>
+                    Professional liability
+                </legend>
+                <div id="Liabiltyqwe">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Carrier Name</th>
+                                    <th>Policy Number</th>
+                                    <th>Address</th>
+                                    <th>Document</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="Li in ProfessionalLiabiltys">
+
+                                <tr>
+                                    <td>{{Li.CarrierName}}</td>
+                                    <td>{{Li.PolicyNumber}}</td>
+                                    <td>{{Li.Number}}, {{Li.Street}}</td>
+                                    <td><i class="data-label"><a href="/Content/Document/SINGH - LIABILITY INS.pdf" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Liability Insurance Certificate"><i class="fa fa-file"></i></a></i></td>
+                                    <td>
+                                        <button class="btn btn-xs btn-default" ng-click="showLiabilityInsurance($index,Li)" ng-hide="showViewLiabilityInsurance" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        <button class="btn btn-xs btn-primary" ng-click="editProfessionalLiabilty($index,Li)" ng-hide="editShowProfessionalLiabilty" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-xs btn-success" ng-click="addProfessionalLiabilty()" ng-hide="showViewLiabilityInsurance||editShowProfessionalLiabilty||newShowProfessionalLiabilty" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+
+                                <tr ng-show="showViewLiabilityInsurance && Li==professionalLiabilty">
+                                    <td colspan="6" id="professionalLiabiltyEditDiv{{$index}}" class="editTableDataStyle">
+
+                                        @Html.Partial("~/Areas/Profile/Views/Liability/ViewLiabilityInsurance.cshtml")
+                                    </td>
+
+                                </tr>
+
+                                <tr ng-show="editShowProfessionalLiabilty && Li==professionalLiabilty">
+                                    <td colspan="6" id="professionalLiabiltyEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/Liability/_AddEditLiabilityInsurance.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                       
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <fieldset ng-show="newShowProfessionalLiabilty">
+                        <legend>
+                            Add Professional Liability
+                        </legend>
+                        <div id="newShowProfessionalLiabiltyDiv">
+                            @Html.Partial("~/Areas/Profile/Views/Liability/_AddEditLiabilityInsurance.cshtml")
+                        </div>
+                    </fieldset>
+                
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

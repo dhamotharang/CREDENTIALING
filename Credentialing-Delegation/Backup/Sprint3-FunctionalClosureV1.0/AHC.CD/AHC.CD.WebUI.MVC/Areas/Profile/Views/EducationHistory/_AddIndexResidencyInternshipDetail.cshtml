@@ -1,0 +1,132 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<fieldset ng-show="visibilityControl==($index+'_editresidencyInternshipViewModel') || visibilityControl==($index+'_viewresidencyInternshipViewModel') ">
+    <legend>
+        Residency/Internship/Fellowship Details
+    </legend>
+    <div class="legend2 pull-right">
+        <button type="button" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="*List each department separately , if applicable"><i class="fa fa-question"></i></button>
+    </div>    
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div>
+            <div class="clearfix"></div><br />
+            <table ng-hide="tempObject.ResidencyInternshipDetails.length > 0 || visibilitySecondControl =='addresidency'" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                <thead>
+                    <tr>
+                        <td>
+                            No Data Available ! To Add New Click
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                            {
+                                <button class="btn btn-xs btn-success" ng-click="operateSecondViewAndAddControl('addresidency')"><i class="fa fa-plus"></i></button>
+                            }
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+
+            <table ng-show="tempObject.ResidencyInternshipDetails.length > 0" class="table table-bordered table-condensed customtbodyStyle">
+                <thead>
+                    <tr>
+                        <th>Program Type</th>
+                        <th>Specialty</th>
+                        <th>Department</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Primary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="residency in tempObject.ResidencyInternshipDetails track by $index">
+                    <tr ng-class="{'1':'isprimary', '2':''}[residency.PreferenceType]">
+                        <td>{{residency.ProgramType}}</td>
+                        <td>{{residency.Specialty.Name}}</td>
+                        <td>{{residency.Department}}</td>
+                        <td>{{residency.StartDate | date:'MM-dd-yyyy'}}</td>
+                        <td>{{residency.EndDate | date:'MM-dd-yyyy'}}</td>
+                        <td><i class="data-label " ng-class="{'1':'fa fa-check', '2':'fa fa-times'}[residency.PreferenceType]"></i></td>
+                        <td>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                            {
+                                <button data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateSecondViewAndAddControl($index+'_viewresidency')" ng-hide="viewShowFellowship"><i class=" fa fa-eye"></i></button>
+                            }
+
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                            {
+                                <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateSecondEditControl($index+'_editresidency',residency)" ng-hide="editShowFellowship"><i class="fa fa-edit"></i></button>
+                            }
+
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                            {
+                                <button data-toggle="tooltip" data-placement="right" title="Add New" ng-hide="viewShowFellowship ||editShowFellowship || newShowFellowship || $index+1!=tempObject.ResidencyInternshipDetails.length" ng-click="operateSecondViewAndAddControl('addresidency')" class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button>
+                            }
+
+                        </td>
+                    </tr>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                    {
+                        <tr ng-show="visibilitySecondControl==($index+'_editresidency')">
+                            <td colspan="7" id="residencyEditDiv{{residency.ResidencyInternshipDetailID}}" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend>
+                                       Update Residency/Internship/Fellowship Details
+                                    </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditResidencyInternshipFellowship.cshtml")
+                                </fieldset>
+                            </td>
+                        </tr>
+                    }
+
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                    {
+                        <tr ng-show="visibilitySecondControl==($index+'_viewresidency')">
+                            <td colspan="7" id="{{$index}}" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend>
+                                        View Residency/Internship/Fellowship Details
+                                    </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewResidencyInternshipFellowship.cshtml")
+                                </fieldset>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+        {
+            <div ng-show="visibilitySecondControl=='addresidency'">
+                
+                <div id="newResidencyDivForAdd{{residencyInternshipViewModel.TrainingDetailID}}">
+                    <fieldset>
+                        <legend>
+                            Add Residency/Internship/Fellowship Details
+                        </legend>
+                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditResidencyInternshipFellowship.cshtml")
+                        </fieldset>
+                </div>
+            </div>
+        }
+
+        <div class="clearfix"></div><br />
+        <div ng-show="visibilitySecondControl=='addedNewResidencyDetails'" class="alert alert-success" role="alert">
+            <button ng-click="operateSecondCancelControl('')" class="close"><span>&times;</span></button>
+            <i class="fa fa-2x fa-arrow-up"></i>New Residency/Internship/Fellowship Details Added Successfully !!!!
+        </div>
+        <div ng-show="visibilitySecondControl=='updatedResidencyDetails'" class="alert alert-success" role="alert">
+            <button ng-click="operateSecondCancelControl('')" class="close"><span>&times;</span></button>
+            <i class="fa fa-2x fa-arrow-up"></i>Residency/Internship/Fellowship Details Updated Successfully !!!!
+        </div>
+    </div>
+</fieldset>
+
+<div ng-show="ErrorInProgramDetails" class="col-lg-12">
+    <div class="alert alert-danger" role="alert">
+        <span class="pull-right" ng-click="ErrorInProgramDetails=false"><i class="fa fa-times"></i></span>
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        Error Lists : <br />
+        <span ng-repeat="err in ProgramDetailsErrorList track by $index">{{err}}</span>
+    </div>
+</div>

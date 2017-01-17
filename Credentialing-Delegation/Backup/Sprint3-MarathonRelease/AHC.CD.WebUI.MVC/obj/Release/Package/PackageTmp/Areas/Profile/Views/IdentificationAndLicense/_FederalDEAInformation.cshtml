@@ -1,0 +1,88 @@
+﻿
+<div class="panel-default">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Federal DEA Information
+            </legend>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:black">
+                <label>*If you have additional DEA Licenses include all DEA Registration numbers here.</label>
+               
+            </div>
+        
+            <div id="FederalDEAInfo" class="panel-body">
+                <table ng-hide="FederalDEA.length > 0||newShowFederalDEALicense" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>No Data Available ! To Add New Click
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addDEAInformation')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="FederalDEA.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+
+                    <thead>
+                    <tr>
+                    <th>DEA Number</th>
+                    <th> State Of Registration</th>
+                    <th>Issue Date</th>
+                    <th>Expiration Date</th>
+                    <th>Certificate</th>
+                    <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="DEAInformation in FederalDEA">
+                    <tr>
+                        <td>{{DEAInformation.DEANumber}}</td>
+                        <td>{{DEAInformation.StateOfReg}}</td>
+                        <td>{{DEAInformation.IssueDate| date: "MM-dd-yyyy"}}</td>
+                        <td>{{DEAInformation.ExpiryDate| date: "MM-dd-yyyy"}}</td>
+
+                        <td>
+                            <a ng-if="DEAInformation.DEALicenceCertPath" href="{{DEAInformation.DEALicenceCertPath}}" class="pointer" target="_blank" title="{{DEAInformation.DEALicenceCertPath}}"><i class="fa fa-file" title=""></i></a>
+                            <label ng-if="!DEAInformation.DEALicenceCertPath">Not Available</label></td>
+                    <td>
+                        <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewDEAInformation')" ng-hide="viewFederalDEALicense" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+
+                        <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editDEAInformation',DEAInformation)" ng-hide="editShowFederalDEALicense" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addDEAInformation')" data-toggle="tooltip" data-placement="right" title="Add new" ng-hide="viewFederalDEALicense||editShowFederalDEALicense || newShowFederalDEALicense || $index+1!=FederalDEA.length"><i class="fa fa-plus"></i></button>
+                    </td>
+                    </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewDEAInformation')">
+                            <td colspan="7"  class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewFederalDEAInformation.cshtml")
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_editDEAInformation')">
+                            <td colspan="7" id="FederalDEALicenseEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditFederalDEAInformation.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+                    <div class="clearfix"></div>
+                    <div class="form-style">
+                        <fieldset ng-show="visibilityControl=='addDEAInformation'">
+                            <legend>
+                                Add Federal DEA License
+                            </legend>
+                            <div id="newShowFederalDEALicenseDiv">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditFederalDEAInformation.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                <div ng-show="visibilityControl=='addedDEA'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>New DEA License Added Successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedDEA'" class="alert alert-warning" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                </div>
+</div>
+        </fieldset>
+    </div>
+</div>

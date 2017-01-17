@@ -1,0 +1,307 @@
+﻿@model PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.AddProviderViewModel
+<script src="~/Areas/Portal/Scripts/BridgeProviderAccept/BridgeProviderAccept.js"></script>
+<script src="~/Areas/Portal/Scripts/ProviderBridge/AddProvider/AddProvider.js"></script>
+@using PratianUI
+@{
+
+}
+<style>
+    .marginTop-7 {
+        margin-top: -7px;
+        margin-bottom: 7px;
+    }
+
+    .select2-search__field {
+        width: 100% !important;
+    }
+    /*.theMultipleSelect span.select2-selection.select2-selection--multiple {
+        min-height: 20px !important;
+        margin-top: -10px;
+    }*/
+    label {
+        display: inline-block;
+        max-width: 100%;
+        margin-bottom: 1px;
+        margin-top: 2px;
+        font-weight: bold !important;
+    }
+    .theProviderBodyFacility span.select2.select2-container.select2-container--default,
+    .theProviderBodySpecialty span.select2.select2-container.select2-container--default {
+        width: 100% !important;
+    }
+    .theMarginTop3px {
+        margin-top: 3px;
+    }
+    .AddProviderModal textarea.form-control.input-xs.Add_Provider.text-uppercase {
+        height: 22px;
+    }
+
+    .alignThis1 > div > label > span {
+        margin: 3px !important;
+    }
+</style>
+<div class="container">
+
+</div>
+
+<fieldset class="AddProviderModal" id="AddNewProvider">
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase ">Personal Info</span>
+        </legend>
+        <div class="row">
+
+            <div class="col-md-2 col-lg-2 col-sm-4">
+                <label class="text-uppercase">@Html.LabelFor(e => e.ProviderType)</label>
+                @Html.DropDownListFor(m => m.ProviderType,
+                                               new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.ProviderTypes))),
+                                                        "MD", new { @class = "form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" })
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6">
+                <label class="text-uppercase">@Html.LabelFor(e => e.FirstName)</label>
+                @Html.TextBoxFor(e => e.FirstName, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "FIRST NAME" })
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6">
+                <label class="text-uppercase">@Html.LabelFor(e => e.MiddleName)</label>
+                @Html.TextBoxFor(e => e.MiddleName, new { @class = "form-control input-xs Add_Provider text-uppercase", @placeholder = "MIDDLE NAME" })
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6">
+                <label class="text-uppercase">@Html.LabelFor(e => e.LastName)</label>
+                @Html.TextBoxFor(e => e.LastName, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "LAST NAME" })
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-4 ">
+                <label class="text-uppercase">Gender</label>
+                @*<select class="form-control input-xs text-uppercase" style=" margin-top: 2px; width: 100%;">
+                    <option>MALE</option>
+                    <option>FEMALE</option>
+                </select>*@
+                @Html.DropDownListFor(m => m.Gender,
+                                                        new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.Gender))),
+                                                        new { @class = "form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" })
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.NPI)</label>
+                @Html.TextBoxFor(e => e.NPI, new { @class = "form-control input-xs Add_Provider loser_field", @placeholder = "NPI" })
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-2 col-md-2  col-sm-12 theProviderBodyFacility">
+                <label class="text-uppercase">@Html.LabelFor(e => e.FacilityName)</label>
+                @*@Html.TextBoxFor(e => e.FacilityName, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "FACILITY NAME" })*@
+                @*<select id="planInput" class="form-control  text-uppercase FacilityMultiple" multiple="multiple">
+                    <option selected>8365 South Suncoast Blvd</option>
+                    <option>Lakeshore2</option>
+                    <option>14555 Cortez Blvd.</option>
+                    <option>Brooksville1</option>
+                </select>*@
+                @Html.DropDownListFor(m => m.FacilityName,
+                                                        new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.facility))),
+                                                        "--SELECT--", new { @class = "form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" })
+            </div>
+
+            <div class="col-md-2 col-md-2 col-sm-12 theProviderBodySpecialty">
+                <label class="text-uppercase">@Html.LabelFor(e => e.Specialty)</label>
+                @*@Html.TextBoxFor(e => e.Specialty, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "SPECIALTY" })*@
+                @*<select id="planInput" class="form-control  text-uppercase SpecialtyMultiple" multiple="multiple">
+                    <option selected>Allergy & Immunology</option>
+                    <option>Anesthesiology</option>
+                    <option>Cardiology</option>
+                    <option>Dentist</option>
+                </select>*@
+                @Html.DropDownListFor(m => m.Specialty,
+                                                        new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.specialty))),
+                                                        "--SELECT--", new { @class = "form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" })
+            </div>
+
+        </div>
+    </fieldset>
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase">Contact Info</span>
+        </legend>
+        <div class="row">
+            <div class="col-md-3 col-md-3 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.ContactName)</label>
+                @Html.TextBoxFor(e => e.ContactName, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "CONTACT NAME" })
+            </div>
+            <div class="col-md-3 col-md-3 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.PhoneNumber)</label>
+                @Html.TextBoxFor(e => e.ContactPhoneNumber, new { @class = "form-control input-xs Add_Provider    loser_field", @placeholder = "PHONE NUMBER" })
+            </div>
+            <div class="col-md-3 col-md-3 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.FaxNumber)</label>
+                @Html.TextBoxFor(e => e.ContactFaxNumber, new { @class = "form-control input-xs Add_Provider    loser_field", @placeholder = "FAX NUMBER" })
+            </div>
+            <div class="col-md-3 col-md-3 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.Email)</label>
+                @Html.TextBoxFor(e => e.ContactEmail, new { @class = "form-control input-xs Add_Provider    loser_field", @placeholder = "EMAIL" })
+            </div>
+
+
+            <div class="col-md-3 col-md-3 col-sm-12 theMarginTop3px">
+                <label class="text-uppercase">Address 1</label>
+                @Html.TextBoxFor(e => e.Address1, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "ADDRESS 1" })
+            </div>
+            <div class="col-md-3 col-md-3 col-sm-12 theMarginTop3px">
+                <label class="text-uppercase">Address 2</label>
+                @Html.TextBoxFor(e => e.Address2, new { @class = "form-control input-xs Add_Provider text-uppercase ", @placeholder = "ADDRESS 2" })
+            </div>
+
+            <div class="col-md-3 col-md-3 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.City)</label>
+                @Html.TextBoxFor(e => e.City, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "CITY" })
+            </div>
+            <div class="col-md-1 col-md-1 col-sm-12 " style="padding-right: 0px;">
+                <label class="text-uppercase">@Html.LabelFor(e => e.State)</label>
+                @Html.TextBoxFor(e => e.State, new { @class = "form-control input-xs Add_Provider text-uppercase   loser_field", @placeholder = "STATE" })
+            </div>
+            <div class="col-md-2 col-md-2 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.ZipCode)</label>
+                @Html.TextBoxFor(e => e.ZipCode, new { @class = "form-control input-xs Add_Provider   loser_field ", @placeholder = "ZIP CODE" })
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="fsStyle" id="kyunBhai">
+
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <label class="text-uppercase">@Html.LabelFor(e => e.TaxIdType)</label><br />
+                <div class="inline_block theme_label marginTop-7 alignThis1">
+                    @Html.PratianUiCheckboxFor(T => T.TaxIdType, "INDIVIDUAL", new { @id = "IndividualTaxIdType", @value = "Group", @checked = "checked" })
+                </div>
+
+                <div class="inline_block theme_label marginTop-7 alignThis1">
+                    @Html.PratianUiCheckboxFor(T => T.TaxIdType, "GROUP", new { @id = "GroupTaxIdType", @value = "Group", @checked = "checked" })
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div style="margin: 0px 15px 0px 10px; border: 1px solid #dadada; border-radius: 5px; height: 62px;" class="" id="IndividualTaxIDView">
+                <div class="col-md-6 col-lg-6 col-sm-12 zero-padding-left-right">
+                    <label class="text-uppercase">@Html.LabelFor(e => e.PlanName)</label>
+                    @*@Html.TextBoxFor(e => e.PlanName, new { @class = "form-control input-xs Add_Provider text-uppercase", @placeholder = "ULTIMATE", @value = "ULTIMATE", @readonly = "readonly" })*@
+                    @*<select style="position: inherit !important;width: 100%;" id="planInput" class="form-control  text-uppercase planMutiple marginTop-7" multiple="multiple">
+                        <option selected>ULTIMATE</option>
+                        <option>WELLCARE</option>
+                        <option>HUMANA</option>
+                        <option>FREEDOM</option>
+                    </select>*@
+                    @Html.DropDownListFor(m => m.PlanName,
+                                                        new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.plan))),
+                                                        "--SELECT--", new { @class = "form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" })
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12 zero-padding-left-right">
+                    <label class="text-uppercase">@Html.LabelFor(e => e.IndividualTaxID)</label>
+                    @Html.TextBoxFor(e => e.IndividualTaxID, new { @class = "form-control input-xs Add_Provider text-uppercase ", @placeholder = "TAX ID" })
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div style="margin: 6px 15px 0px 10px; border: 1px solid #dadada; border-radius: 5px; " class="" id="GroupTaxIDView">
+                <div class="row" style="margin-left: 0px;">
+                    <div class="col-md-2 col-lg-2 col-sm-2 zero-padding-left-right">
+                        <label class="text-uppercase">@Html.LabelFor(e => e.GroupName)</label>
+                    </div>
+                    <div class="col-md-5 col-lg-5 col-sm-5 zero-padding-left-right">
+                        <label class="text-uppercase">@Html.LabelFor(e => e.PlanName)</label>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-sm-2 zero-padding-left-right">
+                        <label class="text-uppercase">@Html.LabelFor(e => e.GroupTaxID)</label>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-sm-3 zero-padding-left-right">
+                        <label class="text-uppercase">@Html.LabelFor(e => e.GroupContactName)</label>
+                    </div>
+                </div>
+                <div class="row" id="GroupData">
+                    <div class="row col-lg-12" style="margin-left: 0px; margin-bottom: 6px; ">
+                        <div class="col-md-2 col-lg-2 col-sm-2 zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.GroupName, new { @class = "form-control input-xs Add_Provider text-uppercase ", @placeholder = "GROUP NAME" })
+
+                        </div>
+                        <div class="col-md-5 col-lg-5 col-sm-5 zero-padding-left-right">
+                            @*@Html.TextBoxFor(e => e.PlanName, new { @class = "form-control input-xs Add_Provider text-uppercase", @placeholder = "ULTIMATE", @value = "ULTIMATE", @readonly = "readonly" })*@
+                            @*<select style="width: 100% !important;" id="planInput" class="form-control  text-uppercase planMutiple marginTop-7" multiple="multiple">
+                                <option selected>ULTIMATE</option>
+                                <option>WELLCARE</option>
+                                <option>HUMANA</option>
+                                <option>FREEDOM</option>
+                            </select>*@
+                            @Html.DropDownListFor(m => m.PlanName,
+                                                        new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.plan))),
+                                                        "--SELECT--", new { @class = "form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" })
+                        </div>
+                        <div class="col-md-2 col-lg-2 col-sm-2 zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.GroupTaxID, new { @class = "form-control input-xs Add_Provider text-uppercase ", @placeholder = "TAX ID" })
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 zero-padding-left-right">
+                            <span class="col-md-10 col-lg-10 col-sm-10 zero-padding-left-right">@Html.TextBoxFor(e => e.GroupContactName, new { @class = "form-control input-xs Add_Provider text-uppercase ", @placeholder = "GROUP CONTACT NAME" })</span>
+                            <span class="col-md-2 col-lg-2 col-sm-2 zero-padding-left-right"><button style="padding:0px;" class="btn btn-xs btn-success hola"><i class="fa fa-plus" style="color:white; margin: 6px;cursor:pointer"></i></button></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-lg-12 zero-padding-left-right">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <br /><label class="text-uppercase">REQUEST STATUS</label><br />
+                <div class="inline_block theme_label alignThis1">
+                    @Html.PratianUiSquareRadioButton("APPROVE", new { @id="AcceptRadio" ,@name="Reason", @class="checkbox-radio" ,@value="ACCEPT" })
+                    @*<input id="AcceptRadio" type="radio" name="Reason" class="checkbox-radio" value="ACCEPT">
+                    <label for="AcceptRadio"><span></span>APPROVE</label>*@
+                </div>
+
+                <div class="inline_block theme_label alignThis1">
+                    @Html.PratianUiSquareRadioButton("PENDING", new { @id = "RejectRadio", @name = "Reason", @class = "checkbox-radio", @value = "RECJECT" })
+                    @*<input id="RejectRadio" type="radio" name="Reason" class="checkbox-radio" value="RECJECT">
+            <label for="RejectRadio"><span></span>PENDING</label>*@
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12" id="reasonElm" hidden><br />
+                <label class="text-uppercase">@Html.LabelFor(e => e.Reason)</label>
+                @*@Html.DropDownListFor(m => m.Reason, new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.Portal.Models.ProviderBridge.AddProvider.Reasons))),
+                                                        "Select Reason", new { @class = "form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" })*@
+                <select class="form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" data-val="true" data-val-required="The Reason field is required." id="Reason" name="Reason">
+                    <option value="">Select Reason</option>
+                    <option>InValid Details</option>
+                    <option>Participated In Malpractice</option>
+                </select>
+
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12 theMarginTop3px" id="notesArea" hidden><br />
+                <label class="text-uppercase">Notes</label>
+                <textarea class="form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field"></textarea>
+            </div>
+
+        </div>
+    </fieldset>
+</fieldset>
+
+
+<script>
+    $("#FirstName")[0].value = "LINA";
+    $("#MiddleName")[0].value = "S";
+    $("#LastName")[0].value = "ACKER";
+    $("#ContactName")[0].value = "SINDA";
+    $("#NPI")[0].value = "123454";
+    //$("#FacilityName")[0].value = "OKA HILL";
+    //$("#Specialty")[0].value = "NURSING";
+    $("#ContactPhoneNumber")[0].value = "+1 (458) 236455 ";
+    $("#ContactFaxNumber")[0].value = "44852141";
+    $("#ContactEmail")[0].value = "SINDA12@ACC.COM";
+    $("#Address1")[0].value = "#1974 , 7th Cross";
+    $("#City")[0].value = "Spring Hill";
+    $("#State")[0].value = "FLORIDA";
+    $("#ZipCode")[0].value = "417815";
+    $("#IndividualTaxID")[0].value = "1845454544";
+    $("#GroupTaxID")[0].value = "1845454546";
+    $("#GroupName")[0].value = "ACCESS 2";
+</script>

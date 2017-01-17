@@ -1,0 +1,130 @@
+﻿
+@model PortalTemplate.Areas.Billing.Models.PayerDrilldownReport.CRenderingProviderReportViewModel
+
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+    <div id="count_renderingProvider_report_donut_chart" class="report_donut_chart">
+
+    </div>
+    <div>
+        <table id="chart_table" class="table table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th>
+                        Claims Status
+                    </th>
+                    <th>
+                        Count
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="submitted_row">
+                    <td>
+                        <label class="text">Submitted</label>
+                    </td>
+                    <td>
+                        <label>@Model.SubmittedClaims</label>
+                    </td>
+                </tr>
+                <tr class="accepted_row">
+                    <td>
+                        <label class="text">Accepted</label>
+                    </td>
+                    <td>
+                        <label>@Model.AcceptedClaims</label>
+                    </td>
+                </tr>
+                <tr class="pending_row">
+                    <td>
+                        <label class="text">Pending</label>
+                    </td>
+                    <td>
+                        <label>@Model.PendingClaims</label>
+                    </td>
+                </tr>
+                <tr class="rejected_row">
+                    <td>
+                        <label class="text">Rejected</label>
+                    </td>
+                    <td>
+                        <label>@Model.RejectedClaims</label>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+    <label class="list_title">Rendering Provider List</label>
+    <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+        <thead class="theme_thead">
+            <tr>
+                <th rowspan="2">
+                    Sl No
+                </th>
+                <th rowspan="2">
+                    Rendering Provider
+                </th>
+                <th rowspan="2">
+                    No of Billing Provider
+                </th>
+                <th colspan="4" class="text-center">
+                   No of Claims
+                </th>
+                <th rowspan="2">
+                    Action
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Submitted
+                </th>
+                <th>
+                    Accepted
+                </th>
+                <th>
+                    Rejected
+                </th>
+                <th>
+                    Pending
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.RenderingProvider)
+            {
+                <tr>
+                    <td>
+                        @( ((Int32)1) + @Model.RenderingProvider.IndexOf(item))
+                    </td>
+                    <td class="renderingProvider_name">
+                        @item.RenderingProvider
+                    </td>
+                    <td>
+                        @item.MemberCount
+                    </td>
+                    <td>
+                        @item.ClaimsSubmitted
+                    </td>
+                    <td>
+                        @item.ClaimsAccepted
+                    </td>
+                    <td>
+                        @item.ClaimsRejected
+                    </td>
+                    <td>
+                        @item.ClaimsPending
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-xs margin_left_12px view_count_renderingProvider_btn" data-container="@item.ID"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+
+<script src="~/Areas/Billing/Scripts/AppJs/ProviderDrilldownReport/Unminified/Count/CRenderingProvider.js"></script>

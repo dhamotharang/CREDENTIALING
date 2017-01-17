@@ -1,0 +1,125 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PortalTemplate.Helper
+<p-script filepath="~/Areas/UM/Scripts/Common/Contacts/Common/NonMinified/ContactCommon.js"></p-script>
+<div class="col-lg-12 zero-padding-left-right" id="contactDiv">
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                <span class="transparent-font-color">________.</span>
+                @Html.Label("Contacts")
+                <span class="transparent-font-color">________</span>
+            </span>
+            <span class="text-uppercase pull-right">
+                <span>
+                    <button class="btn btn-success btn-xs" type="button" style="margin-top: -3px;" tabindex="-1" onclick="AddNewContact()">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </span>
+            </span>
+        </legend>
+        <div class="x_content zero-padding-left" id="contactDivision">
+            <table class="table margin_bottom_zero table-white noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody" style="font-weight:bold" onmouseover="initPop()">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].CallDateTime)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].ContactEntity)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].ContactName)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].ContactType)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].EMailFaxOther)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].Direction)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].OutcomeType)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].Description)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Contacts[0].CreatedBy)</th>
+                        <th class="theme_label inc-fax">@Html.DisplayNameFor(e => e.Contacts[0].IncludeFax)</th>
+                        <th class="theme_label" style="width:10%">
+                            <span class="action_Class">Action</span>
+                            <a style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1" onclick="PrintContacts()">
+                                <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="contactTbody" onmouseover="initPop()">
+                    @{
+                        int i = 0;
+                    }
+                    @if (Model != null && Model.Contacts != null && Model.Contacts.Count > 0)
+                    {
+                        foreach (var item in Model.Contacts)
+                        {
+                            <tr>
+                                <td class="theme_label_data">
+                                    @Html.DisplayFor(e => item.CallDateTime)
+                                    @Html.TextBoxFor(e => e.Contacts[@i].CallDateTime, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].AuthorizationContactID, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].ContactName, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].EMailFaxOther, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].Direction, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].CallDateTime, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].CreatedDate, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].ContactEntity, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].ContactType, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].OutcomeType, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].Outcome, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].Description, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].Reason, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].Remarks, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].CreatedBy, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].MemberID, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].ModuleName, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].ContactEntityType, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].PreviewFilePath, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].Status, new { @class = "hidden" })
+                                    @Html.TextBoxFor(e => e.Contacts[@i].ContactViewType, new { @class = "hidden" })
+                                </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.ContactEntity) </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.ContactName) </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.ContactType) </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.EMailFaxOther) </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.Direction) </td>
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.OutcomeType) </td>
+                                @if (item.Description != null)
+                                {
+                                    if (item.Description.Length > 10)
+                                    {
+                                        <td class="theme_label_data"> @Html.DisplayFor(e => item.Description).ToString().Substring(0, 10)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.Description)  <br />Reason:  @Html.DisplayFor(e => item.Reason)  <br />Outcome:  @Html.DisplayFor(e => item.Outcome)" onmouseover="initPop()"><b>...</b></span> </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="theme_label_data"> @Html.DisplayFor(e => item.Description)  <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.Description)  <br />Reason:  @Html.DisplayFor(e => item.Reason)  <br />Outcome:  @Html.DisplayFor(e => item.Outcome)" onmouseover="initPop()"><b>...</b></span> </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td class="theme_label_data"> <span style="cursor:pointer" data-container="body" data-toggle="popover" title="Note" data-trigger="hover" data-placement="top" data-html="true" data-content="-<br />Reason:  @Html.DisplayFor(e => item.Reason)  <br />Outcome:  @Html.DisplayFor(e => item.Outcome)" onmouseover="initPop()"><b>...</b></span> </td>
+                                }
+                                <td class="theme_label_data"> @Html.DisplayFor(e => item.CreatedBy) </td>
+                                @if(item.IncludeFax==true)
+                                {
+                                    <td class="theme_label_data"> <input type="checkbox" class="checkbox-radio contactincfax" name="Contacts[@i].IncludeFax" value="true" checked="checked" /> <label><span></span></label> </td>
+                                }
+                                else
+                                {
+                                    <td> <input type="checkbox" class="checkbox-radio contactincfax" name="Contacts[@i].IncludeFax" value="false" /> <label><span></span></label> </td>
+                                }
+                                <td class="theme_label_data">
+                                    <button class="btn btn-xs btn-success" type="button" onclick="ViewContact(this)"> <i class="fa fa-eye"></i> </button> 
+                                    <button class="btn btn-xs btn-primary" type="button" onclick="EditContact(this)"> <i class="fa fa-pencil"></i> </button> 
+                                    <button class="btn btn-xs btn-danger" type="button" onclick="DeleteContact(this)"> <i class="fa fa-trash-o"></i> </button>
+                                </td>
+                            </tr>
+                                i++;
+                        }
+                    }
+                    else
+                    {
+                        <tr id="emptyContactTemplate" style="text-align:center">
+                            <td colspan="11" class="theme_label_data theme_a">No Data Available</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+</fieldset>
+</div>
+@Html.Partial("~/Areas/UM/Views/Common/Contact/Common/_PrintContact.cshtml")

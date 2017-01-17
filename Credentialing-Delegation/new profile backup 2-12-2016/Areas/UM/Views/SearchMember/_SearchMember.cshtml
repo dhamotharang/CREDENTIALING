@@ -1,0 +1,51 @@
+﻿@using PortalTemplate.Helper
+
+<link href="~/Areas/UM/Styles/SearchMember/SearchMember.css" rel="stylesheet" />
+<p-script filepath="~/Areas/UM/Resources/ServiceData/MemberServiceData.js"></p-script>
+<p-script filepath="~/Areas/UM/Scripts/SearchMember/NonMinified/SearchMember.js"></p-script>
+
+<div id="spinner_wrapper">
+    @*<div id="spinnerDivision"><img id="spinner_png" src="~/Resources/Images/Common/spinner.gif" /></div>*@
+    <table class="table" id="inputFieldsTable">
+        <thead>
+            <tr>
+                <th class="theme_label_data">MBR ID</th>
+                <th class="theme_label_data">MBR LAST NAME</th>
+                <th class="theme_label_data">MBR FIRST NAME</th>
+                <th class="theme_label_data">HICN</th>
+                <th class="theme_label_data">MEDICAID</th>
+                <th class="theme_label_data">PHONE</th>
+                <th class="theme_label_data">DOB</th>
+                <th class="theme_label_data"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="memberIdInput" class="form-control input-sm text-uppercase" type="text" placeholder="Member ID" /></td>
+                <td><input id="lastNameInput" class="form-control input-sm text-uppercase" type="text" placeholder="Last Name" /></td>
+                <td><input id="firstNameInput" class="form-control input-sm text-uppercase" type="text" placeholder="First Name" /></td>
+                <td><input id="hicnInput" class="form-control input-sm text-uppercase" type="text" placeholder="HICN" /></td>
+                <td><input id="medicaidInput" class="form-control input-sm text-uppercase" type="text" placeholder="Medicaid" /></td>
+                <td><input id="phoneInput" class="form-control input-sm text-uppercase" type="text" placeholder="Phone" /></td>
+                <td><input id="dobInput" class="form-control input-sm text-uppercase" type="text" placeholder="MM/DD/YYYY" /></td>
+                <td id="searchActionItems" class="width_4">
+                    <button class="btn btn-primary btn-sm" id="searchMembersButton" disabled><i class="fa fa-search"></i></button>
+                    <button class="btn btn-cancel btn-sm" id="clearSearchButton" disabled><i class="fa fa-remove"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="resultCountSection" class="theme_label_data" style="display:none;">
+        Search Member Result - <span id="resultCount">0</span> Result(s)
+        <span id="exportOptionsForAdvanceUMSearch">
+            @*<button class="pointer MemberSearchfilterBtn btn-xs theme_label_data" style="background-color:#ffffff; border:none">Filter <i class="fa fa-caret-down" style="color: #203764 !important;"></i></button>*@
+            @Html.ExportOptions("excel", "print", "filter")
+        </span>
+    </div>
+    <div id="tableWrapper" style="display: none;">
+        @Html.Partial("~/Areas/UM/Views/SearchMember/Common/_SearchMemberResultGrid.cshtml")
+    </div>
+    <div id="noResultFound" style="display:none;">
+        <h5>No Data Available</h5>
+    </div>
+</div>

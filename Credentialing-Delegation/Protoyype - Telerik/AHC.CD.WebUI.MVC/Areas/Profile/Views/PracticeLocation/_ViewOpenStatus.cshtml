@@ -1,0 +1,105 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.OpenPracticeStatusViewModel
+
+
+
+
+
+<fieldset ng-show="visibilitySecondControl != 'editOpenPracticeStatus'" class="wrap-words">
+    <legend>Open Practice Status</legend>
+    <div class="legend2 pull-right" ng-if="PracticeLocationDetail.OpenPracticeStatus != null && visibilitySecondControl != 'editOpenPracticeStatus' ">
+        <button class="btn btn-xs btn-primary" ng-click="operateSecondEditControl('editOpenPracticeStatus', PracticeLocationDetail.OpenPracticeStatus); Showanswersonedit(PracticeLocationDetail.OpenPracticeStatus); ResetFormForValidation('#practiceOpenStatusForm{{$index}}')" data-toggle="tooltip" data-placement="top" title="Edit" id="editPracticeOoenStatus" tooltip><i class="fa fa-edit"></i></button>
+    </div>
+    <table ng-show="PracticeLocationDetail.OpenPracticeStatus == null && visibilitySecondControl != 'editOpenPracticeStatus' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+        <thead>
+            <tr>
+                <td>
+                    No Data Available for Open Practice Status!
+                    <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateSecondViewAndAddControl('editOpenPracticeStatus')" data-toggle="tooltip" data-placement="top" title="Add New" id="noDataAddNewOpenPracticeStatus" tooltip><i class="fa fa-plus"></i></button> to add new Open Practice Status.</span>
+                </td>
+            </tr>
+        </thead>
+    </table>
+    <div class="zero-padding-left-right-div" ng-if="PracticeLocationDetail.OpenPracticeStatus">
+        <div class="form-group">
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4" ng-repeat="practiceOpenStatusQuestion in masterOpenPracticeStatusQuestions">
+                    <label class="control-label small">{{practiceOpenStatusQuestion.Title}}*</label>
+                    <div ng-show="PracticeLocationDetail.OpenPracticeStatus.PracticeQuestionAnswers[$index].Answer == 'YES'">
+                        <i class="data-label" id="ans">Yes</i>
+                    </div>
+                    <div ng-show="PracticeLocationDetail.OpenPracticeStatus.PracticeQuestionAnswers[$index].Answer == 'NO'">
+                        <i class="data-label" id="ans">No</i>
+                    </div>
+                    <div ng-show="!PracticeLocationDetail.OpenPracticeStatus.PracticeQuestionAnswers[$index].Answer">
+                        <i class="data-label" id="ans">Not Available</i>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.AnyInformationVariesByPlan, new { @class = "control-label small" })
+                    <div>
+                        <i>{{PracticeLocationDetail.OpenPracticeStatus.AnyInformationVariesByPlan || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.AnyPracticeLimitationOption, new { @class = "control-label small" })
+                    <div ng-show="PracticeLocationDetail.OpenPracticeStatus.AnyPracticeLimitation == 'YES'">
+                        <i class="data-label" id="ans">Yes</i>
+                    </div>
+                    <div ng-show="PracticeLocationDetail.OpenPracticeStatus.AnyPracticeLimitation == 'NO'">
+                        <i class="data-label" id="ans">No</i>
+                    </div>
+                    <div ng-show="!PracticeLocationDetail.OpenPracticeStatus.AnyPracticeLimitation">
+                        <i class="data-label" id="ans">Not Available</i>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="PracticeLocationDetail.OpenPracticeStatus.AnyPracticeLimitation == 'YES'">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.GenderLimitationType, new { @class = "control-label small" })
+                    <div ng-show="PracticeLocationDetail.OpenPracticeStatus.GenderLimitation == 'MaleOnly'">
+                        <i class="data-label" id="ans">Male Only</i>
+                    </div>
+                    <div ng-show="PracticeLocationDetail.OpenPracticeStatus.GenderLimitation == 'FemaleOnly'">
+                        <i class="data-label" id="ans">Female Only</i>
+                    </div>
+                    <div ng-show="PracticeLocationDetail.OpenPracticeStatus.GenderLimitation == 'None'">
+                        <i class="data-label" id="ans">None</i>
+                    </div>
+                    <div ng-show="!PracticeLocationDetail.OpenPracticeStatus.GenderLimitation">
+                        <i class="data-label" id="ans">Not Available</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small col-lg-12 zero-padding-left-right-div">Age Limitations</label>
+                    <div class="col-md-4 zero-padding-left-right-div">
+                        @Html.LabelFor(model => model.MinimumAge, new { @class = "control-label small" })
+                        <div>
+                            <i>{{PracticeLocationDetail.OpenPracticeStatus.MinimumAge || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-md-4 zero-padding-left-right-div">
+                        @Html.LabelFor(model => model.MaximumAge, new { @class = "control-label small" })
+                        <div>
+                            <i>{{PracticeLocationDetail.OpenPracticeStatus.MaximumAge || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.OtherLimitations, new { @class = "control-label small" })
+                    <div>
+                        <i>{{PracticeLocationDetail.OpenPracticeStatus.OtherLimitations || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div ng-show="activeMessageDiv=='openPracticeStatusSuccessMsg'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>
+        </div>
+    </div>
+</fieldset>

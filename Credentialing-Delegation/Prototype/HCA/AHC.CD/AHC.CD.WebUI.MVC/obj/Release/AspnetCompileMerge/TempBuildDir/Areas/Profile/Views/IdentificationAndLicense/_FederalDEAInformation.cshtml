@@ -1,0 +1,78 @@
+﻿
+<div class="panel-default">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Federal DEA Information
+            </legend>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                <label>*If you have additional DEA Licenses include all DEA Registration numbers here.</label>
+               
+            </div>
+        
+            <div id="FederalDEAInfo" class="panel-body">
+                <table ng-hide="FederalDEA.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>No Data Available ! To Add New Click "Add Federal DEA Information"</td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="FederalDEA.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+
+                    <thead>
+                    <tr>
+                    <th>DEA Number</th>
+                    <th> State Of Registration</th>
+                    <th>Issue Date</th>
+                    <th>Expiration Date</th>
+                    <th>Document</th>
+                    <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="fdl in FederalDEA">
+                    <tr>
+                    <td>{{fdl.DEANumber}}</td>
+                    <td>{{fdl.StateOfReg}}</td>
+                    <td>{{fdl.IssueDate| date: "MM-dd-yyyy"}}</td>
+                    <td>{{fdl.ExpiryDate| date: "MM-dd-yyyy"}}</td>
+
+                    <td><a href="{{fdl.DEALicenceCertPath}}" class="pointer" target="_blank" title="{{fdl.DEALicenceCertPath}}"><i class="fa fa-file" title=""></i></a></td>
+                    <td>
+                        <button class="btn btn-xs btn-default" ng-click="viewFederalDEALicenseInfo($index,fdl)" ng-hide="viewFederalDEALicense" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+
+                        <button class="btn btn-xs btn-primary" ng-click="editFederalDEALicense($index,fdl)" ng-hide="editShowFederalDEALicense" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-xs btn-success" ng-click="addFederalDEALicense()" data-toggle="tooltip" data-placement="right" title="Add new" ng-hide="viewFederalDEALicense||editShowFederalDEALicense || newShowFederalDEALicense || $index+1!=FederalDEA.length"><i class="fa fa-plus"></i></button>
+                    </td>
+                    </tr>
+                        <tr ng-show="viewFederalDEALicense && fdl==FederalDEALicense">
+                            <td colspan="7" id="FederalDEALicenseEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewFederalDEAInformation.cshtml")
+                            </td>
+                        </tr>
+                    <tr ng-show="editShowFederalDEALicense && fdl==FederalDEALicense">
+                    <td colspan="7" id="FederalDEALicenseEditDiv{{$index}}" class="editTableDataStyle">
+                    @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditFederalDEAInformation.cshtml")
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+
+                    <div class="clearfix"></div>
+                    <div class="form-style">
+                        <fieldset ng-show="newShowFederalDEALicense">
+                            <legend>
+                                Add Federal DEA License
+                            </legend>
+                            <div id="newDEALicenseDiv">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditFederalDEAInformation.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                <div ng-hide="FederalDEA.length > 0 || newShowFederalDEALicense" class="col-md-12 text-right">
+                    <button class="btn btn-xs btn-primary addDEABtn" ng-click="addFederalDEALicense()"><i class="fa fa-plus"></i> Add Federal DEA License</button>
+                </div>
+</div>
+        </fieldset>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Areas/Credentialing/Scripts/PSVCheckList/PSVCheckListController.js"></script>
+
+<div id="page-wrapper" ng-app="psvCheckList" ng-controller="viewPSVController">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-check-square-o"></i> PSV Check List
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="row" ng-cloak>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-style zero-padding-left-right-div">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        PSV Check List
+                        <span class="pull-right">
+                            <a ng-click="AddNewPSVData()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add New</a>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <!-- success message ----->
+                        <div ng-if="DataUpdated" class="alert alert-success alert-dismissible fade in" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <strong>Success!</strong> {{PSVMessage}}
+                        </div>
+
+                        @Html.Partial("~/Areas/Credentialing/Views/PSVCheckList/_ViewPSVCheckList.cshtml");
+
+                        <fieldset ng-if="AddNewPSV">
+                            <legend>
+                                New PSV Checklist
+                            </legend>
+
+                            @Html.Partial("~/Areas/Credentialing/Views/PSVCheckList/_AddNew.cshtml");
+
+                        </fieldset>
+
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Confirmation !!!!</h4>
+                            </div>
+                            <div class="modal-body">
+                                <span>
+                                    Are You sure! you want to remove {{selectedPSV.Name}} ({{selectedPSV.Code}}).
+                                </span>
+                            </div>
+                            <div class="modal-footer">
+                                <button ng-click="CancelRemove(selectedIndex)" type="button" class="btn btn-sm btn-default" data-dismiss="modal">No</button>
+                                <button ng-click="Confirmation()" type="button" class="btn btn-sm btn-primary">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /#page-wrapper -->

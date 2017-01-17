@@ -1,0 +1,190 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<br />
+<div class="form-style" ng-controller="practiceLocationController">
+    <fieldset>
+        <legend>
+@if (!ViewBag.Roles.Contains("CCO"))
+{
+                <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="PracticeLocationPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+            }
+            Practice Location
+        </legend>
+        <div class="pull-right legend2">
+            @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-show="PracticeLocationDetails.length > 0" ng-click="downloadTableData('Profile_PracticeLocation', 'Practice Location')"><i class="fa fa-download"></i></button>*@
+            <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-show="PracticeLocationDetails.length > 0" ng-click="printData('Profile_PracticeLocation','Practice Location')"><i class="fa fa-print"></i></button>
+            <button type="button" ng-click="showPLHistory('PLH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+            <div id="PLH" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+        </div>
+        <div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide="PracticeLocationDetails.length >= 1 || visibilityControlPracLoc==('addPracticeLocation') || visibilityControlPracLoc==('addPracticeLocationNew')" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td ng-hide="visibilityControl=='addPracticeLocation'">
+                                No Data Available For Practice Locations !
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateAddControlPracLoc('addPracticeLocation')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button> to add new practice location information</span>
+                                }
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-show="PracticeLocationDetails.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_PracticeLocation">
+                    <thead>
+                        <tr>
+                            <th>Facility Name</th>
+                            <th>Practice Name</th>
+                            <th>Street</th>
+                            <th>Building / Suite Number</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th class="hideData">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="PracticeLocationDetail in PracticeLocationDetails track by $index">
+                        <tr>
+                            <td class="wrap-words">{{PracticeLocationDetail.Facility.FacilityName || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetail.PracticeLocationCorporateName || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetail.Facility.Street || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetail.Facility.Building || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetail.Facility.City || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetail.Facility.State || 'Not Available'}}</td>
+                            <td class="col-lg-2 zero-padding-left-right-div hideData">
+                                <button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="View" ng-click="operateCancelControl(''); operateAddControlPracLoc($index+'_viewPracticeLOcation') ; supervisingforfacility(PracticeLocationDetail.PracticeLocationDetailID , PracticeLocationDetail.Facility.FacilityID);TemporaryOfficeHourcheck(PracticeLocationDetail)" tooltip><i class="fa fa-eye"></i></button>
+                                <button ng-click="operateCancelControl(''); operateAddControlPracLoc($index+'_viewPracticeLOcation') ; supervisingforfacility(PracticeLocationDetail.PracticeLocationDetailID,PracticeLocationDetail.Facility.FacilityID);TemporaryOfficeHourcheck(PracticeLocationDetail)" class="btn btn-xs btn-primary" title="Edit" tooltip><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initPracticeLocationWarning(PracticeLocationDetail);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                <button class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="right" title="Add New" ng-click="operateAddControlPracLoc('addPracticeLocation')" ng-if=" $index+1==PracticeLocationDetails.length" tooltip><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="visibilityControlPracLoc==($index+'_viewPracticeLOcation')" class="hideData">
+                            <td colspan="7">
+                                @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewPracticeLocationInformation.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+    <div class="modal fade" id="practiceLocationWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="removePracticeLocation">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="col-lg-12 text-center" ng-show="isRemoved">
+                        <div style="margin-top:2%;">
+                            <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                        </div>
+                    </div>
+                    <div class="modal-body" ng-show="!isRemoved">
+                        Do you really want to remove <b>{{tempPracticeLocation.Facility.FacilityName}} - {{tempPracticeLocation.PracticeLocationCorporateName}}</b> from your Practice Location list ?
+                        <input type="hidden" name="PracticeLocationDetailID" value="{{tempPracticeLocation.PracticeLocationDetailID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" ng-click="removePracticeLocation(PracticeLocationDetails)">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <fieldset ng-if="visibilityControlPracLoc==('addPracticeLocation')">
+        <legend>
+            Add Practice Location
+        </legend>
+        <form id="addPracticeLocationDetails">
+            @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditGeneralInformation.cshtml")
+        </form>
+        @*Add And Cancel Buttons For Practice Location Details Data Start*@
+        <div class="col-lg-12">
+            <div class="control-group">
+                <button class="btn btn-warning btn-sm" ng-click="operateAddControlPracLoc('');resetDates();">Cancel</button>
+                <button class="btn btn-success btn-sm pull-right" ng-click="savePracticeLocationDetailInformaton()">Save</button>
+            </div>
+        </div>
+        @*Add And Cancel Buttons For Practice Location Details Data End*@
+    </fieldset>
+    <fieldset ng-if="visibilityControlPracLoc==('addPracticeLocationNew')">
+        <legend>
+            Add Facility Data
+        </legend>
+        <form id="newFacilityDataForm">
+            @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditFacilityData.cshtml")
+        </form>
+    </fieldset>
+    <div class="clearfix"></div>
+    <div ng-show="activeMessageDiv=='addedNewFacility'" class="alert alert-success" role="alert">
+        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+    </div>
+    <div ng-show="activeMessageDiv=='removePracticeLocation'">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists :<br />
+            <span ng-repeat="err in errorPracticeLocation track by $index">{{err}}</span>
+        </div>
+    </div>
+    <fieldset ng-if="showPracticeLocationHistoryTable">
+        <legend>
+            Practice Location History
+        </legend>
+        <div class="pull-right legend2">
+            @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-show="PracticeLocationDetailsHistory.length > 0" ng-click="downloadTableData('Profile_PracticeLocationHistory', 'Practice Location History')"><i class="fa fa-download"></i></button>*@
+            <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-show="PracticeLocationDetailsHistory.length > 0" ng-click="printData('Profile_PracticeLocationHistory','Practice Location History')"><i class="fa fa-print"></i></button>
+            <button type="button" ng-click="cancelPLHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+        </div>
+        <div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide="PracticeLocationDetailsHistory.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No History Available for Practice Location!
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-show="PracticeLocationDetailsHistory.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_PracticeLocationHistory">
+                    <thead>
+                        <tr>
+                            <th>Facility Name</th>
+                            <th>Practice Name</th>
+                            <th>Street</th>
+                            <th>Building/Suite Number</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Status</th>
+                            <th class="hideData">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="PracticeLocationDetailHistory in PracticeLocationDetailsHistory">
+                        <tr>
+                            <td class="wrap-words">{{PracticeLocationDetailHistory.Facility.FacilityName || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetailHistory.PracticeLocationCorporateName || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetailHistory.Facility.Street || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetailHistory.Facility.Building || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetailHistory.Facility.City || 'Not Available'}}</td>
+                            <td class="wrap-words">{{PracticeLocationDetailHistory.Facility.State || 'Not Available'}}</td>
+                            <td>{{PracticeLocationDetailHistory.HistoryStatus}}</td>
+                            <td class="col-lg-2 zero-padding-left-right-div hideData">
+                                <button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="View" ng-click="operateCancelControl(''); operateAddControlPracLoc($index+'_viewPracticeLOcationHistory') ; supervisingforfacility(PracticeLocationDetailHistory.PracticeLocationDetailID , PracticeLocationDetailHistory.Facility.FacilityID);" tooltip><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="visibilityControlPracLoc==($index+'_viewPracticeLOcationHistory')" class="hideData">
+                            <td colspan="8">
+                                @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewPracticeLocationInformationHistory.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+</div>

@@ -1,0 +1,56 @@
+﻿@foreach (var item in Model)
+{
+    <tr class="tab-navigation cursor_pointer" data-tab-action="View Authorization" data-tab-usertype="Member" data-tab-title="View Auth" data-tab-parentcontainer="partialBodyContainer" data-tab-floatmenu="true" data-tab-container="innerTabContainer" data-tab-autoflush="false" data-tab-issubtab="true" data-tab-defaultparenttab="Member" data-tab-userid=@item.MemberID data-tab-parenttabtitle=@item.MemberName data-tab-path="/UM/ViewAuthorization/GetViewAuth?ID=20" data-tab-float-menu-path="~/Areas/UM/Views/Shared/_UMFloatMenu.cshtml" data-tab-parenttabpath="/Portal/MemberManage/GetMemberHeaderById?IDs=@item.MemberID" data-tab-parenttabrenderingarea="headerArea">
+        <td class="maxWidthtdSM"><label class="singleElemQueue theme_label_data"><span class="label label-primary">  @item.Abbrevation </span></label></td>
+        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> -<!--Put Auth Number View model here--></label></td>
+
+        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.ReferenceNumber </label></td>
+        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.MemberID</label></td>
+        @if (ViewBag.QueueTab.ToLower() == "completed")
+        {
+            <td class="maxWidthtdXL">
+                <label class="singleElemQueue maxWidthXLem theme_label_data">
+                    <div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="VIEW HISTORY" data-content="@item.MemberName">
+                        <a class="tab-navigation cursor_pointer" data-tab-action="Portal Auth History" data-tab-usertype="Member" data-tab-title="PORTAL AUTH HISTORY" data-tab-parentcontainer="partialBodyContainer" data-tab-floatmenu="true" data-tab-container="innerTabContainer" data-tab-autoflush="false" data-tab-issubtab="true" data-tab-path="~/Areas/UM/Views/History/PortalHistory/HistoryList/_PortalAuthHistory.cshtml" data-tab-defaultparenttab="Member" data-tab-userid="@item.MemberID" data-tab-parenttabtitle="@item.MemberName" data-tab-float-menu-path="~/Areas/UM/Views/Shared/_UMFloatMenu.cshtml" data-tab-parenttabpath="/Portal/MemberManage/GetMemberHeaderById?IDs=@item.MemberID" data-tab-parenttabrenderingarea="headerArea">
+                            @item.MemberName
+                        </a>
+                    </div>
+                </label>
+        </td>
+         
+         }
+        else
+        {
+            <td class="maxWidthtdXL"><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="MEMBER" data-content=@item.MemberName.ToUpper()>  @item.MemberName </div></label></td>
+        }
+        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data">@item.FromDate </label></td>
+        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.ToDate</label></td>
+        <td class="maxWidthtdXL"><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="PROVIDER" data-content=@item.ProviderName> @item.ProviderName</div></label></td>
+        <td class="maxWidthtdXL"><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="FACILITY" data-content=@item.FacilityName>@item.FacilityName</div></label></td>
+        <td class="maxWidthtdXL"><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="SVC PROVIDER" data-content=@item.SVCAttProviderName.ToUpper()>@item.SVCAttProviderName</div></label></td>
+        @if (@item.RequestType.ToLower() == "expedited")
+        {
+            <td class="maxWidthtdSM request"><label class="singleElemQueue red-color">EX</label></td>
+        }
+        else
+        {
+            <td class="maxWidthtdSM request"><label class="singleElemQueue green-color">ST</label></td>
+        }
+        <td class="maxWidthtdSM"><label class="singleElemQueue theme_label_data"> @item.TypeOfCare  </label></td>
+
+        @if (@item.DurationLeft == "0D 00:00")
+        {
+            <td class="maxWidthtdX"><label class="singleElemQueue red-color">  @item.DurationLeft  </label></td>
+        }
+        else
+        {
+            <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data">  @item.DurationLeft   </label></td>
+        }
+        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data">@item.ExpectedDOS </label></td>
+        <td class="maxWidthtdSM text-center"><label class="singleElemQueue theme_label_data">  @item.RequestedUnit  </label></td>
+        <td class="maxWidthtdX"><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="STATUS" data-content=@item.AuthStatus.ToUpper()>@item.AuthStatus </div></label></td>
+        <td class="maxWidthtdSM"><label class="singleElemQueue theme_label_data">@item.PosAbb </label></td>
+        <td class="maxWidthtdX"><label class="singleElemQueue maxWidthXLem theme_label_data"><div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="DX" data-content=@item.PrimaryDx.ToUpper()>@item.PrimaryDx </div></label></td>
+        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data">@item.AuthNote</label></td>
+    </tr>
+}

@@ -1,0 +1,301 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocation.PracticeServiceViewModel
+
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-md-12">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+        <span ng-if="primaryPracticeLocations.Services.PracticeServiceID">
+            @Html.HiddenFor(model => model.PracticeServiceID, new { id = "PracticeServiceID", ng_value = "primaryPracticeLocations.Services.PracticeServiceID", data_ng_model = "primaryPracticeLocations.Services.PracticeServiceID" })
+        </span>
+        <div class="col-md-6">
+            <label class="control-label small">Re-use information from another practice location </label>
+            <select class="form-control input-sm" data-ng-model="primaryPracticeLocations.Services.PracticeLocation">
+                <option></option>
+                <option></option>
+            </select>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <br />
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="col-md-12">
+                <label for="Contact" class="control-label">Does this location provide any of the following services?</label>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-3">
+                <label class="control-label small">Laboratory Services?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" ng-click="showProgram()" name="lab" value="Yes" data-ng-model="primaryPracticeLocations.Services.LaboratoryServices"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-click="hideProgram()" name="lab" value="No" data-ng-model="primaryPracticeLocations.Services.LaboratoryServices"> No
+                    </label>
+                </div>
+            </div>
+            <div ng-show="program" class="form-group col-md-3">
+                <label class="control-label small">Provide Accrediting/Certifying Program</label>
+                <div>
+                    <input type="text" class="form-control input-sm" data-ng-model="primaryPracticeLocations.Services.Accrediting" required />
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label small">Radiology Services?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" ng-click="showXray()" name="rad" value="Yes" data-ng-model="primaryPracticeLocations.Services.RadiologyServices"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-click="hideXray()" name="rad" value="No" data-ng-model="primaryPracticeLocations.Services.RadiologyServices"> No
+                    </label>
+                </div>
+            </div>
+            <div ng-show="xray" class="form-group col-md-3">
+                <label class="control-label small">Provide X-Ray certificate type</label>
+                <div>
+                    <input type="text" class="form-control input-sm" data-ng-model="primaryPracticeLocations.Services.XRay" required />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-4">
+                <label class="control-label small">EKGS?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="ekgs" value="Yes" data-ng-model="primaryPracticeLocations.Services.EKGS"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="ekgs" value="No" data-ng-model="primaryPracticeLocations.Services.EKGS"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Allergy Injection?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="all" value="Yes" data-ng-model="primaryPracticeLocations.Services.AllergyInjection"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="all" value="No" data-ng-model="primaryPracticeLocations.Services.AllergyInjection"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Allergy Skin Testing?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="skin" value="Yes" data-ng-model="primaryPracticeLocations.Services.SkinTesting"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="skin" value="No" data-ng-model="primaryPracticeLocations.Services.SkinTesting"> No
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <div class="form-group col-md-4">
+                <label class="control-label small">Routing Office Gynecology(Pelvi/Pap)?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="route" value="Yes" data-ng-model="primaryPracticeLocations.Services.Gynecology"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="route" value="No" data-ng-model="primaryPracticeLocations.Services.Gynecology"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Drawing Blood?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="draw" value="Yes" data-ng-model="primaryPracticeLocations.Services.Blood"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="draw" value="No" data-ng-model="primaryPracticeLocations.Services.Blood"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Age Appropriate immunization?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="age" value="Yes" data-ng-model="primaryPracticeLocations.Services.Immunization"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="age" value="No" data-ng-model="primaryPracticeLocations.Services.Immunization"> No
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <div class="form-group col-md-4">
+                <label class="control-label small">Flexible Sigmoidoscopy?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="flex" value="Yes" data-ng-model="primaryPracticeLocations.Services.Sigmoidoscopy"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="flex" value="No" data-ng-model="primaryPracticeLocations.Services.Sigmoidoscopy"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Tympanometry/Audiometry Screening?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="tymp" value="Yes" data-ng-model="primaryPracticeLocations.Services.Tympanometry"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="tymp" value="No" data-ng-model="primaryPracticeLocations.Services.Tympanometry"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Asthma Treatment?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="asth" value="Yes" data-ng-model="primaryPracticeLocations.Services.Asthma"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="asth" value="No" data-ng-model="primaryPracticeLocations.Services.Asthma"> No
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <div class="form-group col-md-4">
+                <label class="control-label small">Osteopathic Manipulation?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="ost" value="Yes" data-ng-model="primaryPracticeLocations.Services.Osteopathic"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="ost" value="No" data-ng-model="primaryPracticeLocations.Services.Osteopathic"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">IV Hydration/Treatment?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="hyd" value="Yes" data-ng-model="primaryPracticeLocations.Services.Hydration"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="hyd" value="No" data-ng-model="primaryPracticeLocations.Services.Hydration"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Cardiac Stress Test?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="test" value="Yes" data-ng-model="primaryPracticeLocations.Services.Cardiac"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="test" value="No" data-ng-model="primaryPracticeLocations.Services.Cardiac"> No
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <div class="form-group col-md-4">
+                <label class="control-label small">Pulmonary Function Testing?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="pul" value="Yes" data-ng-model="primaryPracticeLocations.Services.Pulmonary"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="pul" value="No" data-ng-model="primaryPracticeLocations.Services.Pulmonary"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Physical Therapy?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="phy" value="Yes" data-ng-model="primaryPracticeLocations.Services.Physical"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="phy" value="No" data-ng-model="primaryPracticeLocations.Services.Physical"> No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">Care Of Minor Lacerations?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="minor" value="Yes" data-ng-model="primaryPracticeLocations.Services.Lacerations"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="minor" value="No" data-ng-model="primaryPracticeLocations.Services.Lacerations"> No
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr class="zero-margin-top-bottom-hr" />
+        <div class="clearfix"></div>
+
+        <div class="col-md-12">
+            <div class="form-group col-md-6">
+                <label class="control-label small">Is Anesthesia Administered In Your Office?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" ng-click="showClass()" name="ane" value="Yes" data-ng-model="primaryPracticeLocations.Services.Anesthesia"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-click="hideClass()" name="ane" value="No" data-ng-model="primaryPracticeLocations.Services.Anesthesia"> No
+                    </label>
+                </div>
+            </div>
+            <div ng-show="admin">
+                <div class="form-group col-md-6">
+                    <label class="control-label small">What Class/Category Do You Use</label>
+                    <div>
+                        <input type="text" class="form-control input-sm" data-ng-model="primaryPracticeLocations.Services.Category" required />
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">Who Administers It?</label>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">First Name</label>
+                        <input type="text" class="form-control input-sm" data-ng-model="primaryPracticeLocations.Services.FirstName" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label small">Last Name</label>
+                        <input type="text" class="form-control input-sm" data-ng-model="primaryPracticeLocations.Services.LastName" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+            <div class="form-group col-md-6">
+                <label class="control-label small">Type Of Practice?</label>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="prac" value="Solo Practice" data-ng-model="primaryPracticeLocations.Services.TypeOfPractice"> Solo Practice
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="prac" value="Single Specialty Group" data-ng-model="primaryPracticeLocations.Services.TypeOfPractice"> Single Specialty Group
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="prac" value="Multi-Specialty Group" data-ng-model="primaryPracticeLocations.Services.TypeOfPractice"> Multi-Specialty Group
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label small">Additional Office Procedures Provided(Including Surgical Procedures)</label>
+                <input type="text" class="form-control input-sm" data-ng-model="primaryPracticeLocations.Services.AdditionalOffice" />
+            </div>
+        </div>
+    </div>
+</div>

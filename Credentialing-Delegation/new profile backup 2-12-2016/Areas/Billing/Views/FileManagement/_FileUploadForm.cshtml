@@ -1,0 +1,91 @@
+﻿@model PortalTemplate.Areas.Billing.Models.File_Management.FileUpload
+
+
+@{
+    List<SelectListItem> FileTypes = new List<SelectListItem>();
+    FileTypes.Add(new SelectListItem
+    {
+        Text = "837 CAP",
+        Value = "837CAP",
+        Selected = true
+    });
+
+    FileTypes.Add(new SelectListItem
+    {
+        Text = "837 FFS",
+        Value = "837FFS"
+    });
+
+    FileTypes.Add(new SelectListItem
+    {
+        Text = "835",
+        Value = "835"
+    });
+
+    FileTypes.Add(new SelectListItem
+    {
+        Text = "277",
+        Value = "277"
+    });
+
+    FileTypes.Add(new SelectListItem
+    {
+        Text = "999",
+        Value = "999"
+    });
+
+    List<SelectListItem> InputSource = new List<SelectListItem>();
+    InputSource.Add(new SelectListItem
+    {
+        Text = "Care Tracker",
+        Value = "CareTracker",
+        Selected = true
+    });
+
+    InputSource.Add(new SelectListItem
+    {
+        Text = "ECW",
+        Value = "ECW"
+    });
+
+    InputSource.Add(new SelectListItem
+    {
+        Text = "Others",
+        Value = "Others"
+    });
+    
+}
+<form id="file_upload_form">
+    <div class="x_panel border_on_panel">
+        <div class="x_content">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    @Html.LabelFor(model => model.InputSource)
+                    @Html.DropDownListFor(model => model.InputSource, InputSource, new { @class = "form-control input-xs non_mandatory_field_halo dropdown_selector" })
+                    @Html.ValidationMessageFor(model => model.InputSource)
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    @Html.LabelFor(model => model.FileType)
+                    @Html.DropDownListFor(model => model.FileType, FileTypes, new { @class = "form-control input-xs non_mandatory_field_halo dropdown_selector" })
+                    @Html.ValidationMessageFor(model => model.FileType)
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    @Html.LabelFor(model => model.EdiFile)
+                    @Html.TextBoxFor(model => model.EdiFile, new { type = "file", multiple = "multiple", @class = "form-control custom-file-input input-xs", @style = "border:none;outline:none" })
+                    @*<input id="EdiFile" name="EdiFile" multiple="multiple" class="form-control custom-file-input input-xs" type="file" style="border:none;outline:none">*@
+                    @Html.ValidationMessageFor(model => model.EdiFile)
+                </div>
+            </div>
+            <div class="row">
+                <div class="margin_top_20_px button-styles clearfix col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <button class="edit-button pull-left" id="ClearForm">Clear</button>
+                    <button type="submit" class="view-button pull-right" id="Upload_ediFile_btn">Upload File</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+<p-script filepath="~/Areas/Billing/Scripts/AppJs/FileManagement/Unminified/uploadForm.js"></p-script>

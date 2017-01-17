@@ -1,0 +1,99 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Note.NoteViewModel
+@using PortalTemplate.Helper
+@using PratianUI
+<p-script filepath="~/Areas/UM/Scripts/Common/Note/Common/NonMinified/NoteFormCommon.js"></p-script>
+<form id="note_form" onsubmit="return false;">
+    <div class="col-lg-12 NotesModal" id="NoteForm">
+        <div class="row">
+            <div class="col-lg-6">
+                <label> @Html.ShortNameFor(e => e.NoteType) </label>@*<label class="label label-success pull-right noteTypeCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                @Html.DropDownListFor(e => e.NoteType, new SelectList((System.Collections.IEnumerable)ViewData["MasterNoteTypes"], "TypeOfNote", "TypeOfNote"), new { @class = "form-control text-uppercase Notes_Contact text-uppercase", @id = "NoteType" })
+            </div>
+            <div class="col-lg-6">
+                @Html.LabelFor(e => e.Subject)@*<label class="label label-success pull-right subjectCms" style="cursor: pointer"><span class="fa fa-plus"></span></label>*@
+                @Html.DropDownListFor(e => e.Subject, new SelectList((System.Collections.IEnumerable)ViewData["MasterNoteSubjects"], "Subject", "Subject"), new { @class = "form-control text-uppercase Notes_Contact text-uppercase", @id = "NoteSubject" })
+            </div>
+        </div>
+        <br />
+        <div id="NoteFormDiv">
+            <div class="col-lg-12 zero-padding-left-right" id="normalnote">
+                @Html.LabelFor(e => e.Description)
+                @Html.TextAreaFor(e => e.Description, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "Note Here", @id = "NoteDescription", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+            </div>
+            <div id="ApproveDenyRadiobtns" style="display:none;">
+                <div class="col-lg-5 inline_block">
+                    @Html.PratianUiRadioButtonFor(e => e.NoteStatus, "APPROVE", new { @checked = "checked", @id = "ApproveRadio", @Value = "APPROVE", @class = "noteRadio" })
+                </div>
+                <div class="col-lg-5 inline_block">
+                    @Html.PratianUiRadioButtonFor(e => e.NoteStatus, "DENIAL", new { @id = "DenialRadio", @Value = "DENIAL", @class = "noteRadio" })
+                </div>
+                <div class="clearfix"></div>
+                <br />
+            </div>
+            <div id="ApproveNote" style="display:none;">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(e => e.Description)
+                        @Html.TextAreaFor(e => e.Description, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "Note Here", @id = "NoteDescription", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+                    </div>
+                    <br />
+                </div>
+                <div class="row">
+                    <div class=" col-lg-12">
+                        @Html.LabelFor(e => e.CriteriaUsedDescription)
+                        @Html.TextAreaFor(e => e.CriteriaUsedDescription, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "CRITERIA USED HERE", @id = "NoteCriteria", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="row" id="DenyNote" style="display:none;">
+                <div class="col-lg-12">
+                    @Html.LabelFor(e => e.Description)
+                    @Html.TextAreaFor(e => e.Description, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "NOTE HERE", @id = "NoteDescription", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+                    <br />
+                </div>
+                <div class=" col-lg-12">
+                    @Html.LabelFor(e => e.RationaleDescription)
+                    @Html.TextAreaFor(e => e.RationaleDescription, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "RATIONALE HERE", @id = "NoteRATIONALE", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+                    <br />
+                </div>
+                <div class=" col-lg-12">
+                    @Html.LabelFor(e => e.AlternatePlanDescription)
+                    @Html.TextAreaFor(e => e.AlternatePlanDescription, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "ALTERNATE PLAN HERE", @id = "NoteAlternate", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+                    <br />
+                </div>
+                <div class=" col-lg-12">
+                    @Html.LabelFor(e => e.CriteriaUsedDescription)
+                    @Html.TextAreaFor(e => e.CriteriaUsedDescription, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "CRITERIA USED HERE", @id = "NoteCriteria", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+                    <br />
+                </div>
+                <div class=" col-lg-12">
+                    @Html.LabelFor(e => e.ServiceSubjectToNotice)
+                    @Html.TextAreaFor(e => e.ServiceSubjectToNotice, new { @class = "form-control input-xs inp Notes_Contact text-uppercase", @placeholder = "SERVICE SUBJECT TO NOTICE", @id = "NoteService", @style = "font-size: 14px", @rows = "4", @cols = "140", onkeyup = "do_resize10(this)" })
+                    <br />
+                </div>
+                <div class="col-lg-12" id="listOfMedicalServices">
+                    @Html.LabelFor(e => e.MedicalNecessaries)
+                    <div id="MedicalService0" class="MedicalService">
+                        <div class="col-lg-10">
+                            <textarea class="form-control input-xs inp Notes_Contact text-uppercase MedTextArea" cols="100" id="MEDICALService0" name="MedicalNecessaries[0].Description" onkeyup="do_resize(this)" placeholder="MEDICAL SERVICES" rows="1" style="font-size: 14px;margin-left:-10px"></textarea>
+                        </div>
+                        <div class="col-lg-2">
+                            <button class="btn btn-xs btn-danger minusButton" style="display:none"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-xs btn-success plusButton"><i class="fa fa-plus"></i></button>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="text" name="tempNoteID" class="hidden"/>
+        <input type="text" name="AuthorizationID" class="hidden" />
+        <input type="text" name="NoteID" class="hidden" />
+        <input type="text" name="Status" class="hidden" />
+        <input type="text" name="IsPrivate" class="hidden" />
+        <input type="text" name="MemberID" class="hidden" />
+        <input type="text" name="ModuleName" class="hidden" />
+        <input type="checkbox" name="IncludeFax" class="hidden" />
+    </div>
+</form>

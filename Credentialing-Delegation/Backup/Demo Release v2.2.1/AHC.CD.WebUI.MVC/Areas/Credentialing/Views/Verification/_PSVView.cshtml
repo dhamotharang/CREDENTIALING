@@ -1,0 +1,436 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.PSVInfo.ProfileVerificationDetailViewModel
+
+<br />
+
+<div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true" ng-init="GetProfileVerificationParameter()">
+    @*<div class="panel panel-default">
+
+            <div class="panel-heading text-right">
+                <div class="row col-lg-6 text-left">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                            20%<span class="sr-only">20% Complete</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-xs btn-warning" onclick="savedata()">Save</button>
+                <a href="~/CredentialingApproval/ProvidersList" class="btn btn-xs btn-success">Submit</a>
+                </div>
+        </div>*@
+
+    <!--dynamic tabs-->
+    @*<div class="panel panel-default" ng-repeat="pan in LicenseList">
+
+        <div class="panel-heading" role="tab" id="{{pan.tabId}}">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#{{pan.tabPanelId}}"  aria-expanded="false" aria-controls="{{pan.tabPanelId}}">
+                <i ng-if="pan.id == parameterId" class="fa fa-check-circle text-success"></i> {{pan.title}}
+                <i class="pull-right">Last Verified Date : <span ng-if="pan.id == parameterId">{{verifiedDate.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+            </a>
+        </div>*@
+    <!--State Lisence-->
+    @*<div id="{{pan.tabPanelId}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{pan.tabId}}">
+        <div ng-if="pan.tabId==stateLicenses.tabId">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_StateLisence.cshtml")
+        </div>
+        <div ng-if="pan.tabId==BoradCertifications.tabId">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_BoardCertifications.cshtml")
+        </div>
+        <div ng-if="pan.tabId==DEAs.tabId">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_DEA.cshtml")
+        </div>
+        <div ng-if="pan.tabId==CDSs.tabId">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_CDS.cshtml")
+        </div>
+        <div ng-if="pan.tabId==NPDBs.tabId || pan.tabId==Medicares.tabId || pan.tabId==OIGs.tabId ">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_Remarks.cshtml")
+        </div>
+        <div ng-show="activeMessageDiv=='addedNewPSV'" class="alert alert-success" role="alert">
+            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+    @*    {{messageDesc}}
+        </div>
+        <div ng-show="activeMessageDiv=='addedNewPSVError'" class="alert alert-danger" role="alert">*@
+    @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+    @*{{messageDesc}}
+                </div>
+            </div>
+        </div>*@
+
+    <!-- State Lisence-->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="stateLisenceInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perstateLisenceInfo" aria-expanded="false" aria-controls="perstateLisenceInfo">
+                <i ng-if="stateLicenses.length > 0 && stateLicenses[0].ProfileVerificationDetail.ProfileVerificationDetailId" class=" fa fa-check-circle text-success"></i> State License for Practicing State
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+                @*<i ng-if="stateLicenses.length > 0 && stateLicenses[0].ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{stateLicenses[0].ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>*@
+                
+            </a>
+            <span ng-if="stateLicenses.length == 0"> - No State License data available</span>
+        </div>
+
+        <div id="perstateLisenceInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLisenceInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_StateLisence.cshtml")
+
+        </div>
+    </div>
+
+    <!-- Borad Certifications for Physicians -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="boardCertificateInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perboardCertificateInfo" aria-expanded="false" aria-controls="perboardCertificateInfo">
+                <i ng-if="BoradCertifications.length > 0 && BoradCertifications[0].ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> Board Certifications for Physicians
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+                @*<i ng-if="BoradCertifications.length > 0 && BoradCertifications[0].ProfileVerificationDetail.VerificationDate != ''" class=" pull-right">Last Verified Date : <span>{{BoradCertifications[0].ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>*@
+                
+            </a>
+            <span ng-if="BoradCertifications.length == 0"> - No Board Certifications available</span>
+        </div>
+
+        <div id="perboardCertificateInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="boardCertificateInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_BoardCertifications.cshtml")
+        </div>
+    </div>
+
+    <!-- DEA -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="deaInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perdea" aria-expanded="false" aria-controls="perdea">
+                <i ng-if="DEAs.length > 0 && DEAs[0].ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> DEA
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+                @*<i ng-if="DEAs.length > 0 && DEAs[0].ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span class="danger">{{DEAs[0].ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>*@
+                
+            </a>
+            <span ng-if="DEAs.length == 0"> - No DEA data available</span>
+        </div>
+
+        <div id="perdea" class="panel-collapse collapse" role="tabpanel" aria-labelledby="deaInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_DEA.cshtml")
+        </div>
+    </div>
+
+    <!-- CDS -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="cdsInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#percds" aria-expanded="false" aria-controls="percds">
+                <i ng-if="CDSs.length > 0 && CDSs[0].ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> CDS
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+                @*<i ng-if="CDSs.length > 0 && CDSs[0].ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{CDSs[0].ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>*@
+                
+            </a>
+            <span ng-if="CDSs.length == 0"> - No CDS data available</span>
+        </div>
+
+        <div id="percds" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cdsInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_CDS.cshtml")
+        </div>
+    </div>
+    <!--OIG-->
+    @*<div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="persmsoigInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#persmsoig" aria-expanded="false" aria-controls="persmsoig">
+                <i ng-if="OIG.ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> OIG
+                <i ng-if="OIG.ProfileVerificationDetail.ProfileVerificationDetailId && OIG.ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{OIG.ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+            </a>
+        </div>
+        <div id="persmsoig" class="panel-collapse collapse" role="tabpanel" aria-labelledby="persmsoigInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_OIG.cshtml")
+        </div>
+    </div>*@
+    <!-- NPDB -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="npdbInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#pernpdb" aria-expanded="false" aria-controls="pernpdb">
+                <i ng-if="NPDB.ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> NPDB
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+                <i ng-if="NPDB.ProfileVerificationDetail.ProfileVerificationDetailId && NPDB.ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{NPDB.ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+                
+            </a>
+        </div>
+
+        <div id="pernpdb" class="panel-collapse collapse" role="tabpanel" aria-labelledby="npdbInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_NPDB.cshtml")
+        </div>
+    </div>
+    <!-- Medicare OPT-->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="conMediInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perMedi" aria-expanded="false" aria-controls="perMedi">
+                <i ng-if="MedicareOPT.ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> Medicare OPT
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+                <i ng-if="MedicareOPT.ProfileVerificationDetail.ProfileVerificationDetailId && MedicareOPT.ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{MedicareOPT.ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+                
+            </a>
+        </div>
+
+        <div id="perMedi" class="panel-collapse collapse" role="tabpanel" aria-labelledby="conMediInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_MedicareOPT.cshtml")
+        </div>
+    </div>
+    <!--  OIG  -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="persmsoigInfo">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#persmsoig" aria-expanded="false" aria-controls="persmsoig">
+
+                <i ng-if="OIG.ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i>OIG
+                <span class="glyphicon glyphicon-plus pull-right"></span>
+                <i ng-if="typeof OIG.ProfileVerificationDetail.VerificationDate != 'undefined' || OIG.ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{OIG.ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+                
+            </a>
+        </div>
+        <div id="persmsoig" class="panel-collapse collapse" role="tabpanel" aria-labelledby="persmsoigInfo">
+            @Html.Partial("~/Areas/Credentialing/Views/Verification/_OIG.cshtml")
+        </div>
+    </div>
+
+
+    <!-- Malpractice Coverage -->
+    @*<div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="malpracticeInfo">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#permalpractice" aria-expanded="false" aria-controls="permalpractice">
+                    Malpractice Coverage
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                </a>
+            </div>
+
+            <div id="permalpractice" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLicenseInfo">
+                <div class="panel-body">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <!-- Hospital Privileges -->
+    @*<div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="hospitalPrivilegesInfo">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perhospitalPrivileges" aria-expanded="false" aria-controls="perhospitalPrivileges">
+                    Hospital Privileges
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                </a>
+            </div>
+
+            <div id="perhospitalPrivileges" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLicenseInfo">
+                <div class="panel-body">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+
+    <!-- Education History -->
+    @*<div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="educationHistoryInfo">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#pereducationHistory" aria-expanded="false" aria-controls="pereducationHistory">
+                    Education History
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                </a>
+            </div>
+
+            <div id="pereducationHistory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLicenseInfo">
+                <div class="panel-body">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <!-- Professional Liability Coverage -->
+    @*<div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="profLiabInfo">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perprofLiab" aria-expanded="false" aria-controls="perprofLiab">
+                    Professional Liability Coverage
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                </a>
+            </div>
+
+            <div id="perprofLiab" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLicenseInfo">
+                <div class="panel-body">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+    <!-- Site Verfication -->
+    @*<div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="siteInfo">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#persite" aria-expanded="false" aria-controls="persite">
+                    Site Verification
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                </a>
+            </div>
+
+            <div id="persite" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLicenseInfo">
+                <div class="panel-body">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Valid</option>
+                                <option>Invalid</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Source</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Verification Source">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Remarks</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label small">Verified Document</label>
+                            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select Supportive Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+
+    <!-- Other Remarks -->
+    @*<div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="peroverRemInfo">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#peroverRem" aria-expanded="false" aria-controls="peroverRem">
+                    Overall Remark
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                </a>
+            </div>
+            <div id="peroverRem" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLicenseInfo">
+                <div class="panel-body">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label small">Remark</label>
+                            <input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remark">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+</div>

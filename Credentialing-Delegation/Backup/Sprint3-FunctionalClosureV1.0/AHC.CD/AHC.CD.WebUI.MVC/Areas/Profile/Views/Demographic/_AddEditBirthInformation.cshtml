@@ -1,0 +1,79 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.BirthInformationViewModel
+
+<form enctype="multipart/form-data" id="BirthInformationForm">
+    <span ng-if="tempObject.BirthInformationID">
+        @Html.HiddenFor(model => model.BirthInformationID, new { ng_value = "tempObject.BirthInformationID" })
+    </span>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @Html.TextBoxFor(model => model.DateOfBirth, new { data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.DateOfBirth" })
+                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group col-md-4" ng-init="selectedBirthLocation={'City':tempObject.CityOfBirth, 'State':tempObject.StateOfBirth, 'Zipcode':''}">
+            @Html.LabelFor(model => model.CityOfBirth, htmlAttributes: new { @class = "control-label small" })
+            <input type="text" placeholder="enter city" class="form-control input-sm" ng-model="selectedBirthLocation" data-limit="10" ng-options="location.City +'  '+ location.State+'  '+ location.Zipcode for location in Locations" ng-change="addressAutocompleteForBirthInformation(selectedBirthLocation)" bs-typeahead />
+            @Html.HiddenFor(model => model.CityOfBirth, new { ng_value = "tempObject.CityOfBirth" })
+            @Html.ValidationMessageFor(model => model.CityOfBirth, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.StateOfBirth, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.StateOfBirth, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.StateOfBirth", placeholder = "state name" } })
+            @Html.ValidationMessageFor(model => model.StateOfBirth, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.CountryOfBirth, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.CountryOfBirth, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.CountryOfBirth", placeholder = "country name" } })
+            @Html.ValidationMessageFor(model => model.CountryOfBirth, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.CountyOfBirth, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.CountyOfBirth, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.CountyOfBirth", placeholder = "county name" } })
+            @Html.ValidationMessageFor(model => model.CountyOfBirth, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="" ng-class="{'col-md-11':tempObject.BirthCertificatePath,'col-md-12':!tempObject.BirthCertificatePath}">
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                <span class="input-group-addon btn btn-default btn-sm btn-file">
+                    <span class="fileinput-new">Select Birth Document</span><span class="fileinput-exists">Change</span>
+                    @Html.TextBoxFor(model => model.BirthCertificateFile, new { type = "file" })
+                </span>
+                <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>
+            @Html.ValidationMessageFor(model => model.BirthCertificateFile, "", new { @class = "text-danger" })
+        </div>
+        <div ng-if="tempObject.BirthCertificatePath" class="col-lg-1 form-group">
+            <div>
+                <input type="hidden" name="BirthCertificatePath" value="{{tempObject.BirthCertificatePath}}" />
+                <a href="/Document/View?path={{tempObject.BirthCertificatePath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Birth Certificate"><i class="fa fa-2x fa-file"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    @*<div ng-if="IsBirthInformationHasError" class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error Lists : <br />
+                <span ng-repeat="err in BirthInformationErrorList track by $index">{{err}}</span>
+            </div>
+        </div>*@
+    <div ng-show="alertMessage=='alertBirthInformationError'" class="alert alert-{{message.status}}" role="alert">
+        <button ng-click="closeAlert('alertBirthInformationError')" class="close"><span>&times;</span></button>
+        Errors: <br/>
+        <div ng-repeat="err in message.desc track by $index">{{err}}</div>
+    </div>
+    <div class="col-md-12">
+        <button class="btn btn-warning btn-sm" ng-click="operateCancelControl('_EditBirthInformation')">Cancel</button>
+        <button class="btn btn-success btn-sm pull-right" type="submit" ng-click="saveBirthInformation('BirthInformationForm')">Save</button>
+    </div>
+</form>
+

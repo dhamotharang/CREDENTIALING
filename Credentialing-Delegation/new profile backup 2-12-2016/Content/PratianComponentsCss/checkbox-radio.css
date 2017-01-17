@@ -1,0 +1,143 @@
+/*!
+ * checkbox-radio.css v1.0 (component 14)
+ * Copyright 2016-2017 Pratian Technologies Pvt Limited.
+ * Licensed under ----
+ */
+/*! Author: Pavan Kota */
+
+/*Design Concept:
+The main intension while creating the component is to make it light weight and it should be easy to read,use and maintain.
+The component is created by using css (mostly) and  light javascript code.
+
+The plan to create checkboxes and Radio buttons is 
+
+    1) Hide all the browser generated Checkboxes and Radio Boxes.
+
+    2) Create a <label> element with child <span>element just after the <input type=checkbox/radio>
+        Eg: <input id="radio2" type="radio" name="radio1" class="normal-radio" value="2"><label for="radio1"><span></span>Option 1</label>
+
+    3) Label element is adjusted upon the hidden checkboxes and Radio Button.
+        This makes an illusion as if the user is clicking on check box/radio button.
+
+    4) Create all necessary styles to span element that makes the look and feel like check box/radio button.
+
+    5) If input is checked behind the scene which is invisible, then a style is applied to span creating an illusion that span itself is working as checkbox/radio
+    
+*/
+
+/*Group of checkboxes and Radio Buttons arranged side by side for demo purpose*/
+.checkbox-group,.radio-group {
+    margin-bottom: 1.5em;
+    /*display: inline-block;*/
+    width: 250px;
+    float:left;
+}
+/*Group of checkboxes and Radio Buttons arranged side by side for demo purpose*/
+
+
+/*By default all the browser generated checkbox and radio buttons are made invisible*/
+input.normal-checkbox, input.normal-radio,input.checkbox-radio {
+    width: 2em;
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+    opacity: 0; /*Hides the browser generated checkbox and radio buttons*/
+    cursor: pointer;
+    position: absolute;
+}
+
+
+
+/*Label element immediately after the input element*/
+input.normal-checkbox + label,input.normal-radio + label,input.checkbox-radio + label{
+    display: inline-block; /*Floats left to the previous element*/
+    /* margin-left: -2em; */ /*It makes the label move upon to the checkbox/ radio button*/
+    line-height: 1.75em;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+
+/*span element as achild in the label*/
+input.normal-checkbox + label > span,
+input.normal-radio + label > span,
+input.checkbox-radio + label > span{
+    display: inline-block;
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0.25em 0.75em 0.25em 0.25em;/* arranging space between the control and text*/
+    border: 0.0625em solid rgb(192,192,192);
+    vertical-align: bottom;
+    cursor: pointer;
+}
+input.checkbox-radio:disabled + label > span{
+   
+    border: 0.0625em solid  #f0f0f0;
+   
+}
+
+
+
+/*sets the shape of radio button as circle*/
+input.normal-radio + label > span 
+{
+    border-radius: 1em;
+}
+
+input.checkbox-radio + label > span
+{
+
+}
+
+/*sets the color of the checkbox and radio button when it is checked*/
+input.normal-checkbox:checked + label > span,
+input.normal-radio:checked + label > span,
+input.checkbox-radio:not(:disabled):checked + label > span 
+{
+    background: #6a5a8c;
+    /*background: #00A6FB;*/
+}
+
+input.checkbox-radio:disabled:checked + label > span 
+{
+    background: rgb(192,192,192);
+}
+
+
+/*Creates a tick mark if the radio or checkbox is checked */
+input.normal-checkbox:checked + label > span:before,
+input.normal-radio:checked + label > span:before,
+input.checkbox-radio:checked + label > span:before 
+{
+    content: '\2714';
+    display: block;
+    width: 1.25em;
+    color: white;
+    font-size: 0.875em;
+    line-height: 1.5em;
+    text-align: center;
+    text-shadow: 0 0 0.0714em rgb(115,153,77);
+    font-weight: bold;
+}
+
+
+
+input.normal-checkbox:not(:checked):hover + label > span,
+input.normal-radio:not(:checked):hover + label > span,
+input.checkbox-radio:not(:disabled):not(:checked):hover + label > span
+{
+     border: 0.15em solid #6a5a8c !important;
+}
+
+input[type='checkbox']:disabled ,
+input[type='radio']:disabled {
+    cursor: not-allowed;
+}
+
+input.checkbox-radio[disabled]:hover > span{    
+    border: 0.0625em solid  #f0f0f0 !important;   
+}
+
+.align-side-by-side{
+    display:inline-block;
+}

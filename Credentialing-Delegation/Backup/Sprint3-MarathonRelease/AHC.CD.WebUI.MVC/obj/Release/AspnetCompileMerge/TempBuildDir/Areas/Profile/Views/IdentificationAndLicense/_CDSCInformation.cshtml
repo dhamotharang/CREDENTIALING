@@ -1,0 +1,96 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.FederalDEAInformationViewModel
+<div>
+    @*<div class="panel-heading" role="tab" id="licenseOne">
+            <a data-toggle="collapse" data-parent="#accordion5" href="#licenseprofessional" aria-expanded="true" aria-controls="licenseprofessional">
+                State License
+                <span class="pull-right">
+                    <span class="glyphicon glyphicon-minus"></span>
+                </span>
+            </a>
+        </div>*@
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                CDS Information
+            </legend>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:black">
+                <label>*If you have additional CDS Certificates include here.</label>
+            </div>
+            <table ng-hide="CDSCInformations.length >0||newShowCDSCInformation" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                <thead>
+                    <tr>
+                        <td>No Data Available ! To Add New Click
+                            <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addCDSCInformation')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                        
+                        </td>
+                    </tr>
+                </thead>
+              
+            </table>
+            <div id="licenseprofessional" class="panel-body">
+                <table ng-hide="CDSCInformations.length <1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>Certificate Number</th>
+                            <th>State Of Registration</th>
+                            <th>Issue Date</th>
+                            <th>Expiration Date</th>
+                            <th>Certificate</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="CDSCInformation in CDSCInformations">
+                        <tr>
+                            <td>{{CDSCInformation.CertNumber}}</td>
+                            <td>{{CDSCInformation.State}}</td>
+                            <td>{{CDSCInformation.IssueDate| date: "MM-dd-yyyy"}}</td>
+                            <td>{{CDSCInformation.ExpiryDate| date: "MM-dd-yyyy"}}</td>
+                            <td>
+                            <a ng-if="CDSCInformation.CDSCCerificatePath" href="{{CDSCInformation.CDSCCerificatePath}}" class="pointer" target="_blank" title="{{CDSCInformation.CDSCCerificatePath}}"><i cl><i class="fa fa-file" title=""></i></a>
+                                <label ng-if="!CDSCInformation.CDSCCerificatePath">Not available</label>
+                            </td>
+
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewCDSCInformation')" ng-hide="viewCDSC" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editCDSCInformation',CDSCInformation)" ng-hide="editShowCDSCInformation" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addCDSCInformation')" data-toggle="tooltip" data-placement="right" title="Add new" ng-hide="viewCDSC || editShowCDSCInformation || newShowCDSCInformation || $index+1!=CDSCInformations.length"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewCDSCInformation')">
+                            <td colspan="6" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewCDSCInformation.cshtml")
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_editCDSCInformation')">
+                            <td colspan="6" id="cDSCInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditCDSCInformation.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                    @*<div class="col-lg-12 clearfix" style="padding-bottom:15px;"></div>*@
+                    <div class="clearfix"></div>
+                    <div class="form-style">
+                        <fieldset ng-show="visibilityControl=='addCDSCInformation'">
+                            <legend>
+                                Add CDSC Information
+                            </legend>
+                            <div id="newShowCDSCInformationDiv">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditCDSCInformation.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+
+                <div ng-show="visibilityControl=='addedCDS'" class="alert alert-success" role="alert">
+                    <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>New CDS Information Added Successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedCDS'" class="alert alert-warning" role="alert">
+                    <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                </div>
+</div>
+        </fieldset>
+    </div>
+</div>

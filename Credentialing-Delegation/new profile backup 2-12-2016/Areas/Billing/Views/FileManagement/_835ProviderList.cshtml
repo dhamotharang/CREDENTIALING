@@ -1,0 +1,119 @@
+﻿@using PratianUI
+@model List<PortalTemplate.Areas.Billing.Models.File_Management.File835ProviderInfo>
+<br />
+@*<div class="x_content">
+    <div class="col-lg-12 clearfix">
+        <label class="title_text pull-left">Claim List FOR CLAIM FILE - <span class="bolder text-uppercase" id="ClaimFileName"></span></label>
+    </div>
+</div>*@
+<div class="x_content border_on_panel">  
+    <div class="x_content">
+        <div class="table-responsive">
+            <table id="835providerListTable" class="table table-striped table-hover custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+                <thead class="theme_thead">
+                    <tr>
+                        <th>
+                            <input class="normal-checkbox selectAllProvider" id="835allProvider" name="835allProvider" type="checkbox" value="true"><label><span></span></label>
+                        </th>
+                        <th>
+                            NPI
+                        </th>
+                        <th>
+                            Provider Last Name
+                        </th>
+                        <th>
+                            Provider First Name
+                        </th>
+                        <th>
+                            No. Of Claims
+                        </th>
+                        <th>
+                            Claims Transaction($)
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr data-container="@item.InterKey @(item.InterKey != null ? item.InterKey.ToString() :"")">
+                            <td>
+                                @Html.PratianUiCheckbox(new { @class = "ProviderCheckbox", @value = item.RenderingProviderNPI })
+
+                            </td>
+                            <td>
+                                @item.RenderingProviderNPI
+                            </td>
+                            <td>
+                                @item.RenderingProviderLastName
+                            </td>
+                            <td>
+                                @item.RenderingProviderFirstName
+                            </td>
+                            <td>
+                                @item.NoOfClaims
+                            </td>
+                            <td>
+                                TOTAL CLAIMED:@item.AmountClaimed<br />
+                                TOTAL RECEIVED:@item.AmountReceived
+                            </td>
+                            <td>
+                                <button class="btn btn-xs btn-info margin_left_12px viewEOBBtn">EOB</button>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div id="835ProviderNavigationButtons" class="margin_top_20_px button-styles clearfix">
+            <button class="btn btn-warning btn-xs pull-left" id="GoTo835ListBtn">Back</button>
+            <button class="btn btn-success btn-xs  pull-right" id="GoToGeneratedListBtn" disabled>Generate</button>
+        </div>
+    </div>
+</div>
+<script>
+
+    $('#835providerListTable').prtGrid({
+        url: "/Billing/FileManagement/Get835ProviderListByIndex",
+        dataLength: 50,
+        columns: [{ type: 'none', name: '', text: '', widthPercentage: 5, sortable: { isSort: false } },
+        { type: 'text', name: 'RenderingProviderNPI', text: 'NPI', widthPercentage: 20, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'RenderingProviderLastName', text: 'Provider Last Name', widthPercentage: 25, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'RenderingProviderFirstName', text: 'Provider First Name', widthPercentage: 25, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'NoOfClaims', text: ' No. Of Claims', widthPercentage: 10, sortable: { isSort: true, defaultSort: 'ASC' } },
+        { type: 'text', name: 'AmountClaimed', text: 'Claims Transaction($)', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'none', name: '', text: '', widthPercentage: 5, sortable: { isSort: false } }]
+    });
+
+
+    //select all checkboxes
+    $(".selectAllProvider").change(function () {  //"select all" change
+        $(".normal-checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
+        $('#GoToGeneratedListBtn').removeAttr("disabled");
+    });
+    //".checkbox" change
+    $('.normal-checkbox').change(function () {
+        //uncheck "select all", if one of the listed checkbox item is unchecked
+        if (!$(this).prop("checked")) { //if this item is unchecked
+            $(".selectAllProvider").prop('checked', false); //change "select all" checked status to false
+            if ($('.normal-checkbox:checked').length < 1) {
+                $('#GoToGeneratedListBtn').attr("disabled", true);
+            }
+        } else {
+            if ($('.normal-checkbox:checked').length >= 1) {
+                $('#GoToGeneratedListBtn').removeAttr("disabled");
+            }
+        }
+        //check "select all" if all checkbox items are checked
+        if ($('.normal-checkbox:checked').length == ($('.normal-checkbox').length) - 1) {
+            $(".selectAllProvider").prop('checked', true);
+        }
+    });
+
+</script>
+
+<script src="~/Areas/Billing/Scripts/AppJs/FileManagement/Unminified/File835ProviderList.js"></script>
+

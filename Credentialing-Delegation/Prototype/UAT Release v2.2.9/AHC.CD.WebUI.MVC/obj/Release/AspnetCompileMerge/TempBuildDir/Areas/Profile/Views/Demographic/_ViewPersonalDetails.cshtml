@@ -1,0 +1,91 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.PersonalDetailViewModel
+
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-2 form-group">
+        @Html.LabelFor(model => model.SalutationType, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.Salutation">{{Provider.PersonalDetails.Salutation}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.Salutation">Not Availabe</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @Html.LabelFor(model => model.FirstName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.FirstName">{{Provider.PersonalDetails.FirstName}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.FirstName">Not Availabe</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @Html.LabelFor(model => model.MiddleName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.MiddleName">{{Provider.PersonalDetails.MiddleName}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.MiddleName">Not Available</i>
+        </div>
+    </div>
+    <div class="col-lg-2 form-group">
+        @Html.LabelFor(model => model.LastName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.LastName">{{Provider.PersonalDetails.LastName}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.LastName">Not Available</i>
+        </div>
+    </div>
+    <div class="col-lg-2 form-group">
+        <label class="control-label small">Suffix (JR,III)</label>
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.Suffix">{{Provider.PersonalDetails.Suffix}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.Suffix">Not Available</i>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-2 form-group">
+        @Html.LabelFor(model => model.GenderType, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.Gender">{{Provider.PersonalDetails.Gender}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.Gender">Not Available</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group" ng-if="Provider.PersonalDetails.Gender=='Female'">
+        @Html.LabelFor(model => model.MaidenName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.MaidenName">{{Provider.PersonalDetails.MaidenName}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.MaidenName">Not Available</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        @Html.LabelFor(model => model.MaritalStatusType, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.MaritalStatus">{{Provider.PersonalDetails.MaritalStatus}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.MaritalStatus">Not Available</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group" ng-if="Provider.PersonalDetails.MaritalStatus=='Married'">
+        @Html.LabelFor(model => model.SpouseName, new { @class = "control-label small" })
+        <div>
+            <i class="data-label" ng-if="Provider.PersonalDetails.SpouseName">{{Provider.PersonalDetails.SpouseName}}</i>
+            <i class="data-label" ng-if="!Provider.PersonalDetails.SpouseName">Not Available</i>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 zero-padding-left-right-div">
+
+    <div class="col-lg-2 form-group">
+        @Html.LabelFor(model => model.ProviderLevelID, new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{Provider.PersonalDetails.ProviderLevel.Name}}</i>
+        </div>
+    </div>
+
+    <div class="form-group col-lg-10" ng-init="searchTitleViewModel.StatusType = 1">
+
+        @Html.LabelFor(model => model.ProviderTitles, new { @class = "control-label small" })
+        <div ng-if="Provider.PersonalDetails.ProviderTitles.length > 0">
+            <span ng-repeat="pt in Provider.PersonalDetails.ProviderTitles | filter:searchTitleViewModel track by $index">
+                <span ng-if="$index > 1">&nbsp;&nbsp;</span><span class="label label-default">{{pt.ProviderType.Title}}</span>
+            </span>
+        </div>
+        <div ng-if="Provider.PersonalDetails.ProviderTitles.length == 0">
+            <i class="data-label">Not Available</i>
+        </div>
+    </div>
+</div>

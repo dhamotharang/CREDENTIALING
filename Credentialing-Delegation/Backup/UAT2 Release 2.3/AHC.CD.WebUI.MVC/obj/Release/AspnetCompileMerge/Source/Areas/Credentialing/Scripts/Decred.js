@@ -1,0 +1,1 @@
+﻿var DeCred_SPA_App = angular.module('decred_SPA_App', []);

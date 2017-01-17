@@ -1,0 +1,331 @@
+﻿@model IEnumerable<PortalTemplate.Areas.Portal.Models.ProviderBridge.BridgeQueue.BridgeQueueViewModel>
+@using PortalTemplate.Helper
+@using PratianUI
+<style>
+    input.normal-checkbox:checked + label > span, input.normal-radio:checked + label > span, input.checkbox-radio:not(:disabled):checked + label > span {
+        background: #6a5a8c;
+        margin-right: 0px;
+        margin-bottom: 0px;
+    }
+
+    input.normal-checkbox + label > span, input.normal-radio + label > span, input.checkbox-radio + label > span {
+        display: inline-block;
+        width: 1.25em;
+        height: 1.25em;
+        margin: 0.25em 0.75em 0.25em 0.25em;
+        border: 0.0625em solid rgb(192,192,192);
+        vertical-align: bottom;
+        cursor: pointer;
+        margin-right: 0px;
+        margin-bottom: 0px;
+    }
+
+    legend.legendStyle {
+        font-size: 12px !important;
+        background-color: transparent;
+        font-weight: bold !important;
+    }
+
+    legend {
+        display: block;
+        width: auto !important;
+        margin-bottom: 3px !important;
+        border: 0;
+    }
+
+    fieldset.fsStyle {
+        margin-top: 7px !important;
+    }
+
+    label {
+        display: inline-block;
+        max-width: 100%;
+        margin-bottom: 5px;
+        font-weight: bold !important;
+    }
+
+    .theCity .filer-search {
+        width: 60%;
+    }
+
+    .theState .filer-search {
+        width: 40%;
+    }
+
+    .theLastName .filer-search {
+        width: 79%;
+    }
+
+    .theAssigned {
+        padding: 8px 0px !important;
+    }
+
+    /*.theReqBy .filer-search {
+        width: 81%;
+    }*/
+
+    .NPWidth {
+        width: 6.5em;
+    }
+    /*#queueTable thead, #queueTable tbody {
+        display: block;
+    }*/
+    @@media screen and (min-width: 1821px) {
+        #queueTable {
+            max-height: 585px;
+            overflow-y: auto;
+        }
+        /*#queueTable tbody {
+                height: 530px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }*/
+    }
+
+    @@media screen and (min-width: 1707px) and (max-width: 1820px) {
+        #queueTable {
+            max-height: 540px;
+            overflow-y: auto;
+        }
+        /*#queueTable tbody {
+                height: 475px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }*/
+    }
+
+    @@media screen and (min-width: 1517px) and (max-width: 1706px) {
+        #queueTable {
+            max-height: 470px;
+            overflow-y: auto;
+        }
+        /*#queueTable tbody {
+                height: 390px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }*/
+    }
+
+    @@media screen and (min-width: 1366px) and (max-width: 1516px) {
+        #queueTable {
+            max-height: 380px;
+            overflow-y: auto;
+        }
+        /*#queueTable tbody {
+                height: 300px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }*/
+    }
+
+    /*#countdown1, #countdown3, #countdown5, #countdown7 {
+        color: #FFFFFF;
+    }
+    #countdown1 span, #countdown3 span, #countdown5 span, #countdown7 span {
+        color: #000;
+        font-size: 10px;
+        font-weight: bold;
+        margin-right: 1px;
+        text-align: center;
+    }*/
+</style>
+<script>
+    $('#bridgeQueueTableBody').off('click', '.moveToCA').on('click', '.moveToCA', function () {
+        TabManager.openFloatingModal("~/Areas/Portal/Views/ProviderProfile/ApprovedConfirmationModal/_MoveToCABody.cshtml", "~/Areas/Portal/Views/ProviderProfile/ApprovedConfirmationModal/_MoveToCAHeader.cshtml", "~/Areas/Portal/Views/ProviderProfile/ApprovedConfirmationModal/_MoveToCAFooter.cshtml");
+    });
+
+    $('body').off('click', '.empyesbtn').on('click', '.tempCAyesbtn', function () {
+        $('.temmessage').hide();
+        $('#tempsuccess').removeClass('hidden');
+        //$('.tempyesbtn').hide();
+        $('.tempfooter').hide
+        $('#closetemmodal').click();
+       // setTimeout(searchpage, 2000);
+    })
+    function searchpage() {
+
+        $('#closetemmodal').click();
+        TabManager.navigateToTab(tabnavigation);
+    }
+
+    var tabnavigation =
+        {
+            "tabAction": "Bridge REQUESTS",
+            "tabTitle": "Bridge REQUEST",
+            "tabPath": "/BridgeQueue/Index",
+            "tabContainer": "fullBodyContainer"
+        }
+</script>
+<p-script filepath="~/Areas/UM/Scripts/SearchMember/NonMinified/SearchMemberResultGrid.js"></p-script>
+
+@if (Model.Count() != 0)
+{
+    <table id="bridgeQueueTable" class="table table-striped table-hover table-responsive text-uppercase">
+    <thead class="theme_thead custom-thead-back theme1_table custom-thead-font custom-tbody" id="resultTableHeaderGlobal">
+        
+        <tr>
+            
+            <th class="maxWidthtdSM">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">NPI &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            <th class="maxWidthtdX theLastName">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">L NAME &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            <th class="maxWidthtdX">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">F NAME &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            <th class="maxWidthtdX theState">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.NetworkParticipation) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            <th class="maxWidthtdXL theReqBy">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.ReqBy) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            <th class="maxWidthtdX">
+
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.Module) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+
+                <th class="maxWidthtdX">
+                    <span class="styled-input">
+                        <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.TimeLeft) &nbsp;</label>
+                        <span></span>
+                        <i class="fa fa-sort facility-queue-sort"></i>
+                    </span>
+                </th>
+            
+            <th class="maxWidthtdXL">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.PhoneNumber) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+
+            <th class="maxWidthtdXL">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.ReqDate) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            
+            <th class="maxWidthtdXL">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.Address) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            <th class="maxWidthtdXL theCity">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.City) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            <th class="maxWidthtdX theState">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required /><label class="singleElemQueue bgFieldsQueue">@Html.DisplayNameFor(o => o.State) &nbsp;</label>
+                    <span></span>
+                    <i class="fa fa-sort facility-queue-sort"></i>
+                </span>
+            </th>
+            
+                <th class="maxWidthtdSM">
+                    <label class="singleElemQueue bgFieldsQueue">Action&nbsp;</label>
+                    <span class="styled-input">
+
+
+                        <span></span>
+
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        @*background: -webkit-linear-gradient( left, rgba(240, 47, 23, 0.59), rgba(240, 47, 23, 0.66), rgba(240, 47, 23, 0.47),rgba(240, 47, 23, 0.36), rgba(240, 47, 23, 0.69));
+            background-attachment: fixed;*@
+        <tbody id="bridgeQueueTableBody">
+            @{int counter = 1;}
+            @foreach (var item in Model)
+            {
+                <tr class="tab-navigation cursor_pointer">
+                    @*@if (@item.AssignedTo != null && @item.TimeLeft!=null)
+                    {
+                        if (int.Parse(@item.TimeLeft) < 24)
+                        {
+                            <td class="width_1 redtd_start"></td>
+                        }
+                        else if (int.Parse(@item.TimeLeft) >= 24 && int.Parse(@item.TimeLeft) < 48)
+                        {
+                            <td class="width_1 whitetd_start"></td>
+                        }
+                        else
+                        {
+                            <td class="width_1 greentd_start"></td>
+                        }
+                    }*@
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.NPINumber</label></td>
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.LastName</label></td>
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.FirstName</label></td>
+                    @if (@item.NetworkParticipation == "IN")
+                    {
+                        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"><span class="label label-success">@item.NetworkParticipation</span> </label></td>
+                    }
+                    else
+                    {
+                        <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"><span class="label label-danger">@item.NetworkParticipation</span> </label></td>
+                    }
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.ReqBy</label></td>
+
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data">@item.Module</label></td>
+                   
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data">@item.TimeLeft </label></td>
+                  
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data">@item.PhoneNumber </label></td>
+
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.ReqDate</label></td>
+                    
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.Address</label></td>
+
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.City</label></td>
+
+                    <td class="maxWidthtdX"><label class="singleElemQueue theme_label_data"> @item.State</label></td>
+                    
+                    <td class="maxWidthtdX">
+                        <button class="btn btn-info btn-xs margin_left_12px tab-navigation view_note_btn" id="PendingBtn"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        <span>No Record Available.</span>
+    </div>
+}

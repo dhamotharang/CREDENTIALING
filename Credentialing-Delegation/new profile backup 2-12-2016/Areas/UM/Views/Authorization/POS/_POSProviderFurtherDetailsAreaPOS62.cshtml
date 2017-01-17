@@ -1,0 +1,99 @@
+﻿@{ PortalTemplate.Areas.UM.Models.ViewModels.Authorization.MemberViewModel memberData = @ViewBag.MemberData;}
+@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PratianUI
+@using PortalTemplate.Helper
+
+<div class="x_panel border_on_panel zero-padding-left-right CmsArea">
+    <div class="x_content zero-padding-left-right" style="padding-bottom: 0;">
+        <div class="inline_block margin_right_1">
+            <span class="theme_label">@Html.LabelFor(e => e.PlaceOfService)</span>
+            @Html.DropDownListFor(e => e.PlaceOfService, new SelectList((System.Collections.IEnumerable)ViewData["MasterPlaceOfServices"], "Name", "Name"), new { @class = "form-control input-xs mandatory_field_halo variable_width_select loser_field text-uppercase", @tabindex = "1" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label">@Html.LabelFor(e => e.RequestType)</span>
+            @Html.DropDownListFor(e => e.RequestType, new SelectList((System.Collections.IEnumerable)ViewData["MasterRequestTypes"], "Name", "Name"), new { @class = "form-control input-xs mandatory_field_halo variable_width_select loser_field text-uppercase", @tabindex = "2" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label">@Html.LabelFor(e => e.AuthorizationType)@*<i class="label label-success plusbtnSign authTypeCms"><span class="fa fa-plus"></span></i>*@</span>
+            @Html.DropDownListFor(e => e.AuthorizationType, new SelectList((System.Collections.IEnumerable)ViewData["MasterAuthorizationTypes"], "Name", "Name"), new { @class = "form-control input-xs mandatory_field_halo variable_width_select loser_field text-uppercase", @tabindex = "3" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label">@Html.LabelFor(e => e.TypeOfCare)@*<i class="label label-success plusbtnSign typeOfCareCms"><span class="fa fa-plus"></span></i>*@</span>
+            @Html.DropDownListFor(e => e.TypeOfCare, new SelectList((System.Collections.IEnumerable)ViewData["MasterTypeOfCares"], "Name", "Name"), new { @class = "form-control input-xs mandatory_field_halo variable_width_select loser_field text-uppercase", @tabindex = "4" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label"> @Html.LabelFor(e => e.ReceivedDate) </span>
+            @*@Html.TextBoxFor(e => e.ReceivedDate, new { @class = "form-control input-xs mandatory_field_halo  variable_width_datetime loser_field dateTimePicker", @placeholder = "MM/DD/YYYY HH:MM:SS", @tabindex = "5" })*@
+            @Html.PratianUiDateTimePickerFor(e => e.ReceivedDate, "bottom", new { @class = "form-control input-xs mandatory_field_halo  variable_width_datetime loser_field", @placeholder = "MM/DD/YYYY HH:MM:SS", @tabindex = "5" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label"> <label> @Html.ShortNameFor(e => e.FromDate) </label> </span>
+            @*@Html.TextBoxFor(e => e.FromDate, new { @class = "form-control input-xs variable_width_date datePicker loser_field", @placeholder = "MM/DD/YYYY", @tabindex = "6" })*@
+            @Html.PratianUiDatePickerFor(e => e.FromDate, "bottom", new { @class = "form-control input-xs variable_width_date loser_field summaryDateChange", @id = "FromDateAuthTextBox", @placeholder = "MM/DD/YYYY", @tabindex = "6" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label"><label> @Html.ShortNameFor(e => e.ToDate) </label></span>
+            @*@Html.TextBoxFor(e => e.ToDate, new { @class = "form-control input-xs variable_width_date read_only_field loser_field datePicker", @readonly = "readonly", @placeholder = "MM/DD/YYYY", @tabindex = "-1" })*@
+            @Html.PratianUiDatePickerFor(e => e.ToDate, "bottom", new { @class = "form-control input-xs variable_width_date loser_field summaryDateChange", @id = "ToDateAuthTextBox", @placeholder = "MM/DD/YYYY", @tabindex = "7" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label"> @Html.LabelFor(e => e.PCP) </span>
+            @Html.TextBoxFor(e => e.PCP.FullName, new { @class = "form-control input-xs mandatory_input_field variable_width_providername read_only_field loser_field", @readonly = "readonly", @tabindex = "-1" })
+            @Html.Partial("~/Areas/UM/Views/Authorization/Form/_PcpProviderHiddenData.cshtml")
+        </div>
+        <!-------------------Requesting Provider Partial Page ----------------->
+        @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_RequestingProviderView.cshtml")
+        <!-------------------End of Requesting Provider Partial Page ---------->
+        <!-------------------Servicing Provider Partial Page ----------------->
+        @Html.Partial("~/Areas/UM/Views/Authorization/Provider/_ServicingProviderView.cshtml")
+        <!-------------------End of Servicing Provider Partial Page ---------->
+        <div class="inline_block margin_right_1">
+            <nobr><span class="theme_label"><label> @Html.ShortNameFor(e => e.Facility) </label> @*<i class="label label-success plusbtnSign Add_New_Facility_Btn bold_text loser_field"><span class="fa fa-plus"></span>ADD NEW</i>*@ </span></nobr>
+            @Html.TextBoxFor(e => e.Facility.FullName, new { @class = "form-control FacilitySearchDropdown summaryDataChange  input-xs mandatory_field_halo variable_width_facilityname loser_field", @tabindex = "11", @placeholder = "FACILITY" })
+            @if (@Model.Facility != null && @Model.Facility.FullName != null)
+            {
+                <label class="label label-success INFacility INOONLabel">IN</label>
+                @Html.Partial("~/Areas/UM/Views/Authorization/Form/_FacilityHiddenData.cshtml")
+            }
+            @*<button class="btn btn-success btn-xs Add_New_Facility_Btn bold_text loser_field"><i class="fa fa-plus"></i>ADD NEW FACILITY</button>*@
+        </div>
+        <div class="inline_block margin_right_1">
+            <nobr><span class="theme_label">@Html.LabelFor(e => e.UMServiceGroup)@*<i class="label label-success plusbtnSign unSvcGrpCms summaryDataChange"><span class="fa fa-plus"></span></i>*@</span></nobr>
+            @Html.DropDownListFor(e => e.UMServiceGroup, new SelectList((System.Collections.IEnumerable)ViewData["MasterUMSvcGrps"], "UMServiceGroupID", "Name"), "SELECT", new { @class = "form-control input-xs variable_width_select loser_field text-uppercase summaryDataChange", @tabindex = "12" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label">@Html.LabelFor(e => e.LevelOfCare)@*<i class="label label-success plusbtnSign levelOfCareCms"><span class="fa fa-plus"></span></i>*@</span>
+            @Html.DropDownListFor(e => e.LevelOfCare, new SelectList((System.Collections.IEnumerable)ViewData["MasterLevelOfCares"], "Name", "Name"), "SELECT", new { @class = "form-control input-xs mandatory_field_halo variable_width_select loser_field text-uppercase", @tabindex = "13" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label">@Html.LabelFor(e => e.ExpectedCharge) $</span>
+            @Html.TextBoxFor(e => e.ExpectedCharge, new { @class = "form-control input-xs text-uppercase  expected_charges_field loser_field", @placeholder = "Expected charges", @tabindex = "14" })
+        </div>
+        <div class="inline_block margin_right_1">
+            <span class="theme_label"><label> @Html.ShortNameFor(e => e.ExpectedDOS) </label></span>
+            @*@Html.TextBoxFor(e => e.ExpectedDOS, new { @class = "form-control input-xs text-uppercase mandatory_field_halo  variable_width_date loser_field datePicker", @placeholder = "MM/DD/YYYY", @tabindex = "15" })*@
+            @Html.PratianUiDatePickerFor(e => e.ExpectedDOS, "bottom", new { @class = "form-control input-xs mandatory_field_halo variable_width_date loser_field", @placeholder = "MM/DD/YYYY", @tabindex = "6" })
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="col-lg-12 zero-padding-left-right" id="admissionSection">
+    
+</div>
+<div class="clearfix"></div>
+
+<div class="col-lg-12" id="ICDCPTArea">
+    @Html.Partial("~/Areas/UM/Views/Authorization/ICDCPT/_ICDCPTAreaPOS62.cshtml")
+</div>
+
+@*@Html.Partial("~/Areas/UM/Views/Authorization/Form/_DocumentsArea.cshtml")
+
+
+@Html.Partial("~/Areas/UM/Views/Authorization/Form/_NotesAreaForCreate.cshtml")
+
+
+@Html.Partial("~/Areas/UM/Views/Authorization/Form/_ContactsAreaForCreate.cshtml")
+
+<span id="summarySection">
+    @Html.Partial("~/Areas/UM/Views/Authorization/AuthorizationSummary/_AuthSummaryPOS62.cshtml",Model)
+</span>*@

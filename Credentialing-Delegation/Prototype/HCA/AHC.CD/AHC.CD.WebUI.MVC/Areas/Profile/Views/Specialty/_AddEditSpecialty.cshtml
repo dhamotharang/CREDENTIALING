@@ -1,0 +1,161 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.BoardSpeciality.SpecialityDetailViewModel
+
+<form id="specialtyForm">
+    <div class=" col-lg-12 zero-padding-left-right-div">
+        
+        <fieldset>
+            <legend>
+                Specialty
+            </legend>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                <label>* Enter first three letters and select the appropriate one from the given dropdown.</label>
+            </div><br />
+            <div>
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.SpecialityPreference, new { @class = "control-label small" })
+                    &nbsp;&nbsp;
+                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.PreferenceType)))
+                    {
+                        <label class="radio-inline">
+                            @Html.RadioButtonFor(model => model.SpecialityPreference, value.ToString(), new { data_ng_model = "specialty.SpecialtyPreference" }) @value.ToString()
+                        </label>
+                    }
+                </div>
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.Speciality, new { @class = "control-label small" })
+                    <select class="selectSpecialty" ng-model="specialty.Specialty">
+                        <option></option>
+                        <option ng-repeat="spl in splNames" value="{{spl}}">{{spl}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.PercentageOfTime, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PercentageOfTime, new { @class = "form-control input-sm", data_ng_model = "specialty.PercentageOfTime", type = "number", min = "0.0", max = "100.00" })
+                </div>
+                <div class="col-lg-5">
+                    <label class="control-label small pull-right">Do you wish to be listed in the directory under this specialty? *</label>
+                </div>
+                <div class="col-lg-3">
+                    <table class="col-lg-12">
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.ListedInHMO, new { @class = "control-label small" })
+                            </td>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <td>
+                                    <label class="radio-inline">
+                                        @Html.RadioButtonFor(model => model.ListedInHMO, value.ToString(), new { data_ng_model = "specialty.ListedInHMO" }) @value.ToString()
+                                    </label>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.ListedInPPO, new { @class = "control-label small" })
+                            </td>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <td>
+                                    <label class="radio-inline">
+                                        @Html.RadioButtonFor(model => model.ListedInPPO, value.ToString(), new { data_ng_model = "specialty.ListedInPPO" }) @value.ToString()
+                                    </label>
+                                </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.ListedInPOS, new { @class = "control-label small" })
+                            </td>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <td>
+                                    <label class="radio-inline">
+                                        @Html.RadioButtonFor(model => model.ListedInPOS, value.ToString(), new { data_ng_model = "specialty.ListedInPOS" }) @value.ToString()
+                                    </label>
+                                </td>
+                            }
+                        </tr>
+                    </table>
+                </div>
+                <div class="clearfix"></div><br />
+                @*<div class="col-md-12 form-group">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                        <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new small">Select Specialty Certificate</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>*@
+            </div>
+        </fieldset>
+        
+        <fieldset>
+            <legend>
+                Board Details
+            </legend>
+            <div class="col-lg-12">
+                <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                    <label>* If you have professional/medical specialty.</label>
+                </div><br />
+            </div>
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.SpecialityBoardDetail.IsBoardCertified, new { @class = "control-label small" })
+                &nbsp;&nbsp;
+                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                {
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.SpecialityBoardDetail.IsBoardCertified, value.ToString(), new { data_ng_model = "specialty.SpecialityBoardDetail.IsBoardCertified", data_ng_click = "boardCertified(specialty.SpecialityBoardDetail.IsBoardCertified)" }) @value.ToString()
+                    </label>
+                }
+            </div>
+            <div class="col-lg-6 form-group" ng-show="boardCertifiedForYes">
+                @Html.LabelFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.SpecialityBoard, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.SpecialityBoard, new { @class = "form-control input-sm", data_ng_model = "specialty.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.SpecialityBoard" })
+            </div>
+            <div class="col-lg-4 form-group" ng-show="boardCertifiedForYes">
+                @Html.LabelFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.InitialCertificationDate, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.InitialCertificationDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "specialty.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.InitialCertificationDate" })
+            </div>
+            <div class="col-lg-4 form-group" ng-show="boardCertifiedForYes">
+                <label class="control-label small">Last Recertification Date *</label> 
+                @*@Html.LabelFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.LastReCerificationDate, new { @class = "control-label small" })*@
+                @Html.TextBoxFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.LastReCerificationDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "specialty.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.LastReCredentialingDate" })
+            </div>
+            <div class="col-lg-4 form-group" ng-show="boardCertifiedForYes">
+                @Html.LabelFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.ExpirationDate, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.ExpirationDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "specialty.SpecialityBoardDetail.SpecialityBoardCetifiedDetail.ExpirationDate" })
+            </div>
+            <div class="col-lg-12 form-group" ng-show="boardCertifiedForNo">
+                @Html.LabelFor(model => model.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ExamStatus, new { @class = "control-label small" })
+                <div>
+                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.SpecialityBoardExamStatus)))
+                    {
+                        <label class="radio-inline">
+                            @Html.RadioButtonFor(model => model.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ExamStatus, value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1], new { data_ng_model = "specialty.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ExamStatus", data_ng_click = "intentionOfSitting(specialty.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ExamStatus)" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-6 form-group" ng-show="boardCertifiedForNo && doIntendToSit">
+                @Html.LabelFor(model => model.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ExamDate, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ExamDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "specialty.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ExamDate" })
+            </div>
+            <div class="col-lg-6 form-group" ng-show="boardCertifiedForNo && doNotIntendToSit">
+                @Html.LabelFor(model => model.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ReasonForNotTakingExam, new { @class = "control-label small" })
+                @Html.TextAreaFor(model => model.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ReasonForNotTakingExam, new { @class = "form-control input-sm", data_ng_model = "specialty.SpecialityBoardDetail.SpecialityBoardNotCertifiedDetail.ReasonForNotTakingExam" })
+            </div>
+            <div class="col-md-12 form-group" ng-show="boardCertifiedForYes">
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new small">Select Board Certification Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+        </fieldset>
+                
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="cancelSpecialty()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveSpecialty(specialty)">{{submitButtonText}}</button>
+        </div>
+    </div>
+</form>

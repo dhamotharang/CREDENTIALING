@@ -1,0 +1,134 @@
+﻿@{
+}
+
+
+@*@section AddToHead{
+        <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+        <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+        <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+        <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+        <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+        <script src="~/Scripts/ng-signature-pad.js"></script>
+        <script src="~/Scripts/signature_pad.js"></script>
+        <script src="~/Areas/Credentialing/Scripts/CCM/CCM.js"></script>
+        <script src="~/Scripts/jquery.validate.min.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+        <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+        <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+        <script src="~/Areas/Credentialing/Scripts/CCM/WellcomeLetter.js"></script>
+
+    }*@
+<style>
+    .welcomeletter {
+        text-align:justify;
+        font-family:'Times New Roman';
+        font-size:large;
+        cursor: default;
+        margin: 0px 0px 6px 0px;
+        line-height: 1.5;
+        display: inline-block;
+    }
+    /*.welcomeletter {
+        font-size: larger;
+    }*/
+    .ProviderTypeSelectAutoList.popover.bottom {
+        margin-top: 32px;
+    }
+
+    section {
+        margin-left: 15px;
+        width: 86%;
+    }
+    /*#dateid{
+        display:inline;
+        width:30%;
+    }*/
+</style>
+<br />
+<div class="panel-default form-style">
+    <fieldset>
+        <legend>
+            Welcome Letter
+        </legend>
+        <button class="btn btn-sm btn-primary pull-right" ng-click="showeditview()" ng-show="!editletter" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+        <div class="" ng-cloak>
+            <div id="welcletter" ng-show="!editletter">
+                <section>
+                    @*<b>*@
+                        @*<label>Date :</label><input class="" type="date" />*@
+                        <p class="welcomeletter">Date :<b> {{tempObject1.WelcomeLetterPreparedDate | date:'MM/dd/yyyy' }}</b></p>
+                        <br />
+                        <br />
+                    
+                    <p class="welcomeletter">
+                        Dear <b>{{welcomelettername}},</b>
+                    </p>
+                    
+                        <br />
+                        <br />
+                        <p class="welcomeletter">Welcome to the Access Helath Care Physicians family of participating physicians and providers.</p>
+
+                        <p class="welcomeletter">
+                            Primary source verification of your credentialing application and supporting materials has
+                            been completed and your application was recently presented to the Access HealthCare
+                            Physicians Credentialing Committee. Our Medical Director and the Credentialing
+                            Committee has reviewed your credentialing application and supporting documents based
+                            upon established Access Health Care Physicians policies and procedures, State and
+                            Federal regulatory guidelines, and criteria from selected accreditation bodies.<br /><br />
+                            You may begin providing services to Access Health Care Physicians Members on the
+                            @*first day of <b>{{tempObject1.ServiceCommencingDate | date:'MM/dd/yyyy'}}</b>. Your assigned Provider Relations Representative will be*@
+                            first day of <b>{{selectedmonth}},{{selectedyear}}</b>. Your assigned Provider Relations Representative will be
+                            contacting you and your staff to deliver your counter-signed Agreement and to schedule a
+                            New Office Orientation.<br /><br />
+                            If you have any questions, please contact our Provider Relations Department staff by
+                            @*calling <a href="tel:+352799-0046" class="">(352) 799-0046</a>.<br /><br />*@
+                            calling (352) 799-0046.<br /><br />
+                            Respectfully,<br /><br />
+                            Medical Director<br />
+                            Access HelathCare Physicians<br /><br />
+                            Cc: Physician/Provider File
+                        </p>
+                    @*</b>*@
+                </section>
+                <br />
+            </div>
+            @*<button class="btn btn-info" ng-show="!editletter" ng-click="showeditview()">Edit</button>*@
+            <div ng-show="editletter">
+                <section>
+                    @*<b>*@
+                        <p class="welcomeletter">Date : <b><input type="text" style="font-size:medium" class="form-group input-sm" data_val_date="Please enter date in mm/dd/yyyy format." placeholder="mm/dd/yyyy" data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" ng-model="tempObject1.WelcomeLetterPreparedDate" name="" /></b></p>
+                        <br />
+                        <br />
+                        <p class="welcomeletter">Dear </p><input style="width:50%;font-size:medium" class="form-group input-sm" type="text" id="name" value="{{welcomelettername}}" />
+
+                        <p class="welcomeletter">Welcome to the Access Helath Care Physicians family of participating physicians and <br />providers.</p>
+
+                        <p class="welcomeletter">
+                            Primary source verification of your credentialing application and supporting materials has
+                            been completed and your application was recently presented to the Access HealthCare
+                            Physicians Credentialing Committee. Our Medical Director and the Credentialing
+                            Committee has reviewed your credentialing application and supporting documents based upon
+                            established Access Health Care Physicians policies and procedures, State and
+                            Federal regulatory guidelines, and criteria from selected accreditation bodies.<br /><br />
+                            You may begin providing services to Access Health Care Physicians Members on the
+                            @*first day of <input type="text" class="" style="width:20%" data_val_date="Please enter date in mm/dd/yyyy format." placeholder="mm/dd/yyyy" data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" ng-model="joiningdate" name="" />. Your assigned Provider Relations Representative will be<br />*@
+                            first day of <select id="monthid" ng-model="selectedmonth"><option ng-repeat="month in MonthsList">{{month}}</option></select>,&nbsp;<select id="yearid" ng-model="selectedyear"><option ng-repeat="year in YearsList">{{year}}</option></select>. Your assigned Provider Relations Representative will be<br />
+                            contacting you and your staff to deliver your counter-signed Agreement and to schedule a
+                            New Office Orientation.<br /><br />
+                            If you have any questions, please contact our Provider Relations Department staff by
+                            @*calling <a href="tel:+352799-0046" class="">(352) 799-0046</a>.<br /><br />*@
+                            calling (352) 799-0046.<br /><br />
+                            Respectfully,<br /><br />
+                            Medical Director<br />
+                            Access HelathCare Physicians<br /><br />
+                            Cc: Physician/Provider File
+                        </p>
+                        <br />
+                    @*</b>*@
+                </section>
+            </div>
+            <button class="btn btn-sm btn-info" ng-show="editletter" ng-click="Savewelcomeletter()">Save</button>
+            <button class="btn btn-sm btn-warning" ng-show="editletter" ng-click="canceleditview()">Cancel</button>
+        </div>
+    </fieldset>
+</div>

@@ -1,0 +1,43 @@
+﻿
+<div id="dis">
+    <form class="form-style">
+        <fieldset ng-repeat="QuestionCategory in masterQuestionCategories track by $index">
+            <legend>
+                {{QuestionCategory.Title}}
+            </legend>
+            @if (AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionValidator.IsAuthorized(AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                
+            }
+            @*<div class="pull-right legend2">                
+                <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory($index+'DisclosureQuestions');OperateUpdateHistory(QuestionCategory.QuestionCategoryID,'QuestionCategoryID');" tooltip><i class="fa fa-cloud"></i></button>
+            </div>*@
+            <div class="zero-padding-left-right-div">
+                <div class="form-group col-md-12 zero-padding-left-right-div" ng-repeat="Question in masterQuestions track by $index" ng-if="QuestionCategory.QuestionCategoryID == Question.QuestionCategoryId">
+                    <label class="control-label small col-md-12">@*<i class="fa fa-arrow-right"></i>*@{{$index+1}}. {{Question.Title}}</label>
+                    <div class="col-md-12">
+                        <label class="control-label small">Answer</label>
+                        <div ng-show="disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption == '1'">
+                            <i class="data-label" id="ans">Yes</i>
+                        </div>
+                        <div ng-show="disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption == '2'">
+                            <i class="data-label" id="ans">No</i>
+                        </div>
+                        <div ng-show="!disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption">
+                            <i class="data-label" id="ans">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="col-md-12 wrap-words" ng-show="disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption == '1'">
+                        <label class="control-label small">Reason</label>
+                        <div>
+                            <i class="data-label">{{disclosureQuestions.ProfileDisclosureQuestionAnswers[$index].Reason || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <div class="clearfix"></div><br />
+            </div>
+        </fieldset>
+        <div class="clearfix"></div>
+    </form>
+</div>

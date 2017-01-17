@@ -1,0 +1,1156 @@
+﻿<br />
+<div class="col-lg-12 zero-padding-left-right-div form-style">
+    <fieldset>
+        <legend>
+            Plan Report
+        </legend>
+        <div class="pull-right legend2">
+            <button type="button" ng-hide="showHospitalHistory" ng-click="showHospitalHistory=true;" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+            <button type="button" ng-show="showHospitalHistory" ng-click="showHospitalHistory=false;" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-arrow-left"></i></button>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12">
+            <div class="alert alert-success" id="planMsgReCred" role="alert" style="display:none;">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                The Submission is Successful and Email is Sent !!!!
+            </div>
+        </div>
+        <div class="col-lg-12" id="planDataReCred" ng-hide="showHospitalHistory">
+
+            @*<div class="col-lg-12 form-group">
+                <div class="col-lg-6">
+                    <label class="control-label small">Provider Id:</label>
+                    <div>
+                        <input type="text" class="form-control input-sm">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="control-label small">Group Id:</label>
+                    <div>
+                        <input type="text" class="form-control input-sm">
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-lg-12 form-group">
+                <div class="col-lg-6">
+                    <label class="control-label small">Initiated Date:</label>
+                    <div>
+                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="control-label small">Credentialled Date:</label>
+                    <div>
+                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-lg-12 form-group">
+                <div class="col-lg-6">
+                    <label class="control-label small">Termination Date:</label>
+                    <div>
+                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="control-label small">Fee Schedules:</label>
+                    <div>
+                        <select class="form-control input-sm">
+                            <option selected disabled>
+                                ---Select-----
+                            </option>
+                            <option>
+                                Schedule 1
+                            </option>
+                            <option>
+                                Schedule 2
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="col-lg-12">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label small">Contract Document</label>
+                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label small">Welcome Letter</label>
+                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <button class="btn btn-xs btn-success pull-right" onclick="PlanmsgReCred();">
+                    Submit
+                </button>
+            </div>*@
+
+            <table class="table table-bordered table-striped table-hover">
+                <!-- ngInclude: templates.header -->
+                <thead>
+                    <tr>
+                        <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3">Business Entity</th>
+                        <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3">Specialty</th>
+                        <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Location</th>
+                        <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Initial Credentialing Date</th>
+                        <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Line Of Business</th>
+                        <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Select Template</th>
+                        <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Action</th>
+                    </tr>
+                    <tr>
+                        <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                        <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                        <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                        <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><input type="text" class="form-control input-sm"></th>
+                        <th class="col-lg-1 col-md-1 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                        <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                        <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ngRepeat: c in LoadData -->
+                    <tr class="ng-scope">
+                        <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                        <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Ontology</td>
+                        <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5350 Spring Hill Drive</td>
+                        <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                        <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                        <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                            Template 1
+                        </td>
+                        <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <button ng-hide="data1" class="btn btn-xs btn-primary" ng-click="data1=true"><i class="fa fa-sort-down"></i></button>
+                            <button ng-show="data1" class="btn btn-xs btn-primary" ng-click="data1=false"><i class="fa fa-sort-up"></i></button>
+                        </td>
+                    </tr><!-- end ngRepeat: c in LoadData -->
+                    <tr ng-show="data1">
+                        <td colspan="7">
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Provider Id:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Group Id:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Initiated Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Credentialled Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Termination Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Fee Schedules:</label>
+                                    <div>
+                                        <select class="form-control input-sm">
+                                            <option selected disabled>
+                                                ---Select-----
+                                            </option>
+                                            <option>
+                                                Schedule 1
+                                            </option>
+                                            <option>
+                                                Schedule 2
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label small">Contract Document</label>
+                                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label small">Welcome Letter</label>
+                                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-xs btn-success pull-right" ng-click="data1 = false;">
+                                    Submit
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="ng-scope">
+                        <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                        <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Dentist</td>
+                        <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5356 Florida</td>
+                        <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                        <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                        <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                            Template 1
+                        </td>
+                        <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <button ng-hide="data2" class="btn btn-xs btn-primary" ng-click="data2=true;"><i class="fa fa-sort-down"></i></button>
+                            <button ng-show="data2" class="btn btn-xs btn-primary" ng-click="data2=false;"><i class="fa fa-sort-up"></i></button>
+                        </td>
+                    </tr><!-- end ngRepeat: c in LoadData -->
+                    <tr ng-show="data2">
+                        <td colspan="7">
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Provider Id:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Group Id:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Initiated Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Credentialled Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Termination Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Fee Schedules:</label>
+                                    <div>
+                                        <select class="form-control input-sm">
+                                            <option selected disabled>
+                                                ---Select-----
+                                            </option>
+                                            <option>
+                                                Schedule 1
+                                            </option>
+                                            <option>
+                                                Schedule 2
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label small">Contract Document</label>
+                                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label small">Welcome Letter</label>
+                                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-xs btn-success pull-right" ng-click="data2 = false;">
+                                    Submit
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="ng-scope">
+                        <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                        <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Ontology</td>
+                        <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5350 Spring Hill Drive</td>
+                        <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                        <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                        <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                            Template 2
+                        </td>
+                        <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <button ng-hide="data3" class="btn btn-xs btn-primary" ng-click="data3=true;"><i class="fa fa-sort-down"></i></button>
+                            <button ng-show="data3" class="btn btn-xs btn-primary" ng-click="data3=false;"><i class="fa fa-sort-up"></i></button>
+                        </td>
+                    </tr><!-- end ngRepeat: c in LoadData -->
+                    <tr ng-show="data3">
+                        <td colspan="7">
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Provider Id:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Group Id:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Initiated Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Credentialled Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 form-group">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Termination Date:</label>
+                                    <div>
+                                        <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Fee Schedules:</label>
+                                    <div>
+                                        <select class="form-control input-sm">
+                                            <option selected disabled>
+                                                ---Select-----
+                                            </option>
+                                            <option>
+                                                Schedule 1
+                                            </option>
+                                            <option>
+                                                Schedule 2
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label small">Contract Document</label>
+                                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label small">Welcome Letter</label>
+                                        <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-xs btn-success pull-right" ng-click="data3 = false;">
+                                    Submit
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-lg-12" id="planDataReCred" ng-show="showHospitalHistory">
+
+            <table class="table table-bordered table-striped table-hover">
+                <tr>
+                    <th>Re-Credentialed</th>
+                    <th>05/30/2015</th>
+                    <th>
+                        <button ng-hide="his1" class="btn btn-xs btn-primary" ng-click="his1=true"><i class="fa fa-sort-down"></i></button>
+                        <button ng-show="his1" class="btn btn-xs btn-primary" ng-click="his1=false"><i class="fa fa-sort-up"></i></button>
+                    </th>
+                </tr>
+                <tr ng-show="his1">
+                    <td colspan="3">
+
+                        <table class="table table-bordered table-striped table-hover">
+                            <!-- ngInclude: templates.header -->
+                            <thead>
+                                <tr>
+                                    <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3">Business Entity</th>
+                                    <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3">Specialty</th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Location</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Initial Credentialing Date</th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Line Of Business</th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Select Template</th>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Action</th>
+                                </tr>
+                                <tr>
+                                    <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-1 col-md-1 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ngRepeat: c in LoadData -->
+                                <tr class="ng-scope">
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                                    <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Ontology</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5350 Spring Hill Drive</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                                        Template 1
+                                    </td>
+                                    <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        <button ng-hide="data1" class="btn btn-xs btn-primary" ng-click="data1=true"><i class="fa fa-sort-down"></i></button>
+                                        <button ng-show="data1" class="btn btn-xs btn-primary" ng-click="data1=false"><i class="fa fa-sort-up"></i></button>
+                                    </td>
+                                </tr><!-- end ngRepeat: c in LoadData -->
+                                <tr ng-show="data1">
+                                    <td colspan="7">
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Provider Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Group Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Initiated Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Credentialled Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Termination Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Fee Schedules:</label>
+                                                <div>
+                                                    <select class="form-control input-sm">
+                                                        <option selected disabled>
+                                                            ---Select-----
+                                                        </option>
+                                                        <option>
+                                                            Schedule 1
+                                                        </option>
+                                                        <option>
+                                                            Schedule 2
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Contract Document</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Welcome Letter</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="col-lg-12">
+                                        <button class="btn btn-xs btn-success pull-right" ng-click="data1 = false;">
+                                            Submit
+                                        </button>
+                                    </div>*@
+                                    </td>
+                                </tr>
+                                <tr class="ng-scope">
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                                    <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Dentist</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5356 Florida</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                                        Template 1
+                                    </td>
+                                    <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        <button ng-hide="data2" class="btn btn-xs btn-primary" ng-click="data2=true;"><i class="fa fa-sort-down"></i></button>
+                                        <button ng-show="data2" class="btn btn-xs btn-primary" ng-click="data2=false;"><i class="fa fa-sort-up"></i></button>
+                                    </td>
+                                </tr><!-- end ngRepeat: c in LoadData -->
+                                <tr ng-show="data2">
+                                    <td colspan="7">
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Provider Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Group Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Initiated Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Credentialled Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Termination Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Fee Schedules:</label>
+                                                <div>
+                                                    <select class="form-control input-sm">
+                                                        <option selected disabled>
+                                                            ---Select-----
+                                                        </option>
+                                                        <option>
+                                                            Schedule 1
+                                                        </option>
+                                                        <option>
+                                                            Schedule 2
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Contract Document</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Welcome Letter</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="col-lg-12">
+                                        <button class="btn btn-xs btn-success pull-right" ng-click="data2 = false;">
+                                            Submit
+                                        </button>
+                                    </div>*@
+                                    </td>
+                                </tr>
+                                <tr class="ng-scope">
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                                    <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Ontology</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5350 Spring Hill Drive</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                                        Template 2
+                                    </td>
+                                    <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        <button ng-hide="data3" class="btn btn-xs btn-primary" ng-click="data3=true;"><i class="fa fa-sort-down"></i></button>
+                                        <button ng-show="data3" class="btn btn-xs btn-primary" ng-click="data3=false;"><i class="fa fa-sort-up"></i></button>
+                                    </td>
+                                </tr><!-- end ngRepeat: c in LoadData -->
+                                <tr ng-show="data3">
+                                    <td colspan="7">
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Provider Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Group Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Initiated Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Credentialled Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Termination Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Fee Schedules:</label>
+                                                <div>
+                                                    <select class="form-control input-sm">
+                                                        <option selected disabled>
+                                                            ---Select-----
+                                                        </option>
+                                                        <option>
+                                                            Schedule 1
+                                                        </option>
+                                                        <option>
+                                                            Schedule 2
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Contract Document</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Welcome Letter</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="col-lg-12">
+                                        <button class="btn btn-xs btn-success pull-right" ng-click="data3 = false;">
+                                            Submit
+                                        </button>
+                                    </div>*@
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Credentialed</th>
+                    <th>05/31/2012</th>
+                    <th>
+                        <button ng-hide="his2" class="btn btn-xs btn-primary" ng-click="his2=true"><i class="fa fa-sort-down"></i></button>
+                        <button ng-show="his2" class="btn btn-xs btn-primary" ng-click="his2=false"><i class="fa fa-sort-up"></i></button>
+                    </th>
+                </tr>
+                <tr ng-show="his2">
+                    <td colspan="3">
+
+                        <table class="table table-bordered table-striped table-hover">
+                            <!-- ngInclude: templates.header -->
+                            <thead>
+                                <tr>
+                                    <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3">Business Entity</th>
+                                    <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3">Specialty</th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Location</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Initial Credentialing Date</th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Line Of Business</th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Select Template</th>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Action</th>
+                                </tr>
+                                <tr>
+                                    <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-1 col-md-1 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ngRepeat: c in LoadData -->
+                                <tr class="ng-scope">
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                                    <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Ontology</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5350 Spring Hill Drive</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                                        Template 1
+                                    </td>
+                                    <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        <button ng-hide="data1" class="btn btn-xs btn-primary" ng-click="data1=true"><i class="fa fa-sort-down"></i></button>
+                                        <button ng-show="data1" class="btn btn-xs btn-primary" ng-click="data1=false"><i class="fa fa-sort-up"></i></button>
+                                    </td>
+                                </tr><!-- end ngRepeat: c in LoadData -->
+                                <tr ng-show="data1">
+                                    <td colspan="7">
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Provider Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Group Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Initiated Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Credentialled Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Termination Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Fee Schedules:</label>
+                                                <div>
+                                                    <select class="form-control input-sm">
+                                                        <option selected disabled>
+                                                            ---Select-----
+                                                        </option>
+                                                        <option>
+                                                            Schedule 1
+                                                        </option>
+                                                        <option>
+                                                            Schedule 2
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Contract Document</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Welcome Letter</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="col-lg-12">
+                                        <button class="btn btn-xs btn-success pull-right" ng-click="data1 = false;">
+                                            Submit
+                                        </button>
+                                    </div>*@
+                                    </td>
+                                </tr>
+                                <tr class="ng-scope">
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                                    <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Dentist</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5356 Florida</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                                        Template 1
+                                    </td>
+                                    <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        <button ng-hide="data2" class="btn btn-xs btn-primary" ng-click="data2=true;"><i class="fa fa-sort-down"></i></button>
+                                        <button ng-show="data2" class="btn btn-xs btn-primary" ng-click="data2=false;"><i class="fa fa-sort-up"></i></button>
+                                    </td>
+                                </tr><!-- end ngRepeat: c in LoadData -->
+                                <tr ng-show="data2">
+                                    <td colspan="7">
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Provider Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Group Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Initiated Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Credentialled Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Termination Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Fee Schedules:</label>
+                                                <div>
+                                                    <select class="form-control input-sm">
+                                                        <option selected disabled>
+                                                            ---Select-----
+                                                        </option>
+                                                        <option>
+                                                            Schedule 1
+                                                        </option>
+                                                        <option>
+                                                            Schedule 2
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Contract Document</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Welcome Letter</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="col-lg-12">
+                                        <button class="btn btn-xs btn-success pull-right" ng-click="data2 = false;">
+                                            Submit
+                                        </button>
+                                    </div>*@
+                                    </td>
+                                </tr>
+                                <tr class="ng-scope">
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">PCP</td>
+                                    <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3 ng-binding">Ontology</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3 ng-binding">5350 Spring Hill Drive</td>
+                                    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ng-binding">05-09-2014</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs ng-binding">Wellcare Medicare</td>
+                                    <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                                        Template 2
+                                    </td>
+                                    <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                        <button ng-hide="data3" class="btn btn-xs btn-primary" ng-click="data3=true;"><i class="fa fa-sort-down"></i></button>
+                                        <button ng-show="data3" class="btn btn-xs btn-primary" ng-click="data3=false;"><i class="fa fa-sort-up"></i></button>
+                                    </td>
+                                </tr><!-- end ngRepeat: c in LoadData -->
+                                <tr ng-show="data3">
+                                    <td colspan="7">
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Provider Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Group Id:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Initiated Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Credentialled Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yy" placeholder="mm/dd/yyyy" bs-datepicker />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="col-lg-12 form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Termination Date:</label>
+                                                <div>
+                                                    <input type="text" class="form-control input-sm" data-date-format="MM/dd/yyyy" placeholder="mm/dd/yyyy" bs-datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label small">Fee Schedules:</label>
+                                                <div>
+                                                    <select class="form-control input-sm">
+                                                        <option selected disabled>
+                                                            ---Select-----
+                                                        </option>
+                                                        <option>
+                                                            Schedule 1
+                                                        </option>
+                                                        <option>
+                                                            Schedule 2
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Contract Document</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="control-label small">Welcome Letter</label>
+                                                    <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Attach Document</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="col-lg-12">
+                                        <button class="btn btn-xs btn-success pull-right" ng-click="data3 = false;">
+                                            Submit
+                                        </button>
+                                    </div>*@
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    </fieldset>
+</div>
+<script>
+    var PlanmsgReCred = function () {
+
+        $("#planMsgReCred").show();
+        $("#planDataReCred").hide();
+    };
+</script>
+

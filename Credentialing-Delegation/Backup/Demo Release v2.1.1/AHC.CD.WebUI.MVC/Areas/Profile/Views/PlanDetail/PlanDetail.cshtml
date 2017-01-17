@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "PlanDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>  
+<script src="~/Areas/Profile/Scripts/JavaScripts/PlanDetails.js"></script>
+
+<div id="page-wrapper" ng-app="masterPlans" ng-controller="masterPlansController" ng-cloak>
+    <div class="row">
+        <br />
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-check fa-fw"></i> Plan Details
+            </div>
+            <div class="panel-body">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words'>
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('logo',reverse,1)" class="pointer">Plan Logo<i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('PlanName',reverse,2)" class="pointer">Plan Name<i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('planType',reverse,3)" class="pointer">Plan Type<i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('CompanyName',reverse,4)" class="pointer">Company Name<i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('ContactPersonName',reverse,5)" class="pointer">Contact Person Name<i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                <a ng-click="reverse=!reverse;order('planStatus',reverse,6)" class="pointer">Plan Status<i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('MailTo',reverse,7)" class="pointer">Mail To<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="text" class="form-control" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" />
+                            </th>
+                            <th>
+                                <input type="text" class="form-control" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in AllPlans'>
+                            <td><img src="~/Content/Images/Plans/{{p.logo}}" class="datatableimg" /></td>
+                            <td>{{p.PlanName}}</td>
+                            <td>{{p.planType}}</td>
+                            <td>{{p.ICName}}</td>
+                            <td>{{p.ContactPersonName}}</td>
+                            <td>{{p.planStatus}}</td>
+                            <td><a class="pointer" href="mailto:{{p.MailTo}}">{{p.MailTo}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination ng-if="AllPlans.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                @*<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>*@
+
+                @*<div ng-if="CurrentPageLicenses.length == 0">No new plan added.</div>*@
+            </div>
+        </div>
+    </div>
+</div>

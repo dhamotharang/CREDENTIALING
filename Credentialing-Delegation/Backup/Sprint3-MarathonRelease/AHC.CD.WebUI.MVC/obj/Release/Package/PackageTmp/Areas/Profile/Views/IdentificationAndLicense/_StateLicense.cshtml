@@ -1,0 +1,88 @@
+﻿
+<div class="panel-default">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                State License
+            </legend>
+         
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:black">
+                <label>*If you have additional State Licenses include all state license certification numbers here.</label>
+                
+            </div>
+            <div id="licenseprofessional" class="panel-body">
+                <table ng-hide="StateLicenses.length > 0||newShowStateLicense" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>No Data Available ! To Add New Click
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addStateLicenseInformation')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                             </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="StateLicenses.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                    <tr>
+                    <th>License Number</th>
+                    <th>Issue State</th>
+                    <th>Type</th>
+                    <th>Expiration Date</th>
+                    <th>Status</th>
+                    <th>Certificate</th>
+                    <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="StateLicenseInformation in StateLicenses">
+                        <tr>
+                            <td>{{StateLicenseInformation.LicenseNumber}}</td>
+                            <td>{{StateLicenseInformation.IssuingState}}</td>
+                            <td>{{StateLicenseInformation.ProviderType.Title}}</td>
+                            <td>{{StateLicenseInformation.ExpiryDate | date: "MM-dd-yyyy"}}</td>
+                            <td>{{StateLicenseInformation.StateLicenseStatus.Title}}</td>
+                            <td>
+                                <a ng-if="StateLicenseInformation.StateLicenseDocumentPath" href="{{StateLicenseInformation.StateLicenseDocumentPath}}" class="pointer" target="_blank" title="{{sl.StateLicenseDocumentPath}}"><i class="fa fa-file" title=""></i></a>
+                                <label ng-if="!StateLicenseInformation.StateLicenseDocumentPath">Not Available</label>
+                             </td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewStateLicenseInformation')" ng-hide="viewStateLicense" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editStateLicenseInformation',StateLicenseInformation)" ng-hide="editShowStateLicense" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addStateLicenseInformation')" ng-hide="viewStateLicense|| editShowStateLicense || newShowStateLicense || $index+1!=StateLicenses.length" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewStateLicenseInformation')">
+                            <td colspan="7" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewStateLicense.cshtml")
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_editStateLicenseInformation')">
+                            <td colspan="7" id="stateLicenseEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditStateLicense.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+
+                    <div class="clearfix"></div>
+                    <div class="form-style">
+                        <fieldset ng-show="visibilityControl=='addStateLicenseInformation'">
+                            <legend>
+                                Add State License
+                            </legend>
+                            <div id="newStateLicenseDiv">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditStateLicense.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                <div ng-show="visibilityControl=='addedStateLicense'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>New State License Added Successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedStateLicense'" class="alert alert-warning" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                </div>
+              
+</div>
+        </fieldset>
+    </div>
+</div>

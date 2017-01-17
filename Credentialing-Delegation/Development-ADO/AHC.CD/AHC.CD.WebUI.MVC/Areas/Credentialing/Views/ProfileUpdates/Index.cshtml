@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenwal.js"></script>
+
+<style>
+    .vertical-align {
+        align-items: center;
+    }
+
+    .selectedProvider {
+        background-color: rgb(150, 162, 225);
+    }
+
+    .imageStyle {
+        padding: 0px;
+        margin-bottom: 0px;
+    }
+
+    .alignTableStyle > thead > tr > th,
+    .alignTableStyle > tbody > tr > th,
+    .alignTableStyle > tfoot > tr > th,
+    .alignTableStyle > thead > tr > td,
+    .alignTableStyle > tbody > tr > td,
+    .alignTableStyle > tfoot > tr > td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .marginTop {
+        margin-top: 22px;
+    }
+
+    .marginBottom {
+        margin-bottom: 22px;
+    }
+
+    .select2-container {
+        display: block;
+    }
+
+    .seperate {
+        border-right: 1px solid black;
+    }
+</style>
+
+
+<div id="page-wrapper" ng-app="InitCredApp" ng-controller="listController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-ol"></i> Profile Updates
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <div role="tabpanel">
+            @*<div>
+                     Nav tabs
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#provider" aria-controls="provider" role="tab" data-toggle="tab"> A Provider</a></li>
+                        <li role="presentation" ><a href="#bulk" aria-controls="bulk" role="tab" data-toggle="tab">Multiple Providers</a></li>
+                    </ul>
+                </div>*@
+
+            <div ng-class="{'false':'col-lg-12','true':'col-lg-7'}[IsHowDetails]" class=" zero-padding-left-right-div" id="list">
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="provider">
+                        <!---Provider partial starts here-->
+
+                        <div class="panel panel-default">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">
+                                <i ng-hide="historyMode">Profile Updates & Renewals List</i><i ng-show="historyMode">Profile Updates & Renewals History</i> &nbsp;&nbsp;
+                                <a class="btn btn-xs btn-info" ng-click="getByType('Update');showUpdate=true" ng-class="{'active':SelectedType=='Update'}">Updates<span ng-show="historyMode"> History</span></a>
+                                &nbsp;&nbsp;
+                                <a class="btn btn-xs btn-info" ng-click="getByType('Renewal');showUpdate=false" ng-class="{'active':SelectedType=='Renewal'}">Renewals<span ng-show="historyMode"> History</span></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a class="btn btn-xs btn-warning" ng-click="getProfileUpdateHistory()" ng-hide="historyMode"><i class="fa fa-list"></i>View History</a>
+                                <span class="pull-right">
+                                    @*<a ng-disabled="!OneIsSelected" ng-click="ActionForChanges('reject')" class="btn btn-xs btn-danger">Reject</a>
+                                        &nbsp;&nbsp;
+                                        <a ng-disabled="!OneIsSelected" ng-click="ActionForChanges('accept')" class="btn btn-xs btn-success">Accept</a>*@
+                                    @if (ProfileActionValidator.IsMask(ViewBag.Roles))
+                                    {
+                                        <a ng-disabled="!OneIsSelected" ng-hide="historyMode" ng-click="ActionForChanges('accept')" class="btn btn-xs btn-success">Accept All Selected</a>
+
+                                    }
+                                    <a ng-click="getAllUpdates()" ng-show="historyMode" class="btn btn-xs btn-success">Profile Updates & Renewals List</a>
+
+                                </span>
+                            </div>
+
+
+                            <div class="panel-body" ng-init="showUpdate=true">
+                                <div ng-if="showUpdate" ng-hide="progressbar" ng-show="$data">
+
+                                    <table ng-table="tableParamsUpdate" show-filter="true" class="table ng-table-responsive">
+
+                                        <tr ng-repeat="user in $data">
+                                            <td data-title="'NPI Number'" sortable="'NPINumber'" filter="{ 'NPINumber': 'text' }">
+                                                {{user.NPINumber}}
+                                            </td>
+                                            <td data-title="'First Name'" sortable="'FirstName'" filter="{ 'FirstName': 'text' }">
+                                                {{user.FirstName}}
+                                            </td>
+                                            <td data-title="'Section'" sortable="'Section'" filter="{ 'Section': 'text' }">
+                                                {{user.Section}}
+                                            </td>
+                                            <td data-title="'Sub Section'" sortable="'SubSection'" filter="{ 'SubSection': 'text' }">
+                                                {{user.SubSection}}
+                                            </td>
+                                            <td data-title="'Status'" sortable="'ApprovalStatus'" filter="{ 'ApprovalStatus': 'text' }">
+                                                {{user.ApprovalStatus}}
+                                            </td>
+                                            <td data-title="{false:'Modified Date',true:'Approved Date'}[historyMode]" sortable="'LastModifiedDate'" filter="{ 'LastModifiedDate': 'text' }">
+                                                {{user.LastModifiedDate}}
+                                            </td>
+                                            <td header="'ng-table/headers/checkbox1.html'">
+                                                @if (ProfileActionValidator.IsMask(ViewBag.Roles))
+                                                {
+                                                    <input type="checkbox" ng-hide="historyMode" ng-model="user.IsChecked" ng-change="anyOneChecked()">
+                                                }
+                                            </td>
+                                            <td data-title="'Action'">
+                                                <a ng-click="pushdata(user.ProfileUpdatesTrackerId);" data-toggle="tooltip" data-placement="right" title="View Details" class="pointer"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div ng-if="showUpdate">
+                                    <table ng-if="data.length == 0">
+                                        <tr>
+                                            <td><label class="text-center">No Data Available !</label></td>
+                                        </tr>
+                                    </table>
+                                    <table ng-if="users.length == 0 && data.length != 0">
+                                        <tr>
+                                            <td><label class="text-center">No Results Found !</label></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div ng-if="!showUpdate" ng-hide="progressbar">
+                                    <table ng-table="tableParamsRenewal" show-filter="true" class="table ng-table-responsive">
+                                        <tr ng-repeat="user in $data">
+                                            <td data-title="'NPI Number'" sortable="'NPINumber'" filter="{ 'NPINumber': 'text' }">
+                                                {{user.NPINumber}}
+                                            </td>
+                                            <td data-title="'First Name'" sortable="'FirstName'" filter="{ 'FirstName': 'text' }">
+                                                {{user.FirstName}}
+                                            </td>
+                                            <td data-title="'Section'" sortable="'Section'" filter="{ 'Section': 'text' }">
+                                                {{user.Section}}
+                                            </td>
+                                            <td data-title="'Sub Section'" sortable="'SubSection'" filter="{ 'SubSection': 'text' }">
+                                                {{user.SubSection}}
+                                            </td>
+                                            <td data-title="'Status'" sortable="'ApprovalStatus'" filter="{ 'ApprovalStatus': 'text' }">
+                                                {{user.ApprovalStatus}}
+                                            </td>
+                                            <td data-title="'Modified Date'" sortable="'LastModifiedDate'" filter="{ 'LastModifiedDate': 'text' }">
+                                                {{user.LastModifiedDate}}
+                                            </td>
+                                            <td ng-hide="historyMode" header="'ng-table/headers/checkbox2.html'">
+                                                <input type="checkbox" ng-model="user.IsChecked" ng-change="anyOneChecked()">
+                                            </td>
+                                            <td data-title="'Action'">
+                                                <a ng-click="pushdata(user.ProfileUpdatesTrackerId);" data-toggle="tooltip" data-placement="right" title="View Details" class="pointer"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div ng-if="anyBusinessError">
+                                    <label class="control-label small text-danger">
+                                        All selected requests were not accepted. Please view details for more information..!
+                                    </label>
+                                </div>
+                                <div ng-if="!showUpdate">
+                                    <table ng-if="data.length == 0">
+                                        <tr>
+                                            <td><label class="text-center">No Data Available !</label></td>
+                                        </tr>
+                                    </table>
+                                    <table ng-if="users.length == 0 && data.length != 0">
+                                        <tr>
+                                            <td><label class="text-center">No Results Found !</label></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <script type="text/ng-template" id="ng-table/headers/checkbox1.html">
+                                    @if (ProfileActionValidator.IsMask(ViewBag.Roles))
+                                    {
+                                        <label ng-hide="historyMode">Select All</label>
+                                        <input ng-hide="historyMode" type="checkbox" ng-disabled="data.length == 0" ng-model="IsAllChecked" ng-change="SelectAll(IsAllChecked)">
+                                    }
+                                </script>
+                                <script type="text/ng-template" id="ng-table/headers/checkbox2.html">
+                                    @if (ProfileActionValidator.IsMask(ViewBag.Roles))
+                                    {
+                                        <label ng-hide="historyMode">Select All</label>
+                                        <input ng-hide="historyMode" type="checkbox" ng-disabled="data.length == 0" ng-model="IsAllChecked" ng-change="SelectAll(IsAllChecked)">
+                                    }
+                                </script>
+                                <div class="progress col-lg-12" ng-show="progressbar" ng-cloak>
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        Loading...Please wait...
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!---Provider partial ends here-->
+                    </div>
+
+                </div>
+            </div>
+            <div ng-if="IsHowDetails" class="col-lg-5">
+                @Html.Partial("~/Areas/Credentialing/Views/ProfileUpdates/_DetailOnUpdate.cshtml")
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- /#page-wrapper -->

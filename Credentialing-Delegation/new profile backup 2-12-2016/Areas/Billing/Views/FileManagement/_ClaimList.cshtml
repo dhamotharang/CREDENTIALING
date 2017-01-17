@@ -1,0 +1,64 @@
+﻿@model List<PortalTemplate.Areas.Billing.Models.File_Management.ClaimList>
+
+<div class="x_panel border_on_panel">
+    <div class="x_content">
+        <div class="col-lg-12 clearfix">
+            <label class="title_text pull-left">Claim List For File - <span class="text-uppercase" id="ClaimFileName"></span>&nbsp;&nbsp;&nbsp;&nbsp; Control Number - <span class="text-uppercase" id="CNLabel837ClaimList"></span></label>
+        </div>
+    </div>
+    <div class="">
+        <div class="col-lg-12" id="claimListTable">
+            <span hidden><input name="IncomingFileId" type="text" id="HiddenClaimListID" /></span>
+            <table id="Table837ClaimListList" class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+                <thead class="theme_thead">
+                    <tr>
+                        <th>Claim Number </th>
+                        <th>Member Name</th>
+                        <th>Provider Name</th>
+                        <th>Payer Name</th>
+                        <th>DOS</th>
+                        <th>Date Created</th>
+                        <th>Amount</th>
+                        <th>Claim Type</th>
+                        <th>Age(DOC)</th>
+                        <th>Age(DOS)</th>
+                        <th>Status</th>
+                        @*<th>Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.Partial("~/Areas/Billing/Views/FileManagement/_TBody837ClaimList.cshtml")
+                </tbody>
+            </table>
+
+            <div class="margin_top_20_px button-styles clearfix">
+                <button class="btn btn-warning btn-xs pull-left" id="backTo837">Back</button>
+            </div>
+
+        </div>
+        <div id="claimInfo" hidden>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#Table837ClaimListList').prtGrid({
+        url: "/Billing/FileManagement/Get837ClaimListTableListByIndex",
+        dataLength: 50,
+        columns: [{ type: 'text', name: 'ClaimNumber', text: 'Claim Number', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'MemLastName', text: 'Member Name', widthPercentage: 15, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'ProviderLastName', text: 'Provider Name', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'PayerName', text: 'Payer Name', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'date', name: 'DOSFrom', text: 'DOS', widthPercentage: 15, sortable: { isSort: true, defaultSort: null } },
+        { type: 'date', name: 'DateCreated', text: 'Date Created', widthPercentage: 10, sortable: { isSort: true, defaultSort: 'ASC' } },
+        { type: 'text', name: 'Amount', text: 'Amount', widthPercentage: 10, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'ClaimType', text: 'Claim Type', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'AgeOfDOC', text: 'Age(DOC)', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'AgeOfDOS', text: 'Age(DOS)', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } },
+        { type: 'text', name: 'Status', text: 'Status', widthPercentage: 5, sortable: { isSort: true, defaultSort: null } }],
+        //{ type: 'none', name: '', text: '', widthPercentage: 5, sortable: { isSort: false } }],
+        externalFactors: [{ name: 'IncomingFileId', type: 'text' }]
+    });
+</script>
+<script src="~/Areas/Billing/Scripts/AppJs/FileManagement/Unminified/claimList.js"></script>

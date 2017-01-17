@@ -1,0 +1,118 @@
+﻿
+
+<div class="col-lg-10 zero-padding-left-right-div">
+    <div class="col-lg-6 form-group">
+        <label class="control-label small">Plan Name</label>
+        <div>{{tempObject.PlanName}}</div>
+    </div>
+    <div class="col-md-6 form-group">
+        <label class="control-label small">Plan Code</label>
+        <div>{{tempObject.PlanCode}}</div>
+    </div>
+    <div class="col-md-6 form-group">
+        <label class="control-label small">street</label>
+        <div>{{tempObject.Location.Street}}</div>
+    </div>
+    <div class="col-md-6 form-group">
+        <label class="control-label small">Apartment</label>
+        <div>{{tempObject.Location.Appartment}}</div>
+    </div>
+</div>
+<div class="col-lg-2 form-group zero-padding-left-right-div">
+    <label class="control-label small">Plan Logo</label>
+    <div class="fileinput fileinput-exists" data-provides="fileinput">
+        <input type="hidden">
+        <div class="fileinput-preview thumbnail file_preview_upload" style="line-height: 83px; background-image: url('/Content/Images/a0.jpg'); background-size: 100% 97%;" data-trigger="fileinput"></div>
+    </div>
+</div>
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-md-3 form-group">
+        <label class="control-label small">City</label>
+        <div>{{tempObject.Location.City}}</div>
+    </div>
+    <div class="col-md-3 form-group">
+        <label class="control-label small">State</label>
+        <div>{{tempObject.Location.State}}</div>
+    </div>
+    <div class="col-md-3 form-group">
+        <label class="control-label small">Country</label>
+        <div>{{tempObject.Location.Country}}</div>
+    </div>
+    <div class="col-md-3 form-group">
+        <label class="control-label small">County</label>
+        <div>{{tempObject.Location.County}}</div>
+    </div>
+</div>
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-3 form-group">
+        <label class="control-label small">Contact Person</label>
+        <div>{{tempObject.ContactDetail.ContactPersonName}}</div>
+    </div>
+    <div class="col-md-3 form-group">
+        <label class="control-label small">Phone</label>
+        <div>{{tempObject.ContactDetail.PhoneNumber}}</div>
+    </div>
+    <div class="col-md-3 form-group">
+        <label class="control-label small">Fax</label>
+        <div>{{tempObject.ContactDetail.FaxNumber}}</div>
+    </div>
+    <div class="col-md-3 form-group">
+        <label class="control-label small">Email Address</label>
+        <div>{{tempObject.ContactDetail.EmailAddress}}</div>
+    </div>
+</div>
+
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-md-3 form-group">
+        <label class="control-label small">Attach Application Form</label>
+        <div>
+            Form{{tempObject.AttachedFormID}}
+        </div>
+    </div>
+    <div class="col-md-3 form-group">
+        <br />
+        <div class="checkbox">
+            <label>
+                Is Delegated : {{tempObject.IsDelegated}}
+            </label>
+        </div>
+    </div>
+    <div ng-if="tempObject.PlanBE.length > 0" class="col-md-3 form-group">
+        <label class="control-label small">Business Entity</label>
+        <div>
+            <span ng-repeat="pbe in tempObject.PlanBE" class="label label-primary" style="margin-left: 5px;">{{pbe.Group.Name}} <span ng-click="RemoveBusinessEntity(pbe);" class="pointer">&times;</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>LOB Name</th>
+                <th>Business Entity</th>
+                <th>Address</th>
+                <th>Contact Person</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="plob in tempObject.PlanLOB track by $index">
+                <td>{{plob.LOB.LOBName}}</td>
+                <td>
+                    <span ng-repeat="be in plob.LobDetail.BE" class="label label-primary" style="margin-left: 5px;">{{be.Group.Name}} </span>
+                </td>
+                <td>{{plob.LobDetail.Location.Street}} - {{plob.LobDetail.Location.Appartment}} - {{plob.LobDetail.Location.City}}</td>
+                <td>{{plob.LobDetail.ContactDetail.ContactPersonName}}</td>
+                <td>
+                    @*<a ng-click="showSelectedLOB = plob.LobDetail;" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></a>*@
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="col-lg-12">
+    <input id="next1" type="button" value="Confirm" ng-click="confirmationAddProvider()" class="btn btn-primary btn-sm pull-right" />
+    <input id="next1" type="button" value="Previous" ng-click="nextForm(2)" class="btn btn-warning btn-sm pull-left" />
+</div>

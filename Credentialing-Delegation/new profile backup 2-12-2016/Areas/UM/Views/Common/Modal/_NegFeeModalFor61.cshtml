@@ -1,0 +1,422 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PratianUI;
+<p-script filepath="~/Areas/UM/Scripts/Authorization/NEG_FEE/NonMinified/Neg_Fee.js"></p-script>
+<!--------------------------------Neg Fee Modal Body---------------------------->
+<form id="Neg_Fee_Details" autocomplete="off">
+    <div class="container text-uppercase" id="NegFeeModal">
+
+        <!----------------------DRG/RATE ,  % OF DRG, cost,RANGE,ALOS,GMLOS,LOW TRIM, req los For Pos 61----------->
+        <div class="col-md-12" id="ForPos61">
+            <div class="col-md-2">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.DrugAndRate)</span>
+                <select class="input-xs form-control" id="DrgRateDropDown">
+                    <option value="SELECT">SELECT</option>
+                    <option value="DRG">DRG</option>
+                    <option value="PERDIEM">PER DIEM</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.DRGPercentage)</span>
+                @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.DRGPercentage, new { @class = "form-control DrgRateField input-xs", @disabled = "disabled", @id = "percentageOfDrug" })
+            </div>
+            <div class="col-md-2">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.BaseCost)</span>
+                @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.BaseCost, new { @class = "form-control ValueToRight input-xs mandatory_field_halo removeUpDownControl loser_field text-uppercase", Value = 0, @type = "number", @placeholder = "COST", @id = "BaseCostDrugOrDiem" })
+                <span class="DollarInputField"><b>$</b></span>
+                 </div>
+            <div class="col-md-2">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Range)</span>
+                <select class="input-xs form-control DrgRateField  text-uppercase" disabled="disabled" id="RangeDrugOrDiem">
+                    <option value="DAY">Day</option>
+                    <option value="WEEK">Week</option>
+                    <option value="MONTH">Month</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.ALOS)</span>
+                @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.ALOS, new { @class = "form-control  input-xs", @disabled = "disabled", @id = "Alos" })
+            </div>
+            <div class="col-md-1">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.GMLOS)</span>
+                @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.GMLOS, new { @class = "form-control  input-xs", @disabled = "disabled", @id = "Gmlos" })
+            </div>
+            <div class="col-md-1">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.LowTrimPoint)</span>
+                @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.LowTrimPoint, new { @class = "form-control  input-xs", @disabled = "disabled", @id = "LowTrimPoint" })
+            </div>
+
+            <div class="col-md-2">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].RequiredLOS)</span>
+                @Html.TextBoxFor(e => e.LOSs[0].RequiredLOS, new { @class = "form-control DrgRateField input-xs", @placeholder = "REQ LOS", @id = "ReqLosForDrgOrDiem" })
+            </div>
+        </div>
+        <!----------------------End of DRG/RATE ,  % OF DRG, cost,RANGE,ALOS,GMLOS,LOW TRIM, req los For Pos 61----------->
+        <!---------------------------Medication Area-------------------------------->
+        <div id="NEG_FEE_MODAL">
+            <div class="x_panel border_on_panel Margin_top_negFee negFeeBackColor">
+                <div class="col-md-12 Margin_top_carveout_negFee">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].CarveOutType)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Reason)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Cost)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Dose)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Range1)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Unit)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Range2)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].FromDate)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].ToDate)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].TotalCost)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label"><label>ACTION</label></span>
+                    </div>
+                </div>
+
+                <div id="MedicationsArea">
+                    <div class="col-md-12 MedicationsRow Margin_top_carveout_negFee" id="_Medications___0">
+                        <div class="col-md-1">
+                            <input type="checkbox" id="CHECKBOX_Medications___0" name="LOSs[0].NEGFeeDetail.Medications[0].IsActive" class="form-control NegFeeCheckbox MedicationsCheckBox checkbox-radio"><label><span></span></label>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.HiddenFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].CarveOutType, new { @value = "Medication", @id = "NAME_Medications___0" })
+                            <span class="theme_label"><label>MEDICATION</label></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Reason, new { @class = "form-control Disable_Enable text-uppercase input-xs", @id = "REASON_Medications___0", @placeholder = "REASON", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Cost, new { @class = "form-control Disable_Enable removeUpDownControl CalculateCost COST ValueToRight input-xs", @id = "COST_Medications___0", @type = "number", @placeholder = "COST", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Dose, new { @class = "form-control Disable_Enable removeUpDownControl DOSE input-xs", @id = "DOSE_Medications___0", @placeholder = "DOSE", @type = "number", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Range1, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control Disable_Enable CalculateCost RANGE1 input-xs text-uppercase", @id = "RANGE1_Medications___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Unit, new { @class = "form-control Disable_Enable UNITS removeUpDownControl input-xs", @placeholder = "UNITS", @type = "number", @id = "UNITS_Medications___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Range2, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control RANGE2 input-xs CalculateCost Disable_Enable text-uppercase", @id = "RANGE2_Medications___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].FromDate, new { @class = "form-control input-xs Disable_Enable DateTimeField", @id = "FROM_DATE_Medications___0", @placeholder = "MM/DD/YYYY", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].ToDate, new { @class = "form-control input-xs  Disable_Enable", @placeholder = "MM/DD/YYYY", @id = "TO_DATE_Medications___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].TotalCost, new { @class = "form-control ValueToRight input-xs Disable_Enable removeUpDownControl TOTAL_AMOUNT", @id = "TOTALCOST_Medications___0", @type = "number", @placeholder = "TOTAL COST", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1" id="Medications">
+                            <button type="button" class="btn btn-danger btn-xs NegFeeMinusButton MedicationsMinusButton Disable_Enable hidden" id="MedicationsMinusButton" disabled><i class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-success btn-xs Disable_Enable NegFeePlusButton MedicationsPlusButton" disabled><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!------------------------End Of Medication Area---------------------------->
+            <div class="x_panel border_on_panel Margin_top_negFee negFeeBackColor">
+                <div class="col-md-12 Margin_top_carveout_negFee">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].CarveOutType)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Reason)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Cost)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Dose)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Range1)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Unit)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].Range2)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].FromDate)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].ToDate)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.Medications[0].TotalCost)</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span class="theme_label"><label>ACTION</label></span>
+                    </div>
+                </div>
+                <!---------------------Specialty Bed Mat Area--------------------------->
+                <div id="SpecialtyBedMatsArea">
+                    <div class="col-md-12 SpecialtyBedMatsRow Margin_top_carveout_negFee" id="_SpecialtyBedMats___0">
+                        <div class="col-md-1">
+                            <input type="checkbox" name="LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].IsActive" id="CHECKBOX_SpecialtyBedMats___0" class="form-control NegFeeCheckbox SpecialtyBedMatsCheckBox checkbox-radio"><label><span></span></label>
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.HiddenFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].CarveOutType, new { @value = "SPECIALTY BED/MAT", @id = "NAME_SpecialtyBedMats___0" })
+                            <span class="theme_label"><label>SPECIALTY BED/MAT</label></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].Reason, new { @class = "form-control Disable_Enable text-uppercase input-xs", @id = "REASON_SpecialtyBedMats___0", @placeholder = "REASON", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].Cost, new { @class = "form-control Disable_Enable ValueToRight input-xs removeUpDownControl", @type = "number", id = "COST_SpecialtyBedMats___0", @placeholder = "COST", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].Dose, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @id = "DOSE_SpecialtyBedMats___0", @placeholder = "DOSE", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].Range1, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control Disable_Enable input-xs text-uppercase", id = "RANGE1_SpecialtyBedMats___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].Unit, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "UNITS", id = "UNITS_SpecialtyBedMats___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].Range2, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs Disable_Enable text-uppercase", id = "RANGE2_SpecialtyBedMats___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].FromDate, new { @class = "form-control input-xs DateTimeField  Disable_Enable", @id = "FROM_DATE_SpecialtyBedMats___0", @placeholder = "MM/DD/YYYY", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].ToDate, new { @class = "form-control input-xs  Disable_Enable", @placeholder = "MM/DD/YYYY", @id = "TO_DATE_SpecialtyBedMats___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.SpecialtyBedMats[0].TotalCost, new { @class = "form-control input-xs TOTAL_AMOUNT Disable_Enable ValueToRight removeUpDownControl", @type = "number", id = "TOTALCOST_SpecialtyBedMats___0", @placeholder = "TOTAL COST", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1" id="SpecialtyBedMats">
+                            <button type="button" class="btn btn-danger btn-xs NegFeeMinusButton SpecialtyBedMatsMinusButton Disable_Enable hidden" id="SpecialtyBedMatsMinusButton" disabled><i class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-success btn-xs Disable_Enable NegFeePlusButton SpecialtyBedMatsPlusButton" disabled><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------End OFSpecialty Bed Mat Area--------------------->
+                <!---------------------WoundCares  Area--------------------------->
+                <div id="WoundCaresArea">
+                    <div class="col-md-12 WoundCaresRow Margin_top_carveout_negFee" id="_WoundCares___0">
+                        <div class="col-md-1">
+                            <input type="checkbox" name="LOSs[0].NEGFeeDetail.WoundCares[0].IsActive" id="CHECKBOX_WoundCares___0" class="form-control NegFeeCheckbox WoundCaresCheckBox checkbox-radio"><label><span></span></label>
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.HiddenFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].CarveOutType, new { @value = "WOUND CARE", @id = "NAME_WoundCares___0" })
+                            <span class="theme_label"><label>WOUND CARE</label></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].Reason, new { @class = "form-control Disable_Enable text-uppercase input-xs", @placeholder = "REASON", @disabled = "disabled", @id = "REASON_WoundCares___0" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].Cost, new { @class = "form-control Disable_Enable input-xs ValueToRight removeUpDownControl", @type = "number", @placeholder = "COST", @id = "COST_WoundCares___0", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].Dose, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "DOSE", @disabled = "disabled", @id = "DOSE_WoundCares___0" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].Range1, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control Disable_Enable input-xs text-uppercase", id = "RANGE1_WoundCares___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].Unit, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "UNITS", id = "UNITS_WoundCares___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].Range2, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs Disable_Enable text-uppercase", id = "RANGE2_WoundCares___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].FromDate, new { @class = "form-control input-xs DateTimeField Disable_Enable", @id = "FROM_DATE_WoundCares___0", @placeholder = "MM/DD/YYYY", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].ToDate, new { @class = "form-control input-xs  Disable_Enable", @placeholder = "MM/DD/YYYY", @id = "TO_DATE_WoundCares___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.WoundCares[0].TotalCost, new { @class = "form-control input-xs ValueToRight TOTAL_AMOUNT Disable_Enable removeUpDownControl", @type = "number", @id = "TOTALCOST_WoundCares___0", @placeholder = "TOTAL COST", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1" id="WoundCares">
+                            <button type="button" class="btn btn-danger btn-xs NegFeeMinusButton WoundCaresMinusButton Disable_Enable hidden" id="WoundCaresMinusButton" disabled><i class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-success btn-xs Disable_Enable NegFeePlusButton WoundCaresPlusButton" disabled><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------End OF WoundCares Area--------------------->
+                <!---------------------LifeVests  Area--------------------------->
+                <div id="LifeVestsArea">
+                    <div class="col-md-12 LifeVestsRow Margin_top_carveout_negFee" id="_LifeVests___0">
+                        <div class="col-md-1">
+                            <input type="checkbox" name="LOSs[0].NEGFeeDetail.LifeVests[0].IsActive" id="CHECKBOX_LifeVests___0" class=" form-control NegFeeCheckbox  lifevestscheckbox checkbox-radio"><label><span></span></label>
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.HiddenFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].CarveOutType, new { @value = "LIFE VEST", @id = "NAME_LifeVests___0" })
+                            <span class="theme_label"><label>LIFE VEST</label></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].Reason, new { @class = "form-control Disable_Enable text-uppercase input-xs", @placeholder = "REASON", @id = "REASON_LifeVests___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].Cost, new { @class = "form-control ValueToRight Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "COST", id = "COST_LifeVests___0", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].Dose, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "DOSE", @disabled = "disabled", @id = "DOSE_LifeVests___0" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].Range1, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control Disable_Enable input-xs text-uppercase", id = "RANGE1_LifeVests___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].Unit, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "UNITS", id = "UNITS_LifeVests___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].Range2, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs Disable_Enable text-uppercase", id = "RANGE2_LifeVests___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].FromDate, new { @class = "form-control input-xs DateTimeField Disable_Enable", @id = "FROM_DATE_LifeVests___0", @placeholder = "MM/DD/YYYY", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].ToDate, new { @class = "form-control input-xs  Disable_Enable", @placeholder = "MM/DD/YYYY", @id = "TO_DATE_LifeVests___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.LifeVests[0].TotalCost, new { @class = "form-control input-xs TOTAL_AMOUNT Disable_Enable ValueToRight removeUpDownControl", @type = "number", @placeholder = "TOTAL COST", @id = "TOTALCOST_LifeVests___0", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1" id="LifeVests">
+                            <button type="button" class="btn btn-danger btn-xs NegFeeMinusButton LifeVestsMinusButton Disable_Enable hidden" id="LifeVestsMinusButton" disabled><i class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-success btn-xs Disable_Enable NegFeePlusButton LifeVestsPlusButton" disabled><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------End OF LifeVests Area--------------------->
+                <!---------------------Others  Area--------------------------->
+                <div id="OthersArea">
+                    <div class="col-md-12 OthersRow Margin_top_carveout_negFee" id="_Others___0">
+                        <div class="col-md-1">
+                            <input type="checkbox" name="LOSs[0].NEGFeeDetail.Others[0].IsActive" id="CHECKBOX_Others___0" class="form-control NegFeeCheckbox OthersCheckBox checkbox-radio"><label><span></span></label>
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.HiddenFor(e => e.LOSs[0].NEGFeeDetail.Others[0].CarveOutType, new { @value = "Medication", @id = "NAME_Others___0" })
+                            <span class="theme_label"><label>OTHER</label></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Others[0].Reason, new { @class = "form-control Disable_Enable text-uppercase input-xs", @placeholder = "REASON", @disabled = "disabled", @id = "REASON_Others___0" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Others[0].Cost, new { @class = "form-control Disable_Enable input-xs ValueToRight removeUpDownControl", @type = "number", @placeholder = "COST", id = "COST_Others___0", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Others[0].Dose, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "DOSE", @disabled = "disabled", @id = "DOSE_Others___0" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.Others[0].Range1, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control Disable_Enable input-xs text-uppercase", id = "RANGE1_Others___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Others[0].Unit, new { @class = "form-control Disable_Enable input-xs removeUpDownControl", @type = "number", @placeholder = "UNITS", id = "UNITS_Others___0", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(e => e.LOSs[0].NEGFeeDetail.Others[0].Range2, new SelectList((System.Collections.IEnumerable)ViewData["MasterRangeTypes"], "RangeType", "RangeType"), "SELECT", new { @class = "form-control input-xs Disable_Enable text-uppercase", id = "RANGE2_Others___0", @disabled = "disabled" })
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.Others[0].FromDate, new { @class = "form-control input-xs DateTimeField Disable_Enable", @id = "FROM_DATE_Others___0", @placeholder = "MM/DD/YYYY", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.PratianUiDatePickerFor(e => e.LOSs[0].NEGFeeDetail.Others[0].ToDate, new { @class = "form-control input-xs  Disable_Enable", @id = "TO_DATE_Others___0", @placeholder = "MM/DD/YYYY", @disabled = "disabled" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.Others[0].TotalCost, new { @class = "form-control input-xs ValueToRight TOTAL_AMOUNT Disable_Enable removeUpDownControl", @type = "number", @placeholder = "TOTAL COST", @id = "TOTALCOST_Others___0", @disabled = "disabled" })
+                            <span class="DollarInput"><b>$</b></span>
+                        </div>
+                        <div class="col-md-1" id="Others">
+                            <button type="button" class="btn btn-danger btn-xs NegFeeMinusButton OthersMinusButton Disable_Enable hidden" id="OthersMinusButton" disabled><i class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-success btn-xs Disable_Enable NegFeePlusButton OthersPlusButton" disabled><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!---------------------End OF Others Area--------------------->
+            </div>
+        </div>
+        <!--------------------------Total cost Area--------------------------------->
+        <div class="col-md-12 Margin_top_carveout_negFee">
+            <div class="col-md-1">
+
+
+            </div>
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-1">
+
+
+            </div>
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-1">
+
+
+            </div>
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-1">
+                <span class="theme_label">@Html.LabelFor(e => e.LOSs[0].NEGFeeDetail.TotalCost)</span>
+            </div>
+            <div class="col-md-1">
+                @Html.TextBoxFor(e => e.LOSs[0].NEGFeeDetail.TotalCost, new { @class = "form-control ValueToRight removeUpDownControl input-xs", @type = "number", Value = 0, @id = "Total_Amount", @placeholder = "TOTAL COST" })
+                <span class="DollarInput"><b>$</b></span>
+            </div>
+            <div class="col-md-1">
+
+            </div>
+        </div>
+        <!--------------------------End of Total cost Area-------------------------->
+    </div>
+</form>

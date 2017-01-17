@@ -1,0 +1,91 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+@using PratianUI
+@using PortalTemplate.Helper
+<div class="x_panel border_on_panel" id="ICDDiv">
+    <div class="x_content zero_padding_bottom">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 zero-padding-left-right">
+            <span class="theme_label">@Html.LabelFor(e => e.ICDVersion)</span>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 zero-padding-left-right">
+            <div class="inline_block theme_label col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                @Html.PratianUiRadioButtonFor(e => e.ICDVersion, "Ver. 10", new { @checked = "checked", @id = "ver10", @Value = "1" })
+            </div>
+            <div class="inline_block theme_label col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                @Html.PratianUiRadioButtonFor(e => e.ICDVersion, "Ver. 9", new { @id = "ver9", @Value = "0" })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="x_content mozillamargintop">
+        <div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6  zero-padding-left-right">
+                <span class="theme_label"> @Html.LabelFor(e => e.ICDCodes[0].ICDCode) </span>
+            </div>
+            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-6  zero-padding-left-right">
+                <span class="theme_label"> <label> @Html.ShortNameFor(e => e.ICDCodes[0].ICDCodeDescription) </label> </span> <br />
+            </div>
+            <div class="col-lg-4 col-md-3 col-sm-3 col-xs-6 button-styles-xs  zero-padding-left-right">
+                <span class="theme_label"><label>ACTION</label></span> <br />
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div id="ICDArea">
+            @{
+                int i = 0;
+            }
+            @if (Model != null && Model.ICDCodes != null)
+            {
+                foreach (var item in Model.ICDCodes)
+                {
+                    <div class="ICDRow">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6  zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.ICDCodes[@i].ICDCode, new { @class = "form-control input-xs mandatory_field_halo icdCode_search_cum_dropdown icdCode loser_field summaryDataChange", @placeholder = "ICD CODE" })
+                            @Html.ValidationMessageFor(e => e.ICDCodes[@i].ICDCode)
+                        </div>
+                        <div class="col-lg-4 col-md-5 col-sm-5 col-xs-6  zero-padding-left-right">
+                            @Html.TextBoxFor(e => e.ICDCodes[@i].ICDCodeDescription, new { @class = "form-control input-xs mandatory_field_halo icdDescription_search_cum_dropdown icdDescription loser_field summaryDataChange", @placeholder = "DESCRIPTION" })
+                            @Html.ValidationMessageFor(e => e.ICDCodes[@i].ICDCodeDescription)
+                        </div>
+                        <div class="col-lg-4 col-md-3 col-sm-3 col-xs-6 button-styles-xs  zero-padding-left-right icdButtonArea">
+                            @if (Model.ICDCodes.Count() == i + 1 && Model.ICDCodes.Count() != 1)
+                            {
+                                <button class="btn btn-danger btn-xs delete_icd_btn" tabindex="-1" type="button"><i class="fa fa-minus"></i></button>
+                                <button class="btn btn-success btn-xs add_icd_btn loser_field" type="button"><i class="fa fa-plus"></i></button>
+                            }
+                            else if (Model.ICDCodes.Count() == 1)
+                            {
+                                <button class="btn btn-success btn-xs add_icd_btn loser_field" type="button"><i class="fa fa-plus"></i></button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-danger btn-xs delete_icd_btn" tabindex="-1" type="button"><i class="fa fa-minus"></i></button>
+                            }
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                            i++;
+                }
+            }
+            else
+            {
+                <div class="ICDRow">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6  zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.ICDCodes[0].ICDCode, new { @class = "form-control input-xs mandatory_field_halo icdCode_search_cum_dropdown icdCode loser_field summaryDataChange", @placeholder = "ICD CODE" })
+                        @Html.ValidationMessageFor(e => e.ICDCodes[0].ICDCode)
+                    </div>
+                    <div class="col-lg-4 col-md-5 col-sm-5 col-xs-6  zero-padding-left-right">
+                        @Html.TextBoxFor(e => e.ICDCodes[0].ICDCodeDescription, new { @class = "form-control input-xs mandatory_field_halo icdDescription_search_cum_dropdown icdDescription loser_field summaryDataChange", @placeholder = "DESCRIPTION" })
+                        @Html.ValidationMessageFor(e => e.ICDCodes[0].ICDCodeDescription)
+                    </div>
+                    <div class="col-lg-4 col-md-3 col-sm-3 col-xs-6 button-styles-xs  zero-padding-left-right icdButtonArea">
+                        <button class="btn btn-success btn-xs add_icd_btn loser_field" type="button"><i class="fa fa-plus"></i></button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>

@@ -1,0 +1,393 @@
+﻿@model AHC.CD.WebUI.MVC.Models.MasterDataNewViewModel.PracticePaymentAndRemittanceMasterDataViewModel
+
+@{
+    ViewBag.Title = "PaymentRemittance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/PaymentRemittance.js"></script>
+
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> Payment and Remittance
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="PaymentRemittanceApp" ng-controller="PaymentRemittanceController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Payment and Remittance Management
+                        <span class="pull-right">
+                            <button ng-click="addPaymentRemittances()" class="btn btn-xs btn-success" ng-disabled="AddMode || EditMode"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+
+                        @* List View *@
+                        <div ng-show="ListMode">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Billing Department</th>
+                                        <th>Name *</th>
+                                        <th>Telephone</th>
+                                        <th>Fax</th>
+                                        <th>Address</th>
+                                        <th>E-Mail Address</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="License in CurrentPage track by $index">
+                                        <td>{{License.BillingDepartment}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.FirstName}} {{License.PaymentAndRemittancePerson.MiddleName}} {{License.PaymentAndRemittancePerson.LastName}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.Telephone}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.Fax}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.Street}},{{License.PaymentAndRemittancePerson.Building}},{{License.PaymentAndRemittancePerson.City}},{{License.PaymentAndRemittancePerson.State}},{{License.PaymentAndRemittancePerson.Country}}-{{License.PaymentAndRemittancePerson.ZipCode}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.EmailAddress}}</td>
+                                        <td>
+                                            <a class="btn btn-default btn-xs" ng-click="viewPaymentRemittances(License)"><i class="fa fa-eye"></i></a>
+                                            <a class="btn btn-info btn-xs" ng-click="editPaymentRemittances(License)"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="clearfix"></div>
+                            <div ng-show="activeMessageDiv=='alertPaymentRemittancePerson'" class="alert alert-danger" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                            </div>
+                            <div ng-show="activeMessageDiv=='paymentRemittancePersonSuccessMsg'" class="alert alert-success" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        </div>
+
+
+                        @* Add/Edit mode *@
+                        <div ng-show="AddMode || EditMode" class="form-style">
+                            <fieldset>
+                                <legend>
+                                    Payment and Remittance
+                                </legend>
+                                <form id="PaymentRemittance">
+                                    <div class="col-lg-12">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+                                        <span ng-if="tempSecondObject.MasterPracticePaymentRemittancePersonID">
+                                            @Html.HiddenFor(model => model.MasterPracticePaymentRemittancePersonID, new { id = "MasterPracticePaymentRemittancePersonID", Value = "{{tempSecondObject.MasterPracticePaymentRemittancePersonID}}", data_ng_model = "tempSecondObject.MasterPracticePaymentRemittancePersonID" })
+                                        </span>
+                                        <span ng-if="tempSecondObject.PaymentAndRemittancePerson.MasterEmployeeID">
+                                            @Html.HiddenFor(model => model.PaymentAndRemittancePerson.MasterEmployeeID, new { id = "MasterEmployeeID", Value = "{{tempSecondObject.PaymentAndRemittancePerson.MasterEmployeeID}}", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.MasterEmployeeID" })
+                                        </span>
+                                        <div class="clearfix"></div>
+                                        <br />
+                                        @*<fieldset id="abc" ng-disabled="remittance=='Yes'">
+                                        *@
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.ElectronicBillingCapabilityYesNoOption, htmlAttributes: new { @class = "control-label small" })
+                                                <div>
+                                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                                    {
+                                                    <label class="radio-inline">
+                                                        @Html.RadioButtonFor(model => model.ElectronicBillingCapabilityYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.ElectronicBillingCapabilityYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                                    </label>
+                                                    }
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.ElectronicBillingCapabilityYesNoOption, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.BillingDepartment, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.BillingDepartment, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.BillingDepartment", placeholder = "Billing Department" } })
+                                                @Html.ValidationMessageFor(model => model.BillingDepartment, "", new { @class = "text-danger" })
+                                            </div>
+
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.CheckPayableTo, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.CheckPayableTo, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.CheckPayableTo", placeholder = "Check Payable To" } })
+                                                @Html.ValidationMessageFor(model => model.CheckPayableTo, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.Office, htmlAttributes: new { @class = "control-label small" })
+
+                                                @Html.EditorFor(model => model.Office, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.Office", placeholder = "Office" } })
+
+                                                @Html.ValidationMessageFor(model => model.Office, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.FirstName, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.FirstName, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.FirstName", placeholder = "First Name" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.FirstName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.MiddleName, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.MiddleName, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.MiddleName", placeholder = "Middle Name" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.MiddleName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.LastName, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.LastName, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.LastName", placeholder = "Last Name" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.LastName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Street, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.Street, new { htmlAttributes = new { @class = "form-control input-sm", data_val = "true", data_val_required = "Please enter Street/PO Box No: *.", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.Street", placeholder = "Street Address" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.Street, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Building, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.Building, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.Building", placeholder = "Apartment/Unit #" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.Building, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.City, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.TextBoxFor(model => model.PaymentAndRemittancePerson.City, new { @class = "form-control input-sm", data_val = "true", data_val_required = "Please enter City *.", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.City", placeholder = "City", data_ng_change = "addressAutocomplete2(tempSecondObject.PaymentAndRemittancePerson.City)", data_selectmethod = "selectedLocation2", data_autocomplete = "addressautocomplete" })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.City, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.State, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.State, new { htmlAttributes = new { @class = "form-control input-sm", data_val = "true", data_val_required = "Please enter State *.", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.State", placeholder = "State Name" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.State, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.ZipCode, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.ZipCode, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.ZipCode", placeholder = "Zip Code" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.ZipCode, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-3 form-group" ng-init="tempSecondObject.PaymentAndRemittancePerson.Country = 'United States'">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Country, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.Country, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.Country", placeholder = "Country name" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.Country, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.County, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.County, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.County", placeholder = "County name" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.County, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Telephone, htmlAttributes: new { @class = "control-label small" })
+                                                <div>
+                                                    <span ng-if="!tempSecondObject.CountryCodeTelephone" ng-init="tempSecondObject.CountryCodeTelephone='+1'"></span>
+                                                    <div class="input-group">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('TelephoneCountryCode'+$index)"> {{tempSecondObject.CountryCodeTelephone}} <span class="caret"></span></button>
+                                                            @*  <input type="hidden" value="{{tempSecondObject.CountryCodeTelephone}}" name="PaymentAndRemittancePerson.CountryCodeTelephone">*@
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='TelephoneCountryCode{{$index}}'>
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select ng-model="tempSecondObject.CountryCodeTelephone" name="PaymentAndRemittancePerson.CountryCodeTelephone">
+                                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSecondObject.CountryCodeTelephone">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        @Html.EditorFor(model => model.PaymentAndRemittancePerson.Telephone, new { htmlAttributes = new { @class = "form-control", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.Telephone", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.CountryCodeTelephone, "", new { @class = "text-danger" })
+                                                    @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.Telephone, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Fax, htmlAttributes: new { @class = "control-label small" })
+                                                <div>
+                                                    <span ng-if="!tempSecondObject.CountryCodeFax" ng-init="tempSecondObject.CountryCodeFax='+1'"></span>
+                                                    <div class="input-group">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('CountryCodeFax'+$index)"> {{tempSecondObject.CountryCodeFax}} <span class="caret"></span></button>
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='CountryCodeFax{{$index}}'>
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select ng-model="tempSecondObject.CountryCodeFax" name="PaymentAndRemittancePerson.CountryCodeFax">
+                                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSecondObject.CountryCodeFax">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        @Html.EditorFor(model => model.PaymentAndRemittancePerson.Fax, new { htmlAttributes = new { @class = "form-control", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.Fax", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.CountryCodeFax, "", new { @class = "text-danger" })
+                                                    @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.Fax, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.EmailAddress, htmlAttributes: new { @class = "control-label small" })
+                                                @Html.EditorFor(model => model.PaymentAndRemittancePerson.EmailAddress, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PaymentAndRemittancePerson.EmailAddress", placeholder = "Email Address" } })
+                                                @Html.ValidationMessageFor(model => model.PaymentAndRemittancePerson.EmailAddress, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                        @*
+                                            </fieldset>*@
+                                        <div class="clearfix"></div>
+                                        <div ng-show="activeMessageDiv=='alertPayment'" class="alert alert-danger" role="alert">
+                                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="control-group">
+                                                <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+                                                <button class="btn btn-success btn-sm pull-right" ng-show="AddMode" ng-click="savePaymentRemittances()">Add</button>
+                                                <button class="btn btn-info btn-sm pull-right" ng-show="EditMode" ng-click="updatePaymentRemittances()">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </fieldset>
+                        </div>
+
+
+                        @* View Mode *@
+                        <div ng-show="ViewMode" class="form-style">
+                            <fieldset>
+                                <legend>
+                                    Payment and Remittance
+                                </legend>
+                                <form id="PaymentRemittance">
+                                    <div class="col-lg-12">
+                                        <div class="clearfix"></div>
+                                        <br />
+                                        @*<fieldset id="abc" ng-disabled="remittance=='Yes'">*@
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.ElectronicBillingCapabilityYesNoOption, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.ElectronicBillingCapabilityYesNoOption}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.BillingDepartment, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.BillingDepartment}}</i>
+                                            </div>
+
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.CheckPayableTo, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.CheckPayableTo}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.Office, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.Office}}</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.FirstName, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.FirstName}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.MiddleName, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.MiddleName}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.LastName, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.LastName}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Street, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Street}}</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Building, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Building}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.City, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.City}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.State, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.State}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.ZipCode, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.ZipCode}}</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-lg-3 form-group" ng-init="tempSecondObject.PaymentAndRemittancePerson.Country = 'United States'">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Country, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Country}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.County, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.County}}</i>
+                                            </div>
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Telephone, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Telephone}}</i>
+                                            </div>
+
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Fax, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Fax}}</i>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group col-lg-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.EmailAddress, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.EmailAddress}}</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*</fieldset>*@
+                                   
+                                    <div class="col-lg-12">
+                                        <div class="control-group">
+                                            <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </fieldset>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+

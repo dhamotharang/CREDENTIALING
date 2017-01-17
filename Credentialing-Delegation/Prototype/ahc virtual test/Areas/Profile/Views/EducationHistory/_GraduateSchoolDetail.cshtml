@@ -1,0 +1,204 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Graduate/Medical School Details
+        </legend>
+        <div class="legend2 pull-right">
+            <button type="button" ng-click="showGraduateDetailHistory('GSH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+            <div id="GSH" class="loading pull-right loadingHistory"><img src=@Url.Content("~/Content/Images/ajax-loader.gif") width="20" height="20"></div>
+        </div>
+        <div id="grad" class="panel-body">
+            <div class="form-style">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table ng-hide="GraduationDetailViewModel.length > 0 || visibilityControl == ('addgraduationDetailViewModel')" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No Data Available for Graduate/Medical School Details! Please click on
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                    {
+                                    <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addgraduationDetailViewModel')" id="noDataAddNewGraduationDetails">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                    }
+                                    to add new Graduate/Professional School Information
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-hide="GraduationDetailViewModel.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <th>School</th>
+                                <th>Degree Awarded</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Supporting Document</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="graduationDetailViewModel in GraduationDetailViewModel track by $index">
+                            <tr>
+                                <td class="wrap-words">{{graduationDetailViewModel.SchoolInformation.SchoolName}}</td>
+                                <td ng-if="graduationDetailViewModel.QualificationDegree" class="wrap-words">{{graduationDetailViewModel.QualificationDegree }}</td>
+                                <td ng-if="!graduationDetailViewModel.QualificationDegree" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="graduationDetailViewModel.StartDate" class="wrap-words">{{graduationDetailViewModel.StartDate | date:'MM-dd-yyyy'}}</td>
+                                <td ng-if="!graduationDetailViewModel.StartDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="graduationDetailViewModel.EndDate" class="wrap-words">{{graduationDetailViewModel.EndDate | date:'MM-dd-yyyy'}}</td>
+                                <td ng-if="!graduationDetailViewModel.EndDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="graduationDetailViewModel.CertificatePath" class="wrap-words">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                                    {
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{graduationDetailViewModel.CertificatePath}}" target="_blank" title="{{graduationDetailViewModel.CertificatePath}}"><i class="fa fa-file" title=""></i></a>
+                                    }
+                                </td>
+                                <td ng-if="!graduationDetailViewModel.CertificatePath" class="wrap-words"><i>Not Available</i></td>
+                                <td class="wrap-words">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                    {
+                                    <button tooltip data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewgraduationDetailViewModel')"><i class="fa fa-eye"></i></button>}
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                    {
+                                    <button tooltip data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editgraduationDetailViewModel', graduationDetailViewModel)"><i class="fa fa-edit"></i></button>
+                                    }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                    {
+                                    <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initGSchoolDetailWarning(graduationDetailViewModel);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                    <button tooltip data-toggle="tooltip" id="addNewGraduationDetails" data-placement="right" title="Add New" ng-hide="$index+1!=GraduationDetailViewModel.length" ng-click="operateViewAndAddControl('addgraduationDetailViewModel')" class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                            {
+                            <tr ng-show="visibilityControl==($index+'_editgraduationDetailViewModel')">
+                                <td colspan="6" id="graduationEditDiv{{$index}}" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditGraduationDetails.cshtml")
+                                </td>
+                            </tr>
+                            }
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                            {
+                            <tr ng-show="visibilityControl==($index+'_viewgraduationDetailViewModel')">
+                                <td colspan="6" id="{{$index}}" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewGraduationDetails.cshtml")
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div ng-show="activeMessageDiv=='addedNewPGDetails'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div ng-show="activeMessageDiv=='removePGDetails'">
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error Lists :<br />
+                            <span ng-repeat="err in errorPGDetails track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                {
+                <div ng-show="visibilityControl=='addgraduationDetailViewModel'">
+                    <div id="newGraduationFormDiv">
+                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditGraduationDetails.cshtml")
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </fieldset>
+    <div class="modal fade" id="GSchoolWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="removeGSchool">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="modal-body">
+                        Do you really want to remove <b>{{tempGSchool.SchoolInformation.SchoolName}}</b> from your Graduate/Medical School Details list ?
+                        <input type="hidden" name="EducationDetailID" value="{{tempGSchool.EducationDetailID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" ng-click="removeGSchool(GraduationDetailViewModel)">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <fieldset ng-if="showGraduateDetailTable">
+        <legend>
+            Graduate/Medical School Details History
+        </legend>
+        <div class="legend2 pull-right">
+            <button type="button" ng-click="cancelGraduateDetailHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+        </div>
+        <div id="grad" class="panel-body">
+            <div class="form-style">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table ng-hide="GraduateArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No History Available for Graduate/Medical School Details!
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-hide="GraduateArray.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <th>School</th>
+                                <th>Degree Awarded</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Supporting Document</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="graduationDetailViewModelHistory in GraduateArray track by $index">
+                            <tr>
+                                <td class="wrap-words">{{graduationDetailViewModelHistory.SchoolInformation.SchoolName}}</td>
+                                <td ng-if="graduationDetailViewModelHistory.QualificationDegree" class="wrap-words">{{graduationDetailViewModelHistory.QualificationDegree }}</td>
+                                <td ng-if="!graduationDetailViewModelHistory.QualificationDegree" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="graduationDetailViewModelHistory.StartDate" class="wrap-words">{{graduationDetailViewModelHistory.StartDate | date:'MM-dd-yyyy'}}</td>
+                                <td ng-if="!graduationDetailViewModelHistory.StartDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="graduationDetailViewModelHistory.EndDate" class="wrap-words">{{graduationDetailViewModelHistory.EndDate | date:'MM-dd-yyyy'}}</td>
+                                <td ng-if="!graduationDetailViewModelHistory.EndDate" class="wrap-words"><i>Not Available</i></td>
+                                <td ng-if="graduationDetailViewModelHistory.CertificatePath" class="wrap-words">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                                    {
+                                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{graduationDetailViewModelHistory.CertificatePath}}" target="_blank" title="{{graduationDetailViewModelHistory.CertificatePath}}"><i class="fa fa-file" title=""></i></a>
+                                    }
+                                </td>
+                                <td ng-if="!graduationDetailViewModelHistory.CertificatePath" class="wrap-words"><i>Not Available</i></td>
+                                <td class="wrap-words">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                    {
+                                        <button tooltip data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewgraduationDetailViewModelHistory')"><i class="fa fa-eye"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                            {
+                                <tr ng-show="visibilityControl==($index+'_viewgraduationDetailViewModelHistory')">
+                                    <td colspan="6" id="{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewGraduationDetailsHitory.cshtml")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>

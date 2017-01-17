@@ -1,0 +1,134 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.CalypsoAI.AIListViewModel
+@using PortalTemplate.Helper
+<div class="CalypsoAIDiv">
+    <h5 style="color:red;padding-left:8px;">Review for Duplicate Services:</h5>
+    @if (Model != null && (Model.VisitDuplicacyResult != null && Model.VisitDuplicacyResult.Count() > 0) || (Model.AdmissionDuplicacyResult != null && Model.AdmissionDuplicacyResult.Count() > 0))
+    {
+        if (Model != null && Model.VisitDuplicacyResult != null && Model.VisitDuplicacyResult.Count() > 0)
+        {
+            <table class="table" style="font-weight:bold" onmouseover="initPop()">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].ReferenceNumber)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].CPTCode)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].CPTDescription)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].Units)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].SVCorAttendingProvider)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].Specialty)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].DOS)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].Facility)</th>
+                    </tr>
+                </thead>
+                <tbody id="CalypsoAITbody" onmouseover="initPop()">
+                    @foreach (var item in Model.VisitDuplicacyResult)
+                    {
+                        <tr>
+                            <td> @Html.DisplayFor(e => item.ReferenceNumber) </td>
+                            <td> @Html.DisplayFor(e => item.CPTCode) </td>
+                            @if (item.CPTDescription != null && item.CPTDescription.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.CPTDescription).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="CPT Description" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.CPTDescription)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.CPTDescription) </td>
+                            }
+                            <td> @Html.DisplayFor(e => item.Units) </td>
+                            @if (item.SVCorAttendingProvider != null && item.SVCorAttendingProvider.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.SVCorAttendingProvider).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="SVC PROVIDER" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.SVCorAttendingProvider)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.SVCorAttendingProvider) </td>
+                            }
+                            @if (item.Specialty != null && item.Specialty.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.Specialty).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="SPECIALTY" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.Specialty)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.Specialty) </td>
+                            }
+                            <td> @Html.DisplayFor(e => item.DOS) </td>
+                            @if (item.Facility != null && item.Facility.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.Facility).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="FACILITY" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.Facility)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.Facility) </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+        }
+    
+        if (Model != null && Model.AdmissionDuplicacyResult != null && Model.AdmissionDuplicacyResult.Count() > 0)
+        {
+            <table class="table" style="font-weight:bold" onmouseover="initPop()">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].ReferenceNumber)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].CPTCode)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].CPTDescription)</th>
+                        <th class="theme_label">@Html.DisplayName("ATT PROVIDER")</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].Specialty)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].AdmissionDate)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].DischargeDate)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.VisitDuplicacyResult[0].Facility)</th>
+                    </tr>
+                </thead>
+                <tbody id="CalypsoAITbody" onmouseover="initPop()">
+                    @foreach (var item in Model.AdmissionDuplicacyResult)
+                    {
+                        <tr>
+                            <td> @Html.DisplayFor(e => item.ReferenceNumber) </td>
+                            <td> @Html.DisplayFor(e => item.CPTCode) </td>
+                            @if (item.CPTDescription != null && item.CPTDescription.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.CPTDescription).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="CPT Description" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.CPTDescription)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.CPTDescription) </td>
+                            }
+                            @if (item.SVCorAttendingProvider != null && item.SVCorAttendingProvider.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.SVCorAttendingProvider).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="SVC PROVIDER" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.SVCorAttendingProvider)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.SVCorAttendingProvider) </td>
+                            }
+                            @if (item.Specialty != null && item.Specialty.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.Specialty).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="SPECIALTY" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.Specialty)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.Specialty) </td>
+                            }
+                            <td> @Html.DisplayFor(e => item.AdmissionDate) </td>
+                            <td> @Html.DisplayFor(e => item.DischargeDate) </td>
+                            @if (item.Facility != null && item.Facility.Length > 10)
+                            {
+                                <td> @Html.DisplayFor(e => item.Facility).ToString().Substring(0, 10) <span style="cursor:pointer" data-container="body" data-toggle="popover" title="FACILITY" data-trigger="hover" data-placement="top" data-html="true" data-content="@Html.DisplayFor(e => item.Facility)" onmouseover="initPop()"><b>...</b></span> </td>
+                            }
+                            else
+                            {
+                                <td> @Html.DisplayFor(e => item.Facility) </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+    else
+    {
+        <h5 style="text-align:center">No Duplicate Match found.</h5>
+    }
+</div>

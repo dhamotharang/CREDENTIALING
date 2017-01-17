@@ -1,0 +1,71 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.MedicaidInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<form class="MedicaidInformationForm">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+               Medicaid Information
+            </legend>
+            <div>
+                
+                <div class="form-group col-md-12 zero-padding-left-right-div">
+
+                    <div class="col-md-4">
+                        @*    @Html.HiddenFor(model => model.MedicaidInformationID, new { ng_value = "tempObject.MedicaidInformationID" })*@
+                        @Html.LabelFor(model => model.LicenseNumber, new { @class = "  control-label small" })
+                        <div>
+                            <i class="data-label">{{MedicaidInformation.LicenseNumber}}</i>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.State, new { @class = "  control-label small" })
+                        <div>
+                            <i class="data-label">{{MedicaidInformation.State}}</i>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.IssueDate, new { @class = "  control-label small" })
+                        <div>
+                            <i class="data-label">{{MedicaidInformation.IssueDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                        </div>
+                    </div>
+
+                </div>
+                        <div class="clearfix"></div>
+                <div class="form-group col-md-12 zero-padding-left-right-div">
+
+                    <div class="col-lg-12">
+                        <label class="control-label small">Supporting Document</label>
+                        <div ng-show="MedicaidInformation.CertificatePath">
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                            {
+                                <i class="data-label"><a href="/Document/View?path={{MedicaidInformation.CertificatePath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Medicaid Certificate"><i class="fa fa-file"></i></a></i>
+                            }
+                        </div>
+                        <div ng-hide="MedicaidInformation.CertificatePath">
+                            <i class="data-label">Not Available</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div ng-show="activeMessageDiv=='updatedMedicaid'+$index" class="alert alert-{{messageType}}" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="operateEditControl($index+'_editMedicaidInformation',MedicaidInformation)">Edit</button>
+                        }
+                    </div>
+                </div>
+                    <div class="clearfix"></div>
+                </div>
+          
+            </fieldset>
+        </div>
+</form>

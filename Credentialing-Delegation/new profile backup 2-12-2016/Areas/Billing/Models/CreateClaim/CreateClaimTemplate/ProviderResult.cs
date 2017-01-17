@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace PortalTemplate.Areas.Billing.Models.CreateClaim.CreateClaimTemplate
+{
+    public class ProviderResult
+    {
+        public int ProviderId { get; set; }
+
+        public string ProviderNPI { get; set; }
+
+        public string ProviderFirstName { get; set; }
+
+        public string ProviderMiddleName { get; set; }
+
+        public string ProviderFirstAddress { get; set; }
+
+        public string ProviderSecondAddress { get; set; }
+
+        public string ProviderCity { get; set; }
+
+        public string ProviderState { get; set; }
+
+        public string ProviderZip { get; set; }
+
+        public string ProviderPhoneNo { get; set; }
+
+
+        public string ProviderLastOrOrganizationName { get; set; }
+
+        public string ProviderTaxonomy { get; set; }
+
+        public string ProviderFullName
+        {
+            get
+            {
+                return ProviderFirstName + " " + ProviderMiddleName + " " + ProviderLastOrOrganizationName;
+            }
+        }
+
+        public string ProviderFullAddress  {
+            get
+            {
+                return ProviderFirstAddress + " " + ProviderSecondAddress;
+            }
+        }
+
+    }
+}

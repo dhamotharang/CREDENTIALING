@@ -1,0 +1,24 @@
+﻿@model PortalTemplate.Areas.Auditing.Models.CreateAuditing.CreateAuditingViewModel
+<p-link filepath="~/Areas/Auditing/Contents/CSS/AppCss/EditAuditing/NonMinified/_EditAuditing.css" rel="stylesheet"></p-link>
+<div id="SaveAuditingDetailsFormDiv">
+    @using (Ajax.BeginForm("SaveAuditDetails", "/Auditing/Auditing", new AjaxOptions { HttpMethod = "POST", LoadingElementId = "SaveAuditingDetails", OnBegin = "validateForm", OnSuccess = "onSuccessFn" }, new { id = "savedetailsForm" }))
+    {
+        <div>
+        <div class="row zero-padding-left-right">
+            @***************Encounter Audit Decision************************@
+            @Html.Partial("~/Areas/Auditing/Views/EditAuditing/_EncounterAudit.cshtml", Model.EncounterDetails)
+            @***************Coding Audit Information************************@
+            @Html.Partial("~/Areas/Auditing/Views/EditAuditing/_CodingDetailsAudit.cshtml", Model.CodingDetails)
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <a class="btn btn-sm btn-warning pull-left" onclick="TabManager.closeCurrentlyActiveTab()">Cancel</a>
+            @*<a data-toggle="tooltip" title="" class="btn btn-sm btn-primary tab-navigation pull-right" data-tab-val="Auditing List" data-tab-action="Auditing List" data-tab-title="Auditing List" data-tab-container="fullBodyContainer" data-tab-autoflush="false" data-tab-path="~/Views/PBAS/AuditingManagement/QueueList/_QueueList.cshtml" onclick="TabManager.closeCurrentlyActiveTab()">Save as Draft</a>*@
+            <button type="submit" class="btn btn-sm btn-primary pull-right tab-navigation">Update</button>
+            @*<a class="btn btn-sm btn-danger pull-right">Disagree</a>
+            <a class="btn btn-sm btn-success pull-right">Agree</a>*@
+        </div>
+    </div>
+    }
+</div>
+<p-script filepath="~/Areas/Auditing/Scripts/AppJs/EditAuditing/NonMinified/_EditAuditing.js"></p-script>

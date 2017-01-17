@@ -1,0 +1,110 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.CdsInfo>
+
+@{
+    var EditCDSInfo = 0;
+    bool IsEdit = true;
+}
+
+<!--label and value coming side by side-->
+@***************State License Edit*********************************@
+
+
+<fieldset class="fsStyle" id="AddEditCDSInfo">
+   
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            @foreach (var item in Model)
+            {
+                if (item == null)
+                {
+                    <span>Add CDS Information</span>
+                    IsEdit = false;
+                    break;
+                }
+            }
+            @if (IsEdit)
+            {
+                <span>EDIT CDS Information</span>
+            }
+        </span>
+    </legend>
+
+@foreach (var item in Model)
+{
+    using (Ajax.BeginForm("AddCDSInfo", "Licenses", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "CDSInfo" }))
+    {
+        EditCDSInfo = EditCDSInfo + 1;
+        
+        <div class="x_content zero-padding-left mutiple-data">
+@if (item != null)
+{
+    <div class="SubHeaderSpacing1">
+        <span class="text-uppercase TableHeading">EDIT CDS Information-@EditCDSInfo</span>
+    </div>
+}
+else
+{ }
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.CDS)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    @Html.TextBoxFor(m => item.CDS, new { @class = "form-control input-xs", placeholder = "CDS" })
+                    @Html.ValidationMessageFor(m => item.CDS)
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.StateOfRegistration)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    @Html.TextBoxFor(m => item.StateOfRegistration, new { @class = "form-control input-xs", placeholder = "STATE OF REGISTRATION" })
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.IssueDate)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    @Html.PratianUiDatePickerFor(m => item.IssueDate, new { @class = "form-control input-xs", placeholder = "ISSUE DATE" })
+                    @*@Html.TextBoxFor(m => item.IssueDate, new { @class = "form-control input-xs", placeholder = "ISSUE DATE" })*@
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.ExpirationDate)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    @Html.PratianUiDatePickerFor(m => item.ExpirationDate, new { @class = "form-control input-xs", placeholder = "EXPIRY DATE" })
+                    @*@Html.TextBoxFor(m => item.ExpirationDate, new { @class = "form-control input-xs", placeholder = "EXPIRY DATE" })*@
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.SupportingDocumentPath) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                @*<span class="col-lg-6 nopadding">
+                    <span class="theme_label_data">@Html.TextBoxFor(e => item.SupportingDocumentPath, new { @class = "form-control input-xs", @type = "file" })</span>
+                </span>*@
+                <span class="col-lg-6 input-group  nopadding">
+                    @{
+string InputId = "UploadCds" + EditCDSInfo;
+string InputUploadId = "InputCds" + EditCDSInfo;
+                    }
+                    <input id=@InputId type="text" class="form-control input-xs" readonly placeholder="Document">
+                    <span class="input-group-addon File_uploadStyle" onclick="$(@InputUploadId).click();"><i class="fa fa-upload"></i></span>
+                    <input id=@InputUploadId style="display:none" onchange="$(@InputId).val(this.value);" type="file">
+
+            </div>
+        </div>
+
+    }
+}
+    <div style="padding-top:10px;" class="row col-lg-12 zero-padding-left-right">
+        @*<input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save">*@
+        <button class="btn btn-success btn-xs yahanClickKar list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetCDSInformationPartial?model=@Model&ActionType=View" data-tab-container="CDSInfo" value="">Save</button>
+        <button class="btn btn-danger btn-xs yahanClickKar list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetCDSInformationPartial?model=@Model&ActionType=View" data-tab-container="CDSInfo" value="">Cancel</button>
+   </div>
+</fieldset>

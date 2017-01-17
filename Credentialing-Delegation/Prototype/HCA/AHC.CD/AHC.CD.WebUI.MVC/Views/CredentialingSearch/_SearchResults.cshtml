@@ -1,0 +1,47 @@
+﻿
+<br />
+<table class="table table-bordered table-hover table-condensed alignTableStyle">
+
+    <thead>
+        <tr>
+            <th>Application Number</th>
+            <th>NPI Number</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Group</th>
+            <th>Plan</th>
+            <th>Status</th>
+            <th rowspan="2">Action</th>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="Filter Application" class="form-control input-sm" ng-model="search.ApplicationNumber" /></td>
+            <td><input type="text" placeholder="Filter NPI" class="form-control input-sm" ng-model="search.NPI" /></td>
+            <td><input type="text" placeholder="Filter First Name" class="form-control input-sm" ng-model="search.FirstName" /></td>
+            <td><input type="text" placeholder="Filter Last Name" class="form-control input-sm" ng-model="search.LastName" /></td>
+            <td><input type="text" placeholder="Filter Group" class="form-control input-sm" ng-model="search.Group" /></td>
+            <td><input type="text" placeholder="Filter Plan" class="form-control input-sm" ng-model="search.Plan" /></td>
+            <td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.Status" /></td>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr ng-repeat="p in Providers | filter:{Application:search.ApplicationNumber,NPI:search.NPI,FirstName:search.FirstName,LastName:search.LastName,Group:search.Group,Plan:search.Plan,Status:search.Status}">
+            <td>{{p.ApplicationNumber}}</td>
+            <td>{{p.NPI}}</td>
+            <td>{{p.FirstName}}</td>
+            <td>{{p.LastName}}</td>
+            <td>{{p.Group}}</td>
+            <td>{{p.Plan}}</td>
+            @*<td><i class="fa fa-spinner"></i>{{p.Status}}</td>*@
+            <td><a href="#" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="{{p.Status}}"><i ng-class="{'Approved':'fa fa-2x fa-check-circle-o', 'Initiated':'fa fa-2x fa-spinner','ReProcess':'fa fa-2x fa-recycle', 'Rejected':'fa fa-2x fa-times-circle-o'}[p.Status]"></i></a></td>
+            <td>
+                @* <a class="btn btn-primary btn-sm" href="~/Profile/MasterProfile/Index" data-toggle="tooltip" data-placement="right" title="View Profile" target="_blank"><i class="fa fa-search-plus"></i></a>*@
+                <a class="btn btn-primary btn-sm" ng-click=""><i class="fa fa-eye"></i></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+@*<p><strong>Page:</strong> {{tableParams.page()}}</p>
+<p><strong>Count per page:</strong> {{tableParams.count()}}</p>*@

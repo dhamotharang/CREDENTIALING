@@ -1,0 +1,184 @@
+﻿@{
+    ViewBag.Title = "EmailTemplate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AHC.CD.WebUI.MVC.Models.EmailTemplate.EmailTemplateViewModel
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/bootstrap-colorpicker-module.js"></script>
+<script src="~/Scripts/Lib/angular-wysiwyg.js"></script>
+<script src="~/Scripts/Custom/Email%20Template/EmailTemplate.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>
+<div id="page-wrapper">
+    <div class="container-fluid" ng-app="EmailTemplateApp" ng-controller="EmailTemplateController">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="~/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> E-Mail Template
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="panel panel-default content-panel" id="templateList">
+                <div class="panel-heading">
+                    Email Templates List
+                    <button style="cursor: pointer; text-decoration: none;" ng-class="{disabled:loadingAjax}" ng-click="AddOrSaveEmailTemplate()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-plus"></i>Add New Email Template</button>
+                </div>
+                <div class="panel-body" ng-if="!AddNewEmailTemplate" ng-cloak>
+                    <div ng-show="loadingAjax" class="progress col-lg-12" ng-cloak>
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+                    <div ng-show="!loadingAjax && data.length<1">
+                        <label>No Email Templates Available.</label>
+                    </div>
+                    <div ng-show="!loadingAjax && data.length>0" ng-cloak>
+                        <table ng-table="tableParams" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                            <tbody ng-repeat="c in $data track by $index">
+                                <tr>
+                                    <td class=" wrap-words" data-title="'Action'" header-class="text-centre" sortable="'Action'" filter="{ 'Action': 'text' }">{{c.Action}}</td>
+                                    <td class=" wrap-words" data-title="'Title'" header-class="text-left" sortable="'Title'" filter="{ 'Title': 'text' }">{{c.Title}}</td>
+                                    <td class=" wrap-words" data-title="'Description'" header-class="text-left" sortable="'Description'" filter="{ 'Description': 'text' }">{{c.Description}}</td>
+                                    <td class=" wrap-words" data-title="'Subject'" header-class="text-left" sortable="'Subject'" filter="{ 'Subject': 'text' }">{{c.Subject}}</td>
+                                    <td class=" wrap-words" data-title="'Edit'" header-class="text-left">
+                                        <button class="btn btn-xs btn-primary" ng-click="EditEmailTemplate(c);" tooltip="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class=" fa fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="c.EditStatus">
+                                    <td colspan="5" class="col-md-12">
+                                        <div class="form-style">
+                                            <form id="EditEmailTemplate" ng-submit="AddingEmailTemplate('EditEmailTemplate')">
+                                                <fieldset class="">
+                                                    <legend>
+                                                        Add Email Template
+                                                    </legend>
+                                                    <div id="newOtherLegalFormDiv">
+                                                        <div class="col-lg-12 zero-padding-left-right-div ng-scope">
+                                                            @Html.HiddenFor(model => model.EmailTemplateID, new { ng_value = "tempObject.EmailTemplateID" })
+                                                            @Html.HiddenFor(model => model.StatusType, new { ng_value = "1" })
+                                                            <div class="col-lg-6 form-group">
+                                                                <label class="control-label small">Action</label><select name="Action" id="Action" ng-model="tempObject.Action" class="form-control input-sm">
+                                                                    <option selected disabled ng-if="!tempObject.Action">--select--</option>
+                                                                    <option value="Profile Management Updates">Profile Management Updates</option>
+                                                                </select>
+                                                                @*@Html.TextBoxFor(model => model.Action, new { @class = "form-control input-sm", data_ng_model = "tempObject.Action" })*@
+                                                            </div>
+                                                            <div class="col-lg-6 form-group">
+                                                                <label class="control-label small">Email Type</label>
+                                                                <select name="EmailNotificationTypeCategory" id="EmailNotificationTypeCategory" ng-model="tempObject.EmailNotificationTypeCategory" class="form-control input-sm">
+                                                                    <option selected ng-if="!tempObject.EmailNotificationTypeCategory" value="">--select--</option>
+                                                                    <option value="1">Alert</option>
+                                                                    <option value="2">Reminder</option>
+                                                                </select>
+                                                                @*@Html.EnumDropDownListFor(model => model.EmailNotificationTypeCategory, new { @class = "form-control input-sm", data_ng_model = "tempObject.EmailNotificationTypeCategory" })*@
+                                                            </div>
+                                                            <div class="col-lg-6 form-group">
+                                                                <label class="control-label small">Title *</label>
+                                                                @Html.TextBoxFor(model => model.Title, new { @class = "form-control input-sm", data_ng_model = "tempObject.Title" })
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label class="control-label small">Description *</label>
+                                                                <div>
+                                                                    @Html.TextAreaFor(model => model.Description, new { style = "width:100%;resize: vertical;", data_ng_model = "tempObject.Description" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 form-group">
+                                                                <label class="control-label small">Cc</label>
+                                                                @Html.TextBoxFor(model => model.CC, new { @class = "form-control input-sm", data_ng_model = "tempObject.CC" })
+                                                            </div>
+                                                            <div class="col-lg-6 form-group">
+                                                                <label class="control-label small">Bcc</label>
+                                                                @Html.TextBoxFor(model => model.BCC, new { @class = "form-control input-sm", data_ng_model = "tempObject.BCC" })
+                                                            </div>
+                                                            <div class="clearfix">
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label class="control-label small">Subject *</label>
+                                                                <div>
+                                                                    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm", data_ng_model = "tempObject.Subject" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2 form-group">
+                                                                <label class="control-label small">Set Interval *</label>
+                                                                <div class="radio">
+                                                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                                                    {
+                                                                        <label class="radio-inline">
+                                                                            @Html.RadioButtonFor(model => model.IsRecurrenceEnabledYesNoOption, (int)value, new { data_ng_model = "tempObject.IsRecurrenceEnabledYesNoOption", data_ng_click = "" }) @value.ToString()
+                                                                        </label>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1">
+                                                                <label class="control-label small">Recurrence Type *</label>
+                                                                <div class="radio">
+                                                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.RecurrenceIntervalType)))
+                                                                    {
+                                                                        <label class="radio-inline">
+                                                                            @Html.RadioButtonFor(model => model.RecurrenceIntervalTypeCategory, (int)value, new { data_ng_model = "tempObject.RecurrenceIntervalTypeCategory", data_ng_click = "tempObject.IntervalFactor=null" }) @value.ToString()
+                                                                        </label>
+                                                                    }
+                                                                    <br />
+                                                                    <br />
+                                                                    @Html.TextBoxFor(model => model.IntervalFactor, new { @type = "number", @class = "form-control input-sm", data_ng_model = "tempObject.IntervalFactor", @placeholder = "Enter Interval" })
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                            <div class="clearfix">
+                                                            </div>
+                                                            <div class="col-md-12 form-group">
+                                                                <label class="control-label small">Body *</label>
+                                                                @*@Html.TextAreaFor(model => model.Body, new { rows = "20", style = "width:100%;resize: none;overflow-y: scroll;", data_ng_model = "tempObject.Body" })*@
+                                                                <wysiwyg textarea-id="wysiwygBody" textarea-class="form-control" textarea-height="400px" textarea-style="width:100%;resize: none;overflow-y: scroll;" textarea-name="wysiwygBody" textarea-required ng-model="tempObject.Body" enable-bootstrap-title="true"></wysiwyg>
+                                                                @Html.HiddenFor(model => model.Body, new { ng_value = "tempObject.Body" })
+                                                            </div>
+                                                            <div class="col-md-12 form-group">
+                                                                <button type="button" class="btn btn-warning btn-sm" ng-click="EditCancle(tempObject);">Cancel</button>
+                                                                <button id="saveButton" type="submit" class="btn btn-primary btn-sm pull-right">Save</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-12">
+                        <div ng-if="activeMessageDiv=='EmailTemplateMessage'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                            <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                            {{messageDesc}}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body" ng-if="AddNewEmailTemplate" ng-cloak>
+                    <div id="AddNewEmailTemplate">
+                        <!---AddEmailTemplate partial starts here-->
+                        @Html.Partial("_AddNewEmailTemplate")
+                        <!---AddEmailTemplate partial ends here-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

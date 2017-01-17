@@ -1,0 +1,353 @@
+﻿@model AHC.CD.WebUI.MVC.Models.EmailService.EmailGroupViewModel
+
+<style>
+    b {
+        font-size: large;
+    }
+
+    textarea.large-compact {
+        height: 2.5em;
+        transition: height .3s ease-out;
+        width: 85%;
+    }
+
+        textarea.large-compact:focus {
+            height: 5em;
+        }
+
+    /*#GroupName{
+            width:85%
+        }*/
+    .biscuits_3D > .row > .col-lg-12 > .panel-body {
+        color: whitesmoke;
+        position: relative;
+        text-decoration: none;
+        width: 105%;
+        display: block;
+        padding: 4px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        -moz-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        box-shadow: 0px 9px 0px rgb(195, 195, 195), 0px 9px 25px rgba(0,0,0,.7);
+        text-align: center;
+        -webkit-transition: all .1s ease;
+        -moz-transition: all .1s ease;
+        -ms-transition: all .1s ease;
+        -o-transition: all .1s ease;
+        transition: all .1s ease;
+    }
+
+    .biscuits > .panel > .panel-body {
+        width: 105%;
+        text-align: center;
+        color: white;
+        background-color: grey;
+        border-radius: 8px;
+    }
+
+    .right-inner-addon {
+        position: relative;
+    }
+
+        .right-inner-addon input {
+            padding-right: 30px;
+        }
+
+        .right-inner-addon i {
+            position: absolute;
+            right: 0px;
+            padding: 10px 12px;
+            pointer-events: none;
+        }
+
+    .ViewResultPanel {
+        /*padding: 0px;
+        margin-left: 1%;*/
+        margin-left: -2%;
+        width: 95%;
+        -webkit-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        -moz-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        box-shadow: 0px 9px 0px rgb(195, 195, 195), 0px 9px 25px rgba(0,0,0,.7);
+    }
+
+    .selectedPanel {
+        -webkit-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        -moz-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        box-shadow: 0px 9px 0px rgb(195, 195, 195), 0px 9px 25px rgba(0,0,0,.7);
+    }
+
+    .header {
+        background-color: white;
+        background-image: none;
+        background-size: auto;
+        box-shadow: none;
+    }
+
+    #addMember {
+        border-radius: .5em .5em .5em .5em;
+    }
+
+    /*body {
+        font-family: Raleway;
+    }*/
+
+    /* end only demo styles */
+
+    .checkbox-custom {
+        opacity: 0;
+        position: absolute;
+    }
+
+    .checkbox-custom, .checkbox-custom-label {
+        display: inline-block;
+        vertical-align: middle;
+        /*margin: 5px;*/
+        margin-left: 10%;
+        cursor: pointer;
+    }
+
+    .checkbox-custom-label {
+        position: relative;
+    }
+
+    .checkbox-custom + .checkbox-custom-label:before {
+        content: '';
+        /*background: #fff;*/
+        /*border: 2px solid #ddd;*/
+        border: 2px solid rgba(79, 75, 75, 0.6);
+        display: inline-block;
+        vertical-align: middle;
+        width: 20px;
+        height: 20px;
+        /*padding: 2px;*/
+        /*margin-right: 10px;*/
+        text-align: center;
+    }
+
+    .checkbox-custom:checked + .checkbox-custom-label:before {
+        content: "\f00c";
+        font-family: 'FontAwesome';
+        background: rebeccapurple;
+        color: #fff;
+    }
+
+    .checkbox-custom:focus + .checkbox-custom-label {
+        outline: 1px solid #ddd; /* focus style */
+    }
+</style>
+
+<div id="ViewGroupEmail" class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-12" style="padding-left:2%">                
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">Group Name</label>
+                        <div>
+                            <i class="data-label wrap-words">{{tempObject.EmailGroupName || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">Description</label>
+                        <div>
+                            <i class="data-label wrap-words">{{tempObject.Description || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">Owner</label>
+                        <div>
+                            <i class="data-label wrap-words">{{tempObject.CreatedBy.EmailId || 'Not Available'}}</i>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <div class="row" style="padding-left:0px">
+            <div class="col-lg-12 form-group">
+                @*<div class="col-lg-8" style="padding-left:0px">
+                        <label>Search</label>
+                        <div id="AddMoreData" style="margin-left:2%">
+                            <div class="row">
+
+                                <div class="col-lg-10" style="margin-left: -2.5%">
+
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="width:30%;padding:0px">
+                                            <select class="form-control input-sm" data-val="true" id="SearchCriteria" ng-model="searchCriteria">
+                                                <option selected value="">All</option>
+                                                <option>Provider Level</option>
+                                                <option>IPA</option>
+                                                <option>Provider Relationship</option>
+                                            </select>
+                                        </span>
+                                        <span><input class="form-control input-sm" name="GlobalSearch" autocomplete="off" ng-model="search" ng-focus="searchCumDropDown()" placeholder="Global Search" style="width:116%"></span>
+                                    </div>
+
+                                    <div>
+
+                                        <span ng-show="addNewMember">
+                                            <span class="col-lg-5">Name:<span><input class="form-control input-sm" name="MemberName" autocomplete="off" ng-model="memberName" placeholder="Name"></span></span>
+                                            <span class="col-lg-5">Email ID:<span><input class="form-control input-sm" name="mailId" autocomplete="off" ng-model="mailId" placeholder="Email ID"></span></span>
+                                            <span class="col-lg-2"><br /><button type="button" id="addMember" class="btn btn-primary btn-sm" ng-click="addNewMember=false">Add</button></span>
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-2 zero-padding-left-right-div">
+                                    <i ng-click="AddMore()" class="fa fa-plus-circle fa-2x" style="margin-left:53%"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-lg-8 panel biscuits_3D">
+                    <div class="row" style="margin-left:-4%">
+                        <div class="col-lg-12">
+                            <div class=" col-lg-3 panel-body" style="background-color: rgba(99, 191, 228, 0.87); width: 24%; ">
+                                <div><i class="fa fa-users fa-2x"></i><b>&nbsp;&nbsp;{{tempObject.GroupMailUserDetails.length}}</b><br /> All</div>
+                            </div>
+                            <div class=" col-lg-3 panel-body" style="background-color: rgba(51, 122, 183, 0.8); width: 24%; margin-left: 5px; ">
+                                <div><i class="fa fa-users fa-2x"></i><b>&nbsp;&nbsp;{{ProviderData.length}}</b><br /> Providers</div>
+                            </div>
+                            <div class=" col-lg-3 panel-body" style="background-color: rgba(92, 184, 92, 0.78); width: 24%; margin-left: 5px; ">
+                                <div><i class="fa fa-user fa-2x"></i>&nbsp;&nbsp;<b>{{UsersData.length}}</b><br /> Users</div>
+                            </div>
+                            <div class=" col-lg-3 panel-body" style="background-color: rgba(124, 124, 126, 0.65); width: 24%; margin-left: 5px; font-size: 96%; ">
+                                <div>
+                                    <i class="fa fa-user fa-2x"></i>&nbsp;&nbsp;<b>{{otherUsersData.length}}</b><br /><span style="margin-left: -11px;margin-right: -9px;">Other Members</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row col-lg-12">
+            <div class="col-lg-11">
+                <div ng-cloak class="panel panel-primary ViewResultPanel">
+                    <div class="panel-heading" style="padding:0.5%">
+                        <label class="panel-title" style="margin-left:3%">Selected Members</label>
+                        @*<input type="checkbox" name="select-all" data-ng-model="selectedAll" ng-change="selectAll()" class="Sharath" id="select-all">*@
+                        @*<label id="select-all" class="Sharath pull-right" for="select-all" style="padding:0.5%;width:13%;margin-top:-3%;font-size:small" data-toggle="tooltip" data-placement="top" title="Add to group">Select All</label>*@
+                        <span style="margin-left:40%">
+                            <button type="button" id="provider" class="btn btn-sm" ng-click="getSpecificDataForView('All')" style="padding: 0.7%; border-radius: 0.5em 0.5em 0.5em 0.53em; margin-left: -8%; font-size: x-small; background-color: rgba(99, 191, 228, 0.87);width:7.5%;border:1px solid"><i class="fa fa-users fa-2x"></i>All</button>
+                            <button ng-if="ProviderData.length>0" type="button" id="provider" class="btn btn-sm" ng-click="getSpecificDataForView('Provider')" style="padding: 0.7%; border-radius: 0.5em 0.5em 0.5em 0.53em; font-size: x-small; background-color: rgba(51, 122, 183, 0.8); border: 1px solid; "><i class="fa fa-users fa-2x"></i>Providers</button>
+                            <button ng-if="UsersData.length>0" type="button" id="provider" class="btn btn-sm" ng-click="getSpecificDataForView('Users')" style="padding: 0.7%; border-radius: 0.5em 0.5em 0.5em 0.53em; font-size: x-small; background-color: rgba(92, 184, 92, 0.71); width: 8.5%; border: 1px solid"><i class="fa fa-user fa-2x"></i>Users</button>
+                            <button ng-if="otherUsersData.length>0" type="button" id="provider" class="btn btn-sm" ng-click="getSpecificDataForView('Others')" style="padding: 0.7%; border-radius: 0.5em 0.5em 0.5em 0.53em; font-size: x-small; background-color: rgba(124, 124, 126, 0.63); border: 1px solid;"><i class="fa fa-user fa-2x"></i>Other Members</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="clearfix"></div>
+                        <div class="col-lg-12" style="overflow-x:auto;">
+                            <table class='table table-condensed customtbodyStyle table-striped groupListTable' st-table="gm.displayed" st-pipe="gm.callServer" st-safe-src="groupMailList">
+                                <thead>
+                                    <tr>
+                                        <th st-sort-default="reverse" st-sort="FullName" class="col-lg-2">Full Name</th>
+                                        <th st-sort="EmailIds" class="col-lg-2">Email ID</th>
+                                        <th st-sort="ProviderLevel" class="col-lg-2" ng-if="columnStatus.providerLevel">Provider Level</th>
+                                        @*<th st-sort="Status" class="col-lg-2">Status</th>*@
+                                        <th st-sort="IPA" class="col-lg-2" ng-if="columnStatus.IPA">IPA</th>
+                                        <th st-sort="Roles" class="col-lg-2" ng-if="columnStatus.Role">Role</th>
+                                        <th st-sort="ProviderRelationship" class="col-lg-2" ng-if="columnStatus.ProviderRelationship">Provider Relationship</th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!gm.isLoading">
+                                    <tr ng-repeat="c in gm.displayed">
+                                        <td>{{c.FullName || 'Not Available'}}</td>
+                                        <td>{{c.EmailIds|| 'Not Available'}}</td>
+                                        <td ng-if="columnStatus.providerLevel">{{c.ProviderLevel|| 'Not Available'}}</td>
+                                        <td ng-if="columnStatus.IPA"><span ng-repeat="i in c.IPA">{{i || 'Not Available'}}</span></td>
+                                        @*<td>{{c.Status|| 'Not Available'}}</td>*@
+                                        <td ng-if="columnStatus.Role"><span ng-repeat="r in c.Roles">{{r}}</span><span ng-show="r.UserType=='User' && r.Roles.length!=0">Not Available</span><span ng-show="r.UserType=='OtherUser'">NA</span></td>
+                                        <td ng-if="columnStatus.ProviderRelationship">{{c.ProviderRelationship|| 'Not Available'}}</td>                                        
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="gm.isLoading">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="loading-indicator"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot style="cursor:pointer">
+                                    <tr ng-if="groupMailList.length>10">
+                                        <td class="text-center" st-pagination="" st-items-by-page="10" colspan="8"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            @*<table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+
+                                <tr>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'Full Name'" header-class="text-left" headers-style="background-color:none" sortable="'FullName'">
+                                        Parikshith Singh
+                                    </td>
+                                    <td class="col-lg-3 wrap-words" data-title="'Email ID'" header-class="text-left" sortable="'EmailIds'" ">
+                                        parikshithsingh@access.com
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'Provider Level'" header-class="text-left" headers-style="background-color:none" sortable="'ProviderLevel'">
+                                        Doctor
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'IPA'" header-class="text-left" headers-style="background-color:none" sortable="'Ipa'">
+                                        Access
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-1 wrap-words" data-title="'Role'" header-class="text-left" headers-style="background-color:none" sortable="'Role'">
+                                        NA
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-1 wrap-words" data-title="'Provider Relationship'" header-class="text-left" headers-style="background-color:none" sortable="'ProviderRelation'">
+                                        Employee
+                                    </td>
+                                   
+                                </tr>
+                                <tr>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'Full Name'" header-class="text-left" headers-style="background-color:none" sortable="'FullName'">
+                                        Jmartin
+                                    </td>
+                                    <td class="col-lg-3 wrap-words" data-title="'Email ID'" header-class="text-left" sortable="'EmailIds'" ">
+                                        jmartin@accesshealthcarellc.net
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'Provider Level'" header-class="text-left" headers-style="background-color:none" sortable="'ProviderLevel'">
+                                        NA
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'IPA'" header-class="text-left" headers-style="background-color:none" sortable="'Ipa'">
+                                        NA
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-1 wrap-words" data-title="'Role'" header-class="text-left" headers-style="background-color:none" sortable="'Role'">
+                                        CCO
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-1 wrap-words" data-title="'Provider Relationship'" header-class="text-left" headers-style="background-color:none" sortable="'ProviderRelation'">
+                                        NA
+                                    </td>                                   
+                                </tr>
+                                <tr>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'Full Name'" header-class="text-left" headers-style="background-color:none" sortable="'FullName'">
+                                        Alex Tambrini
+                                    </td>
+                                    <td class="col-lg-3 wrap-words" data-title="'Email ID'" header-class="text-left" sortable="'EmailIds'" ">
+                                        alex@access.com
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'Provider Level'" header-class="text-left" headers-style="background-color:none" sortable="'ProviderLevel'">
+                                        Doctor
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-2 wrap-words" data-title="'IPA'" header-class="text-left" headers-style="background-color:none" sortable="'Ipa'">
+                                        MIRRA
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-1 wrap-words" data-title="'Role'" header-class="text-left" headers-style="background-color:none" sortable="'Role'">
+                                        NA
+                                    </td>
+                                    <td ng-show="!allUsers" class="col-lg-1 wrap-words" data-title="'Provider Relationship'" header-class="text-left" headers-style="background-color:none" sortable="'ProviderRelation'">
+                                        Employee
+                                    </td>
+                                  
+                                </tr>
+                            </table>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

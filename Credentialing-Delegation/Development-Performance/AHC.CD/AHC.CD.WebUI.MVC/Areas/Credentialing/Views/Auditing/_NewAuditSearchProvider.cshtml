@@ -1,0 +1,514 @@
+﻿@model AHC.CD.WebUI.MVC.Models.EmailService.EmailServiceViewModel
+<style>
+    .container-outer {
+        overflow: scroll;
+    }
+
+    /*.container-inner {
+        width: 10000px;
+    }*/
+</style>
+<style>
+    .makeBld {
+        font-weight: bold;
+    }
+</style>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<ul class="nav nav-tabs">    
+    <li id="Provider" class="active"><a data-toggle="tab" href="#ProviderTab">Search Provider</a></li>
+    <li id="Package" ng-if="selectedProviders.length == 0" ng-class="{'disabled':selectedProviders.length == 0}"><a>Package/Form Generation</a></li>
+    <li id="Package" ng-if="selectedProviders.length > 0" ng-class="{'':selectedProviders.length > 0}"><a data-toggle="tab" href="#PackageTab">Package/Form Generation</a></li>
+    @*<li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+        <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>*@
+    <li id="Provider" class="pull-right"><a data-toggle="tab" ng-click="GetAllPackageTracker()" href="#packagetracker">Package Tracker</a></li>
+</ul>
+
+
+@*<div ng-if="showTracker" class="tab-content">
+    <br />    
+    <div class="panel panel-default small">
+        <div class="panel-heading">
+            <button class="pull-right btn btn-xs" ng-click="closeTracker()"><i class="fa fa-times"></i></button>
+            <div>Package Tracker</div>
+        </div>
+        <div role="tabpanel" class="panel-body closePanel">
+            <div class="col-md-12">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active">*@
+                        <!---Provider partial starts here-->
+                        @*@Html.Partial("~/Areas/Credentialing/Views/Auditing/_PackageGenerationTracker.cshtml")*@
+                        <!---Provider partial ends here-->
+                        @*<div ng-show="activeMessageDiv=='noProviderDetails'" class="alert alert-danger" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                            </div>*@
+                    @*</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>*@
+@*<div ng-show="loading">
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            <span>Loading...Please wait...</span>
+        </div>
+    </div>
+</div>*@
+<div class="tab-content">
+    <br />
+    <div id="ProviderTab" class="tab-pane fade in active">
+        <div class="panel panel-default small">
+            <div class="panel-heading">
+                <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('AuditSearch');" ng-disabled="packageLoading"><i class="fa fa-th-list"></i></button>
+                <div>Search Provider</div>
+            </div>
+            <div role="tabpanel" id="AuditSearch" class="panel-body closePanel">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active">
+                            <!---Provider partial starts here-->
+                            @Html.Partial("~/Areas/Credentialing/Views/Auditing/_Audit_SearchByDetails.cshtml")
+                            <!---Provider partial ends here-->
+                            @*<div ng-show="activeMessageDiv=='noProviderDetails'" class="alert alert-danger" role="alert">
+                                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="loadingAjax">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    <span>Loading...Please wait...</span>
+                </div>
+            </div>
+        </div>
+        <div ng-cloak ng-show="activeMessageDiv=='noProviderDetails'" class="col-lg-12 form-group">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span>{{messageDesc}}</span>
+            </div>
+        </div>
+        <div class="panel panel-default small" ng-show="allProviders.length>0">
+            <div class="panel-heading">
+                Search Result
+                <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('SearchProviderResultPanel');" ng-disabled="packageLoading"><i class="fa fa-th-list"></i></button>
+
+            </div>
+            <div role="tabpanel">
+                <div id="SearchProviderResultPanel" class="panel-body closePanel">
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active">
+                                @*<a class="btn btn-primary btn-xs pull-right" href="#" data-toggle="tooltip" data-placement="right" title="Download Selected"><i class="fa fa-download"> Download Selected</i></a>*@
+                                <!---Provider partial starts here-->
+                                @Html.Partial("~/Areas/Credentialing/Views/Auditing/_Audit_SearchResult.cshtml")
+                                <!---Provider partial ends here-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="PackageTab" class="tab-pane fade">
+        <div class="panel panel-default small" ng-show="allProviders.length > 0">
+            <div class="panel-heading">
+                Selected Providers
+                <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('SearchProviderResultPanel1');" ng-disabled="packageLoading"><i class="fa fa-th-list"></i></button>
+            </div>
+            <div role="tabpanel">
+                <div id="SearchProviderResultPanel1" class="panel-body closePanel">
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active">
+                                <!---Provider partial starts here-->
+                                @Html.Partial("~/Areas/Credentialing/Views/Auditing/_selectedProvider.cshtml")
+                                <!---Provider partial ends here-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel panel-default small" ng-hide="selectedProviders.length == 0">
+            <div class="panel-heading">
+                Select Document for Package & Form Generation
+                <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('SearchProviderResultPanel2');" ng-disabled="packageLoading"><i class="fa fa-th-list"></i></button>
+
+            </div>
+            <div role="tabpanel">
+                <div id="SearchProviderResultPanel2" class="panel-body closePanel">
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="tab-content">
+                            <div class="col-lg-12 form-group">
+                                <label class="radio-inline" for="radios-0">
+                                    <input type="radio" id="radios-0" name="geneType" value="PackageGeneration" ng-disabled="packageLoading || selectedProviders.length>1" ng-model="generationType" ng-click="genPackageType='Individual';getData(selectedProviders[0].ProfileID)" />
+                                    Package Generation
+                                </label>
+                                <label class="radio-inline" for="radios-1">
+                                    <input type="radio" id="radios-1" name="geneType" value="FormGeneration" ng-disabled="packageLoading" ng-model="generationType" />
+                                    Form Generation
+                                </label>
+
+                            </div>
+                            <br />
+                            <!--Package Generation Start-->
+                            <div role="tabpanel" class="tab-pane active form-style" ng-if="generationType=='PackageGeneration'">
+                                <span id="topTable"></span>
+                                <fieldset ng-init="">
+                                    <legend>
+                                        Package Generation
+                                    </legend>
+
+                                    @*<input type="radio" name="genType" value="Individual" ng-model="genPackageType" ng-click="getData(selectedProviders[0].ProfileID)" />Individual*@
+                                    @*<input type="radio" name="genType" value="Generic" ng-model="genPackageType" />Generic*@
+
+                                    <div ng-show="genPackageType=='Individual'">
+
+                                        <div class="form-style">
+                                            <fieldset ng-disabled="packageLoading">
+                                                <legend>
+                                                    Existing Documents
+                                                </legend>
+                                                <div class="col-lg-12">
+                                                    <table class="table table-striped" ng-hide="loadingBar" ng-if="spaDoc">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="col-lg-1"></th>
+                                                                <th class="col-lg-9">Document</th>
+                                                                <th><input type="checkbox" ng-click="selectAll()" /></th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-class="{'active info':l.Status==true}" id="packageid{{$index}}" ng-repeat="l in spaDoc track by $index" ng-init="CountDoc()">
+                                                                <td><a ng-show="$index != countDocument - 1 && $index < countDoc - 1" ng-if="l.Status" class="btn btn-xs btn-info"><i class="fa fa-sort-down" ng-click="moveDocumentDown($index)"></i></a> <a ng-show="$index != 0" ng-if="l.Status" class="btn btn-xs btn-info"><i class="fa fa-sort-up" ng-click="moveDocumentUp($index)"></i></a></td>
+                                                                <td id="makeBold{{index}}" >{{l.LicenseName}}</td>
+                                                                <td><input type="checkbox" ng-click="SelectedDoc(l,$index)" ng-model="l.Status" class="checkbx" /></td>
+                                                                <td>
+                                                                    <a class="btn btn-xs btn-primary" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{l.LicenseDocPath}}" target="_blank" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></a>
+                                                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{l.LicenseDocPath}}" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="right" title="download" download="{{l.LicenseName}}"><i class="fa fa-download"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div ng-show="loadingBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                                        Loading...Please wait...
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <table class="table table-bordered" ng-if="!spaDoc">
+                                                        <tr>
+                                                            <td>
+                                                                No Documents Available...
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <span ng-show="packageLoading"><img width="25px" src="~/Areas/Credentialing/img/loading.GIF" /><i>Generating Package...</i></span>
+                                            @*<button ng-disabled="packageLoading || selectedDocument.length==0" ng-click="GenerateEmailPopUp()" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#composeMail">Send Email</button>*@
+                                            <a ng-click="generatePackage(selectedProviders[0].ProfileID);" class="btn btn-sm btn-primary pull-right" ng-hide="loadingBar" ng-disabled="packageLoading || selectedDocument.length==0">Generate Package</a>
+                                            @*<a ng-click="generatePackage(selectedProviders[0].ProfileID);" class="btn btn-sm btn-primary pull-right">Generate Package</a>*@
+                                        </div>
+                                        <div ng-show="activeMessageDiv=='pkgGenerated'" class="alert alert-success" role="alert">
+                                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                        </div>
+                                        <div ng-show="activeMessageDiv=='pkgGeneratedError'" class="alert alert-danger" role="alert">
+                                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                        </div>
+                                        <div ng-show="activeMessageDiv=='LoadedSuccess'" class="alert alert-success" role="alert">
+                                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                        </div>
+                                    </div>
+
+                                    <div ng-show="genPackageType=='Generic'">
+                                        <div class="form-style">
+                                            <fieldset>
+                                                <legend>
+                                                    Existing Documents
+                                                </legend>
+                                                <div class="col-lg-12">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="col-lg-1"></th>
+                                                                <th class="col-lg-9">Document</th>
+                                                                <th><input type="checkbox" ng-click="selectAll()" /></th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="l in spaDoc track by $index" ng-init="CountDoc()">
+                                                                <td><a ng-show="$index != countDocument - 1 && $index < countDoc - 1" ng-if="l.Status" class="btn btn-xs btn-info"><i class="fa fa-sort-down" ng-click="moveDocumentDown($index)"></i></a> <a ng-show="$index != 0" ng-if="l.Status" class="btn btn-xs btn-info"><i class="fa fa-sort-up" ng-click="moveDocumentUp($index)"></i></a></td>
+                                                                <td >{{l.LicenseName}}</td>
+                                                                <td><input type="checkbox" ng-click="SelectedDoc(l,$index)" ng-model="l.Status" /></td>
+                                                                <td>
+                                                                    <a class="btn btn-xs btn-primary" data-toggle="modal" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{l.LicenseDocPath}}" target="_blank"><i class="fa fa-eye"></i></a>
+                                                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{l.LicenseDocPath}}" class="btn btn-xs btn-primary" data-toggle="modal" download="{{l.LicenseName}}"><i class="fa fa-download"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <a ng-click="generatePackage();" class="btn btn-sm btn-primary pull-right">Generate Package</a>
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                            </div>
+                            <!--Package Generation End-->
+                            <!--Form Generation Start-->
+                            <div ng-show="loadFormAjax" class="progress col-lg-12" ng-cloak>
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    Loading...Please wait...
+                                </div>
+                            </div>
+                            <div class="form-style" ng-show="generationType=='FormGeneration'">
+                                <div ng-show="loadFormAjax" class="progress col-lg-12" ng-cloak>
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        Loading...Please wait...
+                                    </div>
+                                </div>
+                                <fieldset ng-disabled="packageLoading">
+                                    <legend>
+                                        Form Generation
+                                    </legend>
+                                    <table class="table table-bordered table-hover table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Action<br />@*<input type="checkbox" ng-click="selectAllForms()" name="select">*@</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-class="{'active info':p.IsCkecked==true}" ng-repeat="p in pdfTemplateList">
+                                                <td class="col-lg-10">{{p.Name}}</td>
+                                                <td class="col-lg-2"><input type="checkbox" ng-click="SelectForms(p,$index)" ng-model="p.IsCkecked" name="select">&nbsp;&nbsp;<span ng-show="p.IsLoading" class="fa fa-check text-success"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                                <div>
+                                    <span ng-show="packageLoading"><img width="25" src="~/Areas/Credentialing/img/loading.GIF" /><i>Generating Form...</i></span>
+                                    <a ng-click="generateForm();" ng-disabled="packageLoading || selectedForms.length==0" class="btn btn-sm btn-primary pull-right">Generate Form</a>
+                                </div>
+                                <div ng-show="activeMessageDiv=='formGenerated'" class="alert alert-success" role="alert">
+                                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                </div>
+                                <div ng-show="activeMessageDiv=='formGeneratedError'" class="alert alert-danger" role="alert">
+                                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                </div>
+                            </div>
+                            <!--Form Generation End-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default small" ng-show="showFormDiv">
+            <div class="panel-heading">
+                Generated Forms
+                <button class="pull-right btn btn-xs" ng-click="SearchProviderPanelToggle('SearchProviderResultPanel3');" ng-disabled="packageLoading"><i class="fa fa-th-list"></i></button>
+
+            </div>
+            <div role="tabpanel">
+                <div id="SearchProviderResultPanel3" class="panel-body closePanel container-outer col-lg-12">
+                    <table class="table table-bordered table-condensed container-inner">
+                        <thead>
+                            <tr>
+                                <th>Providers</th>
+                                <th ng-repeat="file in createdForms">
+                                    {{file.FileName}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="obj in showGeneratedForm">
+                                <td>
+                                    {{obj.FirstName}} {{obj.LastName}}
+                                </td>
+                                <td ng-repeat="filePath in obj.GeneratedFilePaths">
+                                    <a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{filePath}}"><i class="fa fa-file"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="packagetracker" class="tab-pane fade">
+        <div class="panel panel-default small">
+            <div class="panel-heading">
+                <button class="pull-right btn btn-xs" ng-click="closeTracker()"><i class="fa fa-times"></i></button>
+                <div>Package Tracker</div>
+            </div>
+            <div role="tabpanel" class="panel-body closePanel">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active">
+                            <div>
+                                <!---Provider partial starts here-->
+                                @Html.Partial("~/Areas/Credentialing/Views/Auditing/_PackageGenerationTracker.cshtml")
+                                <!---Provider partial ends here-->
+                                @*<div ng-show="activeMessageDiv=='noProviderDetails'" class="alert alert-danger" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+            </div>*@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="composeMail" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true" my-modal>
+        <div class="modal-dialog" style="width:90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" data-toggle="tooltip" data-placement="right" data-original-title="Close">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Compose Mail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form id="newEmailForm">
+                            <div class="col-lg-12 zero-padding-left-right-div ng-scope">
+                                @*@Html.HiddenFor(model => model.EmailServiceID, new { ng_value = "tempObject.EmailServiceID" })*@
+                                @Html.HiddenFor(model => model.StatusType, new { ng_value = "1" })
+
+                                <div>
+                                    <div class="col-lg-12 form-group">
+                                        @*<div ng-if="templateSelected || tempObject.UseExistingTemplate == 'NO'">
+                                            <div class="col-lg-12 form-group">*@
+                                        <label class="control-label small">To *</label>
+                                        @*@Html.TextBoxFor(model => model.To, new { @class = "form-control input-sm", type = "email", data_ng_model = "tempObject.To", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$" })*@
+                                        @Html.TextBoxFor(model => model.To, new { @class = "form-control input-sm", data_ng_model = "tempObject.To", @id = "torecepient" })
+                                        <p ng-if="errmsgforTo" style="color:red">Invalid Email...</p>
+                                        @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-6 form-group">
+                                        <label class="control-label small">Cc</label>
+                                        @*@Html.TextBoxFor(model => model.CC, new { @class = "form-control input-sm", data_ng_model = "tempObject.CC", type = "email", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$", data_val = "true" })*@
+                                        @Html.TextBoxFor(model => model.CC, new { @class = "form-control input-sm", data_ng_model = "tempObject.CC", id = "ccrecepient" })
+                                        @Html.ValidationMessageFor(model => model.CC, "", new { @class = "text-danger" })
+                                        <p ng-if="errmsgforCC" style="color:red">Invalid Email...</p>
+                                    </div>
+                                    <div class="col-lg-6 form-group">
+                                        <label class="control-label small">Bcc</label>
+                                        @*@Html.TextBoxFor(model => model.BCC, new { @class = "form-control input-sm", type = "email", data_ng_model = "tempObject.BCC", data_val_regex = "Please enter the valid email address.", data_val_regex_pattern = "^[a-z0-9.]+@[a-z]+.[a-z]{2,5}$", data_val = "true" })*@
+                                        @Html.TextBoxFor(model => model.BCC, new { @class = "form-control input-sm", data_ng_model = "tempObject.BCC", id = "bccrecepient" })
+                                        @Html.ValidationMessageFor(model => model.BCC, "", new { @class = "text-danger" })
+                                        <p ng-if="errmsgforBCC" style="color:red">Invalid Email...</p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label small">Subject *</label>
+                                        <div>
+                                            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm", data_ng_model = "tempObject.Subject" })
+                                            @Html.ValidationMessageFor(model => model.Subject, "Please provide details for 'Subject' field", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-md-12 form-group">
+                                        <label class="control-label small">Body*</label>
+                                        <wysiwyg textarea-id="wysiwygBody" textarea-class="form-control" textarea-height="400px" textarea-style="width:100%;resize: none;overflow-y: scroll;" textarea-name="wysiwygBody" textarea-required data-ng-model="tempObject.Body" enable-bootstrap-title="true"></wysiwyg>
+
+                                        @Html.HiddenFor(model => model.Body, new { @class = "form-control input-sm", ng_value = "tempObject.Body" })
+                                        @Html.ValidationMessageFor(model => model.Body, "Please provide details for 'Body' field", new { @class = "text-danger" })
+
+
+                                    </div>
+                                    <div class="col-md-3 form-group" style="width:20%">
+                                        <label class="control-label small">Schedule Recurrence *</label>
+                                        <div class="radio">
+                                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                            {
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.IsRecurrenceEnabledYesNoOption, (int)value, new { data_ng_model = "tempObject.IsRecurrenceEnabledYesNoOption", data_ng_click = "" }) @value.ToString()
+                                                </label>
+                                            }
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.IsRecurrenceEnabledYesNoOption, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-5 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1">
+                                        <label class="control-label small">Recurrence Type *</label>
+                                        <div class="radio">
+                                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.RecurrenceIntervalType)))
+                                            {
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.RecurrenceIntervalTypeCategory, (int)value, new { data_ng_model = "tempObject.RecurrenceIntervalTypeCategory", data_ng_click = "tempObject.IntervalFactor=null" }) @value.ToString()
+                                                </label>
+                                            }
+                                            <br />
+                                            @Html.ValidationMessageFor(model => model.RecurrenceIntervalTypeCategory, "", new { @class = "text-danger" })
+                                            <br />
+                                            <br />
+                                            <span ng-if="tempObject.RecurrenceIntervalTypeCategory != 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.IntervalFactor, new { @type = "number", @class = "form-control input-sm col-lg-3", data_ng_model = "tempObject.IntervalFactor", data_ng_init = 1, @placeholder = "Enter Interval" })</span>
+                                            @Html.ValidationMessageFor(model => model.IntervalFactor, "", new { @class = "text-danger" })
+                                            <span ng-if="tempObject.RecurrenceIntervalTypeCategory == 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.DateForCustomRecurrence, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm  col-lg-3", data_ng_model = "tempObject.DateForCustomRecurrence", placeholder = "mm/dd/yyyy" })</span>
+                                            @Html.ValidationMessageFor(model => model.DateForCustomRecurrence, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="col-md-4 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1 && tempObject.RecurrenceIntervalTypeCategory != '6'" style="width:38%">
+                                        <div class="col-lg-6 form-group">
+                                            <label class="control-label small" style="margin-bottom:20px;">From</label>
+                                            @Html.TextBoxFor(model => model.FromDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.FromDate", placeholder = "mm/dd/yyyy" })
+                                            @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-lg-6 form-group">
+                                            <label class="control-label small" style="margin-bottom:20px;">To</label>
+                                            @Html.TextBoxFor(model => model.ToDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ToDate", placeholder = "mm/dd/yyyy" })
+                                            @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 form-group">
+                                        <button type="button" class="btn btn-warning btn-sm" ng-click="EditCancle(tempObject);" data-dismiss="modal">Cancel</button>
+                                        <button id="saveButton" type="submit" ng-click="AddOrSaveEmail('newEmailForm',selectedProviders[0].ProfileID)" class="btn btn-primary btn-sm pull-right">Send</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div ng-show="activeMessageDiv=='warningdiv'" class="alert alert-info" role="alert">
+                                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                        <strong>Please wait...</strong> {{messageDesc}}
+                                    </div>
+                                    <div ng-show="activeMessageDiv=='FilesizeExceedError'" class="alert alert-danger" role="alert">
+                                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

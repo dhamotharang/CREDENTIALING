@@ -1,0 +1,393 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.DocumentRepository.OtherDocumentViewModel
+
+<script src="~/Areas/Credentialing/Scripts/PackageGeneratorJS.js"></script>
+<div class="clearfix"></div>
+<ul class="pager small">
+    <li class="previous" ng-if="credentialingInfo.IsDelegated == 'YES'"><a href="" ng-click="goToNextTab('credentialing_action')"><<</a></li>
+    <li class="previous" ng-if="credentialingInfo.IsDelegated == 'NO'"><a href="" ng-click="goToNextTab('SUMMARY')"><<</a></li>
+    <li class="next"><a href="" ng-click="goToNextTab('load_to_plan')">>></a></li>
+    <li class="next"><a href="" ng-click="goToNextTab('load_to_plan')">Skip</a></li>
+</ul>
+<br />
+
+<div ng-controller="PackageGeneratorController" ng-cloak>
+
+    <div class="form-style">
+
+        <fieldset>
+            <legend>
+                Package Generator
+            </legend>
+
+
+            <div class="legend2 pull-right">
+                <button ng-show="!AddPackageStatus1" ng-click="AddPackage()" class="btn btn-xs btn-primary pull-left">Add Package</button>
+                <button ng-show="AddPackageStatus1" type="button" ng-click="AddPackageStatus1 = false" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Close"><i class="fa fa-times text-danger"></i></button>
+            </div>
+            <br />
+            <div class="col-lg-12" ng-show="!AddPackageStatus || !AddPackageStatus1">
+                <div ng-show="loadingAjax" class="progress" ng-cloak>
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        Loading...Please wait...
+                    </div>
+                </div>
+                <div ng-show="!loadingAjax">
+                    <div ng-if="GetAllPackage.length == 0">
+                        No Data Available
+                    </div>
+                    <div class="col-lg-2" ng-repeat="p in GetAllPackage track by $index" ng-if="GetAllPackage.length != 0">
+                        <a href="/Document/View?path=/ApplicationDocument/GeneratedPackagePdf/{{p.PackageName}}" target="_blank">
+                            <i class="fa fa-folder-open fa-4x"></i>
+                            <div class="col-lg-12"><label class="control-label wrap-words">{{p.PackageName}}</label></div>
+                        </a>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <br />
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            @*<div ng-show="loadingAjax" class="progress col-lg-12" ng-cloak>
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        Loading...Please wait...
+                    </div>
+                </div>*@
+            <div ng-show="activeMessageDiv=='PackageAdd'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+            </div>
+            <div class="col-lg-12" ng-show="AddPackageStatus1">
+                <div class="panel panel-info small col-md-6">
+                    <div class="panel-heading">
+                        <label>Plan Form</label>
+                        <button class="pull-right btn btn-xs" ng-click="MyPanelToggle('MyPanel01');"><i class="fa fa-th-list"></i></button>
+
+                    </div>
+                    <div id="MyPanel01" class="panel-body closePanel">
+
+                        <div>
+                            <button ng-click="GeneratePdf()" class="btn btn-xs btn-primary">Generate PDF</button>
+                            <button ng-click="AttachDocumentForPlanForm();" class="btn btn-xs btn-primary pull-right">Attach Planform</button>
+                        </div>
+                        <br />
+                        <div id="newDocumentForm1" ng-show="AttachPlanFormPanel">
+                            <form enctype="multipart/form-data" name="DocumentForm1">
+
+                                <div class="col-lg-12" style="padding-left: 0px; padding-right: 0px;">
+                                    <div ng-if="TempObject.ID" ng-hide="true">
+
+                                        @Html.EditorFor(model => model.OtherDocumentID, new { htmlAttributes = new { data_ng_model = "TempObject.ID" } })
+
+                                    </div>
+                                    <div class="col-lg-12">
+
+                                        <label class="control-label small">Document Name *:</label>@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control input-sm col-lg-4 input-group-sm", data_ng_model = "TempObject.Title", placeholder = "title" } })
+                                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="col-lg-12 form-group">
+                                        @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label small" })
+                                        <div class="col-lg-12 fileinput fileinput-new input-group" data-provides="fileinput">
+                                            <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                                <span class="fileinput-new">Select Document</span><span class="fileinput-exists">Change</span>
+                                                @Html.TextBoxFor(model => model.File, new { type = "file", name = "FilePath", htmlAttributes = new { data_ng_model = "TempObject.FilePath", value = "FilePath", @class = "input-group-sm" }, onchange = "setFileNameWith(this);" })
+                                            </span>
+                                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+
+                                        </div>
+
+                                        @*@Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })*@
+                                        <p style="color:red;" ng-if="isError">{{message}}</p>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        @Html.CheckBoxFor(model => model.IsPrivate, new { data_ng_model = "TempObject.IsPrivate", id = "Private" }) Private
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br />
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <button class="btn btn-xs btn-danger  pull-left" ng-click="cancelAddPlanForm();">Cancel</button>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <button type="submit" ng-click="savePlanDocuments('newDocumentForm1', pdfProfileId)" class="btn btn-xs btn-success  pull-right" data-dismiss="fileinput">Add</button>
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br />
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="col-lg-12" ng-show="!AttachPlanFormPanel">
+
+
+                            <div class="col-lg-12">
+
+                                <div class="progress col-lg-12" ng-show="pdfLoadingAjax" ng-cloak>
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        Generating...Please wait...
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <!--Generate PDF Template-->
+                                <div class="col-lg-12 form-style" ng-show="isGeneratePdf">
+                                    <div class="col-lg-12 form-group">
+                                        <label class="control-label small">Plan Template*</label>
+                                        <input type="text" class="form-control input-sm" placeholder="Select Plan Template" name="PlanPdfName" ng-model="tempObject.seletedPDFName" ng-click="searchCumDropDownforGeneratePlan();tempObject.seletedPDFName='';" data-searchdropdown="searchdropdown" />
+                                        <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForTypePlan" style="margin-top:55px;">
+                                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                                <tbody>
+                                                    <tr ng-repeat="temp in pdfTemplateList = (pdfTemplateList | filter:tempObject.seletedPDFName)" ng-click="addIntoTypePdfDropDown(temp)" class="pointer">
+                                                        <td>{{temp.Name}}</td>
+                                                    </tr>
+                                                    <tr ng-if="pdfTemplateList.length == 0">
+                                                        <td>Template not found..... </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <button class="btn btn-xs btn-warning  pull-left" ng-click="cancelAdd();tempObject=null;IsFileSelected=true;">Cancel</button>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <button type="submit" ng-click="ViewTemplate(pdfProfileId,tempObject.selectedFileName)" class="btn btn-xs btn-success  pull-right" data-dismiss="fileinput" ng-disabled="IsFileSelected || tempObject.seletedPDFName=='' ">Generate PDF</button>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br />
+
+                                </div>
+
+                                <!--Generated PDF Template List-->
+
+
+
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12" style="padding-left: 0px; padding-right: 0px;" ng-show="!isGeneratePdf">
+                                <div>
+                                    <table class="table table-striped table-fixed">
+                                        <thead>
+                                            <tr>
+                                                <th>Select</th>
+                                                <th>Plan Form</th>
+                                                <th colspan="2">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="display:none;"></tbody>
+                                    </table>
+                                </div>
+                                <div class="pre-scrollable">
+                                    <table class="table table-striped table-fixed">
+                                        <thead style="display:none;"></thead>
+                                        <tbody>
+                                            <tr ng-if="PlanForm.length == 0">
+                                                <td>
+                                                    No Data Available
+                                                </td>
+                                            </tr>
+                                            <tr ng-repeat="p in PlanForm track by $index" ng-if="PlanForm.length != 0">
+                                                <td><input type="checkbox" ng-model="p.isCheck" style="width:15px;height:15px;" ng-click="ToggleSelection(p)" /></td>
+                                                <td><i class="wrap-words">{{p.Title}}</i></td>
+                                                @*<td ng-if="isEdit">
+                                                        <div class="col-lg-12 fileinput fileinput-new input-group" data-provides="fileinput">
+                                                            <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                                                            <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                                                <span class="fileinput-new"><a href="" target="_blank" class="btn btn-xs btn-default" toggle data-toggle="tooltip" data-placement="bottom" title="Upload"><i class="fa fa-upload"></i></a></span><span class="fileinput-exists"><a href="" toggle data-toggle="tooltip" data-placement="bottom" title="Change"><i class="fa fa-upload"></i></a></span>
+                                                                @Html.TextBoxFor(model => model.File, new { type = "file", htmlAttributes = new { data_ng_model = "FilePath", value = "FilePath", @class = "input-group-sm" }, onchange = "setFileNameWith(this);" })
+                                                            </span>
+                                                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" toggle data-toggle="tooltip" data-placement="bottom" title="Remove"><i class="fa fa-minus-circle"></i></a>
+                                                        </div>
+                                                    </td>
+                                                    <td ng-if="isEdit" class="center-in-span"><a href="" target="_blank" class="btn btn-sm btn-default" ng-click="cancelEditPlanForm()"><i class="fa fa-minus-square"></i></a></td>*@
+                                                <td><a href="/Document/View?path={{p.FilePath}}" target="_blank" class="btn btn-xs btn-default" toggle data-toggle="tooltip" data-placement="bottom" title="View"><i class="fa fa-eye"></i></a></td>
+                                                <td><a href="/Document/View?path={{p.FilePath}}" target="_blank" class="btn btn-xs btn-primary" ng-click="editPlanForm()" toggle data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit"></i></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-lg-6">
+                        <fieldset style="padding:5px">
+                            <legend>
+                                Plan Form
+                            </legend>
+
+                            <br />
+
+                        </fieldset>
+                    </div>*@
+                <div class="panel panel-info small col-md-6">
+                    <div class="panel-heading">
+                        <label>Profile Document</label>
+                        <button class="pull-right btn btn-xs" ng-click="MyPanelToggle('MyPanel02');"><i class="fa fa-th-list"></i></button>
+
+                    </div>
+                    <div id="MyPanel02" class="panel-body closePanel">
+                        <div class="pull-right">
+                            <button ng-click="AttachDocumentForProfileDocuments()" class="btn btn-xs btn-primary pull-left">Attach Document</button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div id="newDocumentForm2" ng-show="AttachProfileDocumentPanel">
+                            <form enctype="multipart/form-data" name="DocumentForm2">
+
+                                <div class="col-lg-12">
+                                    <div ng-if="TempObject.ID" ng-hide="true">
+
+                                        @Html.EditorFor(model => model.OtherDocumentID, new { htmlAttributes = new { data_ng_model = "TempObject.ID" } })
+
+                                    </div>
+                                    <div class="col-lg-12">
+
+                                        <label class="control-label small">Document Name *:</label>@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control input-sm col-lg-4 input-group-sm", data_ng_model = "TempObject.Title", placeholder = "title" } })
+                                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="col-lg-12 form-group">
+                                        @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label small" })
+                                        <div class="col-lg-12 fileinput fileinput-new input-group" data-provides="fileinput">
+                                            <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                                            <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                                <span class="fileinput-new">Select Document</span><span class="fileinput-exists">Change</span>
+                                                @Html.TextBoxFor(model => model.File, new { type = "file", htmlAttributes = new { data_ng_model = "FilePath", value = "FilePath", @class = "input-group-sm" }, onchange = "setFileNameWith(this);" })
+                                            </span>
+                                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+
+                                        </div>
+
+                                        @*@Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })*@
+                                        <p style="color:red;" ng-if="isError">{{message}}</p>
+                                    </div>
+
+                                    <div class="col-lg-12 pull-right">
+                                        @Html.CheckBoxFor(model => model.IsPrivate, new { data_ng_model = "TempObject.IsPrivate", id = "Private" }) Private
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br />
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <button class="btn btn-xs btn-danger  pull-left" ng-click="cancelAddProfileDocuments();">Cancel</button>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <button type="submit" ng-click="saveProfileDocuments('newDocumentForm2', pdfProfileId)" class="btn btn-xs btn-success  pull-right" data-dismiss="fileinput">Add</button>
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br />
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="col-lg-12" ng-show="!AttachProfileDocumentPanel" style="padding-left: 0px; padding-right: 0px;">
+                            <div>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Select</th>
+                                            <th>Profile Document</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="display:none;"></tbody>
+                                </table>
+                            </div>
+                            <div class="pre-scrollable">
+                                <table class="table table-striped">
+                                    <thead style="display:none;"></thead>
+                                    <tbody>
+                                        <tr ng-if="ProfileDocument.length == 0">
+                                            <td>
+                                                No Data Available
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="q in ProfileDocument track by $index" ng-if="ProfileDocument.length != 0">
+                                            <td><input type="checkbox" ng-model="q.isCheck" style="width:15px;height:15px;" ng-click="ToggleSelection(q)" /></td>
+                                            <td class="wrap-words">{{q.Title}}</td>
+                                            <td><a href="/Document/View?path={{q.FilePath}}" target="_blank" class="btn btn-xs btn-default" toggle data-toggle="tooltip" data-placement="bottom" title="View"><i class="fa fa-eye"></i></a></td>
+                                            @*<td><a href="/Document/View?path={{q.FilePath}}" target="_blank" class="btn btn-xs btn-primary" ng-click="editPlanForm()" toggle data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit"></i></a></td>*@
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-lg-6">
+                        <fieldset style="padding:5px">
+                            <legend>
+                                Profile Document
+                            </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="AttachDocumentForProfileDocuments()" class="btn btn-xs btn-primary pull-left">Attach Document</button>
+                            </div>
+                            <br />
+
+                        </fieldset>
+                    </div>
+                    <br />*@
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-12" ng-show="!loadingAjax">
+                <div class="panel panel-info small" ng-if="PackageGenerated.length>0">
+                    <div class="panel-heading">
+                        <label>Package</label>
+                    </div>
+                    <div class="panel-body closePanel">
+                        <div class="col-lg-12 pre-scrollable">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Arrange</th>
+                                        <th>Profile Document</th>
+                                        @*<th colspan="2">Action</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="p in PackageGenerated track by $index">
+                                        <td ng-if="$index==0"><a class="btn btn-xs btn-info" ng-click="moveDocumentDown($index)"><i class="fa fa-sort-down"></i></a></td>
+                                        <td ng-if="$index>0 && $index<PackageGenerated.length-1"><a class="btn btn-xs btn-info" ng-click="moveDocumentDown($index)"><i class="fa fa-sort-down"></i></a><a class="btn btn-xs btn-info" ng-click="moveDocumentUp($index)"><i class="fa fa-sort-up"></i></a></td>
+                                        <td ng-if="$index==PackageGenerated.length-1 && $index!=0"><a class="btn btn-xs btn-info" ng-click="moveDocumentUp($index)"><i class="fa fa-sort-up"></i></a></td>
+                                        <td>{{p.Title}}</td>
+                                        @*<td><a class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a></td>
+                                            <td><a class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a></td>*@
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <button class="btn btn-primary pull-right" ng-click="GeneratePackage()">Generate</button>
+                        <div class="clearfix"></div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <br />
+        </fieldset>
+    </div>
+</div>
+

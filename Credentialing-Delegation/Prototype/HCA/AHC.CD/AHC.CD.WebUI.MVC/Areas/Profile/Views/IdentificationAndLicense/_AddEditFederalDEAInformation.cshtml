@@ -1,0 +1,128 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.FederalDEAInformationViewModel
+<fieldset>
+    <legend>
+        Federal DEA Information
+    </legend>
+    <div>
+        <form class="FederalDEALicenseForm">
+            <div class="form-style">
+                <div id="licensedea" class="panel-body zero-padding-left-right-div">
+                    <div class="zero-padding-left-right-div">
+                        <div class="col-md-12">
+                            <div class="form-group col-md-3">
+                                @Html.LabelFor(model => model.DEANumber, new { @class = "control-label small" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.DEANumber, new { @class = "form-control input-sm", data_ng_model = "FederalDEALicense.DEANumber" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.DEANumber, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                @Html.LabelFor(model => model.StateOfReg, new { @class = "control-label small" })
+                                <div>
+                                 @*   @Html.DropDownListFor(model => model.StateOfReg, new[] { new SelectListItem { Value = "Florida", Text = "Florida" }, new SelectListItem { Value = "Arizona", Text = "Arizona" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "FederalDEALicense.StateOfRegistration" })*@
+                                    <select id="StateOfReg" class="form-control input-sm" data-ng-model="FederalDEALicense.StateOfReg">
+                                        <option value="" disabled selected>--Select--</option>
+                                        <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}" >{{state.State}}</option>
+                                    </select>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.StateOfReg, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-md-3">
+                                @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.IssueDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "FederalDEALicense.IssueDate" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.ExpiryDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "FederalDEALicense.ExpiryDate" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                       
+
+                        <div class="clearfix"></div>
+                        <div class="col-md-12">
+                            @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditSchedules.cshtml")
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-3">
+                                @Html.LabelFor(model => model.IsInGoodStanding, new { @class = "control-label small" })
+                                <div class="radio">
+                                    <label class="radio-inline">
+                                        @Html.RadioButtonFor(model => model.IsInGoodStanding, true, new { data_ng_model = "FederalDEALicense.IsInGoodStanding" }) Yes
+                                    </label>
+                                    <label class="radio-inline">
+                                        @Html.RadioButtonFor(model => model.IsInGoodStanding, false, new { data_ng_model = "FederalDEALicense.IsInGoodStanding" }) No
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.IsInGoodStanding, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-md-9">
+                                <div class="col-md-11">
+                                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new small">Select Federal DEA License Document</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.DEALicenceCertPath, new { type = "file", data_ng_model = "FederalDEALicense.DEALicenceCertPath" })</span>
+                                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <a href="{{FederalDEALicense.DEALicenceCertPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                                @*<div class="col-md-3">
+                @Html.LabelFor(model => model.LimitedOrRestricted, new { @class = "control-label small" })
+                @Html.DropDownListFor(model => model.LimitedOrRestricted, new[] { new SelectListItem { Value = "Limited", Text = "Limited" }, new SelectListItem { Value = "Restricted", Text = "Restricted" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "FederalDEALicense.LimitedOrRestricted" })
+                @Html.ValidationMessageFor(model => model.LimitedOrRestricted, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.RestrictionExplanation, new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.RestrictionExplanation, new { @class = "form-control input-sm", data_ng_model = "FederalDEALicense.RestrictionExplanation" })
+                </div>
+                @Html.ValidationMessageFor(model => model.RestrictionExplanation, "", new { @class = "text-danger" })
+            </div>*@
+
+                                @*<div class="form-group col-md-3">
+                @Html.LabelFor(model => model.HasStateControlledSubstanceRegCertificate, new { @class = "control-label small" })
+                <div class="radio">
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.HasStateControlledSubstanceRegCertificate, true, new { data_ng_model = "FederalDEALicense.HasStateControlledSubstanceRegCertificate" }) Yes
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.HasStateControlledSubstanceRegCertificate, false, new { data_ng_model = "FederalDEALicense.HasStateControlledSubstanceRegCertificate" }) No
+                    </label>
+                </div>
+                @Html.ValidationMessageFor(model => model.HasStateControlledSubstanceRegCertificate, "", new { @class = "text-danger" })
+            </div>*@
+                          
+                        <div class="clearfix"></div>
+                        @*<div class="form-style" ng-show="FederalDEALicense.HasStateControlledSubstanceRegCertificate=='True'">
+                            @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditCDSCInformation.cshtml")
+
+
+                        </div>*@
+
+                        <div class="clearfix"></div>
+                      
+                        <div class="clearfix"></div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-warning btn-sm" ng-click="cancelFederalDEALicense()">Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveFederalDEALicense(FederalDEALicense)">{{submitButtonText}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+</div></fieldset>

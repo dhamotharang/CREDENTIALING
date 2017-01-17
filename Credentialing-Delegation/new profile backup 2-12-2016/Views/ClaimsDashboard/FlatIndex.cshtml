@@ -1,0 +1,202 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_FlatLayout.cshtml";
+}
+@section AddToHead{
+    <title>CLAIMS DASHBOARD | AHC</title>
+}
+
+<link href="~/Content/AppCss/ClaimsDashboard/claimsDashboard.css" rel="stylesheet" />
+<link href="~/Content/AppCss/Search/searchOverlay.css" rel="stylesheet" />
+<link href="~/Content/c3.min.css" rel="stylesheet" />
+<link href="~/Content/AppCss/ClaimsDashboard/animate.css" rel="stylesheet" />
+<link href="~/Content/LibCss/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/AppCss/ClaimsDashboard/multiple-select.css" rel="stylesheet" />
+<link href="~/Content/AppCss/ClaimsDashboard/filter.css" rel="stylesheet" />
+<link href="~/Content/AppCss/ClaimsDashboard/multiselect-search.css" rel="stylesheet" />
+<link href="~/Content/CustomCss/OuterTabs.css" rel="stylesheet" />
+<link href="~/Content/LibCss/daterangepicker.css" rel="stylesheet" />
+<div class="custom_tooltip">
+    <div class="tooltip_header">
+        January
+    </div>
+    <div class="tooltip_body">
+        $67,278
+    </div>
+</div>
+<div class="col-lg-12 mainBodyCollapse" id="mainBody" style="height: auto; display: block;">
+    <div class="col-lg-6">
+        <div class="tabs btn-group btn-breadcrumb" id="breadcrumbArea">
+            <a href="#" class="btn btn-default"><i class="fa fa-user fa-1x"></i>&nbsp;Barbara Joy</a>
+            <a href="#" class="btn btn-success">CLAIMS DASHBOARD</a>
+        </div>
+    </div>
+    <div class="col-lg-6 clearfix">
+        @*<span class="Info pull-right padding-right">
+                <span>
+                    <span class="text-primary"><span class="text-primary font_weight">Dispatched</span> $<b>234,242</b></span>
+                </span>
+                <span class="border-left-right">
+                    <span class="text-success"><span class="text-success font_weight">Paid</span> $<b>244,214</b></span>
+                </span>
+                <span>
+                    <span class="text-danger"><span class="text-danger font_weight">Rejected</span> $<b>34,001</b></span>
+                </span>
+            </span>*@
+        <style>
+            .small_tile {
+                padding: 5px;
+                margin-top: 11px;
+                border-radius: 2px;
+                text-transform: uppercase;
+            }
+
+            .small_tile_header {
+                text-align: center;
+            }
+
+            .small_tile_body {
+                font-size: 13px;
+                text-align: center;
+            }
+
+            .info_small_tile {
+                /*background: #487fc4;*/
+                color: #487fc4;
+                border: 1px solid #487fc4;
+                border-bottom: 3px solid #487fc4;
+            }
+
+            .success_small_tile {
+                color: #18a689;
+                border: 1px solid #18a689;
+                border-bottom: 3px solid #18a689;
+            }
+
+            .danger_small_tile {
+                color: #ea394c;
+                border: 1px solid #ea394c;
+                border-bottom: 3px solid #ea394c;
+            }
+        </style>
+        <div class="col-lg-4">
+            <div class="small_tile info_small_tile">
+                <div class="small_tile_header">
+
+                </div>
+                <div class="small_tile_body">
+                    <span>Dispatched:</span><b>$8,854,856</b>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="small_tile success_small_tile">
+                <div class="small_tile_header">
+
+                </div>
+                <div class="small_tile_body">
+                    <span>Paid:</span><b>$7,107,021</b>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="small_tile danger_small_tile">
+                <div class="small_tile_header">
+
+                </div>
+                <div class="small_tile_body">
+                    <span>Rejected:</span><b>$845,152</b>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <h4>
+            CLAIMS REPORT FOR FINANCIAL YEAR -
+            <select class="financial_year_dropdown">
+                <option>2013-2014</option>
+                <option>2014-2015</option>
+                <option selected>2015-2016</option>
+            </select>
+
+            @*<a class="btn btn-xs btn-warning pull-right">
+                    <i class="fa fa-history"></i>
+                </a>*@
+            <a class="btn btn-xs btn-success pull-right" id="Float_Settings" data-role="tooltip" data-placement="left" title="Open Settings">
+                <i class="fa fa-cog"></i>
+            </a>
+            <a class="btn btn-xs btn-info pull-right" id="master_filter">
+                <i class="fa fa-filter"></i>
+            </a>
+
+
+        </h4>
+    </div>
+    @*<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+            <a class="btn btn-xs btn-warning pull-right">
+                <i class="fa fa-history"></i>
+            </a>
+            <a class="btn btn-xs btn-info pull-right" id="master_filter">
+                <i class="fa fa-filter"></i>
+            </a>
+        </div>*@
+    @Html.Partial("~/Views/ClaimsDashboard/_Filter.cshtml")
+
+
+    @Html.Partial("~/Views/ClaimsDashboard/_TileView.cshtml")
+    <ul class="claims_report_list" id="sortable">
+        <li class="ui-state-default info_border" id="chart1" data-id="1" data-url="#MeanProcessTimeReport" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="c_panel" id="OverAllMeanProcessTimeId">
+                @Html.Partial("~/Views/ClaimsDashboard/_SOverallMeanProcessTime.cshtml")
+            </div>
+        </li>
+        <li class="ui-state-default success_border" id="chart2" data-id="2" data-url="#HighCostClaimsReport" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="c_panel" id="HighCostClaims">
+                @Html.Partial("~/Views/ClaimsDashboard/_SHighCostClaims.cshtml")
+            </div>
+        </li>
+        <li class="ui-state-default default_border" id="chart3" data-id="3" data-url="#ProceduresClaimedReport" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="c_panel" id="ProceduresClaimed">
+                @Html.Partial("~/Views/ClaimsDashboard/_SProceduresClaims.cshtml")
+            </div>
+        </li>
+        <li class="ui-state-default warning_border" id="chart4" data-id="4" data-url="#ICDReport" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="c_panel" id="MostCommonDisease">
+                @Html.Partial("~/Views/ClaimsDashboard/_SMostCommonDiseases.cshtml")
+            </div>
+        </li>
+        <li class="ui-state-default info_border" id="chart5" data-id="5" data-url="#PenaltyAdjustmentReport" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="c_panel" id="PenalityFY">
+                @Html.Partial("~/Views/ClaimsDashboard/_SPenaltyAdjustmentReport.cshtml")
+            </div>
+        </li>
+        <li class="ui-state-default success_border" id="chart6" data-id="6" data-url="#SpanTimeReport" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="c_panel" id="internalMeanProcessTime">
+                @Html.Partial("~/Views/ClaimsDashboard/_SInternalMeanProcessTime.cshtml")
+            </div>
+        </li>
+    </ul>
+
+
+
+    <div class="clearfix"></div>
+    @Html.Partial("~/Views/Shared/OtherLayouts/_Footer.cshtml")
+</div>
+
+<script src="~/Scripts/LibScripts/underscore-min.js"></script>
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script src="~/Scripts/LibScripts/jquery-ui.min.js"></script>
+@*<script src="~/Scripts/AppScripts/ClaimsDashboard/googleMap.js"></script>*@
+
+
+<script src="~/Scripts/LibScripts/d3.min.js"></script>
+<script src="~/Scripts/LibScripts/c3.min.js"></script>
+<script src="~/Scripts/LibScripts/moment.min.js"></script>
+<script src="~/Scripts/LibScripts/daterangepicker.js"></script>
+@*<script src="~/Scripts/AppScripts/ClaimsDashboard/multiple-select.js"></script>*@
+<script src="~/Scripts/AppScripts/ClaimsDashboard/multi-select-searchcumdropdown.js"></script>
+<script src="~/Scripts/AppScripts/ClaimsDashboard/filter.js"></script>
+<script src="~/Scripts/AppScripts/ClaimsDashboard/ClaimsDashboardRewamp.js"></script>
+<script src="~/Scripts/AppScripts/ClaimsDashboard/data.js"></script>
+
+@Html.Partial("~/Views/ClaimsDashboard/_SettingForClaimsDashBoard.cshtml")

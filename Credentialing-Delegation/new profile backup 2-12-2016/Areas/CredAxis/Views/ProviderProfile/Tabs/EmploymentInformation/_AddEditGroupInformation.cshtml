@@ -1,0 +1,94 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.EmploymentInformationVieModel.GroupInformationViewModel>
+@using PratianUI
+@{
+    var Group = 0;
+}
+
+<fieldset class="fsStyle" id="AddEditGrpInfo">
+    <legend class="legendStyle">
+        @if (Model.FirstOrDefault().GroupInformationViewID == null)
+        {
+            <span class="theme_depend text-uppercase TabHeading"><span class="transparent-font-color">_____</span>Add Group Information<span class="transparent-font-color">____</span></span>
+        }
+        else
+        {
+            <span class="theme_depend text-uppercase "><span class="transparent-font-color">_____</span>Edit Group Information<span class="transparent-font-color">____</span></span>
+        }
+    </legend>
+
+    @using (Ajax.BeginForm("AppendGroupdata", "Employment", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "ViewGroupInformation" }))
+    {
+
+        foreach (var item in Model)
+        {
+            Group = Group + 1;
+            @Html.HiddenFor(e => item.GroupInformationViewID)
+            <div class="x_content zero-padding-left-right mutiple-data">
+                @if (item.GroupInformationViewID != null)
+                {
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">Edit Group Information-@Group</span>
+                    </div>
+                }
+                else
+                {
+                }
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle ">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.IpaGroupName) :</label>
+                    </span>
+                    <span class="col-lg-8 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(e => item.IpaGroupName, new { @class = "form-control input-xs", @placeholder = "IPA/Group Name" })</span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.StartDate) :</label>
+                    </span>
+                    <span class="col-lg-8 nopadding">
+                        <span class="theme_label_data">@Html.PratianUiDatePickerFor(m => item.StartDate, new { @class = "form-control input-xs", placeholder = "MM/DD/YYYY" })</span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.EndDate) :</label>
+                    </span>
+                    <span class="col-lg-8 nopadding">
+                        <span class="theme_label_data">@Html.PratianUiDatePickerFor(m => item.EndDate, new { @class = "form-control input-xs", placeholder = "MM/DD/YYYY" })</span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.Status) :</label>
+                    </span>
+                    <span class="col-lg-8 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(e => item.Status, new { @class = "form-control input-xs", @placeholder = "Status" })</span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.GroupTaxId) :</label>
+                    </span>
+                    <span class="col-lg-8 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(e => item.GroupTaxId, new { @class = "form-control input-xs", @placeholder = "Group Tax Id" })</span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-5 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.GroupNPI) :</label>
+                    </span>
+                    <span class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(e => item.GroupNPI, new { @class = "form-control input-xs", @placeholder = "Group NPI" })</span>
+                    </span>
+                </div>
+            </div>
+        }
+        <div class="row col-lg-12 zero-padding-left-right" style="margin-top:5px;">
+            @*<input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save" />*@
+
+            <button class="btn btn-success btn-xs yahanClickKar list-item buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Employment/GetGroupInfoData" data-tab-container="ViewGroupInformation" value="">Save</button>
+                <button class="btn btn-danger btn-xs yahanClickKar list-item buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Employment/GetGroupInfoData" data-tab-container="ViewGroupInformation" value="">Cancel</button>
+</div>
+
+    }
+</fieldset>

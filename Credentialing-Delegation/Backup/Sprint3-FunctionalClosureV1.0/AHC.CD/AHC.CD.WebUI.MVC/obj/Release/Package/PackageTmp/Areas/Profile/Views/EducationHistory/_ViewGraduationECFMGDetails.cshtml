@@ -1,0 +1,39 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.ECFMGDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+    {
+        <div class="legend2 pull-right" ng-show="visibilityControl!='editecfmgDetail'">
+            <button class="btn btn-xs btn-primary" ng-click="operateEditControl('editecfmgDetail', ecfmgDetail)" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+        </div>
+    }
+    
+    <div class="col-lg-3 form-group">
+        
+        @Html.LabelFor(model => model.ECFMGNumber, htmlAttributes: new { @class = "control-label small" })       
+        <div>
+            <i class="data-label">{{ecfmgDetail.ECFMGNumber}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        
+        @Html.LabelFor(model => model.ECFMGIssueDate, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{ecfmgDetail.ECFMGIssueDate | date:'MM-dd-yyyy'}}</i>
+        </div>
+    </div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+        {
+            <div class="col-md-3 form-group">
+                @Html.LabelFor(model => model.ECFMGCertPath, htmlAttributes: new { @class = "control-label small" })
+                <div ng-show="ecfmgDetail.ECFMGCertPath!=''">
+                    <i class="data-label"><a href="/Document/View?path={{ecfmgDetail.ECFMGCertPath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="ECFMG Certificate"><i class="fa fa-file"> ECFMG Certificate</i></a></i>
+                </div>
+                <div ng-show="ecfmgDetail.ECFMGCertPath==''">
+                    <i class="data-label"> Not available</i>
+                </div>
+            </div>
+        }
+
+    
+

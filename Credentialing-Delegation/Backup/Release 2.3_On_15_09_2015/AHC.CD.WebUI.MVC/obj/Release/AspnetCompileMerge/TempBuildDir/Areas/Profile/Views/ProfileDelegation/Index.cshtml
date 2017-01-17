@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProfileDelegation.js"></script>
+}
+<div id="page-wrapper" ng-app="DelegationApp" ng-controller="delegationController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Profile Delegation
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="newUser" class="panel panel-default content-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Profile Delegation</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="col-lg-12 zero-padding-left-right-div">
+
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Team Lead</label>
+                                    <div>
+                                        <input type="text" ng-focus="TL.ProfileUserIdfocus=true" ng-blur="TL.ProfileUserIdfocus=false" class="form-control input-sm" name="Name" ng-model="TL.NameDup" ng-change="searchCumDropDown('ForTL'+$index)" />
+                                        <div ng-hide="!filterTLData.length" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForTL{{$index}}">
+                                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                                <tbody>
+                                                    <tr ng-repeat="TL in filterTLData=(TeamLeads | filter : TL.NameDup) track by $index" ng-click="addIntoTLDropDown(TL,'ForTL')" class="pointer">
+                                                        <td>{{TL.Name}} - {{TL.Email}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div ng-if="!filterTLData.length" ng-hide="!TL.ProfileUserIdfocus" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Team Lead Name not found</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <span class="text-danger" data-valmsg-for="RoleCode" data-valmsg-replace="true">
+                                            <span for="RoleCode" class=""></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div><br />
+                            <div class="panel-body">
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12" style="overflow-x:auto;">
+                                    <table class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email Id</th>
+                                                <th>Date Of Birth</th>
+                                                <th>Gender</th>
+                                                <th>Mobile Number</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{TL.Name}}</td>
+                                                <td>{{TL.Email}}</td>
+                                                <td>{{TL.DateOfBirth}}</td>
+                                                <td>{{TL.Gender}}</td>
+                                                <td>{{TL.MobileNumber}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div><br />
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-12 form-group">
+                                    <input type="button" value="Confirm" ng-click="addUser(@ViewBag.ProfileId, TL.ProfileUserID)" class="btn btn-primary btn-sm pull-right" />
+                                    <input type="button" value="Clear" ng-click="clear()" class="btn btn-warning btn-sm pull-left" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- /.row -->
+                </div>
+                <div ng-show="activeMessageDiv=='TL'" class="alert alert-success" role="alert">
+                    {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='TLError'" class="alert alert-danger" role="alert">
+                    {{messageDesc}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</div>

@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@section AddToHead{
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/MilitaryRank.js"></script>
+    }
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> Military Rank
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataMilitaryRanks" ng-controller="masterDataMilitaryRanksController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="/MasterDataNew/MilitaryBranch">Military Branch Management</a> &nbsp;&nbsp;  <a href="/MasterDataNew/MilitaryRank">Military Rank Management</a>
+                        <span class="pull-right">
+                            <button  ng-disabled="disableAdd" ng-click="addMilitaryRanks()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <br />
+                        <div ng-show="activeMessageDiv=='Rank'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div><br />
+                        <div ng-show="activeMessageDiv=='RankError'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rank Title *</th>
+                                    <th>Branch Name *</th>
+                                    <th>Status</th>
+                                    <th>Last Modified Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="Filter Rank Title" class="form-control input-sm" ng-model="search.MilitaryRankTitle" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter Branch Title" class="form-control input-sm" ng-model="search.MilitaryBranchTitle" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.Status" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter Last Modified Date" class="form-control input-sm" ng-model="search.LastModifiedDate" ng-change="filterData()" /></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="License in CurrentPage|filter:{MilitaryRankTitle:search.MilitaryRankTitle,MilitaryBranchTitle:search.MilitaryBranchTitle,Status:search.Status,LastModifiedDate:search.LastModifiedDate} track by $index" ng-include="getTemplate(License)"></tr>
+                            </tbody>
+                        </table>
+
+                        <script type="text/ng-template" id="displayMilitaryRanks">
+                            <td>{{License.MilitaryRankTitle}}</td>
+                            <td>{{License.MilitaryBranchTitle || 'Not Available'}}</td>
+                            <td>{{License.Status}}</td>
+                            <td>{{License.LastModifiedDate}}</td>
+                            <td>
+                            @*    <button ng-disabled="disableEdit" ng-click="editMilitaryRanks(License)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editMilitaryRanks">
+                            <td>
+                                <input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempMilitaryRanks.MilitaryRankTitle" />
+                                <span class="text-danger">{{rankError}}</span>
+                                <span class="text-danger" name="title" ng-if="existErr">{{existErr}}</span>
+                            </td>
+                            <td>
+                                @*<input type="text" ng-model="tempMilitaryRanks.MilitaryBranch[0].Title" />*@
+                            <select ng-disabled="hide" ng-model="tempMilitaryRanks.MilitaryBranchID" ng-change="getMilitaryBranch(tempMilitaryRanks.MilitaryBranchID)" class="form-group form-control input-sm inputMarginBottoomZero">
+                                <option ng-if="!tempMilitaryRanks.MilitaryBranchID" selected hidden value="">--Select--</option>
+                                <option ng-repeat="branch in MilitaryBranchs track by $index" value="{{branch.MilitaryBranchID}}" ng-selected="tempMilitaryRanks.MilitaryBranchID == branch.MilitaryBranchID">{{branch.Title}}</option>
+                            </select>
+                                <span class="text-danger">{{rankbranchError}}</span>
+
+                        </td>
+                        <td>{{tempMilitaryRanks.Status}}</td>
+                        <td>{{tempMilitaryRanks.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                        <td>
+                            <button ng-if="!tempMilitaryRanks.MilitaryRankID" ng-click="saveMilitaryRanks($index)" class="btn btn-xs btn-primary">Save</button>
+                            <button ng-if="tempMilitaryRanks.MilitaryRankID" ng-click="UpdateMilitaryRanks($index)" class="btn btn-xs btn-primary">Update</button>
+                            <button ng-if="tempMilitaryRanks.MilitaryRankID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                            <button ng-if="!tempMilitaryRanks.MilitaryRankID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                        </td>
+                    </script>
+                        <div class="clearfix"></div><br />
+                        <div ng-hide="AddNewInsuranceCarrier" ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+
+                        <pagination ng-hide="AddNewInsuranceCarrier" ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+
+
+
+
+
+

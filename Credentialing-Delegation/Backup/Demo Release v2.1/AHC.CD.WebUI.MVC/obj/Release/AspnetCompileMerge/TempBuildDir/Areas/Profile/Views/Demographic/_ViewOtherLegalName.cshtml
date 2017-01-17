@@ -1,0 +1,87 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.OtherLegalNameViewModel
+
+<fieldset>
+    <legend>
+        Other Legal Name
+    </legend>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.OtherFirstName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words" ng-if="oln.OtherFirstName">{{oln.OtherFirstName}}</i>
+                <i class="data-label" ng-if="!oln.OtherFirstName">Not Available</i>
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.OtherMiddleName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words" ng-if="oln.OtherMiddleName">{{oln.OtherMiddleName}}</i>
+                <i class="data-label" ng-if="!oln.OtherMiddleName">Not Available</i>
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.OtherLastName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words" ng-if="oln.OtherLastName">{{oln.OtherLastName}}</i>
+                <i class="data-label" ng-if="!oln.OtherLastName">Not Available</i>
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            <label class="control-label small">Suffix</label>
+            <div>
+                <i class="data-label" ng-if="oln.Suffix">{{oln.Suffix}}</i>
+                <i class="data-label" ng-if="!oln.Suffix">Not Available</i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <span ng-if="oln.StartDate">
+                        {{oln.StartDate | date: "MM/dd/yyyy"}}
+                    </span>
+                    <span ng-if="!oln.StartDate">
+                        Not Available
+                    </span>
+                </i>
+            </div>
+        </div>
+        <div class="col-md-3 form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <span ng-if="oln.EndDate">
+                        {{oln.EndDate | date: "MM/dd/yyyy"}}
+                    </span>
+                    <span ng-if="!oln.EndDate">
+                        Not Available
+                    </span>
+                </i>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.DocumentPath, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <a ng-if="oln.DocumentPath" href="/Document/View?path={{oln.DocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Other Legal Name Document"><i class="fa fa-file"></i></a>
+                    <span ng-if="!oln.DocumentPath">Not Available</span>
+                </i>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div ng-if="activeMessageDiv=='alertOtherLegalNameSuccess'+$index" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+        {{messageDesc}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-12 form-group">
+        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl()">Cancel</button>
+        @if (AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionValidator.IsAuthorized(AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <button class="btn btn-sm btn-primary pull-right" ng-click="operateEditControl($index+'_EditOtherLegalName',oln)">Edit</button>
+        }
+    </div>
+</fieldset>

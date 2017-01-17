@@ -1,0 +1,78 @@
+﻿@model IEnumerable<PortalTemplate.Areas.UM.Models.ViewModels.Contact.AuthorizationContactViewModel>
+@using PortalTemplate.Helper
+<div class="col-lg-12 zero-padding-left-right" id="contactDiv">
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                <span class="transparent-font-color">________.</span>
+                @Html.Label("Contacts")
+                <span class="transparent-font-color">________</span>
+            </span>
+            <span class="text-uppercase pull-right">
+                <span>
+                    <button class="btn btn-success btn-xs add_contact_btn" type="button" style="margin-top: -3px;" tabindex="-1">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </span>
+            </span>
+        </legend>
+        
+        <div class="x_content zero-padding-left" id="contactDivision">
+            <table class="table margin_bottom_zero table-white noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.CallDateTime)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.ContactEntity)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.ContactName)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.ContactType)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.EMailFaxOther)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Direction)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.OutcomeType)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.Description)</th>
+                        <th class="theme_label">@Html.DisplayNameFor(e => e.CreatedBy)</th>
+                        <th class="theme_label inc-fax">@Html.DisplayNameFor(e => e.IncludeFax)</th>
+                        <th class="theme_label" style="width:10%">
+                            <span class="action_Class">Action</span>
+                            <a class="contact_print_button_beside_table hover_effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                                <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                            </a>
+                       </th>
+                    </tr>
+                </thead>
+                <tbody id="contactTbody">
+                    @if (Model!=null && Model.Count()>0)
+                    {
+                         foreach (var item in Model)
+                             {
+                               <tr>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.CallDateTime)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.ContactEntity)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.ContactName)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.ContactType)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.EMailFaxOther)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.Direction)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.OutcomeType)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.Description)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.CreatedBy)</td>
+                                   <td class="theme_label_data">@Html.DisplayFor(e => item.IncludeFax)</td>
+                                   <td class="theme_label_data"></td>
+                               </tr>
+                             }
+                    }
+                    else
+                    {
+                        <tr id="emptyContactTemplate" style="text-align:center">
+                            <td colspan="11" class="theme_label_data theme_a">No Data Available</td>
+                        </tr>
+                    }
+                  
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>
+<div class="hidden" id="ContactsArea">
+
+</div>
+<div class="clearfix"></div>
+@Html.Partial("~/Areas/UM/Views/Common/Contact/Common/_PrintContact.cshtml")

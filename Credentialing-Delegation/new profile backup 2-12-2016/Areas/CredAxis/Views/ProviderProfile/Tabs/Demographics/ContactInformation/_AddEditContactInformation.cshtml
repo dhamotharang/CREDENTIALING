@@ -1,0 +1,92 @@
+﻿@model PortalTemplate.Areas.CredAxis.Models.DemographisViewModels.ContactInformationViewModel
+
+@{
+    bool IsEdit = true;
+}
+
+@***************CONTACT INFORMATION Edit*********************************@
+<div class="col-lg-12 nopadding">
+    <fieldset class="fsStyle" id="AddEditContactInfo">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                @if (Model == null)
+                {
+                    <span>ADD CONTACT INFORMATION</span>
+                    IsEdit = false;
+                }
+                @if (IsEdit)
+                {
+                    <span><span class="transparent-font-color">__</span>EDIT CONTACT INFORMATION<span class="transparent-font-color">_</span></span>
+                }
+            </span>
+        </legend>
+        @using (Ajax.BeginForm("AddContactInfo", "Demographics", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "ContactInformationDiv" }))
+        {
+            <div class="x_content zero-padding-left">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.PhoneNumber)</label>
+                    </span>
+                    <span class="col-lg-1 "></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control input-xs", placeholder = "MOBILE NUMBER" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.HomePhoneNumber)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.HomePhoneNumber, new { @class = "form-control input-xs", placeholder = "HOME PHONE" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.EmailId)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.EmailId, new { @class = "form-control input-xs", placeholder = "EMAIL ID" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.HomeFaxNumber)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.HomeFaxNumber, new { @class = "form-control input-xs", placeholder = "HOME FAX NUMBER" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.Pager)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => m.Pager, new { @class = "form-control input-xs", placeholder = "PAGER" })
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 theme_label nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.PreferredMethod)</label>
+                    </span>
+                    <span class="col-lg-1"></span>
+                    <div class="col-lg-7 nopadding">
+                        @Html.DropDownList("PreferredMethod",
+                             new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.CredAxis.Enums.PreferedMethod))),
+                    "Select",
+                             new { @class = "form-control input-xs" })
+
+                    </div>
+                </div>
+            </div>
+            <div class="row col-lg-12 zero-padding-left-right">
+                <button class="btn btn-success btn-xs yahanClickKar   buttonmargin pull-right margin-right-5px" type="button" name="submit">Save</button>
+                <button type="button" class="btn btn-danger btn-xs list-item yahanClickKar buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Demographics/CancelContactInfoEdit" data-tab-container="ContactInformationDiv">Cancel</button>
+            </div>
+        }
+        @*<div class="row btn-right">
+                <button class="btn btn-danger btn-xs ripple list-item  pull-right" data-tab-path="/CredAxis/Demographics/CancelContactInfoEdit" data-tab-container="PostGraduationCMEDetails">Cancel</button>
+                <button class="btn btn-danger btn-xs list-item buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Demographics/CancelContactInfoEdit" data-tab-container="PostGraduationCMEDetails">Save</button>
+
+            </div>*@
+    </fieldset>
+</div>

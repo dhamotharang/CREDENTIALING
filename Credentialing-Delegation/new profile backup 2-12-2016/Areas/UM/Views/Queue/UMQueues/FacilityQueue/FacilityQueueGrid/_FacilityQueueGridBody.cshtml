@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PortalTemplate.Areas.UM.Models.ViewModels.Queue.FacilityQueueViewModel>
+
+@foreach (var item in Model)
+{
+    var startcolor = String.Concat(item.RowColor, "_start");
+    var reviewDateColor = String.Concat(item.RowColor, "_start");
+    <tr class="tab-navigation cursor_pointer" data-tab-action="View Authorization" data-tab-usertype="Member" data-tab-title="View Auth" data-tab-parentcontainer="partialBodyContainer" data-tab-floatmenu="true" data-tab-container="innerTabContainer" data-tab-autoflush="false" data-tab-issubtab="true" data-tab-defaultparenttab="Member" data-tab-userid=@item.MemberID data-tab-parenttabtitle=@item.MemberName data-tab-path="/UM/ViewAuthorization/GetViewAuth?ID=20" data-tab-float-menu-path="~/Areas/UM/Views/Shared/_UMFloatMenu.cshtml" data-tab-parenttabpath="/Portal/MemberManage/GetMemberHeaderById?IDs=@item.MemberID" data-tab-parenttabrenderingarea="headerArea">
+        <td class="@startcolor"></td> 
+        <td @*class="maxWidthtdSM"*@><span class="singleElemQueue theme_label_data"><span class="label label-primary">  @item.Abbrevation </span></span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> @item.ReferenceNumber </span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> @item.MemberID</span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> <span class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="MEMBER NAME" data-content="@item.MemberName"> @item.MemberName</span></span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> @*@item.ExpectedDOA*@ 10/20/19</span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> @*@item.DateOfConversion*@10/20/19</span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> @*@item.ReviewDate*@10/20/19</span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> @*@item.ExpectedDcDate*@10/20/19</span></td>
+        <td @*class="maxWidthtdXL"*@><span class="singleElemQueue theme_label_data"><span class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="PROVIDER" data-content="@item.ProviderName"> @item.ProviderName</span></span></td>
+        <td @*class="maxWidthtdXL"*@><span class="singleElemQueue theme_label_data"><span class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="FACILITY" data-content="@item.FacilityName">@item.FacilityName</span></span></td>
+        <td @*class="maxWidthtdXL"*@><span class="singleElemQueue theme_label_data"><span class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="SVC PROVIDER" data-content="@item.SVCAttProviderName.ToUpper()">@item.SVCAttProviderName</span></span></td>
+        <td class="text-center">
+
+            @if (item.RequestType.ToLower() == "expedited")
+            {
+                <span class="singleElemQueue red-color">EX</span>
+            }
+            else
+            {
+                <span class="singleElemQueue green-color">ST</span>
+            }
+
+
+        </td>
+        <td @*class="maxWidthtdX"*@ class="text-center"><span class="singleElemQueue theme_label_data"> @item.AuthorizationType</span></td>
+        <td @*class="maxWidthtdX"*@ class="text-center"><span class="singleElemQueue theme_label_data"> @item.TypeOfCare</span></td>
+        <td @*class="maxWidthtdX"*@ class="text-center"><span class="singleElemQueue theme_label_data"> @*@item.Review*@CC</span></td>
+        <td @*class="maxWidthtdX"*@ class="text-center"><span class="singleElemQueue theme_label_data"> @item.ActualLOS</span></td>
+        <td @*class="maxWidthtdX"*@ class="text-center"><span class="singleElemQueue theme_label_data"> @item.DaysRequested</span></td>
+        <td @*class="maxWidthtdX"*@ class="text-center"><span class="singleElemQueue theme_label_data"> @item.TotalAuthorized</span></td>
+        <td @*class="maxWidthtdX"*@ class="text-center"><span class="singleElemQueue theme_label_data"> @item.TotalDenied</span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> <span class="td-ellipsis" data-toggle="popover" data-placement="left" data-trigger="hover" data-title="STATUS" data-content="@item.AuthStatus"> @item.AuthStatus</span></span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"> @item.PosAbb</span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"><span class="td-ellipsis" data-toggle="popover" data-placement="left" data-trigger="hover" data-title="DIAGNOSIS DESCRIPTION" data-content="@item.PrimaryDx"> @item.PrimaryDx</span></span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"><span class="td-ellipsis" data-toggle="popover" data-placement="left" data-trigger="hover" data-title="ASSIGNED TO" data-content="@item.Assigned"> @item.Assigned</span></span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"><span class="td-ellipsis" data-toggle="popover" data-placement="left" data-trigger="hover" data-title="ENTRY" data-content="@item.Entry"> @item.Entry</span></span></td>
+        <td @*class="maxWidthtdX"*@><span class="singleElemQueue theme_label_data"><span class="td-ellipsis" data-toggle="popover" data-placement="left" data-trigger="hover" data-title="AUTH NOTE" data-content="@item.AuthNote"> @item.AuthNote</span></span></td>
+        
+    </tr>
+}

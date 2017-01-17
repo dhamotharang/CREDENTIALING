@@ -1,0 +1,142 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+    <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+    <script src="~/Scripts/Custom/TaskTracker/LoadingInterceptor.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+
+
+    <script src="~/Scripts/Custom/TaskTracker/TaskTracker.js"></script>
+
+}
+<style>
+    /* styles for validation helpers */
+    .field-validation-error {
+        color: #b94a48;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    input.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    select.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    input[type="checkbox"].input-validation-error {
+        border: 0 none;
+    }
+
+    .validation-summary-errors {
+        color: #b94a48;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+
+    .emptyData {
+        color: "#E27B7B";
+    }
+
+    /*Provider Type Style*/
+    .label-provider-type {
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        /*padding: 4px 4px 5px 7px;*/
+    }
+
+        .label-provider-type > i {
+            padding-left: 10px;
+            color: #b94a48;
+        }
+
+        .label-provider-type:hover {
+            background-color: #eee;
+            text-decoration: none;
+        }
+</style>
+
+
+<div id="page-wrapper" ng-app="TrackerApp">
+        
+    <div  class="container-fluid" ng-controller="TrackerCtrl" ng-init="progressbar = false;LoadData()">
+        
+        <div class="row">
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                </li>
+            </ol>
+        </div>
+        <div ng-show="showLoading" class="row" ng-cloak>
+            <div style="margin-left:45%;margin-top:15%">
+                <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+                <span>Loading...Please Wait</span>
+            </div>
+        </div>
+        <div id="tasktrackerdiv" hidden>
+            <div class="panel panel-body form-style">
+                <fieldset>
+                    <legend>
+                        Tasks Overview
+                    </legend>
+                    <div class="legend2 pull-right">
+                        <button ng-click="showAddView()" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
+                    </div>
+                    <div class="col-lg-12" ng-if="!addView && !editView && !detailView" ng-cloak>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="active"><a data-toggle="tab" ng-click="showtabdata()" href="#tab1">Daily Tasks</a></li>
+                            <li><a data-toggle="tab" ng-click="showtabdata()" href="#tab2">Tasks Assigned</a></li>
+                            <li><a data-toggle="tab" ng-click="showtabdata()" href="#tab3">All Tasks</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab1" class="tab-pane fade in active row">@Html.Partial("_DailyTasks")</div>
+                            <div id="tab2" class="tab-pane fade">@Html.Partial("_TasksAssigned")</div>
+                            <div id="tab3" class="tab-pane fade">@Html.Partial("_AllTasks")</div>
+                        </div>
+                    </div>
+
+
+                    <div ng-if="addView" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" ng-cloak>
+                        <fieldset>
+                            <legend>
+                                Add New Task
+                            </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="cancelAdd()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="close"><i class="fa fa-close"></i></button>
+                            </div>
+                            <div id="newFormDiv">
+                                @Html.Partial("~/Views/TaskTracker/_AddEditTask.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,47 @@
+﻿<div class="col-lg-12">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th class="col-md-2">LOB Name</th>
+                <th class="col-md-3">Sub Plan Name</th>
+                <th class="col-md-2">Contact Person Name</th>
+                <th class="col-md-2">Address Detail</th>
+                <th class="col-md-3">Action</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="plob in tempViewObject.PlanLOBs track by $index" ng-init="parentindex=$index">
+            <tr>
+                <td class=" wrap-words">
+                    <span ng-if="visibilityControl != parentindex+'EditLOB'">
+                        {{plob.LOB.LOBName}}
+                    </span>
+                </td>
+                <td class=" wrap-words"><span ng-repeat="sub in plob.SubPlans">{{sub.SubPlanName }}&nbsp;&nbsp;</span></td>
+                <td class=" wrap-words"><span ng-repeat="con in plob.LOBContactDetails">{{con.ContactPersonName }}&nbsp;&nbsp;</span></td>
+                <td class=" wrap-words">
+                    <span ng-if="visibilityControl != parentindex+'EditLOB'">
+                        <span ng-repeat="addr in plob.LOBAddressDetails">
+                            {{addr.Street }}{{addr.Appartment }} {{addr.City }}
+                            {{addr.State }} {{addr.ZipCode }}  {{addr.Country }}
+                            {{addr.County }}&nbsp;&nbsp;
+                        </span>
+                        <span ng-if="plob.SubPlans.length == 0">
+                            No Sub Plans
+                        </span>
+                    </span>
+                </td>
+                <td>
+                    <a ng-click="ViewLOB(parentindex+'ViewLOB', plob,$index);" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></a>
+                </td>
+            </tr>
+            <tr ng-show="visibilityControl == parentindex+'ViewLOB'">
+                <td colspan="5" class="editTableDataStyle">
+                        @Html.Partial("_ViewLOBDetail")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="ProceedViewContract()">Proceed</button>
+        <input type="button" value="Back" ng-click="cancelViewPlanLOB(0)" class="btn btn-warning btn-sm pull-left">
+</div>
+

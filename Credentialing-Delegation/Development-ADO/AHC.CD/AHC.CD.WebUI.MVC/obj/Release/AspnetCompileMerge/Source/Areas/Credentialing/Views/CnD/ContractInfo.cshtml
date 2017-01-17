@@ -1,0 +1,297 @@
+﻿@{
+    ViewBag.Title = "ContractInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+<script src="~/Areas/Credentialing/Scripts/CnD/Contractinfo.js"></script>
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+
+<div id="page-wrapper">
+    <div class="container-fluid" ng-app="Contractinfo" ng-controller="ContractinfoController">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> Contract Information
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="panel panel-default content-panel">
+                <div class="panel-heading">
+                    Contract Information
+                </div>
+                <div class="panel-body" ng-cloak>
+                    <div ng-show="loadingAjax" class="progress col-lg-12" ng-cloak>
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+                    <div ng-show="!loadingAjax" ng-cloak>
+                        <table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                            <tbody ng-repeat="c in $data track by $index">
+                                <tr>
+
+                                    <td class="col-md-1 wrap-words" data-title="'Name'" header-class="text-center" sortable="'Name'" filter="{ 'Name': 'text' }">{{c.Name}}</td>
+                                    <td class="col-md-2 wrap-words" data-title="'Title'" header-class="text-center" sortable="'Title'" filter="{ 'Title': 'text' }">{{c.Title}}</td>
+                                    <td class="col-md-2 wrap-words" data-title="'Plan (LOB)'" header-class="text-center" sortable="'Plan'" filter="{ 'Plan': 'text' }">{{c.Plan}}</td>
+                                    <td class="col-md-2 wrap-words" data-title="'Location'" header-class="text-center" sortable="'Location'" filter="{ 'Location': 'text' }">{{c.Location}}</td>
+                                    <td class="col-md-1 wrap-words" data-title="'Proovider ID'" header-class="text-center" sortable="'ProviderID'" filter="{ 'ProviderID': 'text' }">{{c.ProviderID}}</td>
+                                    <td class="col-md-1 wrap-words" data-title="'Credentialing Status'" header-class="text-center" sortable="'CredentialingStatus'" filter="{ 'CredentialingStatus': 'text' }">{{c.CredentialingStatus}}</td>
+                                    <td class="col-md-1 wrap-words" data-title="'Effective Date'" header-class="text-center" sortable="'EffectiveDate'" filter="{ 'EffectiveDate': 'text' }">{{c.EffectiveDate}}</td>
+                                    <td class="col-md-2 wrap-words" data-title="'Action'" header-class="text-center">
+                                        <button class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="left" title="View" ng-click="viewContractInfo(c)"><i class=" fa fa-eye"></i></button>
+                                        <button class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-click="editContractInfo(c)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="removeContractInfo(c)"><i class="fa fa-minus-circle"></i></button>
+                                    </td>
+
+                                </tr>
+                                <tr ng-if="c.ViewStatus">
+                                    <td colspan="8">
+                                        <div class="panel-default form-style">
+                                            <fieldset>
+                                                <legend>
+                                                    Loacation Participation Details
+                                                </legend>
+                                                <div class="pull-right legend2">
+                                                    <button class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History" data-original-title="" title=""><i class="fa fa-edit"></i></button>
+                                                </div>
+                                                <div class="col-lg-12 zero-padding-left-right-div">
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Address</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.Address}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.Address==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Plan</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.Plan}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.Plan==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Business Entity</label>
+                                                        <div ng-repeat="be in c.LocationDetails.BE track by $index">
+                                                            <span class="ResultDataStyle">{{be}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.BE.length==0">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Line Of Business</label>
+                                                        <div ng-repeat="lob in c.LocationDetails.LOB track by $index">
+                                                            <span class="ResultDataStyle">{{lob}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.LOB.length==0">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Speciality</label>
+                                                        <div ng-repeat="speciality in c.LocationDetails.Speciality track by $index">
+                                                            <span class="ResultDataStyle">{{speciality}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.Speciality.length==0">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Group ID</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.GroupID}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.GroupID==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Provider ID</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.ProviderID}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.ProviderID==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Panel Status</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.PanelStatus}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.PanelStatus==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Phone</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.Phone}}&nbsp;&nbsp; <i tooltip data-toggle="tooltip" data-placement="right" title="Primary Home Fax" class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.Phone==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Fax</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.Address}}&nbsp;&nbsp; <i tooltip data-toggle="tooltip" data-placement="right" title="Primary Home Fax" class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.Fax==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">OfficeManager</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.LocationDetails.OfficeManager}}</span>
+                                                        </div>
+                                                        <div ng-if="c.LocationDetails==null||c.LocationDetails.OfficeManager==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr ng-if="c.ViewStatus">
+                                    <td colspan="8">
+                                        <div class="panel-default form-style">
+                                            <fieldset>
+                                                <legend>
+                                                    Fee Schedule Details
+                                                </legend>
+                                                <div class="pull-right legend2">
+                                                    <button class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History" data-original-title="" title=""><i class="fa fa-edit"></i></button>
+                                                </div>
+                                                <div class="col-lg-12 zero-padding-left-right-div">
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Fee Schedule</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.FeeDetails.FeeSchedule}}</span>
+                                                        </div>
+                                                        <div ng-if="c.FeeDetails==null||c.FeeDetails.FeeSchedule==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Effective Date</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.FeeDetails.EffectiveDate}}</span>
+                                                        </div>
+                                                        <div ng-if="c.FeeDetails==null||c.FeeDetails.EffectiveDate==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Termination Date</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.FeeDetails.TermDate}}</span>
+                                                        </div>
+                                                        <div ng-if="c.FeeDetails==null||c.FeeDetails.TermDate==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Supporting Document</label>
+                                                        <div ng-if="c.FeeDetails.SupportingDocument">
+                                                            <i class="fa fa-file"></i>
+                                                        </div>
+                                                        <div ng-if="c.FeeDetails==null||!c.FeeDetails.SupportingDocument">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr ng-if="c.ViewStatus">
+                                    <td colspan="8">
+                                        <div class="panel-default form-style">
+                                            <fieldset>
+                                                <legend>
+                                                    Other Details
+                                                </legend>
+                                                <div class="pull-right legend2">
+                                                    <button class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History" data-original-title="" title=""><i class="fa fa-edit"></i></button>
+                                                </div>
+                                                <div class="col-lg-12 zero-padding-left-right-div">
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Initiated Date</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.OtherDetails.InitiatedDate}}</span>
+                                                        </div>
+                                                        <div ng-if="c.OtherDetails==null||c.OtherDetails.InitiatedDate==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Initial Credentialing Date</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.OtherDetails.InitialCredentialingDate}}</span>
+                                                        </div>
+                                                        <div ng-if="c.OtherDetails==null||c.OtherDetails.InitialCredentialingDate==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Recredentialing Date</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.OtherDetails.RecredentialingDate}}</span>
+                                                        </div>
+                                                        <div ng-if="c.OtherDetails==null||c.OtherDetails.RecredentialingDate==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Welcome Letter Mailed Date</label>
+                                                        <div>
+                                                            <span class="ResultDataStyle">{{c.OtherDetails.WelcomeLetterMailedDate}}</span>
+                                                        </div>
+                                                        <div ng-if="c.OtherDetails==null||c.OtherDetails.WelcomeLetterMailedDate==null">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label class="control-label small">Welcome Letter</label>
+                                                        <div ng-if="c.OtherDetails.WelcomeLetterDoc">
+                                                            <i class="fa fa-file"></i>
+                                                        </div>
+                                                        <div ng-if="c.OtherDetails==null||!c.OtherDetails.WelcomeLetterDoc">
+                                                            <i class="data-label">Not available</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

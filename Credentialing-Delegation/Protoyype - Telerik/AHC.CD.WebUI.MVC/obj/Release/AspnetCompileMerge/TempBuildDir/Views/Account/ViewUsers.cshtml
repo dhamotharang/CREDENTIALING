@@ -1,0 +1,109 @@
+﻿@model AHC.CD.WebUI.MVC.Models.UsersList
+@{
+    ViewBag.Title = "ViewUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Custom/ResetPassword.js"></script>
+}
+<div id="page-wrapper" ng-app="Resetpasswordapp" ng-controller="ResetPasswordController" ng-init="Getlist()" ng-cloak>
+    <div class="container-fluid">
+        <div class="row" style="margin-top:2px">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Change Role of an Existing User/ Reset Password
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- Page Heading -->
+        <div ng-show="showLoading" class="row">
+            <div style="margin-left:45%;margin-top:15%">
+                <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+                <span>Loading...Please Wait</span>
+            </div>
+        </div>
+        <div id="mydiv" class="row" hidden>
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <p id="para" style="color:red" hidden>Please enter valid Email ID</p>
+                    <p id="para1" style="color:red" hidden>No Details found with this Email ID</p>
+                    <table id="userstable" ng-show="1==1" class='table table-striped table-bordered customtbodyStyle small wrap-words'>
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Email
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Name
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Role
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Change Role
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Update
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                    Reset Password
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='p in mydata'>
+
+                                <td>{{p.Email}}</td>
+                                <td>{{p.Name}}</td>
+                                <td>{{p.Role}}</td>
+                                <td>
+                                    <select data-val="true" data-val-required="Please select the Role*" name="RoleCode" ng-model="role" class="form-control input-sm" ng-change="myfun($index)">
+                                        <option value="">Change Role</option>
+                                        <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="role == role.Code">{{role.Name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    @*<button type="button" id="updatebutton{{$index}}" data-toggle="tooltip" data-placement="bottom" title="Update" class="btn btn-sm btn-info updatebtn" ng-click="ChangeRole(role,p.Email)"><i class="fa fa-chevron-circle-right"></i></button>*@
+                                    <button id="updatebutton{{$index}}" class="tulasi btn btn-info btn-sm " data-placement="bottom" title="Update Role" ng-click="ChangeRole(role,p.Email)" data-toggle="modal" data-target="#myModal" disabled><i class="fa fa-chevron-circle-right"></i></button>
+                                </td>
+                                <td>
+                                    <button id="PasswordReset" data-target="#myModal" data-toggle="modal" data-placement="bottom" title="Reset Password" class="btn btn-sm btn-info" ng-click="PasswordReset(p.Email)"><i class="fa fa-fire"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <pagination ng-if="" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p><b>{{errormessage}}</b></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

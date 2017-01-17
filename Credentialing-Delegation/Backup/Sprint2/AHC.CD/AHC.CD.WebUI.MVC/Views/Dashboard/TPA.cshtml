@@ -1,0 +1,787 @@
+﻿
+@*<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular-Chart/d3.min.js"></script>
+<script src="~/Scripts/Lib/Angular-Chart/angular-charts.min.js"></script>
+<script src="~/Scripts/Custom/DashBoard/TPA.js"></script>
+<style type="text/css">
+    .chart {
+        height: 290px;
+    }
+
+    .string {
+        color: green;
+    }
+
+    .number {
+        color: darkorange;
+    }
+
+    .boolean {
+        color: blue;
+    }
+
+    .null {
+        color: magenta;
+    }
+
+    .key {
+        color: red;
+    }
+
+    .section {
+        padding-top: 50px;
+    }
+</style>*@
+
+<style>
+
+
+
+
+    .vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none;
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+}
+
+
+
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/nvd3/angular.min.js"></script>
+<script src="~/Scripts/Lib/nvd3/d3.min.js"></script>
+<script src="~/Scripts/Lib/nvd3/nv.d3.min.js"></script>
+<script src="~/Scripts/Lib/nvd3/angular-nvd3.min.js"></script>
+<link href="~/Content/nvd3/nv.d3.min.css" rel="stylesheet" />
+<script src="~/Scripts/Custom/DashBoard/TPA.js"></script>
+
+<div id="page-wrapper" ng-app="example" ng-controller='MainController'>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-dashboard"></i> Dashboard
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> TPA
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+
+            <div class="col-lg-8">
+                <div class="panel panel-default">
+                    @*<div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i></h3>
+                    </div>*@
+                    <div class="panel-body">
+                        <div role="tabpanel">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#graph1" aria-controls="graph1" role="tab" data-toggle="tab" ng-click="ChangeGraph('Growth')">Cred Growth</a></li>
+                                <li role="presentation" class=""><a href="graph2" aria-controls="graph1" role="tab" data-toggle="tab" ng-click="ChangeGraph('Group')">Group</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                @*<div role="tabpanel" class="tab-pane active" id="graph1">
+                                    <br />
+                                    <div class='charts pad'>
+                                        <div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div>
+                                    </div>
+                                </div>*@
+                                <div role="tabpanel" class="tab-pane active" id="graph2">
+
+                                    @*<b>Chart type: </b>
+                                    <select ng-model='chartType' class='input'>
+                                        <option value="pie">Pie</option>
+                                        <option value="bar">Bar</option>
+                                        <option value="line">Line</option>
+                                        <option value="point">Point</option>
+                                        <option value="area">Area</option>
+                                    </select>*@
+                                    @*<span ng-show="chartType==='pie'"><b>Radius</b> <input ng-model="config.innerRadius" size="4"></span>
+                                    <p></p>*@
+                                    <br />
+                                    @*<div class='charts pad'>
+                                        <div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div>
+                                    </div>*@
+
+                                    <nvd3 options="options" data="data"></nvd3>
+
+                                    @*<div class="text-right">
+                                        <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>*@
+                                </div>
+                                @*<div role="tabpanel" class="tab-pane" id="graph2">
+                                    <img src="~/Content/Images/logo2.png" />
+                                    <div class="text-right">
+                                        <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    @*<div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i>Feeds</h3>
+                    </div>*@
+                    <div class="panel-body">
+                        <div class="list-group pre-scrollable">
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> Primary Source Verification for Plan FREEDOM VIP SAVINGS COPD (HMO SNP) DONE
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN RX (HMO) is SUBMITTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is ACCEPTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-times-circle-o text-danger"></i> FREEDOM VIP CARE (HMO SNP) is REJECTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is VERIFIED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is ACCEPTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO SNP) is SUBMITTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is INITIATED
+                            </a>
+                        </div>
+                        <div class="text-right">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.row -->
+
+
+
+        <div class="clearfix"></div><br />
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    @*<div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i></h3>
+                    </div>*@
+                    <div class="panel-body">
+                        <div role="tabpanel">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#grid1" aria-controls="grid1" role="tab" data-toggle="tab">Hospital Privileges</a></li>
+                                <li role="presentation"><a href="#grid2" aria-controls="grid2" role="tab" data-toggle="tab">Health Plan Credentialing</a></li>
+                                <li role="presentation"><a href="#grid6" aria-controls="grid2" role="tab" data-toggle="tab">Licenses</a></li>
+                                @*<li role="presentation"><a href="#grid3" aria-controls="grid3" role="tab" data-toggle="tab">Upcoming Expires</a></li>
+                                <li role="presentation"><a href="#grid4" aria-controls="grid4" role="tab" data-toggle="tab">Recredentialing</a></li>
+                                <li role="presentation"><a href="#grid5" aria-controls="grid5" role="tab" data-toggle="tab">Speciality</a></li>*@
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="grid1">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Provider Name</th>
+                                                    <th>Group</th>
+                                                    <th>Hospital</th>
+                                                    <th>Privilege</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>HEND F. ABDELMALEK</td>
+                                                    <td>Access2 IPA</td>
+                                                    <td>BAYCARE HOME CARE INC</td>
+                                                    <td>Hospitalist</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>QAHTAN A. ABDULFATTAH</td>
+                                                    <td>PrimeCare</td>
+                                                    <td>BROOKSVILLE REGIONAL HOSPITAL</td>
+                                                    <td>Admitting</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>HUSAM A. ABUZARAD</td>
+                                                    <td>Access Physicians</td>
+                                                    <td>COUNTRYSIDE SURG CTR HCA WEST</td>
+                                                    <td>Surgery</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>IAN	ADAM</td>
+                                                    <td>Access2 IPA</td>
+                                                    <td>SEVEN RIVERS REGIONAL MED CTR</td>
+                                                    <td>Visiting</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>MARC A.	ALESSANDRONI</td>
+                                                    <td>Access Physicians</td>
+                                                    <td>CONSULATE HC NEW PORT RICHEY</td>
+                                                    <td>Hospitalist</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="grid2">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Provider</th>
+                                                    <th>Location</th>
+                                                    <th>Insurance Company</th>
+                                                    <th class="col-md-3">Health Plan</th>
+                                                    <th>Tracker</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>HEND F. ABDELMALEK</td>
+                                                    <td>BROOKSVILLE</td>
+                                                    <td>FREEDOM</td>
+                                                    <td>FREEDOM SAVINGS PLAN RX (HMO)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Initiated</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>QAHTAN A. ABDULFATTAH</td>
+                                                    <td>BROOKSVILLE</td>
+                                                    <td>FREEDOM</td>
+                                                    <td>FREEDOM VIP CARE COPD (HMO SNP)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Verified</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>IAN	ADAM</td>
+                                                    <td>SPRING HILL</td>
+                                                    <td>OPTIMUM</td>
+                                                    <td>OPTIMUM GOLD REWARDS PLAN (HMO-POS)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Submitted</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>MARC A.	ALESSANDRONI</td>
+                                                    <td>SPRING HILL</td>
+                                                    <td>OPTIMUM</td>
+                                                    <td>OPTIMUM DIAMOND REWARDS (HMO-POS SNP)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Status</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CRIDER NORMA</td>
+                                                    <td>NEW PRT RCHY</td>
+                                                    <td>OPTIMUM</td>
+                                                    <td>OPTIMUM PLATINUM PLAN (HMO-POS)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-fail">Rejected</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="grid3">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Provider</th>
+                                                    <th class="col-lg-3">Document</th>
+                                                    <th>Expiry Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ANTIOCO VINCENT</td>
+                                                    <td>DEA Licence</td>
+                                                    <td>08-August-2015</td>
+                                                    <td>
+                                                        <i class="fa fa-check-circle text-success"></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PETERSON ANTHONY</td>
+                                                    <td>State Licence</td>
+                                                    <td>09-December-2014</td>
+                                                    <td>
+                                                        <i class="fa fa-warning text-warning"></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WILLIAMS JUDITH</td>
+                                                    <td>CDS Licence</td>
+                                                    <td>04-December-2014</td>
+                                                    <td>
+                                                        <i class="fa fa-times-circle-o text-danger"></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ANTIOCO VINCENT</td>
+                                                    <td>MEDICARE Licence</td>
+                                                    <td>14-January-2015</td>
+                                                    <td>
+                                                        <i class="fa fa-check-circle text-success"></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WILLIAMS JUDITH</td>
+                                                    <td>MEDICAID Licence</td>
+                                                    <td>01-December-2014</td>
+                                                    <td>
+                                                        <i class="fa fa-times-circle-o text-danger"></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WILLIAMS JUDITH</td>
+                                                    <td>Workers Compensation</td>
+                                                    <td>20-December-2014</td>
+                                                    <td>
+                                                        <i class="fa fa-warning text-warning"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="grid4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Provider</th>
+                                                    <th>Plan</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ANTIOCO VINCENT</td>
+                                                    <td>FREEDOM SAVINGS PLAN RX (HMO)</td>
+                                                    <td>30 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PETERSON ANTHONY</td>
+                                                    <td>FREEDOM VIP CARE COPD (HMO SNP)</td>
+                                                    <td>28 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WILLIAMS JUDITH</td>
+                                                    <td>OPTIMUM GOLD REWARDS PLAN (HMO-POS)</td>
+                                                    <td>29 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WISNIEWSKI LESLIE</td>
+                                                    <td>OPTIMUM DIAMOND REWARDS (HMO-POS SNP)</td>
+                                                    <td>30 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CRIDER NORMA</td>
+                                                    <td>OPTIMUM PLATINUM PLAN (HMO-POS)</td>
+                                                    <td>28 - Dec - 2014</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="grid5">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Provider</th>
+                                                    <th>Plan</th>
+                                                    <th>Specilaity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ANTIOCO VINCENT</td>
+                                                    <td>FREEDOM SAVINGS PLAN RX (HMO)</td>
+                                                    <td>Physician</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PETERSON ANTHONY</td>
+                                                    <td>FREEDOM VIP CARE COPD (HMO SNP)</td>
+                                                    <td>Dentist</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WILLIAMS JUDITH</td>
+                                                    <td>OPTIMUM GOLD REWARDS PLAN (HMO-POS)</td>
+                                                    <td>Psycologist</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WISNIEWSKI LESLIE</td>
+                                                    <td>OPTIMUM DIAMOND REWARDS (HMO-POS SNP)</td>
+                                                    <td>Optometrist</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CRIDER NORMA</td>
+                                                    <td>OPTIMUM PLATINUM PLAN (HMO-POS)</td>
+                                                    <td>Dentist</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+
+
+
+                                <div role="tabpanel" class="tab-pane" id="grid6">
+                                    <div class="clearfix"></div><br />
+
+                                    <div class="col-lg-3">
+                                        <label class="control-label ">Select Duration</label>
+                                        <select class="form-control input-sm">
+                                            <option>Next 30 days</option>
+                                            <option>Next 60 days</option>
+                                            <option>Next 90 days</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="clearfix"></div><br />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6 text-center">
+                                                <div class="col-lg-12">
+                                                    <div class="panel panel-yellow">
+                                                        <div class="panel-body">
+
+                                                            
+                                                            <div class="col-lg-3"><button onclick="togglePlan('panel-yellow')" class="btn btn-warning btn-xl btn-circle" data-toggle="tooltip" data-placement="top" title="Filter By">1</button></div>
+                                                            <div class="col-lg-9 h4 text-right">2 Licenses to be Renewed</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 text-center">
+                                                <div class="col-lg-12">
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-body">
+                                                            <div class="col-lg-3"><button onclick="togglePlan('panel-red')" class="btn btn-danger btn-xl btn-circle" data-toggle="tooltip" data-placement="top" title="Filter By">3</button></div>
+                                                            <div class="col-lg-9 h4 text-right">11 Licenses Already Expired</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 text-center plancontainer pre-scrollable" style="overflow-y:auto;">
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-green">
+                                                        <div class="panel-heading">3 DEA License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal">View Details</button>
+</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4" >
+                                                    <div class="panel panel-yellow">
+                                                        <div class="panel-heading">2 State License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal1">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4" >
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-heading">5 CDS License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal2">View Details</button>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-green">
+                                                        <div class="panel-heading">1 Medicare License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal3">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-heading">4 Medicaid License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal4">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-heading">2 Working Compensation</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal5">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 text-right">
+                                                <button class="btn btn-xs btn-info allplan" onclick="allPlans();" style="display:none;">Show All Licenses</button>
+                                            </div>
+                                        </div>
+
+                                       
+
+
+                                    </div>
+                                    
+
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">DEA Licenses</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <ol type="1">
+                            <li class="numberlist">Daniel Craig(Pediartist)  05-Dec-2014</li>
+                            <li>Ved Kumar(Dermatologist)  11-Apr-2014</li>
+                            <li>Shalab Nayar(Phsychiartist)  21-Mar-2014</li>
+                            <li>Marakovits Joseph(Anesthesiologist)  19-Sep-2014</li>
+                        </ol>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">State Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ol type="1">
+                            <li>Nahmias Nissin (Neurosurgeon) 18-Jan-2014 </li>
+                            <li>Corcoran, Patrick(Gynecologist) 15-Feb-2014</li>
+                        
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">CDS Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <ol type="1">
+                            <li>Berns Ellison(Psychiatrist) 23-Aug-2014</li>
+                            <li>Borkowski Robert(Pediatrician) 19-Dec-2014</li>
+                            <li>Katsetos Manny(Orthopaedic Surgeon) 01-Dec-2014</li>
+                            <li>Harris Peter J(Neurologist) 01-Dec-2014</li>
+                            <li>Herath Shiromini C(Orthopaedic Surgeon) 01-Dec-2014</li>
+                        </ol>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Medicare Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ol type="1">
+                            <li>Janssen Henry(Neurologist) 01-Dec-2014</li>
+
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Medicaid Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <ol type="1">
+                            <li>Farmer William D(Cardiologist) 01-Dec-2014</li>
+                            <li>Glaser Leonard C(Dermatologist) 01-Dec-2014</li>
+                            <li>Harris Peter J(Neurologist) 01-Dec-2014</li>
+                            <li>Herath Shiromini C(Orthopaedic Surgeon)</li>
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Working Compensation Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <ol type="1">
+                            <li>Holmes Catherine A(Neurosurgeon) 01-Dec-2014</li>
+                            <li>Miller Gary(Gynecologist) 01-Dec-2014</li>
+                          
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+

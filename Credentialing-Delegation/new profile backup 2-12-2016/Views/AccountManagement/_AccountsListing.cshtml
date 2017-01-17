@@ -1,0 +1,124 @@
+﻿@model PortalTemplate.Models.AccountManagement.AccountManagementViewModel
+
+<div style="overflow:hidden">
+    <h4 class="pull-left text-uppercase" style="margin-top: 5px;">Accounts List</h4>
+    <span class="pull-right activitybtns">
+        @Html.ExportOptions("print", "pdf", "excel")
+    </span>
+    <div class="pull-right accounts_switch">
+        <span class="viewtype">List View</span>&nbsp;&nbsp;<input type="checkbox" name="my-checkbox" checked>
+    </div>
+</div>
+<div style="overflow-y:scroll;overflow-x:hidden;height:400px">
+    <table class="table table-responsive">
+        <thead class="text-uppercase">
+            <tr>
+                <th class="withfilter">
+                    <span class="styled-input">
+                        <input class="filer-search theadfilter" type="text" required="">
+                        <label class="theadcoltextlabel">Account ID</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter">
+                    <span class="styled-input">
+                        <input class="filer-search theadfilter" type="text" required="">
+                        <label class="theadcoltextlabel">Account Name</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter">
+                    <span class="styled-input">
+                        <input class="filer-search theadfilter" type="text" required="">
+                        <label class="theadcoltextlabel">Account Type</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter">
+                    <span class="styled-input">
+                        <input class="filer-search theadfilter" type="text" required="">
+                        <label class="theadcoltextlabel">Report To</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter">
+                    <span class="styled-input">
+                        <input class="filer-search theadfilter" type="text" required="">
+                        <label class="theadcoltextlabel">Reportee</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter">
+                    <span class="styled-input">
+                        <input class="filer-search theadfilter" type="text" required="">
+                        <label class="theadcoltextlabel">Status</label><span></span><i class="fa fa-sort"></i>
+                    </span>
+                </th>
+                <th class="withfilter">
+                    <label class="actionscol">Actions</label>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="text-uppercase">
+            @foreach (var item in Model.AccountsList)
+            {
+                <tr>
+                    <td>@item.AccountID</td>
+                    <td>@item.AccountName</td>
+                    <td>@item.AccountType</td>
+                    <td>@item.ReportTo</td>
+                    <td>@item.Reportee</td>
+                    @if(@item.Status == "Active") {
+                    <td><span style="color:green">@item.Status</span></td>
+                    }
+                    else {
+                    <td><span style="color:red">@item.Status</span></td>
+                    }
+                    <td>
+                        <button class="copy-button" data-toggle="tooltip" data-placement="top" title="" data-title-original="Go To Account" onclick="ShowModal('~/Views/AccountManagement/_ViewAccountDetails.cshtml', 'Account Details');"><i class=" fa fa-arrow-circle-right fa-2x"></i></button>
+                        <button class="edit-button" data-toggle="tooltip" data-placement="top" title="" data-title-original="Edit/Update Account" onclick="ShowModal('~/Views/AccountManagement/_EditAccountDetails.cshtml', 'Edit Account Details'); editAccount('@(item.AccountID)', '@(item.AccountName)');"><i class="fa fa-pencil-square-o fa-2x"></i></button>
+                        @if (@item.Status == "Active")
+                        {
+                       <button class="red-button toDeactivatebtn" data-toggle="tooltip" data-placement="top" title="" data-title-original="Deactivate Account"><i class="fa fa-thumbs-o-down fa-2x"></i></button>
+                        }
+                        else
+                        {
+                            <button class="default-button toActivatebtn" data-toggle="tooltip" data-placement="top" title="" data-title-original="Activate Account"><i class="fa fa-thumbs-o-up fa-2x"></i></button>
+                        }
+                        
+                    </td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+
+    $("[name='my-checkbox']").bootstrapSwitch('size', 'mini');
+
+    $('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log(this); // DOM element
+        //console.log(event); // jQuery event
+        console.log(state); // true | false
+        var currentview = $('input[name="my-checkbox"]').parent().parent().parent().children('span').html();
+        if (state) {
+            $('input[name="my-checkbox"]').parent().parent().parent().children('span').html("List View")
+        } else {
+            $('input[name="my-checkbox"]').parent().parent().parent().children('span').html("Tree View")
+        }
+    });
+
+    //function goToAccount(id , acc){
+    //    alert("called");
+    //    console.log( id , acc);
+    //}
+
+    function editAccount(id, acc) {
+        $('.SaveBtn').hide();
+        $('.close_modal_btn').hide();
+        console.log(id, acc);
+    }
+</script>
+

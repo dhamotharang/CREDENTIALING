@@ -1,0 +1,268 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.EducationViewModel.PostGraduationViewModel>
+@{
+    var PostGraduationIndex = 0;
+    bool IsEdit = true;
+}
+<div class="target profilediv col-lg-12 nopadding">
+    <fieldset class="fsStyle" id="AddEditPostGraduateDetails">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                @foreach (var item in Model)
+                {
+                    if (item == null)
+                    {
+                        <span>ADD Post Graduate Training/CME Detail</span>
+                        IsEdit = false;
+                        break;
+                    }
+                }
+                @if (IsEdit)
+                {
+                    <span>EDIT Post Graduate Training/CME Details</span>
+
+                }
+            </span>
+        </legend>
+        @using (Ajax.BeginForm("AddPostGraduationDetails", "Education", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "PostGraduationCMEDetails" }))
+        {
+            foreach (var item in Model)
+            {
+                PostGraduationIndex = PostGraduationIndex + 1;
+                //if (GraduationIndex <= 2)
+                //{
+                <div class="x_content mutiple-data zero-padding-left">
+                    @if (item != null)
+                    {
+                        <div class="SubHeaderSpacing1">
+                            <span class="text-uppercase TableHeading">Edit Post Graduate Training/CME Detail - @PostGraduationIndex</span>
+                        </div>
+                    }
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.IsDegreeAwarded) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">
+                                @Html.PratianUiRadioButtonFor(e => item.IsDegreeAwarded, new { color = "green", @checked = "checked" }) YES
+                                @Html.PratianUiRadioButtonFor(e => item.IsDegreeAwarded, new { color = "red" }) NO
+                                @*@Html.RadioButtonFor(e => item.IsDegreeAwarded, true) Yes
+                                    @Html.RadioButtonFor(e => item.IsDegreeAwarded, false) No*@
+                            </span>
+                        </span>
+                        @*@foreach (var value in Enum.GetValues(typeof(PortalTemplate.Areas.CredAxis.Enums.YesNoOption)))
+                            {
+                                    <span class="col-lg-3 nopadding">
+                                        <span class="theme_label_data">
+                                            @Html.RadioButtonFor(e => item.IsDegreeAwarded, (int)value, new { }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                        </span>
+                                    </span>
+                            }*@
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">CME NAME </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">
+                                <select class="form-control input-xs">
+                                    <option>Certified Midwife</option>
+                                    <option>Licensed Midwife</option>
+                                </select>
+                                @*@Html.TextBoxFor(e => item.TrainingName, new { @class = "form-control input-xs", @placeholder = "CME NAME" })*@
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.SchoolName) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">
+                                <select class="form-control input-xs">
+                                    <option>Albany Medical College</option>
+                                    <option>Brown Medical School</option>
+                                </select>
+                                @*@Html.TextBoxFor(e => item.SchoolName, new { @class = "form-control input-xs", @placeholder = "SCHOOL NAME" })*@
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.SponsorName) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.SponsorName, new { @class = "form-control input-xs", @placeholder = "SPONSOR NAME" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.Location) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.Location, new { @class = "form-control input-xs", @placeholder = "LOCATION" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.SuitNumber) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.SuitNumber, new { @class = "form-control input-xs", @placeholder = "SUIT NUMBER" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.StreetNumber) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.StreetNumber, new { @class = "form-control input-xs", @placeholder = "STREET NUMBER" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.City)  </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.City, new { @class = "form-control input-xs", @placeholder = "CITY" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.State)  </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.State, new { @class = "form-control input-xs", @placeholder = "STATE" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.County) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.County, new { @class = "form-control input-xs", @placeholder = "COUNTY" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.Country) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.Country, new { @class = "form-control input-xs", @placeholder = "COUNTRY" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.ZipCode)  </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.ZipCode, new { @class = "form-control input-xs", @placeholder = "ZIP CODE" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.Email) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.Email, new { @class = "form-control input-xs", @placeholder = "EMAIL" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.TelephoneNumber) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.TelephoneNumber, new { @class = "form-control input-xs", @placeholder = "TELEPHONE" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.FaxNumber)  </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.FaxNumber, new { @class = "form-control input-xs", @placeholder = "FAX" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.CreditHours) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.CreditHours, new { @class = "form-control input-xs", @placeholder = "CREDIT HOURS" })</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.StartDate) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.PratianUiDatePickerFor(e => item.StartDate, new { @class = "form-control input-xs", placeholder = "START DATE" })</span>
+                            @*<span class="theme_label_data">@Html.TextBoxFor(e => item.StartDate, new { @class = "form-control input-xs", @placeholder = "START DATE" })</span>*@
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.CompletionDate) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.PratianUiDatePickerFor(e => item.CompletionDate, new { @class = "form-control input-xs", placeholder = "COMPLETION DATE" })</span>
+                            @*<span class="theme_label_data">@Html.TextBoxFor(e => item.CompletionDate, new { @class = "form-control input-xs", @placeholder = "COMPLETION DATE" })</span>*@
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-4 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.ExpirationDate) </label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.PratianUiDatePickerFor(e => item.ExpirationDate, new { @class = "form-control input-xs", placeholder = "EXPIRATION DATE" })</span>
+                            @*<span class="theme_label_data">@Html.TextBoxFor(e => item.ExpirationDate, new { @class = "form-control input-xs", @placeholder = "EXPIRATION DATE" })</span>*@
+                        </span>
+                    </div>
+                    @*<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-4 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.Document) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+
+                            <span class="col-lg-7 input-group  nopadding">
+                                <input type="text" class="form-control input-xs" placeholder="Document">
+                                <span class="input-group-addon File_uploadStyle"><i class="fa fa-upload"></i></span>
+                            </span>
+                        </div>*@
+
+                    @*<div class="row col-lg-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  col-lg-offset-1 buttonmargin">
+                                <button class="btn btn-danger btn-xs ripple  list-item" data-tab-path="/CredAxis/Education/CancelAddPostGraduationDetails" data-tab-container="PostGraduationCMEDetails">Cancel</button>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 col-lg-offset-5 buttonmargin ">
+                                <input type="submit" name="submit" value="Save" class="btn btn-success btn-xs ripple " />
+                            </div>
+                        </div>*@
+                </div>
+            }
+            <div class="row col-lg-12 zero-padding-left-right margin-top-5px">
+                <button class="btn btn-success yahanClickKar btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="">Save</button>
+                <button class="btn btn-danger yahanClickKar  btn-xs list-item buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Education/CancelAddPostGraduationDetails" data-tab-container="PostGraduationCMEDetails" value="">Cancel</button>
+            </div>
+        }
+    </fieldset>
+</div>

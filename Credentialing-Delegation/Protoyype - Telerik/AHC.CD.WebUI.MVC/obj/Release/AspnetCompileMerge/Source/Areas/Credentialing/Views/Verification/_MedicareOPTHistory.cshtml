@@ -1,0 +1,54 @@
+﻿
+
+
+<div class="panel-body">
+    <form class="form-style">
+        <fieldset>
+            <legend>
+                <strong>Verification History</strong>
+            </legend>
+            <div class="col-md-12" ng-if="MedicareOPTHistory.length>0">
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Remarks</th>
+                            <th>Verified Date</th>
+                            <th>Verified Document</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="license in MedicareOPTHistory">
+                            <td>
+                                <a class="data-label wrap-words" style="cursor:pointer" ng-if="license.VerificationResult.Source" ng-click="checkForHttp(license.VerificationResult.Source)">{{license.VerificationResult.Source}}</a>
+                            </td>
+                            <td>
+                                <i class="control-label small wrap-words">{{license.VerificationResult.Remark}}</i>
+                            </td>
+                            <td>
+                                <i class="wrap-words">{{license.VerificationDate | date:'MM/dd/yyyy'}}</i>
+                            </td>
+                            <td>
+                                <a ng-if="license.VerificationResult.VerificationDocumentPath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{license.VerificationResult.VerificationDocumentPath}}" target="_blank"><i class="fa fa-file"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12" ng-if="MedicareOPTHistory.length==0">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No History Available for Medicare Opt OUT</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-md-12">
+                <a class="btn btn-sm btn-warning" ng-click="MedicareHistoryDiv=false">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+

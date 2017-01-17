@@ -1,0 +1,123 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.OtherIdentificationNumberViewModel
+
+
+@*<div ng-show="visibilityControl=='editOtherIdentificationNumbers'" class="panel-default">
+    <div class="form-style">*@
+
+
+<div id="otherIdenNumbers" class="panel-body zero-padding-left-right-div">
+    <form id="otherIdentificationNumbersForm">
+        <div class="form-group col-md-12 zero-padding-left-right-div">
+            <span ng-if="tempObject.OtherIdentificationNumberID">
+                @Html.HiddenFor(model => model.OtherIdentificationNumberID, new { ng_value = "tempObject.OtherIdentificationNumberID" })
+            </span>
+            <div class="form-group col-md-4 ">
+                @Html.LabelFor(model => model.NPINumber, new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.NPINumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.NPINumber" })
+                </div>
+                @Html.ValidationMessageFor(model => model.NPINumber, "", new { @class = "text-danger" })
+
+            </div>
+            <div class="form-group col-md-4 ">
+                @Html.LabelFor(model => model.NPIUserName, new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.NPIUserName, new { @class = "form-control input-sm", data_ng_model = "tempObject.NPIUserName" })
+                    @*     <input class="form-control input-sm" type="password" data-val="true" data-val-regex-pattern="[a-zA-Z0-9!#$%^&_-]{8,40}$" data-val-regex="Enter 8 to 40 characters only without any blank space." name="NPIUserName" data-ng-model="tempObject.NPIUserName" />*@
+                    @*@Html.TextBoxFor(model => model.NPIAuthenticationDetail.UserName, new { @class = "form-control input-sm", type = "password", data_ng_model = "tempObject.NPIAuthenticationDetail.UserName" })*@
+                </div>
+                @Html.ValidationMessageFor(model => model.NPIUserName, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-4 ">
+                @Html.LabelFor(model => model.NPIPassword, new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.NPIPassword, new { @class = "form-control input-sm", data_ng_model = "tempObject.NPIPassword" })
+                    @*   <input class="form-control input-sm" type="password" data-val="true" data-val-regex-pattern="[a-zA-Z0-9]{8,40}$" data-val-regex="Enter 8 to 40 alphanumeric characters only." name="NPIPassword" data-ng-model="tempObject.NPIPassword" />*@
+                    @*  @Html.TextBoxFor(model => model.NPIAuthenticationDetail.Password, new { @class = "form-control input-sm", type = "password", data_ng_model = "tempObject.NPIAuthenticationDetail.Password" })*@
+                </div>
+                @Html.ValidationMessageFor(model => model.NPIPassword, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group col-md-12 zero-padding-left-right-div">
+            <div class="form-group col-md-4 ">
+                @Html.LabelFor(model => model.CAQHNumber, new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.CAQHNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.CAQHNumber", data_ng_change = "clearCAQHCredentials(tempObject.CAQHNumber)" })
+                    @Html.ValidationMessageFor(model => model.CAQHNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.CAQHUserName, new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.CAQHUserName, new { data_ng_disabled = "!tempObject.CAQHNumber",  @class = "form-control input-sm", data_ng_model = "tempObject.CAQHUserName" })
+                </div>
+                <span ng-if="tempObject.CAQHNumber.length > 0"> @Html.ValidationMessageFor(model => model.CAQHUserName, "", new { @class = "text-danger" })</span>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.CAQHPassword, new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.CAQHPassword, new { data_ng_disabled = "!tempObject.CAQHNumber", @class = "form-control input-sm", data_ng_model = "tempObject.CAQHPassword" })
+                </div>
+                <span ng-if="tempObject.CAQHNumber.length > 0"> @Html.ValidationMessageFor(model => model.CAQHPassword, "", new { @class = "text-danger" })</span>
+              </div>
+
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4 ">
+                    @Html.LabelFor(model => model.UPINNumber, new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.UPINNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.UPINNumber" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.UPINNumber, "", new { @class = "text-danger" })
+
+                </div>
+
+                <div class="form-group col-md-4 ">
+                    @Html.LabelFor(model => model.USMLENumber, new { @class = " control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.USMLENumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.USMLENumber" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.USMLENumber, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-4 ">
+                    <span ng-if="!tempObject.LastCAQHAttestationDate" ng-init="tempObject.LastCAQHAttestationDate=''"></span>
+                    @Html.LabelFor(model => model.LastCAQHAttestationDate, new { @class = " control-label small" })
+                    <div>
+                       @*@Html.TextBoxFor(model => model.LastCAQHAttestationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.LastCAQHAttestationDate", placeholder = "mm/dd/yyyy" })*@
+                        @Html.TextBoxFor(model => model.LastCAQHAttestationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.LastCAQHAttestationDate", placeholder = "mm/dd/yyyy", data_ng_change = "AutoFillNextAttestationDate(tempObject.LastCAQHAttestationDate)" })
+                        @Html.ValidationMessageFor(model => model.LastCAQHAttestationDate, "", new { @class = "text-danger" })
+                    </div>                   
+                </div>
+
+                <div class="form-group col-md-4 ">
+                    @Html.LabelFor(model => model.NextAttestationDate, new { @class = " control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.NextAttestationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.NextAttestationDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.NextAttestationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>                
+
+            </div>
+
+        </div>
+        <div ng-show="activeMessageDiv=='OtherIdError'" class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error List : <br />
+                <span ng-repeat="err in OtherIdError track by $index">{{err}}</span>
+            </div>
+        </div>
+        <div class="col-md-12 zero-padding-left-right-div">
+            <div class="col-md-12">
+                <button class="btn btn-warning pull-left" ng-click="operateCancelControl('')">Cancel</button>
+
+                <button class="btn btn-success pull-right" ng-click="saveOtherIdentificationNumber('otherIdentificationNumbersForm',tempObject)">Save</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+@*</div>
+    </div>*@

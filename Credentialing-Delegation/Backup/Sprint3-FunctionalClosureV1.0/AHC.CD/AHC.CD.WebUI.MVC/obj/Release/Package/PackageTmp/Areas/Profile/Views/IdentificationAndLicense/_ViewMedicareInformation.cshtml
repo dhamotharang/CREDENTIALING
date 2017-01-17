@@ -1,0 +1,76 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.MedicareInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<form class="MedicareInformationForm">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Medicare Information
+            </legend>
+            <div>
+
+                <div class="form-group col-md-12">
+                    @*<div class="col-md-4">
+                            <label class=" control-label small">Medicare Approved*</label>
+                            <div>
+
+                                <i class="data-label">{{MedicareInformation.IsApproved}}</i>
+                            </div>
+                        </div>*@
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.LicenseNumber, new { @class = "  control-label small" })
+                        <div>
+                            <i class="data-label">{{MedicareInformation.LicenseNumber}}</i>
+                        </div>
+                    </div>
+                    @*<div class="col-md-4">
+                            @Html.LabelFor(model => model.State, new { @class = "  control-label small" })
+                            <div>
+                                <i class="data-label">{{MedicareInformation.State}}</i>
+                            </div>
+                        </div>*@
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.IssueDate, new { @class = "  control-label small" })
+                        <div>
+                            <i class="data-label">{{MedicareInformation.IssueDate | date: "MM-dd-yyyy"}}</i>
+                        </div>
+                    </div>
+                    @*<div class="col-md-3">
+                            @Html.LabelFor(model => model.ExpiryDate, new { @class = "  control-label small" })
+                            <div>
+                                <i class="data-label">{{MedicareInformation.ExpiryDate | date: "MM-dd-yyyy"}}</i>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-md-12 ">
+
+                    <div class="col-lg-12">
+                        <label class="control-label small">Supporting Document</label>
+                        <div>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                            {
+    <i class="data-label"><a href="/Document/View?path={{MedicareInformation.CertificatePath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="{{MedicareInformation.CertificatePath}}"><i class="fa fa-file">Medicare Document</i></a></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="clearfix"></div>
+
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+@if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+{   <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="operateEditControl($index+'_editMedicareInformation',MedicareInformation)">Edit</button>
+}
+                       </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+
+        </fieldset>
+    </div>
+</form>

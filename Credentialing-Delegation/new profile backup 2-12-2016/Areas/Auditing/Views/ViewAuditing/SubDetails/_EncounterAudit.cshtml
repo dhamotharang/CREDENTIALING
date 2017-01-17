@@ -1,0 +1,67 @@
+﻿@model PortalTemplate.Areas.Auditing.Models.CreateAuditing.EncounterInfoViewModel
+
+<div class="row AuditDecision">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+        <div class="x_panel border_on_panel">
+            <div class="x_content">
+                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 top_on_panel">
+                    <label class="title_text">Encounter Details</label>
+                    <a onclick="toggleCollapseEncounter()" class="btn btn-xs btn-info pull-right"><span class="fa fa-list"></span></a>
+                </div>
+                @Html.Partial("~/Areas/SharedView/Views/Encounter/_EncounterView.cshtml", Model.EncounterDetails)
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <fieldset class="fieldsetStyle">
+                            <legend class="legendstyle">Encounter Audit</legend>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                                    <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                        @Html.LabelFor(model => model.IsAgree, new { @class = "font-normal" })
+                                        <div>
+                                            @{
+                                                if (@Model.IsAgree)
+                                                {
+                                                    <label class="padding_left_right_12px"><span class="agree_btn"><i class="fa fa-check"></i></span><span>Agreed</span></label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="padding_left_right_12px"><span class="disagree_btn"><i class="fa fa-close"></i></span><span>Disagree</span></label>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (!@Model.IsAgree)
+                                    {
+                                        <div class="col-lg-8 col-md-8 col-xs-8 col-sm-8">
+                                            <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+                                                @Html.LabelFor(model => model.Categories[0].CategoryName, new { @class = "font-normal" })
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+                                                @Html.LabelFor(model => model.Categories[0].Remarks, new { @class = "font-normal" })
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    @{
+                                        foreach (var category in @Model.Categories)
+                                        {
+                                            <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+                                                <label>@category.CategoryName</label>
+                                            </div>
+                                                        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+                                                            <label>@category.Remarks</label>
+                                                        </div>
+                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

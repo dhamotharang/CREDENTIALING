@@ -1,0 +1,151 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.FederalDEAInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div ng-hide="ShowRenewDivDEA">
+    <div class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error List : <br />
+            <span>Renewal cannot be initiated.Expiry Date is missing.</span>
+        </div>
+    </div>
+</div>
+
+<div ng-show="ShowRenewDivDEA">
+    <form class="FederalDEALicenseForm">
+        <div class="form-style">
+            <div id="licensedea" class="panel-body zero-padding-left-right-div">
+                <div class="zero-padding-left-right-div">
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <span ng-if="tempObject.FederalDEAInformationID">
+                            @Html.HiddenFor(model => model.FederalDEAInformationID, new { ng_value = "tempObject.FederalDEAInformationID" })
+                            @Html.HiddenFor(model => model.DEANumber, new { ng_value = "tempObject.DEANumber" })
+                            @Html.HiddenFor(model => model.GoodStandingYesNoOption, new { ng_value = "tempObject.GoodStandingYesNoOption" })
+                            @Html.HiddenFor(model => model.StateOfReg, new { ng_value = "tempObject.StateOfReg" })
+                        </span>
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(model => model.DEANumber, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{tempObject.DEANumber}}</i>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">New Issue Date</label>
+                            <div>
+                                @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="control-label small">New Expiry Date</label>
+                            <div>
+                                @Html.TextBoxFor(model => model.ExpiryDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ExpiryDate", placeholder = "mm/dd/yyyy" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-12">
+                        <table class="col-md-12 table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Schedule</th>
+                                    <th>Schedule Type</th>
+                                    <th>Eligibility (Choose 'YES' for the Schedules applicable)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="sl in Schedules track by $index">
+                                    <td>
+                                        <label>{{sl.ScheduleTitle}}</label>
+                                    </td>
+                                    <td>
+                                        <label>{{sl.ScheduleTypeTitle}}</label>
+                                    </td>
+                                    <td>
+                                        <span ng-if="tempObject.FederalDEAInformationID">
+                                            <input type="hidden" ng-value="tempObject.DEAScheduleInfoes[{{$index}}].DEAScheduleInfoID" name="DEAScheduleInfoes[{{$index}}].DEAScheduleInfoID">
+                                        </span>
+                                        <input type="hidden" value="{{sl.DEAScheduleID}}" data-ng-model="tempObject.DEAScheduleInfoes[$index].DEAScheduleID" name="DEAScheduleInfoes[{{$index}}].DEAScheduleID">
+
+                                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                        {
+                                            <span ng-if="!tempObject.DEAScheduleInfoes[$index].YesNoOption" ng-init="tempObject.DEAScheduleInfoes[$index].YesNoOption = 2">
+                                            </span>
+                                            <label class="radio-inline">
+                                                <input type="radio" data-val="true" data-val-required="Eligibility is required" name="DEAScheduleInfoes[{{$index}}].YesNoOption" data-ng-model="tempObject.DEAScheduleInfoes[$index].YesNoOption" value="@((int)value)" />@value.ToString()
+
+                                            </label>
+                                        }
+                                        &nbsp;
+                                        <span class="field-validation-valid text-danger" data-valmsg-for="DEAScheduleInfoes[{{$index}}].YesNoOption" data-valmsg-replace="true"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @*   @Html.ValidationMessageFor(model => model.DEAScheduleInfoes, "", new { @class = "text-danger" })*@
+
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 zero-padding-left-right-div">
+
+                        <div class="form-group col-md-12 zero-padding-left-right-div">
+                            <div ng-class="{'col-lg-11':tempObject.DEALicenceCertPath,'col-lg-12':!tempObject.DEALicenceCertPath}">
+                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                    <div class="form-control" data-trigger="fileinput">
+                                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                        <span class="fileinput-filename"></span>
+                                    </div>
+                                    <span class="input-group-addon btn btn-default btn-file">
+                                        <span class="fileinput-new small">Select Federal DEA License Document</span>
+                                        <span class="fileinput-exists">Change</span>
+                                        @Html.TextBoxFor(model => model.DEALicenceCertFile, new { name = "DEALicenceCertFile", ng_data_model = "tempObject.DEALicenceCertFile", type = "file" })
+                                        @* <input type="file" name="DEALicenceCertFile" ng-model="tempObject.DEALicenceCertFile" autocomplete="off">*@
+                                    </span>
+                                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                </div>
+                                @Html.HiddenFor(model => model.DEALicenceCertPath, new { ng_value = "tempObject.DEALicenceCertPath" })
+                                @Html.ValidationMessageFor(model => model.DEALicenceCertFile, "", new { @class = "text-danger" })
+                            </div>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                            {
+                                <div ng-show="tempObject.DEALicenceCertPath!=null" class="col-lg-1">
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.DEALicenceCertPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                    <div ng-show="activeMessageDiv=='DEAError'" class="col-lg-12">
+                        <div class="alert alert-danger" role="alert">
+                            @*     <span class="pull-right" ng-click="DEAError=''"><i class="fa fa-times"></i></span>*@
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error List : <br />
+                            <span ng-repeat="err in DEAError track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="col-md-12">
+
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveFederalDEALicense(tempObject,$index)">{{buttonLabel}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+

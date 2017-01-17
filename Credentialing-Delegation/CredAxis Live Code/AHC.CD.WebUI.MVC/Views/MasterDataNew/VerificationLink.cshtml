@@ -1,0 +1,139 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+@model AHC.CD.WebUI.MVC.Models.MasterDataNewViewModel.VerificationLinkViewModel
+
+@{
+    ViewBag.Title = "VerificationLink";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+    <script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="~/Scripts/Custom/MasterDataNew/VerificationLinks.js"></script>
+}
+
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> Verification Link
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="MasterDataVerificationLinks" ng-controller="VerificationLinksccontroller" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Verification Link Management
+                        <span class="pull-right">
+                            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                            {
+                                var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                                if (roles.Contains("CRA"))
+                                {
+                                    <button ng-disabled="disableAdd" ng-click="addVerificationLink(Name)" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                                }
+                            }
+                            
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div ng-show="activeMessageDiv=='VerificationLink'" class="alert alert-success" role="alert">
+                            {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div><br />
+                        <div ng-show="activeMessageDiv=='verificationlinkerror'" class="alert alert-danger" role="alert">
+                            {{messageDesc}}
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Verification Link Name*</th>
+                                    <th>Link*</th>
+                                    @*<th>Status</th>*@
+                                    <th>Last Modified Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr ng-show="VerificationLinks.length>0">
+                                    <td><input type="text" placeholder="Filter Title" class="form-control input-sm" ng-model="search.Name" ng-change="filterData()" /></td>
+                                    <td><input type="text" placeholder="Filter Link" class="form-control input-sm" ng-model="search.Link" ng-change="filterData()" /></td>
+                                    @*<td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.Status" ng-change="filterData()" /></td>*@
+                                    <td><input type="text" placeholder="Filter LastModifiedDate" class="form-control input-sm" ng-model="search.LastModifiedDate" ng-change="filterData()" /></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody ng-show="VerificationLinks.length>0">
+                                <tr ng-repeat="Name in VerificationLinksData=(VerificationLinks | filter:{Name:search.Name,Link:search.Link,Status:search.Status,LastModifiedDate:search.LastModifiedDate}) track by $index" ng-include="getTemplate(Name)" ng-show="IsValidIndex($index)"></tr>
+                            </tbody>
+                            <tbody ng-show="VerificationLinksData.length==0 || VerificationLinks.length==0 ">
+                                <tr class="text-center">
+                                    <td colspan="7"><b>No Data Available</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <script type="text/ng-template" id="displayVerificationLinks">
+                            <td>{{Name.Name}}</td>
+                            <td>{{Name.Link}}</td>
+                            @*<td>{{Name.Status}}</td>*@
+                            <td>{{Name.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                            <td>
+                                @*<button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#verficationModal" ng-click="InactivateVerificationLink(Name.VerificationLinkID)"><i tooltip data-toggle="tooltip" data-placement="right" title="Deactivate Verification Link">Deactivate</i></button>*@
+                                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                                {
+                                    var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                                    if (roles.Contains("CRA"))
+                                    {
+                                        <button data-toggle="modal" data-target="#verficationModal" class="btn btn-sm btn-warning" ng-click="InactivateVerificationLink(Name.VerificationLinkID)">Delete</button>
+                                    }
+                                }
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editVerificationLinkName">
+                            <td>
+                                <input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempVerificationLinks.Name" />
+                                <span class="text-danger" name="Name" ng-if="error && !tempVerificationLinks.Name">{{error}}</span>
+                                <span class="text-danger" name="Name" ng-if="existErr && tempVerificationLinks.Name">{{existErr}}</span>
+                            </td>
+                            <td>
+                            <input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempVerificationLinks.Link" />
+                                <span class="text-danger" name="Name" ng-if="error1 && !tempVerificationLinks.Link">{{error1}}</span>
+                                <span class="text-danger" name="Name" ng-if="existErr1 && tempVerificationLinks.Link">{{existErr1}}</span>
+                            </td>
+                            @*<td>{{tempVerificationLinks.Status}}</td>*@
+                            <td>{{tempVerificationLinks.LastModifiedDate | date :'MM-dd-yyyy' }}</td>
+                            <td>
+                                <button ng-if="!tempVerificationLinks.VerificationLinkID" ng-click="saveVerificationLink($index)" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-if="tempVerificationLinks.VerificationLinkID" ng-click="updateVerificationLinks($index)" class="btn btn-xs btn-primary">Update</button>
+                                <button ng-if="tempVerificationLinks.VerificationLinkID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                <button ng-if="!tempVerificationLinks.VerificationLinkID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                            </td>
+                        </script>
+                        <div class="clearfix"></div>
+                        <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                        <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        <div class="row">
+                            <verfication-modal saving="savingStatus" modal-id="verficationModal" modal-title="Delete Verification Link" modal-message="Are you sure, you want to Delete the Verification Link ?" modal-src="/CustomHTML/PlanModal.html" remove="RemoveVerificationLink()"></verfication-modal>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        
+    </div>
+    <!-- /.container-fluid -->
+</div>

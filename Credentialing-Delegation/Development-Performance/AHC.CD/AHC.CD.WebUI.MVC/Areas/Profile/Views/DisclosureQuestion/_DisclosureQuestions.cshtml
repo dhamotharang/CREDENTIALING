@@ -1,0 +1,46 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="panel-group">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ProfileDisclosurePendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Disclosure Questions
+
+            </legend>
+
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                <div class="legend2 pull-right" ng-if="visibilityControl=='editcategory'">
+                    <button class="btn btn-xs btn-default" ng-click="EditTemp(MasterProfile.DisclosureQuestion.ProfileDisclosure);operateCancelControl('disclosureForm'); disableSave();" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-xs btn-info" ng-click="setAllNo()">Set No for All</button>
+                </div>
+                <div class="legend2 pull-right" ng-if="visibilityControl!='editcategory'">
+                    <button class="btn btn-xs btn-primary" ng-click="EditTemp(MasterProfile.DisclosureQuestion.ProfileDisclosure);operateEditControl('editcategory', MasterProfile.DisclosureQuestion.ProfileDisclosure)" tooltip data-toggle="tooltip" data-placement="top" title="Edit All"><i class="fa fa-edit"></i></button>
+                </div>
+            }
+            <div ng-if="visibilityControl!='editcategory'">
+                @Html.Partial("~/Areas/Profile/Views/DisclosureQuestion/_ViewDisclosureQuestions.cshtml")
+            </div>
+            <div ng-if="visibilityControl=='editcategory'">
+                <div id="editShowDisclosureQuestions">
+                    @Html.Partial("~/Areas/Profile/Views/DisclosureQuestion/_AddEditDisclosureQuestions.cshtml")
+                </div>
+            </div>
+            <a id="bottom"></a>
+
+            <div class="clearfix"></div><br ng-show="activeMessageDiv" />
+            <div ng-show="activeMessageDiv=='addedNewDisclosureQuestions'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+            </div>
+            <div ng-show="activeMessageDiv=='updatedDisclosureQuestions'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>
+        </fieldset>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.ContactDetailViewModel
+
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="form-group col-md-4">
+        <label class="control-label small">Home Phone</label>
+        <div ng-repeat="hp in Provider.UserContactDetails.PhoneDetails.HomePhones track by $index" class="input-group input-group-sm" ng-if="hp.Status=='Active'">
+            <span class="input-group-addon">
+                {{hp.CountryCode}}-{{hp.Number}}
+            </span>
+            <span class="input-group-addon">
+                <i ng-if="hp.Preference=='Primary'" class="fa fa-check"></i>
+            </span>
+        </div>
+    </div>
+    <div class="form-group col-md-4">
+        <label class="control-label small">Home Fax *</label>
+        <div ng-repeat="hf in Provider.UserContactDetails.PhoneDetails.HomeFaxes track by $index" class="input-group input-group-sm" ng-if="hf.Status=='Active'">
+            <span class="input-group-addon">
+                {{hf.CountryCode}}-{{hf.Number}}
+            </span>
+            <span class="input-group-addon">
+                <i ng-if="hf.Preference=='Primary'" class="fa fa-check"></i>
+            </span>
+        </div>
+    </div>
+    <div class="form-group col-md-4">
+        <label class="control-label small">Mobile Number *</label>
+        <div ng-repeat="mn in Provider.UserContactDetails.PhoneDetails.HomeMobiles track by $index" class="input-group input-group-sm" ng-if="mn.Status=='Active'">
+            <span class="input-group-addon">
+                {{mn.CountryCode}}-{{mn.Number}}
+            </span>
+            <span class="input-group-addon">
+                <i ng-if="mn.Preference=='Primary'" class="fa fa-check"></i>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-4 zero-padding-left-right-div">
+        <div class="col-lg-12 form-group">
+            @Html.LabelFor(model => model.PreferredWrittenContacts, new { @class = "control-label small" })
+            <div>
+                <span ng-repeat="pwc in Provider.UserContactDetails.PreferredWrittenContacts">
+                    <span ng-if="$index > 0">, </span> {{pwc.ContactType}}
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-12 form-group">
+            @Html.LabelFor(model => model.PreferredContacts, new { @class = "control-label small" })
+            <div>
+                <span ng-repeat="pc in Provider.UserContactDetails.PreferredContacts">
+                    <span ng-if="$index > 0">, </span> {{pc.ContactType}}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 zero-padding-left-right-div" style="margin-bottom: 10px;">
+        <div class="col-lg-12">
+            <label class="control-label small">Email Id *</label>
+            <div ng-repeat="email in Provider.UserContactDetails.EmailIDs track by $index" class="input-group input-group-sm" ng-if="email.Status=='Active'">
+                <span class="input-group-addon">
+                    {{email.EmailAddress}}
+                </span>
+                <span class="input-group-addon">
+                    <i ng-if="email.Preference=='Primary'" class="fa fa-check"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,278 @@
+﻿@model AHC.CD.WebUI.MVC.Models.MasterDataNewViewModel.FacilityEmployeeMasterDataViewModel
+@{
+    ViewBag.Title = "OfficeManager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/OfficeManager.js"></script>
+
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> Office Manager
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="OfficeManagerApp" ng-controller="OfficeManagerController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Office Manager Management
+                        <span class="pull-right">
+                            <button ng-click="addOfficeManagers()" class="btn btn-xs btn-success" ng-disabled="AddMode || EditMode"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+
+                        @* List mode *@
+                        <div ng-show="ListMode">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name *</th>
+                                        <th>Telephone</th>
+                                        <th>Fax</th>
+                                        <th>E-Mail Address</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="License in CurrentPage track by $index">
+                                        <td>{{License.FirstName}} {{License.MiddleName}} {{License.LastName}}</td>
+                                        <td>{{License.Telephone}}</td>
+                                        <td>{{License.Fax}}</td>
+                                        <td>{{License.EmailAddress}}</td>
+                                        <td>
+                                            <a class="btn btn-default btn-xs" ng-click="viewOfficeManager(License)"><i class="fa fa-eye"></i></a>
+                                            <a class="btn btn-info btn-xs" ng-click="editOfficeManager(License)"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="clearfix"></div>
+                            <div ng-show="activeMessageDiv=='alertOfficeManager'" class="alert alert-danger" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                            </div>
+                            <div ng-show="activeMessageDiv=='businessManagerSuccessMsg'" class="alert alert-success" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        </div>
+
+
+                        @* Add/Edit mode *@
+                        <div ng-show="AddMode || EditMode" class="form-style">
+                            <fieldset>
+                                <legend>
+                                    Office manager/Business Office Staff Contact
+                                </legend>
+                                <form id="BusinessOfficeContactPersonForm">
+                                    <div class="col-lg-12">
+                                        @*<div class="col-md-12">*@
+                                        <span ng-if="tempSecondObject.MasterEmployeeID">
+                                            @Html.HiddenFor(model => model.MasterEmployeeID, new { id = "MasterEmployeeID", Value = "{{tempSecondObject.MasterEmployeeID}}", data_ng_model = "tempSecondObject.MasterEmployeeID" })
+                                        </span>
+
+                                        @*</div>*@
+                                        <div class="clearfix"></div>
+                                        <br />
+                                        @*<fieldset id="abc" ng-disabled="manager=='Yes'">*@
+                                        <div class="col-md-12">
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.FirstName, new { @class = "control-label small" })
+                                                <div>
+                                                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", placeholder = "First Name", data_ng_model = "tempSecondObject.FirstName" })
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.MiddleName, new { @class = "control-label small" })
+                                                <div>
+                                                    @Html.TextBoxFor(model => model.MiddleName, new { @class = "form-control input-sm", placeholder = "Middle Name", data_ng_model = "tempSecondObject.MiddleName" })
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.LastName, new { @class = "control-label small" })
+                                                <div>
+                                                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-sm", placeholder = "Last Name", data_ng_model = "tempSecondObject.LastName" })
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(model => model.Telephone, htmlAttributes: new { @class = "control-label small" })
+                                                <div>
+                                                    <span ng-if="!tempSecondObject.CountryCodeTelephone" ng-init="tempSecondObject.CountryCodeTelephone='+1'"></span>
+                                                    <div class="input-group">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('TelephoneCountryCode'+$index)">{{tempSecondObject.CountryCodeTelephone}}<span class="caret"></span></button>
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='TelephoneCountryCode{{$index}}'>
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select ng-model="tempSecondObject.CountryCodeTelephone" name="CountryCodeTelephone">
+                                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSecondObject.CountryCodeTelephone">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        @Html.EditorFor(model => model.Telephone, new { htmlAttributes = new { @class = "form-control", data_ng_model = "tempSecondObject.Telephone", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.CountryCodeTelephone, "", new { @class = "text-danger" })
+                                                    @Html.ValidationMessageFor(model => model.Telephone, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(model => model.Fax, new { @class = "control-label small" })
+                                                <div>
+                                                    <span ng-if="!tempSecondObject.CountryCodeFax" ng-init="tempSecondObject.CountryCodeFax='+1'"></span>
+                                                    <div class="input-group">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('CountryCodeFax'+$index)"> {{tempSecondObject.CountryCodeFax}} <span class="caret"></span></button>
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='CountryCodeFax{{$index}}'>
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select ng-model="tempSecondObject.CountryCodeFax" name="CountryCodeFax">
+                                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSecondObject.CountryCodeFax">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        @Html.EditorFor(model => model.Fax, new { htmlAttributes = new { @class = "form-control", data_ng_model = "tempSecondObject.Fax", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.CountryCodeFax, "", new { @class = "text-danger" })
+                                                    @Html.ValidationMessageFor(model => model.Fax, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.EmailAddress, new { @class = "control-label small" })
+                                                <div>
+                                                    @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control input-sm", placeholder = "E-Mail Address", data_ng_model = "tempSecondObject.EmailAddress" })
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        @*</fieldset>*@
+                                        
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-12">
+                                                <div class="control-group">
+                                                    <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+                                                    <button class="btn btn-success btn-sm pull-right" ng-show="AddMode" ng-click="saveOfficeManager()">Add</button>
+                                                    <button class="btn btn-info btn-sm pull-right" ng-show="EditMode" ng-click="updateOfficeManager()">Update</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </fieldset>
+                        </div>
+
+
+                        @* View Mode *@
+                        <div ng-show="ViewMode" class="form-style">
+                            <fieldset>
+                                <legend>
+                                    Office manager/Business Office Staff Contact
+                                </legend>
+                                <form id="BusinessOfficeContactPersonForm{{$index}}">
+                                    <div class="col-lg-12">
+
+                                        <div class="clearfix"></div>
+                                        <br />
+                                        @*<fieldset id="abc" ng-disabled="manager=='Yes'">*@
+                                        <div class="col-md-12">
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.FirstName, new { @class = "control-label small" })
+                                                <div>
+                                                    <i>{{tempSecondObject.FirstName}}</i>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.MiddleName, new { @class = "control-label small" })
+                                                <div>
+                                                    <i>{{tempSecondObject.MiddleName}}</i>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.LastName, new { @class = "control-label small" })
+                                                <div>
+                                                    <i>{{tempSecondObject.LastName}}</i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(model => model.Telephone, htmlAttributes: new { @class = "control-label small" })
+                                                <div>
+                                                    <i>{{tempSecondObject.Telephone}}</i>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(model => model.Fax, new { @class = "control-label small" })
+                                                <div>
+                                                    <i>{{tempSecondObject.Fax}}</i>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4 form-group">
+                                                @Html.LabelFor(model => model.EmailAddress, new { @class = "control-label small" })
+                                                <div>
+                                                    <i>{{tempSecondObject.EmailAddress}}</i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-12">
+                                                <div class="control-group">
+                                                    <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </fieldset>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+

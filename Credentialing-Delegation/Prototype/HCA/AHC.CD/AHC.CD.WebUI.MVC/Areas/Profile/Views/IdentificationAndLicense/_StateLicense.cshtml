@@ -1,0 +1,81 @@
+﻿
+<div class="panel-default">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                State License
+            </legend>
+         
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                <label>*If you have additional State Licenses include all state license certification numbers here.</label>
+                
+            </div>
+            <div id="licenseprofessional" class="panel-body">
+                <table ng-hide="StateLicenses.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>No Data Available ! To Add New Click "Add State Licenses Information"</td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="StateLicenses.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                    <tr>
+                    <th>License Number</th>
+                    <th>Issue State</th>
+                    <th>Type</th>
+                    <th>Expiration Date</th>
+                    <th>Status</th>
+                    <th>Document</th>
+                    <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="sl in StateLicenses">
+                    <tr>
+                    <td>{{sl.LicenseNumber}}</td>
+                    <td>{{sl.IssuingState}}</td>
+                    <td>{{sl.StateLicenseType}}</td>
+                    <td>{{sl.ExpiryDate}}</td>
+                    <td>{{sl.StateLicenseStatus}}</td>
+                    <td>
+                        
+                        <span ng-show="sl.StateLicenseDocumentPath==''">Not Available</span>
+                        <a ng-hide="sl.StateLicenseDocumentPath==''" href="{{sl.StateLicenseDocumentPath}}" class="pointer" target="_blank" title="{{sl.StateLicenseDocumentPath}}"><i class="fa fa-file" title=""></i></a>
+                    </td>
+                    <td>
+                        <button class="btn btn-xs btn-default" ng-click="viewStateLicenseInfo($index,sl)" ng-hide="viewStateLicense" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                        <button class="btn btn-xs btn-primary" ng-click="editStateLicense($index,sl)" ng-hide="editShowStateLicense" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-xs btn-success" ng-click="addStateLicense()" ng-hide="viewStateLicense|| editShowStateLicense || newShowStateLicense || $index+1!=StateLicenses.length" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                    </td>
+                    </tr>
+                        <tr ng-show="viewStateLicense && sl==stateLicense">
+                            <td colspan="7" id="stateLicenseEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewStateLicense.cshtml")
+                            </td>
+                        </tr>
+                    <tr ng-show="editShowStateLicense && sl==stateLicense">
+                    <td colspan="7" id="stateLicenseEditDiv{{$index}}" class="editTableDataStyle">
+                    @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditStateLicense.cshtml")
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+
+                    <div class="clearfix"></div>
+                    <div class="form-style">
+                        <fieldset ng-show="newShowStateLicense">
+                            <legend>
+                                Add State License
+                            </legend>
+                            <div id="newStateLicenseDiv">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditStateLicense.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                <div ng-hide="StateLicenses.length > 0 || newShowStateLicense" class="col-md-12 text-right">
+                    <button class="btn btn-xs btn-primary addStateLicenseBtn" ng-click="addStateLicense()"><i class="fa fa-plus"></i> Add State License</button>
+                </div>
+</div>
+        </fieldset>
+    </div>
+</div>

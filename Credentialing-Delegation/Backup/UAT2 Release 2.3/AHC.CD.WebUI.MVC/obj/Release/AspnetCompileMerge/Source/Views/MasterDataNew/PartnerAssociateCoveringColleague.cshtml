@@ -1,0 +1,350 @@
+﻿@model AHC.CD.WebUI.MVC.Models.MasterDataNewViewModel.FacilityPracticeProviderMasterDataViewModel
+
+@{
+    ViewBag.Title = "PartnerAssociateCoveringColleague";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+    <script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+    <script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="~/Scripts/Custom/MasterDataNew/CoveringColleague.js"></script>
+}
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> Partners/Associates/Covering Colleagues
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="CoveringColleagueApp" ng-controller="CoveringColleagueController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Partners/Associates/Covering Colleagues Management
+                        <span class="pull-right">
+                            <button ng-click="addPaymentRemittances()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+
+                        @* List View *@
+                        <div ng-show="ListMode">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Billing Department</th>
+                                        <th>Name *</th>
+                                        <th>Telephone</th>
+                                        <th>Fax</th>
+                                        <th>Address</th>
+                                        <th>E-Mail Address</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="License in CurrentPage track by $index">
+                                        <td>{{License.BillingDepartment}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.FirstName}} {{License.PaymentAndRemittancePerson.MiddleName}} {{License.PaymentAndRemittancePerson.LastName}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.Telephone}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.Fax}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.Street}},{{License.PaymentAndRemittancePerson.Building}},{{License.PaymentAndRemittancePerson.City}},{{License.PaymentAndRemittancePerson.State}},{{License.PaymentAndRemittancePerson.Country}}-{{License.PaymentAndRemittancePerson.ZipCode}}</td>
+                                        <td>{{License.PaymentAndRemittancePerson.EmailAddress}}</td>
+                                        <td>
+                                            <a class="btn btn-default btn-xs" ng-click="viewPaymentRemittances(License)"><i class="fa fa-eye"></i></a>
+                                            <a class="btn btn-info btn-xs" ng-click="editPaymentRemittances(License)"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="clearfix"></div>
+                            <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        </div>
+
+
+                        @* Add/Edit view *@
+                        <div ng-show="AddMode || EditMode" class="form-style">
+                            <fieldset>
+                                <legend>
+                                    Partners/Associates/Covering Colleagues
+                                </legend>
+                                <form id="PaymentRemittance">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+                                    @Html.HiddenFor(model => model.PracticeType, new { Value = @AHC.CD.Entities.MasterData.Enums.PracticeType.CoveringColleague })
+                                    <span ng-if="tempSecondObject.PracticeProviderID">
+                                        @Html.HiddenFor(model => model.PracticeProviderID, new { ng_value = "tempSecondObject.PracticeProviderID", data_ng_model = "tempSecondObject.PracticeProviderID" })
+                                        @Html.HiddenFor(model => model.RelationType, new { ng_value = "tempSecondObject.RelationType" })
+                                    </span>
+                                    <div class="form-group">
+                                        <div ng-if="tempSecondObject.NPINumber || tempSecondObject.FirstName || tempSecondObject.LastName || tempSecondObject.RelationType == 'External'">
+                                            <div class=" col-md-12 zero-padding-left-right-div">
+                                                <div class="col-lg-6 form-group">
+                                                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label small" })
+                                                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", placeholder = "first name", data_ng_model = "tempSecondObject.FirstName" })
+                                                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-lg-6 form-group">
+                                                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label small" })
+                                                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-sm", placeholder = "last name", data_ng_model = "tempSecondObject.LastName" })
+                                                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 zero-padding-left-right-div">
+
+                                                <div class="col-md-12 zero-padding-left-right-div">
+                                                    <div class="col-md-6 form-group">
+                                                        @Html.LabelFor(model => model.PracticeProviderSpecialties, htmlAttributes: new { @class = "control-label small" })
+                                                        <input class="form-control input-sm" ng-model="searchSpecialty" onblur="this.value=''" ng-click="showProviderTypeList($event)" placeholder="specialty" />
+                                                        <div ng-show="searchSpecialty.length > 0" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                                                <tbody>
+                                                                    <tr ng-repeat="specialty in filteredSpecialtiesResults = (masterSpecialties | filter:searchSpecialty)" ng-click="SelectSpecalties(specialty)" class="pointer">
+                                                                        <td>{{specialty.Name}}</td>
+                                                                    </tr>
+                                                                    <tr ng-if="filteredSpecialtiesResults.length == 0">
+                                                                        <td>Specialty Name not found..... </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.PracticeProviderSpecialties, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        @Html.LabelFor(model => model.PracticeProviderTypes, htmlAttributes: new { @class = "control-label small" })
+                                                        <input class="form-control input-sm" ng-model="searchproviderType" onblur="this.value=''" ng-focus="showProviderTypeList($event)" placeholder="provider type" />
+                                                        <div ng-show="searchproviderType.length > 0" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                                                <tbody>
+                                                                    <tr ng-repeat="providertype in filteredProviderTypeResults = (masterProviderTypes | filter:searchproviderType)" ng-click="SelectProviderType(providertype)" class="pointer">
+                                                                        <td>{{providertype.Title}}</td>
+                                                                    </tr>
+                                                                    <tr ng-if="filteredProviderTypeResults.length == 0">
+                                                                        <td>Provider Type not found..... </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.PracticeProviderTypes, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 zero-padding-left-right-div">
+                                                    <div ng-if="PracticeSpecialties.length > 0" class="col-lg-6 form-group">
+                                                        <label class=""></label>
+                                                        <table class="table table-striped table-bordered table-hover table-condensed">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="col-lg-10">Specialty Name</th>
+                                                                    <th class="col-lg-2">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="tpt in PracticeSpecialties | unique:'SpecialtyID' track by $index">
+                                                                    <td ng-class="{'success':tpt.StatusType==1,'warning':tpt.StatusType==2}">
+                                                                        <span>{{tpt.Specialty.Name}}</span>
+                                                                        <input type="hidden" name="PracticeProviderSpecialties[{{$index}}].SpecialtyID" value="{{tpt.SpecialtyID}}" />
+                                                                        <input type="hidden" name="PracticeProviderSpecialties[{{$index}}].PracticeProviderSpecialtyId" value="{{tpt.PracticeProviderSpecialtyId}}" />
+                                                                        <input type="hidden" name="PracticeProviderSpecialties[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <span class="label label-danger pointer" ng-if="tpt.StatusType==1" ng-click="ActionSpecialty(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                                            <i class="fa fa-minus-circle"></i>
+                                                                        </span>
+                                                                        <span class="label label-danger pointer" ng-if="tpt.StatusType==2" ng-click="ActionSpecialty(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                                            <i class="fa fa-minus-circle"></i> Removed
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div ng-if="PracticeProviderTypes.length > 0" class="col-lg-6 form-group">
+                                                        <label class=""></label>
+                                                        <table class="table table-striped table-bordered table-hover table-condensed">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="col-lg-10">Provider Type Name</th>
+                                                                    <th class="col-lg-2">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="tpt in PracticeProviderTypes track by $index">
+                                                                    <td ng-class="{'success':tpt.StatusType==1,'warning':tpt.StatusType==2}">
+                                                                        <span>{{tpt.ProviderType.Title}}</span>
+                                                                        <input type="hidden" name="PracticeProviderTypes[{{$index}}].ProviderTypeID" value="{{tpt.ProviderTypeID}}" />
+                                                                        <input type="hidden" name="PracticeProviderTypes[{{$index}}].PracticeProviderTypeId" value="{{tpt.PracticeProviderTypeId}}" />
+                                                                        <input type="hidden" name="PracticeProviderTypes[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <span class="label label-danger pointer" ng-if="tpt.StatusType==1" ng-click="ActionProviderType(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                                            <i class="fa fa-minus-circle"></i>
+                                                                        </span>
+                                                                        <span class="label label-danger pointer" ng-if="tpt.StatusType==2" ng-click="ActionProviderType(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                                            <i class="fa fa-minus-circle"></i> Removed
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div ng-show="activeMessageDiv=='ErrorInPartners'+$index" class="alert alert-danger" role="alert">
+                                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                                {{messageDesc}}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="control-group">
+                                                <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+                                                <button class="btn btn-success btn-sm pull-right" ng-show="AddMode" ng-click="savePaymentRemittances()">Add</button>
+                                                <button class="btn btn-info btn-sm pull-right" ng-show="EditMode" ng-click="updatePaymentRemittances()">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </fieldset>
+                        </div>
+
+
+                        @* View Mode *@
+                        <div ng-show="ViewMode" class="form-style">
+                            <fieldset>
+                                <legend>
+                                    Payment and Remittance
+                                </legend>
+                                <form id="PaymentRemittance">
+                                    <div class="col-lg-12">
+                                        <div class="clearfix"></div>
+                                        <br />
+                                        @*<fieldset id="abc" ng-disabled="remittance=='Yes'">*@
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.ElectronicBillingCapabilityYesNoOption, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.ElectronicBillingCapabilityYesNoOption}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.BillingDepartment, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.BillingDepartment}}</i>
+                                            </div>
+
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.CheckPayableTo, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.CheckPayableTo}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.Office, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.Office}}</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.FirstName, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.FirstName}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.MiddleName, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.MiddleName}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.LastName, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.LastName}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Street, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Street}}</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Building, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Building}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.City, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.City}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.State, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.State}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.ZipCode, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.ZipCode}}</i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-lg-3 form-group" ng-init="tempSecondObject.PaymentAndRemittancePerson.Country = 'United States'">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Country, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Country}}</i>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.County, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.County}}</i>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Telephone, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Telephone}}</i>
+                                            </div>
+
+                                            <div class="form-group col-md-3">
+                                                @Html.LabelFor(model => model.PaymentAndRemittancePerson.Fax, htmlAttributes: new { @class = "control-label small" })<br />
+                                                <i>{{tempSecondObject.PaymentAndRemittancePerson.Fax}}</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group col-md-3">
+                                            @Html.LabelFor(model => model.PaymentAndRemittancePerson.EmailAddress, htmlAttributes: new { @class = "control-label small" })<br />
+                                            <i>{{tempSecondObject.PaymentAndRemittancePerson.EmailAddress}}</i>
+                                        </div>
+
+                                    </div>
+                                    @*</fieldset>*@
+                                    <div class="clearfix"></div>
+                                    <div ng-show="activeMessageDiv=='alertPayment'" class="alert alert-danger" role="alert">
+                                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="control-group">
+                                            <button class="btn btn-warning btn-sm" ng-click="cancel()">Cancel</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </fieldset>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+

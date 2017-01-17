@@ -1,0 +1,170 @@
+﻿@model  IEnumerable<PortalTemplate.Areas.CredAxis.Models.ProfessionalAffiliationViewModel.ProfessionalAffiliationViewModel>
+@{
+    var Affiliation = 0;
+}
+
+<div class="target profilediv col-lg-12" id="IDProfessionalAffiliation">
+    @if (Model != null)
+    {
+        <fieldset class="fsStyle col-lg-12 padding_top_down_5px nopadding" id="ViewProfAffiliation">
+            <legend class="legendStyle">
+                <span class="theme_depend text-uppercase create-auth-legends">
+                    <span class="transparent-font-color">___</span>
+                    Professional Affiliation
+                    <span class="transparent-font-color">___</span>
+                </span>
+                &nbsp;&nbsp; <span class="text-uppercase ">
+                    <span class="fstyleBtnStyle">
+                        <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/ProfessionalAffiliation/GetProfessionalAffiliationPartial?model=@Model&value=Add" data-tab-container="AffiliationTabView">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/ProfessionalAffiliation/GetProfessionalAffiliationPartial?model=@Model&value=Edit" data-tab-container="AffiliationTabView">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        @*<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/ProfessionalAffiliation/ViewAffiliationHistory?value=@item.ProfessionalAffiliationID" data-tab-container="@item.ProfessionalAffiliationID">*@
+                        @*<button class="btn btn-warning btn-xs historyBtnCSS" data-toggle="collapse" data-target="#ProfessionalAffiliationHistory">*@
+                        <button class="btn btn-warning btn-xs historyBtnCSS list-item" @*data-toggle="collapse"*@ data-tab-path="/CredAxis/ProfessionalAffiliation/ViewAffiliationHistoryforAll" data-tab-container="ProfessionalAffiliationID">
+                            <i class="fa fa-history"></i>
+                        </button>
+                        <a class="print_button_for_Affiliation hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                            <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                        </a>
+                    </span>
+                </span>
+            </legend>
+            @foreach (var item in Model)
+            {
+                Affiliation = Affiliation + 1;
+                if (Affiliation <= 2)
+                {
+                    <div class="x_content zero-padding-left mutiple-data">
+                        <div class="SubHeaderSpacing1">
+                            <span class="text-uppercase TableHeading">Professional Affiliation-@Affiliation</span>&nbsp;
+                            <button onclick="groupmodalhistory('ProfessionalAffiliation','removeaffiliationinfo','@item.ProfessionalAffiliationID','ViewProfAffiliation')" data-toggle="modal" @*data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>&nbsp;
+                            @*<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/ProfessionalAffiliation/ViewAffiliationHistory?value=@item.ProfessionalAffiliationID" data-tab-container="@item.ProfessionalAffiliationID">
+                                    <i class="fa fa-history"></i>
+                                </button>*@
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.OrganizationName) :</span>
+                            <span class="theme_label_data">@item.OrganizationName</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</span>
+                            <span class="theme_label_data">@item.StartDate</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</span>
+                            <span class="theme_label_data">@item.EndDate</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.PositionOfficeHeld) :</span>
+                            <span class="theme_label_data">@item.PositionOfficeHeld</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.MemberApplicant) :</span>
+                            <span class="theme_label_data">@item.MemberApplicant</span>
+                        </div>
+                        <div id="@item.ProfessionalAffiliationID">
+
+                        </div>
+                    </div>
+                    if (Affiliation == 2)
+                    {
+                        <span class="view-more pull-right" id="affiliatemore" data-toggle="collapse" data-target=".ViewMoreAffiliation" onclick="ShowHideAddView('Affiliateless', 'affiliatemore')">View More</span>
+                    }
+                }
+                else
+                {
+                    <div class="x_content zero-padding-left mutiple-data ViewMoreAffiliation collapse">
+                        <div class="SubHeaderSpacing1">
+                            <span class="text-uppercase TableHeading">Professional Affiliation-@Affiliation</span>&nbsp;
+                            <button onclick="groupmodalhistory('ProfessionalAffiliation','removeaffiliationinfo','@item.ProfessionalAffiliationID','ViewProfAffiliation')" data-toggle="modal" @*data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>&nbsp;
+                            @*<button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>&nbsp;<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/ProfessionalAffiliation/ViewAffiliationHistory?value=@item.ProfessionalAffiliationID" data-tab-container="@item.ProfessionalAffiliationID">
+                                    <i class="fa fa-history"></i>
+                                </button>*@
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.OrganizationName) :</span>
+                            <span class="theme_label_data">@item.OrganizationName</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.StartDate) :</span>
+                            <span class="theme_label_data">@item.StartDate</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.EndDate) :</span>
+                            <span class="theme_label_data">@item.EndDate</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.PositionOfficeHeld) :</span>
+                            <span class="theme_label_data">@item.PositionOfficeHeld</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                            <span class="theme_label">@Html.DisplayNameFor(e => e.MemberApplicant) :</span>
+                            <span class="theme_label_data">@item.MemberApplicant</span>
+                        </div>
+                        <div id="@item.ProfessionalAffiliationID">
+
+                        </div>
+                    </div>
+
+                    if (Affiliation == Model.Count())
+                    {
+                        <span class="view-more hidden pull-right" id="Affiliateless" data-toggle="collapse" data-target=".ViewMoreAffiliation" onclick="ShowHideAddView('affiliatemore', 'Affiliateless')">View Less</span>
+                    }
+                }
+
+            }
+            <div id="ProfessionalAffiliationID"></div>
+
+        </fieldset>
+    }
+    else
+    {
+        @Html.Action("GetNoDataAvailablePartial", "CredAxis", new { SectionName = "PROFESSIONAL AFFILIATION", RedirectUrl = "~/Areas/CredAxis/Views/ProviderProfile/Tabs/ProfessionalAffiliation/_AddEditProfessionalAffiliation.cshtml", SectionId = "AffiliationTabView" })
+    }
+
+
+</div>
+
+@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/_RemoveModal.cshtml")
+
+@*<div class="modal fade " tabindex="-1" role="dialog" id="BhaukalId" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-lg ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">*@
+@*<div class="row" style="text-align: center;">
+        <span class="modalTitle text-uppercase">REMOVE DETAIL</span>
+        <span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+
+    </div>*@
+@*<div class="col-lg-12">
+            <div class="col-lg-8">
+                <h4 style="color:white"><i class="fa fa-question-circle"></i> &nbsp; REMOVE DETAILS </h4>
+            </div>
+            <div class="col-lg-4" style=" top: 14px;">
+                <button type="button" class="btn btn-danger btn-xs pull-right" data-dismiss="modal" id="closeModal">X</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body modalbodyheight  ">*@
+@* <span class="text-uppercase label" style="background-color: #C5CAE9; color: black;">Specialty Detail</span>*@
+@*<div class="x_content zero-padding-left text-uppercase">
+                        <span class="AddProviderModal">
+                            <h3>&nbsp;&nbsp;&nbsp;&nbsp;DO YOU WANT TO REMOVE THESE DETAILS?</h3>
+                        </span>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer   ">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 button-styles text-right">
+                        <span><button data-dismiss="modal" class="btn btn-danger close_modal_btn">NO</button></span>
+                        <button data-dismiss="modal" class="btn btn-success close_modal_btn">YES</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>*@

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<PortalTemplate.Areas.UM.Models.ViewModels.AuthPreview.CPTPreviewViewModel>
+
+@{
+    string CPTPreviewHeader = ViewBag.AuthPreviewContent.CPTPreviewHeader;
+    string CPTPreviewBody = ViewBag.AuthPreviewContent.CPTPreviewBody;
+    PortalTemplate.Areas.UM.Models.ViewModels.AuthPreview.CPTPreviewViewModel emptyObject = new PortalTemplate.Areas.UM.Models.ViewModels.AuthPreview.CPTPreviewViewModel();
+}
+<div class="row col-md-12">
+    <table class="table authpreview-table table-bordered remove-padding-td-a uppercase">
+        <thead>
+            <tr>
+
+                @Html.Partial(CPTPreviewHeader, emptyObject)
+                @Html.Partial(CPTPreviewHeader, emptyObject)
+                @Html.Partial(CPTPreviewHeader, emptyObject)
+
+            </tr>
+        </thead>
+        <tbody>
+            @for (int index = 0; index < Model.Count(); index++)
+            {
+
+                <tr>
+                    @Html.Partial(CPTPreviewBody, Model.ElementAt(index))
+                    @{ index++; }
+
+                    @if (index < Model.Count())
+                    {
+                        @Html.Partial(CPTPreviewBody, Model.ElementAt(index))
+                    }
+                    else
+                    {
+                        @Html.Partial(CPTPreviewBody, emptyObject)
+                    }
+                    @{ index++; }
+                    @if (index < Model.Count())
+                    {
+                        @Html.Partial(CPTPreviewBody, Model.ElementAt(index))
+                    }
+                    else
+                    {
+                        @Html.Partial(CPTPreviewBody, emptyObject)
+                    }
+                </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+</div>

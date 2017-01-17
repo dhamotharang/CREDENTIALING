@@ -1,0 +1,361 @@
+﻿
+
+
+<br/>
+<div class="col-lg-12 zero-padding-left-right-div form-style">
+    <div class="panel panel-default" ng-hide="templateSelected">
+        <div class="panel-heading">
+            <a style="cursor: pointer; text-decoration: none;" ng-click="setActionID2(1);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==1}">Credentialing</a> &nbsp;
+            <a style="cursor: pointer; text-decoration: none;" ng-click="setActionID2(2);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==2}">Re-Credentialing</a> &nbsp;
+            <a style="cursor: pointer; text-decoration: none;" ng-click="setActionID2(3);clearAction();" ng-class="{'btn btn-xs btn-info': selectedAction==3}">De-Credentialing</a>
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-12" ng-show="selectedAction==1">
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-condensed alignTableStyle">
+                        <tr>
+                            <th>Profile Pic</th>
+                            <th>NPI Number</th>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Provider Type</th>
+                            <th>Specialty</th>
+                            <th>Group</th>
+
+                        </tr>
+                        <tr>
+                            <td class="col-lg-1">
+                                <div class="thumbnail imageStyle">
+                                    <img src="~/Content/Images/Providers/Pariksith_Singh.jpg" class="img-rounded" />
+                                </div>
+                            </td>
+                            <td>{{Npi}}</td>
+                            <td>{{Firstname}}</td>
+                            <td>{{Middlename}}</td>
+                            <td>{{Lastname}}</td>
+                            <td>{{Type}}</td>
+                            <td><span ng-repeat="s in Specilities"><span ng-if="$index > 0">, </span>{{s}}</span></td>
+                            <td><span ng-repeat="g in Groups"><span ng-if="$index > 0">, </span>{{g}}</span></td>
+                        </tr>
+
+
+                    </table>
+                </div>
+                <br />
+                <div class="col-lg-12 zero-padding-left-right-div" ng-hide="initiateSuccess">
+                    <div class="col-lg-12">
+                        <select class="form-control input-sm">
+                            <option selected disabled>Select Plan (not Credentialed yet)</option>
+                            <option>VIP SAVINGS</option>
+                            <option>SAVINGS PLAN RX</option>
+                            <option>SAVINGS COPD</option>
+                        </select>
+                    </div>
+
+
+
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="alert alert-success" role="alert" ng-show="msgAlert">
+                        <strong>Success!</strong> {{Title}} {{Firstname}} {{Lastname}}'s Credentialing Initiated Successfully.
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div ng-show="initiateSuccess">
+                    <span class="col-lg-4"><hr /></span>
+                    <span class="col-lg-4 text-center h4">What would you like to do?</span>
+                    <span class="col-lg-4"><hr /></span>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div ng-show="initiateSuccess" class="col-lg-6 text-right pull-right"><a class="btn btn-success btn-sm" href="/Credentialing/CnD/Index/#/psv" ng-click="PSVSTATUSR()"> Perform PSV</a></div>
+                    <div ng-hide="initiateSuccess" class="col-lg-6 text-right pull-right"><button class="btn btn-primary btn-sm" ng-click="InitiateCredentialing();"> Initiate Credentialing</button></div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+            </div>
+
+         
+            
+
+            <div class="col-lg-12" ng-show="selectedAction==2">
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-condensed alignTableStyle">
+                        <tr>
+                            <th>Profile Pic</th>
+                            <th>NPI Number</th>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Provider Type</th>
+                            <th>Specialty</th>
+                            <th>Group</th>
+
+                        </tr>
+                        <tr>
+                            <td class="col-lg-1">
+                                <div class="thumbnail imageStyle">
+                                    <img src="~/Content/Images/Providers/Pariksith_Singh.jpg" class="img-rounded" />
+                                </div>
+                            </td>
+                            <td>{{Npi}}</td>
+                            <td>{{Firstname}}</td>
+                            <td>{{Middlename}}</td>
+                            <td>{{Lastname}}</td>
+                            <td>{{Type}}</td>
+                            <td><span ng-repeat="s in Specilities"><span ng-if="$index > 0">, </span>{{s}}</span></td>
+                            <td><span ng-repeat="g in Groups"><span ng-if="$index > 0">, </span>{{g}}</span></td>
+                        </tr>
+
+
+                    </table>
+                </div>
+                <br />
+                <div class="col-lg-12 zero-padding-left-right-div" ng-hide="initiateSuccess">
+
+                    <div class="col-lg-6">
+                        <label class="control-label">Select Plan:</label>
+                        <div id="BEID">
+                            <select class="form-control input-sm" data-val="true" data-val-required="Please select Plan" ng-model="PlanList[$index]" ng-change="showPlanListReCred(PlanList[$index])">
+                                <option selected disabled hidden value="">-Select-</option>
+                                <option ng-repeat="p in PlanList track by $index" value="{{p.PlanID}}">{{p.PlanName}}</option>
+                            </select>
+                        </div>
+                        <span ng-show="isHasError" class="text-danger field-validation-error">
+                            <span>Please select Plan.</span>
+                        </span>
+                    </div>
+                    <br />
+                    <div class="clearfix"></div>
+                    <div ng-show="loadingAjax1" style="margin-top:30px;" class="progress col-lg-12" ng-cloak>
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <table class="table table-bordered table-condensed alignTableStyle table-hover" ng-show="!loadingAjax1 && tableShowStatus">
+                        <!-- ngInclude: templates.header -->
+                        <thead>
+                            <tr ng-show="CredentialingContractRequests.length>0">
+                                <th class="col-lg-2">Business Entity</th>
+                                <th class="col-lg-2">Line Of Business</th>
+                                <th class="col-lg-2">Specialty</th>
+                                <th class="col-lg-3">Location</th>
+                                <th class="col-lg-3">Status</th>
+
+                                <th class="col-lg-1">Action&nbsp;&nbsp;<input type="checkbox" style="width:20px; height:20px;" ng-checked="selection.length==CredentialingContractRequests.length" ng-model="allItemsSelected" ng-click="selectAll()" ng-disabled="CredentialingContractRequests.length!=SelectAllCheckBox"></th>
+                            </tr>
+                            @*<tr ng-show="PlanListID && CredentialingContractRequests.length==0">
+                    <th class="col-lg-12"></th>
+                </tr>*@
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="c in CredentialingContractRequests track by $index" ng-class='{danger:c.TableRowStatus ==false, success:c.TableRowStatus ==true}'>
+                                <td>{{c.BusinessEntity}}</td>
+                                <td>
+                                    <span ng-repeat="s in c.ContractLOBs">
+                                        <i ng-if="$index>0">,</i><br ng-if="$index>0" />
+                                        <span>
+                                            {{s}}
+                                        </span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span ng-repeat="s in c.ContractSpecialties">
+                                        <i ng-if="$index>0">,</i><br ng-if="$index>0" />
+                                        {{s}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span ng-repeat="s in c.ContractPracticeLocations">
+                                        <i ng-if="$index>0">,</i><br ng-if="$index>0" />
+                                        {{s}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary pull-left" ng-if="c.TableRowStatus==true">Completed </span>
+                                    <span class="label label-danger pull-left" ng-if="c.TableRowStatus==false">Not Completed </span>
+                                </td>
+
+                                <td>
+                                    <input type="checkbox" ng-model="c.isChecked" style="width:20px; height:20px;" ng-checked="selection.indexOf(c) > -1" ng-click="toggleSelection(c)" @*ng-change="selectEntity()"*@ ng-disabled="c.TableRowStatus==false">
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+
+
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="alert alert-success" role="alert" ng-show="msgAlert">
+                        <strong>Success!</strong> {{Title}} {{Firstname}} {{Lastname}}'s Re-Credentialing Initiated Successfully.
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div ng-show="initiateSuccess">
+                    <span class="col-lg-4"><hr /></span>
+                    <span class="col-lg-4 text-center h4">What would you like to do?</span>
+                    <span class="col-lg-4"><hr /></span>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div ng-show="initiateSuccess" class="col-lg-6 text-right pull-right"><a class="btn btn-success btn-sm" href="/Credentialing/CnD/Index/#/psv" ng-click="PSVSTATUSR()"> Perform PSV</a></div>
+                    <div ng-hide="initiateSuccess" class="col-lg-6 text-right pull-right"><button class="btn btn-primary btn-sm" ng-click="InitiateCredentialing();"> Initiate Re Credentialing</button></div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+            </div>
+
+
+
+
+
+
+            <div class="col-lg-12" ng-show="selectedAction==3">
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-condensed alignTableStyle">
+                        <tr>
+                            <th>Profile Pic</th>
+                            <th>NPI Number</th>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Provider Type</th>
+                            <th>Specialty</th>
+                            <th>Group</th>
+
+                        </tr>
+                        <tr>
+                            <td class="col-lg-1">
+                                <div class="thumbnail imageStyle">
+                                    <img src="~/Content/Images/Providers/Pariksith_Singh.jpg" class="img-rounded" />
+                                </div>
+                            </td>
+                            <td>{{Npi}}</td>
+                            <td>{{Firstname}}</td>
+                            <td>{{Middlename}}</td>
+                            <td>{{Lastname}}</td>
+                            <td>{{Type}}</td>
+                            <td><span ng-repeat="s in Specilities"><span ng-if="$index > 0">, </span>{{s}}</span></td>
+                            <td><span ng-repeat="g in Groups"><span ng-if="$index > 0">, </span>{{g}}</span></td>
+                        </tr>
+
+
+                    </table>
+                </div>
+                <br />
+                <div class="col-lg-12 zero-padding-left-right-div" ng-hide="initiateSuccess">
+
+                    <div class="col-lg-6">
+                        <label class="control-label">Select Plan:</label>
+                        <div id="BEID">
+                            <select class="form-control input-sm" data-val="true" data-val-required="Please select Plan" ng-model="PlanList[$index]" ng-change="showPlanListReCred(PlanList[$index])">
+                                <option selected disabled hidden value="">-Select-</option>
+                                <option ng-repeat="p in PlanList track by $index" value="{{p.PlanID}}">{{p.PlanName}}</option>
+                            </select>
+                        </div>
+                        <span ng-show="isHasError" class="text-danger field-validation-error">
+                            <span>Please select Plan.</span>
+                        </span>
+                    </div>
+                    <br />
+                    <div class="clearfix"></div>
+                    <div ng-show="loadingAjax1" style="margin-top:30px;" class="progress col-lg-12" ng-cloak>
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <table class="table table-bordered table-condensed alignTableStyle table-hover" ng-show="!loadingAjax1 && tableShowStatus">
+                        <!-- ngInclude: templates.header -->
+                        <thead>
+                            <tr ng-show="CredentialingContractRequests.length>0">
+                                <th class="col-lg-2">Business Entity</th>
+                                <th class="col-lg-2">Line Of Business</th>
+                                <th class="col-lg-2">Specialty</th>
+                                <th class="col-lg-3">Location</th>
+                                <th class="col-lg-1">Action&nbsp;&nbsp;<input type="checkbox" style="width:20px; height:20px;" ng-checked="selection.length==CredentialingContractRequests.length" ng-model="allItemsSelected" ng-click="selectAll()" ng-disabled="ContractGrid.length!=SelectAllCheckBox"></th>
+                            </tr>
+                            @*<tr ng-show="PlanListID && CredentialingContractRequests.length==0">
+                            <th class="col-lg-12"></th>
+                        </tr>*@
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="c in ContractGrid track by $index">
+                                <td>{{c.BusinessEntity}}</td>
+                                <td>
+                                    
+                                       
+                                        <span>
+                                            {{c.ContractLOBs}}
+                                        </span>
+                                    
+                                </td>
+                                <td>
+                                    <span>
+                                        
+                                        {{c.ContractSpecialties}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        
+                                        {{c.ContractPracticeLocations}}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <input type="checkbox" ng-model="c.isChecked" style="width:20px; height:20px;" ng-checked="selection.indexOf(c) > -1" ng-click="toggleSelection(c)" @*ng-change="selectEntity()"*@ ng-disabled="c.TableRowStatus==false">
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="alert alert-success" role="alert" ng-show="msgAlert">
+                        <strong>Success!</strong> {{Title}} {{Firstname}} {{Lastname}}'s De-Credentialing Initiated Successfully.
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div ng-show="initiateSuccess">
+                    <span class="col-lg-4"><hr /></span>
+                    <span class="col-lg-4 text-center h4">What would you like to do?</span>
+                    <span class="col-lg-4"><hr /></span>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div ng-show="initiateSuccess" class="col-lg-6 text-right pull-right"><a class="btn btn-success btn-sm" href="/Verification/PrimarySource"> De Credentialing Application</a></div>
+                    <div ng-hide="initiateSuccess" class="col-lg-6 text-right pull-right"><button class="btn btn-primary btn-sm" ng-click="InitiateCredentialing();"> Initiate De Credentialing</button></div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+            </div>
+
+
+        </div>
+       
+    </div>
+</div>

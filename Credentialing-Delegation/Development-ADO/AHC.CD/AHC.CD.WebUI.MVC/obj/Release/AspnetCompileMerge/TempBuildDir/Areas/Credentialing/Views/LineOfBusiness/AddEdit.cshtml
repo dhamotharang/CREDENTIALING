@@ -1,0 +1,295 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/angular-resource.min.js"></script>
+<script src="~/Scripts/Lib/Angular/angular-mocks.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Areas/Credentialing/Scripts/plans.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+
+<style>
+    .loading-container {
+        position: relative;
+    }
+
+        .loading-container .loading:before, .loading-container .loading:after {
+            content: " ";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            min-height: 50px;
+            min-width: 50px;
+        }
+
+        .loading-container .loading:before {
+            background-color: white;
+            opacity: 0.5;
+        }
+</style>
+
+<div id="page-wrapper" ng-app="planApp" ng-controller="planController">
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Line Of Business
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div>
+            <div class="col-lg-6 pull-left">
+                <label class="control-label small">Select Plan</label>
+                <div>
+                    <select class="form-control input-sm">
+                        <option selected disabled>-Select-</option>
+                        <option>Wellcare</option>
+                        <option>Blue Cross Blue Shield</option>
+                        <option>Freedom</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 pull-right">
+                <label class="control-label small">Select Type of Plan</label>
+                <div>
+                    <select class="form-control input-sm">
+                        <option selected disabled>-Select-</option>
+                        <option>Commercial</option>
+                        <option>Medicaid</option>
+                        <option>Medicare</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <br />
+        <!-- Add Provider content form div -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Add New Line Of Business</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <label class="control-label small">Line Of Business Name</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label small">Line Of Business Code</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div>
+                                <div class="col-md-12">
+                                    <label class="control-label small"><input type="checkbox" /> Use Same Address as the Plan Address</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="col-md-4">
+                                <label class="control-label small">Street/P.O Box</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label small">Apartment/Unit No.</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label small">City</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="col-md-4">
+                                <label class="control-label small">State</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label small">Country</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="control-label small">County</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div>
+                                <div class="col-md-12">
+                                    <label class="control-label small"><input type="checkbox" /> Use Same Contact Detail as the Company Contact</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="col-md-3">
+                                <label class="control-label small">Contact Person Name</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label small">Phone</label>
+                                <div>
+                                    <div class="col-md-9 zero-padding-left-right-div">
+                                        <input type="text" class="form-control input-sm" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Add more Phone"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label small">Fax</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label small">Email</label>
+                                <div>
+                                    <input type="text" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div>
+                                <div class="col-md-12">
+                                    <label class="control-label small"><input type="checkbox" /> Use Same  Detail as the Plan Detail</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="col-md-4">
+                                <label class="control-label small">Attach Business Entity</label>
+                                <div>
+                                    <div class="col-md-9 zero-padding-left-right-div">
+                                        <select class="form-control input-sm">
+                                            <option selected disabled>-Select-</option>
+                                            <option>BE 1</option>
+                                            <option>BE 2</option>
+                                            <option>BE 3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Add more Business Entity"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label small">Attach Application</label>
+                                <div>
+                                    <select class="form-control input-sm">
+                                        <option selected disabled>-Select-</option>
+                                        <option>Application 1</option>
+                                        <option>Application 2</option>
+                                        <option>Application 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label small">Attach Doc Checklist</label>
+                                <div>
+                                    <select class="form-control input-sm">
+                                        <option selected disabled>-Select-</option>
+                                        <option>Check List 1</option>
+                                        <option>Check List 2</option>
+                                        <option>Check List 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <label class="control-label small">Delegated</label>
+                                <input type="checkbox" class="form-control input-sm" />
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="col-md-4">
+                                <label class="control-label small">Sub Plans</label>
+                                <div>
+                                    <div class="col-md-9 zero-padding-left-right-div">
+                                        <input class="form-control input-sm">                                            
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Add more Sub Plans"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="control-label small">Attach PSV</label>
+                                <div>
+                                    <select class="form-control input-sm">
+                                        <option selected disabled>-Select-</option>
+                                        <option>PSV 1</option>
+                                        <option>PSV 2</option>
+                                        <option>PSV 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <br />
+                                <a href="/Credentialing/PSVCheckList/Index" class="btn btn-primary btn-sm">Configure New PSV</a>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="col-lg-12">
+                                <a href="/Credentialing/LineOfBusiness/ListLOB" class="btn btn-danger btn-sm pull-left">Cancel</a>
+                                <a href="/Credentialing/LineOfBusiness/ListLOB" class="btn btn-success btn-sm pull-right">Submit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

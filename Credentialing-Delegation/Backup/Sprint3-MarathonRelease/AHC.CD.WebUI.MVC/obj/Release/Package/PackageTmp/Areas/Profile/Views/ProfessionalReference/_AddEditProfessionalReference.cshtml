@@ -1,0 +1,242 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalReference.ProfessionalReferenceViewModel
+
+<fieldset>
+    <legend>
+        Professional Reference
+    </legend>
+    <form class="professionalReference">
+        <span ng-if="tempObject.ProfessionalReferenceInfoID">
+            @Html.HiddenFor(model => model.ProfessionalReferenceInfoID, new { ng_value = "tempObject.ProfessionalReferenceInfoID", data_ng_model = "tempObject.ProfessionalReferenceInfoID" })
+        </span>
+        <div class="col-lg-12 zero-padding-left-right-div">
+
+            <div class="col-md-12">
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(p => p.ProviderTypeID, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <select id="ProviderTypeID" name="ProviderTypeID" class="form-control input-sm" ng-model="tempObject.ProviderTypeID" >
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="providertype in masterProviderTypes" value="{{providertype.ProviderTypeID }}">{{providertype.Title }}</option>
+                        </select>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ProviderTypeID, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(p => p.FirstName, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", data_ng_model = "tempObject.FirstName" })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(p => p.MiddleName, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.MiddleName, new { @class = "form-control input-sm", data_ng_model = "tempObject.MiddleName" })
+                </div>
+
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(p => p.LastName, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-sm", data_ng_model = "tempObject.LastName" })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12">
+            <div class="form-group col-md-3">
+                @Html.LabelFor(p => p.UnitNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.UnitNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.UnitNumber" })
+                    @Html.ValidationMessageFor(model => model.UnitNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.Building, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.Building, new { @class = "form-control input-sm", data_ng_model = "tempObject.Building" })
+                        @Html.ValidationMessageFor(model => model.Building, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="form-group col-md-3">
+                @Html.LabelFor(p => p.Street, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @Html.TextBoxFor(model => model.Street, new { @class = "form-control input-sm", data_ng_model = "tempObject.Street" })
+                    @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.Country, htmlAttributes: new { @class = "control-label small" })
+                    @*<div>
+                        <select class="form-control input-sm" >
+                            <option>USA</option>
+                        </select>
+                    </div>*@
+
+                    <div>
+                        <select id="Country" name="Country" class="form-control input-sm" ng-model="tempObject.Country" ng-change="getStates(tempObject.Country)">
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="country in Countries" value="{{country.Code}}" ng-selected="country.Code == tempObject.Country">{{country.Name}}</option>
+                        </select>
+                    </div>
+                </div>
+        </div>
+            <div class="col-md-12">
+            <div class="form-group col-md-3">
+                @Html.LabelFor(p => p.State, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <div>
+                        <select id="State" name="State" class="form-control input-sm" ng-model="tempObject.State" ng-change="getCounties(tempObject.State)">
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}" ng-selected="state.State == tempObject.State">{{state.State}}</option>
+                        </select>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(p => p.County, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <div>
+                        <select id="County" name="County" class="form-control input-sm" ng-model="tempObject.County" ng-change="getCities(tempObject.County)">
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="county in Counties | unique: 'County'" value="{{county.County}}" ng-selected="county.County == tempObject.County">{{county.County}}</option>
+                        </select>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.County, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(p => p.City, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select class="form-control input-sm" id="City" name="City" ng-model="tempObject.City">
+                        <option value="" disabled selected>--Select--</option>
+                        <option ng-repeat="city in Cities | unique: 'City'" value="{{city.City}}" ng-selected="city.City == tempObject.CityOfBirth">{{city.City}}</option>
+                    </select>
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                </div>
+            </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.Zipcode, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @Html.TextBoxFor(model => model.Zipcode, new { @class = "form-control input-sm", data_ng_model = "tempObject.Zipcode" })
+                        @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+        </div>
+
+            <div class="col-md-12">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control input-sm", data_ng_model = "tempObject.Email" })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(p => p.Telephone, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                        </div>
+                        <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                            <div class="arrow"></div>
+                            <h3 class="popover-title">Select Country Dial Code</h3>
+                            <div class="popover-content">
+                                <select id="ContactContryCode">
+                                    <option>+91</option>
+                                </select>
+                            </div>
+                        </div>
+                        @Html.TextBoxFor(model => model.Telephone, new { @class = "form-control input-sm", data_ng_model = "tempObject.Telephone" })
+                        @Html.ValidationMessageFor(model => model.Telephone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(p => p.Fax, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-sm"><span class="caret"></span></button>
+                        </div>
+                        <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                            <div class="arrow"></div>
+                            <h3 class="popover-title">Select Country Dial Code</h3>
+                            <div class="popover-content">
+                                <select id="ContactContryCode">
+                                    <option>+91</option>
+                                </select>
+                            </div>
+                        </div>
+                        @Html.TextBoxFor(model => model.Fax, new { @class = "form-control input-sm", data_ng_model = "tempObject.Fax" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="form-group col-md-6">
+
+                @Html.LabelFor(p => p.Degree, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select class="form-control input-sm" ng-model="tempObject.Degree" name="Degree">
+                        <option></option>
+                        <option ng-repeat="degree in masterDegrees" value="{{degree.Title}}">{{degree.Title}}</option>
+                    </select>
+
+                    <div>
+                        @Html.ValidationMessageFor(model => model.Degree, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(p => p.SpecialtyID, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <select class="form-control input-sm" ng-model="tempObject.SpecialtyID" name="SpecialtyID">
+                        <option></option>
+                        <option ng-repeat="speciality in masterSpecialties" value="{{speciality.SpecialtyID}}">{{speciality.Name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+              
+
+
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.Relationship, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+
+                        @Html.TextBoxFor(model => model.Relationship, new { @class = "form-control input-sm", data_ng_model = "tempObject.Relationship" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3">
+
+                    @Html.LabelFor(p => p.BoardCerifiedOption, htmlAttributes: new { @class = "control-label small" })
+                    <div class="radio">
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.BoardCerifiedOption, (int)value, new { data_ng_model = "tempObject.BoardCerifiedOption" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div ng-if="IsProfessionalReferenceHasError" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists : <br />
+                    <span ng-repeat="err in ProfessionalReferenceErrorList  track by $index">{{err}}</span>
+                </div>
+            </div>
+
+            <div class="col-md-12 form-group">
+                <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalReference(tempObject,$index)">{{submitButtonText}}</button>
+            </div>
+        </div>
+    </form>
+    </fieldset>

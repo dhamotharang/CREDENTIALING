@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ahc.cd.entities.masterprofile.profile>
+
+    @{
+        ViewBag.Title = "ViewProviders";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    @section AddToHead{
+        <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+        <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+        <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+        <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    }
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12" ng-app="ProviderApp" ng-controller="ProviderCtrl">
+                    <br />
+                    <div class="form-style">
+                        <fieldset>
+                            <legend>
+                                Search Provider
+                            </legend>
+                            <div ng-cloak class="panel panel-default content-panel">
+                                <div class="panel-body">
+                                    <div class="col-lg-12" style="overflow-x:auto;">
+                                        <table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                                            <tr ng-repeat="user in $data"
+                                                ng-class="{'active': user.$selected}">
+                                                <td data-title="'First Name'" header-class="text-left" sortable="'PersonalDetail.FirstName'" filter="{ 'PersonalDetail.FirstName': 'text' }">
+                                                    {{user.PersonalDetail.FirstName}}
+                                                </td>
+                                                <td data-title="'Last Name'" sortable="'PersonalDetail.LastName'" filter="{ 'PersonalDetail.LastName': 'text' }">
+                                                    {{user.PersonalDetail.LastName}}
+                                                </td>
+                                                <td data-title="'Gender'" header-class="text-left" sortable="'Gender'" filter="{ 'Gender': 'text' }">
+                                                    {{user.PersonalDetail.Gender}}
+                                                </td>
+                                                <td data-title="'MaritalStatus'" header-class="text-left" sortable="'MaritalStatus'" filter="{ 'MaritalStatus': 'text' }">
+                                                    {{user.PersonalDetail.MaritalStatus}}
+                                                </td>
+                                                <td>
+                                                    <a href="~/Profile/MasterProfile/ProviderProfile/{{user.ProfileID}}" class="btn btn-xs btn-success"><i class="fa fa-caret-right"></i></a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Areas/Profile/Scripts/SearchProvider.js"></script>

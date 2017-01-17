@@ -1,0 +1,71 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.ECFMGDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="clearfix"></div>
+<form>
+    <span ng-if="tempObject.ECFMGDetailID">
+        @Html.HiddenFor(model => model.ECFMGDetailID, new { id = "ECFMGDetailID", ng_value = "tempObject.ECFMGDetailID", data_ng_model = "tempObject.ECFMGDetailID" })
+    </span>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6 form-group">
+
+            @Html.LabelFor(model => model.ECFMGNumber, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @Html.TextBoxFor(model => model.ECFMGNumber, new { @class = "form-control input-sm", placeholder = "ECFMG Number", data_ng_model = "tempObject.ECFMGNumber" })
+            </div>
+            @Html.ValidationMessageFor(model => model.ECFMGNumber, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.ECFMGIssueDate, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @Html.TextBoxFor(model => model.ECFMGIssueDate, new { @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format", data_ng_model = "tempObject.ECFMGIssueDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker" })
+            </div>
+            @Html.ValidationMessageFor(model => model.ECFMGIssueDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="form-group" ng-class="{'col-lg-11':tempObject.ECFMGCertPath,'col-lg-12':!tempObject.ECFMGCertPath}">
+            @Html.HiddenFor(model => model.ECFMGCertPath, new { ng_value = "tempObject.ECFMGCertPath" })
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new small">Supporting Document</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.ECFMGCertificateDocumentFile, new { name = "tempObject.ECFMGCertificateDocumentFile", type = "file", data_ng_model = "tempObject.ECFMGCertificateDocumentFile" })</span>
+                <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>
+            @Html.ValidationMessageFor(model => model.ECFMGCertificateDocumentFile, "", new { @class = "text-danger" })
+        </div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+        {
+
+            <div ng-if="tempObject.ECFMGCertPath" class="form-group col-md-1">
+                <a href="/Document/View?path={{tempObject.ECFMGCertPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+            </div>
+
+        }
+    </div>
+    <div class="clearfix"></div>
+    <div ng-show="activeMessageDiv=='ErrorInECFMGDetails'" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists :<br />
+            <span ng-repeat="err in ECFMGDetailsErrorList track by $index">{{err}}</span>
+        </div>
+    </div>
+    <br />
+
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-lg-12">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); datePickerReset();">Cancel</button>
+            <button class="btn btn-success pull-right" ng-click="saveECFMGDetails(tempObject)">Save</button>
+        </div>
+    </div>
+    @*<div ng-show="ErrorInECFMGDetails" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="pull-right" ng-click="ErrorInECFMGDetails=false"><i class="fa fa-times"></i></span>
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists : <br />
+            <span ng-repeat="err in ECFMGDetailsErrorList track by $index">{{err}}</span>
+        </div>
+    </div>*@
+</form>

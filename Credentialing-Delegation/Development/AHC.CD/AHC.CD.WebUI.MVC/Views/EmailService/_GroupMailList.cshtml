@@ -1,0 +1,225 @@
+﻿<style>
+    .select-page {
+        width: 50px;
+        text-align: center;
+    }
+
+    .groupListTable tr:nth-child(even) {
+        background-color: rgba(100, 149, 237, 0.08);
+    }
+
+    .groupListTable {
+        margin-left: -1.5%;
+    }
+
+    /*.groupListTable thead {
+        color: white;
+        background-color: rgba(100, 149, 237, 0.78);
+    }*/
+</style>
+<div class="panel-group col-lg-12 zero-padding-left-right-div" @*ng-controller="GroupMailController as gm"*@ ng-cloak>
+    @*<div>
+        <br />
+    </div>*@
+    <div ng-if="loading" class="row" ng-cloak>
+        <div style="margin-left:45%;margin-top:10%">
+            <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+            <span>Loading...Please Wait</span>
+        </div>
+    </div>
+    <div ng-if="!loading" class="col-lg-12 zero-padding-left-right-div" ng-cloak>
+        <ul class="nav nav-tabs" role="tablist" ng-show="tableView" style="width:97%">
+            <li class="active"><a id="tabs1" data-toggle="tab" ng-click="getTabData('activeGroups')" href="#tab1">Active Groups</a></li>
+            <li><a id="tabs3" data-toggle="tab" ng-click="getTabData('inactiveGroups')" href="#tab1">Inactive Groups</a></li>
+        </ul>
+        <div class="clearfix"></div>
+        @*<div class="col-lg-12 zero-padding-left-right-div">
+                <div ng-show="activeMessageDiv=='successfullySaved'" class="alert alert-success" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='errorInitiated'" class="col-lg-12">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        <span>{{messageDesc}}</span>
+                    </div>
+                </div>
+            </div>*@
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div ng-show="activeMessageDiv=='successfullySaved'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>
+            <div ng-show="activeMessageDiv=='errorInitiated'" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    <span>{{messageDesc}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div id="tab1" class="tab-pane fade in active">
+                <div class="col-lg-12">
+                    @*<fieldset>*@
+                    @*<legend>Group Mail</legend>*@
+                    @*<div class="col-lg-12 zero-padding-left-right-div">
+                            <div ng-show="activeMessageDiv=='successfullySaved'" class="alert alert-success" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                {{messageDesc}}
+                            </div>
+                            <div ng-show="activeMessageDiv=='errorInitiated'" class="col-lg-12">
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    <span>{{messageDesc}}</span>
+                                </div>
+                            </div>
+                        </div>*@
+                    @*<div class="col-lg-12 zero-padding-left-right-div">
+                            <div ng-show="activeMessageDiv=='successfullySaved'" class="alert alert-success" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                {{messageDesc}}
+                            </div>
+                            <div ng-show="activeMessageDiv=='errorInitiated'" class="col-lg-12">
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    <span>{{messageDesc}}</span>
+                                </div>
+                            </div>
+                        </div>*@
+                    @*<div ng-show="AjaxLoading" class="progress col-lg-12">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                Loading...Please wait...
+                            </div>
+                        </div>*@
+                    @*<button type="button" ng-disabled="1==1" class="btn btn-xs btn-primary pull-right" style="margin-left:3px;" tooltip="" data-toggle="tooltip" data-placement="top" title="" data-original-title="View InActive Contracts">InActive Contracts</button>*@
+                    @*<div ng-if="!isView || !isEdit">*@
+                    <div ng-if="tableView">
+                        <div class="col-lg-12 form-group  zero-padding-left-right-div">
+                            <table class='table table-bordered table-condensed customtbodyStyle table-striped groupListTable' st-pipe="gm.callServer" st-table="gm.displayed" st-safe-src="groupMailList">
+                                <thead>
+                                    <tr style="color: white; background-color: rgba(66, 123, 225, 0.78);">
+                                        <th st-sort-default="reverse" st-sort="EmailGroupName" class="col-lg-2">Group Name</th>
+                                        <th st-sort="CreatedBy" class="col-lg-2">Created By</th>
+                                        <th st-sort="CreatedBy" class="col-lg-2">Created On</th>
+                                        @*<th st-sort="Status" class="col-lg-2">Status</th>*@
+                                        <th st-sort="CreatedBy" class="col-lg-2">Description</th>
+                                        <th st-sort="Emails" class="col-lg-1">Number of Email IDs</th>
+                                        <th class="col-lg-2">ACTION</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="hideData "><input st-search="EmailGroupName" type="text" placeholder="Filter Group Name" class="form-control input-sm" /></td>
+                                        <td class="hideData"><input st-search="CreatedBy.EmailId" type="text" placeholder="Filter Created By" class="form-control input-sm" /></td>
+                                        <td class="hideData"><input st-search="CreatedOn.EmailId" type="text" placeholder="Filter Created On" class="form-control input-sm" /></td>
+                                        <td class="hideData"><input st-search="Description" type="text" placeholder="Filter Description" class="form-control input-sm" /></td>
+                                        @*<td class="hideData"><input st-search="Status" type="text" placeholder="Filter Status" class="form-control input-sm" /></td>*@
+                                        <td class="hideData"><input st-search="GroupMailUserDetails.length" type="text" placeholder="Filter Number Of Email IDs" class="form-control input-sm" /></td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!gm.isLoading">
+                                    <tr ng-repeat="c in gm.displayed">
+                                        <td>{{c.EmailGroupName || 'Not Available'}}</td>
+                                        <td>{{c.CreatedBy.EmailId|| 'Not Available'}}</td>
+                                        <td>{{c.CreatedOn.EmailId|| 'Not Available'}}</td>
+                                        <td>{{c.Description|| 'Not Available'}}</td>
+                                        @*<td>{{c.Status|| 'Not Available'}}</td>*@
+                                        <td>{{c.GroupMailUserDetails.length|| 'Not Available'}}</td>
+                                        <td>
+                                            <button class="btn btn-xs btn-default" ng-click="viewGroup(c)" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                            <button class="btn btn-xs btn-primary" ng-if="c.Status == 'Active'" ng-class="{'disabled':c.CreatedBy.CDUserID!=c.currentCDuserId}" ng-click="EditGroup(c)" tooltip data-toggle="tooltip" data-placement="left" title="Edit"><i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-xs btn-danger" ng-if="c.Status == 'Active'" ng-class="{'disabled':c.CreatedBy.CDUserID!=c.currentCDuserId}" data-toggle="tooltip" data-placement="top" title="Inactivate Group" ng-click="Remove(c.EmailGroupId);" tooltip><i class="fa fa-remove"></i></button>
+                                            <button class="btn btn-xs btn-info" ng-if="c.Status == 'Inactive'" ng-class="{'disabled':c.CreatedBy.CDUserID!=c.currentCDuserId}" data-toggle="tooltip" data-placement="top" title="Re-Activate Group" ng-click="ReActivateGroup(c.EmailGroupId);" tooltip><i class="fa fa-repeat"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="gm.isLoading">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="loading-indicator"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot style="cursor:pointer">
+                                    <tr ng-if="groupMailList.length>10">
+                                        <td class="text-center" st-pagination="" st-items-by-page="10" colspan="8"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+
+                        <br />
+                        <div ng-show="groupMailList.length==0 && !gm.isLoading && !loading" class="text-center">
+                            <label>No Data Available.</label>
+                        </div>
+                        <br />
+                        <div class="modal fade" id="inactivateWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form id="removeTask">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                                        </div>
+                                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                                            <div style="margin-top:2%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                                            </div>
+                                        </div>
+                                        <div class="modal-body" ng-show="!isRemoved">
+                                            Do you really want to remove the Group ?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" ng-click="removeGroup()" data-dismiss="modal">Continue</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="ActivateWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form id="removeTask">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                                        </div>
+                                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                                            <div style="margin-top:2%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                                            </div>
+                                        </div>
+                                        <div class="modal-body" ng-show="!isRemoved">
+                                            Do you really want to Activate the Group ?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" ng-click="ActivateGroup()" data-dismiss="modal">Continue</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class=" zero-padding-left-right-div" ng-if="isView">
+                        @*@Html.Partial("~/Views/EmailService/_ViewGroupMails.cshtml")*@
+                        @Html.Partial("~/Views/EmailService/_NewViewGroupMail.cshtml")
+                    </div>
+                    <div class=" zero-padding-left-right-div" ng-if="isEdit">
+                        @Html.Partial("~/Views/EmailService/_AddEditViewGroupMail.cshtml")
+                        <br />
+                    </div>
+                    @*</fieldset>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

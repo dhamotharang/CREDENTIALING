@@ -1,0 +1,116 @@
+﻿<br />
+<script src="~/Scripts/Custom/Profile/hospital.js"></script>
+
+@model AHC.CD.WebUI.MVC.Areas.Profile.Models.HospitalPrivilege.HospitalPrivilegeInformationViewModel
+<div class="panel-group" ng-controller="hospitalcltr">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Hospital Privilege Information
+            </legend>
+            <div class="col-md-12">
+                <form id="hospitalPrivilegeInfoForm">
+                    <div ng-show="message.desc!=''" class="alert alert-{{message.status}}" role="alert">
+                        <button ng-click="message.desc=''" class="close"><span>&times;</span></button>
+                        {{message.desc}}
+                    </div>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+                    <span ng-if="HospitalPrivilegeInformations.HospitalPrivilegeInformationID">
+                        @Html.HiddenFor(model => model.HospitalPrivilegeInformationID, new { ng_value = "HospitalPrivilegeInformations.HospitalPrivilegeInformationID" })
+                    </span>
+                    <div class="col-lg-12">
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.HospitalPrivilegeYesNoOption, new { @class = "control-label small" })
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButtonFor(model => model.HospitalPrivilegeYesNoOption, "1", new { data_ng_model = "HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption" }) Yes
+                                </label>
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.HospitalPrivilegeYesNoOption, "2", new { data_ng_model = "HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption" }) No
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.HospitalPrivilegeYesNoOption, "", new { @class = "text-danger" })
+                        </div>
+                        <div ng-show="HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption=='2'" class="form-group col-md-6">
+                            @Html.LabelFor(model => model.OtherAdmittingArrangements, new { @class = "control-label small" })
+                            @Html.TextAreaFor(model => model.OtherAdmittingArrangements, new { @class = "form-control input-sm", data_ng_model = "HospitalPrivilegeInformations.OtherAdmittingArrangements" })
+                            @Html.ValidationMessageFor(model => model.OtherAdmittingArrangements, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <button class="btn btn-xs btn-primary pull-right" ng-click="saveHopitalPrivilegeInformation(HospitalPrivilegeInformations)">Save</button>
+                    </div>
+                </form>
+            </div>
+            <div id="hospital1" class="panel-body" ng-show="HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption=='1'">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-hide="HospitalPrivilegeInformations.HospitalPrivilegeDetails.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>No Data Available ! To Add New Click <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addhospitalPrivilegeInformation')"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="HospitalPrivilegeInformations.HospitalPrivilegeDetails.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Hospital Name</th>
+                                    <th>Specialty</th>
+                                    <th>Street Address</th>
+                                    <th>Contact Person</th>
+                                    <th>Primary</th>
+                                    <th>Document</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="hospitalPrivilegeInformation in HospitalPrivilegeInformations.HospitalPrivilegeDetails">
+                                <tr>
+                                    <td>{{hospitalPrivilegeInformation.Hospital.HospitalName}}</td>
+                                    <td>{{getSpecialityForProvider(hospitalPrivilegeInformation.SpecialtyID).Name}}</td>
+                                    <td>{{hospitalPrivilegeInformation.HospitalContactInfo.Street}}</td>
+                                    <td>{{hospitalPrivilegeInformation.HospitalContactPerson.ContactPersonName}}</td>
+                                    <td><i class="data-label " ng-class="{'1':'fa fa-check', '2':'fa fa-times'}[hospitalPrivilegeInformation.PreferenceType]"></i></td>
+                                    <td><span ng-show="hospitalPrivilegeInformation.HospitalPrevilegeLetterPath==''">Not Available</span><a ng-show="hospitalPrivilegeInformation.HospitalPrevilegeLetterPath!=''" href="{{hospitalPrivilegeInformation.HospitalPrevilegeLetterPath}}" data-toggle="tooltip" data-placement="top" title="{{hospitalPrivilegeInformation.DocumentPath}}" target="_blank"><i class="fa fa-file"></i></a></td>
+                                    <td>
+                                        <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewhospitalPrivilegeInformation')" ng-hide="viewShowHosPrv"><i class="fa fa-eye"></i></button>
+                                        <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_edithospitalPrivilegeInformation',hospitalPrivilegeInformation)" ng-hide="editShowHosPrv"><i class="fa fa-edit"></i></button>
+                                        <button ng-hide="$index+1!=HospitalPrivilegeInformations.HospitalPrivilegeDetails.length" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addhospitalPrivilegeInformation')"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-show="visibilityControl==($index+'_viewhospitalPrivilegeInformation')">
+                                    <td colspan="7" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_ViewHospitalPriviledge.cshtml")
+                                    </td>
+                                </tr>
+                                <tr ng-show="visibilityControl==($index+'_edithospitalPrivilegeInformation')">
+                                    <td colspan="7" id="hospitalPrivilegeInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_AddEditHospitalPriviledge.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div ng-show="visibilityControl=='addedNewHospitalPrivilege'" class="alert alert-success" role="alert">
+                            <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i>New Hospital Privilege Added Successfully !!!!
+                        </div>
+                        <div ng-show="visibilityControl=='updatedHospitalPrivilege'" class="alert alert-warning" role="alert">
+                            <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <fieldset ng-show="visibilityControl=='addhospitalPrivilegeInformation'">
+                        <legend>
+                            Add Hospital Privilege Information
+                        </legend>
+                        <div id="newShowHosPrvDiv">
+                            @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_AddEditHospitalPriviledge.cshtml")
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+

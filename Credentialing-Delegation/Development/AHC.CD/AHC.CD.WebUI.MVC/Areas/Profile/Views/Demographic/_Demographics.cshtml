@@ -1,0 +1,944 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.ProfilePictureViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<br />
+<div class="form-style" ng-controller="profileDemographicsController">
+    <div id="PersonalDetail">
+        <fieldset class="wrap-words">
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="PersonalDetailsPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Personal Details
+            </legend>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div class="legend2 pull-right">
+                    <button id="editPersonalInfo" ng-if="visibilityControl!='EditPersonalDetails'" class="btn btn-xs btn-primary" ng-click="PersonalDetailsToggle('EditPersonalDetails')" tooltip data-toggle="tooltip" data-placement="top" title="Edit Personal Details"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory('personalDetail');OperateUpdateHistory(Provider.PersonalDetails.PersonalDetailID,'PersonalDetailID');" tooltip><i class="fa fa-history"></i></button>
+                    <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Do not use nicknames or initials, unless they are part of your legal names"><i class="fa fa-question"></i></button>
+                    @*<button class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Edit Personal Details"><i class="fa fa-exclamation-circle"></i></button>*@
+
+                </div>
+            }
+            <div ng-if="visibilityControl!='_PersonalDetailProfilePic' && visibilityControl!='EditPersonalDetails' && UpdateHistorySectionVisibility != ('personalDetail')" class="col-lg-1 zero-padding-left-right-div pull-right text-center profileIamge">
+                <label class="control-label small">Profile Picture</label><br />
+                <img ng-if="Provider.ProfilePhotoPath" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{Provider.ProfilePhotoPath}}" alt="Profile Picture" style="width: 83px; height: 83px;" class="img-thumbnail" />
+                <img ng-if="!Provider.ProfilePhotoPath" src="~/Content/Images/no_image.png" alt="Profile Picture" style="width: 83px; height: 83px;" class="img-thumbnail" />
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+{
+                    <span ng-click="operateViewAndAddControl('_PersonalDetailProfilePic', 'ProfilePicture')" tooltip data-toggle="tooltip" data-placement="top" title="Edit "><i id="Demographics_PersonalDetails_Edit_ProfilePicture" class="fa fa-edit"></i></span>
+}
+            </div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl=='_PersonalDetailProfilePic'" class="col-lg-1 zero-padding-left-right-div pull-right text-center">
+                    <label class="control-label small">Profile Picture </label><br />
+                    <div class="fileinput fileinput-exists" data-provides="fileinput">
+                        <input type="hidden" value="" name="">
+                        <div class="fileinput-preview thumbnail file_preview_upload" style="line-height: 83px; background-image: url('/Content/Images/a0.jpg'); background-size: 100% 97%;" data-trigger="fileinput"><img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{Provider.ProfilePhotoPath}}"></div>
+                        <div>
+                            <form id="ProfilePic" name="form" ng-submit="ProfileUpload('ProfilePic')" enctype="multipart/form-data">
+                                <a id="Demographics_PersonalDetails_Close_ProfilePicture" class="btn btn-warning btn-xs" ng-click="operateCancelControl()" tooltip data-toggle="tooltip" data-placement="left" title="Cancel"><i class="fa fa-remove"></i></a>
+                                <span class="btn btn-primary btn-xs btn-file" tooltip data-toggle="tooltip" data-placement="top" title="Search">
+                                    <span class="fileinput-new"><i class="fa fa-search"></i></span>
+                                    <span class="fileinput-exists" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-search"></i></span>
+                                    @Html.TextBoxFor(model => model.ProfilePictureFile, new { type = "file", data_ng_model = "document", data_valid_file = "valid-file", required = "required" })
+                                </span>
+                                <button ng-if="form.$valid" class="btn btn-success btn-xs fileinput-exists" type="submit"><i tooltip data-toggle="tooltip" data-placement="top" title="Upload" class="fa fa-upload"></i></button>
+                                <button id="Demographics_PersonalDetails_Delete_profilePicture" ng-if="Provider.ProfilePhotoPath && !form.$valid" ng-click="ProfilePictureRemove(Provider.ProfilePhotoPath)" class="btn btn-danger btn-xs fileinput-exists"><i class="fa fa-trash" tooltip data-toggle="tooltip" data-placement="right" title="Remove"></i></button>
+                                @Html.ValidationMessageFor(model => model.ProfilePictureFile, "", new { @class = "text-danger" })
+                                <br />
+                                <span ng-if="form.$valid" ng-hide="valstaus">Please click on upload button to upload the selected picture.</span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl=='EditPersonalDetails'" class="zero-padding-left-right-div" ng-class="{true:'col-lg-12', false:'col-lg-11'}[visibilityControl=='EditPersonalDetails']">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalDetails.cshtml")
+                </div>
+                <div ng-if="UpdateHistorySectionVisibility == 'personalDetail'" class="zero-padding-left-right-div">
+                    <div>
+                        <fieldset>
+                            <legend>
+                                Professional Detail History
+                            </legend>
+                            @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                        </fieldset>
+                    </div>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl!='EditPersonalDetails'&& UpdateHistorySectionVisibility != ('personalDetail')" class="col-lg-11 zero-padding-left-right-div">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalDetails.cshtml")
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12">
+                    <div ng-if="activeMessageDiv=='alertPersonalDetailsSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                </div>
+            }
+        </fieldset>
+    </div>
+
+    <div id="OtherLegalName">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+            {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="OtherLegalNamesPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+            }
+                Other Legal Names
+            </legend>
+            <div class="legend2 pull-right">
+                @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-if="Provider.OtherLegalNames.length > 0" ng-click="downloadTableData('Profile_Demographic_OtherLegal Names','Other LegalNames')"><i class="fa fa-download"></i></button>*@
+                <button id="Demographics_OtherLegalName_Print" type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" ng-if="Provider.OtherLegalNames.length > 0" ng-click="printData('Profile_Demographic_OtherLegalNames','Other Legal Names')">
+                    <i class="fa fa-print"></i>
+                </button>
+                @if (System.Configuration.ConfigurationManager.AppSettings["OtherLegalNameHistory"] == "true")
+            {
+                    <button type="button" ng-click="showOtherLegalNameHistory('OLNH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+                    <div id="OLNH" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+            }
+                <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Do not use nicknames or initials, unless they are part of your legal names"><i class="fa fa-question"></i></button>
+                &nbsp;
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                    <button id="editOtherLegalNamesYesNo" ng-if="Provider.OtherLegalNames.length == 0 && visibilityControl!='_NewOtherLegalNameYesNoOption' && visibilityControl!='_NewOtherLegalName' || !Provider.OtherLegalNames && visibilityControl!='_NewOtherLegalNameYesNoOption' && visibilityControl!='_NewOtherLegalName'" class="btn btn-xs btn-primary pull-right" ng-click="operateViewAndAddControl('_NewOtherLegalNameYesNoOption')" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+            }
+            </div>
+            <div class="col-lg-12" ng-init="newLegalNameFormYesNo=(Provider.OtherLegalNames.length > 0)">
+                <span ng-if="Provider.OtherLegalNames.length == 0 && visibilityControl!='_NewOtherLegalNameYesNoOption' && visibilityControl!='_NewOtherLegalName' || !Provider.OtherLegalNames && visibilityControl!='_NewOtherLegalNameYesNoOption' && visibilityControl!='_NewOtherLegalName'">
+                    Have You Ever Used Another Name ? * &nbsp;&nbsp;&nbsp; <i class="data-label">NO</i>
+                </span>
+            </div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+                <div ng-if="visibilityControl=='_NewOtherLegalNameYesNoOption'" class="col-lg-12">
+                    <div class="form-group">
+                        Have You Ever Used Another Name ? * &nbsp;&nbsp;&nbsp;
+                        <label class="radio-inline">
+                            <input id="Demographics_OtherLegalName_Edit_EverUsedAnotherName" type="radio" ng-model="newLegalNameFormYesNo" ng-value="true" ng-click="operateViewAndAddControl('_NewOtherLegalName')"> Yes
+                        </label>
+                        <label class="radio-inline">
+                            <input id="Demographics_OtherLegalName_Edit_EverUsedAnotherName" type="radio" ng-model="newLegalNameFormYesNo" ng-value="false"> No
+                        </label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div>
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl()">Cancel</button>
+                        <button type="button" class="btn btn-success btn-sm pull-right" ng-click="operateCancelControl(); SaveOtherLegalNameTemp();">Update</button>
+                    </div>
+                </div>
+        }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+        {
+                <div ng-if="Provider.OtherLegalNames.length > 0" class="col-lg-12">
+                    <table class="table table-bordered table-condensed customtbodyStyle" id="Profile_Demographic_OtherLegalNames">
+                        <thead ng-init="OtherLegalPredicate = 'OtherLegalNameID'">
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Suffix</th>
+                                <th>Started Using</th>
+                                <th>Stopped Using</th>
+                                <th class="hideData">Supporting Document</th>
+                                <th class="hideData">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="oln in Provider.OtherLegalNames | orderBy:OtherLegalPredicate:!reverse track by $index">
+                            <tr>
+                                <td class="col-lg-2 wrap-words"><i class="data-label" ng-if="oln.OtherFirstName">{{oln.OtherFirstName}}</i><i class="data-label" ng-if="!oln.OtherFirstName">Not Available</i></td>
+                                <td class="col-lg-1 wrap-words"><i class="data-label" ng-if="oln.OtherMiddleName">{{oln.OtherMiddleName}}</i><i class="data-label" ng-if="!oln.OtherMiddleName">Not Available</i></td>
+                                <td class="col-lg-2 wrap-words"><i class="data-label" ng-if="oln.OtherLastName">{{oln.OtherLastName}}</i><i class="data-label" ng-if="!oln.OtherLastName">Not Available</i></td>
+                                <td class="col-lg-1 wrap-words"><i class="data-label" ng-if="oln.Suffix">{{oln.Suffix}}</i><i class="data-label" ng-if="!oln.Suffix">Not Available</i></td>
+                                <td class="col-lg-2 wrap-words">
+                                    <i class="data-label" ng-if="oln.StartDate">
+                                        {{oln.StartDate | date: "MM/dd/yyyy"}}
+                                    </i>
+                                    <i class="data-label" ng-if="!oln.StartDate">
+                                        Not Available
+                                    </i>
+                                </td>
+                                <td class="col-lg-1 wrap-words">
+                                    <i class="data-label" ng-if="oln.EndDate">
+                                        {{oln.EndDate | date: "MM/dd/yyyy"}}
+                                    </i>
+                                    <i class="data-label" ng-if="!oln.EndDate">
+                                        Not Available
+                                    </i>
+                                </td>
+                                <td class="col-lg-1 hideData">
+                                    <a ng-if="oln.DocumentPath" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{oln.DocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Other Legal Name Document"><i class="fa fa-file"></i></a>
+                                    <i class="data-label" ng-if="!oln.DocumentPath">Not Available</i>
+                                </td>
+                                <td class="col-lg-2 hideData">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+{
+    <button id="Demographics_OtherLegalName_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewOtherLegalName')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+}
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+{
+    <button id="Demographics_OtherLegalName_View_EditButton" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditOtherLegalName',oln)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+}
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+{
+    <button id="Demographics_OtherLegalName_View_CancelButton" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initOtherLegalNameWarning(oln);" tooltip><i class="fa fa-minus-circle"></i></button>
+    <button id="addNewOtherLegalName" ng-if="$index == Provider.OtherLegalNames.length-1" ng-hide="visibilityControl=='_NewOtherLegalName'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewOtherLegalName')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+}
+                                    <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory($index+'OtherLegalNames');OperateUpdateHistory(oln.OtherLegalNameID,'OtherLegalNameID');" tooltip><i class="fa fa-history"></i></button>
+                                </td>
+                            </tr>
+                            <tr ng-if="UpdateHistorySectionVisibility == ($index+'OtherLegalNames')" class="hideData">
+                                <td colspan="8" class="editTableDataStyle">
+                                    <div>
+                                        <fieldset>
+                                            <legend>
+                                                Other Legal Name History
+                                            </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                                        </fieldset>
+                                    </div>
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                        {
+                                <tr ng-if="visibilityControl==$index+'_EditOtherLegalName' && UpdateHistorySectionVisibility != ($index+'OtherLegalNames')" class="hideData">
+                                    <td colspan="8" id="otherLegalNameEditDiv{{$index}}" class="editTableDataStyle">
+                                        <fieldset>
+                                            <legend>
+                                                Edit Other Legal Name
+                                            </legend>
+                                            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                        }
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                        {
+                                <tr ng-if="visibilityControl==$index+'_ViewOtherLegalName' && UpdateHistorySectionVisibility != ($index+'OtherLegalNames')" class="hideData">
+                                    <td colspan="8" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewOtherLegalName.cshtml")
+                                    </td>
+                                </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+        }
+            <div class="clearfix"></div>
+            <div class="col-lg-12">
+                <div ng-if="activeMessageDiv=='alertOtherLegalNameSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                    <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+            </div>
+            <div ng-show="activeMessageDiv=='removeOtherLegalName'">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists :<br />
+                    <span ng-repeat="err in errorOtherLegalName track by $index">{{err}}</span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+        {
+                <fieldset id="newLegalNameForm" ng-if="visibilityControl=='_NewOtherLegalName'">
+                    <legend>
+                        Add Other Legal Name
+                    </legend>
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+                </fieldset>
+        }
+        </fieldset>
+    </div>
+    <div class="modal fade" id="otherLegalNameWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="removeOtherLegalName">
+                    <div class="modal-header">
+                        <button id="Demographics_OtherLegalName_Remove_Close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="modal-body">
+                        Do you really want to remove <b>{{tempOtherLegalName.OtherFirstName}} {{tempOtherLegalName.OtherLastName}}</b> from your Other Legal Names list ?
+                        <input type="hidden" name="OtherLegalNameID" value="{{tempOtherLegalName.OtherLegalNameID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button id="Demographics_OtherLegalName_Remove_CancelButton" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button id="Demographics_OtherLegalName_Remove_RemoveButton" type="button" class="btn btn-primary" ng-click="removeOtherLegalName(Provider.OtherLegalNames)">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+        @if (System.Configuration.ConfigurationManager.AppSettings["OtherLegalNameHistory"] == "true")
+{
+    <div id="OtherLegalNameHistory">
+        <fieldset ng-if="showOtherLegalNameHistoryTable">
+            <legend>
+                Other Legal Names History
+            </legend>
+            <div class="legend2 pull-right">
+                @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" ng-hide="OtherLegalNamesHistory.length <= 0" data-original-title="" title="" ng-click="downloadTableData('Profile_Demographic_Other LegalNames History')"><i class="fa fa-download"></i></button>*@
+                <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" ng-hide="OtherLegalNamesHistory.length <= 0" data-original-title="" title="" ng-click="printData('Profile_Demographic_OtherLegalNamesHistory','Other LegalNames History')"><i class="fa fa-print"></i></button>
+                <button type="button" ng-click="cancelOtherLegalNameHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+            </div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                {
+                <div class="col-lg-12">
+                    <table ng-hide="OtherLegalNamesHistory.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No History Available for Other Legal Names!
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-hide="OtherLegalNamesHistory.length <= 0" class="table table-bordered table-condensed customtbodyStyle" id="Profile_Demographic_OtherLegalNamesHistory">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Suffix</th>
+                                <th>Started Using</th>
+                                <th>Stopped Using</th>
+                                <th class="hideData">Supporting Document</th>
+                                <th class="hideData">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="olnHistory in OtherLegalNamesHistory | orderBy:OtherLegalPredicate:!reverse track by $index">
+                            <tr>
+                                <td class="col-lg-2 wrap-words"><i class="data-label" ng-if="olnHistory.OtherFirstName">{{olnHistory.OtherFirstName}}</i><i class="data-label" ng-if="!olnHistory.OtherFirstName">Not Available</i></td>
+                                <td class="col-lg-1 wrap-words"><i class="data-label" ng-if="olnHistory.OtherMiddleName">{{olnHistory.OtherMiddleName}}</i><i class="data-label" ng-if="!olnHistory.OtherMiddleName">Not Available</i></td>
+                                <td class="col-lg-2 wrap-words"><i class="data-label" ng-if="olnHistory.OtherLastName">{{olnHistory.OtherLastName}}</i><i class="data-label" ng-if="!olnHistory.OtherLastName">Not Available</i></td>
+                                <td class="col-lg-1 wrap-words"><i class="data-label" ng-if="olnHistory.Suffix">{{olnHistory.Suffix}}</i><i class="data-label" ng-if="!olnHistory.Suffix">Not Available</i></td>
+                                <td class="col-lg-2 wrap-words">
+                                    <i class="data-label" ng-if="olnHistory.StartDate">
+                                        {{olnHistory.StartDate | date: "MM/dd/yyyy"}}
+                                    </i>
+                                    <i class="data-label" ng-if="!olnHistory.StartDate">
+                                        Not Available
+                                    </i>
+                                </td>
+                                <td class="col-lg-1 wrap-words">
+                                    <i class="data-label" ng-if="olnHistory.EndDate">
+                                        {{olnHistory.EndDate | date: "MM/dd/yyyy"}}
+                                    </i>
+                                    <i class="data-label" ng-if="!olnHistory.EndDate">
+                                        Not Available
+                                    </i>
+                                </td>
+                                <td class="col-lg-1 hideData">
+                                    <a ng-if="olnHistory.DocumentPath" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{olnHistory.DocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Other Legal Name Document"><i class="fa fa-file"></i></a>
+                                    <i class="data-label" ng-if="!olnHistory.DocumentPath">Not Available</i>
+                                </td>
+                                <td class="col-lg-2 hideData">
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                        {
+                                        <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewOtherLegalNameHistory')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                <tr ng-if="visibilityControl==$index+'_ViewOtherLegalNameHistory'" class="hideData">
+                                    <td colspan="8" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewOtherLegalNameHistory.cshtml")
+                                    </td>
+                                </tr>
+                                }
+                        </tbody>
+                    </table>
+                </div>
+                }
+        </fieldset>
+    </div>
+}
+    <div id="ContactInformation">
+        <fieldset>
+            <legend>
+                Contact Information
+            </legend>
+            <div id="HomeAddress">
+                <fieldset>
+                    <legend>
+                        @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                            <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="HomeAddressesPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                        Home Address
+                    </legend>
+                    <div class="pull-right legend2">
+                        @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Download" ng-if="HomeAddresses.length > 0" data-original-title="" title="" ng-click="downloadTableData('Profile_Demographic_ContactInformation_HomeAddress','Home Address')"><i class="fa fa-download"></i></button>*@
+                        <button id="Demographics_ContactInfo_HomeAddress_Print" type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" ng-if="HomeAddresses.length > 0" data-original-title="" title="" ng-click="printData('Profile_Demographic_ContactInformation_HomeAddress','Home Address')"><i class="fa fa-print"></i></button>
+                        @if (System.Configuration.ConfigurationManager.AppSettings["HomeAddressHistory"] == "true")
+                {
+                            <button type="button" ng-click="showHomeAddressHistory('HAH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+                            <div id="HAH" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+                }
+                    </div>
+                    <div class="col-lg-12">
+                        <table ng-if="HomeAddresses.length == 0 && visibilityControl!='_NewHomeAddress' || !HomeAddresses && visibilityControl!='_NewHomeAddress'" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No Data Available for Home Address!
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                {
+                                            <span>Please click on <button id="noDataAddNewHomeAddress" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewHomeAddress')" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Home Address</span>
+                                }
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                {
+                            <table ng-if="HomeAddresses.length > 0" class="table table-bordered table-condensed customtbodyStyle" id="Profile_Demographic_ContactInformation_HomeAddress">
+                                <thead ng-init="AddressPredicate = 'AddressPreferenceType'">
+                                    <tr>
+                                        <th>Street/PO Box No:</th>
+                                        <th>Apartment/Unit Number</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Zip Code</th>
+                                        <th class="hideData">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="ha in (HomeAddresses | orderBy:AddressPredicate:reverse | orderEmpty:'AddressPreferenceType':'toBottom') track by $index">
+                                    <tr ng-class="{isprimary:ha.AddressPreferenceType==1}">
+                                        <td class="col-lg-2 wrap-words">
+                                            @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                                <i class="data-label" ng-if="ha.Street">############</i>
+                                                <i class="data-label" ng-if="!ha.Street">Not Available</i>
+                                    }
+                                    else
+                                    {
+                                                <i class="data-label" ng-if="ha.Street">{{ha.Street}}</i>
+                                                <i class="data-label" ng-if="!ha.Street">Not Available</i>
+                                    }
+                                        </td>
+                                        <td class="col-lg-2 wrap-words">
+                                            @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                                <i class="data-label" ng-if="ha.UnitNumber">############</i>
+                                                <i class="data-label" ng-if="!ha.UnitNumber">Not Available</i>
+                                    }
+                                    else
+                                    {
+                                                <i class="data-label" ng-if="ha.UnitNumber">{{ha.UnitNumber}}</i>
+                                                <i class="data-label" ng-if="!ha.UnitNumber">Not Available</i>
+                                    }
+                                        </td>
+                                        <td class="col-lg-2 wrap-words">
+                                            @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                                <i class="data-label" ng-if="ha.City">############</i>
+                                                <i class="data-label" ng-if="!ha.City">Not Available</i>
+                                    }
+                                    else
+                                    {
+                                                <i class="data-label" ng-if="ha.City">{{ha.City}}</i>
+                                                <i class="data-label" ng-if="!ha.City">Not Available</i>
+                                    }
+                                        </td>
+                                        <td class="col-lg-2 wrap-words">
+                                            @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                                <i class="data-label" ng-if="ha.State">############</i>
+                                                <i class="data-label" ng-if="!ha.State">Not Available</i>
+                                    }
+                                    else
+                                    {
+                                                <i class="data-label" ng-if="ha.State">{{ha.State}}</i>
+                                                <i class="data-label" ng-if="!ha.State">Not Available</i>
+                                    }
+                                        </td>
+                                        <td class="col-lg-2 wrap-words">
+                                            @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                                <i class="data-label" ng-if="ha.ZipCode">############</i>
+                                                <i class="data-label" ng-if="!ha.ZipCode">Not Available</i>
+                                    }
+                                    else
+                                    {
+                                                <i class="data-label" ng-if="ha.ZipCode">{{ha.ZipCode}}</i>
+                                                <i class="data-label" ng-if="!ha.ZipCode">Not Available</i>
+                                    }
+                                        </td>
+                                        <td class="col-lg-2 hideData">
+                                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+{
+    <button id="Demographics_ContactInfo_HomeAddress_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewHomeAddress')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+}
+                                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+{
+    <button id="Demographics_ContactInfo_HomeAddress_Table_EditIcon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditHomeAddress',ha)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory('HomeAddress');OperateUpdateHistory(ha.HomeAddressID,'HomeAddressID');" tooltip><i class="fa fa-history"></i></button>
+}
+                                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+{
+    <button id="Demographics_ContactInfo_HomeAddress_Table_RemoveIcon" class="btn btn-xs btn-danger" ng-disabled="ha.AddressPreferenceType == '1'" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initHomeAddressWarning(ha);" tooltip><i class="fa fa-minus-circle"></i></button>
+    <button id="addNewHomeAddress" ng-if="$index == HomeAddresses.length-1" ng-hide="visibilityControl=='_NewHomeAddress'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewHomeAddress')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+}
+                                        </td>
+                                    </tr>
+                                    <tr ng-if="UpdateHistorySectionVisibility == 'HomeAddress'" class="hideData">
+                                        <td colspan="8" class="editTableDataStyle">
+                                            <div>
+                                                <fieldset>
+                                                    <legend>
+                                                        Home Address History
+                                                    </legend>
+                                                    @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                                                </fieldset>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                            {
+                                        <tr ng-if="visibilityControl==$index+'_EditHomeAddress'" class="hideData">
+                                            <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                                <fieldset>
+                                                    <legend>
+                                                        Edit Home Address
+                                                    </legend>
+                                                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+                                                </fieldset>
+                                            </td>
+                                        </tr>
+                            }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                            {
+                                        <tr ng-if="visibilityControl==$index+'_ViewHomeAddress'" class="hideData">
+                                            <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewHomeAddress.cshtml")
+                                            </td>
+                                        </tr>
+                            }
+                                </tbody>
+                            </table>
+                }
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-lg-12">
+                        <div ng-if="activeMessageDiv=='alertHomeAddressSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                            <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                            {{messageDesc}}
+                        </div>
+                    </div>
+                    <div ng-show="activeMessageDiv=='removeHomeAddress'">
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error Lists :<br />
+                            <span ng-repeat="err in errorHomeAddress track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+            {
+                        <fieldset id="newHomeAddressForm" ng-if="visibilityControl=='_NewHomeAddress'">
+                            <legend>
+                                Add Home Address
+                            </legend>
+                            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+                        </fieldset>
+            }
+                </fieldset>
+            </div>
+            <div class="modal fade" id="homeAddressWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="removeHomeAddress">
+                            <div class="modal-header">
+                                <button id="Demographics_ContactInfo_HomeAddress_Remove_Close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                            </div>
+                            <div class="col-lg-12 text-center" ng-show="isRemoved">
+                                <div style="margin-top:2%;">
+                                    <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                                </div>
+                            </div>
+                            <div class="modal-body" ng-show="!isRemoved">
+                                Do you really want to remove <b>{{tempHomeAddress.Street}}, {{tempHomeAddress.UnitNumber}}, {{tempHomeAddress.City}}, {{tempHomeAddress.State}}</b> from your Home Address list ?
+                                <input type="hidden" name="HomeAddressID" value="{{tempHomeAddress.HomeAddressID}}" />
+                                <input type="hidden" name="StatusType" value="2" />
+                            </div>
+                            <div class="modal-footer">
+                                <button id="Demographics_ContactInfo_HomeAddress_Remove_Cancelbutton" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button id="Demographics_ContactInfo_HomeAddress_Remove_RemoveButton" type="button" class="btn btn-primary" ng-click="removeHomeAddress(HomeAddresses)">Remove</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @if (System.Configuration.ConfigurationManager.AppSettings["HomeAddressHistory"] == "true")
+{
+    <div id="ContactDetail">
+        <fieldset ng-if="showHomeAddressHistoryTable">
+            <legend>
+                Home Address History
+            </legend>
+            <div class="pull-right legend2">
+                @*<button type="button" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" ng-if="HomeAddressesHistory.length > 0" data-original-title="" title="" ng-click="downloadTableData('Profile_Demographic_ContactInformation_HomeAddressHistory','Home Address History')"><i class="fa fa-download"></i></button>*@
+                <button type="button" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" ng-if="HomeAddressesHistory.length > 0" data-original-title="" title="" ng-click="printData('Profile_Demographic_ContactInformation_HomeAddressHistory','Home Address History')"><i class="fa fa-print"></i></button>
+                <button type="button" ng-click="cancelHomeAddressHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+            </div>
+            <div class="col-lg-12">
+                <table ng-hide="HomeAddressesHistory.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No History Available for Home Address!
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                    {
+                        <table ng-if="HomeAddressesHistory.length > 0" class="table table-bordered table-striped table-condensed customtbodyStyle" id="Profile_Demographic_ContactInformation_HomeAddressHistory">
+                            <thead>
+                                <tr>
+                                    <th>Street/PO Box No:</th>
+                                    <th>Apartment/Unit Number</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Zip Code</th>
+                                    <th class="hideData">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="haHistory in (HomeAddressesHistory | orderBy:AddressPredicate:reverse | orderEmpty:'AddressPreferenceType':'toBottom') track by $index">
+                                <tr>
+                                    <td class="col-lg-2 wrap-words">
+                                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                        {
+                                            <i class="data-label" ng-if="haHistory.Street">############</i>
+                                            <i class="data-label" ng-if="!haHistory.Street">Not Available</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="data-label" ng-if="haHistory.Street">{{haHistory.Street}}</i>
+                                            <i class="data-label" ng-if="!haHistory.Street">Not Available</i>
+                                        }
+                                    </td>
+                                    <td class="col-lg-2 wrap-words">
+                                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                        {
+                                            <i class="data-label" ng-if="haHistory.UnitNumber">############</i>
+                                            <i class="data-label" ng-if="!haHistory.UnitNumber">Not Available</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="data-label" ng-if="haHistory.UnitNumber">{{haHistory.UnitNumber}}</i>
+                                            <i class="data-label" ng-if="!haHistory.UnitNumber">Not Available</i>
+                                        }
+                                    </td>
+                                    <td class="col-lg-2 wrap-words">
+                                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                        {
+                                            <i class="data-label" ng-if="haHistory.City">############</i>
+                                            <i class="data-label" ng-if="!haHistory.City">Not Available</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="data-label" ng-if="haHistory.City">{{haHistory.City}}</i>
+                                            <i class="data-label" ng-if="!haHistory.City">Not Available</i>
+                                        }
+                                    </td>
+                                    <td class="col-lg-2 wrap-words">
+                                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                        {
+                                            <i class="data-label" ng-if="!haHistory.State">Not Available</i>
+                                            <i class="data-label" ng-if="haHistory.State">############</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="data-label" ng-if="haHistory.State">{{haHistory.State}}</i>
+                                            <i class="data-label" ng-if="!haHistory.State">Not Available</i>
+                                        }
+                                    </td>
+                                    <td class="col-lg-2 wrap-words">
+                                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                        {
+                                            <i class="data-label" ng-if="haHistory.ZipCode">############</i>
+                                            <i class="data-label" ng-if="!haHistory.ZipCode">Not Available</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="data-label" ng-if="haHistory.ZipCode">{{haHistory.ZipCode}}</i>
+                                            <i class="data-label" ng-if="!haHistory.ZipCode">Not Available</i>
+                                        }
+                                    </td>
+                                    <td class="col-lg-2 hideData">
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewHomeAddressHistory')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                {
+                                    <tr ng-if="visibilityControl==$index+'_ViewHomeAddressHistory'" class="hideData">
+                                        <td colspan="6" class="editTableDataStyle">
+                                            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewHomeAddressHistory.cshtml")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+            </div>
+        </fieldset>
+    </div>
+}
+            <fieldset>
+                <legend>
+                    @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                        <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ContactDetailPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                    Contact Details
+                </legend>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                    <div class="legend2 pull-right">
+                        <button id="editContactDetails" ng-if="visibilityControl!='EditContactDetails'" ng-hide="!Provider.ContactDetails.ContactDetailID" class="btn btn-xs btn-primary" ng-click="ContactDetailsToggle('EditContactDetails')" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory('ContactDetails');OperateUpdateHistory(Provider.ContactDetails.ContactDetailID,'ContactDetailID');" tooltip><i class="fa fa-history"></i></button>
+                        <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Click on Add to add a contact details. Please click on a preferred method of contact to change it's priority."><i class="fa fa-question"></i></button>
+                    </div>
+            }
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                    <div ng-if="visibilityControl=='EditContactDetails'">
+                        @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditContactDetails.cshtml")
+                    </div>
+                    <div ng-if="UpdateHistorySectionVisibility =='ContactDetails'">
+                        <div>
+                            <fieldset>
+                                <legend>
+                                    Contact Details History
+                                </legend>
+                                @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                            </fieldset>
+                        </div>
+                    </div>
+            }
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                    <div ng-if="visibilityControl!='EditContactDetails' && UpdateHistorySectionVisibility !='ContactDetails'">
+                        @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewContactDetails.cshtml")
+                    </div>
+                    <div class="col-lg-12">
+                        <div ng-if="activeMessageDiv=='alertContactDetailsSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                            <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                            {{messageDesc}}
+                        </div>
+                    </div>
+            }
+            </fieldset>
+        </fieldset>
+    </div>
+    <div id="PersonalIdentification">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="PersonalIdentificationPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Personal Identification
+            </legend>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+            {
+                <div class="legend2 pull-right">
+
+                    <button id="editPersonalIdentification" ng-if="visibilityControl!='_EditPersonalIdentification'" ng-hide="!Provider.PersonalIdentification" class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditPersonalIdentification',Provider.PersonalIdentification)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-if="visibilityControl!='_EditPersonalIdentification'" ng-click="sectionWiseVisibilityControlForUpdateHistory('personalIdentification');OperateUpdateHistory(Provider.PersonalIdentification.PersonalIdentificationID,'PersonalIdentificationID');" tooltip><i class="fa fa-history"></i></button>
+                    <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Only enter a Foreign Identification Number If you don't have SSN. Don't enter National Identification Number (NPI) here"><i class="fa fa-question"></i></button>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+            {
+                <div ng-if="visibilityControl=='_EditPersonalIdentification' && UpdateHistorySectionVisibility !='personalIdentification'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalIdentification.cshtml")
+                </div>
+                <div ng-if="UpdateHistorySectionVisibility =='personalIdentification'">
+                    <div>
+                        <fieldset>
+                            <legend>
+                                Personal Identification History
+                            </legend>
+                            @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                        </fieldset>
+                    </div>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+            {
+                <div ng-if="visibilityControl!='_EditPersonalIdentification' && UpdateHistorySectionVisibility !='personalIdentification'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalIdentification.cshtml")
+                </div>
+                <div class="col-lg-12">
+                    <div ng-if="activeMessageDiv=='alertPersonalIdentificationSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                </div>
+            }
+        </fieldset>
+    </div>
+    <div id="BirthInformation">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="BirthInformationPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Birth Information
+            </legend>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl!='_EditBirthInformation'" ng-hide="!Provider.BirthInformation" class="legend2 pull-right">
+
+                    <button id="editBirthInformation" class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditBirthInformation',Provider.BirthInformation)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory('birthInformation');OperateUpdateHistory(Provider.BirthInformation.BirthInformationID,'BirthInformationID');" tooltip><i class="fa fa-history"></i></button>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl=='_EditBirthInformation'&& UpdateHistorySectionVisibility !='birthInformation'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditBirthInformation.cshtml")
+                </div>
+                <div ng-if="UpdateHistorySectionVisibility =='birthInformation'">
+                    <div>
+                        <fieldset>
+                            <legend>
+                                Birth Information History
+                            </legend>
+                            @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                        </fieldset>
+                    </div>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl!='_EditBirthInformation'&& UpdateHistorySectionVisibility !='birthInformation'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewBirthInformation.cshtml")
+                </div>
+                <div class="col-lg-12">
+                    <div ng-if="activeMessageDiv=='alertBirthInformationSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                </div>
+            }
+        </fieldset>
+    </div>
+    <div id="CitizenshipInformation">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="VisaDetailPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Citizenship Information
+            </legend>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+            {
+                <div class="legend2 pull-right">
+                    <button id="editCitizenshipInfo" ng-if="visibilityControl!='_EditVisaDetails'" ng-hide="!Provider.VisaDetails" ng-click="operateEditControl('_EditVisaDetails',Provider.VisaDetails)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory('visaDetails');OperateUpdateHistory(Provider.VisaDetails.VisaDetailID,'VisaDetailID');" tooltip><i class="fa fa-history"></i></button>
+                    <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Only enter a Foreign Identification Number If you don't have SSN"><i class="fa fa-question"></i></button>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+            {
+                <div ng-if="visibilityControl=='_EditVisaDetails'&& UpdateHistorySectionVisibility !='visaDetails'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditCitizenship.cshtml")
+                </div>
+            <div ng-if="UpdateHistorySectionVisibility =='visaDetails'">
+                <div>
+                    <fieldset>
+                        <legend>
+                            Citizenship Information History
+                        </legend>
+                        @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                    </fieldset>
+                </div>
+            </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+            {
+                <div ng-if="visibilityControl!='_EditVisaDetails'&& UpdateHistorySectionVisibility !='visaDetails'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewCitizenship.cshtml")
+                </div>
+                <div class="col-lg-12">
+                    <div ng-if="activeMessageDiv=='alertVisaDetailsSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                </div>
+            }
+        </fieldset>
+    </div>
+    <div id="LaguagesKnown">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="LanguageInfoPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Languages Known
+            </legend>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl!='EditKnowLanguage'" ng-hide="!Provider.LanguageInfo" class="legend2 pull-right">
+                    <button id="editLanguagesKnown" class="btn btn-xs btn-primary" ng-click="LanguageKnownToggle('EditKnowLanguage');CloseUpdateHistorySection();" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory('knownLanguages');OperateUpdateHistory(Provider.LanguageInfo.LanguageInfoID,'LanguageInfoID');" tooltip><i class="fa fa-history"></i></button>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl=='EditKnowLanguage' && UpdateHistorySectionVisibility !='knownLanguages'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditLanguageInfo.cshtml")
+                </div>
+                <div ng-if="UpdateHistorySectionVisibility =='knownLanguages'">
+                    <div>
+                        <fieldset>
+                            <legend>
+                                Languages Known History
+                            </legend>
+                            @Html.Partial("~/Areas/Profile/Views/Demographic/_LanguageInfoUpdateHistory.cshtml")
+                        </fieldset>
+                    </div>
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl!='EditKnowLanguage'&& UpdateHistorySectionVisibility !='knownLanguages'">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewLanguageInfo.cshtml")
+                </div>
+                <div class="col-lg-12">
+                    <div ng-if="activeMessageDiv=='alertLanguageKnownSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                </div>
+            }
+        </fieldset>
+    </div>
+    </div>

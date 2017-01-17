@@ -1,0 +1,107 @@
+﻿<div class="form-style">
+    <fieldset>
+        <legend>
+            Partners/Associates/Covering Colleagues
+        </legend>
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">NPI Number </label>
+                    <div>
+                        <i class="data-label">{{partner.NPINumber || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">First Name </label>
+                    <div>
+                        <i class="data-label wrap-words">{{partner.FirstName || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Middle Name</label>
+                    <div>
+                        <i class="data-label wrap-words">{{partner.MiddleName || 'Not Available'}}</i>
+                    </div>
+                </div>
+                
+            </div>            
+
+            <div class="col-md-12">
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Last Name </label>
+                    <div>
+                        <i class="data-label wrap-words">{{partner.LastName || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Street </label>
+                    <div>
+                        <i class="data-label wrap-words">{{partner.Street || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Suite/Building</label>
+                    <div>
+                        <i class="data-label wrap-words">{{partner.Building || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+                       
+            <div class="col-md-12">
+                <div class="form-group col-md-4">
+                    <label class="control-label small">City</label>
+                    <div>
+                        <i class="data-label wrap-words">{{partner.City || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">State</label>
+                    <div>
+                        <i class="data-label wrap-words">{{partner.State || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Zip Code </label>
+                    <div>
+                        <i class="data-label">{{partner.ZipCode || 'Not Available'}}</i>
+                    </div>
+                </div>        
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group col-md-4">
+                    <label for="MobileNo" class="control-label small">Telephone number</label>
+                    <div>
+                        <i ng-if="partner.Telephone" class="data-label">{{partner.CountryCodeTelephone}}-{{partner.Telephone}}</i>
+                        <i ng-if="!partner.Telephone" class="data-label">Not Available</i>
+                    </div>
+                </div>  
+                <div class="col-md-4 form-group">
+                    <label class="control-label small">Specialty</label>
+                    <div>
+                        <i ng-if="partner.PracticeProviderSpecialties.length > 0  && s.StatusType == 1" class="data-label wrap-words" ng-repeat="s in partner.PracticeProviderSpecialties"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{s.Specialty.Name}}</i>
+                        <i ng-if="partner.PracticeProviderSpecialties.length == 0" class="data-label">Not Available</i>
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label class="control-label small">Provider Type</label>
+                    <div>
+                        <i ng-if="partner.PracticeProviderTypes.length > 0 && p.StatusType == 1" class="data-label wrap-words" ng-repeat="p in partner.PracticeProviderTypes"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{p.ProviderType.Title}}</i>
+                        <i ng-if="partner.PracticeProviderTypes.length == 0" class="data-label">Not Available</i>
+                    </div>
+                </div>                
+            </div>  
+            <div class="clearfix"></div>
+            <div ng-show="activeMessageDiv =='updatedPartnerDetails'+$index" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>          
+            <div class="col-md-12">
+                <div class="col-md-12 form-group">
+                    <button class="btn btn-warning btn-sm" ng-click="operateSecondCancelControl('')">Cancel</button>
+                    <button class="btn btn-primary btn-sm pull-right" ng-click="operateSecondEditControl($index+'_editPartner',partner); setValue(partner);">Edit</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>

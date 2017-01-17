@@ -1,0 +1,94 @@
+﻿<script src="~/Areas/Profile/Scripts/ProfessionalAffiliation/ProfessionalAffiliation.js"></script>
+
+<br />
+<div class="panel-group" ng-controller="professionalAppCtrl">
+    <div class="panel-default">
+        <div class="form-style">
+            <fieldset>
+                <legend>
+                    Professional Affiliation
+                </legend>
+                <div id="Affiliationqwe">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-hide="ProfessionalAffiliations.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No Data Available ! To Add New Click
+                                        <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addpa')" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                    </td>
+
+                                </tr>
+                            </thead>
+                        </table>
+
+                        <table ng-hide="ProfessionalAffiliations.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle">
+                            <thead>
+                                <tr>
+                                    <th>Organization Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Position Office Held</th>
+                                    <th>Member/Applicant</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="pa in ProfessionalAffiliations">
+
+                                <tr>
+                                    <td>{{pa.OrganizationName}}</td>
+                                    <td>{{pa.StartDate | date:'MM-dd-yyyy'}}</td>
+                                    <td>{{pa.EndDate | date:'MM-dd-yyyy'}}</td>
+                                    <td>{{pa.PositionOfficeHeld}}</td>
+                                    <td>{{pa.Member}}</td>
+                                    <td>
+                                        <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewpa')" ng-hide="showViewProfessionalAffiliation" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editpa',pa)" ng-hide="editShowProfessionalAffiliation" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                        <button ng-if="$index == ProfessionalAffiliations.length-1" ng-hide="showViewProfessionalAffiliation||editShowProfessionalAffiliation || newShowProfessionalAffiliation" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addpa')" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+
+
+                                <tr ng-show="visibilityControl==($index+'_viewpa')">
+                                    <td colspan="6" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/ProfessionalAffiliation/_ViewProfessionalAffiliation.cshtml")
+                                    </td>
+
+                                </tr>
+
+                                <tr ng-show="visibilityControl==($index+'_editpa')">
+                                    <td colspan="6" id="professionalAffiliationEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/ProfessionalAffiliation/_AddEditProfessionalAffiliation.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                        <div ng-show="visibilityControl=='addedNewProfessionalAffiliation'" class="alert alert-success" role="alert">
+                            <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i>New Professional Affiliation Added Successfully !!!!
+                        </div>
+                        <div ng-show="visibilityControl=='updatedProfessionalAffiliation'" class="alert alert-warning" role="alert">
+                            <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <fieldset ng-show="visibilityControl=='addpa'">
+                        <legend>
+                            Add Professional Affiliation
+                        </legend>
+                        <div id="newShowProfessionalAffiliationDiv">
+                            @Html.Partial("~/Areas/Profile/Views/ProfessionalAffiliation/_AddEditProfessionalAffiliation.cshtml")
+                        </div>
+                    </fieldset>
+                    @*<div ng-hide="editShowProfessionalAffiliation || newShowProfessionalAffiliation" class="col-md-12 text-right">
+                            <button class="btn btn-xs btn-primary addHosPrvBtn" ng-click="addProfessionalAffiliation()"><i class="fa fa-plus"></i> Add Professional Affiliation</button>
+                        </div>*@
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

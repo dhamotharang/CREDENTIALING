@@ -1,0 +1,183 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.ProviderPracticeOfficeHourViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<div ng-if="visibilitySecondControl == 'OfficeHoursEdit'" id="OfficeHourDiv">
+    <fieldset>
+        <legend>
+            Office Hours
+        </legend>
+        <form id="OfficeHourForm{{$index}}">
+            @Html.HiddenFor(model => model.UpdateHistory, new { id = "UpdateHistoryHidden" })
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationDetailID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            <span ng-if="PracticeLocationtemporary.PracticeOfficeHourID">
+                @Html.HiddenFor(model => model.PracticeOfficeHourID, new { ng_value = "PracticeLocationtemporary.PracticeOfficeHourID" })
+            </span>
+            <div class="form-group ">
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <div class="col-md-2 form-group">
+                        <label class="control-label small">Day</label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="col-md-4 form-group">
+                            <label class="control-label small">Start Time</label>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label class="control-label small">End Time</label>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label class="control-label small">Actions</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="providerofficehoursdiv" class="col-md-12 zero-padding-left-right-div" ng-repeat="PracticeDay in PracticeLocationtemporary.PracticeDays track by $index">
+                    <input type="hidden" name="PracticeDays[{{$index}}].PracticeDayID" value="{{PracticeDay.PracticeDayID}}" ng-if="PracticeDay.PracticeDayID">
+                    <input type="hidden" name="PracticeDays[{{$index}}].DayName" value="{{PracticeDay.DayName}}" />
+                    <input type="hidden" name="PracticeDays[{{$index}}].DayOfWeek" value="{{PracticeDay.DayOfWeek}}" />
+                    <input type="hidden" name="PracticeDays[{{$index}}].DayOff" value="{{PracticeDay.DayOff}}" />
+                    <div class="col-md-2 form-group">
+
+                        @*<label class="btn btn-xs btn-default btn-circle" ng-class="{'YES':'btn-primary','NO':'btn-default'}[PracticeDay.DayOff]" ng-click="dayOffToggel(PracticeDay)" tooltip data-toggle="tooltip" data-placement="left" title="dayOffTooltip"><i class="fa fa-power-off"></i></label>*@
+
+                        <label id="DayOn_OfficeHours" class="btn btn-xs btn-primary btn-circle" ng-show="PracticeDay.DayOff=='YES'" ng-click="dayOffToggel(PracticeDay)" tooltip data-toggle="tooltip" data-placement="left" title="Day off?"><i class="fa fa-power-off"></i></label>
+                        <label id="DayOff_OfficeHours" class="btn btn-xs btn-default btn-circle" ng-show="PracticeDay.DayOff=='NO'" ng-click="dayOffToggel(PracticeDay)" tooltip data-toggle="tooltip" data-placement="left" title="Day on?"><i class="fa fa-power-off"></i></label>
+
+                        <label class="control-label small">{{PracticeDay.DayName}}</label>
+                    </div>
+                    <div class="col-md-10">
+                        <!-- ngRepeat: t in Days[0].Times -->
+                        <div ng-repeat="DailyHour in PracticeDay.DailyHours track by $index" class="col-md-12 zero-padding-left-right-div ng-scope">
+                            @*<span ng-if="DailyHour.PracticeDailyHourID">
+                                <input type="hidden" name="PracticeDays[{{$parent.$index}}].DailyHours[{{$index}}].PracticeDailyHourID" value="{{DailyHour.PracticeDailyHourID}}">
+                            </span>*@
+                            <input type="hidden" name="PracticeDays[{{$parent.$index}}].DailyHours[{{$index}}].PracticeDailyHourID" value="{{DailyHour.PracticeDailyHourID?DailyHour.PracticeDailyHourID:0}}">
+
+
+                            <div class="col-md-4 form-group">
+                                <div id="StartTime_OfficeHours" class="input-group input-group-sm col-md-8" ng-cloak>
+                                    <input type="hidden" name="PracticeDays[{{$parent.$index}}].DailyHours[{{$index}}].StartTime" ng-value="PracticeDay.DayOff=='NO'?(DailyHour.StartTime|date:'HH:mm'):('Not Available')" />
+                                    <timepicker-pop input-time="DailyHour.StartTime" class="input-group" id="startTime_{{$parent.$index}}{{$index}}" value="{{DailyHour.StartTime}}" ng-if="PracticeDay.DayOff=='NO'" disabledint="PracticeDay.DayOff=='YES'" show-meridian='true'></timepicker-pop>
+                                    <input type="text" class="form-control input-sm" id="startTime_{{$parent.$index}}{{$index}}" value="Day Off" readonly="" ng-if="PracticeDay.DayOff=='YES'" ng-disabled="PracticeDay.DayOff=='YES' && $index > 0">
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-4 form-group">
+                                <div id="EndTime_OfficeHours" class="input-group input-group-sm col-md-8" ng-cloak>
+                                    <input type="hidden" name="PracticeDays[{{$parent.$index}}].DailyHours[{{$index}}].EndTime" ng-value="PracticeDay.DayOff=='NO'?(DailyHour.EndTime|date:'HH:mm'):('Not Available')" />
+                                    <timepicker-pop input-time="DailyHour.EndTime" class="input-group" id="endTime_{{$parent.$index}}{{$index}}" value="{{DailyHour.EndTime}}" ng-if="PracticeDay.DayOff=='NO'" disabledint="PracticeDay.DayOff=='YES'" show-meridian='true'></timepicker-pop>
+                                    <input type="text" class="form-control input-sm" id="startTime_{{$parent.$index}}{{$index}}" value="Day Off" readonly="" ng-if="PracticeDay.DayOff=='YES'" ng-disabled="PracticeDay.DayOff=='YES' && $index > 0">
+                                </div>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label id="Add_Day_OfficeHours" ng-show="$index==PracticeDay.DailyHours.length-1" class="btn btn-xs btn-success" ng-click="addDailyHourMain(PracticeDay)" ng-if="PracticeDay.DayOff=='NO'"><i class="fa fa-plus-circle"></i></label>
+
+                                @*<label ng-show="$index==PracticeDay.DailyHours.length-1" class="btn btn-xs btn-success" ng-click="addDailyHour(PracticeDay.DailyHours)" ng-if="PracticeDay.DayOff=='NO'"><i class="fa fa-plus-circle"></i></label>*@
+                                <label id="Remove_Day_OfficeHours" ng-show="$index>0" class="btn btn-xs btn-danger" ng-click="removeDailyHour(PracticeDay.DailyHours, $index)" ng-if="PracticeDay.DayOff=='NO'">  <i class="fa fa-minus-circle"></i></label>
+                            </div>
+                            <span class="col-md-12 text-danger" id="msg_{{$parent.$index}}{{$index}}" style="color: #b94a48;"></span>
+                        </div><!-- end ngRepeat: t in Days[0].Times -->
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-2 remove-left-padding">
+                            @Html.LabelFor(model => model.AnyTimePhoneCoverageYesNoOption, new { @class = "control-label small" })
+                        </div>
+
+                        <div class="col-md-10">
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.AnyTimePhoneCoverageYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.AnyTimePhoneCoverageYesNoOption", data_ng_click = "changeOtherTwo(tempSecondObject.AnyTimePhoneCoverageYesNoOption,'AnyTimePhoneCoverageYesNoOption')", id = "AnyTimePhoneCoverageYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AnyTimePhoneCoverageYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div ng-if="tempSecondObject.AnyTimePhoneCoverageYesNoOption=='1'" class="col-md-12 zero-padding-left-right-div">
+                    <div class="form-group col-md-3">
+
+                        @Html.LabelFor(model => model.AnsweringServiceYesNoOption, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.AnsweringServiceYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.AnsweringServiceYesNoOption", data_ng_click = "changeOtherTwo(tempSecondObject.AnsweringServiceYesNoOption,'one')", id = "AnsweringServiceYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AnsweringServiceYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.VoiceMailToAnsweringServiceYesNoOption, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.VoiceMailToAnsweringServiceYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.VoiceMailToAnsweringServiceYesNoOption", data_ng_click = "changeOtherTwo(tempSecondObject.VoiceMailToAnsweringServiceYesNoOption,'two')", id = "VoiceMailToAnsweringServiceYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.VoiceMailToAnsweringServiceYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.VoiceMailOtherYesNoOption, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.VoiceMailOtherYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.VoiceMailOtherYesNoOption", data_ng_click = "changeOtherTwo(tempSecondObject.VoiceMailOtherYesNoOption,'three')", id = "VoiceMailOtherYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.VoiceMailOtherYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.AfterHoursTelephoneNumber, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <span ng-if="!tempSecondObject.CountryCode" ng-init="tempSecondObject.CountryCode='+1'"></span>
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('CountryCodeDiv')"> {{tempSecondObject.CountryCode}} <span class="caret"></span></button>
+                                </div>
+                                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='CountryCodeDiv'>
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select ng-model="tempSecondObject.CountryCode" name="CountryCode">
+                                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSecondObject.CountryCode">{{code.name}}({{code.dial_code}})</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @class = "form-control", data_ng_model = "tempSecondObject.Number", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CountryCode, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12"></div>
+
+                <div class="clearfix"></div>
+                <div ng-show="activeMessageDiv=='providerPracticeOfficeHoursErrorMsg'" class="alert alert-danger" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-md-12 form-group">
+                    <button id="Cancel_OfficeHours" type="button" class="btn btn-warning btn-sm " ng-click="OfficeHoursEdit=false; operateSecondCancelControl('OfficeHourDiv');CancelObjectForOfficeHour()">Cancel</button>
+                    <button id="Save_OfficeHours" type="button" class="btn btn-success btn-sm pull-right " ng-click="validateDailyHours(PracticeLocationtemporary.PracticeDays, PracticeLocationDetail,'ProviderOfficeHour' , $index)">Save</button>
+                </div>
+
+            </div>
+        </form>
+    </fieldset>
+</div>
+
+

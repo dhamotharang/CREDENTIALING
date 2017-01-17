@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Documentation CheckList";
+}
+
+<div class="panel-group">
+    <div class="row">
+        <div class="panel-body">
+            <div class="form-style">
+                <fieldset>
+                    <legend>
+                        Document CheckList
+                    </legend>
+                    <div class="btn-group pull-right legend2 ng-scope">
+                        <button class="dropdown-toggle btn btn-xs btn-primary" popover="" data-toggle="dropdown" aria-hidden="true"><span data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" ng-click="printDCData('Documentation Checklist')" data-content=" print" data-original-title="" title="" class="fa fa-print"></span></button>
+                        <div ng-show="LoadForDCPdf" class=" pull-right "><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+                    </div>
+                    <form class="form-group" id="Documentation">
+                        <div ng-repeat="t in sections">
+                            <h4>{{t.name}}</h4>
+                            <div ng-repeat="j in t.docs track by $index">
+                                <span><input type="checkbox" ng-model="j.value" /> </span>
+                                {{j.title}}
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+            </div>
+           
+        </div>
+    </div>
+    <div id="hiddenPrintDiv1" ng-if="loadData"  style="display:none">
+        <div ng-repeat="t in sections">
+            <h4>{{t.name}}</h4>
+            <div ng-repeat="j in t.docs track by $index">
+                <span ng-if="j.value"><input type="checkbox" checked /> </span>
+                <span ng-if="!j.value"><input type="checkbox" /> </span>
+                {{j.title}}
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,761 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Portal.PriorAuthorizationViewModel
+  
+<p-link filepath="~/Areas/UM/Styles/PortalAuth/CreatePortal.css" rel="stylesheet"></p-link>         
+@{
+    List<SelectListItem> Dicipline = new List<SelectListItem>() {
+        new SelectListItem { Text = "SELECT", Value = "" },
+        new SelectListItem { Text = "HHA", Value = "HHA" },
+        new SelectListItem { Text = "MSW", Value = "MSW" },
+        new SelectListItem { Text = "OT EVAL", Value = "OT EVAL" },
+        new SelectListItem { Text = "OT VISIT", Value = "OT VISIT" },
+        new SelectListItem { Text = "PT EVAL", Value = "PT EVAL" },
+        new SelectListItem { Text = "PT VISIT", Value = "PT VISIT" },
+        new SelectListItem { Text = "SN EVAL", Value = "SN EVAL" },
+        new SelectListItem { Text = "SN VISIT", Value = "SN VISIT" },
+        new SelectListItem { Text = "ST EVAL", Value = "ST EVAL" },
+        new SelectListItem { Text = "ST VISIT", Value = "ST VISIT" },
+    };
+    List<SelectListItem> Range = new List<SelectListItem>() {
+        new SelectListItem { Text = "SELECT", Value = "" },
+        new SelectListItem { Text = "DAY", Value = "HHA" },
+        new SelectListItem { Text = "DAYS", Value = "MSW" },
+        new SelectListItem { Text = "WEEK", Value = "OT EVAL" },
+        new SelectListItem { Text = "WEEKS", Value = "OT VISIT" },
+        new SelectListItem { Text = "MONTH", Value = "PT EVAL" },
+        new SelectListItem { Text = "MONTHS", Value = "PT VISIT" },
+    };
+    List<SelectListItem> AttachmentTypes = new List<SelectListItem>() {
+        new SelectListItem { Text = "SELECT", Value = "" },
+        new SelectListItem { Text = "CLINICAL", Value = "CLINICAL" },
+        new SelectListItem { Text = "PROGRESS NOTES", Value = "PROGRESS NOTES" },
+        new SelectListItem { Text = "FAX", Value = "FAX" },
+        new SelectListItem { Text = "LOA", Value = "LOA" },
+        new SelectListItem { Text = "PLAN AUTHORIZATION", Value = "PLAN AUTHORIZATION" },
+    };
+    List<SelectListItem> UMSvcGroup = new List<SelectListItem>(){
+        new SelectListItem{Text="SELECT",Value=""},
+        new SelectListItem { Value = "10" , Text = "CEDG" },
+        new SelectListItem { Value = "2" , Text = "COLON" },
+        new SelectListItem { Value = "4" , Text = "EDG" },
+        new SelectListItem { Value = "11" , Text = "RADIATION" }
+    };                              
+}
+<form enctype="multipart/form-data" id="PreAuthRequestForm" class="zero-padding-left-right createForm form_11 auth_form" onsubmit="return false;">
+    <div class="x_panel col-lg-12  col-md-12 col-sm-12 col-xs-12 zero-padding-left-right topPadding">
+        <div class="x_content zero-padding-left-right">
+            <div class="col-md-12 text-center theme_label">
+                <img src="/Resources/Images/Common/ahc_logo.png" class="pull-left" style=" width: 140px; height: 68px;">
+                <h3>
+                    <b style="">PRIOR AUTHORIZATION</b>
+                </h3>
+            </div>
+            <div class="row col-lg-12">
+                <!--Authorization Type-->
+                <div class="x_panel border_on_panel zero-padding-left-right">
+                    <div class="x_content zero-padding-left-right">
+                        <div class="col-lg-5">
+                            <span class="col-lg-5 zero-padding-left-right theme_label">
+                                <b>@Html.LabelFor(e=>e.AuthorizationType)</b>
+                            </span>
+                            <div class="col-lg-4 ">
+                                <input type="radio" name="RequestType" id="standardId" value="Standard" class="checkbox-radio form-control AuthTypeCheck" checked>
+                                <label for="standardId" class="theme_label_data"><span></span>STANDARD</label>
+                            </div>
+                            <div class="col-lg-3 zero-padding-left-right">
+                                <input type="radio" name="RequestType" id="expediteId" value="Expedited" class="checkbox-radio form-control AuthTypeCheck">
+                                <label for="expediteId" class="theme_label_data"><span></span>EXPEDITED</label>
+                            </div>
+                        </div>
+                        <div id="expediteMessageId" class="col-lg-7 zero-padding-left-right hidden">
+                            <span class="ExpeditedMsg"> Select Expedited Only if the member's life, health or ability to regain maximum function is jeopardized.</span>
+                        </div>
+                    </div>
+                </div>
+                <!--Authorization Type Ends-->
+                <!--Member Information-->
+                <fieldset class="fsStyle">
+                    <legend class="legendStyle">
+                        <span class="theme_depend text-uppercase">
+                            <span class="transparent-font-color">_____.</span>
+                            MEMBER INFORMATION
+                            <span class="transparent-font-color">_____.</span>
+                        </span>
+                    </legend>
+                    <div class="x_panel zero-padding-left-right" id="PreAuthMemberArea">
+                        <div class="x_content zero-padding-left-right">
+                            <div class="col-lg-12">
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e=>e.Member.MemberID)</span><br />
+                                    @Html.TextBoxFor(e => e.Member.SubscriberID, new { @class = "form-control input-xs read_only_field", @placeholder = "MEMBER ID", @readonly = "readonly", @id = "preAuthMBRID" })
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e=>e.Member.LastName)</span><br />
+                                    @Html.TextBoxFor(e => e.Member.LastName, new { @class = "form-control input-xs read_only_field", @placeholder = "LAST NAME", @readonly = "readonly", @id = "preAuthMBRLastNameID" })
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Member.FirstName)</span><br />
+                                    @Html.TextBoxFor(e => e.Member.FirstName, new { @class = "form-control input-xs read_only_field", @placeholder = "FIRST NAME", @readonly = "readonly", @id = "preAuthMBRFirstNameID" })
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.ReceivedDate)</span><br />
+                                    @Html.TextBoxFor(e => e.ReceivedDate,
+                            new
+                            {
+                                @class = "form-control input-xs width-120 dateTimePicker",
+                                placeholder = "MM/DD/YYYY hh:mm:ss",
+                                @name="received",
+                                Value = "",
+                                id = "requestDateID"
+                            })
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Member.MemberContact.PrimaryContact)</span><br />
+                                    @Html.TextBoxFor(e => e.Member.MemberContact.PrimaryContact, new { @class = "form-control input-xs read_only_field", @placeholder = "PHONE NUMBER", @readonly = "readonly", @id = "preAuthMBRPhoneNumberID" })
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Member.DateOfBirth)</span><br />
+                                    @Html.TextBoxFor(e => e.Member.DateOfBirth,
+                                new
+                                {
+                                    @class = "form-control input-xs read_only_field datePicker",
+                                    @name="DOB",
+                                    @placeholder = "MM/DD/YYYY",
+                                    @readonly = "readonly",
+                                    @id = "preAuthMBRDOBID"
+                                })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </fieldset>
+                <!--Member Information Ends-->
+                <!--Service Requested Starts-->
+                <fieldset class="fsStyle">
+                    <legend class="legendStyle">
+                        <span class="theme_depend text-uppercase">
+                            <span class="transparent-font-color">_______</span>
+                            SERVICE REQUESTED
+                            <span class="transparent-font-color">_______</span>
+                        </span>
+                    </legend>
+                    <div class="x_panel zero-padding-left-right">
+                        <div class="x_content zero-padding-left-right" id="ServiceRequested">
+                            <div class="col-lg-9">
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="InOffice"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="11(a)-Office" checked>
+                                    <label class="theme_label_data" for="InOffice"><span class="theme_label "></span>IN-OFFICE</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="FreeStandingFacility"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="24-Ambulatory Surgical Center">
+                                    <label class="theme_label_data" for="FreeStandingFacility"><span class="theme_label "></span>FREE STANDING FACILITY</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="Dialysis"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="65-End-Stage Renal Disease Treatment Facility">
+                                    <label class="theme_label_data" for="Dialysis"><span></span>DIALYSIS</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="Observation"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="22-OutPatient Hospital">
+                                    <label class="theme_label_data" for="Observation"><span></span>OBSERVATION</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="RehabFacility"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="11(b)-OP Rehab">
+                                    <label class="theme_label_data" for="RehabFacility"><span></span>REHAB FACILITY</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="Hospice"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="34-Hospice">
+                                    <label class="theme_label_data" for="Hospice"><span></span>HOSPICE</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="InpatientHospital"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="21-InPatient Hospital">
+                                    <label class="theme_label_data" for="InpatientHospital"><span></span>INPATIENT HOSPITAL</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="SNF"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="31-Skilled Nursing Facility" />
+                                    <label class="theme_label_data" for="SNF"><span></span>SNF</label>
+                                </div>
+                                <div class="col-lg-4" ng-hide="true">
+                                    <input type="radio"
+                                           id="DME"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="12-Patient Home" />
+                                    <label class="theme_label_data" for="DME"><span></span>DME</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="OutPatientHospital"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="22-OutPatient Hospital" />
+                                    <label class="theme_label_data" for="OutPatientHospital"><span></span>OUTPATIENT HOSPITAL</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="radio"
+                                           id="HomeHealth"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="12-Patient Home" />
+                                    <label class="theme_label_data" for="HomeHealth"><span></span>HOME HEALTH</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="col-lg-12">
+                                    <input type="radio"
+                                           id="Therapy"
+                                           class="checkbox-radio servicereqCheck form-control"
+                                           name="PlaceOfService"
+                                           value="11(b)-OP Rehab" />
+                                    <label class="theme_label_data" for="Therapy"><span></span>THERAPY</label>
+                                </div>
+                                <div class="col-lg-12 therapychecks hidden">
+                                    <div class="col-lg-12">
+                                        <input type="checkbox"
+                                               id="Physical"
+                                               class="checkbox-radio servicereqCheck form-control"
+                                               value="PHYSICAL"
+                                               name="PHYSICAL" />
+                                        <label class="theme_label_data" for="Physical"><span></span>PHYSICAL</label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <input type="checkbox"
+                                               id="Occupational"
+                                               class="checkbox-radio servicereqCheck form-control"
+                                               value="OCCUPATIONAL"
+                                               name="OCCUPATIONAL" />
+                                        <label class="theme_label_data" for="Occupational"><span></span>OCCUPATIONAL</label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <input type="checkbox"
+                                               id="Speech"
+                                               class="checkbox-radio servicereqCheck form-control"
+                                               value="SPEECH"
+                                               name="SPEECH" />
+                                        <label class="theme_label_data" for="Speech"><span></span>SPEECH</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </fieldset>
+                <!--Service Requested Ends-->
+                <!--REQUESTING PROVIDER-->
+                <fieldset class="fsStyle">
+                    <legend class="legendStyle">
+                        <span class="theme_depend text-uppercase">
+                            <span class="transparent-font-color">_____.</span>
+                            REQUESTING PROVIDER
+                            <span class="transparent-font-color">_____.</span>
+                        </span>
+                    </legend>
+                    <div class="x_panel zero-padding-left-right" id="PreAuthReqProvider">
+                        <div class="col-lg-12">
+                            <div class="col-lg-2">
+                                <span>
+                                    <span class="theme_label">@Html.LabelFor(e=>e.RequestingProvider.FirstName)</span>
+                                    @*<span class="label label-success">IN</span>*@
+                                </span><br>
+                                @Html.TextBoxFor(e => e.RequestingProvider.FirstName, new { @class = "form-control input-xs read_only_field", @placeholder = "FIRST NAME", @id = "ReqProviderFirstName" })
+                            </div>
+                            <div class="col-lg-2">
+                                <span><span class="theme_label">@Html.LabelFor(e => e.RequestingProvider.LastName)</span></span><br>
+                                @Html.TextBoxFor(e => e.RequestingProvider.LastName, new { @class = "form-control input-xs read_only_field", @placeholder = "LAST NAME", @id = "ReqProviderLastName" })
+                            </div>
+
+                            <div class="col-lg-2">
+                                <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider.TaxID)</span><br>
+                                @Html.TextBoxFor(e => e.RequestingProvider.TaxID, new { @class = "form-control input-xs", @placeholder = "TAX ID", @id = "ReqProviderTaxID" })
+                            </div>
+                            <div class="col-lg-2">
+                                <span>
+                                    <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider.NPI)</span>
+                                </span><br>
+                                @Html.TextBoxFor(e => e.RequestingProvider.NPI, new { @class = "form-control input-xs read_only_field", @placeholder = "NPI", @id = "ReqProviderNPI" })
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <span class="col-lg-12">
+                                    <span class="theme_label">@Html.LabelFor(e => e.IsPCP)</span>
+                                </span>
+                                <div class="col-lg-4 zero-padding-left-right">
+                                    @*<input type="radio"
+                                           id="Pcp"
+                                           class="checkbox-radio form-control IsPcpType"
+                                           name="IsPCP"
+                                           value="" checked="">
+                                    <label class="theme_label_data"><span></span>PCP</label>*@
+                                    <input type="radio" name="IsPCP" id="Pcp" value="" class="checkbox-radio form-control IsPcpType" checked>
+                                    <label for="Pcp" class="theme_label_data"><span></span>PCP</label>
+                                </div>
+                                <div class="col-lg-6 zero-padding-left-right">
+                                    <input type="radio" name="IsPCP" id="Specialist" value="" class="checkbox-radio form-control IsPcpType">
+                                    <label for="Specialist" class="theme_label_data"><span></span>Specialist</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="col-lg-4">
+                                <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider.ContactName)</span><br>
+                                @Html.TextBoxFor(e => e.RequestingProvider.ContactName, new { @class = "form-control input-xs", @placeholder = "CONTACT NAME", @id = "ReqProviderContactName" })
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider.PhoneNumber)</span><br>
+                                @Html.TextBoxFor(e => e.RequestingProvider.PhoneNumber, new { @class = "form-control input-xs", @placeholder = "PHONE NUMBER", @id = "ReqProviderPhoneNumber" })
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="theme_label">@Html.LabelFor(e => e.RequestingProvider.FaxNumber)</span><br>
+                                @Html.TextBoxFor(e => e.RequestingProvider.FaxNumber, new { @class = "form-control input-xs", @placeholder = "FAX NUMBER", @id = "ReqProviderFaxNumber" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 " id="showSpecialistOptions" style="display:none">
+                            <span class="col-lg-12">
+                                <span class="theme_label"><label>HAS PCP APPROVED THIS REQUEST?</label></span>
+                            </span>
+                            <div class="col-lg-3">
+                                <input type="radio" class="checkbox-radio form-control" id="isPCPApproved" name="approvedPCP" value="true" checked><label><span></span>YES</label>
+                            </div>
+                            <div class="col-lg-3">
+                               <input type="radio" class="checkbox-radio form-control" id="isNotPCPApproved" name="approvedPCP" value="false"><label><span></span>NO</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </fieldset>
+                <!--REQUESTING PROVIDER Ends-->
+                <!--REFERRED TO/SERVICING PROVIDER-->
+                <fieldset class="fsStyle">
+                    <legend class="legendStyle">
+                        <span class="theme_depend text-uppercase">REFERRED TO/SERVICING PROVIDER</span>
+                    </legend>
+                    <div class="x_panel zero-padding-left-right" id="PreAuthSvcProvider">
+                        <div class="col-lg-12">
+                            <div class="col-lg-2">
+                                <span>
+                                    <span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.FirstName)</span>
+                                  </span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.FirstName, new { @class = "form-control input-xs", @placeholder = "FIRST NAME", @id = "ServicingProviderFirstName" })
+                            </div>
+                            <div class="col-lg-2">
+                                <span><span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.LastName)</span></span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.LastName, new { @class = "form-control input-xs", @placeholder = "LAST NAME", @id = "ServicingProviderLastName" })
+                            </div>
+                            <div class="col-lg-2">
+                                <span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.TaxID)</span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.TaxID, new { @class = "form-control input-xs", @placeholder = "TAX ID", @id = "ServicingProviderTaxID" })
+                            </div>
+                            <div class="col-lg-2">
+                                <span><span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.NPI)</span></span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.NPI, new { @class = "form-control input-xs", @placeholder = "NPI", @id = "ServicingProviderNPI" })
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <span><span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.Specialty)</span></span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.Specialty, new { @class = "form-control input-xs", @placeholder = "SPECIALITY", @id = "ServicingProviderSpeciality" })
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="col-lg-4">
+                                <span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.ContactName)</span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.ContactName, new { @class = "form-control input-xs", @placeholder = "CONTACT NAME", @id = "ServicingProviderContactName" })
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.PhoneNumber)</span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.PhoneNumber, new { @class = "form-control input-xs", @placeholder = "PHONE NUMBER", @id = "ServicingProviderPhoneNumber" })
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="theme_label">@Html.LabelFor(e => e.ServicingProvider.FaxNumber)</span><br>
+                                @Html.TextBoxFor(e => e.ServicingProvider.FaxNumber, new { @class = "form-control input-xs", @placeholder = "FAX NUMBER", @id = "ServicingProviderFaxNumber" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 " id="showSpecialistOptions" style="display:none">
+                            <span class="col-lg-12"><span class="theme_label"><label>HAS PCP APPROVED THIS REQUEST?</label></span></span>
+                            <div class="col-lg-3">
+                                <label><input type="radio" class="checkbox-radio form-control" id="isPCPApproved" name="approvedPCP" value="true" checked=""><span></span>YES</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <label><input type="radio" class="checkbox-radio form-control" id="isNotPCPApproved" name="approvedPCP" value="false"><span></span>NO</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </fieldset>
+                <!--REFERRED TO/SERVICING PROVIDER Ends-->
+                <!--FACILITY-->
+                <fieldset class="fsStyle">
+                    <legend class="legendStyle">
+                        <span class="theme_depend text-uppercase">
+                            <span class="transparent-font-color">_____________.</span>
+                            FACILITY
+                            <span class="transparent-font-color">_____________.</span>
+                        </span>
+                    </legend>
+                    <div class="x_panel zero-padding-left-right" id="PreAuthFacility">
+                        <div class="x_content zero-padding-left-right">
+                            <div class="col-lg-12">
+                                <div class="col-lg-4">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Facility.FullName)</span><br>
+                                    @Html.TextBoxFor(e => e.Facility.FullName, new { @class = "form-control input-xs", @placeholder = "FACILITY NAME", @id = "FacilityFullName" })
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Facility.TaxID)</span><br>
+                                    @Html.TextBoxFor(e => e.Facility.TaxID, new { @class = "form-control input-xs", @placeholder = "TAX ID", @id = "FacilityTaxID" })
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Facility.FacilityNPI)</span><br>
+                                    @Html.TextBoxFor(e => e.Facility.FacilityNPI, new { @class = "form-control input-xs", @placeholder = "NPI", @id = "FacilityFacilityNPI" })
+                                </div>
+                                <div class="col-lg-4">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Facility.FacilityType)</span><br>
+                                    @Html.TextBoxFor(e => e.Facility.FacilityType, new { @class = "form-control input-xs", @placeholder = "FACILITY TYPE", @id = "FacilityFacilityType" })
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-lg-4">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Facility.ContactName)</span><br>
+                                    @Html.TextBoxFor(e => e.Facility.ContactName, new { @class = "form-control input-xs", @placeholder = "CONTACT NAME", @id = "FacilityContactName" })
+                                </div>
+                                <div class="col-lg-4">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Facility.PhoneNumber)</span><br>
+                                    @Html.TextBoxFor(e => e.Facility.PhoneNumber, new { @class = "form-control input-xs", @placeholder = "PHONE NUMBER", @id = "FacilityPhoneNumber" })
+                                </div>
+                                <div class="col-lg-4">
+                                    <span class="theme_label">@Html.LabelFor(e => e.Facility.FaxNumber)</span><br>
+                                    @Html.TextBoxFor(e => e.Facility.FaxNumber, new { @class = "form-control input-xs", @placeholder = "FAX NUMBER", @id = "FacilityFaxNumber" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </fieldset>
+                <!--FACILITY Ends-->
+                <!--PLANNED DATE OF SERVICE-->
+                <fieldset class="fsStyle">
+                    <legend class="legendStyle">
+                        <span class="theme_depend text-uppercase">
+                            <span class="transparent-font-color">___.</span>
+                            PLANNED DATE OF SERVICE
+                            <span class="transparent-font-color">___.</span>
+                        </span>
+                    </legend>
+                    <div class="x_panel zero-padding-left-right" id="PreAuthDates">
+                        <div class="x_content zero-padding-left-right">
+                            <div class="col-lg-12">
+                                <span class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e=>e.FromDate)</span>
+                                    @Html.TextBoxFor(e => e.FromDate,
+                                new
+                                {
+                                    @class = "form-control input-xs datePicker",
+                                    @placeholder = "MM/DD/YYYY",
+                                })
+                                </span>
+                                <span class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.ToDate)</span>
+                                    @Html.TextBoxFor(e => e.ToDate,
+                                new
+                                {
+                                    @class = "form-control input-xs read_only_field datePicker",
+                                    @placeholder = "MM/DD/YYYY",
+                                    @readonly = "readonly"
+                                })
+                                </span>
+                                <span class="col-lg-2">
+                                    <span class="theme_label">@Html.LabelFor(e => e.AppointmentDate)</span>
+                                    @Html.TextBoxFor(e => e.AppointmentDate,
+                                new
+                                {
+                                    @class = "form-control input-xs mandatory_field_halo datePicker",
+                                    @placeholder = "MM/DD/YYYY",
+                                })
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </fieldset>
+                <!--PLANNED DATE OF SERVICE Ends-->
+                <!--Primary DX-->
+                <div class="x_panel border_on_panel zero-padding-left-right">
+                    <div class="x_content zero-padding-left-right">
+                        <div class="col-lg-12">
+                            <div>
+                                <div class="col-lg-3 col-md-2 col-sm-8 col-xs-4">
+                                    <nobr><span class="theme_label"><label>PRIMARY DX</label></span></nobr>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-7">
+                                    <span class="theme_label"><label>DIAG DESC</label></span> <br />
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-2 col-xs-1 button-styles-xs">
+                                    <span class="theme_label"><label>ACTION</label></span> <br />
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div id="PrimaryDXArea">
+                                <div class="PrimaryDXRow">
+                                    <div class="col-lg-3 col-md-3 col-sm-8 col-xs-4">
+                                        @Html.TextBoxFor(e => e.ICDCodes[0].ICDCode, new { @class = "form-control input-xs icd_search_cum_dropdown icdCode mandatory_field_halo ", @placeholder = "ICD CODE" })
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-7">
+                                        @Html.TextBoxFor(e => e.ICDCodes[0].ICDCodeDescription, new { @class = "form-control input-xs icd_search_cum_dropdown icdDescription mandatory_field_halo ", @placeholder = "DESCRIPTION" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-2 col-xs-1 button-styles-xs">
+                                        <button class="btn btn-danger btn-xs icd_delete_btn hidden"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-success btn-xs icd_add_btn"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Primary DX Ends-->
+                <!--CPT-4/HCPCS CODE-->
+                <div class="x_panel border_on_panel zero-padding-left-right">
+                    <div class="x_content zero-padding-left-right">
+                        <div class="col-lg-12">
+                            <span class="col-md-2 col-lg-2">
+                                <button class="btn btn-primary btn-xs bold_text pull-left AddCPTRangeBtn_PreAuth">Add CPT Range</button>
+                            </span>
+                            <div>
+                                <span class="theme_label pull-left" style="margin-top:3px">@Html.LabelFor(e=>e.UMServiceGroup)</span>
+                                <div class="col-md-3 col-lg-3">
+                                    @Html.DropDownListFor(e => e.UMServiceGroup,UMSvcGroup, new { @class = "form-control input-xs text-uppercase", @tabindex = "-1", @id = "UMServiceGroupID" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="PreAuthCPTDefault">
+                            <div class="col-lg-12">
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.Label("CPT-4/HCPCS CODE")</span><br />
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("MODIFIER")</span>
+                                </div>
+                                <div class="col-lg-5">
+                                    <span class="theme_label">@Html.Label("DESCRIPTION OF PROCEDURE OR SERVICES")</span>
+                                </div>
+                                <div class="col-lg-2 visits-label">
+                                    <span class="theme_label">@Html.Label("VISITS/FREQUENCY")</span>
+                                </div>
+                                <div class="col-lg-2">
+                                    <span class="theme_label">@Html.Label("ACTION")</span>
+                                </div>
+                            </div>
+                            <div id="PreAuthCPTArea">
+                                <div class="col-lg-12 PreAuthCPTRow">
+                                    <div class="col-lg-2 col-md-2">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].CPTCode, new { @class = "form-control input-xs mandatory_field_halo ", @placeholder = "CPT CODE" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].Modifier, new { @class = "form-control input-xs", @placeholder = "MODIFIER" })
+                                    </div>
+                                    <div class="col-lg-5 col-md-5">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].CPTDesc, new { @class = "form-control input-xs mandatory_field_halo ", @placeholder = "DESCRIPTION" })
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 visits-input">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].RequestedUnits, new { @class = "form-control input-xs", @placeholder = "VISITS", @Value = "1" })
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 button-styles-xs">
+                                        <button class="btn btn-danger btn-xs cpt_delete_btn hidden"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-success btn-xs cpt_add_btn"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="PreAuthCPT2 hidden">
+                            <div class="col-lg-12">
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("CPT-4/HCPCS CODE")</span><br />
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("MODIFIER")</span>
+                                </div>
+                                <div class="col-lg-3">
+                                    <span class="theme_label">@Html.Label("PROC DESC")</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("DICIPLINE")</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("REQ UNITS")</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("RANGE")</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("NO PER")</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("RANGE")</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("TOTAL UNITS")</span>
+                                </div>
+                                <div class="col-lg-1">
+                                    <span class="theme_label">@Html.Label("ACTION")</span>
+                                </div>
+
+                            </div>
+                            <div id="PreAuthCPTArea2">
+                                <div class="col-lg-12 PreAuthCPTRowSecondary">
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].CPTCode, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "CPT CODE" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].Modifier, new { @class = "form-control input-xs ", @placeholder = "MODIFIER" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-3">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].CPTDesc, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "DESCRIPTION" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.DropDownListFor(e => e.CPTCodes[0].Discipline, Dicipline, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].RequestedUnits, new { @class = "form-control input-xs", @placeholder = "REQ UNITS" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.DropDownListFor(e => e.CPTCodes[0].Range1, Range, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].NumberPer, new { @class = "form-control input-xs", @placeholder = "NO PER" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.DropDownListFor(e => e.CPTCodes[0].Range2, Range, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        @Html.TextBoxFor(e => e.CPTCodes[0].TotalUnits, new { @class = "form-control input-xs", @placeholder = "TOTAL UNITS",@Tabindex="-1" })
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 button-styles-xs">
+                                        <button class="btn btn-danger btn-xs cpt_delete_btn hidden"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-success btn-xs cpt_add_btn"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--CPT-4/HCPCS CODE ends-->
+                <!--Documents code-->
+                <div class="x_panel border_on_panel zero-padding-left-right">
+                    <div class="x_content zero-padding-left-right">
+                        <div class="col-lg-12">
+                            <input type="checkbox" class="checkbox-radio form-control" value="AddNewDoc" id="AddNewDocCheck" name="AddNewDoc">
+                            <label class="theme_label_data" for="AddNewDocCheck"><span></span>Add New Document</label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-lg-12 AddNewDocView hidden">
+                            <div class="DocsHeader">
+                                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-2 theme_label">
+                                   @Html.LabelFor(e=>e.Attachments[0].Name)
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2 theme_label">
+                                    @Html.LabelFor(e => e.Attachments[0].AttachmentType)
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-3 col-xs-2 theme_label">
+                                    @Html.LabelFor(e => e.Attachments[0].DocumentFile)
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    &nbsp;
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-left button-styles-xs theme_label">
+                                    <label for="ACTION">ACTION</label>
+                                </div>
+                            </div>
+                            <div id="PreAuthDocumentArea">
+                                <div class="preAuthDocumentRow margin_top_5px">
+                                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-2">
+                                        @Html.TextBoxFor(e => e.Attachments[0].Name, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "DOCUMENT NAME" })
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2">
+                                        @Html.DropDownListFor(e => e.Attachments[0].AttachmentType, AttachmentTypes, new { @class = "form-control input-xs mandatory_field_halo", @placeholder = "Document Type" })
+                                    </div>
+                                    <div class="col-lg-5 col-md-5 col-sm-3 col-xs-2">
+                                        @Html.TextBoxFor(e => e.Attachments[0].Path, new { @class = "form-control input-xs custom-file-input", @style = "border:none;outline:none", @type = "file" })
+                                        <div class="noFile hidden">NO FILE CHOSEN</div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        <button id="previewButton" class="btn btn-ghost btn-xs this_button_preview" data-toggle="tooltip"><img src="/Resources/Images/Icons/previewIcon.png" style="width: 28px;"></button>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-left button-styles-xs">
+                                        <button class="btn btn-danger btn-xs deleteDocumentBtn1 hidden"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-danger btn-xs deleteDocumentBtn hidden"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-success btn-xs addDocumentBtn"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Documents code Ends-->
+                <div class="x_panel border_on_panel zero-padding-left-right">
+                    <div class="x_content zero-padding-left-right">
+                        <div class="col-lg-12">
+                            <span class="theme_label col-lg-5 zero-padding-left-right">@Html.LabelFor(e=>e.Note)</span>
+                            <b class="text-danger pull-right" id="wordcount">250 Words Remaining</b>
+                            <br />
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="col-lg-12">
+                                @*<textarea id="preAuthNote" rows="3" cols="170" name="Notes.Description" style=" resize: none; font-size:inherit;" class="" data-content="Could not paste text as it is exceeding<br>maximum word's limit of textarea." data-container="body" data-original-title="Cannot Paste Text"></textarea>*@
+                                @Html.TextAreaFor(e => e.Note, new { @Class = "form-control input-xs text-uppercase",@Rows="3",@Cols="170"})
+                            </div>
+
+                        </div>
+                        <div class="clearfix">
+                            <br />
+                            <br />
+                        </div>
+                        <div class="col-lg-12">
+                            <span class="col-lg-12 PreAuth_NoteTextStyle">
+                                Authorizations will be given for medically necessary services only. This request cannot be processed without supporting documentation such as office visit notes, pertinent laboratory data, prior treatment note(s), etc. Payment is subject to verification of member eligibility, benefit coverage and appropriate coding guidelines.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--Save and cancel-->
+                <div class="col-lg-12 button-styles">
+                    <button class="btn btn-success req_preAuth_btn pull-right" style="width: 8%">Request</button>&nbsp;
+                    <button class="btn btn-primary pend_preAuth_btn pull-right" style="width: 8%">Pend</button>&nbsp;
+                    <button class="btn btn-danger pull-right" style="width:8%">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="portalauth_preview_modal"></div>
+
+<p-script filepath="~/Areas/UM/Scripts/Authorization/PreAuth/NonMinified/PreAuth.js"></p-script>
+

@@ -1,0 +1,584 @@
+﻿using AHC.CD.Data.Repository;
+using AHC.CD.Entities.Location;
+using AHC.CD.Entities.MasterData.Enums;
+using AHC.CD.Entities.MasterData.Tables;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AHC.CD.Business.MasterData
+{
+    internal class MasterDataManager : IMasterDataManager
+    {
+        private IRepositoryManager repositoryManager = null;
+
+
+        public MasterDataManager(IRepositoryManager repositoryManager)
+        {
+            this.repositoryManager = repositoryManager;
+        }
+        
+        public async Task<IEnumerable<Entities.MasterData.Tables.StateLicenseStatus>> GetAllLicenseStatusAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<StateLicenseStatus>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(StateLicenseStatus obj1, StateLicenseStatus obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.StaffCategory>> GetAllStaffCategoryAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<StaffCategory>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(StaffCategory obj1, StaffCategory obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.SpecialtyBoard>> GetAllspecialtyBoardAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<SpecialtyBoard>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(SpecialtyBoard obj1, SpecialtyBoard obj2) { return obj1.Name.CompareTo(obj2.Name); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.Specialty>> GetAllSpecialtyAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<Specialty>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(Specialty obj1, Specialty obj2) { return obj1.Name.CompareTo(obj2.Name); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.School>> GetAllSchoolAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<School>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(School obj1, School obj2) { return obj1.Name.CompareTo(obj2.Name); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.QualificationDegree>> GetAllQualificationDegreeAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<QualificationDegree>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(QualificationDegree obj1, QualificationDegree obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.ProviderType>> GetAllProviderTypeAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<ProviderType>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(ProviderType obj1, ProviderType obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.PracticeType>> GetAllPracticeTypeAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<PracticeType>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(PracticeType obj1, PracticeType obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.PracticeServiceQuestion>> GetAllPracticeServiceQuestionAsync()
+        {
+            try
+            {
+                return await repositoryManager.GetAsync<PracticeServiceQuestion>(s => s.Status.Equals(StatusType.Active.ToString()));
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.PracticeOpenStatusQuestion>> GetAllPracticeOpenStatusQuestionAsync()
+        {
+            try
+            {
+                return await repositoryManager.GetAsync<PracticeOpenStatusQuestion>(s => s.Status.Equals(StatusType.Active.ToString()));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.PracticeAccessibilityQuestion>> GetAllPracticeAccessibilityQuestionAsync()
+        {
+            try
+            {
+                return await repositoryManager.GetAsync<PracticeAccessibilityQuestion>(s => s.Status.Equals(StatusType.Active.ToString()));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.MilitaryRank>> GetAllMilitaryRankAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<MilitaryRank>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(MilitaryRank obj1, MilitaryRank obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.MilitaryPresentDuty>> GetAllMilitaryPresentDutyAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<MilitaryPresentDuty>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(MilitaryPresentDuty obj1, MilitaryPresentDuty obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.MilitaryDischarge>> GetAllMilitaryDischargeAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<MilitaryDischarge>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(MilitaryDischarge obj1, MilitaryDischarge obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.MilitaryBranch>> GetAllMilitaryBranchAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<MilitaryBranch>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(MilitaryBranch obj1, MilitaryBranch obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.InsuranceCarrier>> GetAllInsuranceCarrierAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<InsuranceCarrier>(s => s.Status.Equals(StatusType.Active.ToString()), "InsuranceCarrierAddresses");
+                var sortData = data.ToList();
+                sortData.Sort(delegate(InsuranceCarrier obj1, InsuranceCarrier obj2) { return obj1.Name.CompareTo(obj2.Name); });
+                Parallel.ForEach(sortData, (s) =>
+                {
+                    s.InsuranceCarrierAddresses.ToList().Sort(delegate(InsuranceCarrierAddress obj1, InsuranceCarrierAddress obj2) { return obj1.City.CompareTo(obj2.City); });
+                });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.InsuranceCarrierAddress>> GetAllInsuranceCarrierAddressesAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<InsuranceCarrierAddress>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(InsuranceCarrierAddress obj1, InsuranceCarrierAddress obj2) { return obj1.City.CompareTo(obj2.City); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.HospitalContactPerson>> GetAllHospitalContactPersonAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<HospitalContactPerson>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(HospitalContactPerson obj1, HospitalContactPerson obj2) { return obj1.ContactPersonName.CompareTo(obj2.ContactPersonName); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.HospitalContactInfo>> GetAllHospitalContactInfoAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<HospitalContactInfo>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(HospitalContactInfo obj1, HospitalContactInfo obj2) { return obj1.City.CompareTo(obj2.City); });
+                Parallel.ForEach(sortData, (s) =>
+                {
+                    s.HospitalContactPersons.ToList().Sort(delegate(HospitalContactPerson obj1, HospitalContactPerson obj2) { return obj1.ContactPersonName.CompareTo(obj2.ContactPersonName); });
+                });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.Hospital>> GetAllHospitalAsync()
+        {
+            try
+            {
+                return await repositoryManager.GetAsync<Hospital>(s => s.Status.Equals(StatusType.Active.ToString()), "HospitalContactInfoes, HospitalContactInfoes.HospitalContactPersons");
+                var data = await repositoryManager.GetAsync<Hospital>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(Hospital obj1, Hospital obj2) { return obj1.HospitalName.CompareTo(obj2.HospitalName); });
+                Parallel.ForEach(sortData, (s) =>
+                {
+                    s.HospitalContactInfoes.ToList().Sort(delegate(HospitalContactInfo obj1, HospitalContactInfo obj2) { return obj1.City.CompareTo(obj2.City); });
+                    Parallel.ForEach(s.HospitalContactInfoes, (x) => { x.HospitalContactPersons.ToList().Sort(delegate(HospitalContactPerson obj1, HospitalContactPerson obj2) { return obj1.ContactPersonName.CompareTo(obj2.ContactPersonName); }); });
+                });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.DEASchedule>> GetAllDEAScheduleAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<DEASchedule>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(DEASchedule obj1, DEASchedule obj2) { return obj1.ScheduleTitle.CompareTo(obj2.ScheduleTitle); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.Certification>> GetAllCertificationAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<Certification>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(Certification obj1, Certification obj2) { return obj1.Name.CompareTo(obj2.Name); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.AdmittingPrivilege>> GetAllAdmittingPrivilegeAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<AdmittingPrivilege>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(AdmittingPrivilege obj1, AdmittingPrivilege obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Entities.MasterData.Tables.ProfileDisclosureQuestion>> GetAllProfileDisclosureQuestionAsync()
+        {
+            try
+            {
+                return await repositoryManager.GetAsync<ProfileDisclosureQuestion>(s => s.Status.Equals(StatusType.Active.ToString()), "Questions, Questions.QuestionCategory, Questions.QuestionTheme");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<IEnumerable<VisaType>> GetAllVisaTypeAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<VisaType>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(VisaType obj1, VisaType obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<VisaStatus>> GetAllVisaStatusAsync()
+        {
+            try
+            {
+                var data = await repositoryManager.GetAsync<VisaStatus>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var sortData = data.ToList();
+                sortData.Sort(delegate(VisaStatus obj1, VisaStatus obj2) { return obj1.Title.CompareTo(obj2.Title); });
+
+                return sortData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<IEnumerable<LocationDetail>> GetLocationsByCityAsync(string city)
+        {
+            try
+            {
+                return await repositoryManager.GetAsync<LocationDetail>(ld => ld.City.Contains(city));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<string>> GetAllStatesAsync()
+        {
+            try
+            {
+                //var data = await repositoryManager.GetAllAsync<LocationDetail>();
+                //var states = data.GroupBy(u => u.State).Select(s => s.First().State).ToList();
+                //states.Sort(delegate(string obj1, string obj2) { return obj1.CompareTo(obj2); });
+                //return states;
+
+                var USStates = from country in await repositoryManager.GetAllAsync<Country>()
+                                      from state in country.States
+                                      where country.Code == "US"
+                                      select state.Name;
+
+                return USStates.ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<IEnumerable<LocationDetail>> GetCitiesAsync(string citySearch)
+        {
+            try
+            {
+                
+                var locationDetails = from country in await repositoryManager.GetAllAsync<Country>()
+                                      from state in country.States
+                                      from city in state.Cities
+                                      where city.Name.ToLower().StartsWith(citySearch.ToLower())
+                                      select new LocationDetail() 
+                                      {
+                                         City = city.Name,
+                                         Country = country.Name,
+                                         State = state.Name,
+                                         StateCode = state.Code,
+                                         CountryCode = country.Code
+                                      };
+                    
+                return locationDetails.ToList();
+
+
+                //var countries = await repositoryManager.GetAllAsync<Country>();
+                //var locationDetail = new List<LocationDetail>();
+
+                //foreach (var country in countries)
+                //{
+                //    foreach (var state in country.States)
+                //    {
+                //        foreach (var city in state.Cities)
+                //        {
+                //            if(city.Name.ToLower().StartsWith(citySearch.ToLower()))
+                //            {
+                //                locationDetail.Add(new LocationDetail() { City = city.Name, Country = country.Name, State = state.Name, StateCode = state.Code, CountryCode = country.Code });
+                //            }
+                //        }
+                //    }
+                //}
+
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<IEnumerable<LocationDetail>> GetCitiesAllAsync()
+        {
+            var locationDetails = from country in await repositoryManager.GetAllAsync<Country>()
+                                  from state in country.States
+                                  from city in state.Cities
+                                  
+                                  select new LocationDetail
+                                  {
+                                      City = city.Name,
+                                      Country = country.Name,
+                                      State = state.Name,
+                                      StateCode = state.Code,
+                                      CountryCode = country.Code
+                                  };
+
+            return locationDetails.ToList();
+        }
+
+        public async Task InitData()
+        {
+            try
+            {
+                await repositoryManager.InitMasterData();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+    }
+}

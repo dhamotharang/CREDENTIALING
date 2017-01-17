@@ -1,0 +1,121 @@
+﻿@model AHC.CD.WebUI.MVC.Models.UsersList
+
+@{
+    ViewBag.Title = "ManageUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+    <script src="~/Areas/Initiation/Scripts/ManageUser.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+}
+<script>
+
+</script>
+
+<style>
+    .select-page {
+        width: 50px;
+        text-align: center;
+    }
+    .pagination li a input {
+        padding: 0;
+        margin: -5px 0;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="managerUserApp" ng-init="Getlist()" ng-controller="ManageUserController as mc" ng-cloak>
+    <toaster-container toaster-options="{'time-out': 1000,
+                'position-class': 'toast-top-right','close-button':true}"></toaster-container>
+    <div class="container-fluid">
+        <div class="row" style="margin-top:2px">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-cogs"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/AdminConfig/Index"> Admin Config</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Activate/Deactivate User
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- Page Heading -->
+        <div ng-show="showLoading" class="row">
+            <div style="margin-left:45%;margin-top:15%">
+                <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+                <span>Loading...Please Wait</span>
+            </div>
+        </div>
+        <div ng-show="!showLoading" id="mydiv" class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <p id="para" style="color:red" hidden>Please enter valid Email ID</p>
+                    <p id="para1" style="color:red" hidden>No Details found with this Email ID</p>
+                    <table id="userstable" class='table table-striped table-bordered customtbodyStyle small wrap-words' st-pipe="mc.callServer" st-table="mc.displayed" st-safe-src="userData">
+                        <thead>                            
+
+                            <tr>
+                                <th st-ratio="22" st-sort="Email">Email</th>
+                                <th st-ratio="16" st-sort-default="reverse" st-sort="Name">Name</th>
+                                <th st-ratio="16" st-sort-default="reverse" st-sort="Roles">Role</th>
+                                <th st-ratio="13" st-sort="status">Status</th>
+                                <th st-ratio="12">Activate User</th>
+                                <th st-ratio="12">Deactivate User</th>
+                            </tr>
+                           
+                            <tr>
+                                <td st-ratio="9"><input st-search="Email" type="text" placeholder="Filter Emails" id="Email" class="form-control input-sm" /></td>
+                                <td st-ratio="14"><input st-search="Name" type="text" placeholder="Filter Name" id="Name" class="form-control input-sm" /></td>
+                                <td st-ratio="9"><input st-search="Roles" type="text" placeholder="Filter Role" id="Role" class="form-control input-sm" /></td>
+                                <td st-ratio="6"><input st-search="status" type="text" placeholder="Filter Status" id="status" class="form-control input-sm" /></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="p in mc.displayed">
+
+                                <td>{{p.Email}}</td>
+                                <td class="wraptext">{{p.Name}}</td>
+                                <td>{{p.Roles}}</td>
+                                <td class="wraptext">
+                                    {{p.status}} <span ng-if="p.status=='Active'"><i class="fa fa-check" style="color:green"></i></span><span ng-if="p.status=='Inactive'"><i class="fa fa-close" style="color:red"></i></span>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;<a id="addbutton{{$index}}" toggle data-toggle="tooltip" title="Activate User" data-placement="bottom" class="btn btn-info btn-sm" ng-click="ActivateUser(p,$index)" ng-disabled="p.status=='Active'"><i class="fa fa-check" style="color:whitesmoke;"></i></a>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;<button id="PasswordReset" toggle data-toggle="tooltip" title="Deactivate User" data-placement="bottom" class="btn btn-warning btn-sm" ng-click="DeactivateUser(p,$index)" ng-disabled="p.status=='Inactive'"><i class="fa fa-close" style="color:white"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>

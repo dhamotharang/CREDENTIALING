@@ -1,0 +1,99 @@
+﻿@*@model PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.MedicaidInfo*@
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.MedicaidInfo>
+
+@{
+    var Medicaid = 0;
+
+}
+
+<fieldset class="fsStyle" id="ViewMedicaidInfo">
+
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            <span class="transparent-font-color">____</span>
+            Medicaid Information
+            <span class="transparent-font-color">____</span>
+        </span>
+
+        &nbsp;&nbsp; <span class="text-uppercase ">
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetMedicaidInformationPartial?model=@Model&ActionType=Add" data-tab-container="Medicaid">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetMedicaidInformationPartial?model=@Model&ActionType=Edit" data-tab-container="Medicaid">
+                    <i class="fa fa-pencil"></i>
+                </button>
+            </span>
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-warning btn-xs historyBtnCSS" data-toggle="collapse" data-target="#medicaidInfoHistory">
+                    <i class="fa fa-history"></i>
+                </button>
+            </span>
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-default btn-xs helpBtnCSS" data-toggle="popover" data-placement="left" data-trigger="hover" data-html="true" data-content="*If you have additional Medicaid Number include here.">
+                    <i class="fa fa-question"></i>
+                </button>
+            </span>
+            <a class="print_button_for_MedicaidInfo hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+            </a>
+        </span>
+    </legend>
+
+
+    @foreach (var item in Model)
+{
+
+    Medicaid = Medicaid + 1;
+
+    <div class="x_content zero-padding-left mutiple-data ViewMoreMedicaid_@Medicaid collapse in">
+        <div class="SubHeaderSpacing1">
+            <span class="text-uppercase TableHeading">Medicaid Information- @Medicaid</span>&nbsp; <button onclick="groupmodalhistory('Licenses','removeMedicaidInfo','@item.MedicaidInfoID','Medicaid')" @*data-toggle="modal" data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal "><i class="fa fa-minus"></i></button>
+            &nbsp; <button class="btn btn-primary btn-xs RemoveButtonStyleModal "><i class="fa fa-refresh"></i></button>
+            @*&nbsp;  <button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Licenses/getMedicaidHisotry?value=@item.MedicaidInfoID" data-tab-container="MedicaidHistory_@item.MedicaidInfoID">
+                    <i class="fa fa-history"></i>
+                </button>*@
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.MedicaidID) :</label>
+            <span class="theme_label_data">@item.MedicaidID</span>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.IssueDate) :</label>
+            <span class="theme_label_data">@item.IssueDate</span>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+            <span class="theme_label_data">@item.ExpirationDate</span>
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.IssueState) :</label>
+            <span class="theme_label_data">@item.IssueState</span>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">SUPPORTING DOCUMENT :</label>
+            <span class="theme_label_data">NOT AVAILABLE</span>
+        </div>
+    </div>
+        <br />
+
+        <div id="MedicaidHistory_@Medicaid">
+        </div>
+
+}
+
+
+    <span class="view-more hidden pull-right" id="moreMedicaid" data-toggle="collapse" data-target=".ViewMoreMedicaid_3" onclick="ShowHideAddView('lessMedicaid', 'moreMedicaid')">View More</span>
+    <span class="view-more  pull-right" id="lessMedicaid" data-toggle="collapse" data-target=".ViewMoreMedicaid_3" onclick="ShowHideAddView('moreMedicaid', 'lessMedicaid')">View Less</span>
+
+
+    <fieldset id="medicaidInfoHistory" class="fsStyle collapse remove_shadow width-100">
+        @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/Licenses/MedicaidInfo/_HistoryMedicaidInfo.cshtml")
+    </fieldset>
+
+</fieldset>
+@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/_RemoveModal.cshtml")

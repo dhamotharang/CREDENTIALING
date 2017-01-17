@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Verification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/verification.js"></script>
+}
+
+<div id="page-wrapper" ng-app="verificationApp" ng-controller="verificationController" ng-cloak>
+    <div class="row">
+        <div class="col-lg-12">
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                </li>
+                <li class="active">
+                    <i class="fa fa-search"></i> Verifications
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">       
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-check fa-fw"></i> Verifications
+            </div>
+            <div class="panel-body">
+                <table class='table table-striped table-bordered customtbodyStyle small wrap-words'>
+                    <thead>
+                        <tr>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('Name',reverse,1)" class="pointer">Name<i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                            <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                <a ng-click="reverse=!reverse;order('MailTo',reverse,7)" class="pointer">Verification Link<i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='p in verificationData'>
+                            <td>{{p.Name}}</td>
+                            <td><a class="pointer" href="{{p.MailTo}}" target="_blank">{{p.MailTo}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination ng-if="verificationData.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                @*<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>*@
+
+                @*<div ng-if="CurrentPageLicenses.length == 0">No new plan added.</div>*@
+            </div>
+        </div>
+    </div>
+</div>

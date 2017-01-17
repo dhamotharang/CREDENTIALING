@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenwal.js"></script>
+
+<style>
+    .vertical-align {
+        align-items: center;
+    }
+
+    .selectedProvider {
+        background-color: rgb(150, 162, 225);
+    }
+
+    .imageStyle {
+        padding: 0px;
+        margin-bottom: 0px;
+    }
+
+    .alignTableStyle > thead > tr > th,
+    .alignTableStyle > tbody > tr > th,
+    .alignTableStyle > tfoot > tr > th,
+    .alignTableStyle > thead > tr > td,
+    .alignTableStyle > tbody > tr > td,
+    .alignTableStyle > tfoot > tr > td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .marginTop {
+        margin-top: 22px;
+    }
+
+    .marginBottom {
+        margin-bottom: 22px;
+    }
+
+    .select2-container {
+        display: block;
+    }
+</style>
+
+
+<div id="page-wrapper" ng-app="InitCredApp" ng-controller="listController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-ol"></i> Profile Updates
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <div role="tabpanel">
+            @*<div>
+                     Nav tabs
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#provider" aria-controls="provider" role="tab" data-toggle="tab"> A Provider</a></li>
+                        <li role="presentation" ><a href="#bulk" aria-controls="bulk" role="tab" data-toggle="tab">Multiple Providers</a></li>
+                    </ul>
+                </div>*@
+            
+            <div ng-class="{'false':'col-lg-12','true':'col-lg-7'}[IsHowDetails]" class=" zero-padding-left-right-div">
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="provider">
+                        <!---Provider partial starts here-->
+
+                        <div class="panel panel-default">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">
+                                List &nbsp;&nbsp;
+                                <a class="btn btn-xs btn-info" ng-click="getByType('Update')" ng-class="{'active':SelectedType=='Update'}">Updates</a>
+                                &nbsp;&nbsp;
+                                <a class="btn btn-xs btn-info" ng-click="getByType('Renewal')" ng-class="{'active':SelectedType=='Renewal'}">Renewals</a>
+                                
+                                <span class="pull-right">
+                                    @*<a ng-disabled="!OneIsSelected" ng-click="ActionForChanges('reject')" class="btn btn-xs btn-danger">Reject</a>
+                                    &nbsp;&nbsp;
+                                    <a ng-disabled="!OneIsSelected" ng-click="ActionForChanges('accept')" class="btn btn-xs btn-success">Accept</a>*@
+                                    <a ng-disabled="!OneIsSelected" ng-click="ActionForChanges('accept')" class="btn btn-xs btn-success">Accept All Selected</a>
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered table-hover table-condensed alignTableStyle">
+                                    <thead>
+                                        <tr>
+                                            <th>NPI Number</th>
+                                            <th>Full Name</th>
+                                            <th>Section</th>
+                                            <th>Sub Section</th>
+                                            <th>Status</th>
+                                            <th>Modified Date</th>                                            
+                                            <th>Select All <input type="checkbox" ng-model="IsAllChecked" ng-change="SelectAll(IsAllChecked)"></th>
+                                            <th>Action</th>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" placeholder="Filter NPI" class="form-control input-sm" ng-model="search.NPINumber" /></td>
+                                            <td><input type="text" placeholder="Filter Full Name" class="form-control input-sm" ng-model="search.FirstName" /></td>
+                                            <td><input type="text" placeholder="Filter Section" class="form-control input-sm" ng-model="search.Section" /></td>
+                                            <td><input type="text" placeholder="Filter Sub Section" class="form-control input-sm" ng-model="search.SubSection" /></td>
+                                            <td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.ApprovalStatus" /></td>
+                                            <td><input type="text" placeholder="Filter Modified Date" class="form-control input-sm" ng-model="search.LastModifiedDate" /></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="p in CurrentPage | filter:{NPINumber:search.NPINumber,FirstName:search.FirstName,Section:search.Section,SubSection: search.SubSection, ApprovalStatus:search.ApprovalStatus, LastModifiedDate:search.LastModifiedDate}">
+                                            <td>{{p.Profile.OtherIdentificationNumber.NPINumber}}</td>
+                                            <td>{{p.Profile.PersonalDetail.FirstName}}</td>
+                                            <td>{{p.Section}}</td>
+                                            <td>{{p.SubSection}}</td>
+                                            <td>{{p.ApprovalStatus}}</td>
+                                            <td>{{p.LastModifiedDate | date:'MM-dd-yyyy'}}</td>
+                                            <td><input type="checkbox" ng-model="p.IsChecked" ng-change="anyOneChecked()"></td>
+                                            <td>
+                                                <a ng-click="pushdata(p);" class="pointer"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </tr>                                        
+                                    </tbody>
+                                </table>    
+                                
+                                <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                                <pagination ng-if="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                                                           
+                                <div ng-if="CurrentPage.length == 0" class="alert alert-info">No data Available</div>
+                                
+                                <div ng-show="activeMessageDiv=='approved'" class="alert alert-success" role="alert">                                    
+                                    {{messageDesc}}
+                                </div>
+                                <div ng-show="activeMessageDiv=='rejected'" class="alert alert-success" role="alert">
+                                    {{messageDesc}}
+                                </div>
+                                <div ng-show="activeMessageDiv=='onHold'" class="alert alert-success" role="alert">
+                                    {{messageDesc}}
+                                </div>
+                        </div>
+                        </div>
+
+                        <!---Provider partial ends here-->
+                    </div>
+
+                </div>
+            </div>
+            <div ng-if="IsHowDetails" class="col-lg-5" style="border-left:1px solid black;">
+                @Html.Partial("~/Areas/Credentialing/Views/ProfileUpdates/_DetailOnUpdate.cshtml")
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- /#page-wrapper -->
+

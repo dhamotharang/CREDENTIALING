@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "CCM COntroller";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+<script src="~/Areas/Credentialing/Scripts/CCM/CCMController.js"></script>
+
+<div id="page-wrapper">
+    <div class="container-fluid" ng-app="CCMApp" ng-controller="CCMController">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> CCM Credentialing Action
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="panel panel-default content-panel">
+                <div class="panel-heading">
+                    <a style="cursor: pointer; text-decoration: none;" ng-click="getDataByMenu(CCMData[0])" ng-class="{'btn btn-xs btn-info': selectedAction==1}">Credentialing</a> &nbsp; 
+                    @*<a style="cursor: pointer; text-decoration: none;" ng-click="getDataByMenu(CCMData[1])" ng-class="{'btn btn-xs btn-info': selectedAction==2}">Re-Credentialing</a> &nbsp; 
+                    <a style="cursor: pointer; text-decoration: none;" ng-click="getDataByMenu(CCMData[2])" ng-class="{'btn btn-xs btn-info': selectedAction==3}">De-Credentialing</a>*@
+                </div>
+                <div class="panel-body">
+                   
+                    
+                    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+                        <h4>Select Plan</h4>
+                        <select class="form-control input-sm" ng-model="Plans[$index]" ng-change="getValue(Plans[$index]) ">
+                            <option value="">ALL</option>
+                            <option ng-repeat="c in Plans track by $index">{{c}} </option>
+                        </select>
+                    </div>
+                    <br/>
+                    <table ng-table="tableParams1" show-filter="true"  class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+
+                        <tbody>
+                            <tr ng-repeat="c in $data track by $index" ng-if="PlanNames==c.Plan || PlanNames==''">
+                                <td class="col-lg-1" data-title="'Picture'">
+                                    <div ng-show="c.ProfilePhoto == null" class="thumbnail imageStyle">
+                                        <img ng-src="/Content/Images/no_image.png" class="img-rounded" />
+                                    </div>
+                                    <div ng-hide="c.ProfilePhoto == null" class="thumbnail imageStyle">
+                                        <img ng-src="/Document/View?path={{c.ProfilePhoto}}" class="img-rounded">
+                                    </div>
+                                </td>
+                                <td class=" wrap-words" data-title="'Name'" header-class="text-left" sortable="'Name'" filter="{ 'Name': 'text' }">{{c.Name}}</td>
+                                <td class=" wrap-words" data-title="'Provider Type'" header-class="text-left" sortable="'ProviderTitle'" filter="{ 'ProviderTitle': 'text' }">{{c.ProviderTitle}}</td>
+                                <td class=" wrap-words" data-title="'Specialty'" header-class="text-left" sortable="'Specialty'" filter="{ 'Specialty': 'text' }">{{c.Specialty}}</td>
+                                <td class=" wrap-words" data-title="'Credentialing Date'" header-class="text-left" sortable="'CredentialingDate'" filter="{ 'CredentialingDate': 'text' }">{{c.CredentialingDate}}</td>
+                                <td class=" wrap-words" data-title="'Appointment Date'" header-class="text-left" sortable="'AppointmentDate'" filter="{ 'AppointmentDate': 'text' }">{{c.AppointmentDate}}</td>
+                                <td class=" wrap-words" data-title="'Recommended Level'" header-class="text-left" sortable="'RecommendedLevel'" filter="{ 'RecommendedLevel': 'text' }">{{c.RecommendedLevel}}</td>
+
+                                <td>
+                                    <a ng-if="selectedAction==1" class="btn btn-xs btn-info" href="/Credentialing/CCM/Application/{{c.CredentialingInfoId}}" target="_blank" data-toggle="tooltip" data-placement="top" title="View Application"><i class="fa fa-caret-right"></i></a>
+                                    <a ng-if="selectedAction==2" class="btn btn-xs btn-info" href="/Credentialing/CCM/Application/{{c.CredentialingInfoId}}" target="_blank"><i class="fa fa-caret-right"></i></a>
+                                    <a ng-if="selectedAction==3" class="btn btn-xs btn-info" href="/Credentialing/CCM/Application/{{c.CredentialingInfoId}}" target="_blank"><i class="fa fa-caret-right"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,163 @@
+﻿@using PratianUI
+@model PortalTemplate.Areas.CredAxis.Models.DemographisViewModels.CitizenshipInformationViewModel
+
+@{
+    bool IsEdit = true;
+}
+
+<fieldset class="fsStyle" id="AddEditCitizenshipInfo">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            @if (Model == null)
+            {
+                <span>ADD Citizenship Information</span>
+                IsEdit = false;
+            }
+            @if (IsEdit)
+            {
+                <span>EDIT Citizenship Information</span>
+            }
+        </span>
+    </legend>
+    <div class="x_content zero-padding-left">
+        @*@Html.ValidationSummary(true)*@
+        @Html.HiddenFor(model => model.CitizenshipInformationId)
+        <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+            <span class="theme_label"><label>@Html.LabelFor(model => model.CitizenOfUS, new { @class = "control-label" })</label></span>
+            <span class="theme_label_data">
+                @Html.PratianUiRadioButtonFor(model => model.CitizenOfUS, new { color = "green", @onchange = "ShowHideAddView('EmptyDiv','ViewVisaInformation')" }) YES
+                @Html.PratianUiRadioButtonFor(model => model.CitizenOfUS, new { color = "red", @checked = "checked", @onchange = "ShowHideAddView('ViewVisaInformation','EmptyDiv')" }) NO
+                @*@Html.RadioButtonFor(model => model.CitizenOfUS, true, new { @onchange = "ShowHideAddView('EmptyDiv','ViewVisaInformation')" }) Yes
+                    @Html.RadioButtonFor(model => model.CitizenOfUS, false, new { @onchange = "ShowHideAddView('ViewVisaInformation','EmptyDiv')" }) No*@
+            </span>
+        </div>
+        <div id="EmptyDiv"></div>
+        <div id="ViewVisaInformation">
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label"><label>@Html.LabelFor(model => model.AthorizedToWorkInUS, new { @class = "control-label" })</label></span>
+                <span class="theme_label_data">
+                    @Html.PratianUiRadioButtonFor(model => model.AthorizedToWorkInUS, new { color = "green", @checked = "checked" }) YES
+                    @Html.PratianUiRadioButtonFor(model => model.AthorizedToWorkInUS, new { color = "red" }) NO
+                    @*@Html.RadioButtonFor(model => model.AthorizedToWorkInUS, true, new { }) Yes
+                        @Html.RadioButtonFor(model => model.AthorizedToWorkInUS, false, new { }) No*@
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label> @Html.LabelFor(model => model.VisaNumber, new { @class = "control-label" }) </label></span>
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="theme_label_data">
+                        @Html.TextBoxFor(model => model.VisaNumber, new { @class = "form-control input-xs", @placeholder = "Visa Number" })
+                        @*@Html.ValidationMessageFor(model => model.VisaNumber)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label">
+                        <label>
+                            @Html.LabelFor(model => model.VisaType, new { @class = "control-label" })
+                        </label>
+                    </span>
+
+
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="">
+                        @Html.TextBoxFor(model => model.VisaType, new { @class = "form-control input-xs", @placeholder = "Visa Type" })
+                        @*@Html.ValidationMessageFor(model => model.VisaType)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label>@Html.LabelFor(model => model.VisaStatus, new { @class = "control-label" }) </label></span>
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="">
+                        @Html.TextBoxFor(model => model.VisaStatus, new { @class = "form-control input-xs", @placeholder = "Visa Status" })
+                        @*@Html.ValidationMessageFor(model => model.VisaStatus)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label>@Html.LabelFor(model => model.VisaSponsor, new { @class = "control-label" }) </label></span>
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="">
+                        @Html.TextBoxFor(model => model.VisaSponsor, new { @class = "form-control input-xs", @placeholder = "Visa Sponsor" })
+                        @*@Html.ValidationMessageFor(model => model.VisaSponsor)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label>@Html.LabelFor(model => model.VisaExpiration, new { @class = "control-label" }) </label></span>
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="">
+                        @Html.PratianUiDatePickerFor(model => model.VisaExpiration, new { @class = "form-control input-xs", @placeholder = "Visa Expiration" })
+                        @*@Html.ValidationMessageFor(model => model.VisaExpiration)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label>@Html.LabelFor(model => model.GreenCardNumber, new { @class = "control-label" }) </label></span>
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="">
+                        @Html.TextBoxFor(model => model.GreenCardNumber, new { @class = "form-control input-xs", @placeholder = "Green Card Number" })
+                        @*@Html.ValidationMessageFor(model => model.GreenCardNumber)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label>@Html.LabelFor(model => model.NationalId, new { @class = "control-label" }) </label></span>
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="">
+                        @Html.TextBoxFor(model => model.NationalId, new { @class = "form-control input-xs", @placeholder = "National Id" })
+                        @*@Html.ValidationMessageFor(model => model.NationalId)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label>@Html.LabelFor(model => model.CountryOfIssue, new { @class = "control-label" }) </label></span>
+                </span>
+                <span class="col-lg-8 nopadding">
+                    <span class="">
+                        @Html.TextBoxFor(model => model.CountryOfIssue, new { @class = "form-control input-xs", @placeholder = "Country" })
+                        @*@Html.ValidationMessageFor(model => model.CountryOfIssue)*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 nopadding">
+                    <span class="theme_label"><label>DOCUMENT</label></span>
+                </span>
+
+
+                <span class="col-lg-7 input-group  nopadding">
+                    <input id="UploadCitizenshipDoc" type="text" class="form-control input-xs" readonly placeholder="Document">
+                    <span class="input-group-addon File_uploadStyle" onclick="$('#file-inputCitizenshipDoc').click();"><i class="fa fa-upload"></i></span>
+                    <input id="file-inputCitizenshipDoc" style="display:none" onchange="document.getElementById('UploadCitizenshipDoc').value = this.value" type="file">
+
+                </span>
+                @*@Html.ValidationMessageFor(model => model.CountryOfIssue)*@
+
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="row col-lg-12 zero-padding-left-right">
+                <button class="btn btn-success btn-xs list-item yahanClickKar buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Demographics/GetCitizenShipInfoEditPartial?ActionType=View" data-tab-container="CitizenInformationDiv">Save</button>
+                <button class="btn btn-danger btn-xs list-item yahanClickKar buttonmargin pull-right margin-right-5px" data-tab-path="/CredAxis/Demographics/GetCitizenShipInfoEditPartial?ActionType=View" data-tab-container="CitizenInformationDiv">Cancel</button>
+            </div>
+        </div>
+    </div>
+</fieldset>

@@ -1,0 +1,131 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.FacilityEmployeeViewModel
+
+<div class="form-style" ng-if="visibilitySecondControl != 'BillingContactEdit'">
+    <fieldset class="wrap-words">
+        <legend>
+            Billing Contact
+        </legend>
+        <div ng-if="!BillingContactEdit && PracticeLocationDetail.BillingContactPerson != null" class="legend2 pull-right">
+            <button ng-click="BillingContactEdit=true; operateSecondEditControl('BillingContactEdit', PracticeLocationDetail.BillingContactPerson);TemporaryDataForBillingContact(PracticeLocationDetail.BillingContactPerson)" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Edit" tooltip><i class="fa fa-edit"></i></button>
+        </div>
+        <table ng-show="PracticeLocationDetail.BillingContactPerson == null && visibilityControl != 'BillingContactEdit' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+            <thead>
+                <tr>
+                    <td>
+                        No Data Available for Billing Contact!
+
+                        <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateSecondViewAndAddControl('BillingContactEdit');resetData();" data-toggle="tooltip" data-placement="top" title="Add New" id="noDataAddNewPracticeInterest" tooltip><i class="fa fa-plus"></i></button> to add new Billing Contact information.</span>
+
+                    </td>
+                </tr>
+            </thead>
+        </table>
+        <div class="form-group" ng-if="PracticeLocationDetail.BillingContactPerson">
+            <div class="col-md-12">
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.FirstName || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.MiddleName, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.MiddleName || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.LastName || 'Not Available'}}</i>
+                    </div>
+                </div>
+                @*<div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.POBoxAddress, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.POBoxAddress || 'Not Available'}}</i>
+                        </div>
+                    </div>*@
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.Telephone, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @*<i class="data-label">{{PracticeLocationDetail.BillingContactPerson.CountryCodeTelephone || 'Not Available'}} - {{PracticeLocationDetail.BillingContactPerson.Telephone || 'Not Available'}}</i>*@
+                        <i ng-if="PracticeLocationDetail.BillingContactPerson.Telephone " class="data-label">{{PracticeLocationDetail.BillingContactPerson.CountryCodeTelephone }}-{{PracticeLocationDetail.BillingContactPerson.Telephone }}</i>
+                        <i ng-if="!PracticeLocationDetail.BillingContactPerson.Telephone " class="data-label">Not Available</i>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.Fax, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @*<i class="data-label">{{PracticeLocationDetail.BillingContactPerson.CountryCodeFax || 'Not Available'}} - {{PracticeLocationDetail.BillingContactPerson.Fax || 'Not Available'}}</i>*@
+                        <i ng-if="PracticeLocationDetail.BillingContactPerson.Fax" class="data-label">{{PracticeLocationDetail.BillingContactPerson.CountryCodeFax}}-{{PracticeLocationDetail.BillingContactPerson.Fax}}</i>
+                        <i ng-if="!PracticeLocationDetail.BillingContactPerson.Fax" class="data-label">Not Available</i>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.EmailAddress || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.Street || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.Building, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.Building || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.City || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.State || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.ZipCode || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.Country || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.County, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{PracticeLocationDetail.BillingContactPerson.County || 'Not Available'}}</i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='billingContactSuccessMsg'" class="alert alert-success" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+    </fieldset>
+</div>

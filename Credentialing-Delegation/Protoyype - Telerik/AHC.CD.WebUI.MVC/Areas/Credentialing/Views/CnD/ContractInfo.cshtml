@@ -1,0 +1,361 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Loading.ContractGridViewModel
+
+@{
+    ViewBag.Title = "ContractInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<script>
+    var contractData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ContractsData))
+</script>
+@section AddToHead{
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <link href="~/Content/animate.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+
+    <link href="~/Content/ngToast.min.css" rel="stylesheet" />
+    <link href="~/Content/ngToast-animations.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script src="~/Scripts/Lib/Angular/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/textAngular-sanitize.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ngToast.min.js"></script>
+
+    <script src="~/Areas/Credentialing/Scripts/CnD/Contractinfo.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CnD/InactiveContractInfo.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CnD/PageSelectDirective.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    @*<link href="~/Content/SharedCss/app.css" rel="stylesheet" />*@><link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/jsPdf/jspdf.min.js"></script>
+    <script src="~/Scripts/Lib/jsPdf/jspdf.plugin.autotable.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/base64.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jquery.base64.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/tableExport.js"></script>
+    <script src="~/Scripts/Lib/pdfGeneration/html2canvas.js"></script>
+}
+
+<style>
+    .select-page {
+        width: 50px;
+        text-align: center;
+    }
+
+    .loadingHistory {
+        padding-left: 7px;
+    }
+
+    .pagination li a input {
+        padding: 0;
+        margin: -5px 0;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .ProviderTypeSelectAutoList.popover.bottom {
+        margin-top: 32px;
+    }
+
+    .ProviderTypeSelectAutoList1.popover.bottom {
+        margin-top: 32px;
+    }
+
+    .my-animation.ng-enter {
+        -webkit-animation: flipInY 1s;
+        -moz-animation: flipInY 1s;
+        animation: flipInY 1s;
+    }
+
+    .my-animation.ng-leave {
+        -webkit-animation: flipOutY 1s;
+        -moz-animation: flipOutY 1s;
+        animation: flipOutY 1s;
+    }
+
+    .contractgrid {
+        cursor: pointer;
+    }
+</style>
+<div id="page-wrapper">
+
+    <div class="container-fluid">
+        <div class="container-fluid" ng-app="Contractinfo" ng-controller="ContractinfoController as mc">
+            <toast></toast>
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-list-alt"></i> Contract Information
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.row -->
+            <!-- Page Heading -->
+            <div class="row" ng-cloak>
+                <div class="panel-default form-style">
+                    <fieldset>
+                        <legend>
+                            Contract Information
+                        </legend>
+                        <div class="btn-group pull-right legend2 ng-scope">
+                            @*<button ng-if="activeStatus && notEdit" class="dropdown-toggle btn btn-xs btn-primary" popover="" data-toggle="dropdown" aria-hidden="true"><span data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" ng-click="printData('Contract Information')" data-content=" print" data-original-title="" title="" class="fa fa-print"></span></button>
+                                <button ng-if="inactiveStatus && notEdit" class="dropdown-toggle btn btn-xs btn-primary" popover="" data-toggle="dropdown" aria-hidden="true"><span data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" ng-click="printInactiveInfo('Inactive Contract Information')" data-content=" print" data-original-title="" title="" class="fa fa-print"></span></button>*@
+
+                            <button class="btn btn-xs btn-primary" ng-if="activeStatus && notEdit" tooltip data-toggle="tooltip" data-placement="top" title="Print" ng-click="printData('Contract Information')"><i class="fa fa-print"></i></button>
+                            <button class="btn btn-xs btn-primary" ng-if="inactiveStatus && notEdit" tooltip data-toggle="tooltip" data-placement="top" title="Print" ng-click="printInactiveInfo('Inactive Contract Information')"><i class="fa fa-print"></i></button>
+                            <span></span>
+                            @*<ul class="dropdown-menu" aria-disabled="true">
+                                    <li><a href="" ng-click="printData('All','Contract_ContractInformation','ContractGridList')">All</a></li>
+                                    <li><a href="" ng-click="printData('Current')">Current Page</a></li>
+
+                                </ul>*@
+                            <button class="btn btn-xs btn-primary" ng-if="activeStatus && notEdit" tooltip data-toggle="tooltip" data-placement="down" title="Export To Excel" ng-click="exportToExcel()"><i class="fa fa-file-excel-o"></i></button>
+                            <button class="btn btn-xs btn-primary" ng-if="inactiveStatus && notEdit" tooltip data-toggle="tooltip" data-placement="down" title="Export To Excel" ng-click="exportToExcel1()"><i class="fa fa-file-excel-o"></i></button>
+                            @*<button type="button" class="btn btn-xs btn-primary" ng-if="activeStatus && notEdit" data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" data-content="Export to excel" data-original-title="" title="" ng-click="exportToExcel()" style="margin-left:5px;border-radius:2px;"><i class="fa fa-file-excel-o"></i></button>
+                                <button type="button" class="btn btn-xs btn-primary" ng-if="inactiveStatus && notEdit" data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" data-content="Export to excel" data-original-title="" title="" ng-click="exportToExcel()" style="margin-left:5px;border-radius:2px;"><i class="fa fa-file-excel-o"></i></button>*@
+                            <div ng-show="ExcelLoad" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+                        </div>
+                        <div ng-show="Loading" class="progress col-lg-12">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                Loading...Please wait...
+                            </div>
+                        </div>
+                        <div ng-show="!Loading">
+
+                            <div class="panel-body">
+                                <div role="tabpanel">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="tab-label active" id="tabactive" aria-controls="activeProviders" ng-click="activeProviders()"><a href="#active" role="tab" data-toggle="tab"> Active Contracts</a></li>
+                                        <li role="presentation" class="tab-label" id="tabInactive" aria-controls="inactiveProviders" ng-click="inactiveProviders()"><a href="#inactive" role="tab" data-toggle="tab"> Inactive Contracts</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-default form-style" ng-show="activeStatus">
+                                <fieldset>
+                                    <div class=" zero-padding-left-right-div" ng-hide="isView || isEdit || AjaxLoading">
+                                        <div>
+                                            <div class="pull-right col-lg-4 form-group">
+                                                <input class="form-control input-sm" name="ProviderName" autocomplete="off" placeholder="Search for provider" id="providersName" ng-model="ProviderName" ng-focus="searchCumDropDown('ProviderList')" />
+                                                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ProviderList">
+                                                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                                        <tbody>
+                                                            <tr ng-repeat="provider in filteredProvidersResults = (ProviderData | filter:ProviderName)" ng-click="SelectProvider(provider)" class="pointer">
+                                                                <td>{{provider.Name}}</td>
+                                                            </tr>
+                                                            <tr ng-if="Providers.length == 0">
+                                                                <td>No data..... </td>
+                                                            </tr>
+                                                            <tr ng-if="filteredProvidersResults.length == 0">
+                                                                <td>No data..... </td>
+                                                            </tr>
+                                                            <tr ng-if="Providers.length > 0 && filteredProvidersResults.length == 0">
+                                                                <td>Provider not found..... </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12 form-group">
+                                                <table class="table table-bordered table-condensed customtbodyStyle table-striped" st-pipe="mc.callServer" st-table="mc.displayed" st-safe-src="randomsItems" id="Contract_ContractInformation">
+                                                    <thead>
+                                                        <tr>
+                                                            @*<th class="col-lg-1">Name</th>*@
+                                                            <th st-ratio="9" st-sort="NPINumber" class="contractgrid">NPI Number</th>
+                                                            <th st-ratio="14" st-sort-default="reverse" st-sort="PlanName" class="contractgrid">Plan</th>
+                                                            <th st-ratio="6" st-sort="LOBCode" class="contractgrid">LOB</th>
+                                                            <th st-ratio="11" st-sort="ParticipatingStatus" class="contractgrid">Status</th>
+                                                            <th st-ratio="8" st-sort="GroupID" class="contractgrid">Group ID</th>
+                                                            <th st-ratio="16" st-sort="ProviderID" class="contractgrid">Individual ID</th>
+                                                            <th st-ratio="12" st-sort="InitiatedDate" class="contractgrid">Effective Date</th>
+                                                            <th st-ratio="12" st-sort="TerminationDate" class="contractgrid">Term Date</th>
+                                                            <th st-ratio="12" class="hidecontent" st-skip-natural="true">Action</th>
+                                                        </tr>
+                                                        <tr>
+                                                            @*<td class="hideData"><input st-search="id" type="text" placeholder="Filter Name" class="form-control input-sm"/></td>*@
+                                                            <td st-ratio="9" class="hideData"><input st-search="NPINumber" type="text" placeholder="Filter NPI Number" id="npiNumber" class="form-control input-sm" /></td>
+                                                            <td st-ratio="14" class="hideData"><input st-search="PlanName" type="text" placeholder="Filter Plan" id="planName" class="form-control input-sm" /></td>
+                                                            <td st-ratio="6" class="hideData"><input st-search="LOBCode" type="text" placeholder="Filter LOB" id="lobCode" class="form-control input-sm" /></td>
+                                                            <td st-ratio="11" class="hideData"><input st-search="ParticipatingStatus" type="text" placeholder="Filter Status" id="participatingStatus" class="form-control input-sm" /></td>
+                                                            <td st-ratio="8" class="hideData"><input st-search="GroupID" type="text" placeholder="Filter Group ID" id="groupID" class="form-control input-sm" /></td>
+                                                            <td st-ratio="16" class="hideData"><input st-search="ProviderID" type="text" placeholder="Filter Individual ID" id="providerID" class="form-control input-sm" /></td>
+                                                            <td st-ratio="12" class="hideData"><input st-search="InitiatedDate" type="text" placeholder="Filter Effective Date" id="initiateDate" class="form-control input-sm" /></td>
+                                                            <td st-ratio="12" class="hideData"><input st-search="TerminationDate" type="text" placeholder="Filter Term Date" id="termDate" class="form-control input-sm" /></td>
+                                                            <td st-ratio="12" class="hidecontent" class="hideData"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody ng-show="!mc.isLoading">
+                                                        <tr ng-repeat="c in mc.displayed" ng-if="activeStatus">
+                                                            @*<td class="col-lg-1">{{c.ProviderFirstName}}</td>*@
+                                                            <td st-ratio="9">{{c.NPINumber}}</td>
+                                                            <td st-ratio="14">{{c.PlanName}}</td>
+                                                            <td st-ratio="6"><span class="label label-primary">{{c.LOBCode || 'Not Available'}}</span></td>
+                                                            <td st-ratio="11">{{c.ParticipatingStatus || 'Not Available'}}</td>
+                                                            <td st-ratio="8">{{c.GroupID || 'Not Available'}}</td>
+                                                            <td st-ratio="16">{{c.ProviderID || 'Not Available'}}</td>
+                                                            <td st-ratio="12">{{c.InitiatedDate  || 'Not Available'}}</td>
+                                                            <td st-ratio="12">{{c.TerminationDate || 'Not Available'}}</td>
+                                                            <td st-ratio="12" class="hidecontent">
+                                                                <button class="btn btn-xs btn-default" ng-click="viewContractGrid(c.ContractGridID)" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                                                <button class="btn btn-xs btn-primary" ng-click="EditContractGrid(c.ContractGridID)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                                                <button class="btn btn-xs btn-danger" ng-click="initWarning(c.ContractGridID)" tooltip data-toggle="tooltip" data-placement="left" title="Remove"><i class="fa fa-remove"></i></button>
+
+                                                            </td>
+                                                        </tr>
+
+                                                        @*<tr ng-repeat="c in mc.displayed" ng-if="inactiveStatus">*@
+                                                        @*<td class="col-lg-1">{{c.ProviderFirstName}}</td>*@
+                                                        @*<td st-ratio="9">{{}}</td>
+                                                            <td st-ratio="14">{{c.PlanName}}</td>
+                                                            <td st-ratio="6"><span class="label label-primary">{{c.LOBCode || 'Not Available'}}</span></td>
+                                                            <td st-ratio="11">{{c.ParticipatingStatus || 'Not Available'}}</td>
+                                                            <td st-ratio="8">{{c.GroupID || 'Not Available'}}</td>
+                                                            <td st-ratio="16">{{c.ProviderID || 'Not Available'}}</td>
+                                                            <td st-ratio="12">{{c.InitiatedDate  || 'Not Available'}}</td>
+                                                            <td st-ratio="12">{{c.TerminationDate || 'Not Available'}}</td>
+                                                            <td st-ratio="12" class="hidecontent">
+                                                                <button class="btn btn-xs btn-default" ng-click="viewContractGrid(c.ContractGridID)" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>*@
+                                                        @*<button class="btn btn-xs btn-primary" ng-click="EditContractGrid(c.ContractGridID)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>*@
+                                                        @*<button class="btn btn-xs btn-primary" ng-click="reactivateContractGrid(c.ContractGridID)" tooltip data-toggle="tooltip" data-placement="top" title="Reactivate"><i class="fa fa-repeat"></i></button>
+                                                                </td>
+                                                            </tr>*@
+
+                                                    </tbody>
+                                                    <tbody ng-show="mc.isLoading">
+                                                        <tr>
+                                                            <td colspan="9" class="text-center">
+                                                                <div class="loading-indicator"></div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+
+
+                                                <table style="display:none" ng-if="AllData" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Contract_ContractInformation1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>NPI Number</th>
+                                                            <th>Plan</th>
+                                                            <th>LOB</th>
+                                                            <th>Status</th>
+                                                            <th>Group ID</th>
+                                                            <th>Individual ID</th>
+                                                            <th>Effective Date</th>
+                                                            <th>Term Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="c in filtered">
+                                                            <td>{{c.NPINumber}}</td>
+                                                            <td>{{c.PlanName}}</td>
+                                                            <td>{{c.LOBCode || 'Not Available'}}</td>
+                                                            <td>{{c.ParticipatingStatus || 'Not Available'}}</td>
+                                                            <td>{{c.GroupID || 'Not Available'}}</td>
+                                                            <td>{{c.ProviderID || 'Not Available'}}</td>
+                                                            <td>{{c.InitiatedDate || 'Not Available'}}</td>
+                                                            <td>{{c.TerminationDate || 'Not Available'}}</td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+
+
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12">
+                                                <div ng-show="!mc.displayed.length==0 && !mc.isLoading">
+                                                    <span class="label label-primary">C- COMMERCIAL</span>&nbsp;
+                                                    <span class="label label-primary">CE- COMMERCIAL EXCHANGE</span>&nbsp;
+                                                    <span class="label label-primary">FFS- FEE FOR SERVICE</span>&nbsp;
+                                                    <span class="label label-primary">MC- MEDICARE</span>&nbsp;
+                                                    <span class="label label-primary">MD- MEDICAID</span>&nbsp;
+                                                    <span class="label label-primary">MR- MEDICARE RISK</span>&nbsp;
+                                                    <span class="label label-primary">WC- WORKERS COMPENSATION</span>&nbsp;
+                                                    <span class="label label-primary">IME- IME</span>&nbsp;
+                                                    <span class="label label-primary">US DOL- US DOL</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class=" zero-padding-left-right-div" ng-show="isView && !AjaxLoading">
+                                        @Html.Partial("~/Areas/Credentialing/Views/CnD/_ViewContractGrid.cshtml")
+                                    </div>
+                                    <div class=" zero-padding-left-right-div" ng-show="isEdit && !AjaxLoading">
+                                        @Html.Partial("~/Areas/Credentialing/Views/CnD/_EditContractGrid.cshtml")
+                                    </div>
+                                    <div ng-show="AjaxLoading" class="row">
+                                        <div style="margin-left:45%;margin-top:15%;height:630px">
+                                            <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+                                            <span>Loading...Please Wait</span>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <div class="modal fade" id="WarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form id="removeStateLicense">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Do you really want to remove this record from list ?
+                                                    @*<input type="hidden" name="StateLicenseInformationID" value="{{tempStateLicense.StateLicenseInformationID}}" />
+                                                        <input type="hidden" name="StatusType" value="2" />*@
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-primary" ng-click="RemoveReport()">Remove</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="Inactive" ng-if="inactiveStatus">
+
+                                @Html.Partial("~/Areas/Credentialing/Views/CnD/_InactiveContractInfo.cshtml")
+
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="hiddenPrintDiv" style="display:none;">
+
+
+</div>
+

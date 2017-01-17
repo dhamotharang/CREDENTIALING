@@ -1,0 +1,149 @@
+﻿@using PratianUI
+@model PortalTemplate.Areas.CredAxis.Models.DemographisViewModels.PersonalDetailsViewModel
+
+@{
+    bool IsEdit = true;
+}
+
+@***************Personal Details Edit*********************************@
+
+<fieldset class="fsStyle" id="AddEditPersonalDetail">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            @if (Model == null)
+            {
+                <span>ADD PERSONAL DETAILs</span>
+                IsEdit = false;
+            }
+            @if (IsEdit)
+            {
+                <span><span class="transparent-font-color">____</span>EDIT PERSONAL DETAILs<span class="transparent-font-color">____</span></span>
+            }
+        </span>
+    </legend>
+    @using (Ajax.BeginForm("AddPersonalDetails", "Demographics", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "PersonalDetailsDiv" }))
+    {
+        <div class="x_content zero-padding-left">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.Salutations)</label>
+                </span>
+                <span class="col-lg-1 "></span>
+                <span class="col-lg-7 nopadding">
+                    @Html.DropDownList("Salutations",
+                                      new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.CredAxis.Enums.SalutationType))),
+                    "Select",
+                             new { @class = "form-control input-xs" })
+                </span>
+                @*<label class="">Salutation </label>
+                    <span class="theme_label_data">Mr.</span>*@
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.FirstName)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    <span class="theme_label_data">@Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-xs", placeholder = "FIRST NAME" })  </span>
+                    @Html.ValidationMessageFor(e => e.FirstName)
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.MiddleName)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    <span class="theme_label_data">@Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control input-xs", placeholder = "MIDDLE NAME" }) </span>
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.LastName)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    <span class="theme_label_data">@Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-xs", placeholder = "LAST NAME" }) </span>
+                    @Html.ValidationMessageFor(e => e.LastName)
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.Gender)</label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    @Html.DropDownList("Gender",
+                                      new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.CredAxis.Enums.GenderType))),
+                    "Select",
+                             new { @class = "form-control input-xs" })
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.Suffix)</label>
+                </span><span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    <span class="theme_label_data">@Html.TextBoxFor(m => m.Suffix, new { @class = "form-control input-xs", placeholder = "SUFFIX" })</span>
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.MaritalStatus)</label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    @Html.DropDownList("MaritalStatus",
+                                      new SelectList(Enum.GetValues(typeof(PortalTemplate.Areas.CredAxis.Enums.MaritalStatusType))),
+                    "Select",
+                             new { @class = "form-control input-xs" })
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.SpouseName)</label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    @Html.TextBoxFor(m => m.SpouseName, new { @class = "form-control input-xs", placeholder = "Spouse Name" })
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.ProviderLevel)</label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    @Html.TextBoxFor(m => m.ProviderLevel, new { @class = "form-control input-xs", placeholder = "PROVIDER LEVEL" })
+                    @Html.ValidationMessageFor(e => e.ProviderLevel)
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="col-lg-4 theme_label nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.ProviderType)</label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-7 nopadding">
+                    @Html.TextBoxFor(m => m.ProviderType, new { @class = "form-control input-xs", placeholder = "PROVIDER TYPE" })
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label"><label>@Html.DisplayNameFor(e => e.IsLegalName) </label></span>
+                <span class="theme_label_data">
+                    @Html.PratianUiRadioButtonFor(t => t.IsLegalName, new { color = "green", @checked = "checked" }) YES
+                    @Html.PratianUiRadioButtonFor(t => t.IsLegalName, new { color = "red" }) NO
+                    @*@Html.RadioButtonFor(e => e.IsLegalName, true) Yes
+                        @Html.RadioButtonFor(e => e.IsLegalName, false) No*@
+                </span>
+            </div>
+            <div class="col-lg-8 col-md-4 col-sm-6 col-xs-12 boxstyle">
+            </div>
+        </div>
+        <div class="row col-lg-12 zero-padding-left-right">
+            <button type="button" class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px yahanClickKar" type="submit" name="submit">Save</button>
+            <button type="button" class="btn btn-danger btn-xs list-item buttonmargin pull-right yahanClickKar margin-right-5px" data-tab-path="/CredAxis/Demographics/CanceltPersonalDetailsEdit" data-tab-container="PersonalDetailsDiv">Cancel</button>
+        </div>
+        @*</div>
+            <div class="col-lg-1 col-md-4 col-sm-6 col-xs-12 buttonmargin">*@
+        @* <button class="btn btn-success btn-xs ripple closeBtnCSS" onclick="ShowHideAddView('ViewPersonalDetail', 'AddEditPersonalDetail')">Save</button>*@
+
+        @*</div>*@
+    }
+</fieldset>

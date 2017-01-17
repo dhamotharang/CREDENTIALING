@@ -1,0 +1,145 @@
+﻿<script src="~/Scripts/Custom/DashBoard/CCODashboardController.js"></script>
+
+<div ng-controller="CCODashboardController" ng-cloak class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-4 zero-padding-left-right-div">
+        <div class="col-lg-12">
+            <span class="h4">Total Count : {{GrandTotalLicenses}}</span>
+            <span class="pull-right">
+                <select ng-model="filterDays" ng-change="getDataAccordingDays(filterDays)" class="form-control input-sm">
+                    <option value="days">days</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                    <option value="35">35</option>
+                    <option value="40">40</option>
+                    <option value="45">45</option>
+                    <option value="50">50</option>
+                    <option value="55">55</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="180">180</option>
+                </select>
+            </span>
+            <hr />
+        </div>
+        <div class="col-lg-12">
+            <div class="list-group">
+                <a ng-repeat="ld in LicenseData track by $index" ng-click="getLicensTypeData(ld)" class="list-group-item pointer" ng-class="{active:LicenseType == ld.LicenseType, 'license-validation-expired':ld.LicenseStatus.ExpiredLicense > 0, 'license-validation-warning':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense > 0), 'license-validation-success':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense == 0 && ld.LicenseStatus.ValidLicense > 0)}">
+                    {{ld.LicenseType}}<span class="badge" ng-class="{'license-validation-expired':ld.LicenseStatus.ExpiredLicense > 0, 'license-validation-warning':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense > 0), 'license-validation-success':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense == 0 && ld.LicenseStatus.ValidLicense > 0)}">{{ld.TotalLicenses}}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 zero-padding-left-right-div form-style">
+        <div class="col-lg-12">
+            <span class="h4">State Licenses</span>
+            <span class="pull-right" style="margin-left: 10px;">
+                <select class="form-control input-sm">
+                    <option>level</option>
+                    <option value="1">Mid-Level</option>
+                    <option value="2">Supervisor</option>
+                </select>
+            </span>
+            @*<span class="pull-right" style="margin-left: 10px;">
+                <select class="form-control input-sm">
+                    <option>days</option>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>15</option>
+                    <option>20</option>
+                    <option>25</option>
+                    <option>30</option>
+                    <option>35</option>
+                    <option>40</option>
+                    <option>45</option>
+                    <option>50</option>
+                    <option>55</option>
+                    <option>60</option>
+                    <option>70</option>
+                    <option>80</option>
+                    <option>90</option>
+                    <option>180</option>
+                </select>
+            </span>*@
+            <span class="pull-right">
+                <select ng-model="providerType" ng-change="getDataAccordingProviderType(providerType)" class="form-control input-sm">
+                    <option value="" ng-selected="true">Provider Type</option>
+                    <option ng-repeat="pt in ProviderTypes track by $index" value="{{pt.Title}}">{{pt.Title}}</option>
+                </select>
+            </span>
+            <hr />
+        </div>
+        <fieldset>
+            <legend>
+                Details
+            </legend>
+            <div ng-if="CurrentPageProviders.length > 0" ccolicensedetailstable></div>
+
+            <pagination ng-if="CurrentPageProviders.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+            @*<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>*@
+
+            <div ng-if="CurrentPageProviders.length == 0">Sorry, There no Provider that have upcomming licenses have 180 days left and expired licenses............</div>
+        </fieldset>
+    </div>
+
+    @*<div class="col-lg-12 form-style">
+        <div class="panel panel-default panel-body">
+            <div class="col-lg-12">
+                <span>Information without expiry date</span>
+                <span class="pull-right" style="margin-left: 10px;">
+                    <select class="form-control input-sm">
+                        <option>--select provider Level--</option>
+                        <option value="1">Mid-Level</option>
+                        <option value="2">Provider</option>
+                    </select>
+                </span>
+                <span class="pull-right">
+                    <select ng-model="providerTypeId1" class="form-control input-sm">
+                        <option ng-selected="true">Provider Type</option>
+                        <option ng-repeat="pt in ProviderTypes track by $index" value="{{pt.ProviderTypeID}}">{{pt.Title}}</option>
+                    </select>
+                </span>
+                <hr />
+            </div>
+            <div class="col-lg-12">
+                <fieldset>
+                    <legend>
+                        Details
+                    </legend>
+                    <table class="table table-striped small">
+                        <thead>
+                            <tr>
+                                <th>NPI Number</th>
+                                <th>Provider Name</th>
+                                <th>License Type</th>
+                                <th>Number of License</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>7676545322</td>
+                                <td>John Abhinave</td>
+                                <td>10-03-2015</td>
+                                <td>1</td>
+                                <td><button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="right" title="Renew"><i class="fa fa-repeat"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2345675655</td>
+                                <td>Smith Shalabh</td>
+                                <td>12-03-2015</td>
+                                <td>3</td>
+                                <td><button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="right" title="Renew"><i class="fa fa-repeat"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+    </div>*@
+</div>

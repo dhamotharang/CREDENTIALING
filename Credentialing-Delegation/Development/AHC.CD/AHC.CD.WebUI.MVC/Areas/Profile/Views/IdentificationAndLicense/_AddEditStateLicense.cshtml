@@ -1,0 +1,163 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.StateLicenseViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+<div>
+    <form enctype="multipart/form-data" class="stateLicenseForm">
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <span ng-if="tempObject.StateLicenseInformationID">
+                    @Html.HiddenFor(model => model.StateLicenseInformationID, new { ng_value = "tempObject.StateLicenseInformationID" })
+                </span>
+                @Html.HiddenFor(model => model.UpdateHistory, new { id = "UpdateHistoryHidden" })
+                @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.LicenseNumber, new { @class = "control-label small", id = "UHLicenseNumber" })
+                    @Html.TextBoxFor(model => model.LicenseNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.LicenseNumber" })
+                    @Html.ValidationMessageFor(model => model.LicenseNumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.ProviderTypeID, new { @class = "control-label small", id = "UHProviderTypeID" })
+                    @*<select class="form-control input-sm" id="ProviderTypeID" data-ng-model="tempObject.ProviderTypeID" name="ProviderTypeID">
+                            <option ng-hide="tempObject.ProviderTypeID" selected disabled hidden value="">--select--</option>
+                            <option ng-repeat="type in ProviderTypes track by $index" value="{{type.ProviderTypeID}}">{{type.Title}}</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.ProviderTypeID, "", new { @class = "text-danger" })*@
+                    <div>
+
+                        <input class="form-control input-sm" id="providertype" data-ng-model="tempObject.ProviderType.Title" data-searchdropdown="searchdropdown" placeholder="select type" />
+                        <input type="hidden" id="providertypeId" ng-model="tempObject.ProviderTypeID" name="ProviderTypeID" value="{{tempObject.ProviderTypeID}}" />
+                        <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip">
+                            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr ng-repeat="type in fProviderTypes = (ProviderTypes | filter:tempObject.ProviderType.Title)" ng-click="hideDiv(); tempObject.ProviderType.Title = type.Title; tempObject.ProviderTypeID = type.ProviderTypeID" class="pointer">
+                                        <td>{{type.Title}}</td>
+                                    </tr>
+                                    <tr ng-if="ProviderTypes.length == 0">
+                                        <td>No data..... </td>
+                                    </tr>
+                                    <tr ng-if="ProviderTypes.length > 0 && fProviderTypes.length == 0">
+                                        <td>Type not found..... </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ProviderTypeID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.StateLicenseStatusID, new { @class = "control-label small", id = "UHStateLicenseStatusID" })
+                    <select class="form-control input-sm" id="StateLicenseStatusID" data-ng-model="tempObject.StateLicenseStatusID" name="StateLicenseStatusID">
+                        <option ng-hide="tempObject.StateLicenseStatusID" selected disabled hidden value="">--select--</option>
+                        <option ng-repeat="status in StateLicenseStatuses track by $index" value="{{status.StateLicenseStatusID}}">{{status.Title}}</option>
+                    </select>
+                    @Html.ValidationMessageFor(model => model.StateLicenseStatusID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small", id = "UHIssueDate" })
+                    @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy", data_ng_change = "tempObject.ExpiryDate = autoFillExpiryDate(tempObject.StateLicenseStatusID, tempObject.IssueDate, tempObject.ExpiryDate)" })
+                    @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.CurrentIssueDate, new { @class = "control-label small", id = "UHCurrentIssueDate" })
+                    @Html.TextBoxFor(model => model.CurrentIssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.CurrentIssueDate", placeholder = "mm/dd/yyyy" })
+                    @Html.ValidationMessageFor(model => model.CurrentIssueDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small", id = "UHExpiryDate" })
+                    @Html.TextBoxFor(model => model.ExpiryDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ExpiryDate", placeholder = "mm/dd/yyyy" })
+                    @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.IssueState, new { @class = "control-label small", id = "UHIssueState" })
+                    <div>
+                        <input class="form-control input-sm" data-ng-model="tempObject.IssueState" name="IssueState" data-searchdropdown="searchdropdown" placeholder="select state" />
+                        <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip">
+                            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr ng-repeat="state in filteredState = (States | filter:tempObject.IssueState)" ng-click="hideDiv(); tempObject.IssueState = state" class="pointer">
+                                        <td>{{state}}</td>
+                                    </tr>
+                                    <tr ng-if="States.length == 0">
+                                        <td>No data..... </td>
+                                    </tr>
+                                    <tr ng-if="States.length > 0 && filteredState.length == 0">
+                                        <td>State not found..... </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.IssueState, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.LabelFor(model => model.CurrentPracticeStateYesNoOption, new { @class = "control-label small", id = "UHCurrentPracticeStateYesNoOption" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.CurrentPracticeStateYesNoOption, (int)value, new { data_ng_model = "tempObject.CurrentPracticeStateYesNoOption" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CurrentPracticeStateYesNoOption, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.GoodStandingYesNoOption, new { @class = "control-label small", id = "UHGoodStandingYesNoOption" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.GoodStandingYesNoOption, (int)value, new { data_ng_model = "tempObject.GoodStandingYesNoOption" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.GoodStandingYesNoOption, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <div ng-class="{'col-lg-11':tempObject.StateLicenseDocumentPath,'col-lg-12':!tempObject.StateLicenseDocumentPath}">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control jancyFileWrapTexts" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename wraptext"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                            <span class="fileinput-new small">Select State License Document</span>
+                            <span class="fileinput-exists">Change</span>
+                            @Html.TextBoxFor(model => model.StateLicenseDocumentFile, new { type = "file", onchange = "angular.element(this).scope().setFiles(this)" })
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                    @Html.HiddenFor(model => model.StateLicenseDocumentPath, new { ng_value = "tempObject.StateLicenseDocumentPath" })
+                    @Html.ValidationMessageFor(model => model.StateLicenseDocumentFile, "", new { @class = "text-danger" })
+                </div>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                {
+                    <div ng-if="tempObject.StateLicenseDocumentPath!=null" class="col-lg-1">
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.StateLicenseDocumentPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                    </div>
+                }
+            </div>
+            <div ng-show="activeMessageDiv=='StateLicenseError'" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error List : <br />
+                    <span ng-repeat="err in SLError track by $index">{{err}}</span>
+                </div>
+            </div>
+            <div class="col-md-12 form-group">
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <button id="StateLicence_Add_CanncelButton" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();">Cancel</button>
+                    <button id="StateLicence_Add_AddButton" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveStateLicense(tempObject,$index)">{{buttonLabel}}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

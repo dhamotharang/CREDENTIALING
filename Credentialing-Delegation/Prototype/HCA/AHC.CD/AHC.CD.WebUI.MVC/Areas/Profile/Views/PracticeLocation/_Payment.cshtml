@@ -1,0 +1,69 @@
+﻿
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Payment And Remittance
+        </legend>
+        <div id="CredentialingContact">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide=" primaryPracticeLocations.PaymentandRemittance.length >= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>No Data Available ! To Add New Click "Add Payment And Remittance"</td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide=" primaryPracticeLocations.PaymentandRemittance.length < 1" class="table table-bordered table-condensed table-striped customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Telephone</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+                    <tbody ng-repeat="paymentandRemittance in primaryPracticeLocations.PaymentandRemittance">
+
+                        <tr>
+                            <td>{{paymentandRemittance.First}} {{paymentandRemittance.Middle}} {{paymentandRemittance.Last}}</td>
+                            <td>{{paymentandRemittance.MailAddress}}</td>
+                            <td>{{paymentandRemittance.Telephone}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="viewPayment($index,paymentandRemittance)" ng-hide="viewShowPayment"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="editPayment($index,paymentandRemittance)" ng-hide="editShowPayment"><i class="fa fa-edit"></i></button>
+                                <button ng-hide="viewShowPayment || editShowPayment || newShowPayment || $index+1!=primaryPracticeLocations.PaymentandRemittance.length" class="btn btn-xs btn-success" ng-click="addPayment()"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="viewShowPayment && payment==payment">
+                            <td colspan="6" id="PaymentEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewPayment.cshtml")
+                            </td>
+                        </tr>
+                        <tr ng-show="editShowPayment && payment==payment">
+                            <td colspan="6" id="paymentEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditPayment.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="clearfix"></div>
+            <fieldset ng-show="newShowPayment">
+                <legend>
+                    Add Payment And Remittance
+                </legend>
+                <div id="newShowPaymentDiv">
+                    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditPayment.cshtml")
+                </div>
+            </fieldset>
+            <div ng-hide="primaryPracticeLocations.PaymentandRemittance.length > 0 || newShowPayment" class="col-md-12 text-right">
+                <button class="btn btn-xs btn-primary addHosPrvBtn" ng-click="addPayment()"><i class="fa fa-plus"></i> Add Payment And Remittance</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+

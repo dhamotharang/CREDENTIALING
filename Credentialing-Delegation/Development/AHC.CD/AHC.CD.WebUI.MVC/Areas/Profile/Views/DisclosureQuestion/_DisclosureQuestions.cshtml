@@ -1,0 +1,81 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<br />
+<div class="panel-group" ng-controller="DisclosureController">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ProfileDisclosurePendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Disclosure Questions
+
+            </legend>
+            @*@if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                {
+                    <div class="legend2 pull-right" ng-if="visibilityControl!='editcategory'">
+                        <button class="btn btn-xs btn-primary" ng-click="EditTemp(disclosureQuestions);operateEditControl('editcategory', disclosureQuestions)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    </div>
+                }*@
+            <script>
+                var setAllNo = function () {
+                    $('input:radio[class^=selectNo][value=2]').each(function (i) {
+                        this.checked = true;
+                    });;
+                };
+
+
+            </script>
+
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                <div class="legend2 pull-right" ng-if="visibilityControl=='editcategory'">
+                    <button id="View_DQ" class="btn btn-xs btn-default" ng-click="EditTemp(disclosureQuestions);operateCancelControl('disclosureForm'); disableSave();" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                    <button id="SetNoForAllQuestion_DQ" class="btn btn-xs btn-info" ng-click="setAllNo()">Set No for All</button>                    
+                </div>
+                <div class="legend2 pull-right" ng-if="visibilityControl!='editcategory'">
+                    <button id="Edit_DQ" class="btn btn-xs btn-primary" ng-click="EditTemp(disclosureQuestions);operateEditControl('editcategory', disclosureQuestions)" tooltip data-toggle="tooltip" data-placement="top" title="Edit All"><i class="fa fa-edit"></i></button>
+                    <button ng-if="tempObject!=null" class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory($index+'DisclosureQuestions');OperateUpdateHistoryForDisclosureQuestions(disclosureQuestions.ProfileDisclosureID,'ProfileDisclosureID');" tooltip><i class="fa fa-cloud"></i></button>
+                </div>                
+                            }
+            <div ng-if="visibilityControl!='editcategory'">
+                @Html.Partial("~/Areas/Profile/Views/DisclosureQuestion/_ViewDisclosureQuestions.cshtml")
+            </div>
+            <div ng-if="visibilityControl=='editcategory'">
+                <div id="editShowDisclosureQuestions">
+                    @Html.Partial("~/Areas/Profile/Views/DisclosureQuestion/_AddEditDisclosureQuestions.cshtml")
+                </div>
+            </div>
+            <div ng-show="UpdateHistorySectionVisibility == ($index+'DisclosureQuestions')" class="hideData">
+                <div class="editTableDataStyle col-lg-12">
+                    <div>
+                        <fieldset>
+                            <legend>
+                                Disclosure Questions History
+                            </legend>
+                            @Html.Partial("~/Areas/Profile/Views/MasterProfile/_DisclosureUpdateHistory.cshtml")
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <a id="bottom"></a>
+            @*This is where the success messages for Disclosure Questions are rendered*@
+            <div class="clearfix"></div><br ng-show="activeMessageDiv" />
+            <div ng-show="activeMessageDiv=='addedNewDisclosureQuestions'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+            </div>
+            <div ng-show="activeMessageDiv=='updatedDisclosureQuestions'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>
+            @*This is where the success messages for Disclosure Questions are rendered*@
+
+            @*<div id="scroller" style="position: relative; top: 50%; transform: translateY(-50%);" class="pull-right">
+                    <div id="scroll-up"><a href="#profileForm"><i class="fa fa-edit"></i></a></div>
+                    <div id="scroll-down"><a href="#bottom"><i class="fa fa-edit"></i></a></div>
+                </div>*@
+        </fieldset>
+    </div>
+</div>

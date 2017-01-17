@@ -1,0 +1,56 @@
+﻿
+<form class="organisationInfo">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6 form-group">
+            <label class="col-md-6 control-label">Provider Relationship *</label>
+            <div class="col-md-6 input-group input-group-sm">
+                <label ng-repeat="providerRelation in providerRelations" class="radio-inline">
+                    <input type="radio" name="radio_provider_relation1"  value="{{providerRelation.relationId}}"> {{providerRelation.relationName}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Are you a part of any Group?</label>
+            <div class="col-md-7 input-group input-group-sm">
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.IsPartOfGroup" name="PartOfGroup1" value="true" ng-click="isPartOfGroup()" required> Yes
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.IsPartOfGroup" name="PartOfGroup1" value="false" ng-click="isPartOfGroup()" required> No
+                </label>
+            </div>
+        </div>
+        <div ng-show="Provider.IsPartOfGroup == 'true'" class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Group Names </label>
+            <div class="col-md-7">
+                <select id="selectGroup" ng-model="Provider.GroupID" multiple>
+                    <option></option>
+                    <option ng-repeat="group in groups" value="{{group}}">{{group}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Upload CV</label>
+            <div class="col-md-7">
+                <input type="file" id="ProviderCV" value="jgfjdgfjdhgjfdg.dfh" class="form-control input-sm">
+            </div>
+        </div>
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Upload Contract</label>
+            <div class="col-md-7">
+                <input type="file" id="ProviderContract" class="form-control input-sm">
+            </div>
+        </div>
+        
+        
+       
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="cancelOrganisationInfo()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalReference(professionalReference)">{{submitButtonText}}</button>
+        </div>
+    </div>
+
+</form>

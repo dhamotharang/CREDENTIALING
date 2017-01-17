@@ -1,0 +1,280 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    credId = @ViewBag.CredentialingInfoID;
+    var credInfo = @Html.Raw(Json.Encode(@ViewBag.CredentialingInfo));
+    var profileId = credInfo.ProfileID;
+    var credFilterInfo =@Html.Raw(Json.Encode(@ViewBag.CredentialingFilterInfo));
+</script>
+@section AddToHead{
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    @*<script src="~/Scripts/Lib/Angular/angular-ui-router.js"></script>*@
+
+    @Scripts.Render("~/Content/profileValidationJs")
+
+    <script src="~/Areas/Credentialing/Scripts/CnDJS.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/app.js"></script>
+    @*<script src="~/Areas/Credentialing/Scripts/CnD/ApplicationFormController.js"></script>*@
+
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link href="~/Content/SharedCss/Colorpicker.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/bootstrap-colorpicker-module.js"></script>
+    <script src="~/Scripts/Lib/angular-wysiwyg.js"></script>
+}
+
+<style>
+    .form-style fieldset {
+        padding: 15px 20px 5px 20px;
+    }
+
+    .grow {
+        transition: all .2s ease-in-out;
+    }
+
+        .grow:hover {
+            transform: scale(2.1);
+        }
+</style>
+
+<div id="page-wrapper">
+    <div class="container-fluid" ng-app="cred_SPA_App" ng-controller="Cred_SPA_Ctrl" ng-cloak>
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-check-square-o"></i>
+                        <a id="redirecttocredentialinglistpage" ng-if="CredListIdView==1" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Initiation/CredentialingList">Credentialing List</a>
+                        <a ng-if="CredListIdView==2" ng-click="setCreLid(2)" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Initiation/CredentialingList">Re-Credentialing List</a>
+                    
+                    </li>
+                    <li>
+                        <i class="fa fa-user"></i> {{credentialingInfo.Profile.PersonalDetail.FirstName}}&nbsp;{{credentialingInfo.Profile.PersonalDetail.LastName}}
+                        <input name="credId" type="hidden" value="@ViewBag.CredentialingInfoID" />
+                    </li>
+                    @*<li class="active">
+                            <i class="fa fa-qrcode"></i> 12120
+                        </li>*@
+
+                    <a class="btn btn-xs btn-success pull-right" ng-if="ViewOnlyMode" data-toggle="modal" data-target="#viewMode">Complete</a>
+                    <label ng-if="!ViewOnlyMode && !isDroped" class="text-success pull-right">Application is submitted!!!</label>
+                    <label ng-if="!ViewOnlyMode && isDroped" class="text-danger pull-right">Application is Dropped!!!</label>
+                </ol>
+            </div>
+        </div>
+
+
+        <div class="row col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-9 text-left alert alert-success alert-dismissible msgCred" role="alert" style="display:none;">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                The Submission is Successful and Email is Sent !!!!
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-9">
+                @Html.Partial("~/Areas/Credentialing/Views/CnD/_ViewContainer.cshtml")
+            </div>
+            <div class="col-lg-3">
+                <div class="col-lg-12 form-style zero-padding-left-right-div">
+                    <fieldset>
+                        <div class="legend2 pull-right">
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{credentialingInfo.ProfileID}}" class="btn btn-xs btn-primary" toggle data-toggle="tooltip" data-placement="bottom" title="View Profile" target="_blank"><i class="fa fa-eye"></i></a>
+                            <button class="btn btn-xs" onclick="toggleDiv('provider_detail_div');" toggle data-toggle="tooltip" data-placement="bottom" title="Expand/Collapse"><i class="fa fa-caret-down"></i></button>
+                        </div>
+                        <legend>
+                            Details
+                        </legend>
+                        @Html.Partial("~/Areas/Credentialing/Views/CnD/_Details.cshtml")
+                    </fieldset>
+                </div>
+                @Html.Partial("~/Areas/Credentialing/Views/CnD/_ActionContainer.cshtml")
+            </div>
+        </div>
+        @* model *@
+        <div class="modal fade" id="viewMode" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <button type="button" ng-disabled="saving" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+                    <div class="panel-body">
+                        Do you want to continue the process?
+                    </div>
+                    <div class="panel-footer">
+                        <div class="clearfix">
+                            <button type="button" class="btn btn-primary pull-right" data-dismiss="modal"  ng-click="SubmitSPA(@ViewBag.CredentialingInfoID)" style="margin-left:10px">Yes</button>
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">No</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* model *@
+
+
+        <div id="render_me" ng-hide="true" ng-class="col-lg-12">
+            <style>
+                .table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td {
+                    padding: 3px;
+                }
+            </style>
+
+            <label class="text-center" style="font-family:Calibri;font-size:14px"><strong>Primary Source Verification</strong></label>
+            <div id="table">
+                <div ng-repeat="tab in FormattedData">
+                    <div ng-if="tab.Id==StateLicenseParameterID">
+                        <label style="font-family:Calibri;font-size:11px">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</label>
+                        <table class="table table-bordered table-condensed" style="font-family:Calibri;font-size:10px;">
+                            <thead>
+                                <tr>
+                                    <th>State</th>
+                                    <th>License Number</th>
+                                    <th>Issue Date</th>
+                                    <th>Expiration Date</th>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Remarks</th>
+                                    <th>Verified Date</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="lisence in tab.Info">
+                                <tr>
+                                    <td class="wrap-words">{{lisence.VerificationData.IssueState}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationData.LicenseNumber}}</td>
+                                    @*<td class="wrap-words" ng-bind="reformatDate(lisence.VerificationData.IssueDate)"></td>*@
+                                    <td class="wrap-words" >{{lisence.VerificationData.IssueDate| date:'MM/dd/yyyy'}}</td>
+                                    <td class="wrap-words" ng-bind="reformatDate(lisence.VerificationData.ExpiryDate)"></td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.VerificationResultStatus}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Source}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Remark}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationDate | date:'MM-dd-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="tab.Id==BoardCertificationParameterID">
+                        <label style="font-family:Calibri;font-size:11px">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</label>
+                        <table class="table table-bordered table-condensed" style="font-family:Calibri;font-size:10px;">
+                            <thead>
+                                <tr>
+                                    <th>Speciality Board Name</th>
+                                    <th>Certification Status</th>
+                                    <th>Certification Date</th>
+                                    <th>Expiration Date</th>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Remarks</th>
+                                    <th>Verified Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="lisence in tab.Info">
+                                    <td class="wrap-words">{{lisence.VerificationData.SpecialtyBoardCertifiedDetail.SpecialtyBoard.Name}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationData.SpecialtyBoardCertifiedDetail.SpecialtyBoard.Status}}</td>
+                                    <td class="wrap-words" ng-bind="reformatDate(lisence.VerificationData.SpecialtyBoardCertifiedDetail.InitialCertificationDate)"></td>
+                                    <td class="wrap-words" ng-bind="reformatDate(lisence.VerificationData.SpecialtyBoardCertifiedDetail.ExpirationDate)"></td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.VerificationResultStatus}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Source}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Remark}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationDate | date:'MM-dd-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="tab.Id==DEAParameterID">
+                        <label style="font-family:Calibri;font-size:11px">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</label>
+                        <table class="table table-bordered table-condensed" style="font-family:Calibri;font-size:10px;">
+                            <thead>
+                                <tr>
+                                    <th>License Number</th>
+                                    <th>Issue Date</th>
+                                    <th>Expiration Date</th>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Remarks</th>
+                                    <th>Verified Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="lisence in tab.Info">
+                                    <td class="wrap-words">{{lisence.VerificationData.DEANumber}}</td>
+                                    @*<td class="wrap-words" ng-bind=" reformatdate(lisence.verificationdata.issuedate)"></td>*@
+                                    <td class="wrap-words" >{{lisence.VerificationData.IssueDate | date:'MM/dd/yyyy'}}</td>
+                                    <td class="wrap-words" ng-bind="reformatDate(lisence.VerificationData.ExpiryDate)"></td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.VerificationResultStatus}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Source}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Remark}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationDate | date:'MM-dd-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="tab.Id==CDSParameterID">
+                        <label style="font-family:Calibri;font-size:11px">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</label>
+                        <table class="table table-bordered table-condensed" style="font-family:Calibri;font-size:10px;">
+                            <thead>
+                                <tr>
+                                    <th>License Number</th>
+                                    <th>Issue Date</th>
+                                    <th>Expiration Date</th>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Remarks</th>
+                                    <th>Verified Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="lisence in tab.Info">
+                                    <td class="wrap-words">{{lisence.VerificationData.CertNumber}}</td>
+                                    @*<td class="wrap-words" ng-bind="reformatdate(lisence.verificationdata.Issuedate)"></td>*@
+                                    <td class="wrap-words">{{lisence.VerificationData.IssueDate | date:'MM/dd/yyyy'}}</td>
+                                    <td class="wrap-words" ng-bind="reformatDate(lisence.VerificationData.ExpiryDate)">{{}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.VerificationResultStatus}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Source}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Remark}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationDate | date:'MM-dd-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="tab.Id==NPDBParameterID || tab.Id==MOPTParameterID || tab.Id==OIGParameterID">
+                        <label style="font-family:Calibri;font-size:11px">{{tab.Info[0].ProfileVerficationParameterObj.Title}}</label>
+                        <table class="table table-bordered table-condensed" style="font-family:Calibri;font-size:10px;">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Remarks</th>
+                                    <th>Verified Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="lisence in tab.Info">
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.VerificationResultStatus}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Source}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationResultObj.Remark}}</td>
+                                    <td class="wrap-words">{{lisence.VerificationDate | date:'MM-dd-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- /#page-wrapper -->

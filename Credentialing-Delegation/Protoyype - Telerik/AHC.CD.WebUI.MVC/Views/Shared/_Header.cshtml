@@ -1,0 +1,277 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+
+
+<script>
+    $(document).ready(function () {
+        var cnd = $.connection.cnDHub;
+
+        cnd.client.logoutCall = function (userSessionId) {
+
+        };
+        // Start the connection.
+        $.connection.hub.start().done(function () {
+            $('#logoutBtn').click(function () {
+                cnd.server.logout($('#userSessionId').val());
+                document.getElementById('logoutForm').submit();
+            });
+        });
+
+
+        $('#alertArea').hide();
+        $('#bell').click(function () {
+            if (opened == true) {
+                $('#alertArea').hide();
+            }
+            $('#alertArea').css("display", "");
+            $('#alertArea').toggle();
+        });
+        ViewAll();
+    });
+    var opened = false;
+    $(document).click(function (event) {
+        if (!$(event.target).hasClass("ringMyBell") && !$(event.target).hasClass("checkMe")) {
+            $('#alertArea').hide();
+            $('#alertArea').css("display", "");
+            opened = true;
+        } else {
+            opened = true;
+            $('#alertArea').show();
+        }
+    });
+
+    function ViewAll() {
+
+        $("#ViewAll").on("click", function () {
+            var count = 0;
+            $("#alertArea").html('');
+            if ($(this).prop("checked") == true) {
+                $("#alertArea").append('<li class="pull-right" style="background-color:#ddd"><input class="checkMe" type="checkbox" id="ViewAll" checked/>View All</li>');
+                if (myData.length == 0) {
+                    $("#alertArea").append('<li id="alertNotifications"><div><p class="text-center">No New Notifications Available.</p></div></a><hr style="padding:0; margin:0"/></li>');
+                }
+                else {
+                    for (msg in myData) {
+                        if (myData[msg].AcknowledgementStatus == "Unread") {
+                            $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+                        } else {
+
+                            $("#alertArea").append('<li id="alertNotifications" style="background-color:#F9F9H9"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+
+                        }
+
+                    };
+
+                }
+            }
+            else {
+                $("#alertArea").append('<li class="pull-right" style="background-color:#ddd"><input class="checkMe" type="checkbox" id="ViewAll"/>View All</li>');
+                for (msg in myData) {
+                    if (myData[msg].AcknowledgementStatus == "Unread") {
+                        count++;
+                        $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+                    }
+                };
+                if (count == 0) {
+                    $("#alertArea").append('<li id="alertNotifications"><div><p class="text-center">No New Notifications Available.</p></div></a><hr style="padding:0; margin:0"/></li>');
+                }
+            }
+            $("#alertArea").append("<script>ViewAll();");
+        });
+
+    };
+
+    var myData;
+    var cduserdata;
+    var Notify = function () {
+        $.ajax({
+            url: rootDir + '/Dashboard/GetMyNotification',
+            data: {
+                format: 'json'
+            },
+            error: function () {
+                //$('#info').html('<p>An error has occurred</p>');
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log("data");
+                console.log(data);
+                cduserdata = data;
+                myData = data.cdUser.DashboardNotifications;
+                var cnt = 0;
+                if (myData.length == 0) {
+                    $("#alertArea").append('<li id="alertNotifications"><div><p class="text-center">No New Notifications Available.</p></div></a><hr style="padding:0; margin:0"/></li>');
+                }
+                else {
+                    $("#alertArea").append('');
+                    for (msg in myData) {
+
+
+                        if (data.cdUser.DashboardNotifications[msg].AcknowledgementStatus == "Unread") {
+                            cnt++;
+                            if (data.cdUser.DashboardNotifications[msg].Action == 'Daily task') {
+                                $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+                            }
+                            else {
+                                $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+                            }
+                            //$("#alertArea").append('<li id="alertNotifications"><a href="' + myData[msg].RedirectURL + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '<i class="fa fa-bell fa-fw"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+                        }
+
+                    };
+                    if (cnt == 0) {
+                        $("#alertArea").append('<li id="alertNotifications"><div><p class="text-center">No New Notifications Available.</p></div></a><hr style="padding:0; margin:0"/></li>');
+
+                    } else {
+                        $("#numberOfNotifications").text(cnt);
+
+                    }
+                }
+
+
+                //$("#alertArea").append('<li class="divider"></li><li><a class="text-center" href="#"><strong>See All Alerts</strong><i class="fa fa-angle-right"></i></a></li>');
+                //var $title = $('<h1>').text(data.talks[0].talk_title);
+                //var $description = $('<p>').text(data.talks[0].talk_description);
+                //$('#info')
+                //   .append($title)
+                //   .append($description);
+            },
+            type: 'GET'
+        });
+    }
+    
+</script>
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top small" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand header-logo" href="~/Dashboard/Index"><img src="~/Content/Images/logo2.png" style="width: 98px;height: 49px;" /></a>
+    </div>
+    <script>
+        var togglemenu = function () {
+            $("#sidemenu").toggleClass("menu-in");
+            $("#page-wrapper").toggleClass("menuup");
+            $("#menu-toggle").toggleClass("btn-menuup");
+        }
+
+        //$('#alertNotifications').append();
+    </script>
+    @*<div class="col-lg-3">*@
+    <button id="menu-toggle" class="btn btn-xs navbar-toggle" onclick="togglemenu()">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+
+    @*</div>*@
+
+    <!-- /.navbar-header -->
+    @*<ul class="nav navbar-top-links navbar-left hidden">
+            <li class="dropdown">
+                <a class="btn-sm btn-default" data-toggle="dropdown" href="#">
+                    <i class="fa fa-list fa-fw"></i>  <i class="fa fa-caret-left-"></i>
+                </a>
+                <!-- /.dropdown-messages -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>*@
+
+
+    @*<script src="~/Scripts/Custom/DashBoard/NotificationApp.js"></script>*@
+    <ul class="nav navbar-top-links navbar-right">
+        @*@if (Session["LoggedInUserView"] != null)
+            {*@
+        <li class="dropdown ringMyBell" id="alerts">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="bell">
+                <span class="label label-info" id="numberOfNotifications"></span>
+                <i class="fa fa-bell fa-fw" tooltip data-toggle="tooltip" data-placement="bottom" title="Notifications"></i> <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-messages pre-scrollable" id="alertArea">
+                <li class="pull-right" style="background-color:#ddd"><input class="checkMe" type="checkbox" id="ViewAll" />View All</li>
+
+                @*<li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>Read All Messages</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>*@
+            </ul>
+            <!-- /.dropdown-messages -->
+        </li>
+
+        @if (HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+            if (roles.Contains("ADM") || roles.Contains("CCO"))
+            {
+                <span><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/Verification/Verification" class="btn btn-xs btn-circle btn-default" tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verification Links"><i class="fa fa-link"></i></a></span>
+            }
+            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CRA"))
+            {
+                if (System.Configuration.ConfigurationManager.AppSettings["SupportsDelegatedPlans"] == "true")
+                {
+                    <span><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Verification/Index" class="btn btn-xs btn-circle btn-default" tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="PSV"><i class="small">PSV</i></a></span>
+                }
+            }
+        }
+
+        @*}*@<!-- /.dropdown -->
+        @*<li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-tasks">
+                    <li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>See All Tasks</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                 /.dropdown-tasks
+            </li>*@
+        <!-- /.dropdown -->
+        @*@if (Session["LoggedInUserView"] != null)
+            {*@
+        @*<li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-alerts" style="width:auto;"></ul>
+                /.dropdown-alerts
+            </li>*@
+        @*}*@
+
+        <li class="dropdown">
+
+            @if (Session["LoggedInUserView"] == null)
+            {
+                Session["LoggedInUserView"] = @Html.Partial("_LoggedInUserView");
+            }
+            @Session["LoggedInUserView"]
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+    </ul>
+    <div class="clearfix onlymedia"></div>
+    <!-- /.navbar-top-links -->
+    @* Sidebar menu implementation *@
+
+    @if (Session["SideBarMenu"] == null)
+    {
+        Session["SideBarMenu"] = @Html.Partial("_Sidebar");
+    }
+    @Session["SideBarMenu"]
+    @* End Sidebar menu implementation *@
+
+</nav>

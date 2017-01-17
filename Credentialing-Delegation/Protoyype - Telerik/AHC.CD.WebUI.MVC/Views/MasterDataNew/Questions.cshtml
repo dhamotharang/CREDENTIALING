@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Questions";
+}
+@section AddToHead{
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/QuestionsController.js"></script>
+}
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                         Questions
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataQuestions" ng-controller="masterDatamasterDataQuestionsController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a ng-click="showQuestions()" class="pointer"><i class="fa fa-question"></i> Questions Management</a>
+                        &nbsp;&nbsp;<a ng-click="showQuestionCategories()" class="pointer"><i class="fa fa-location-arrow"></i> Question Category</a>
+                       
+                        <span ng-if="viewQuestions" class="pull-right">
+                            <button ng-disabled="disableAdd" ng-click="addQuestion()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                        <span ng-if="viewQuestionCategories" class="pull-right">
+                            <button ng-disabled="disableAdd" ng-click="addQC()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div ng-if="viewQuestions">
+                            <div ng-show="activeMessageDiv=='Question'" class="alert alert-success" role="alert">
+                                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                               {{messageDesc}}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div ng-show="activeMessageDiv=='QuestionError'" class="alert alert-danger" role="alert">
+                                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                               {{messageDesc}}
+                            </div>
+                            <table class="table table-striped table-bordered table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-lg-5">Title *</th>
+                                        <th class="col-lg-2">Question Category *</th>
+                                        <th class="col-lg-1">Status</th>
+                                        <th class="col-lg-2">Date Modified</th>
+                                        <th class="col-lg-2">Action</th>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" placeholder="Filter Title" class="form-control input-sm" ng-model="search.Title" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Question Category" class="form-control input-sm" ng-model="search.QuestionCategory" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.Status" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Date Modified" class="form-control input-sm" ng-model="search.LastModifiedDate" ng-change="filterData()" /></td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="question in Questions |filter:{Title:search.Title,QuestionCategory:search.QuestionCategory,Status:search.Status,LastModifiedDate:search.LastModifiedDate} track by $index" ng-include="getHospitalTemplate(question)" ng-show="IsValidIndex($index)"></tr>
+                                </tbody>
+                            </table>
+
+                            <script type="text/ng-template" id="displayQuestion">
+                                <td class="col-lg-5">{{question.Title}}</td>
+                                <td class="col-lg-2">{{question.QuestionCategory.Title}}</td>
+                                <td class="col-lg-1">{{question.Status}}</td>
+                                <td class="col-lg-2">{{question.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td class="col-lg-2">
+                                    @*<button ng-click="editQuestion(question)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                                </td>
+                            </script>
+                            <script type="text/ng-template" id="editQuestion">
+                                <td class="col-lg-5"><input type="text" ng-model="tempQuestion.Title" class="form-group form-control input-sm inputMarginBottoomZero" />
+                                    @*<span class="text-danger" ng-if="questionError">{{questionError}}</span></td>*@
+                                    <span class="text-danger" ng-if="questionError">Please enter the Question</span>
+                                <td class="col-lg-2">
+                                    <select ng-model="tempQuestion.QuestionCategory.QuestionCategoryID" ng-change="getQuestionCategory(tempQuestion.QuestionCategory.QuestionCategoryID)" class="form-group form-control input-sm">
+                                        <option ng-if="!tempQuestion.QuestionCategory.QuestionCategoryID" selected value="">--Select--</option>
+                                        <option ng-repeat="qc in QuestionCategories track by $index" value="{{qc.QuestionCategoryID}}" ng-selected="tempQuestion.QuestionCategory.QuestionCategoryID == qc.QuestionCategoryID">{{qc.Title}}</option>
+                                    </select>
+                                    <span class="text-danger" ng-if="categoryerror">Please enter the category</span>
+                                </td>
+                                <td class="col-lg-1">{{qc.Status}}</td>
+                                <td class="col-lg-2">{{qc.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td class="col-lg-2">
+                                    <button ng-if="!tempQuestion.QuestionID" ng-click="saveQuestion($index)" class="btn btn-xs btn-primary">Save</button>
+                                    <button ng-if="tempQuestion.QuestionID" ng-click="updateQuestion($index)" class="btn btn-xs btn-primary">Update</button>
+                                    <button ng-if="tempQuestion.QuestionID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                    <button ng-if="!tempQuestion.QuestionID" ng-click="cancelAdd(Questions)" class="btn btn-xs btn-warning">Cancel</button>
+                                </td>
+                            </script>
+                            <div class="clearfix"></div>
+                            <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                            
+                        </div>
+                        <div ng-if="viewQuestionCategories">
+                            <div ng-show="activeMessageDiv=='QuestionCategory'" class="alert alert-success" role="alert">
+                                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                               {{messageDesc}}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div ng-show="activeMessageDiv=='QuestionCategoryError'" class="alert alert-danger" role="alert">
+                                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                               {{messageDesc}}
+                            </div>
+                            <table class="table table-striped table-bordered table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title *</th>
+                                        <th>Status</th>
+                                        <th>Date Modified</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="qc in CurrentPage1 track by $index" ng-include="getQCTemplate(qc)"></tr>
+                                </tbody>
+                                <tbody ng-if="QuestionCategories.length == 0">
+                                    <tr>
+                                        <td colspan="4">No Question Categories</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <script type="text/ng-template" id="displayQC">
+                                <td>{{qc.Title}}</td>
+                                <td>{{qc.Status}}</td>
+                                <td>{{qc.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td>
+                                    @*<button ng-click="editQC(qc)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                                </td>
+                            </script>
+                            <script type="text/ng-template" id="editQC">
+                                <td><input type="text" ng-model="tempQC.Title" class="form-group form-control input-sm inputMarginBottoomZero" />
+                                <span class="text-danger">{{questionCategoryError}}</span></td>
+                                <td>{{tempQC.Status}}</td>
+                                <td>{{tempQC.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                                <td>
+                                    <button ng-if="!tempQC.QuestionCategoryID" ng-click="saveQC($index)" class="btn btn-xs btn-primary">Save</button>
+                                    <button ng-if="tempQC.QuestionCategoryID" ng-click="updateQC($index)" class="btn btn-xs btn-primary">Update</button>
+                                    <button ng-if="tempQC.QuestionCategoryID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                    <button ng-if="!tempQC.QuestionCategoryID" ng-click="cancelAdd(QuestionCategories)" class="btn btn-xs btn-warning">Cancel</button>
+                                </td>
+                            </script>
+                            <div class="clearfix"></div>
+                            <div ng-if="CurrentPage1.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-show="CurrentPage1.length > 0" total-items="bigTotalItems1" ng-model="bigCurrentPage1" max-size="maxSize" class="pagination-sm" ng-change="pageChanged1(bigCurrentPage1)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>

@@ -1,0 +1,238 @@
+﻿<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+
+<style>
+    .vertical-align {
+        align-items: center;
+    }
+
+    .selectedProvider {
+        background-color: rgb(150, 162, 225);
+    }
+
+    .imageStyle {
+        padding: 0px;
+        margin-bottom: 0px;
+    }
+
+    .alignTableStyle > thead > tr > th,
+    .alignTableStyle > tbody > tr > th,
+    .alignTableStyle > tfoot > tr > th,
+    .alignTableStyle > thead > tr > td,
+    .alignTableStyle > tbody > tr > td,
+    .alignTableStyle > tfoot > tr > td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .marginTop {
+        margin-top: 22px;
+    }
+
+    .marginBottom {
+        margin-bottom: 22px;
+    }
+
+    .select2-container {
+        display: block;
+    }
+</style>
+
+
+<div id="page-wrapper" ng-app="InitCredApp" ng-controller="listController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-ol"></i> Profile Updates
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <div role="tabpanel">
+            @*<div>
+                     Nav tabs
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#provider" aria-controls="provider" role="tab" data-toggle="tab"> A Provider</a></li>
+                        <li role="presentation" ><a href="#bulk" aria-controls="bulk" role="tab" data-toggle="tab">Multiple Providers</a></li>
+                    </ul>
+                </div>*@
+
+            <div ng-class="{'false':'col-lg-12','true':'col-lg-7'}[IsHowDetails]" class=" zero-padding-left-right-div">
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="provider">
+                        <!---Provider partial starts here-->
+
+                        <div class="panel panel-default">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">
+                                List &nbsp;&nbsp;
+                                <a class="btn btn-xs btn-info" ng-click="getByType('Update')" ng-class="{'active':SelectedType=='Update'}">Updates</a>
+                                &nbsp;&nbsp;
+                                <a class="btn btn-xs btn-info" ng-click="getByType('Renewal')" ng-class="{'active':SelectedType=='Renewal'}">Renewals</a>
+
+
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-bordered table-hover table-condensed alignTableStyle">
+                                    <thead>
+                                        <tr>
+                                            <th>NPI Number</th>
+                                            <th>Full Name</th>
+                                            <th>Section</th>
+                                            <th>Sub Section</th>
+                                            <th>Status</th>
+                                            <th>Reason</th>
+                                            <th>Modified Date</th>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" placeholder="Filter NPI" class="form-control input-sm" ng-model="search.NPI" /></td>
+                                            <td><input type="text" placeholder="Filter Full Name" class="form-control input-sm" ng-model="search.FullName" /></td>
+                                            <td><input type="text" placeholder="Filter Section" class="form-control input-sm" ng-model="search.Section" /></td>
+                                            <td><input type="text" placeholder="Filter Sub Section" class="form-control input-sm" ng-model="search.SubSection" /></td>
+                                            <td><input type="text" placeholder="Filter Sub Section" class="form-control input-sm" ng-model="search.Status" /></td>
+                                            <td><input type="text" placeholder="Filter Sub Section" class="form-control input-sm" ng-model="search.Reason" /></td>
+                                            <td><input type="text" placeholder="Filter Date" class="form-control input-sm" ng-model="search.Date" /></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="p in FilterProviders | filter:{NPI:search.NPI,FullName:search.FullName,Section:search.Section,SubSection: search.SubSection,FieldName:search.FieldName,For:search.For,OldData:search.OldData,Status:search.Status,Reason:search.Reason,Date:search.Date}">
+                                            <td>{{p.NPI}}</td>
+                                            <td>{{p.FullName}}</td>
+                                            <td>{{p.Section}}</td>
+                                            <td>{{p.SubSection}}</td>
+                                            <td>{{p.Status}}</td>
+                                            <td>{{p.Reason}}</td>
+                                            <td>{{p.Date}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div ng-if="ActionMessage" class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    {{ActionMessage}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!---Provider partial ends here-->
+                    </div>
+
+                </div>
+            </div>
+            <div ng-if="IsHowDetails" class="col-lg-5" style="border-left:1px solid black;">
+                @Html.Partial("~/Areas/Credentialing/Views/ProfileUpdates/_DetailOnUpdate.cshtml")
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- /#page-wrapper -->
+<script>
+    var initCredApp = angular.module('InitCredApp', ['ngTable']);
+
+    initCredApp.controller('listController', function ($scope, $http, $timeout) {
+
+        $scope.allProviders = [
+            { "Type": "Update", "NPI": "1234567890", "FullName": "Dr. Pariksith Singh", "Section": "Demographics", "SubSection": "Personal Identification", "FieldName": "Driver's License", "For": "", "OldData": "123456", "NewData": "123459", "Status": "On Hold", "Reason": "Personal Identification is not verified", "Date": "01-31-2015" },
+            { "Type": "Update", "NPI": "1234567890", "FullName": "Dr. Pariksith Singh", "Section": "Demographics", "SubSection": "Medicare Information", "FieldName": "Driver's License", "For": "", "OldData": "123456", "NewData": "123459", "Status": "Rejected", "Reason": "Driving License is expired", "Date": "01-31-2015" },
+            { "Type": "Update", "NPI": "1234567890", "FullName": "Dr. Pariksith Singh", "Section": " Identification & Licenses", "SubSection": "State License", "FieldName": "Issue Date & Expiry Date", "For": "License Number : ME98056", "OldData": "Issue Date: 11-15-2012, Expiry Date: 01-31-2015", "Status": "Accepted", "Reason": "Not Available", "Date": "01-21-2015", "NewData": "Issue Date: 01-31-2015, Expiry Date: 01-31-2018" },
+        ];
+
+        $scope.temp = '';
+        $scope.FilterProviders = [];
+
+        $scope.pushdata = function (data) {
+            $scope.temp = data;
+            $scope.IsHowDetails = true;
+        }
+        $scope.HideDetails = function () {
+            $scope.IsHowDetails = false;
+            $scope.temp = {};
+        };
+
+
+        $scope.OneIsSelected = false;
+
+        //------------- check atleast one checked ----------------
+        $scope.anyOneChecked = function () {
+            var status = false;
+            for (var i in $scope.FilterProviders) {
+                if ($scope.FilterProviders[i].IsChecked) {
+                    status = true;
+                    break;
+                }
+            }
+            $scope.OneIsSelected = status;
+        };
+
+        //----------------------- select all ----------------------
+        $scope.SelectAll = function (status) {
+            if (status) {
+                for (var i in $scope.FilterProviders) {
+                    $scope.FilterProviders[i].IsChecked = true;
+                }
+            } else {
+                for (var i in $scope.FilterProviders) {
+                    $scope.FilterProviders[i].IsChecked = false;
+                }
+            }
+            $scope.anyOneChecked();
+        };
+
+
+        //------------------ get type Type ----------------
+        $scope.getByType = function (type) {
+            var temp1 = [];
+            $scope.SelectedType = type;
+            for (var i in $scope.allProviders) {
+                if ($scope.allProviders[i].Type == type) {
+                    temp1.push($scope.allProviders[i]);
+                }
+            }
+            $timeout(function () {
+                if(temp1.length==0){
+                    $scope.ActionMessage = "No Data Found";
+                }
+                else {
+                    $scope.ActionMessage = "";
+                }
+            });
+            $scope.FilterProviders = temp1;
+            $scope.IsHowDetails = false;
+            $scope.SelectAll(false);
+            $scope.IsAllChecked = false;
+
+        };
+
+        $scope.getByType('Update');
+
+        //--------------- accept Action ----------------------
+        $scope.ActionMessage = "";
+
+        $scope.ActionForChanges = function (type) {
+            if (type == 'accept') {
+                $scope.ActionMessage = "The Acceptation is Successful and Email is Sent !!!!";
+            } else {
+                $scope.ActionMessage = "The Rejection is Successful and Email is Sent !!!!";
+            }
+
+            $timeout(function () {
+                $scope.ActionMessage = "";
+            }, 3000);
+        };
+
+        //----------------- Reject Change -------------------
+
+    });
+</script>
+
+

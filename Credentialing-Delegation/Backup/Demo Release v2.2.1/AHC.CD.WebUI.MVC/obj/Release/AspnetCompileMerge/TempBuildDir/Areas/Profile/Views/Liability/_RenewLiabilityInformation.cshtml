@@ -1,0 +1,206 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalLiability.ProfessionalLiabilityInfoViewModel
+
+<div ng-hide="ShowRenewDiv">
+    <div class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error List : <br />
+            <span>Renewal cannot be initiated.Expiry Date is missing.</span>
+        </div>
+    </div>
+</div>
+
+<form enctype="multipart/form-data">
+    <div class="form-style" ng-show="ShowRenewDiv">
+        <span ng-if="tempObject.ProfessionalLiabilityInfoID">
+            @Html.HiddenFor(model => model.ProfessionalLiabilityInfoID, new { ng_value = "tempObject.ProfessionalLiabilityInfoID" })
+            @*@Html.HiddenFor(p => p.InsuranceCarrierID, new { ng_value = "tempObject.InsuranceCarrierID" })
+            @Html.HiddenFor(p => p.InsuranceCarrierAddressID, new { ng_value = "tempObject.InsuranceCarrierAddressID" })*@
+            @Html.TextBoxFor(model => model.OriginalEffectiveDate, new { data_ng_hide = "true", data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.OriginalEffectiveDate" })
+            @Html.HiddenFor(p => p.InsuranceCoverageType, new { ng_value = "tempObject.InsuranceCoverageType" })
+            @Html.HiddenFor(p => p.AmountOfCoveragePerOccurance, new { ng_value = "tempObject.AmountOfCoveragePerOccurance" })
+            @Html.HiddenFor(p => p.AmountOfCoverageAggregate, new { ng_value = "tempObject.AmountOfCoverageAggregate" })
+            @Html.HiddenFor(p => p.UnlimitedCoverageWithInsuranceCarrierOption, new { ng_value = "tempObject.UnlimitedCoverageWithInsuranceCarrierOption" })
+            @Html.HiddenFor(p => p.PolicyIncludesTailCoverageOption, new { ng_value = "tempObject.PolicyIncludesTailCoverageOption" })
+            @Html.HiddenFor(p => p.Phone, new { ng_value = "tempObject.Phone" })
+            @Html.HiddenFor(p => p.PhoneCountryCode, new { ng_value = "tempObject.PhoneCountryCode" })
+            @Html.HiddenFor(p => p.PolicyNumber, new { ng_value = "tempObject.PolicyNumber" })
+        </span>
+        <div class="panel-body zero-padding-left-right-div">
+
+            <div class="col-md-12 zero-padding-left-right-div" ng-hide="tempObject.ProfessionalLiabilityInfoID">
+                <div class="col-md-6 form-group">
+                    @Html.LabelFor(p => p.InsuranceCarrierID, htmlAttributes: new { @class = "control-label small" })
+                    <select class="form-control input-sm" ng-model="tempObject.InsuranceCarrierID" name="InsuranceCarrierID" ng-change="getLocation();">
+                        <option ng-repeat="insuranceCarrier in masterInsuranceCarriers" value="{{insuranceCarrier.InsuranceCarrierID}}">{{insuranceCarrier.Name}}</option>
+                        <option selected disabled hidden value="">--select--</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(p => p.InsuranceCarrierAddressID, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <select class="form-control input-sm" data-val="true" data-val-required="Please select the insurance carrier address  *" ng-model="tempObject.InsuranceCarrierAddressID" name="InsuranceCarrierAddressID" ng-change="getAddress();">
+                            <option ng-if="tempObject.InsuranceCarrierAddressID" value="{{tempObject.InsuranceCarrierAddress.InsuranceCarrierAddressID}}">{{tempObject.InsuranceCarrierAddress.LocationName}}</option>
+                            <option selected disabled hidden value="">--select--</option>
+                            <option ng-repeat="insuranceCarrierAddress in Location.InsuranceCarrierAddresses" value="{{insuranceCarrierAddress.InsuranceCarrierAddressID}}" ng-selected="insuranceCarrierAddress.InsuranceCarrierAddressID==tempObject.InsuranceCarrierAddressID">{{insuranceCarrierAddress.LocationName}}</option>
+                        </select>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.InsuranceCarrierAddressID, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-hide="tempObject.ProfessionalLiabilityInfoID">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Street/P. O. Box No:</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.Street}}</label>
+
+                    </div>
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Building</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.Building}}</label>
+
+                    </div>
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">City</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.City}}</label>
+
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">State</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.State}}</label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-hide="tempObject.ProfessionalLiabilityInfoID">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Zip Code</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.ZipCode}}</label>
+
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+
+                    <label class="control-label small">Country</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.Country}}</label>
+
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">County</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.County}}</label>
+
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.SelfInsuredYesNoOption, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.SelfInsuredYesNoOption, (int)value, new { data_ng_model = "tempObject.SelfInsuredYesNoOption" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.SelfInsuredYesNoOption, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-12 zero-padding-left-right-div">
+
+                <div class="col-md-4 form-group">
+                    <div>
+                      
+                        @Html.LabelFor(p => p.PolicyNumber, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label">{{tempObject.PolicyNumber}}</i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+
+                    <label class="control-label small">New Effective Date</label>
+                    @Html.TextBoxFor(model => model.EffectiveDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.EffectiveDate" })
+                    @Html.ValidationMessageFor(model => model.EffectiveDate, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-4 form-group">
+
+                    <label class="control-label small">New Expiration Date</label>
+                    @Html.TextBoxFor(model => model.ExpirationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.ExpirationDate" })
+                    @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group" ng-class="{'col-lg-11':tempObject.InsuranceCertificatePath,'col-lg-12':!tempObject.InsuranceCertificatePath}">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-sm btn-file">
+                            <span class="fileinput-new small">Select Liability Document</span>
+                            <span class="fileinput-exists">Change</span>
+                            @Html.TextBoxFor(model => model.InsuranceCertificateFile, new { name = "InsuranceCertificateFile", ng_data_model = "tempObject.InsuranceCertificateFile", type = "file" })
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.InsuranceCertificateFile, "", new { @class = "text-danger" })
+                </div>
+
+                <span ng-show="tempObject.InsuranceCertificatePath">
+                    @Html.HiddenFor(model => model.InsuranceCertificatePath, new { ng_value = "tempObject.InsuranceCertificatePath" })
+                    <a href="/Document/View?path={{tempObject.InsuranceCertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+        <div ng-show="activeMessageDiv=='errorProfessionalLiability'+$index" class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error Lists :<br />
+                <span ng-repeat="err in errorProfessionalLiability track by $index">{{err}}</span>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalLiabilty(tempObject,$index)">{{buttonLabel}}</button>
+            <button class="btn btn-warning btn-sm pull-left" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+        </div>
+
+</form>
+
+
+

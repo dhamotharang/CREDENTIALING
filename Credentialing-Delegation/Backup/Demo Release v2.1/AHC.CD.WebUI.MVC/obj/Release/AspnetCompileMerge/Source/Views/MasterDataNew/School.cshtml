@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/School.js"></script>
+
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> School
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataSchools" ng-controller="masterDataSchoolsController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        School Management
+                        <span class="pull-right">
+                            <button ng-disabled="disableAdd" ng-click="addSchools()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <br />
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name *</th>
+                                    <th>Status</th>
+                                    <th>Last Modified Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="License in CurrentPage track by $index" ng-include="getTemplate(License)"></tr>
+                            </tbody>
+                        </table>
+
+                        <script type="text/ng-template" id="displaySchools">
+                            <td>{{License.Name}}</td>
+                            <td>{{License.Status}}</td>
+                            <td>{{License.LastModifiedDate | date : sortDate()}}</td>
+                            <td>
+                                <button ng-disabled="disableEdit" ng-click="editSchools(License)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editSchools">
+                            <td><input type="text" ng-model="tempSchools.Name" />
+                                <span class="text-danger" name="title" ng-if="error && !tempSchools.Name">{{error}}</span>
+                                <span class="text-danger" name="title" ng-if="existErr">{{existErr}}</span></td>
+
+                            <td>{{tempSchool.Status}}</td>
+                            <td>{{tempSchool.LastModifiedDate | date : sortDate()}}</td>
+                            <td>
+                                <button ng-if="!tempSchools.SchoolID" ng-click="saveSchools($index)" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-if="tempSchools.SchoolID" ng-click="updateSchools($index)" class="btn btn-xs btn-primary">Update</button>
+                                <button ng-if="tempSchools.SchoolID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                <button ng-if="!tempSchools.SchoolID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                            </td>
+                        </script>
+                        <div class="clearfix"></div><br />
+                        <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                        <pagination ng-if="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        <div class="clearfix"></div><br />
+                        <div ng-show="activeMessageDiv=='School'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div><br />
+                        <div ng-show="activeMessageDiv=='SchoolError'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+
+
+

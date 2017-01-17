@@ -1,0 +1,86 @@
+﻿@using PortalTemplate.Areas.ETL.Models.EdwLogger;
+<p-script filepath="~/Areas/ETL/Scripts/LiveFileTrackerTable.js"></p-script>
+<p-link filepath="~/Areas/ETL/Styles/TableStyle/TableStyle.css"></p-link>
+
+<style>
+    tbody > tr, td {
+        white-space: normal;
+        text-transform: none;
+    }
+    th {
+        font-size: 15px;
+        text-transform: none;
+    }
+    body {
+        text-transform: none;
+    }
+    a {
+        cursor: pointer;
+    }
+
+    input {
+        font-size: x-small;
+    }
+    .buttons-excel {
+        visibility: hidden;
+    }
+</style>
+<br />
+<div class="col-lg-4">
+    <span style="background: #0092B3; padding: 10px; border-radius: 10px; color: #fff;"><b>Total Count : <span class="charge badge" style="background-color: rgba(47, 39, 39, 0.84);">@ViewData["_FileTrackerCount"]</span></b></span>
+</div>
+<div class="col-lg-3">
+    <span style="background: #0092B3; padding: 10px; border-radius: 10px; color: #fff;"><b>Filtered Count : <span class="charge badge" id="DisplayFilteredCount" style="background-color: rgba(47, 39, 39, 0.84);">@ViewData["_FileTrackerCount"]</span></b></span>
+</div>
+<div class=" col-lg-1 pull-right">
+    <a href="#" onclick="ExportToExcel()" id="ExportToExcel" class="pointer" style="text-decoration:none;" tooltip="" data-toggle="tooltip" data-placement="top" title="Export to Excel" data-original-title="Export to Excel">
+        <img src="~/Areas/ETL/Resources/Images/ssis-export-excel-file-task.png" style="width:40px; height:40px;" />
+    </a>
+</div>
+<br /><br />
+
+<div class="col-lg-12">
+    <table id="FileTrackerTable" class="displayFileTrackerTable  table table-striped table-hover table-responsive custom-thead-back custom-thead-font" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>S No </th>
+                <th>File Location</th>
+                <th>Plan</th>
+                <th>Data Source</th>
+                <th>File Type</th>
+                <th>File Size</th>
+                <th>File Date</th>
+                <th>Remarks</th>
+
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>S No </th>
+                <th>File Location</th>
+                <th>Plan</th>
+                <th>Data Source</th>
+                <th>File Type</th>
+                <th>File Size</th>
+                <th>File Date</th>
+                <th>Remarks</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var FileTrackerData in (List<FileTrackerDTO>)ViewData["_FileTrackerDTO"])
+            {
+                <tr>
+                    <td>@FileTrackerData.Sno</td>
+                    <td style="word-wrap: break-word">@FileTrackerData.FileLocation</td>
+                    <td>@FileTrackerData.Plan</td>
+                    <td>@FileTrackerData.DataSource</td>
+                    <td>@FileTrackerData.FileType</td>
+                    <td>@FileTrackerData.FileSize</td>
+                    <td>@FileTrackerData.FileDate</td>
+                    <td>@FileTrackerData.Remarks</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

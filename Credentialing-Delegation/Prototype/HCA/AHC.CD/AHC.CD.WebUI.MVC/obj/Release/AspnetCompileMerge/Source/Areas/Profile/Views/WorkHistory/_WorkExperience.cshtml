@@ -1,0 +1,89 @@
+﻿
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Professional Work Experience
+        </legend>
+        <div class="form-style">
+            <div class="col-sm-2 right pull-right" align="right"><a href="~/Content/Document/SINGH - CV.pdf" target="_blank"><i class="fa fa-file" title=""> Curriculum vitae</i></a></div>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                <label>*Minimum of 10 years of experience</label>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table class="table table-bordered table-condensed table-striped customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>Employer Name</th>
+                            <th>Job Title</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="wh in WorkHistories">
+                        <tr>
+                            <td>{{wh.EmployerName}}</td>
+                            <td>{{wh.JobTitle}}</td>
+                            <td>{{wh.StartDate}}</td>
+                            <td>{{wh.EndDate}}</td>
+                            <td>
+                                <button data-toggle="tooltip" data-placement="left" title="View" ng-click="viewWorkHistory($index,wh)" ng-hide="showingDetail && wh==workHistorys" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></button>
+                                <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="editWorkHistory($index,wh)" ng-hide="showingDetailsView && wh==workHistory"><i class="fa fa-edit"></i></button>
+                                <button data-toggle="tooltip" data-placement="right" title="Add New" class="btn btn-xs btn-success" ng-click="addWorkHistory()" ng-hide="$index+1!=WorkHistories.length"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="showingDetails && wh==workHistory">
+                            <td colspan="5" id="workHistoryEditDiv{{$index}}" class="editTableDataStyle">
+
+                                <div id="workHistoryForm">
+                                   
+                                     @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ProfessionalWorkExperience.cshtml")
+
+                                    <div class="col-md-12 form-group"> <button ng-show="workHistoryFormStatus" type="button" class="btn btn-warning btn-sm" ng-click="cancelWorkHistory('editCancel')">Cancel</button> <button ng-show="!workHistoryFormStatus" type="button" class="btn btn-warning btn-sm" ng-click="cancelWorkHistory('saveCancel')">Cancel</button> <button ng-show="!workHistoryFormStatus" type="button" class="btn btn-primary btn-sm pull-right" ng-click="saveWorkHistory(workHistory)">Add</button> <button ng-show="workHistoryFormStatus" type="button" class="btn btn-primary btn-sm pull-right" ng-click="updateWorkHistory(workHistory)">Update</button> </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr ng-show="showingDetailsView && wh==workHistory">
+                            <td colspan="5" id="workHistoryEditDiv{{$index}}">
+
+                                <div>
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ProfessionalWorkEmployerView.cshtml")
+
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ProfessionalWorkAddressView.cshtml")
+
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ProfessionalWorkOtherView.cshtml")
+
+                                    <div class="col-md-12 form-group"><button type="button" class="btn btn-warning btn-sm" ng-click="cancelWorkHistory('viewCancel')">Cancel</button>  </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="clearfix"></div>
+            <fieldset ng-show="newWorkHistoryForm && !workHistoryFormStatus">
+                <legend>
+                    Add Work History
+                </legend>
+                <div id="newWorkHistoryFormDiv">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <form id="newWorkHistoryForm">
+                            @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ProfessionalWorkExperience.cshtml")
+                        </form>
+                        <div class="clearfix"></div>
+                        <div class="col-md-12 form-group">
+                            <button ng-show="!workHistoryFormStatus" type="button" class="btn btn-warning btn-sm" ng-click="cancelWorkHistory('saveCancel')">Cancel</button>
+                            <button ng-show="!workHistoryFormStatus" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveWorkHistory()">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="clearfix"></div>
+        </div>
+    </fieldset>
+</div>

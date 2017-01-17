@@ -1,0 +1,202 @@
+﻿@{
+    ViewBag.Title = "PrimarySource";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Jquery/jquery-ui.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Custom/Validation/PostedFileExtension.js"></script>
+    <script src="~/Scripts/Custom/Validation/PostedFileSize.js"></script>
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/Custom/Checklist/ChecklistIndex.js"></script>
+
+    <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+}
+<script>
+
+    $(document).ready(function () {
+        //$('.checkListDocClick').click(checkListDocClick);
+    });
+
+    $(window).load(function () {
+        $('#accordionProviderInfo').on('shown.bs.collapse', function (e) {
+            var id = $(e.target).prev().find("[id]")[0].id;
+            navigateToElement(id);
+        })
+
+        function navigateToElement(id) {
+            $('html, body').animate({
+                scrollTop: $("#" + id).offset().top
+            }, 1000);
+        }
+    });
+
+    function checkListDocClick() {
+        //$('#grid3').removeClass('active');
+        //$('#grid4').addClass('active');
+
+        $('.psvTab>ul>li:eq(1)').find('a').trigger('click');
+    }
+
+
+</script>
+
+<style>
+    label.small {
+        color: black;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="primarySourceApp" ng-controller="profileAppCtrl" ng-init="Load(@ViewBag.Profile);LoadProfile(@ViewBag.ProfileData);" ng-cloak>
+    <div class="container-fluid" ng-init="LoadVerification(@ViewBag.VerificationId);">
+        <!-- Page Heading -->
+        <div class="row" ng-init="LoadCredInfo(@ViewBag.CredentialingInfoId)">
+            <div class="col-lg-12" ng-init="LoadPendingPSV(@ViewBag.PSVData);">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                    </li>
+                    @*<li class="active">
+                            <a href="~/Verification/Index"><i class="fa fa-list"></i> Verification List</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-list"></i>Primary Source
+                        </li>*@
+                </ol>
+            </div>
+        </div>
+
+        <div ng-if="PlanPsv" class="row col-lg-12">
+
+            @* Adding new code for the provider detail *@
+            
+            <div class="col-lg-1">
+                <img ng-if="ProfileObj.Profile.ProfilePhotoPath" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{ProfileObj.Profile.ProfilePhotoPath}}" alt="Profile Picture" style="height: 75px;"/>
+                <img ng-if="!ProfileObj.Profile.ProfilePhotoPath" src="~/Content/Images/no_image.png" alt="Profile Picture" style="height: 75px;" /></div>
+            <div class="col-lg-11" style="padding-right:0px;">                
+                <table class="table table-bordered pull-right" style="width: 57%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Total</th>
+                            <th style="text-align: center;">Verified</th>
+                            <th style="text-align: center;">Success</th>
+                            <th style="text-align: center;">Failed</th>
+                            <th style="text-align: center;" class="bg-gray">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-primary">7</span></td>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-warning verfcount">0</span></td>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-success successcount">0</span></td>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-danger">0</span></td>
+                            <td style="text-align: center;" class="bg-gray"><a ng-disabled="enableVerified" class="btn btn-primary btn-xs" ng-click="setAllVerified(@ViewBag.CredentialingInfoId,@ViewBag.VerificationId)">All Verified</></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="table table-striped" style="width: 42%;">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th>Provider Name</th>
+                            <th>Initiation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th><a data-toggle="tooltip" data-placement="bottom" title="Click to View Profile" target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/@ViewBag.ProfileId">{{ProfileObj.Profile.PersonalDetail.FirstName}} {{ProfileObj.Profile.PersonalDetail.LastName}}<span ng-repeat="t in ProfileObj.Profile.PersonalDetail.ProviderTitles" ng-if="t.Status=='Active'">, {{t.ProviderType.Title}}</span></a></th>
+                            <td ng-bind="reformatDate(ProfileObj.InitiationDate)"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            @* Ending new view for provider details *@
+
+
+      
+        </div>
+        <div ng-if="!PlanPsv" class="row col-lg-12">
+
+            <div class="col-lg-1">
+                <img ng-if="ProfileObj.Profile.ProfilePhotoPath" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{ProfileObj.Profile.ProfilePhotoPath}}" alt="Profile Picture" style="height: 75px;" />
+                <img ng-if="!ProfileObj.Profile.ProfilePhotoPath" src="~/Content/Images/no_image.png" alt="Profile Picture" style="height: 75px;" />
+            </div>
+            <div class="col-lg-11" style="padding-right:0px;">
+                <table class="table table-bordered pull-right" style="width: 57%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Total</th>
+                            <th style="text-align: center;">Verified</th>
+                            <th style="text-align: center;">Success</th>
+                            <th style="text-align: center;">Failed</th>
+                            <th style="text-align: center;" class="bg-gray">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-primary">7</span></td>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-warning verfcount">0</span></td>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-success successcount">0</span></td>
+                            <td style="text-align: center;"><span class="btn btn-xs btn-danger">0</span></td>
+                            <td style="text-align: center;" class="bg-gray"><a ng-disabled="enableVerified" class="btn btn-primary btn-xs" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/@ViewBag.ProfileId">All Verified</></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-striped" style="width: 42%;">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th>Provider Name</th>
+                            <th>Initiation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th><a data-toggle="tooltip" data-placement="bottom" title="Click to View Profile" target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/@ViewBag.ProfileId">{{ProfileObj.Profile.PersonalDetail.FirstName}} {{ProfileObj.Profile.PersonalDetail.LastName}}<span ng-repeat="t in ProfileObj.Profile.PersonalDetail.ProviderTitles" ng-if="t.Status=='Active'">, {{t.ProviderType.Title}}</span></a></th>
+                            <td ng-bind="reformatDate(ProfileObj.InitiationDate)"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+            var savedata = function () {
+                $("#successAlert").show();
+            };
+        </script>
+        <div class="clearfix"></div>
+        <div>
+            <div id="successAlert" class="alert alert-success" role="alert" style="display:none;">Data is saved successfully !!!</div>
+        </div>
+        <div class="row">
+            
+            <div class="col-lg-12" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <button onclick="verifyall();" id="verfyall" class="btn btn-xs btn-info pull-right" >Verify All</button><h3 class="panel-title"><i class="fa fa-money fa-fw"></i>  Primary Source Verification</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div role="tabpanel" class="psvTab">
+            
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="grid3">
+                                    @Html.Partial("_PSVView")
+                                </div>
+            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@model List<PortalTemplate.Areas.Encounters.Models.MemberViewModel>
+
+<div class="table-responsive">
+    <table id="SchedulerMemberResult" class="table table-striped table-hover custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+        <thead class="theme_thead">
+            <tr>
+                <th>Subscriber ID</th>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Address</th>
+                <th>PCP</th>
+                <th>Plan Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-container="@item.MemberId">
+                    <td>@item.SubscriberID </td>
+                    <td><a href="javascript:void(0)">@item.MemberLastName @item.MemberMiddleName @item.MemberFirstName</a>  </td>
+                    <td>@item.DateOfBirth.Value.ToShortDateString()</td>
+                    <td>@item.Address</td>
+                    <td>@item.PCP</td>
+                    <td>@item.PayerName</td>
+                    <td>@item.StartDate.Value.ToShortDateString()</td>
+                    <td>@item.EndDate.Value.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@*<script>
+    //url need to change later
+    $('#SchedulerMemberResult').prtGrid({
+        url: "/EncounterList/GetScheduleListByIndex",
+        dataLength: 50,
+        columns: [
+        { type: 'text', name: 'SubscriberID', text: 'Subscriber ID', widthPercentage: 8, sortable: true },
+        { type: 'text', name: 'MemberLastName', text: 'Name', widthPercentage: 12, sortable: true },
+        { type: 'date', name: 'DateOfBirth', text: 'DOB', widthPercentage: 10, sortable: true },
+        { type: 'text', name: 'Address', text: 'Address', widthPercentage: 20, sortable: true },
+        { type: 'text', name: 'PCP', text: 'PCP', widthPercentage: 20, sortable: true },
+        { type: 'text', name: 'PayerName', text: 'Plan Name', widthPercentage: 10, sortable: true },
+        { type: 'date', name: 'StartDate', text: 'Start Date', widthPercentage: 10, sortable: true },
+        { type: 'date', name: 'EndDate', text: 'End Date', widthPercentage: 10, sortable: true }]
+    })
+</script>*@
+
+<script src="~/Areas/Encounters/Scripts/AppJs/Schedule/Unminified/MemberResult.js"></script>

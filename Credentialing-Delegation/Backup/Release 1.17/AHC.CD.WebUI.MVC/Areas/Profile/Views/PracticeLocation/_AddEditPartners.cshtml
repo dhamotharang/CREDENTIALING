@@ -1,0 +1,119 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.PracticeColleagueViewModel
+
+<div class="form-style">
+    <span ng-if="PracticeLocationDetailID">
+        @Html.HiddenFor(model => model.PracticeLocationDetailID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+    </span>    
+    <span ng-if="partner.PracticeColleagueID">
+        @Html.HiddenFor(model => model.PracticeColleagueID, new { ng_value = "PracticeColleague.PracticeColleagueID" })
+    </span>
+    <div class="form-group">
+        <div class="col-md-12 zero-padding-left-right-div">
+            <div class="col-md-4 form-group">
+                <label class="control-label small  ">Select Covering Colleague </label>
+                <input type="text" class="form-control input-sm" name="tempSupervisingProvider" ng-model="practitioner" data-practitioners="supervisingProviders" data-onselect="setSupervisingProvider" data-autocomplete="practitioner" practitionersearch />
+                
+            </div>
+        </div>
+        
+        <div ng-if="SupervisingProvider.PersonalDetail.FirstName">
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">First Name </label>
+                    <input type="text" class="form-control input-sm" id="name11" placeholder="first name" disabled data-ng-model="SupervisingProvider.PersonalDetail.FirstName">
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Middle Name</label>
+                    <input type="text" class="form-control input-sm" id="name22" placeholder="middle name" disabled data-ng-model="SupervisingProvider.PersonalDetail.MiddleName ">
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Last Name </label>
+                    <input type="text" class="form-control input-sm" id="name33" placeholder="last name" disabled data-ng-model="SupervisingProvider.PersonalDetail.LastName">
+                </div>
+            </div>
+
+            <div  class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Street </label>
+                    <div>
+                        <input type="text" ng-repeat="address in SupervisingProvider.HomeAddresses" class="form-control input-sm" ng-if="address.AddressPreferenceType == 1" disabled data-ng-model="address.Street" />
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Suite/Building</label>
+                    <div>
+                        <input type="text" ng-repeat="address in SupervisingProvider.HomeAddresses" ng-if="address.AddressPreferenceType == 1" class="form-control input-sm" disabled data-ng-model="address.UnitNumber" />
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-4">
+                    <label class="control-label small">City </label>
+                    <input type="text" ng-repeat="address in SupervisingProvider.HomeAddresses" class="form-control input-sm" ng-if="address.AddressPreferenceType == 1" disabled data-ng-model="address.City">
+                </div>
+
+            </div>
+
+            <div class="col-md-12 zero-padding-left-right-div">
+
+                <div class="form-group col-md-4">
+                    <label class="control-label small">State </label>
+                    <input type="text" ng-repeat="address in SupervisingProvider.HomeAddresses" class="form-control input-sm" ng-if="address.AddressPreferenceType == 1" disabled data-ng-model="address.State">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Zip Code </label>
+                    <div>
+                        <input type="text" ng-repeat="address in SupervisingProvider.HomeAddresses" class="form-control input-sm" ng-if="address.AddressPreferenceType == 1" disabled data-ng-model="address.ZipCode" />
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Country </label>
+                    <input type="text" ng-repeat="address in SupervisingProvider.HomeAddresses" class="form-control input-sm" ng-if="address.AddressPreferenceType == 1" disabled data-ng-model="address.Country">
+                </div>
+            </div>
+
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4">
+                    <label class="control-label small">County </label>
+                    <input type="text" ng-repeat="address in SupervisingProvider.HomeAddresses" class="form-control input-sm" ng-if="address.AddressPreferenceType == 1" disabled data-ng-model="address.County">
+                </div>
+                <div class="form-group col-md-4">                    
+                    <label for="MobileNo" class="control-label small">TelePhone number</label>
+                    <div ng-repeat="phone in SupervisingProvider.ContactDetail.PhoneDetails">
+
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" disabled ng-if="phone.PreferenceType == 1" class="btn btn-default countryCodeClass">{{phone.CountryCode}}<span class="caret"></span></button>
+                            </div>
+                            <div>
+                                <input type="text" name="PhoneNo" ng-if="phone.PreferenceType == 1" class="form-control" disabled data-ng-model="phone.PhoneNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label class="control-label small">Specialty Code </label>
+                    @*<span ng-repeat="spec in SupervisingProvider.SpecialtyDetails track by $index">{{spec.Specialty.Name}},</span>*@
+                    <input type="text" class="form-control input-sm" ng-repeat="spec in SupervisingProvider.SpecialtyDetails" disabled data-ng-model="spec.Specialty.Name"><br />
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-md-4 form-group">
+                    <label class="control-label small">Provider Type</label>
+                    <input type="text" class="form-control input-sm" disabled ng-repeat="prov in SupervisingProvider.PersonalDetail.ProviderTitles" data-ng-model="prov.ProviderType.Code"><br />
+                </div>
+                <div class="col-md-4 form-group">
+                    <label class="control-label small">NPI Number</label>
+                    <input type="text" class="form-control input-sm" disabled data-ng-model="SupervisingProvider.OtherIdentificationNumber.NPINumber">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-12 form-group">
+                <button class="btn btn-warning btn-sm" ng-click="operateSecondViewAndAddControl('')">Cancel</button>
+                <button class="btn btn-success btn-sm pull-right" ng-click="savePatner()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>

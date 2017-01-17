@@ -1,0 +1,135 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Initiation.Models.UserViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/Custom/Validation/StartDate.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/CDN Service/angular-strap.min.js"></script>
+<script src="~/Scripts/Lib/CDN Service/angular-strap.tpl.min.js"></script>
+<script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+<script src="~/Areas/Initiation/Scripts/User.js"></script>
+
+
+<div id="page-wrapper" ng-app="UserApp" ng-controller="userController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> New User Initiation
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="newUser" class="panel panel-default content-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">New User Initiation</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-4 form-group">
+                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label small" })
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "user.Name", placeholder = "Name", autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label small" })
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "user.Email", placeholder = "Email", autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    @Html.LabelFor(model => model.GenderType, htmlAttributes: new { @class = "control-label small" })
+                                    <div>
+                                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.GenderType)))
+                                        {
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.GenderType, (int)value, new { data_ng_model = "user.GenderType" }) @value.ToString()
+                                            </label>
+                                        }
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.GenderType, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-4 form-group " ng-init="user.PhoneCountryCode='+1'">
+                                    @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label small" })
+                                    <div class="input-group">
+                                        @*<span ng-if="!user.PhoneCountryCode" ng-init="user.PhoneCountryCode='+1'"></span>*@
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('TelPhoneCountryCode'+$index)"> {{user.PhoneCountryCode}} <span class="caret"></span></button>
+                                        </div>
+                                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="TelPhoneCountryCode{{$index}}">
+                                            <div class="arrow"></div>
+                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                            <div class="popover-content">
+                                                <select name="PhoneCountryCode" ng-model="user.PhoneCountryCode">
+                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == user.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            @Html.TextBoxFor(model => model.Phone, new { id = "Phone", @class = "form-control", placeholder = "Mobile Number", data_ng_model = "user.Phone", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" })
+                                        </div>
+                                    </div>
+                                    <span class="text-danger" data-valmsg-for="Phone" data-valmsg-replace="true">
+                                        <span for="Phone" class=""></span>
+                                    </span>
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label small" })
+                                    @Html.TextBoxFor(model => model.DateOfBirth, new {@class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format", data_ng_model = "user.DateOfBirth", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker" })
+                                    @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    @Html.LabelFor(model => model.RoleCode, htmlAttributes: new { @class = "control-label small" })
+                                    <select data-val="true" data-val-required="Please select the Role*" name="RoleCode" ng-model="user.RoleCode" class="form-control input-sm">
+                                        <option value="">--Select--</option>
+                                        <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="user.RoleCode == role.Code">{{role.Name}}</option>
+                                    </select>
+                                    <span class="text-danger" data-valmsg-for="RoleCode" data-valmsg-replace="true">
+                                        <span for="RoleCode" class=""></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div><br />
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-12 form-group">
+                                    <input type="button" value="Add" ng-click="addUser(user)" class="btn btn-primary btn-sm pull-right" />
+                                    <input type="button" value="Clear" ng-click="clear()" class="btn btn-warning btn-sm pull-left" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- /.row -->
+                </div>
+                <div ng-show="activeMessageDiv=='User'" class="alert alert-success" role="alert">
+                    {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='UserError'" class="alert alert-danger" role="alert">
+                    {{messageDesc}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</div>
+

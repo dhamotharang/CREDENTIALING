@@ -1,0 +1,356 @@
+﻿
+<link href="~/Areas/MH/Styles/CustomCss/Select2CustomStyle.css" rel="stylesheet" />
+
+@using PortalTemplate.Helper
+@using PratianUI
+
+@model PortalTemplate.Areas.MH.Models.ViewModels.MemberProfile.MemberProfileViewModel
+@{
+    List<SelectListItem> ProviderAccounts = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Access 2 HealthCare" , Text = "Access 2 HealthCare" },
+        new SelectListItem { Value = "All American Physicians" , Text = "All American Physicians" },
+        new SelectListItem { Value = "Prime Care" , Text = "Prime Care" },
+    };
+    List<SelectListItem> PCPs = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Gordon Grenn" , Text = "Gordon Grenn" },
+        new SelectListItem { Value = "Mercely Devabavus" , Text = "Mercely Devabavus" },
+        new SelectListItem { Value = "Danish Siddiq" , Text = "Danish Siddiq" },
+        new SelectListItem { Value = "Asif Mazood" , Text = "Asif Mazood" },
+    };
+    List<SelectListItem> BillingProviders = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Gordon Grenn" , Text = "Gordon Grenn" },
+        new SelectListItem { Value = "Mercely Devabavus" , Text = "Mercely Devabavus" },
+        new SelectListItem { Value = "Danish Siddiq" , Text = "Danish Siddiq" },
+        new SelectListItem { Value = "Asif Mazood" , Text = "Asif Mazood" },
+    };
+    List<SelectListItem> Payers = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Insurance 1" , Text = "Insurance 1" },
+        new SelectListItem { Value = "Insurance 2" , Text = "Insurance 2" },
+        new SelectListItem { Value = "Insurance 3" , Text = "Insurance 3" },
+        new SelectListItem { Value = "Insurance 4" , Text = "Insurance 4" },
+    };
+    List<SelectListItem> Plans = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Ultimate Health Plans LLC" , Text = "Ultimate Health Plans LLC" },
+        new SelectListItem { Value = "Wellcare Health Plans" , Text = "Wellcare Health Plans" },
+        new SelectListItem { Value = "Humana Health Care LLC" , Text = "Humana Health Care LLC" },
+        new SelectListItem { Value = "Optimum Health Care LL" , Text = "Optimum Health Care LLC" },
+    };
+    List<SelectListItem> InsurancePriorities = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Primary" , Text = "Primary" },
+        new SelectListItem { Value = "Secondary" , Text = "Secondary" },
+    };
+    List<SelectListItem> PatientRelationship = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Self" , Text = "Spouse" },
+        new SelectListItem { Value = "Spouse" , Text = "Spouse" },
+        new SelectListItem { Value = "Child" , Text = "Child" },
+    };
+    List<SelectListItem> Genders = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Male" , Text = "Male" },
+        new SelectListItem { Value = "Female" , Text = "Female" },
+        new SelectListItem { Value = "Others" , Text = "Others" },
+    };
+
+}
+
+@*<script>
+        $("label[for='copyMembertoInsurer']").attr("style", "color:black");
+        $("label[for='haveOtherInsurance']").attr("style", "color:black");
+        $("label[for='NoOtherInsurance']").attr("style", "color:black");
+    </script>*@
+<br />
+
+@*<div id="masterData">
+        @Html.Action("GetAllMasterData", "SearchMember")
+    </div>*@
+
+@using (Ajax.BeginForm("AddNewMember", "AddMember", "MH", new AjaxOptions { HttpMethod = "POST", OnSuccess = "goToMemberProfile" }, new { id = "AddNewMemberForm" }))
+{
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase">
+                Member Details
+            </span>
+        </legend>
+        <div class="x_panel zero-padding-left-right" id="PreAuthFacility">
+            <div class="col-lg-12 zero-padding-left-right">
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.PersonalInformation.FirstName)</span>
+                    @Html.TextBoxFor(e => e.PersonalInformation.FirstName, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "FIRST NAME", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.PersonalInformation.LastName)</span>
+                    @Html.TextBoxFor(e => e.PersonalInformation.LastName, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "LAST NAME", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.PersonalInformation.MiddleInitial)</span>
+                    @Html.TextBoxFor(e => e.PersonalInformation.MiddleInitial, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "MIDDLE INITIAL", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.PersonalInformation.Gender)</span>
+                    @Html.DropDownListFor(e => e.PersonalInformation.Gender, Genders, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "GENDER", @id = "" })
+                </div>
+                @*Date Picker Component*@
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.PersonalInformation.DOB)</span>
+                    @Html.PratianUiDatePickerFor(e => e.PersonalInformation.DOB, new { @class = "form-control input-xs memberdetail", @placeholder = "MM/DD/YYYY" })
+                    @*@Html.PratianUiDatePickerFor(e => e.Demographics.DOB, new { @class = "form-control input-xs", @placeholder = "MM/DD/YYYY" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.AddressInformation[0].HomeAddress)</span>
+                    @Html.TextBoxFor(e => e.AddressInformation[0].HomeAddress, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "Address Line 1", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.AddressInformation[0].ApartmentOrSuiteNumber)</span>
+                    @Html.TextBoxFor(e => e.AddressInformation[0].ApartmentOrSuiteNumber, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "Address Line 2", @id = "" })
+                </div>
+                @*SearchWithDropdown Component----->Cities Master Data*@
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.AddressInformation[0].City)</span>
+                    @Html.PratianUiDropDownListFor(e => e.AddressInformation[0].City, "/MH/MasterData/GetAllCities", 1, "100%", "City", "500", "CityID", "CityName", new { @class = "form-control input-xs text-uppercase memberdetail" })
+                    @*  @Html.TextBoxFor(e => e.Demographics.City, new { @class = "form-control input-xs text-uppercase", @placeholder = "City", @id = "" })*@
+                </div>
+                @*SearchWithDropdown Component----->States Master Data*@
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.AddressInformation[0].State)</span>
+                    @Html.PratianUiDropDownListFor(e => e.AddressInformation[0].City, "/MH/MasterData/GetAllStates", 1, "100%", "State", "500", "StateID", "StateName", new { @class = "form-control input-xs text-uppercase memberdetail" })
+                    @*   @Html.TextBoxFor(e => e.Demographics.State, new { @class = "form-control input-xs text-uppercase", @placeholder = "State", @id = "" })*@
+                </div>
+                @*SearchWithDropdown Component----->Counties Master Data*@
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.AddressInformation[0].County)</span>
+                    @Html.PratianUiDropDownListFor(e => e.AddressInformation[0].County, "/MH/MasterData/GetAllCounties", 1, "100%", "County", "500", "CountyID", "CountyName", new { @class = "form-control input-xs text-uppercase memberdetail" })
+                    @*   @Html.TextBoxFor(e => e.Demographics.County, new { @class = "form-control input-xs text-uppercase", @placeholder = "County", @id = "" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.AddressInformation[0].Country)</span>
+                    @Html.TextBoxFor(e => e.AddressInformation[0].Country, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "Country", @id = "", @Value = "US" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.AddressInformation[0].ZipCode)</span>
+                    @Html.TextBoxFor(e => e.AddressInformation[0].ZipCode, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "Zip Code", @id = "" })
+                </div>
+                @*PhoneNumber Format Mask Component----->Member Phone Number*@
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.ContactInformation[0].Number)</span>
+                    @Html.PratianUiPhoneFormatFor(e => e.ContactInformation[0].Number, new { @class = "form-control input-xs memberdetail", @placeholder = "Phone Number" })
+                    @*  @Html.PratianUiPhoneFormatFor(e => e.Demographics.PhoneNumber, new { @class = "form-control input-xs", @placeholder = "Phone Number" })*@
+                </div>
+                @*SearchWithDropDown Component----->Relationships Master Data*@
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].RelationshipName)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].RelationshipName, "/MH/MasterData/GetAllRelationships", 1, "100%", "Patient Relation", "500", "Relationship", "Relationship", new { @class = "form-control input-xs text-uppercase memberdetail" })
+                    @* @Html.DropDownListFor(e => e.Demographics.PatientRelation, PatientRelationship, new { @class = "form-control input-xs text-uppercase", @placeholder = "Patient Relation", @id = "" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.ProfileAccountID)</span>
+                    @Html.TextBoxFor(e => e.ProfileAccountID, new { @class = "form-control input-xs text-uppercase memberdetail", @placeholder = "Patient Account Number", @id = "" })
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase">
+                Insurance Details
+            </span>
+        </legend>
+        <div class="x_panel zero-padding-left-right MemberInsuranceDetails" id="PreAuthFacility">
+            <div class="col-lg-12 zero-padding-left-right">
+                @Html.PratianUiCheckboxFor(e => e.MemberMemberships[0].IsSubscriber, "Copy from Member", new { @class = "", @id = "copyMembertoInsurer", @labelClass = "theme_label_data" })
+
+
+                @*@Html.PratianUiCheckbox("Copy from Member", new { @id = "copyMembertoInsurer", @labelClass = "theme_label_data" })*@
+                @*<input type="checkbox" class="checkbox-radio copyfromMember" value="yes" id="copyMembertoInsurer" name="copyMember">
+                    <label class="theme_label_data" for="copyMembertoInsurer"><span></span>Copy from Member</label>*@
+            </div>
+
+            <div class="col-lg-12 zero-padding-left-right">
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.SubscriberID)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.SubscriberID, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Insured Person ID", @id = "InsurerId" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].Preference)</span>
+                    @Html.DropDownListFor(e => e.MemberMemberships[0].Preference, InsurancePriorities, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Insurance Priority", @id = "InsurancePriority" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.FirstName)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.FirstName, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "First Name", @id = "InsurerFirstName" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.MiddleInitial)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.MiddleInitial, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Middle Initial", @id = "InsurerMiddleInitial" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.LastName)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.LastName, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Last Name", @id = "InsurerLastName" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.Gender)</span>
+                    @Html.DropDownListFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.Gender, Genders, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "GENDER", @id = "InsurerGender" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.DOB)</span>
+                    @Html.PratianUiDatePickerFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.PersonalInformation.DOB, new { @class = "form-control input-xs InsurerDetails", @placeholder = "MM/DD/YYYY", @id = "InsurerDOB" })
+                    @*@Html.TextBoxFor(e => e.Insurance[0].DOB, new { @class = "form-control input-xs text-uppercase", @placeholder = "DOB", @id = "" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].HomeAddress)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].HomeAddress, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Address Line 1", @id = "InsurerAddressLine1" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].ApartmentOrSuiteNumber)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].ApartmentOrSuiteNumber, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Address Line 2", @id = "InsurerAddressLine2" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].City)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].City, "/MH/MasterData/GetAllCities", 1, "100%", "City", "500", "CityID", "CityName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.TextBoxFor(e => e.Insurance[0].City, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "City", @id = "InsurerCity" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].State)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].State, "/MH/MasterData/GetAllStates", 1, "100%", "State", "500", "StateID", "StateName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.TextBoxFor(e => e.Insurance[0].State, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "State", @id = "InsurerState" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].County)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].County, "/MH/MasterData/GetAllCounties", 1, "100%", "County", "500", "CountyID", "CountyName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.TextBoxFor(e => e.Insurance[0].County, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "County", @id = "InsurerCounty" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].Country)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].Country, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Country", @id = "InsurerCountry" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].ZipCode)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.AddressInformation[0].ZipCode, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "ZipCode", @id = "InsurerZipCode" })
+                </div>
+                @*PhoneNumber Format Mask Component----->Memberships Phone Number*@
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.ContactInformation[0].Number)</span>
+                    @Html.PratianUiPhoneFormatFor(e => e.MemberMemberships[0].MembershipInformation.Subscriber.ContactInformation[0].Number, new { @class = "form-control input-xs InsurerDetails", @placeholder = "Phone Number", @id = "InsurerPhoneNumber" })
+                    @*    @Html.TextBoxFor(e => e.Insurance[0].PhoneNumber, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Phone Number", @id = "InsurerPhoneNumber" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.PBPCode)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[0].MembershipInformation.PBPCode, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Policy Number", @id = "InsurerPolicyNumber" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.InsuranceCompanyName)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].MembershipInformation.InsuranceCompanyName, "/MH/MasterData/GetAllInsuranceCompanies", 1, "100%", "Insurance Company", "500", "CompanyID", "CompanyName", new { @class = "form-control input-xs text-uppercase InsurerDetails" })
+                    @*@Html.DropDownListFor(e => e.Insurance[0].PayerName, Payers, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Payer Name", @id = "InsurerPayerName" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].MembershipInformation.PlanName)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].MembershipInformation.PlanName, "/MH/MasterData/GetAllPlansForInsuranceCompany", 1, "100%", "Plan Name", "500", "PlanID", "PlanName", new { @class = "form-control input-xs text-uppercase InsurerDetails" })
+                    @*@Html.DropDownListFor(e => e.Insurance[0].PlanName, Plans, new { @class = "form-control input-xs text-uppercase InsurerDetails", @placeholder = "Plan/Program Name", @id = "InsurerPlanName" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label"><label for="">Is there any other Insurance?</label></span><br />
+
+                    @Html.PratianUiSquareRadioButtonFor(e => e.MemberMemberships[0].HasOtherInsurance, "Yes", new { @class = "checkOtherInsurance", @Value = "true", @id = "haveOtherInsurance", @labelClass = "theme_label_data" })
+                    @Html.PratianUiSquareRadioButtonFor(e => e.MemberMemberships[0].HasOtherInsurance, "No", new { @class = "checkOtherInsurance", @Value = "false", @id = "NoOtherInsurance", @labelClass = "theme_label_data" })
+                    @*<input id="haveOtherInsurance" type="radio" name="Insurance[0].hasOtherInsurance" class="checkbox-radio text-uppercase checkOtherInsurance" value="true">
+                        <label for="haveOtherInsurance" class="theme_label_data"><span></span>Yes</label>*@
+
+                    @*<input id="NoOtherInsurance" type="radio" name="Insurance[0].hasOtherInsurance" class="checkbox-radio text-uppercase checkOtherInsurance" value="false">
+                        <label for="NoOtherInsurance" class="theme_label_data"><span></span>No</label>*@
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="fsStyle OtherInsuranceFieldset">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase">
+                Other Insured Person Details
+            </span>
+        </legend>
+        <div class="x_panel zero-padding-left-right" id="PreAuthFacility">
+            <div class="col-lg-12 zero-padding-left-right">
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].MembershipInformation.SubscriberID)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[1].MembershipInformation.SubscriberID, new { @class = "form-control input-xs text-uppercase", @placeholder = "Insured Person ID", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].Preference)</span>
+                    @Html.DropDownListFor(e => e.MemberMemberships[1].Preference, InsurancePriorities, new { @class = "form-control input-xs text-uppercase", @placeholder = "Insurance Priority", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].MembershipInformation.Subscriber.PersonalInformation.FirstName)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[1].MembershipInformation.Subscriber.PersonalInformation.FirstName, new { @class = "form-control input-xs text-uppercase", @placeholder = "First Name", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].MembershipInformation.Subscriber.PersonalInformation.MiddleInitial)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[1].MembershipInformation.Subscriber.PersonalInformation.MiddleInitial, new { @class = "form-control input-xs text-uppercase", @placeholder = "Middle Initial", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].MembershipInformation.Subscriber.PersonalInformation.LastName)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[1].MembershipInformation.Subscriber.PersonalInformation.LastName, new { @class = "form-control input-xs text-uppercase", @placeholder = "Last Name", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].MembershipInformation.PBPCode)</span>
+                    @Html.TextBoxFor(e => e.MemberMemberships[1].MembershipInformation.PBPCode, new { @class = "form-control input-xs text-uppercase", @placeholder = "Policy Number", @id = "" })
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].MembershipInformation.InsuranceCompanyName)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[1].MembershipInformation.InsuranceCompanyName, "/MH/MasterData/GetAllInsuranceCompanies", 1, "100%", "Insurance Company", "500", "CompanyID", "CompanyName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.DropDownListFor(e => e.Insurance[1].PayerName, Payers, new { @class = "form-control input-xs text-uppercase", @placeholder = "Payer Name", @id = "" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[1].MembershipInformation.PlanName)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[1].MembershipInformation.PlanName, "/MH/MasterData/GetAllPlansForInsuranceCompany", 1, "100%", "Plan Name", "500", "PlanID", "PlanName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.DropDownListFor(e => e.Insurance[1].PlanName, Plans, new { @class = "form-control input-xs text-uppercase", @placeholder = "Plan/Program Name", @id = "" })*@
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase">
+                Provider Details
+            </span>
+        </legend>
+        <div class="x_panel zero-padding-left-right" id="PreAuthFacility">
+            <div class="col-lg-12 zero-padding-left-right">
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].PrimaryProvider.FacilityName)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].PrimaryProvider.FacilityName, "/ExternalData/GetAllProviderAccounts", 1, "100%", "Account", "500", "AccountID", "AccountName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.DropDownListFor(e => e.PCP.Account, ProviderAccounts, new { @class = "form-control input-xs text-uppercase", @tabindex = "-1", @id = "" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@Html.LabelFor(e => e.MemberMemberships[0].PrimaryProvider.PCPName)</span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].PrimaryProvider.PCPName, "/ExternalData/GetAllProviders", 1, "100%", "PCP", "500", "NPI", "ProviderName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.DropDownListFor(e => e.PCP.PCPName, PCPs, new { @class = "form-control input-xs text-uppercase", @tabindex = "-1", @id = "" })*@
+                </div>
+                <div class="inline_block margin_right_1">
+                    <span class="theme_label">@*@Html.LabelFor(e => e.MemberMemberships[0].PrimaryProvider.PCPName)*@<label>Billing Provider</label></span>
+                    @Html.PratianUiDropDownListFor(e => e.MemberMemberships[0].PrimaryProvider.PCPName, "/ExternalData/GetAllProviders", 1, "100%", "Billing Provider", "500", "NPI", "ProviderName", new { @class = "form-control input-xs text-uppercase" })
+                    @*@Html.DropDownListFor(e => e.PCP.BillingProvider, BillingProviders, new { @class = "form-control input-xs text-uppercase", @tabindex = "-1", @id = "" })*@
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <br />
+    <div class="col-lg-12">
+        <button type="submit" class="btn btn-primary bold_text loser_field pull-right saveMemberDetails">Save</button>
+        <button type="button" class="btn btn-danger bold_text loser_field pull-right closeNewMember">Cancel</button>
+    </div>
+
+}
+
+<p-script filepath="~/Areas/MH/Scripts/NewMember/NonMinified/NewMember.js"></p-script>

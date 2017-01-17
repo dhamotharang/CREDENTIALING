@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "AdmittingPrivileges";
+}
+
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/AdmittingPrivilegesController.js"></script>
+
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataAdmittingPrivileges" ng-controller="masterDataAdmittingPrivilegesController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Admitting Privilege Management
+                        <span class="pull-right">                            
+                            <button ng-disabled="disableAdd" ng-click="addAdmittingPrivilege()" class="btn btn-xs btn-success"><i class="fa fa-plus"></i>Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <br />
+                        <table class="table table-striped table-condensed table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class='col-lg-6 col-md-6 col-sm-6 col-xs-6'>Title</th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>Status</th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>Last Modified Date</th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="ap in CurrentPage track by $index" ng-include="getTemplate(ap)"></tr>
+                            </tbody>
+                        </table>
+                        
+                        <script type="text/ng-template" id="displayAdmittingPrivilege">
+                            <td>{{ap.Title}}</td>
+                            <td>{{ap.Status}}</td>
+                            <td>{{ap.LastModifiedDate | date:'MM-dd-yyyy'}}</td>
+                            <td>                                 
+                                <button ng-disabled="disableEdit" ng-click="editAdmittingPrivilege(ap)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>                              
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editAdmittingPrivilege">
+                            <td>
+                                <input type="text" ng-model="tempAP.Title" class="form-group form-control input-sm inputMarginBottoomZero" maxlength="100" />
+                                <span class="text-danger" ng-if="error && !tempAP.Title">{{error}}</span>
+                                <span class="text-danger" ng-if="existErr">{{existErr}}</span>
+                            </td>
+                            <td>{{tempAP.Status}}</td>
+                            <td>{{tempAP.LastModifiedDate | date:'MM-dd-yyyy'}}</td>
+                            <td>
+                                <button ng-if="!tempAP.AdmittingPrivilegeID" ng-click="saveAdmittingPrivilege($index)" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-if="tempAP.AdmittingPrivilegeID" ng-click="updateAdmittingPrivilege($index)" class="btn btn-xs btn-primary">Update</button>
+                                <button ng-if="tempAP.AdmittingPrivilegeID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                <button ng-if="!tempAP.AdmittingPrivilegeID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                            </td>
+                        </script>
+                        <div class="clearfix"></div><br />
+                        <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                        <pagination ng-if="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        <div class="clearfix"></div><br />
+                        <div ng-show="activeMessageDiv=='addedNewPrivilegeDetails'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div><br />
+                        <div ng-show="activeMessageDiv=='addedNewPrivilegeDetailsError'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>

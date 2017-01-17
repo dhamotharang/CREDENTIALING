@@ -1,0 +1,112 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.MedicareInfo>
+
+@{
+    var Medicare = 0;
+
+}
+<!--label and value coming side by side-->
+<fieldset class="fsStyle" id="ViewMedicareInfo">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            <span class="transparent-font-color">____</span>
+            MEDICARE INFORMATION
+            <span class="transparent-font-color">____</span>
+        </span>
+
+        &nbsp;&nbsp; <span class="text-uppercase ">
+            <span class="fstyleBtnStyle">
+
+                <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetMedicareInformationPartial?model=@Model&ActionType=Add" data-tab-container="MedicarePanel">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetMedicareInformationPartial?model=@Model&ActionType=Edit" data-tab-container="MedicarePanel">
+                    <i class="fa fa-pencil"></i>
+                </button>
+            </span>
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-warning btn-xs historyBtnCSS" data-toggle="collapse" data-target="#MedicareInfo">
+                    <i class="fa fa-history"></i>
+                </button>
+            </span>
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-default btn-xs helpBtnCSS" data-toggle="popover" data-trigger="hover" data-content="*If you have additional Medicare Number include here." data-original-title="" title="">
+                    <i class="fa fa-question"></i>
+                </button>
+            </span>
+            <a class="print_button_for_Medicare hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+            </a>
+        </span>
+    </legend>
+
+    @foreach (var item in Model)
+    {
+
+        Medicare = Medicare + 1;
+
+
+        <div class="x_content zero-padding-left mutiple-data ViewMoreMedicare_@Medicare collapse in">
+            <div class="SubHeaderSpacing1">
+                <span class="text-uppercase TableHeading">Medicare Information- @Medicare</span>&nbsp;
+                <button onclick="groupmodalhistory('Licenses','removeMedicareInfo','@item.MedicareInfoID','MedicarePanel')" @*data-toggle="modal" data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal "><i class="fa fa-minus"></i></button>
+                &nbsp; <button class="btn btn-primary btn-xs RemoveButtonStyleModal "><i class="fa fa-refresh"></i></button>
+                @*&nbsp;  <button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Licenses/getMedicareHistory?value=@item.MedicareInfoID" data-tab-container="medicareHistory_@item.MedicareInfoID">
+                        <i class="fa fa-history"></i>
+                    </button>*@
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.MedicareID) :</label>
+                <span class="theme_label_data">@item.MedicareID</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.GroupMedicareNumber) :</label>
+                <span class="theme_label_data">@item.GroupMedicareNumber</span>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.GroupName) :</label>
+                <span class="theme_label_data">@item.GroupName</span>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.GroupTaxID) :</label>
+                <span class="theme_label_data">@item.GroupTaxID</span>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.IssueDate) :</label>
+                <span class="theme_label_data">@item.IssueDate</span>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 nopadding text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+                <span class="theme_label_data">@item.ExpirationDate</span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">SUPPORTING DOCUMENT :</label>
+                @if (item.SupportingDocumentPath != null)
+                {
+                    <span class="theme_label_data"><i class="fa fa-file pointer"></i></span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+        </div>
+        <br />
+
+        <div id="medicareHistory_@item.MedicareInfoID">
+        </div>
+    }
+
+    <span class="view-more hidden pull-right" id="moreMedicare" data-toggle="collapse" data-target=".ViewMoreMedicare_3" onclick="ShowHideAddView('lessMedicare', 'moreMedicare')">View More</span>
+
+    <span class="view-more  pull-right" id="lessMedicare" data-toggle="collapse" data-target=".ViewMoreMedicare_3" onclick="ShowHideAddView('moreMedicare', 'lessMedicare')">View Less</span>
+
+
+    <fieldset class="fsStyle collapse remove_shadow width-100" id="MedicareInfo">
+        @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/Licenses/MedicareInfo/_HistoryMedicareInfo.cshtml")
+    </fieldset>
+</fieldset>
+@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/_RemoveModal.cshtml")

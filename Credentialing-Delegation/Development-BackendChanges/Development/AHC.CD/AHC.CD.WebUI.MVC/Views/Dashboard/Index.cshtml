@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="~/Scripts/Custom/DashBoard/DashboardController.js"></script>
+    <script src="~/Scripts/Lib/pdfGeneration/jspdf.debug.js"></script>
+    @*<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>*@
+    <script src="~/Scripts/Lib/pdfGeneration/jspdf.js"></script>
+    <script src="~/Scripts/Lib/pdfGeneration/jspdf.min.js"></script>
+<script src="~/Scripts/Lib/ngiriraj/base64.js"></script>
+<script src="~/Scripts/Lib/ngiriraj/jquery.base64.js"></script>
+<script src="~/Scripts/Lib/ngiriraj/tableExport.js"></script>
+<script src="~/Scripts/Lib/pdfGeneration/html2canvas.js"></script>
+    <script>
+        var expiredLicenses = @Html.Raw(Json.Encode(@ViewBag.expiresData));
+    </script>
+}
+
+<style>
+    /* Expired License Validation CSS */
+    .renewals > .badge.license-validation-expired {
+        text-shadow: 0 -1px 0 #F47878;
+        background-image: -webkit-linear-gradient(top, #F4444A 0, #F53939 100%);
+        background-image: -o-linear-gradient(top, #F4444A 0, #F53939 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #F4444A), to(#F53939));
+        background-image: linear-gradient(to bottom, #F4444A 0, #F53939 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F4444A', endColorstr='#F53939', GradientType=0);
+        border-color: #F53939;
+    }
+
+    .renewals.active {
+        background-color: #eee;
+    }
+
+    /* Warning License Validation CSS */
+    .renewals > .badge.license-validation-warning {
+        text-shadow: 0 -1px 0 #D27B19;
+        background-image: -webkit-linear-gradient(top, #D2670E 0, #D2670E 100%);
+        background-image: -o-linear-gradient(top, #D2670E 0, #D2670E 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #D2670E), to(#D2670E));
+        background-image: linear-gradient(to bottom, #D2670E 0, #D2670E 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#D2670E', endColorstr='#D2670E', GradientType=0);
+        border-color: #D2670E;
+    }
+
+    /* Success License Validation CSS */
+    .renewals > .badge.license-validation-success {
+        text-shadow: 0 -1px 0 #369028;
+        background-image: -webkit-linear-gradient(top, #33B749 0, #2B9A35 100%);
+        background-image: -o-linear-gradient(top, #33B749 0, #2B9A35 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #33B749), to(#2B9A35));
+        background-image: linear-gradient(to bottom, #33B749 0, #2B9A35 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33B749', endColorstr='#2B9A35', GradientType=0);
+        border-color: #2B9A35;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="dashboardApp">
+    <div class="row">
+        <br />
+        <!-- Render Dashboard according to role base -->
+        @if (ViewBag.Roles != null && ViewBag.Roles.Contains("PRO"))
+        {
+                    <!-- Provider Dashboard-->
+            @Html.Partial("~/Views/Dashboard/_ProviderDashboard.cshtml")
+                     <!-- End provider Dashboard-->
+        }
+        else if (ViewBag.Roles != null && ViewBag.Roles.Contains("CCO"))
+        {
+                    <!-- CCO Dashboard-->
+            @Html.Partial("~/Views/Dashboard/_CCODashboard.cshtml")
+                <!-- End CCO Dashboard-->
+        }
+        else if (ViewBag.Roles != null && ViewBag.Roles.Contains("ADM"))
+        {
+                 <!-- CCO Dashboard-->
+            @Html.Partial("~/Views/Dashboard/_CCODashboard.cshtml")
+                <!-- End CCO Dashboard-->
+        }
+        else
+        {
+                    <!-- Default Dashboard-->
+            @Html.Partial("~/Views/Dashboard/_DefaultDashboard.cshtml")
+                <!-- End Default Dashboard-->
+        }
+    </div>
+</div>
+
+
+<div id="hiddenPrintDiv" style="display:none;">
+
+
+
+</div>

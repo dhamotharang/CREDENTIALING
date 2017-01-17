@@ -1,0 +1,59 @@
+﻿<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>Organization Information</div>
+    </div>
+    <div class="panel-body form-horizontal">
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Provider Relationship *</label>
+            <div class="col-md-7 input-group input-group-sm">
+                <label ng-repeat="providerRelation in providerRelations" class="radio-inline">
+                    <input type="radio" name="radio_provider_relation1" ng-model="Provider.ProviderRelation" value="{{providerRelation.relationId}}"> {{providerRelation.relationName}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Are you a part of any Group?</label>
+            <div class="col-md-7 input-group input-group-sm">
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.IsPartOfGroup" name="PartOfGroup1" value="true" ng-click="isPartOfGroup()" required> Yes
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.IsPartOfGroup" name="PartOfGroup1" value="false" ng-click="isPartOfGroup()" required> No
+                </label>
+            </div>
+        </div>
+        <div ng-show="Provider.IsPartOfGroup == 'true'" class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Group Names </label>
+            <div class="col-md-7">
+                <select id="selectGroup" ng-model="Provider.GroupID" multiple>
+                    <option value="Access1">Access 1</option>
+                    <option value="Access2">Access 2</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Upload CV</label>
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" id="ProviderCV" value="jgfjdgfjdhgjfdg.dfh"></span>
+                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>            
+        </div>
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Upload Contract</label>
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" id="ProviderContract"></span>
+                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>           
+        </div>
+    </div>
+    <div class="panel-footer clearfix">
+        <!--<input id="next1" type="button" value="Continue" ng-click="previewAddProvider(PrimaryInfoForm.$invalid)" class="btn btn-success btn-sm pull-right" />-->
+        <input id="next1" type="button" value="Continue" ng-click="previewAddProvider()" class="btn btn-primary btn-sm pull-right" />
+        <input id="next1" type="button" value="<< Prev" ng-click="nextForm(1)" class="btn btn-warning btn-sm pull-left" />
+    </div>
+</div>

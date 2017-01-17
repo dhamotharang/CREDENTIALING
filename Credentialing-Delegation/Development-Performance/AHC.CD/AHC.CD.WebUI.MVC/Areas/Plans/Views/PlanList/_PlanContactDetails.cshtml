@@ -1,0 +1,20 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Plan.PlanContactDetailViewModel
+
+<fieldset>
+    <legend>
+        Contact Details
+    </legend>
+    <div ng-repeat="pcd in tempObject.ContactDetails track by $index" class="col-lg-12 zero-padding-right-right-div" ng-init="ParentIndex1 = $index">
+        <span ng-if="pcd.PlanContactDetailID">
+            @Html.HiddenFor(model => model.PlanContactDetailID, new { @Name = "ContactDetails[{{$index}}].PlanContactDetailID", @Value = "{{pcd.PlanContactDetailID}}" })
+        </span>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.ContactPersonName, new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.ContactPersonName, new { @Name = "ContactDetails[{{$index}}].ContactPersonName", @class = "form-control input-sm", data_ng_model = "pcd.ContactPersonName", placeholder = "contact person name" })
+            @Html.ValidationMessageFor(model => model.ContactPersonName, "", new { @class = "text-danger" })
+        </div>
+
+        @*@Html.Partial("~/Areas/Credentialing/Views/Plan/_PlanContactDetailInformation.cshtml")*@
+    
+    </div>
+</fieldset>

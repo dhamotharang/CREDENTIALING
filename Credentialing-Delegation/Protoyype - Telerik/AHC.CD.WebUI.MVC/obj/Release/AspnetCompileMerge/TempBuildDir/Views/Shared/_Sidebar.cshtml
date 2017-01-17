@@ -1,0 +1,167 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+
+@{
+    var menus = new[]
+                {
+                   new { Link="Dashboard", Controller="Dashboard", LinkText="Dashboard", Roles="CCO,PRO"  },
+                   new { Link="Profile/MasterProfile/Index", Controller="MasterProfile", LinkText="Profile", Roles="PRO"  },
+                   //new { Link="Profile/MasterProfile/Providers", Controller="MasterProfile", LinkText="Providers", Roles="ADM,CCO,CRA,TL,CCM,MGT,HR"  },
+                   new { Link="Initiation/Provider", Controller="Provider", LinkText="Add Provider", Roles="HR,CCO"  },
+                   new { Link="Profile/SearchProvider/SearchProvider", Controller="SearchProvider", LinkText="Search Provider", Roles="ADM,CCO,CRA"  },
+                   //new { Link="Profile/PlanDetail/PlanDetail", Controller="PlanDetail", LinkText="Plan Details", Roles="ADM,CCO,CRA"  },
+                   new { Link="Profile/SearchProfileForTL/Index", Controller="SearchProfileForTL", LinkText="Search Provider", Roles="TL"  },
+                   //new { Link="Credentialing/Plan/PlanContract", Controller="PlanContract", LinkText="Plan Contract", Roles="ADM,CCO,CRA"  },
+                   new { Link="Credentialing/cnd/contractinfo", Controller="CnD", LinkText="Contract Grid", Roles="CCO,PRO"  },
+                   new { Link="Credentialing/ProfileUpdates/Index", Controller="ProfileUpdates", LinkText="Requests for Approval", Roles="CCO"  },
+                   new { Link="Credentialing/ProfileUpdates/Index", Controller="ProfileUpdates", LinkText="Pending Request", Roles="PRO"  },
+                   new { Link="Profile/LocationTracker/Index", Controller="LocationTracker", LinkText="Location Tracker", Roles="CCO,ADM"  },
+                  // new { Link="Credentialing/IdentificationLicense/Index", Controller="IdentificationLicense", LinkText="Indentification License", Roles="CCO,ADM"  },
+                   //new { Link="EmailService/Index", Controller="EmailService", LinkText="Emails", Roles="CCO,ADM,CCM"  },
+                   //new { Link="PlanPDF/PDFMapping/Index", Controller="PDFMapping", LinkText="PDF Mapping", Roles="CCO,ADM,CCM"  },
+                   //new { Link="Credentialing/DelegationProfileReport/Index", Controller="DelegationProfileReport", LinkText="Delegation Profile Report", Roles="ADM,CCO"  },
+
+                   new { Link="EmailService/Index", Controller="EmailService", LinkText="Messages", Roles="CCO,ADM"  },
+                    new { Link="Account/ViewUsers", Controller="Account", LinkText="Reset Password/Change Role", Roles="SuperAdmin"  },
+                    
+                    new { Link="TaskTracker/Index", Controller="TaskTracker", LinkText="Task Tracker", Roles="CCO,ADM"  },
+                };
+
+    //var adminMenus = new[]
+    //            {
+    //               new { Link="MasterDataNew", Controller="MasterDataNew", LinkText="Master Data", Roles="ADM,CCO"  },
+    //               new { Link="Profile/SearchProfile/SearchProfile", Controller="SearchProfile", LinkText="Manage Profile", Roles="ADM,CCO,CRA"  },
+    //               new { Link="Initiation/InitiateUser/Index", Controller="InitiateUser", LinkText="Manage Users", Roles="ADM"  },
+    //                new { Link="Profile/CustomFieldGeneration/CustomField", Controller="CustomFieldGeneration", LinkText="Custom Field", Roles="ADM,CCO"  },
+    //            };
+    
+    
+        var credentialingNonDelegatedMenus = new[]
+                {
+                   new { Link="Credentialing/Initiation/Index", Controller="Initiation", LinkText="Initiate Credentialing", Roles="ADM,CCO"  },
+                   new { Link="Credentialing/Initiation/CredentialingList", Controller="Initiation", LinkText="Credentialing List", Roles="ADM,CCO"  },                   
+                    //new { Link="Profile/Verification/Verification", Controller="Verification", LinkText="Verifications Links", Roles="ADM,CCO,CRA"  },
+                    //new { Link="Credentialing/Verification/Index", Controller="Verification", LinkText="PSV", Roles="ADM,CCO"  },
+                    new { Link="Credentialing/Auditing/Index", Controller="Auditing", LinkText="Package/Form Generator", Roles="CCO"  },
+                };
+
+
+
+        var credentialingDelegatedMenus = new[]
+                {
+                   new { Link="Credentialing/Initiation/Index", Controller="Initiation", LinkText="Initiate Credentialing", Roles="ADM,CCO"  },
+                   new { Link="Credentialing/Initiation/CredentialingList", Controller="Initiation", LinkText="Credentialing List", Roles="ADM,CCO"  },
+                   new { Link="Credentialing/CnD/CredentialingAppointment", Controller="CnD", LinkText="Credentialing Appointment", Roles="CCO,ADM"  },
+                   new { Link="Credentialing/CCM/Index", Controller="CCM", LinkText="Credentialing Action List", Roles="CCO,ADM,CCM"  },
+                    //new { Link="Profile/Verification/Verification", Controller="Verification", LinkText="Verifications Links", Roles="ADM,CCO,CRA"  },
+                    //new { Link="Credentialing/Verification/Index", Controller="Verification", LinkText="PSV", Roles="ADM,CCO"  },
+                    new { Link="Credentialing/Auditing/Index", Controller="Auditing", LinkText="Package/Form Generator", Roles="CCO"  },
+                };
+   
+
+}
+
+<div id="sidemenu" class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav ScrollableMenuStyle" id="side-menu">
+            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+
+                try
+                {
+
+                    var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                    //roles = (string[])Session["Roles"];
+
+                    if (roles != null)
+                    {
+                        var links = from item in menus
+                                    where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Any(x => roles.Contains(x))
+                                    select item;
+                        foreach (var link in links)
+                        {
+                            <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
+                                <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText</a>
+                            </li>
+                        }
+                        if (System.Configuration.ConfigurationManager.AppSettings["SupportsDelegatedPlans"] == "true")
+                        {
+                            var credLinks = from item in credentialingDelegatedMenus
+                                            where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                            .Any(x => roles.Contains(x))
+                                            select item;
+                            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CCM"))
+                            {
+                                <li class="@(ViewContext.RouteData.Values["controller"].Equals("SearchProfileForTL") ? "active" : "")">
+                                    <a href="#"><i class="fa fa-user fa-fw"></i>Cred/De-Cred<span class="fa arrow"></span></a>
+                                    @foreach (var link in credLinks)
+                                    {
+                                        <ul class="nav nav-second-level collapse">
+                                            <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
+                                                <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText</a>
+                                            </li>
+                                        </ul>
+
+                                    }
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            var credLinks = from item in credentialingNonDelegatedMenus
+                                            where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                            .Any(x => roles.Contains(x))
+                                            select item;
+                            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CCM"))
+                            {
+                                <li class="@(ViewContext.RouteData.Values["controller"].Equals("SearchProfileForTL") ? "active" : "")">
+                                    <a href="#"><i class="fa fa-user fa-fw"></i>Cred/De-Cred<span class="fa arrow"></span></a>
+                                    @foreach (var link in credLinks)
+                                    {
+                                        <ul class="nav nav-second-level collapse">
+                                            <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
+                                                <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText</a>
+                                            </li>
+                                        </ul>
+
+                                    }
+                                </li>
+                            }
+                        }
+                        
+                        @*var adminLinks = from item in adminMenus
+                                             where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                             .Any(x => roles.Contains(x))
+                                             select item;
+                            if (roles.Contains("ADM") || roles.Contains("CCO"))
+                            {
+                                <li class="@(ViewContext.RouteData.Values["controller"].Equals("SearchProfileForTL") ? "active" : "")">
+                                    <a href="#"><i class="fa fa-user fa-fw"></i>Admin Controls<span class="fa arrow"></span></a>
+                                    @foreach (var link in adminLinks)
+                                    {
+                                        <ul class="nav nav-second-level collapse">
+                                            <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
+                                                <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText</a>
+                                            </li>
+                                        </ul>
+
+                                    }
+                                </li>
+                            }*@
+
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+
+        </ul>
+
+    </div>
+    <!-- /.sidebar-collapse -->
+</div>

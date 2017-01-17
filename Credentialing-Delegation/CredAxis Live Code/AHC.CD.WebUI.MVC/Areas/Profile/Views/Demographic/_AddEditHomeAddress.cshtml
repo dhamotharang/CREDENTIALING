@@ -1,0 +1,118 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.HomeAddressViewModel
+
+<form>
+    <span ng-if="tempObject.HomeAddressID">
+        @Html.HiddenFor(model => model.HomeAddressID, new { ng_value = "tempObject.HomeAddressID" })
+    </span>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.Street", placeholder = "street address" } })
+            @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.UnitNumber, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.UnitNumber, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.UnitNumber", placeholder = "apartment/unit #" } })
+            @Html.ValidationMessageFor(model => model.UnitNumber, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.City, new { @class = "form-control input-sm", data_ng_model = "tempObject.City", placeholder = "city name", data_ng_change = "addressHomeAutocomplete(tempObject.City)", onfocus = "showLocationList(this)" })
+            <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                    <tbody>
+                        <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation1(location)" class="pointer">
+                            <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                        </tr>
+                        <tr ng-if="Locations.length == 0">
+                            <td>Not Available..... </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.State", placeholder = "state name" } })
+            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.ZipCode", placeholder = "zip code" } })
+            @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.Country", placeholder = "country name" } })
+            @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.County, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.County, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "tempObject.County", placeholder = "county name" } })
+            @Html.ValidationMessageFor(model => model.County, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.AddressPreferenceType, new { @class = "control-label small" })
+            <div>
+                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.PreferenceType)))
+                {
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.AddressPreferenceType, (int)value, new { data_ng_model = "tempObject.AddressPreferenceType" }) @value.ToString()
+                    </label>
+                }
+            </div>
+            @Html.ValidationMessageFor(model => model.AddressPreferenceType, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.IsPresentlyStayingYesNoOption, new { @class = "control-label small" })
+            <div>
+                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                {
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.IsPresentlyStayingYesNoOption, (int)value, new { data_ng_model = "tempObject.IsPresentlyStayingYesNoOption" }) @value.ToString()
+                    </label>
+                }
+            </div>
+            @Html.ValidationMessageFor(model => model.IsPresentlyStayingYesNoOption, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.LivingFromDate, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.LivingFromDate, new { htmlAttributes = new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.LivingFromDate" } })
+            @Html.ValidationMessageFor(model => model.LivingFromDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group" ng-if="tempObject.IsPresentlyStayingYesNoOption=='2'">
+            @Html.LabelFor(model => model.LivingEndDate, htmlAttributes: new { @class = "control-label small" })
+            @Html.EditorFor(model => model.LivingEndDate, new { htmlAttributes = new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.LivingEndDate" } })
+            @Html.ValidationMessageFor(model => model.LivingEndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div ng-if="visibilityControl=='_NewHomeAddress' && activeMessageDiv=='alertHomeAddressError'" class="col-md-12 alert alert-{{messageType}}" role="alert">
+        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+        Errors: <br />
+        <div ng-repeat="err in messageDesc track by $index">{{err}}</div>
+    </div>
+    <div ng-if="visibilityControl!='_NewHomeAddress' && activeMessageDiv=='alertHomeAddressError'+$index" class="col-md-12 alert alert-{{messageType}}" role="alert">
+        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+        Errors: <br />
+        <div ng-repeat="err in messageDesc track by $index">{{err}}</div>
+    </div>
+    <div class="clearfix"></div>
+    <div ng-if="visibilityControl=='_NewHomeAddress'" class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-md-12 form-group">
+            <button id="Demographics_ContactInfo_HomeAddress_AddNew_CancelButton" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('_NewHomeAddress')">Cancel</button>
+            <button id="Demographics_ContactInfo_AddNew_AddButton" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveHomeAddress('newHomeAddressForm')">Add</button>
+        </div>
+    </div>
+    <div ng-if="visibilityControl!='_NewHomeAddress'" class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-md-12 form-group">
+            <button id="Demographics_ContactInfo_HomeAddress_Edit_CancelButton" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl($index+'_EditHomeAddress')">Cancel</button>
+            <button id="Demographics_ContactInfo_HomeAddress_Edit_UpdateButton" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="updateHomeAddress('homeAddressEditDiv'+$index, $index)">Update</button>
+        </div>
+    </div>
+</form>

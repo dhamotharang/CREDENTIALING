@@ -1,0 +1,141 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.FederalDea>
+
+@{
+    bool IsEdit = true;
+    var federaldea = 0;
+}
+
+<!--label and value coming down-->
+@***************FEDERAL DEA Edit*********************************@
+<fieldset class="fsStyle" id="AddEditFederalDEA">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase TabHeading">
+            @foreach (var item in Model)
+            {
+                if (item == null)
+                {
+                    <span>Add federal Dea Information</span>
+                    IsEdit = false;
+                    break;
+                }
+            }
+            @if (IsEdit)
+            {
+                <span>EDIT federal Dea Information</span>
+            }
+        </span>
+    </legend>
+    @foreach (var item in Model)
+    {
+        using (Ajax.BeginForm("AddFederalDEAInfo", "Licenses", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "FederalDEA" }))
+        {
+            federaldea = federaldea + 1;
+            <div class="x_content zero-padding-left mutiple-data">
+
+                @if (item != null)
+                {
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">EDIT federal Dea Information - @federaldea</span>
+                    </div>
+                }
+
+
+
+
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.DEA)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => item.DEA, new { @class = "form-control input-xs", placeholder = "DEA ID" })
+                        @Html.ValidationMessageFor(m => item.DEA)
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-5 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.StateOfRegistration)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-6 nopadding">
+                        @Html.TextBoxFor(m => item.StateOfRegistration, new { @class = "form-control input-xs", placeholder = "STATE OF REGISTRATION" })
+                        @Html.ValidationMessageFor(m => item.StateOfRegistration)
+                    </span>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-6 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.IsLicenseGood)</label>
+                   </span>@*<span class="col-lg-1"></span>*@
+                    <span class="col-lg-5 nopadding">
+                        <span class="theme_label_data font-bold">
+                            @Html.PratianUiRadioButtonFor(model => item.IsLicenseGood,"Yes", new { color = "green", @checked = "checked" }) 
+                            @Html.PratianUiRadioButtonFor(model => item.IsLicenseGood,"No", new { color = "red" })
+                            @*@Html.RadioButtonFor(e => item.IsLicenseGood, true) Yes
+                                @Html.RadioButtonFor(e => item.IsLicenseGood, true) No*@
+                        </span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.IssueDate)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.PratianUiDatePickerFor(e => item.IssueDate, new { @class = "form-control input-xs", placeholder = "ISSUE DATE" })
+                        @*@Html.TextBoxFor(m => item.IssueDate, new { @class = "form-control input-xs", placeholder = "ISSUE DATE" })*@
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-5 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.ExpirationDate)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-6 nopadding">
+                        @Html.PratianUiDatePickerFor(e => item.ExpirationDate, new { @class = "form-control input-xs", placeholder = "EXPIRY DATE" })
+                        @*@Html.TextBoxFor(m => item.ExpirationDate, new { @class = "form-control input-xs", placeholder = "EXPIRY DATE" })*@
+                    </span>
+                </div>
+
+                <div class="col-lg-8 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-3 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.SCHEDULE)</label>
+                        <span class="col-lg-1 pull-right"></span>
+                    </span>
+                    <span class="col-lg-8 nopadding">
+                        <span class="theme_label_data">
+                            <span>@Html.PratianUiCheckboxFor(e => item.SCHEDULE.One,"1", new { color = "green" })</span>&nbsp;&nbsp;
+                            <span>@Html.PratianUiCheckboxFor(e => item.SCHEDULE.Two,"2", new { color = "green" })</span>&nbsp;&nbsp;
+                            <span>@Html.PratianUiCheckboxFor(e => item.SCHEDULE.TwoN, "2N",new { color = "green" })</span>&nbsp;&nbsp;
+                            <span>@Html.PratianUiCheckboxFor(e => item.SCHEDULE.Three, "3",new { color = "green" }) </span>&nbsp;&nbsp;
+                            <span>@Html.PratianUiCheckboxFor(e => item.SCHEDULE.ThreeN,"3N", new { color = "green" }) </span>&nbsp;&nbsp;
+                            <span>@Html.PratianUiCheckboxFor(e => item.SCHEDULE.FourN, "4N", new { color = "green" })</span>&nbsp;&nbsp;
+                            <span>@Html.PratianUiCheckboxFor(e => item.SCHEDULE.FiveN,"5N", new { color = "green" })</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle ">
+                    <span class="col-lg-5 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.SupportingDocumentPath) </label>
+                    </span>
+                    @*<span class="col-lg-1"></span>*@
+
+                    <span class="col-lg-6 input-group  nopadding">
+                        @{
+                string InputId = "UploadDea" + federaldea;
+                string InputUploadId = "InputDea" + federaldea;
+                        }
+                        <input id=@InputId type="text" class="form-control input-xs" readonly placeholder="Document">
+                        <span class="input-group-addon File_uploadStyle" onclick="$(@InputUploadId).click();"><i class="fa fa-upload"></i></span>
+                        <input id=@InputUploadId style="display:none" onchange="$(@InputId).val(this.value);" type="file">
+
+                    </span>
+                </div>
+
+            </div>
+
+        }
+    }
+    <div class="row col-lg-12 zero-padding-left-right margin-top-5px" id="StateButtons">
+        @* <input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save">*@
+        <button class="btn btn-success yahanClickKar btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetFederalDEAPartial?model=@Model&ActionType=View" data-tab-container="FederalDEA" value="">Save</button>
+        <button class="btn btn-danger yahanClickKar btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetFederalDEAPartial?model=@Model&ActionType=View" data-tab-container="FederalDEA" value="">Cancel</button>
+    </div>
+</fieldset>

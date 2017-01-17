@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/Provider/select2.css" rel="stylesheet" />
+<link href="~/Content/Provider/xeditable.css" rel="stylesheet" />
+<link href="~/Content/Provider/custom.css" rel="stylesheet" />
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery.mask.min.js"></script>
+
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/xeditable.min.js"></script>
+
+<script src="~/Scripts/Lib/Angular/textAngular-sanitize.min.js"></script>
+<script src="~/Scripts/Lib/Angular/textAngular.min.js"></script>
+
+<script src="~/Scripts/Lib/Jquery/select2.min.js"></script>
+
+<script src="~/Scripts/Shared/Data/ErrorMessages.js"></script>
+<script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+<script src="~/Scripts/Shared/Data/listOfUSAStates.js"></script>
+<script src="~/Scripts/Shared/Data/providerNameTitle.js"></script>
+<script src="~/Scripts/Shared/Data/regExpressions.js"></script>
+
+<script src="~/Scripts/Custom/Provider/createProvider.js"></script>
+
+
+
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Add Provider
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="providerApp" ng-controller="providerController" ng-cloak>
+            <div class="col-lg-10">
+                <div ng-hide="providerFinalSubmitStatus || uploadListOfProvider" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{panelTitle}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="" ng-class="{active: tabStatus == 0}">
+                                <a ng-click="nextForm(0)" class="pointer">Basic Information <i ng-show="AddProviderFormTab1" class="fa fa-check-circle text-success"></i></a>
+                            </li>
+                            <li class="" ng-class="{active: tabStatus == 1,disabled:!AddProviderFormTab1}">
+                                <a ng-if="AddProviderFormTab1" ng-click="nextForm(1)" class="pointer">Primary Information <i ng-show="AddProviderFormTab2" class="fa fa-check-circle text-success"></i></a>
+                                <a ng-if="!AddProviderFormTab1">Primary Information</a>
+                            </li>
+                            <li class="" ng-class="{active: tabStatus == 2,disabled:!AddProviderFormTab2}">
+                                <a ng-if="AddProviderFormTab2" ng-click="nextForm(2)" class="pointer">Organization Information <i ng-show="AddProviderFormTab3" class="fa fa-check-circle text-success"></i></a>
+                                <a ng-if="!AddProviderFormTab2">Organization Information</a>
+                            </li>
+                            <li class="" ng-class="{active: tabStatus == 3,disabled:!AddProviderFormTab3}">
+                                <a ng-if="AddProviderFormTab3" ng-click="nextForm(3)" class="pointer">Preview</a>
+                                <a ng-if="!AddProviderFormTab3">Preview</a>
+                            </li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <!-- Basic Information Tab -->
+                            <div class="tab-pane fade" ng-class="{'active in': tabStatus == 0}"> 
+                                <br />
+                                @Html.Partial("_BasicInfoPartial")
+                            </div>
+                            <!-- End Basic Information Tab -->
+                            <!-- Personal Information Tab -->
+                            <div class="tab-pane fade" ng-class="{'active in': tabStatus == 1}">
+                                <br />
+                                @Html.Partial("_PrimaryInfoPartial")
+                            </div>
+                            <!-- End Personal Information Tab -->
+                            <!-- Organization Information Tab -->
+                            <div class="tab-pane fade" ng-class="{'active in': tabStatus == 2}">
+                                <br />
+                                @Html.Partial("_OrganizationInfo")
+
+                            </div>
+                            <!-- End Organization Information Tab -->
+                            <!-- Preview Tab -->
+                            <div class="tab-pane fade" ng-class="{'active in': tabStatus == 3}">
+                                <br />
+                                @Html.Partial("_PreviewPartial")
+
+                            </div>
+
+                            <!-- End Preview Tab -->
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content apply-radius">
+                                        <div class="modal-header bg-gray apply-top-radius">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Confirm - Provider Initiation</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure, you want to confirm and initiate the Provider ?
+                                        </div>
+                                        <div class="modal-footer bg-gray apply-bottom-radius">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                            <a href="#"> <button type="button" class="btn btn-primary" ng-click="confirmProvider()">Yes</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of modal div -->
+
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="providerFinalSubmitStatus">
+                    <!-- Confirmation Mail Partial View Include-->
+                    @Html.Partial("_EmailPartial")
+
+                    <!-- End Of Confirmation Mail Partial View Include-->
+                </div>
+                <div ng-show="uploadListOfProvider">
+                    @Html.Partial("_UploadListOfProvider")
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
+
+<script type="text/javascript">
+
+    $('input').prop('autocomplete', 'off');
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+</script>

@@ -1,0 +1,75 @@
+﻿@model PortalTemplate.Areas.Coding.Models.CreateCoding.ICDCodeDetailsViewModel
+
+<div class="row">
+    <div class="col-lg-12 zero-padding-left-right">
+        <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped ICDCodesTable">
+            <thead class="theme_thead">
+                <tr>
+                    <th>Code </th>
+                    <th>Description </th>
+                    <th>HCC Code</th>
+                    <th>HCC Type</th>
+                    <th>HCC Version</th>
+                    <th>HCC Description </th>
+                    <th>HCC Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in Model.ICDCodes)
+                    {
+                        var RowSpan = item.HCCCodes.Count;
+                        <tr>
+                            <td rowspan="@RowSpan">@item.ICDCode</td>
+                            <td rowspan="@RowSpan">@item.Description</td>
+                            <td>
+
+                                @item.HCCCodes[0].Code
+                            </td>
+                            <td>
+
+                                @item.HCCCodes[0].Type
+
+                            </td>
+                            <td>
+
+                                @item.HCCCodes[0].Version
+
+                            </td>
+                            <td>
+
+                                @item.HCCCodes[0].Description
+
+                            </td>
+                            <td>
+
+                                @item.HCCCodes[0].Weight
+                            </td>
+                        </tr>
+
+                        foreach (var hcc in item.HCCCodes.Skip(1))
+                        {
+                            <tr>
+                                <td>
+                                    @hcc.Code
+                                </td>
+                                <td>
+                                    @hcc.Type
+                                </td>
+                                <td>
+                                    @hcc.Version
+                                </td>
+                                <td>
+                                    @hcc.Description
+                                </td>
+                                <td>
+                                    @hcc.Weight
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

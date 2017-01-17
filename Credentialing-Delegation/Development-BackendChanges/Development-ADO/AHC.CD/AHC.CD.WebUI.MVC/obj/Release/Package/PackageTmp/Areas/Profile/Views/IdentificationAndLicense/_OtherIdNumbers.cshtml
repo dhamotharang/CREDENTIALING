@@ -1,0 +1,68 @@
+﻿
+@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.OtherIdentificationNumberViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="panel-default">
+    <div class="form-style">
+        
+
+            <fieldset>
+                <legend>
+                    Other Identification Numbers
+                </legend>
+                <div class="col-lg-12">
+                    <table ng-show="OtherIdentificationNumbers == null && visibilityControl != 'editOtherIdentificationNumbers' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No Data Available for  Other Identification Numbers!
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                    {
+                                        <span>Please click on <button id="noDataAddNewOtherIdentificationDetails" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('editOtherIdentificationNumbers')" data-toggle="tooltip" data-placement="top" title="Add New">
+    <i class="fa fa-plus"></i>
+</button> to add new  Other Identification Numbers.</span>
+                                    }
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                    {
+
+                        <div ng-show="OtherIdentificationNumbers != null && visibilityControl!='editOtherIdentificationNumbers'">
+                            @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewOtherIdentificationNumbers.cshtml")
+                        </div>
+
+                    }
+
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                    {
+                       
+                        <div ng-show="visibilityControl=='editOtherIdentificationNumbers'">
+                            <div id="otherIdenNumbers">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditOtherIdentificationNumbers.cshtml")
+                            </div>
+                        </div>
+                       
+                    }
+
+                    <div class="clearfix"></div>
+                    <div ng-show="activeMessageDiv=='addedID'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div class="clearfix"></div>
+                    @*<div ng-show="visibilityControl=='addedID'" class="alert alert-success" role="alert">
+                        <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> Other identification information saved successfully.
+                    </div>
+                    <div ng-show="visibilityControl=='updatedID'" class="alert alert-success" role="alert">
+                        <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> Other identification information saved successfully.
+                    </div>
+                    <div class="clearfix"></div>*@
+                  
+                </div>
+            </fieldset>
+    </div>
+</div>

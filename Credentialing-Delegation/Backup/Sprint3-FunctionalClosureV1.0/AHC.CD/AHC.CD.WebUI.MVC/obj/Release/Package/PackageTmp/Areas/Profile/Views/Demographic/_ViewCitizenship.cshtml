@@ -1,0 +1,211 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.VisaDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div ng-if="!Provider.VisaDetails" class="col-md-12 zero-padding-left-right-div">
+
+    No Data Available ! Please Provide Citizenship Information...
+
+    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+    {
+        <button class="btn btn-xs btn-primary pull-right" ng-click="operateEditControl('_EditVisaDetails',Provider.VisaDetails)"><i class="fa fa-plus"></i> Citizenship Information</button>
+    }
+</div>
+
+<div ng-if="Provider.VisaDetails">
+    <div class=" col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsResidentOfUSA, htmlAttributes: new { @class = "control-label small" })
+                &nbsp;&nbsp;{{Provider.VisaDetails.IsResidentOfUSA}}
+            </div>
+        </div>
+        <div ng-if="Provider.VisaDetails.IsResidentOfUSAYesNoOption==2" class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsAuthorizedToWorkInUS, htmlAttributes: new { @class = "control-label small" })
+                &nbsp;&nbsp;{{Provider.VisaDetails.IsAuthorizedToWorkInUS}}
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="Provider.VisaDetails.IsAuthorizedToWorkInUSYesNoOption==1">
+        <div class=" col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                    {
+                        <i class="data-label">############</i>
+                    }
+                    else
+                    {
+                        <i class="data-label">{{Provider.VisaDetails.VisaInfo.VisaNumber}}</i>
+                    }
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaType, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                    {
+                        <i class="data-label">############</i>
+                    }
+                    else
+                    {
+                        <i class="data-label">{{Provider.VisaDetails.VisaInfo.VisaType.Title}}</i>
+                    }
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaStatus, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                    {
+                        <i class="data-label">############</i>
+                    }
+                    else
+                    {
+                        <i class="data-label">{{Provider.VisaDetails.VisaInfo.VisaStatus.Title}}</i>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class=" col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaSponsor, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                    {
+                        <i class="data-label">############</i>
+                    }
+                    else
+                    {
+                        <i class="data-label">{{Provider.VisaDetails.VisaInfo.VisaSponsor}}</i>
+                    }
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">
+                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.VisaExpirationDate">############</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.VisaExpirationDate">Not Available</span>
+                        }
+                        else
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.VisaExpirationDate">{{Provider.VisaDetails.VisaInfo.VisaExpirationDate | date: "MM/dd/yyyy"}}</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.VisaExpirationDate">Not Available</span>
+                        }
+                    </i>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.VisaCertificateFile, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">
+                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                        {
+                            <span>############</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.VisaCertificatePath">Not Available</span>
+                        }
+                        else
+                        {
+                            <a ng-if="Provider.VisaDetails.VisaInfo.VisaCertificatePath" href="/Document/View?path={{Provider.VisaDetails.VisaInfo.VisaCertificatePath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Visa Document"><i class="fa fa-file"></i></a>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.VisaCertificatePath">Not Available</span>
+                        }
+                    </i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.GreenCardNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">
+                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.GreenCardNumber">############</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.GreenCardNumber">Not Available</span>
+                        }
+                        else
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.GreenCardNumber">{{Provider.VisaDetails.VisaInfo.GreenCardNumber}}</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.GreenCardNumber">Not Available</span>
+                        }
+                    </i>
+                </div>
+            </div>
+            <div class="col-md-8">
+                @Html.LabelFor(model => model.VisaInfo.GreenCardCertificateFile, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">
+                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                        {
+                            <span>############</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.VisaCertificatePath">Not Available</span>
+                        }
+                        else
+                        {
+                            <a ng-if="Provider.VisaDetails.VisaInfo.GreenCardCertificatePath" href="/Document/View?path={{Provider.VisaDetails.VisaInfo.GreenCardCertificatePath}}" clas class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Green Card Document"><i class="fa fa-file"></i></a>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.GreenCardCertificatePath">Not Available</span>
+                        }
+                    </i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.NationalIDNumber, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">
+                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.NationalIDNumber">############</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.NationalIDNumber">Not Available</span>
+                        }
+                        else
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.NationalIDNumber">{{Provider.VisaDetails.VisaInfo.NationalIDNumber}}</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.NationalIDNumber">Not Available</span>
+                        }
+                    </i>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.NationalIDCertificateFile, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">
+                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.NationalIDCertificatePath">############</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.VisaCertificatePath">Not Available</span>
+                        }
+                        else
+                        {
+                            <a ng-if="Provider.VisaDetails.VisaInfo.NationalIDCertificatePath" href="/Document/View?path={{Provider.VisaDetails.VisaInfo.NationalIDCertificatePath}}" clas class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="National Identification Document"><i class="fa fa-file"></i></a>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.NationalIDCertificatePath">Not Available</span>
+                        }
+                    </i>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.VisaInfo.CountryOfIssue, htmlAttributes: new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">
+                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.CountryOfIssue">############</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.CountryOfIssue">Not Available</span>
+                        }
+                        else
+                        {
+                            <span ng-if="Provider.VisaDetails.VisaInfo.CountryOfIssue">{{Provider.VisaDetails.VisaInfo.CountryOfIssue}}</span>
+                            <span ng-if="!Provider.VisaDetails.VisaInfo.CountryOfIssue">Not Available</span>
+                        }
+                    </i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

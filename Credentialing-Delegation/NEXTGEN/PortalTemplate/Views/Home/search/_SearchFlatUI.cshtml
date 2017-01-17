@@ -1,0 +1,56 @@
+﻿<link href="~/Content/AppCss/Search/searchnew.css" rel="stylesheet" />
+<div class="search_wrapperF">
+    <div class="smart_search_wordF"><span class="keyWordF"></span></div>
+    <div class="search_inputF"><input type="text" id="searchBoxF" placeholder="Search Members/Providers" /></div>
+    <div class="search_btnF">
+        <div class="search_btnF">
+            <span class="btn" id="searchBtnF" style="display: initial;"><i class="fa fa-search"></i></span>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var AtTheRateData = ["Member Name", "Provider Name", "Facility Name", "Insurance Name", "Payee Name", "Payer Name", "Sender", "Receiver"];
+        var HashTagData = ["Member ID", "NPI Number", "Ref Number", "Auth ID", "Claim Number", "Account No", "Payee ID", "Check Number", "Clearing House ID", "Taxonomy"];
+        var listCount = false;
+        $('#searchBoxF').click(function () {
+
+            $('.search_wrapperF').addClass("search_wrapper_borderF");
+            $('.search_wrapperF').css('width', '26%');
+            //$('.search_btnF').show(100);
+        })
+
+        $('#searchBtnF').click(function () {
+            if ($('#searchBoxF').val() !== '') {
+                SResultOpen();
+            }
+        })
+
+
+        // when clicked other than input
+        $("#searchBoxF").blur(function () {
+            if ($('#searchBoxF').val() === '' && !$('.keyWordF').is(':visible')) {
+                $('.smart_search_wordF').hide();
+                $('.keyWordF').hide();
+                $('.keyWordF').html('');
+
+                $('.search-result-overviewF').hide();
+                $('.searchResultF').hide("clip", 500);
+                $('body').css('overflow-y', 'scroll');
+                $('.search_btnF').hide(100);
+                $(".search_wrapperF").css('width', '14%');
+                $('.search_wrapperF').removeClass("search_wrapper_borderF");
+                $('.search-arrowF').css("display", "none");
+                $('#searchBoxF').attr('placeholder', 'Search Members/Providers')
+            } else {
+
+                //$("#searchBox").focus();            
+            }
+
+        });
+    });
+
+</script>

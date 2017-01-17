@@ -1,0 +1,31 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Plan.LOBContactDetailViewModel
+
+<fieldset>
+    <legend>
+        Contact Details
+    </legend>
+   @*<div class="pull-right legend2">
+        <button type="button" class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="top" title="Add More" ng-click="AddLobContact();"><i class="fa fa-plus"></i></button>
+    </div>*@
+    <div ng-repeat="lobcon in tempObject1.LOBContactDetails track by $index" class="col-lg-12 zero-padding-right-right-div">
+        @*<fieldset>
+            <div ng-if="$index > 0" class="pull-right legend2">
+                <button type="button" class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="RemoveLobContact($index);"><i class=" fa fa-minus"></i></button>
+            </div>*@
+        <span ng-if="lobcon.LOBContactDetailID">
+            @Html.HiddenFor(model => model.LOBContactDetailID, new { @data_ng_value = "lobcon.LOBContactDetailID" })
+        </span>
+        <div ng-if="!PlanIsEdit" class="col-lg-12">
+            <input type="checkbox" ng-init="lobcon.IsSameContatcPerson=true" ng-model="lobcon.IsSameContatcPerson" ng-change="GetContactPerson(lobcon.IsSameContatcPerson)" /><label class="control-label">&nbsp;Same As Plan Contact Detail</label>
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.ContactPersonName, new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.ContactPersonName, new { @class = "form-control input-sm", data_ng_model = "lobcon.ContactPersonName", placeholder = "contact person name" })
+            @Html.ValidationMessageFor(model => model.ContactPersonName, "", new { @class = "text-danger" })
+        </div>
+
+        @Html.Partial("~/Areas/Credentialing/Views/Plan/_LOBContactDetailInformation.cshtml")
+
+        @*</fieldset>*@
+    </div>
+</fieldset>

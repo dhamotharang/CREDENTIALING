@@ -1,0 +1,52 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.BusinessOfficeContactPersonViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="panel-default">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Office manager/Business Office Staff Contact
+            </legend>
+            <div class="col-lg-12">
+                <table ng-show="OfficeManager == null && visibilityControl != 'editOfficeManager' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No Data Available for  Office manager/Business Office Staff Contact!
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                {
+                                    <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('editOfficeManager')" data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Office manager/Business Office Staff Contact.</span>
+                                }
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                {
+
+                    <div ng-show="OfficeManager != null && visibilityControl!='editOfficeManager'">
+                        @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewOfficeManager.cshtml")
+                    </div>
+
+                }
+
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                {
+
+                    <div ng-show="visibilityControl=='editOfficeManager'">
+                        <div id="otherIdenNumbers">
+                            @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditOfficeManager.cshtml")
+                        </div>
+                    </div>
+
+                }
+
+                <div class="clearfix"></div>
+                <div ng-show="activeMessageDiv=='addedID'" class="alert alert-success" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

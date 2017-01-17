@@ -1,0 +1,73 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.SupervisingProviderViewModel
+
+@*ng-if="visibilitySecondControl == 'SupervisingProviderEdit'"*@
+<div id="SupervisingProviderDiv">
+    <fieldset>
+        <legend>
+            Add Supervising Provider
+        </legend>
+        <form id="SupervisingProvider{{$index}}">
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationDetailID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            <span ng-if="SupervisingProvider.ProfileID">
+                @Html.HiddenFor(model => model.ProfileID, new { ng_value = "SupervisingProvider.ProfileID" })
+            </span>
+            <span ng-if="SupervisingProvider.SupervisingProviderID">
+                @Html.HiddenFor(model => model.SupervisingProviderID, new { ng_value = "SupervisingProvider.MidLevelPractitionerID" })
+            </span>
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Select Supervising Provider </label>
+                    <input type="text" class="form-control input-sm" name="tempSupervisingProvider" ng-model="practitioner" data-practitioners="supervisingProviders" data-onselect="setSupervisingProvider" data-autocomplete="practitioner" practitionersearch />
+                </div>
+            </div>
+
+            <div class="col-md-12 form-group">
+
+                <table ng-if="!SupervisingProvider.PersonalDetail" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>Please select a Supervising Provider.</td>
+                        </tr>
+                    </thead>
+                </table>
+
+                <table ng-if="SupervisingProvider.PersonalDetail" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Middle name</th>
+                            <th>Last Name</th>
+                            <th>NPI Number </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i>{{SupervisingProvider.PersonalDetail.FirstName || 'Not Available'}}</i></td>
+                            <td><i>{{SupervisingProvider.PersonalDetail.MiddleName || 'Not Available'}}</i></td>
+                            <td><i>{{SupervisingProvider.PersonalDetail.LastName || 'Not Available'}}</i></td>
+                            <td><i>{{SupervisingProvider.OtherIdentificationNumber.NPINumber || 'Not Available'}}</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div>
+                <input type="hidden" name="StatusType" value="1" />
+            </div>
+            <div class="clearfix"></div>
+            <div ng-show="activeMessageDiv=='supervisingProvidersErrorMsg'" class="alert alert-danger" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 form-group">
+                <button class="btn btn-warning btn-sm" ng-click="SupervisingProviderEdit=false; operateThirdCancelControl('SupervisingProviderDiv'); resetSupervisingProvider();">Cancel</button>
+                <button class="btn btn-success btn-sm pull-right" ng-disabled="!SupervisingProvider.PersonalDetail" ng-click="addSupervisingProvider(PracticeLocationDetail, $index)">Add</button>
+            </div>
+
+        </form>
+    </fieldset>
+</div>

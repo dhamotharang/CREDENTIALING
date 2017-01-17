@@ -1,0 +1,719 @@
+﻿
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular-Chart/d3.min.js"></script>
+<script src="~/Scripts/Lib/Angular-Chart/angular-charts.min.js"></script>
+<script src="~/Scripts/Custom/DashBoard/IPA.js"></script>
+<style type="text/css">
+    .chart {
+        height: 290px;
+    }
+
+    .string {
+        color: green;
+    }
+
+    .number {
+        color: darkorange;
+    }
+
+    .boolean {
+        color: blue;
+    }
+
+    .null {
+        color: magenta;
+    }
+
+    .key {
+        color: red;
+    }
+
+    .section {
+        padding-top: 50px;
+    }
+
+    .vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none;
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+}
+
+
+
+</style>
+<div id="page-wrapper" ng-app="example" ng-controller='MainController'>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-dashboard"></i> Dashboard
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+
+            <div class="col-lg-8">
+                <div class="panel panel-default">
+                    @*<div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i></h3>
+                    </div>*@
+                    <div class="panel-body">
+                        <div role="tabpanel">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#graph1" aria-controls="graph1" role="tab" data-toggle="tab">Credential Growth</a></li>
+                                @*<li role="presentation"><a href="#graph2" aria-controls="graph2" role="tab" data-toggle="tab">Graph 2</a></li>*@
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="graph1">
+                                    @*<b>Chart type: </b>
+                                    <select ng-model='chartType' class='input'>
+                                        <option value="pie">Pie</option>
+                                        <option value="bar">Bar</option>
+                                        <option value="line">Line</option>
+                                        <option value="point">Point</option>
+                                        <option value="area">Area</option>
+                                    </select>*@
+                                    <span ng-show="chartType==='pie'"><b>Radius</b> <input ng-model="config.innerRadius" size="4"></span>
+                                    <p></p>
+                                    <div class='charts'>
+                                        <div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div>
+                                    </div>
+
+                                    <div class="text-right">
+
+                                    </div>
+                                </div>
+                                @*<div role="tabpanel" class="tab-pane" id="graph2">
+                                        <img src="~/Content/Images/logo2.png" />
+                                        <div class="text-right">
+
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    @*<div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-clock-o"></i></h3>
+                    </div>*@
+                    <div class="panel-body">
+                        <div class="list-group pre-scrollable">
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> Primary Source Verification for Plan FREEDOM VIP SAVINGS COPD (HMO SNP) DONE
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN RX (HMO) is SUBMITTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is ACCEPTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-times-circle-o text-danger"></i> FREEDOM VIP CARE (HMO SNP) is REJECTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is VERIFIED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is ACCEPTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO SNP) is SUBMITTED
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="fa fa-fw fa-check-circle text-success"></i> FREEDOM SAVINGS PLAN (HMO) is INITIATED
+                            </a>
+                        </div>
+                        <div class="text-right">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.row -->
+
+
+
+        <div class="clearfix"></div><br />
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    @*<div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-table"></i></h3>
+                    </div>*@
+                    <div class="panel-body">
+                        <div role="tabpanel">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#HospitalPrivileges" aria-controls="HospitalPrivileges" role="tab" data-toggle="tab">Hospital Privileges</a></li>
+                                @*<li role="presentation"><a href="#UpcomingExpiriesSubmitted" aria-controls="UpcomingExpiries" role="tab" data-toggle="tab">Upcoming Expiries</a></li>
+                                <li role="presentation"><a href="#UpcomingReCredentialingsSubmitted" aria-controls="UpcomingReCredentialings" role="tab" data-toggle="tab">Upcoming Re-Credentialings</a></li>*@
+                                @*s<li role="presentation"><a href="#IpaWiseProvidersSubmitted" aria-controls="IpaWiseProviders" role="tab" data-toggle="tab">Providers</a></li>*@
+                                <li role="presentation"><a href="#CredentialingSubmitted" aria-controls="Credentialing" role="tab" data-toggle="tab">Health Plan Credentialing</a></li>
+                                <li role="presentation"><a href="#LicenseInfo" aria-controls="Licenses" role="tab" data-toggle="tab">Licenses</a></li>
+                                @*<li role="presentation"><a href="#CredentialingStatusSubmitted" aria-controls="CredentialingStatus" role="tab" data-toggle="tab">Credentialing Status</a></li>*@
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="HospitalPrivileges">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Provider Name</th>
+                                                    <th>Hospital Name</th>
+                                                    <th>Speciality</th>
+                                                    <th>Privilege</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>HEND F. ABDELMALEK</td>
+                                                    <td>SHANDS UF</td>
+                                                    <td>Surgeon</td>
+                                                    <td>Hospitalist</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>QAHTAN A. ABDULFATTAH</td>
+                                                    <td>BLAKE MEDICAL CENTER</td>
+                                                    <td>Dentist</td>
+                                                    <td>Admitting</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>IAN	ADAM</td>
+                                                    <td>INDIAN RIVER MEDICAL CTR</td>
+                                                    <td>Coroners‎</td>
+                                                    <td>Surgery</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>MARC A.	ALESSANDRONI</td>
+                                                    <td>INDIAN RIVER MEDICAL CTR</td>
+                                                    <td>Dermatologists‎</td>
+                                                    <td>Visiting</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CRIDER NORMA</td>
+                                                    <td>INDIAN RIVER MEDICAL CTR</td>
+                                                    <td>Anesthesiologists‎</td>
+                                                    <td>Hospitalist</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="UpcomingExpiriesSubmitted">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>S no.</th>
+                                                    <th>Provider Name</th>
+                                                    <th>Document About To Be Expired</th>
+                                                    <th>Date Of Expiry</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Shane Watson</td>
+                                                    <td>MBBS Certificate</td>
+                                                    <td>30 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>John Blake</td>
+                                                    <td>MD Certificate</td>
+                                                    <td>28 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>Paul Newman</td>
+                                                    <td>MD Certificate</td>
+                                                    <td>29 - Dec - 2014</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="UpcomingReCredentialingsSubmitted">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>S no.</th>
+                                                    <th>Provider Name</th>
+                                                    <th>Document To Be Re-Credentialized</th>
+                                                    <th>Date Of Re-Credentialing</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>John Paul</td>
+                                                    <td>MBBS Certificate</td>
+                                                    <td>10 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>Bryan K Ottoman</td>
+                                                    <td>MD Certificate</td>
+                                                    <td>15 - Dec - 2014</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>Renee Johnson</td>
+                                                    <td>MD Certificate</td>
+                                                    <td>12 - Dec - 2014</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="IpaWiseProvidersSubmitted">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>S no.</th>
+                                                    <th>IPA Name</th>
+                                                    <th>Provider Name</th>
+                                                    <th>Specialty</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>IPA 1</td>
+                                                    <td>John Paul</td>
+                                                    <td>MD</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>IPA 2</td>
+                                                    <td>Bryan K Ottoman</td>
+                                                    <td>MD</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>IPA 3</td>
+                                                    <td>Renee Johnson</td>
+                                                    <td>MD</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="CredentialingSubmitted">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Provider</th>
+                                                    <th>Location</th>
+                                                    <th>Insurance Company</th>
+                                                    <th class="col-md-3">Health Plan</th>
+                                                    <th>Tracker</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>CRIDER NORMA</td>
+                                                    <td>BROOKSVILLE</td>
+                                                    <td>FREEDOM</td>
+                                                    <td>FREEDOM SAVINGS PLAN RX (HMO)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Initiated</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>MARC A.	ALESSANDRONI</td>
+                                                    <td>BROOKSVILLE</td>
+                                                    <td>FREEDOM</td>
+                                                    <td>FREEDOM VIP CARE COPD (HMO SNP)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Verified</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>IAN	ADAM</td>
+                                                    <td>SPRING HILL</td>
+                                                    <td>OPTIMUM</td>
+                                                    <td>OPTIMUM GOLD REWARDS PLAN (HMO-POS)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Submitted</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>QAHTAN A. ABDULFATTAH</td>
+                                                    <td>SPRING HILL</td>
+                                                    <td>OPTIMUM</td>
+                                                    <td>OPTIMUM DIAMOND REWARDS (HMO-POS SNP)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-done">Status</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>CRIDER NORMA</td>
+                                                    <td>NEW PRT RCHY</td>
+                                                    <td>OPTIMUM</td>
+                                                    <td>OPTIMUM PLATINUM PLAN (HMO-POS)</td>
+                                                    <td>
+                                                        <ol class="progtrckr" data-progtrckr-steps="1">
+                                                            <li class="progtrckr-fail">Rejected</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="CredentialingStatusSubmitted">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>S no.</th>
+                                                    <th>Provider Name</th>
+                                                    <th>Plan Name</th>
+                                                    <th>Credentialing Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>John Paul</td>
+                                                    <td>Freedom</td>
+                                                    <td>Submitted</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>Bryan K Ottoman</td>
+                                                    <td>Freedom</td>
+                                                    <td>Completed</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>Renee Johnson</td>
+                                                    <td>Freedom</td>
+                                                    <td>Rejected</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+
+
+                                <div role="tabpanel" class="tab-pane" id="LicenseInfo">
+                                    <div class="clearfix"></div><br />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6 text-center">
+                                                <div class="col-lg-12">
+                                                    <div class="panel panel-yellow">
+                                                        <div class="panel-body">
+                                                            <div class="col-lg-3"><button onclick="togglePlan('panel-yellow')" class="btn btn-warning btn-xl btn-circle" data-toggle="tooltip" data-placement="top" title="Filter By">1</button></div>
+                                                            <div class="col-lg-9 h4 text-right">3 Licenses to be Renewed This Month</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 text-center">
+                                                <div class="col-lg-12">
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-body">
+                                                            <div class="col-lg-3"><button onclick="togglePlan('panel-red')" class="btn btn-danger btn-xl btn-circle" data-toggle="tooltip" data-placement="top" title="Filter By">3</button></div>
+                                                            <div class="col-lg-9 h4 text-right">9 Licenses  Already Expired</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 text-center plancontainer pre-scrollable" style="overflow-y:auto;">
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-green">
+                                                        <div class="panel-heading">4 DEA License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-yellow">
+                                                        <div class="panel-heading">3 State License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal1">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-heading">3 CDS License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal2">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="panel panel-green">
+                                                        <div class="panel-heading">1 Medicare License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal3">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4" >
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-heading">4 Medicaid License</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal4">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4" data-toggle="modal" data-t>
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-heading">2 Working Compensation</div>
+                                                        <div class="panel-body">
+                                                            <button class="btn btn-link" data-toggle="modal" data-target="#myModal5">View Details</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 text-right">
+                                                <button class="btn btn-xs btn-info allplan" onclick="allPlans();" style="display:none;">Show All Licenses</button>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+
+
+    !-- Button trigger modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">DEA Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <ol type="1">
+                                <li class="numberlist">Daniel Craig(Pediartist) 08-Jan-2015</li>
+                                <li>Ved Kumar(Dermatologist) 08-Jan-2015</li>
+                                <li>Shalab Nayar(Phsychiartist) 08-Jan-2015</li>
+                                <li>Marakovits Joseph(Anesthesiologist) 08-Jan-2015</li>
+                            </ol>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">State Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ol type="1">
+                            <li>Nahmias Nissin (Neurosurgeon) 08-Jan-2015</li>
+                            <li>Corcoran, Patrick(Gynecologist) 08-Jan-2015</li>
+                            <li>Harris Peter J(Neurologist) 08-Jan-2015</li>
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">CDS Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <ol type="1">
+                            <li>Berns Ellison(Psychiatrist) 08-Jan-2015</li>
+                            <li>Borkowski Robert(Pediatrician) 08-Jan-2015</li>
+                            <li>Katsetos Manny(Orthopaedic Surgeon) 08-Jan-2015</li>
+
+                        </ol>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Medicare Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ol type="1">
+                            <li>Janssen Henry(Neurologist) 08-Jan-2015</li>
+
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+    <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Medicaid Licenses 08-Jan-2015</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <ol type="1">
+                            <li>Farmer William D(Cardiologist) 08-Jan-2015</li>
+                            <li>Glaser Leonard C(Dermatologist) 08-Jan-2015</li>
+                            <li>Harris Peter J(Neurologist) 08-Jan-2015</li>
+                            <li>Herath Shiromini C(Orthopaedic Surgeon) 08-Jan-2015</li>
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+    <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Working Compensation Licenses</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <ol type="1">
+                            <li>Holmes Catherine A(Neurosurgeon) 08-Jan-2015</li>
+                            <li>Miller Gary(Gynecologist) 08-Jan-2015</li>
+
+
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+

@@ -1,0 +1,311 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.HospitalPrivilege.HospitalPrivilegeInformationViewModel
+
+<form class="hospitalPrivilegeForm">
+    <div class="col-lg-12 zero-padding-left-right-div">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+        @Html.HiddenFor(model => model.HospitalPrivilegeInformationID, new { data_ng_model = "hospitalPrivilegeInformation.HospitalPrivilegeInformationID" })
+        <fieldset>
+            <legend>
+                Hospital Privilege Information
+            </legend>
+            <div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.Primary, new { @class = "control-label small" })
+                        <div class="radio">
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.Primary, true, new { data_ng_model = "hospitalPrivilegeInformation.Primary" }) Yes
+                            </label>
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.Primary, false, new { data_ng_model = "hospitalPrivilegeInformation.Primary" }) No
+                            </label>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Primary, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-9">
+                        @Html.LabelFor(model => model.HospitalName, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.HospitalName, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.HospitalName" })
+                        @Html.ValidationMessageFor(model => model.HospitalName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.Number, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.Number, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.Number" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.StreetAddress, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.StreetAddress, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.StreetAddress" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.StreetAddress, "", new { @class = "text-danger" })
+                    </div>
+                    
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.Building, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.Building, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.Building" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Building, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="control-label small">Country</label>
+                        <select id="CountryOfBirth" name="countryName" class="form-control input-sm" ng-model="hospitalPrivilegeInformation.Country" ng-change="getStates(hospitalPrivilegeInformation.Country)" required>
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="country in Countries" value="{{country.Code}}" ng-selected="country.Code == hospitalPrivilegeInformation.Country">{{country.Name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <select name="State" class="form-control input-sm" data-ng-model="hospitalPrivilegeInformation.State" data-ng-change="getCounties(hospitalPrivilegeInformation.State)" data-val="true" data-val-required="The State * field is required.">
+                                <option>-- select --</option>
+                                <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}" ng-selected="state.State == hospitalPrivilegeInformation.State">{{state.State}}</option>
+                            </select>
+                            @* @Html.DropDownListFor(model => model.State, new[] { new SelectListItem { Value = "1", Text = "Florida" }, new SelectListItem { Value = "2", Text = "California" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.State" })*@
+                        </div>
+                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.County, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <select name="County" class="form-control input-sm ng-pristine ng-valid ng-touched" data-ng-model="hospitalPrivilegeInformation.County" data-ng-change="getCities(hospitalPrivilegeInformation.County)" data-val="true" data-val-required="The County * field is required.">
+                                <option>-- select --</option>
+                                <option ng-repeat="county in Counties | unique: 'County'" value="{{county.County}}" ng-selected="county.County == hospitalPrivilegeInformation.County">{{county.County}}</option>
+                            </select>
+                            @*  @Html.TextBoxFor(model => model.County, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.Country" })*@
+                        </div>
+                        @Html.ValidationMessageFor(model => model.County, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <select name="City" class="form-control input-sm ng-pristine ng-valid ng-touched" data-ng-model="hospitalPrivilegeInformation.City" data-val="true" data-val-required="The City * field is required.">
+                                <option>-- select --</option>
+                                <option ng-repeat="city in Cities | unique: 'City'" value="{{city.City}}" ng-selected="city.City == hospitalPrivilegeInformation.City">{{city.City}}</option>
+                            </select>
+                            @*  @Html.DropDownListFor(model => model.City, new[] { new SelectListItem { Value = "1", Text = "Spring Hill" }, new SelectListItem { Value = "2", Text = "New York" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.City" })*@
+                        </div>
+                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.Zipcode, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.Zipcode, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.Zipcode" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.HospitalPhone, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('HospitalPrivilegePhoneCountryCode')"> {{hospitalPrivilegeInformation.CountryCode}} <span class="caret"></span></button>
+                                </div>
+                                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="HospitalPrivilegePhoneCountryCode">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select ng-model="hospitalPrivilegeInformation.CountryCode" ng-init="hospitalPrivilegeInformation.CountryCode = '+1'">
+                                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == hospitalPrivilegeInformation.CountryCode">{{code.name}}({{code.dial_code}})</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @* <input type="text" name="PhoneNo" class="form-control" id="PhoneNo" placeholder="Phone Number" required>*@
+                                @Html.TextBoxFor(model => model.HospitalPhone, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.HospitalPhone" })
+
+                            </div>
+                            @Html.ValidationMessageFor(model => model.HospitalPhone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.HospitalFax, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('HospitalPrivilegeFaxCountryCode')"> {{hospitalPrivilegeInformation.FaxCountryCode}} <span class="caret"></span></button>
+                                </div>
+                                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="HospitalPrivilegeFaxCountryCode">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select ng-model="hospitalPrivilegeInformation.FaxCountryCode" ng-init="hospitalPrivilegeInformation.FaxCountryCode = '+1'">
+                                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == hospitalPrivilegeInformation.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(model => model.HospitalFax, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.HospitalFax" })
+
+
+
+                            </div>
+                            @Html.ValidationMessageFor(model => model.HospitalFax, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.EmailID, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.EmailID, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.EmailID" })
+                        @Html.ValidationMessageFor(model => model.EmailID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class=" col-md-12">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.ContactPerson, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.ContactPerson, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.ContactPerson" })
+                        @Html.ValidationMessageFor(model => model.ContactPerson, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.ContactPersonPhone, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('HospitalPrivilegeContactPhoneCountryCode')"> {{hospitalPrivilegeInformation.ContactPhoneCountryCode}} <span class="caret"></span></button>
+                                </div>
+                                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="HospitalPrivilegeContactPhoneCountryCode">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select ng-model="hospitalPrivilegeInformation.ContactPhoneCountryCode" ng-init="hospitalPrivilegeInformation.ContactPhoneCountryCode = '+1'">
+                                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == hospitalPrivilegeInformation.ContactPhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @* <input type="text" name="PhoneNo" class="form-control" id="PhoneNo" placeholder="Phone Number" required>*@
+                                @Html.TextBoxFor(model => model.ContactPersonPhone, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.ContactPersonPhone" })
+
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ContactPersonPhone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.ContactPersonFax, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv('HospitalPrivilegeContactPersonFaxCountryCode')"> {{hospitalPrivilegeInformation.ContactPersonFaxCountryCode}} <span class="caret"></span></button>
+                                </div>
+                                <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="HospitalPrivilegeContactPersonFaxCountryCode">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">Select Country Dial Code</h3>
+                                    <div class="popover-content">
+                                        <select ng-model="hospitalPrivilegeInformation.ContactPersonFaxCountryCode" ng-init="hospitalPrivilegeInformation.ContactPersonFaxCountryCode = '+1'">
+                                            <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == hospitalPrivilegeInformation.ContactPersonFaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @Html.TextBoxFor(model => model.ContactPersonFax, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.ContactPersonFax" })
+
+
+
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ContactPersonFax, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class=" col-md-12">                   
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.DepartmentName, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.DepartmentName, "-- select --", new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.DepartmentName" })
+                        @Html.ValidationMessageFor(model => model.DepartmentName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.DepartmentChief, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.DepartmentChief, "-- select --", new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.DepartmentChief" })
+                        @Html.ValidationMessageFor(model => model.DepartmentChief, "", new { @class = "text-danger" })
+                    </div>
+                </div>                
+                <div class="col-md-12">                    
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.AffilicationStartDate, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.AffilicationStartDate, new { type = "date", @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.AffilicationStartDate" })
+                        @Html.ValidationMessageFor(model => model.AffilicationStartDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.AffiliationEndDate, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.AffiliationEndDate, new { type = "date", @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.AffiliationEndDate" })
+                        @Html.ValidationMessageFor(model => model.AffiliationEndDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.ArePrevilegesTemporary, new { @class = "control-label small" })
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.ArePrevilegesTemporary, true, new { data_ng_model = "hospitalPrivilegeInformation.ArePrevilegesTemporary" }) Yes
+                            </label>
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.ArePrevilegesTemporary, false, new { data_ng_model = "hospitalPrivilegeInformation.ArePrevilegesTemporary" }) No
+                            </label>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ArePrevilegesTemporary, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.FullUnrestrictedPrevilages, new { @class = "control-label small" })
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.FullUnrestrictedPrevilages, true, new { data_ng_model = "hospitalPrivilegeInformation.FullUnrestrictedPrevilages" }) Yes
+                            </label>
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.FullUnrestrictedPrevilages, false, new { data_ng_model = "hospitalPrivilegeInformation.FullUnrestrictedPrevilages" }) No
+                            </label>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.FullUnrestrictedPrevilages, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.AddmittingPrivilegeStatus, htmlAttributes: new { @class = "control-label small" })
+                        @Html.DropDownListFor(model => model.AddmittingPrivilegeStatus, new[] { new SelectListItem { Value = "None", Text = "None" }, new SelectListItem { Value = "Full Unrestricted", Text = "Full Unrestricted" }, new SelectListItem { Value = "Provisional", Text = "Provisional" }, new SelectListItem { Value = "Temporary", Text = "Temporary" } }, "-- Select --", new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.AddmittingPrivilegeStatus" })
+                        @Html.ValidationMessageFor(model => model.AddmittingPrivilegeStatus, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.AnnualAdmisionPercentage, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.AnnualAdmisionPercentage, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.AnnualAdmisionPercentage" })
+                        @Html.ValidationMessageFor(model => model.AnnualAdmisionPercentage, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.Speciality, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.Speciality, new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.Speciality" })
+                        @Html.ValidationMessageFor(model => model.Speciality, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.StaffCategory, htmlAttributes: new { @class = "control-label small" })
+                        @Html.EnumDropDownListFor(model => model.StaffCategory, "-- select --", new { @class = "form-control input-sm", data_ng_model = "hospitalPrivilegeInformation.StaffCategory" })
+                        @Html.ValidationMessageFor(model => model.StaffCategory, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-11 form-group">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                            <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new small">@Html.LabelFor(model => model.HospitalPrevilegeLetterPath, htmlAttributes: new { @class = "control-label small" })</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.HospitalPrevilegeLetterPath, new { type = "file" })</span>
+                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.HospitalPrevilegeLetterPath, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-1 form-group">
+                        <div>
+                            <a ng-show="hospitalPrivilegeInformation.Certificate!=''&& !newShowHosPrv" href="{{hospitalPrivilegeInformation.Certificate}}" data-toggle="tooltip" data-placement="top" title="{{hospitalPrivilegeInformation.DocumentPath}}" target="_blank"><i class="fa fa-3x fa-file"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>        
+        <div class="clearfix"></div>
+        <br />
+        <div class="col-md-12 zero-padding-left-right-div">
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <button type="button" class="btn btn-warning btn-sm" ng-click="cancelHospitalPrivilegeInformation()">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveHospitalPrivilegeInformation(hospitalPrivilegeInformation)">{{submitButtonText}}</button>
+            </div>
+        </div>
+    </div>
+</form>

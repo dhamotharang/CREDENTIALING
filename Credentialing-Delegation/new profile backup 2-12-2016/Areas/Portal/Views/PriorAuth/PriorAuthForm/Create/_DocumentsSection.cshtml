@@ -1,0 +1,52 @@
+﻿@model PortalTemplate.Areas.Portal.Models.PriorAuth.PriorAuthorization.PriorAuthorizationViewModel
+@using PratianUI
+<div class="x_panel border_on_panel zero-padding-left-right">
+    <div class="x_content zero-padding-left-right">
+        <div class="col-lg-12">
+            @Html.PratianUiCheckboxFor(e => e.AuthorizationType, "Add New Document", new { @id = "AddNewDocCheck", @Value = "AddNewDoc" })
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 AddNewDocView hidden">
+            <div class="DocsHeader">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-2 theme_label">
+                    @Html.LabelFor(e => e.Attachments[0].Name)
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2 theme_label">
+                    @Html.LabelFor(e => e.Attachments[0].AttachmentType)
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-3 col-xs-2 theme_label">
+                    @Html.LabelFor(e => e.Attachments[0].DocumentFile)
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                    &nbsp;
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-left button-styles-xs theme_label">
+                    <label for="ACTION">ACTION</label>
+                </div>
+            </div>
+            <div id="PreAuthDocumentArea">
+                <div class="preAuthDocumentRow margin_top_5px">
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-2">
+                        @Html.PratianUiDropDownListFor(e => e.Attachments[0].Name, "/UMMasterData/GetDocumentName", 1, "100%", "Select Document Name", "1000", "DocumentNameID", "DocumentNameValue", new { @class = "form-control input-xs mandatory_field_halo" })
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2">
+                        @Html.DropDownListFor(e => e.Attachments[0].AttachmentType, new SelectList((System.Collections.IEnumerable)ViewData["MasterDocumentTypes"], "DocumentTypeValue", "DocumentTypeValue"), "SELECT", new { @class = "form-control input-xs mandatory_field_halo text-uppercase", @placeholder = "Document Type" })
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-3 col-xs-2">
+                        @Html.TextBoxFor(e => e.Attachments[0].Path, new { @class = "form-control input-xs custom-file-input", @style = "border:none;outline:none", @type = "file" })
+                        <div class="noFile hidden">NO FILE CHOSEN</div>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                        <button id="previewButton" class="btn btn-ghost btn-xs this_button_preview" data-toggle="tooltip"><img src="/Resources/Images/Icons/previewIcon.png" style="width: 28px;"></button>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-left button-styles-xs">
+                        <button type="button" class="btn btn-danger btn-xs deleteDocumentBtn1 hidden"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-danger btn-xs deleteDocumentBtn hidden"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-success btn-xs addDocumentBtn"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

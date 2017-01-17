@@ -1,0 +1,118 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.OpenPracticeStatusViewModel
+
+
+
+
+
+
+<fieldset ng-show="visibilitySecondControl == 'editOpenPracticeStatus'">
+    <legend>Open Practice Status</legend>
+    <form id="practiceOpenStatusForm{{$index}}" class="zero-padding-left-right-div">
+        <div class="form-group">
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationDetailID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            <div class="col-md-12 zero-padding-left-right-div">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+                <span ng-if="tempSecondObject.OpenPracticeStatusID">
+                    @Html.HiddenFor(model => model.OpenPracticeStatusID, new { @id = "OpenPracticeStatusID", ng_value = "tempSecondObject.OpenPracticeStatusID", data_ng_model = "tempSecondObject.OpenPracticeStatusID" })
+                </span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4" ng-repeat="practiceOpenStatusQuestion in masterOpenPracticeStatusQuestions">
+                    <input type="hidden" name="PracticeQuestionAnswers[{{$index}}].PracticeQuestionId" data-ng-model="tempSecondObject.PracticeQuestionAnswers[$index].PracticeQuestionId" value="{{practiceOpenStatusQuestion.PracticeOpenStatusQuestionID}}">
+                    <span ng-if="PracticeQuestionAnswers[$index].PracticeOpenStatusQuestionAnswerID">
+                        <input type="hidden" name="PracticeQuestionAnswers[{{$index}}].PracticeOpenStatusQuestionAnswerID" data-ng-model="tempSecondObject.PracticeQuestionAnswers[$index].PracticeOpenStatusQuestionAnswerID" value="{{tempSecondObject.PracticeQuestionAnswers[$index].PracticeOpenStatusQuestionAnswerID}}">
+                    </span>
+                    <label class="control-label small">{{practiceOpenStatusQuestion.Title}} *</label>
+                    <div class="radio">
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                <input type="radio" name="PracticeQuestionAnswers[{{$index}}].AnswerYesNoOption" value="@value" required data-ng-model="PracticeLocationDetail.OpenPracticeStatus.PracticeQuestionAnswers[$index].Answer"> @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                            </label>
+                        }
+                    </div>
+                    <span class="text-danger field-validation-error" data-valmsg-for="PracticeQuestionAnswers[{{$index}}].AnswerYesNoOption" data-valmsg-replace="true">
+                        <span for="PracticeQuestionAnswers[{{$index}}].AnswerYesNoOption" class=""></span>
+                    </span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.AnyInformationVariesByPlan, new { @class = "control-label small" })
+                    @Html.TextAreaFor(model => model.AnyInformationVariesByPlan, new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.AnyInformationVariesByPlan" })
+                    @Html.ValidationMessageFor(model => model.AnyInformationVariesByPlan, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(model => model.AnyPracticeLimitationOption, new { @class = "control-label small" })
+                    <div class="radio">
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.AnyPracticeLimitationOption, (int)value, new { data_ng_model = "tempSecondObject.AnyPracticeLimitationOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.AnyPracticeLimitationOption, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="tempSecondObject.AnyPracticeLimitationOption == '1'">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.GenderLimitationType, new { @class = "control-label small" })
+                    <div class="radio">
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.GenderLimitationType)))
+                        {
+                        <label class="radio-inline">
+                            @Html.RadioButtonFor(model => model.GenderLimitationType, (int)value, new { data_ng_model = "tempSecondObject.GenderLimitationType" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                        </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.GenderLimitationType, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small col-md-10">Age Limitations</label>
+                    <div>
+                        <div class="col-sm-4">
+                            @Html.LabelFor(model => model.MinimumAge, new { @class = "control-label small" })
+                            @Html.TextBoxFor(model => model.MinimumAge, new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.MinimumAge", ng_change = "validateForAge($index)" })
+                        </div>
+                        <div class="col-sm-4">
+                            @Html.LabelFor(model => model.MaximumAge, new { @class = "control-label small" })
+                            @Html.TextBoxFor(model => model.MaximumAge, new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.MaximumAge" })
+                        </div>
+                        <div class="col-lg-12">
+                            <div>
+                                @Html.ValidationMessageFor(model => model.MinimumAge, "", new { @class = "text-danger" })
+                            </div>
+                            <div>
+                                @Html.ValidationMessageFor(model => model.MaximumAge, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.OtherLimitations, new { @class = "control-label small" })
+                    @Html.TextAreaFor(model => model.OtherLimitations, new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.OtherLimitations" })
+                    @Html.ValidationMessageFor(model => model.OtherLimitations, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='openPracticeStatusErrorMsg'" class="alert alert-danger" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12">
+            <div class="control-group">
+                <button class="btn btn-warning btn-sm" ng-click="operateSecondCancelControl('');resetDates();">Cancel</button>
+                <button class="btn btn-primary btn-sm pull-right" ng-click="saveOpenPracticeStatus(PracticeLocationDetail, $index)"><span ng-if="!tempSecondObject.OpenPracticeStatusID">Save</span><span ng-if="tempSecondObject.OpenPracticeStatusID">Update</span></button>
+            </div>
+        </div>
+    </form>
+</fieldset>

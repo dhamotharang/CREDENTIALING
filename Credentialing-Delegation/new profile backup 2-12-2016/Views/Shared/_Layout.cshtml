@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <noscript>
+        <meta http-equiv="Refresh" content="0;URL=@Url.Content("~/Errorpage/JavaScriptDisabled")">
+    </noscript>
+    <!-- Bootstrap core CSS -->
+    @Styles.Render("~/Content/defaultrequired")
+    <link href="~/Content/AppCss/AppStyle.css" rel="stylesheet" class="head_link" />
+    <link href="~/Content/AppCss/TabStyles.css" rel="stylesheet" />
+    @if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("UM"))
+    {
+        <link href="~/Content/Themes/Theme1.css" rel="stylesheet" id="CurrentTheme" />
+    }
+    else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CM"))
+    {
+        <link href="~/Content/Themes/CMTheme.css" rel="stylesheet" id="CurrentTheme" />
+    }
+    else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("MH"))
+    {
+        <link href="~/Content/Themes/Theme1.css" rel="stylesheet" id="CurrentTheme" />
+    }
+    else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("Claims"))
+    {
+        <link href="~/Content/Themes/PratianTheme.css" rel="stylesheet" id="CurrentTheme" />
+        <script src="~/Areas/Encounters/Scripts/AppJs/Dashboard/Unminified/pCalender.js"></script>
+        <script src="~/Areas/Billing/Scripts/AppJs/ClaimsTracking/Unminified/TrackingTree.js"></script>
+
+    }
+    else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CredAxis"))
+    {
+        <link href="~/Content/Themes/CredaxisTheme1.css" rel="stylesheet" id="CurrentTheme" />
+    }
+    else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CMS"))
+    {
+        <link href="~/Content/Themes/CMSBlue.css" rel="stylesheet" id="CurrentTheme" />
+    }
+    else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("ETL"))
+    {
+        <link href="~/Content/Themes/Theme1.css" rel="stylesheet" id="CurrentTheme" />
+    }
+    else
+    {
+        <link href="~/Content/Themes/Default.css" rel="stylesheet" id="CurrentTheme" />
+    }
+ 
+    <link href="" id="head_link" rel="stylesheet" />
+    @Styles.Render("~/Content/requiredstyles")
+    @Styles.Render("~/Content/allcss")
+    <script id="head_script"></script>
+    <script src="~/Areas/UM/Resources/MasterData/AllUMMasterData.js"></script>
+    <script src="~/Areas/UM/WebWorkers/AjaxWebWorker.js"></script>
+    @Scripts.Render("~/bundles/requiredscripts")
+
+    <!--[if lt IE 9]>
+        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
+    <![endif]-->
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    @*@Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/normalize.css" rel="stylesheet" />
+    <script>
+        var rootDirPath = '@System.Configuration.ConfigurationManager.AppSettings["RootPath"]';
+        var appHost = '@System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"]';
+        var rootDir = rootDirPath + appHost;
+</script>
+    @*@Scripts.Render("~/bundles/js")*@
+
+    @if (IsSectionDefined("AddToHead"))
+    {
+        @RenderSection("AddToHead", required: false)
+    }
+
+    @RenderSection("AddToHeadAnotherWay", required: false)
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+</head>
+<body class="pace-done nav-md" ng-app="HomeApp" ng-controller="homeCtrl" ng-cloak>
+
+    <div class="pace pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
+        </div>
+        <div class="pace-activity"></div>
+    </div>
+
+    <div class="container body">
+        <div class="main_container">
+            @Html.Partial("~/Views/Shared/OtherLayouts/_TopNavBar.cshtml")
+
+
+
+
+
+            <div class="right_col" role="main" style="min-height: 677px;">
+
+                @Html.Partial("~/Views/Shared/OtherLayouts/_Header.cshtml")
+                @RenderBody()
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        @Html.Partial("~/Views/Shared/OtherLayouts/_CustomNotification.cshtml")
+
+        <script>
+            var appConfig = '@System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"]';
+        </script>
+        <script src="~/Scripts/AppScripts/TabActions.js"></script>
+        <script src="~/Scripts/AppScripts/TabsControlCenter.js"></script>
+        <script src="~/Scripts/AppScripts/App.js"></script>
+        <script src="~/Scripts/AppScripts/Modal/ContactModal.js"></script>
+        <script src="~/Scripts/AppScripts/Modal/NoteModal.js"></script>
+        <script src="~/Scripts/AppScripts/Modal/AttachmentModal.js"></script>
+        <script src="~/Areas/UM/Resources/ServiceData/CPTServiceData.js"></script>
+        @*<script src="~/Scripts/AppScripts/AccountManagement/AccountManagementMain.js"></script>*@
+        <link href="~/Content/AppCss/Search/searchOverlay.css" rel="stylesheet" />
+        @*@Scripts.Render("~/bundles/js")*@
+
+        @if (IsSectionDefined("AddToFooter"))
+        {
+            @RenderSection("AddToFooter", required: false)
+        }
+
+        @RenderSection("AddToFooterAnotherWay", required: false)
+
+        @RenderSection("scripts", required: false)
+    </div>
+
+    <div id="loadingSample" class="hidden">
+        <img src="/Resources/Images/Common/Loading1.gif" />
+    </div>
+    @Html.Partial("~/Views/Shared/OtherLayouts/ScreenAlert.cshtml")
+</body>
+
+</html>

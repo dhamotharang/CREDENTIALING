@@ -1,0 +1,177 @@
+﻿@model PortalTemplate.Areas.Portal.Models.ProviderProfile.PersonalInformationViewModel
+@using PratianUI
+<fieldset class="fsStyle" id="AddEditPersonalDetail">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            @if (Model != null)
+            {
+                <span><span class="transparent-font-color">____</span>EDIT PERSONAL INFORMATION<span class="transparent-font-color">____</span></span>
+            }
+            else
+            {
+                <span>ADD PERSONAL INFORMATION</span>
+            }
+        </span>
+    </legend>
+    @using (Ajax.BeginForm("SavePersonalInfo", "ProviderProfile", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "PersonalInformationArea" }, new { id = "savePersonalInfo" }))
+    {
+        <div class="x_content zero-padding-left">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <div class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.NPI)</label>
+                    </div>
+                    <div class="col-lg-1 "></div>
+                    <div class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(m => m.NPI, new { @class = "form-control input-xs", placeholder = "NPI" })  </span>
+                        @Html.ValidationMessageFor(e => e.NPI)
+                    </div>
+                    @*<label class="theme_label">Salutation </label>
+                        <span class="theme_label_data">Mr.</span>*@
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <div class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ProviderType)</label>
+                    </div>
+                    <div class="col-lg-1 "></div>
+                    <div class="col-lg-7 nopadding">
+                        <span class="theme_label_data">
+                            <select class="form-control input-xs Add_Provider text-uppercase  variable_width_select  loser_field" data-val="true" data-val-required="The Provider Type field is required." id="ProviderType" name="ProviderType">
+                                <option value="">DOCTOR</option>
+                                <option>MD</option>
+                                <option>NURSE</option>
+                            </select>
+                        @*@Html.TextBoxFor(m => m.ProviderType, new { @class = "form-control input-xs", placeholder = "NPI" })*@  </span>
+                        @Html.ValidationMessageFor(e => e.ProviderType)
+                    </div>
+                    @*<label class="theme_label">Salutation </label>
+                        <span class="theme_label_data">Mr.</span>*@
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.FirstName)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-xs", placeholder = "FIRST NAME" })  </span>
+                        @Html.ValidationMessageFor(e => e.FirstName)
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.MiddleName)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control input-xs", placeholder = "MIDDLE NAME" }) </span>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.LastName)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-xs", placeholder = "LAST NAME" }) </span>
+                        @Html.ValidationMessageFor(e => e.LastName)
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <div class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Gender)</label>
+                    </div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-7 nopadding">
+                        <span class="theme_label_data">
+                            @Html.PratianUiSquareRadioButtonFor(e => e.Gender, "Male", Model.Gender == "Male" ? new { @checked = "checked" }:null)
+                            @Html.PratianUiSquareRadioButtonFor(e => e.Gender, "Female", Model.Gender == "Female" ? new { @checked = "checked" } : null)
+                        </span>
+                        @Html.ValidationMessageFor(e => e.Gender)
+                    </div>
+                </div>
+
+                @*<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.FacilityName)</label>
+                    </span>
+                    <span class="col-lg-1"></span>
+                    <div class="col-lg-7 nopadding">
+                        <select id="planInput" class="form-control  text-uppercase FacilityMultiple" multiple="multiple">
+                            <option>8365 South Suncoast Blvd</option>
+                            <option selected>Lakeshore2</option>
+                            <option>14555 Cortez Blvd.</option>
+                            <option>Brooksville1</option>
+                        </select>
+                        @foreach (var item in Model.Specialty)
+                        {
+                            <span class="theme_label_data">
+                                @Html.TextBoxFor(m => item, new { @class = "form-control input-xs", placeholder = "Specialty" })
+                            </span>    @Html.ValidationMessageFor(e => item)
+                        }
+                    </div>
+                </div>*@
+                @*<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Specialty)</label>
+                    </span>
+                    <span class="col-lg-1"></span>
+                    <div class="col-lg-7 nopadding">
+                        <select id="planInput" class="form-control text-uppercase SpecialtyMultiple" multiple="multiple">
+                            <option>Allergy & Immunology</option>
+                            <option>Anesthesiology</option>
+                            <option selected>Cardiology</option>
+                            <option>Dentist</option>
+                            <option>Acupuncturist</option>
+                        </select>
+                        @foreach (var item in Model.FacilityName)
+                        {  <span class="theme_label_data">
+                            @Html.TextBoxFor(m => item, new { @class = "form-control input-xs", placeholder = "Specialty" })
+                        </span>
+                            @Html.ValidationMessageFor(e => item)
+                        }
+                        @Html.HiddenFor(m => m.RequestedBy)
+                        @Html.HiddenFor(m => m.RequestedFrom)
+                        @Html.HiddenFor(m => m.NetworkParticipation)
+                    </div>
+                </div>*@
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <div class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.phonenumber)</label>
+                    </div>
+                    <div class="col-lg-1 "></div>
+                    <div class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(m => m.phonenumber, new { @class = "form-control input-xs", placeholder = "PHONE NUMBER" })  </span>
+                        @Html.ValidationMessageFor(e => e.phonenumber)
+                    </div>
+                    @*<label class="theme_label">Salutation </label>
+            <span class="theme_label_data">Mr.</span>*@
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.email)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(m => m.email, new { @class = "form-control input-xs", placeholder = "EMAIL ADDRESS" }) </span>
+                        @Html.ValidationMessageFor(e => e.email)
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="col-lg-4 nopadding">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.TAXID)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        <span class="theme_label_data">@Html.TextBoxFor(m => m.TAXID, new { @class = "form-control input-xs", placeholder = "INDIVIDUAL TAX ID" }) </span>
+                        @Html.ValidationMessageFor(e => e.TAXID)
+                    </span>
+                </div>
+
+            </div>
+        </div>
+        <div class="row col-lg-12 zero-padding-left-right">
+            <input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="SAVE">
+            <a class="btn btn-danger btn-xs list-item buttonmargin pull-right margin-right-5px" data-tab-path="/Portal/ProviderProfile/CancelPersonalInfoEdit?profileId=1" data-tab-container="PersonalInformationArea">CANCEL</a>
+        </div>
+        @*</div>
+            <div class="col-lg-1 col-md-4 col-sm-6 col-xs-12 buttonmargin">*@
+        @* <button class="btn btn-success btn-xs ripple closeBtnCSS" onclick="ShowHideAddView('ViewPersonalDetail', 'AddEditPersonalDetail')">Save</button>*@
+
+        @*</div>*@
+    }
+</fieldset>

@@ -1,0 +1,96 @@
+﻿
+@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.CDSCInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div ng-hide="ShowRenewDivCDS">
+    <div class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error List : <br />
+            <span>Renewal cannot be initiated.Expiry Date is missing.</span>
+        </div>
+    </div>
+</div>
+
+<div ng-show="ShowRenewDivCDS">
+    <form class="cDSCInformationForm">
+
+        <div class="col-md-12 zero-padding-left-right-div">
+            <span ng-if="tempObject.CDSCInformationID">
+                @Html.HiddenFor(model => model.CDSCInformationID, new { ng_value = "tempObject.CDSCInformationID" })
+                @Html.HiddenFor(model => model.CertNumber, new { ng_value = "tempObject.CertNumber" })
+                @Html.HiddenFor(model => model.State, new { ng_value = "tempObject.State" })
+            </span>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.CertNumber, new { @class = "control-label small" })
+                <div>
+                    <i class="data-label">{{tempObject.CertNumber}}</i>
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="control-label small">New Issue Date</label>
+                <div>
+                    @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy" })
+                </div>
+                @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label small">New Expiry Date</label>
+                <div>
+                    @Html.TextBoxFor(model => model.ExpiryDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ExpiryDate", placeholder = "mm/dd/yyyy" })
+                </div>
+                @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 zero-padding-left-right-div">
+            <div ng-class="{'col-lg-11':tempObject.CDSCCerificatePath,'col-lg-12':!tempObject.CDSCCerificatePath}">
+
+
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput">
+                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                        <span class="fileinput-filename"></span>
+                    </div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file">
+                        <span class="fileinput-new small">Select CDS Document</span>
+                        <span class="fileinput-exists">Change</span>
+                        @Html.TextBoxFor(model => model.CDSCCerificateFile, new { name = "CDSCCerificateFile", ng_data_model = "tempObject.CDSCCerificateFile", type = "file" })
+                    </span>
+
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+                @Html.HiddenFor(model => model.CDSCCerificatePath, new { ng_value = "tempObject.CDSCCerificatePath" })
+                @Html.ValidationMessageFor(model => model.CDSCCerificateFile, "", new { @class = "text-danger" })
+            </div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+            {
+                <div ng-show="tempObject.CDSCCerificatePath" class="col-lg-1">
+                    <a href="/Document/View?path={{tempObject.CDSCCerificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                </div>
+            }
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='CDSCError'" class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="pull-right" ng-click="CDSCError=''"><i class="fa fa-times"></i></span>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error List : <br />
+                <span ng-repeat="err in CDSCError track by $index">{{err}}</span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 zero-padding-left-right-div">
+            <div class="col-md-12">
+
+                <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveCDSCInformation(tempObject,$index)">{{buttonLabel}}</button>
+            </div>
+        </div>
+
+    </form>
+</div>

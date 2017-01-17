@@ -1,0 +1,171 @@
+﻿@model PortalTemplate.Areas.SharedView.Models.Encounter.DocumentListViewModel
+<fieldset class="fieldsetStyle">
+    <legend class="legendstyle">Document List</legend>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <button type="button" class="btn btn-xs btn-info pull-right" onclick="toggleDocumentHistoryPanel()"><i class="fa fa-history"></i> Document History</button>
+            <button type="button" class="btn btn-xs btn-info pull-right" onclick="openClaimHistoryModal()" disabled><i class="fa fa-history"></i> Claims History</button>
+        </div>
+    </div>
+
+    <fieldset class="fieldsetStyle Viewmemdochistory" style="margin-bottom: 10px; display: none;">
+        <legend class="legendstyle">Document History</legend>
+        <a class="custombadge outertabclose outertabclose-red pull-right" style="margin-top:-11px; margin-bottom: 6px;" onclick="$('.Viewmemdochistory').slideToggle();"><i class="fa fa-times"></i></a>
+      
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+                    <thead class="theme_thead">
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Category</th>
+                            <th>Uploaded By</th>
+                            <th>Uploaded On</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            
+                        foreach (var item in Model.DocumentHistory) {
+                        <tr>
+                            <td>@item.DocumentName</td>
+                            <td>@item.Category</td>
+                            <td>@item.UploadedBy</td>
+                            <td>@item.UploadedOn</td>
+                            <td>
+                                <a class="btn btn-xs" href="#" style="text-transform:capitalize;" onclick="openDocumentPanel()"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-xs" target="_blank" href="/Content/CustomTheme/PBAS%20Documents/SampleProgressNote.pdf" data-toggle="tooltip" title="Open Document in New Tab"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="documentUploads container">
+        <div class="row fileUploadContainer">
+            <div class="fileUploadItem col-lg-12" data-stampid="0">
+              
+                <div class="col-lg-3">
+                    <label>Document Name</label>
+                    <input name="DocumentName" data-stampid="0" placeholder="Document Name" class="form-control input-xs non_mandatory_field_halo DocumentName" type="text" />
+                </div>
+                <div class="col-lg-2">
+                    <label>
+                        Document Category
+                    </label>
+                   
+                    <input name="DocumentCategory" type="text" class="form-control input-xs non_mandatory_field_halo uppercase documentCategorySelector" list="DocumentCategory">
+                    <datalist id="DocumentCategory">
+                        <option value="PROGRESS NOTES">
+                        <option value="LAB REPORT">
+                        <option value="IMAGE">
+                        <option value="CONSULTATION">
+                        <option value="HOSPITAL">
+                        <option value="CHART">
+                        <option value="PRESCRIPTION">
+                        <option value="REFERENCE NOTES">
+                        <option value="HOSPITAL DISCHARGE">
+                        <option value="ECW PHYSICIAN TO PHYSICIAN">
+                        <option value="SPECIALITY FORMS">
+                        <option value="MISCELLANEOUS">
+                        <option value="EXAMINATION">
+                        <option value="PHYSICAL EXAM DRAWING">
+                        <option value="PROCEDURE DRAWING">
+                        <option value="PROCEDURE DOCUMENT">
+                        <option value="EOB">
+                        <option value="ADVANCE DIRECTORY">
+                        <option value="OTHERS">
+                    </datalist>
+                </div>
+                <div class="col-lg-4 docTypeSelector">
+                    <div>
+                        <input type="radio" name="FileTypeUploadCreate0" class="normal-radio" id="e_upload-0" value="0-0" checked="checked">
+                        <label for="e_upload-0" style="text-transform: none; font-weight: normal;"><span></span>Upload</label>
+                        <input type="radio" name="FileTypeUploadCreate0" class="normal-radio" value="0-1" id="e_create-0">
+                        <label for="e_create-0" style="text-transform: none; font-weight: normal;"><span></span>Create</label>
+                    </div>
+                    <div class="fileBox" data-stampid="0">
+                        <input name="File" class="form-control input-xs non_mandatory_field_halo" type="file" />
+                    </div>
+                    <div class="textBox" data-stampid="0">
+                        <textarea class="expandableNotesBox form-control input-xs non_mandatory_field_halo textToPdfFile"></textarea>
+                    </div>
+                </div>
+                <div class="col-lg-3" style="padding-left: 18px;">
+                    <label>Action</label>
+                    <div class="Actions">
+                        <button class="btn btn-xs btn-primary" type="button" id="uploadDocument"><i class="fa fa-upload"></i> Upload</button>
+                        <button class="btn btn-xs btn-info addFileButton" type="button" onclick="addFile_Click()"><i class="fa fa-plus"></i> Add</button>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:20px;">
+        <div class="col-lg-12">
+            <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+                <thead class="theme_thead">
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Category</th>
+                        <th>Uploaded By</th>
+                        <th>Uploaded On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var doc in Model.UploadedDocuments)
+                    {
+                        <tr>
+                            <td>@doc.DocumentName</td>
+                            <td>@doc.Category</td>
+                            <td>@doc.UploadedBy</td>
+                            <td>@doc.UploadedOn</td>
+                            <td>
+                                <a class="btn btn-xs" style="text-transform: capitalize;" href="#" onclick="openDocumentPanel()"><i class="fa fa-eye"></i></a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a class="btn btn-xs" target="_blank" href="/Content/CustomTheme/PBAS%20Documents/SampleProgressNote.pdf" data-toggle="tooltip" title="Open Document in New Tab"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</fieldset>
+
+@* Create File Modal*@
+<div class="modal fade" tabindex="-1" role="dialog" id="createFileModal" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md" style="width:900px;">
+        <div class="modal-content">
+            <form>
+            <div class="modal-header bg-primary">
+                <div class="col-md-12 col-lg-12">
+                    <i class="fa fa-creative-commons"></i>
+                    <label> Create a File</label>
+                    <button type="button" class="btn btn-xs btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                Text
+                <textarea name="createfiletext" id="createfile" placeholder="ENTER TEXT" class="form-control input-xs non_mandatory_field_halo" style="height:400px;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-sm btn-danger pull-left" data-dismiss="modal">Cancel</a>
+                <a class="btn btn-sm btn-success pull-right" id="exportbtn" onclick="createDocument()">Create</a>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<p-script filepath="~/Areas/SharedView/Scripts/DocumentManager/Documents.js"></p-script>
+<p-link filepath="~/Areas/SharedView/Content/Documents.css" rel="stylesheet"></p-link>

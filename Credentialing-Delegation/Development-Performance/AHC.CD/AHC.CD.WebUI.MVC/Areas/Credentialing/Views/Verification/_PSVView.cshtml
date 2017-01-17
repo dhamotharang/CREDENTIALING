@@ -1,0 +1,207 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.PSVInfo.ProfileVerificationDetailViewModel
+<style>
+    .progress {
+        width: 65%;
+        height: 2px;
+        margin-left: 15%;
+        margin-bottom: 0px;
+        margin-top: -10px;
+        position: absolute;
+    }
+    .text-green-file {
+        color: #5CB85C;
+    }
+</style>
+
+<div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true" ng-init="GetProfileVerificationParameter(); getVerificationLinks()">    
+
+    <!-- State Licence-->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="stateLisenceInfo">
+            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/ApplicationDocuments/PSVDocuments/State License_new.pdf" target="_blank" class="file text-green-file file1" style="position: absolute; margin-left: 82%; margin-top:-3px;"><i class="fa fa-file fa-2x"></i></a>
+            <button class="verifybtn verifybtn1 btn btn-xs btn-info" style="position: absolute; margin-left: 82%; margin-top:-3px;" onclick="annimateelem(1)">Verify</button>
+            <a href="#">
+                <div class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perstateLisenceInfo" aria-expanded="false" aria-controls="perstateLisenceInfo">
+                    <i ng-if="stateLicenses.length > 0 && stateLicenses[0].ProfileVerificationDetail.ProfileVerificationDetailId" class=" fa fa-check-circle text-success"></i> State License
+                    <div class="progress">
+                        <div class="prog1 progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:0px"></div>
+                    </div>                    
+                    <span class="glyphicon glyphicon-plus pull-right"></span>                    
+                </div>
+            </a>
+            <span ng-if="stateLicenses.length == 0" class="Error"> - No State License data available</span>
+        </div>
+
+        <div id="perstateLisenceInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="stateLisenceInfo">
+            <div ng-show="!StateHistory">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_StateLisence.cshtml")
+            </div>
+            <div ng-show="StateHistory">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_StateHistory.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <!-- Board Certifications for Physicians -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="boardCertificateInfo">
+            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/ApplicationDocuments/PSVDocuments/Board Certified_new.pdf" target="_blank" class="file text-green-file file2" style="position: absolute; margin-left: 82%; margin-top:-3px;"><i class="fa fa-file fa-2x"></i></a>
+            <button class="verifybtn verifybtn2 btn btn-xs btn-info" style="position: absolute; margin-left: 82%; margin-top:-3px;" onclick="annimateelem(2)">Verify</button>
+            <a href="#">
+                <div class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perboardCertificateInfo" aria-expanded="false" aria-controls="perboardCertificateInfo">
+                    <i ng-if="BoradCertifications.length > 0 && BoradCertifications[0].ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> Board Certificate
+                    <div class="progress" >
+                        <div class="prog2 progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:0px"></div>
+                    </div>
+                    <span class="glyphicon glyphicon-plus pull-right"></span>                    
+                </div>
+            </a>
+            <span ng-if="BoradCertifications.length == 0" class="Error"> - No Board Certificates available</span>
+        </div>
+
+        <div id="perboardCertificateInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="boardCertificateInfo">
+            <div ng-show="!BoardHistory">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_BoardCertifications.cshtml")
+            </div>
+            <div ng-show="BoardHistory">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_BoardCertificateHistory.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <!-- DEA -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="deaInfo">
+            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/ApplicationDocuments/PSVDocuments/DEA Number_new.pdf" target="_blank" class="file text-green-file file3" style="position: absolute; margin-left: 82%; margin-top:-3px;"><i class="fa fa-file fa-2x"></i></a>
+            <button class="verifybtn verifybtn3 btn btn-xs btn-info" style="position: absolute; margin-left: 82%; margin-top:-3px;" onclick="annimateelem(3)">Verify</button>
+            <a href="#">
+                <div class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perdea" aria-expanded="false" aria-controls="perdea">
+                    <i ng-if="DEAs.length > 0 && DEAs[0].ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> DEA
+                    <div class="progress" >
+                        <div class="prog3 progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:0px"></div>
+                    </div>
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                </div>
+            </a>
+            <span ng-if="DEAs.length == 0" class="Error"> - No DEA data available</span>
+        </div>
+
+        <div id="perdea" class="panel-collapse collapse" role="tabpanel" aria-labelledby="deaInfo">
+            <div ng-show="!DEAHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_DEA.cshtml")
+            </div>
+            <div ng-show="DEAHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_DEAHistory.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <!-- CDS -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="cdsInfo">
+            <a href="" class="file text-danger file4" style="position: absolute; margin-left: 82%; margin-top:-3px;"><i class="fa fa-times fa-2x"></i></a>
+            <button class="verifybtn verifybtn4 btn btn-xs btn-info" style="position: absolute; margin-left: 82%; margin-top:-3px;" onclick="annimateelem(4)">Verify</button>
+            <a href="#">
+                <div class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#percds" aria-expanded="false" aria-controls="percds">
+                    <i ng-if="CDSs.length > 0 && CDSs[0].ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> CDS
+                    <div class="progress" >
+                        <div class="prog4 progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:0px"></div>
+                    </div>
+                    <span class="glyphicon glyphicon-plus pull-right"></span>                                        
+                </div>
+            </a>
+            <span ng-if="CDSs.length == 0" class="Error"> - No CDS data available</span>
+        </div>
+
+        <div id="percds" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cdsInfo">
+            <div ng-show="!CDSHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_CDS.cshtml")
+            </div>
+            <div ng-show="CDSHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_CDSHistory.cshtml")
+            </div>
+        </div>
+    </div>
+    
+    <!-- NPDB -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="npdbInfo">
+            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/ApplicationDocuments/PSVDocuments/NPDB_new.pdf" target="_blank" class="file text-green-file file5" style="position: absolute; margin-left: 82%; margin-top:-3px;"><i class="fa fa-file fa-2x"></i></a>
+            <button class="verifybtn verifybtn5 btn btn-xs btn-info" style="position: absolute; margin-left: 82%; margin-top:-3px;" onclick="annimateelem(5)">Verify</button>
+            <a href="#">
+                <div class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#pernpdb" aria-expanded="false" aria-controls="pernpdb">
+                    <i ng-if="NPDB.ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> NPDB
+                    <div class="progress" >
+                        <div class="prog5 progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:0px"></div>
+                    </div>
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                    <i ng-if="NPDB.ProfileVerificationDetail.ProfileVerificationDetailId && NPDB.ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{NPDB.ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+
+                </div>
+            </a>
+        </div>
+
+        <div id="pernpdb" class="panel-collapse collapse" role="tabpanel" aria-labelledby="npdbInfo">
+            <div ng-show="!NPDBHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_NPDB.cshtml")
+            </div>
+            <div ng-show="NPDBHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_NPDBHistory.cshtml")
+            </div>
+        </div>
+    </div>
+    <!-- Medicare OPT-->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="conMediInfo">
+            <a href="" class="file text-danger file6" style="position: absolute; margin-left: 82%; margin-top:-3px;"><i class="fa fa-times fa-2x"></i></a>
+            <button class="verifybtn verifybtn6 btn btn-xs btn-info" style="position: absolute; margin-left: 82%; margin-top:-3px;" onclick="annimateelem(6)">Verify</button>
+            <a href="#">
+                <div class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#perMedi" aria-expanded="false" aria-controls="perMedi">
+                    <i ng-if="MedicareOPT.ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i> Medicare Opt Out
+                    <div class="progress" >
+                        <div class="prog6 progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:0px"></div>
+                    </div>
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                    <i ng-if="MedicareOPT.ProfileVerificationDetail.ProfileVerificationDetailId && MedicareOPT.ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{MedicareOPT.ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+
+                </div>
+            </a>
+        </div>
+
+        <div id="perMedi" class="panel-collapse collapse" role="tabpanel" aria-labelledby="conMediInfo">
+            <div ng-show="!MedicareHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_MedicareOPT.cshtml")
+            </div>
+            <div ng-show="MedicareHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_MedicareOPTHistory.cshtml")
+            </div>
+        </div>
+    </div>
+    <!--  OIG  -->
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="persmsoigInfo">
+            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/ApplicationDocuments/PSVDocuments/OIG_new.pdf" target="_blank" class="file text-green-file file7" style="position: absolute; margin-left: 82%; margin-top:-3px;"><i class="fa fa-file fa-2x"></i></a>
+            <button class="verifybtn verifybtn7 btn btn-xs btn-info" style="position: absolute; margin-left: 82%; margin-top:-3px;" onclick="annimateelem(7)">Verify</button>
+            <a href="#">
+                <div class="collapsed" data-toggle="collapse" data-parent="#accordion1" href="#persmsoig" aria-expanded="false" aria-controls="persmsoig">
+
+                    <i ng-if="OIG.ProfileVerificationDetail.ProfileVerificationDetailId" class="fa fa-check-circle text-success"></i>OIG
+                    <div class="progress" >
+                        <div class="prog7 progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:0px"></div>
+                    </div>
+                    <span class="glyphicon glyphicon-plus pull-right"></span>
+                    <i ng-if="OIG.ProfileVerificationDetail.ProfileVerificationDetailId && OIG.ProfileVerificationDetail.VerificationDate != ''" class="pull-right">Last Verified Date : <span>{{OIG.ProfileVerificationDetail.VerificationDate || 'Not Available' | date:'MM-dd-yyyy'}}</span></i>
+
+                </div>
+            </a>
+        </div>
+        <div id="persmsoig" class="panel-collapse collapse" role="tabpanel" aria-labelledby="persmsoigInfo">
+            <div ng-show="!OIGHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_OIG.cshtml")
+            </div>
+            <div ng-show="OIGHistoryDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_OIGHistory.cshtml")
+            </div>
+        </div>
+    </div>    
+</div>

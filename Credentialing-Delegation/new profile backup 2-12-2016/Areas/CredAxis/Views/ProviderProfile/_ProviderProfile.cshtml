@@ -1,0 +1,463 @@
+﻿<p-link filepath="~/Areas/CredAxis/CSS/ProviderProfile/ProviderProfile.css"></p-link>
+<p-link filepath="~/Areas/CredAxis/CSS/ProviderProfile/TableTemplate.css"></p-link>
+<p-script filepath="~/Areas/CredAxis/Resources/ServiceData/AllCredAxisData.js"></p-script>
+<p-script filepath="~/Areas/CredAxis/Scripts/ProviderProfile/NonMinified/ProviderProfile.js"></p-script>
+<p-script filepath="~/Areas/CredAxis/Scripts/ProviderProfile/NonMinified/WebWorker.js"></p-script>
+@*<p-script filepath="~/Areas/CredAxis/Scripts/ProviderProfile/NonMinified/Demographics.js"></p-script>*@
+<p-link filepath="~/Areas/CredAxis/CSS/font-awesome_V4.7.css"></p-link>
+<style>
+    #ProviderProfileTabView {
+        overflow: scroll;
+        height: 1600px;       
+    }
+    /*div.active {
+        background-color: #a2ecff;
+    }*/
+    .floatSideBar.panel {
+        position: fixed;
+        right: 0;
+        z-index: 99;
+        min-width: 573px;
+        min-height: 410px;
+        width: 0px;
+        transition-delay: inherit;
+        top: 50px;
+    }
+    .builderToggle {
+        background-color: #203764;
+        position: absolute;
+        z-index: 100;
+        min-width: 45px;
+        min-height: 35px;
+        right: 572px;
+        border: 1px solid white;
+        border-radius: 29px 0px 0px 29px;
+        top: 13px;
+    }
+    .progress {
+        overflow: hidden;
+        height: 10px;
+        top: 3px;
+        margin-bottom: 20px;
+        background-color: #f5f5f5;
+        -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+</style>
+<div id="profileBuilder" style="display:none">
+    <div class="builderToggle" onclick="ToggleProfileBuilder()">
+        <i class="fa fa-superpowers fa-spin text-center" style="color: white; margin: 9px 0px 0px 16px; font-size: 15px;" aria-hidden="true">
+        </i>
+    </div>
+    <div class="floatSideBar panel panel-default" style="margin-top: 1px; box-shadow: 0px 0px 8px 0px #b1b1b1 !important;">
+        <div class="panel-heading" style="background-color: #203764; color: white; font-weight: bold; font-size: 14px; padding: 6.5px 228px; width: auto; border-top-right-radius: 0px; border-top-left-radius: 0px;">PROFILE BUILDER<span class="custombadge innertabclose innertabclose-red" onclick="ShowProfileBuilder()" style="position: absolute;right: 16px;top: 12px;"><i class="fa fa-times"></i></span></div>
+        <div class="panel-body" style="padding: 6px;">
+            <div class="row">
+                <div class="col-lg-12 " style="margin-bottom: 10px;">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MODULE</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <span class="theme_label">PROGRESS</span>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label">FF/TF*</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label">PC*</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="col-lg-9 zero-padding-left theme_label">REMARK</span><span class="col-lg-3 zero-padding-left theme_label">ACTION</span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-half-o" aria-hidden="true"></i>&nbsp;DEMOGRAPHICS</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 62.5%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">50/80</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">62.5%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">Need Attention</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i class="fa fa-edit" onclick="ScrollForCompleteProfile('IDDemographics','Demographics','Demographics','DemographicsTabView','DemographicsScrolls');" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;LICENSES</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 75.5%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">60/80</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">75%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">GOOD TO PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDLicenses', 'LICENSES', 'Licenses', 'LicencesTabView','LicenceScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-half-o" aria-hidden="true"></i>&nbsp;SPECIALTY</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">30/60</span>
+                    </div>
+                    <div class="col-lg-1 ">
+                        <span class="theme_label_data">50%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">SHOULD NOT PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDSpecialty', 'SPECIALTY', 'Speciality', 'SpecialityTabView', 'SpecialityScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;EDUCATION HISTORY</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 92%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">120/130</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">92%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">GOOD TO PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDEducationHistory', 'EDUCATION HISTORY', 'Education', 'EducationTabView', 'EducationHistoryScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;WORK HISTORY</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 84%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">110/130</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">84%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">GOOD TO PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDWorkHistory', 'WORK HISTORY', 'WorkHistory', 'WorkTabView', 'WorkHistoryScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-half-o" aria-hidden="true"></i>&nbsp;PROFESSIONAL AFFILIATION</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">20/40</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">50%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">SHOULD NOT PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDProfessionalAffiliation', 'PROFESSIONAL AFFILIATION', 'ProfessionalAffiliation', 'AffiliationTabView', 'ProfessionalAffilationScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-half-o" aria-hidden="true"></i>&nbsp;PROFESSIONAL LIABILITY</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">10/40</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">25%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">SHOULD NOT PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDProfessionalLiability', 'PROFESSIONAL LIABILITY', 'ProfessionalLiability', 'LiabilityTabView', 'ProfessionalLiablityScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-half-o" aria-hidden="true"></i>&nbsp;EMPLOYMENT INFORMATION</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">5/15</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">33%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">SHOULD NOT PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDEmploymentInformation', 'EMPLOYMENT INFORMATION', 'Employment', 'EmploymentTabView', 'EmploymentInfoScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-half-o" aria-hidden="true"></i>&nbsp;PROFESSIONAL REFERENCE</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">5/15</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">33%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">SHOULD NOT PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDProfessionalRefernces', 'PROFESSIONAL REFERENCE', 'ProfessionalReferences', 'ProfessionalTabView', 'ProfessionalReferenceScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                @*<div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-half-o" aria-hidden="true"></i>&nbsp;HOSPITAL PRIVILEGE</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+                                <span class="sr-only">85% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">5/15</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">33%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">SHOULD NOT PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i onclick="ScrollForCompleteProfile('IDProfessionalRefernces', 'PROFESSIONAL REFERENCE', 'ProfessionalReferences', 'ProfessionalTabView', 'ProfessionalReferenceScroll');" class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>*@
+                @*<div class="col-lg-12 ">
+                    <div class="col-lg-4 zero-padding-left">
+                        <span class="theme_label_data"><i class="fa fa-star-o" aria-hidden="true"></i>&nbsp;DISCLOSURE QUESTION</span>
+                    </div>
+                    <div class="col-lg-2 zero-padding-left">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 zero-padding-left">
+                        <span class="theme_label_data">27/27</span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="theme_label_data">100%</span>
+                    </div>
+                    <div class="col-lg-4 zero-padding-left" style="top: 6px;">
+                        <span class="col-lg-11 zero-padding-left theme_label_data">GOOD TO PROCEED</span><span class="col-lg-1 zero-padding-left theme_label_data" style="bottom: 4px;"><i class="fa fa-edit" aria-hidden="true"></i></span>
+                    </div>
+                </div>*@
+                <div class="col-lg-12 " style="margin-top:10px">
+                    <div class="col-lg-10 zero-padding-left">
+                        <span class="theme_label">FF/TF*</span><span class="theme_label_data"> = FILLED FIELDS / TOTAL FIELDS, </span><span class="theme_label"> PC* </span><span class="theme_label_data"> = PERCENTAGE COMPLETION</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12" style="padding-right: 4px !important;padding-left:4px !important;">
+    <!-- SCROLL BUTTONS -->
+    <div class="zero-padding-left-right post__article" id="ProviderProfile">
+        <div class="memberProfileTabsContainer" id="profileTabs">
+            <ul class="list-unstyled x-dtablist nav-justified tabcontainer" style=" background-color: white; z-index: 99; margin-bottom: 0px;">
+                <li id="SummaryScrolls" class="tab-item tab-item-sec-1 current" data-val="IDSummary">
+                    @*<a href="#IDSummary" data-partial="~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/_summary.cshtml" class="list-item no_underline list-item-tab-1">*@
+                    <a id="SummaryScroll" @*data-partial="~/Areas/CredAxis/Views/ProviderProfile/Tabs/_AllTabIndex.cshtml"*@ class="list-item no_underline list-item-tab-1" data-tab-path="/CredAxis/Summary/Index" data-tab-container="SummaryTabView">
+                        Summary
+                    </a>
+                </li>
+                <li id="DemographicsScrolls" class="tab-item tab-item-sec-2" data-val="IDDemographics">
+                    @*  <a data-partial="~/Areas/CredAxis/Views/ProviderProfile/Tabs/_AllTabIndex.cshtml" class="list-item no_underline list-item-tab-1">*@
+                    <a class="list-item no_underline list-item-tab-2" data-tab-path="/CredAxis/Demographics/Index" data-tab-container="DemographicsTabView">
+                        Demographics
+                    </a>
+                </li>
+                <li id="LicenceScroll" class="tab-item tab-item-sec-3" data-val="IDLicenses">
+                    <a class="list-item no_underline list-item-tab-3" data-tab-path="/CredAxis/Licenses/Index" data-tab-container="LicencesTabView">
+                        Licenses
+                    </a>
+                </li>
+                <li id="SpecialityScroll"class="tab-item tab-item-sec-4" data-val="IDSpecialty">
+                    <a class="list-item no_underline list-item-tab-4" data-tab-path="/CredAxis/Speciality/Index" data-tab-container="SpecialityTabView">
+                        Specialty
+                    </a>
+
+                </li>
+                <li id="PracticeLocationScroll" class="tab-item tab-item-sec-5" data-val="IDPracticeLocation">
+                    <a class="list-item no_underline list-item-tab-5" data-tab-path="/CredAxis/PracticeLocation/Index" data-tab-container="PracticeLocationTabView">
+                        Practice Location
+                    </a>
+                </li>
+                <li id="EducationHistoryScroll" class="tab-item tab-item-sec-5" data-val="IDEducationHistory">
+                    <a class="list-item no_underline list-item-tab-5" data-tab-path="/CredAxis/Education/Index" data-tab-container="EducationTabView">
+                        Education History
+                    </a>
+                </li>
+                <li id="WorkHistoryScroll" class="tab-item tab-item-sec-6" data-val="IDWorkHistory">
+                    <a class="list-item no_underline list-item-tab-6" data-tab-path="/CredAxis/WorkHistory/Index" data-tab-container="WorkTabView">
+                        Work History
+                    </a>
+                </li>
+                <li id="ProfessionalAffilationScroll" class="tab-item tab-item-sec-7" data-val="IDProfessionalAffiliation">
+                    <a class="list-item no_underline list-item-tab-7" data-tab-path="/CredAxis/ProfessionalAffiliation/Index" data-tab-container="AffiliationTabView">
+                        Professional Affiliation
+                    </a>
+                </li>
+                <li id="ProfessionalLiablityScroll" class="tab-item tab-item-sec-8" data-val="IDProfessionalLiability">
+                    <a class="list-item no_underline list-item-tab-8" data-tab-path="/CredAxis/ProfessionalLiability/Index" data-tab-container="LiabilityTabView">
+                        Professional Liability
+                    </a>
+                </li>
+                <li id="EmploymentInfoScroll" class="tab-item tab-item-sec-9" data-val="IDEmploymentInformation">
+                    <a class="list-item no_underline list-item-tab-9" data-tab-path="/CredAxis/Employment/Index" data-tab-container="EmploymentTabView">
+                        Employment Information
+                    </a>
+                </li>
+                <li id="ProfessionalReferenceScroll" class="tab-item tab-item-sec-10" data-val="IDProfessionalRefernces">
+                    <a id="ReferencesScroll" class="list-item no_underline list-item-tab-10" data-tab-path="/CredAxis/ProfessionalReferences/Index" data-tab-container="ProfessionalTabView">
+                        Professional References
+                    </a>
+                </li>
+                <li id="HospitalPrivilegeScroll" class="tab-item tab-item-sec-11" data-val="IDHospitalPrivilege_View">
+                    <a class="list-item no_underline list-item-tab-11" data-tab-path="/CredAxis/HospitalPrivilege/Index" data-tab-container="HospitalTabView">
+                        Hospital Privilege
+                    </a>
+                </li>
+                <li class="tab-item tab-item-sec-12" data-val="IDDiscolsureQuestions">
+                        <a id="DisclosureScroll" class="list-item no_underline list-item-tab-12" data-tab-path="/CredAxis/ProviderTabs/GetDisclousureQuestionPartial" data-tab-container="DisclousureQuestionTabView">
+                            Disclosure Question
+                        </a>
+                    </li>
+                @*<li class="tab-item" data-val="IDTasks">
+                        <a href="javascript:;" data-partial="" class="list-item no_underline list-item-tab-12">
+                            Tasks
+                        </a>
+                    </li>
+                    <li class="tab-item" data-val="IDContract">
+                        <a href="javascript:;" data-partial="" class="list-item no_underline list-item-tab-13">
+                            Contracts
+                        </a>
+                    </li>
+                    <li class="tab-item" data-val="IDDocRepo">
+                        <a href="javascript:;" data-partial="" class="list-item no_underline list-item-tab-14">
+                            Document Repository
+                        </a>
+                    </li>*@
+
+            </ul>
+            <div class="clearfix"></div>
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/_NavigationBar.cshtml")
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div id="ProviderProfileTabView" class="tab memberTabsPadding profile_tabscontent_Padding">
+            <div id="SummaryTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            @*<div id="ghostDiv" style="background-color:red;height:40px;"></div>*@
+            <div id="DemographicsTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="LicencesTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="SpecialityTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="PracticeLocationTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="EducationTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="WorkTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="AffiliationTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="LiabilityTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="EmploymentTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="ProfessionalTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="HospitalTabView" class="tabScrollProviderCA">
+            </div>
+            <div class="clearfix"></div>
+            <div id="DisclousureQuestionTabView" class="tabScrollProviderCA">
+            </div>
+            @*<div id="CredentialingTabView">
+                </div>*@
+
+            <div class="clearfix"></div>
+            <div class="theHideDiv" style="height:20px;"></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<div id="HiddenProviderProfilePrint" hidden>
+
+</div>

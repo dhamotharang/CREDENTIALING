@@ -1,0 +1,308 @@
+﻿
+<script src="~/Scripts/Custom/Profile/Education.js"></script>
+<br />
+<div class="panel-group" ng-controller="educationController">
+
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Under Graduate/Professional Schools Details
+            </legend>
+            <div id="under" class="panel-body">
+                @*<div id="under" class="panel-body panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">*@
+
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table ng-hide="educationDetailViewModels.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>No Data Available ! To Add New Click <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addeducationDetailViewModel')"><i class="fa fa-plus"></i></button></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-hide="educationDetailViewModels.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <th>School</th>
+                                <th>Degree Awarded</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Certificate</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="educationDetailViewModel in educationDetailViewModels">
+                            <tr>
+                                <td>{{educationDetailViewModel.SchoolInformation.SchoolName}}</td>
+                                <td>{{educationDetailViewModel.QualificationDegree}}</td>
+                                <td>{{educationDetailViewModel.StartDate | date:'MM-dd-yyyy'}}</td>
+                                <td>{{educationDetailViewModel.EndDate | date:'MM-dd-yyyy'}}</td>
+                                <td><a href="{{educationDetailViewModel.CertificatePath}}" target="_blank" title="{{educationDetailViewModel.CertificatePath}}"><i class="fa fa-file" title=""></i></a></td>
+                                <td>
+                                    <button data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_vieweducationDetailViewModel')" ng-hide="viewShowUG" @*ng-hide="showViewUGBtn" ng-click="showViewUG($index, education)"*@><i class="fa fa-eye"></i></button>
+                                    <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editeducationDetailViewModel',educationDetailViewModel)" ng-hide="editShowUG" @*ng-hide="hideEditUGBtn" ng-click="editUG($index,education)"*@><i class="fa fa-edit"></i></button>
+                                    <button data-toggle="tooltip" data-placement="right" title="Add New" ng-hide="viewShowUG || editShowUG || newShowUG || $index+1!=educationDetailViewModels.length" ng-click="operateViewAndAddControl('addeducationDetailViewModel')" @*ng-hide="showingUGDetails || ugFormStatus || newUGForm || $index+1!=educationDetailViewModels.length"*@ @*ng-click="addUG()"*@ class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button>
+                                </td>
+                            </tr>
+                            <tr ng-show="visibilityControl==($index+'_editeducationDetailViewModel')">
+                                <td colspan="6" id="ugEditDiv{{$index}}" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditUndergraduationDetails.cshtml")
+                                </td>
+                            </tr>
+                            <tr ng-show="visibilityControl==($index+'_vieweducationDetailViewModel')">
+                                <td colspan="6" id="{{$index}}" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewUnderGraduationDetails.cshtml")
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <fieldset ng-show="visibilityControl=='addeducationDetailViewModel'">
+                    <legend>
+                        Add Under Graduate
+                    </legend>
+                    <div id="newUGFormDiv">
+                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditUndergraduationDetails.cshtml")
+                    </div>
+                </fieldset>
+                <div class="clearfix"></div><br />
+                <div ng-show="visibilityControl=='addedNewUGDetails'" class="alert alert-success" role="alert">
+                    <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>New Under Graduation Details Added Successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedUGDetails'" class="alert alert-warning" role="alert">
+                    <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Under Graduation Details Updated Successfully !!!!
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="clearfix"></div><br />
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Graduate Details
+            </legend>
+            <div id="grad" class="panel-body">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-hide="GraduationDetailViewModel.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>No Data Available ! To Add New Click <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addgraduationDetailViewModel')"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="GraduationDetailViewModel.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <th>School</th>
+                                    <th>Degree Awarded</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Certificate</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="graduationDetailViewModel in GraduationDetailViewModel">
+                                <tr>
+                                    <td>{{graduationDetailViewModel.SchoolInformation.SchoolName}}</td>
+                                    <td>{{graduationDetailViewModel.QualificationDegree}}</td>
+                                    <td>{{graduationDetailViewModel.StartDate | date:'MM-dd-yyyy'}}</td>
+                                    <td>{{graduationDetailViewModel.EndDate | date:'MM-dd-yyyy'}}</td>
+                                    <td><a href="{{graduationDetailViewModel.CertificatePath}}" target="_blank" title="{{graduationDetailViewModel.CertificatePath}}"><i><i class="fa fa-file" title=""></i></a></td>
+                                    <td>
+                                        <button data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewgraduationDetailViewModel')" ng-hide="viewShowPG" @*ng-hide="showViewPGBtn" ng-click="showViewPG($index, graduation)"*@><i class="fa fa-eye"></i></button>
+                                        <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editgraduationDetailViewModel', graduationDetailViewModel)" ng-hide="editShowPG" @*ng-hide="hideEditPGBtn" ng-click="editGraduation($index, graduation)"*@><i class="fa fa-edit"></i></button>
+                                        <button data-toggle="tooltip" data-placement="right" title="Add New" ng-hide="viewShowPG || editShowPG || newShowPG || $index+1!=GraduationDetailViewModel.length" ng-click="operateViewAndAddControl('addgraduationDetailViewModel')" @*ng-hide="graduationFormStatus || newGraduationForm || $index+1!=GraduationDetailViewModel.length"*@ class="btn btn-xs btn-success" @*ng-click="addGraduation()"*@><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-show="visibilityControl==($index+'_editgraduationDetailViewModel')" @*ng-show="showingGDetails && graduation==graduationDetailViewModel"*@>
+                                    <td colspan="6" id="graduationEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditGraduationDetails.cshtml")
+                                    </td>
+                                </tr>
+
+                                <tr ng-show="visibilityControl==($index+'_viewgraduationDetailViewModel')" @*ng-show="viewPG && graduation==graduationDetailViewModel"*@>
+                                    <td colspan="6" id="{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewGraduationDetails.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <fieldset ng-show="visibilityControl=='addgraduationDetailViewModel'" @*ng-show="newGraduationForm && !graduationFormStatus"*@>
+                        <legend>
+                            Add Graduate
+                        </legend>
+                        <div id="newGraduationFormDiv">
+                            @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditGraduationDetails.cshtml")
+                        </div>
+                    </fieldset>
+                    <div class="clearfix"></div><br />
+                    <div ng-show="visibilityControl=='addedNewPGDetails'" class="alert alert-success" role="alert">
+                        <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i>New Graduation Details Added Successfully !!!!
+                    </div>
+                    <div ng-show="visibilityControl=='updatedPGDetails'" class="alert alert-warning" role="alert">
+                        <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i>Graduation Details Updated Successfully !!!!
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="clearfix"></div><br />
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Residency/Internship/Fellowship Details
+            </legend>
+            <div id="residency" class="panel-body">
+                <div class="form-style">
+                    <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:red">
+                        <label>*List all training programs you attended, use one section per institution</label>
+                    </div>
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-hide="ResidencyInternshipViewModel.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>No Data Available ! To Add New Click <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addresidencyInternshipViewModel')"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="ResidencyInternshipViewModel.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Medical School Name</th>
+                                    <th>Hospital Name</th>
+                                    <th>City</th>
+                                    <th>Country</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="residencyInternshipViewModel in ResidencyInternshipViewModel">
+                                <tr>
+                                    <td>{{residencyInternshipViewModel.SchoolInformation.SchoolName}}</td>
+                                    <td>{{residencyInternshipViewModel.HospitalName}}</td>
+                                    <td>{{residencyInternshipViewModel.SchoolInformation.City}}</td>
+                                    <td>{{residencyInternshipViewModel.SchoolInformation.Country}}</td>
+                                    <td>
+                                        <button data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewresidencyInternshipViewModel')" ng-hide="viewShowTraining" @*ng-hide="showViewProgramBtn" ng-click="showViewProgram($index, residency)"*@><i class="fa fa-eye"></i></button>
+                                        <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editresidencyInternshipViewModel',residencyInternshipViewModel)" ng-hide="editShowTraining" @*ng-hide="hideEditProgramBtn" ng-click="editProgram($index, residency)"*@><i class="fa fa-edit"></i></button>
+                                        @*<button data-toggle="tooltip" data-placement="top" title="Is Primary" class="btn btn-xs">@*<a class="text-success pointer" title="Is Primary?"><i class="fa fa-check-circle"></i>@*</a>*@@*</button>*@
+                                        <button data-toggle="tooltip" data-placement="right" title="Add New" ng-hide="viewShowTraining || editShowTraining || newShowTraining || $index+1!=ResidencyInternshipViewModel.length" ng-click="operateViewAndAddControl('addresidencyInternshipViewModel')" @*ng-hide="programFormStatus || newProgramForm || $index+1!=ResidencyInternshipViewModel.length"*@ class="btn btn-xs btn-success" @*ng-click="addProgram()"*@><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-show="visibilityControl==($index+'_editresidencyInternshipViewModel')">
+                                    <td colspan="5" id="programEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditResidencyInternshipDetails.cshtml")
+                                    </td>
+                                </tr>
+                                <tr ng-show="visibilityControl==($index+'_viewresidencyInternshipViewModel')">
+                                    <td colspan="5" id="{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewResidencyInternshipDetails.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <fieldset ng-show="visibilityControl=='addresidencyInternshipViewModel'" @*ng-show="newProgramForm && !programFormStatus"*@>
+                        <legend>
+                            Add Residency/Internship/Fellowship Details
+                        </legend>
+                        <div id="newProgramFormDiv">
+                            @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditResidencyInternshipDetails.cshtml")
+                        </div>
+                    </fieldset>
+                    <div class="clearfix"></div><br />
+                    <div ng-show="visibilityControl=='addedNewProgramDetails'" class="alert alert-success" role="alert">
+                        <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i>New Residency/Internship/Fellowship Details Added Successfully !!!!
+                    </div>
+                    <div ng-show="visibilityControl=='updatedProgramDetails'" class="alert alert-warning" role="alert">
+                        <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i>School Details Updated Successfully !!!!
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="clearfix"></div><br />
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Post Graduate Training/CME
+            </legend>
+            <div id="Certificate" class="panel-body">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-hide="CertificationCMEViewModel.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>No Data Available ! To Add New Click <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addcertificationCMEViewModel')"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="CertificationCMEViewModel.length == 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Certificate Name</th>
+                                    <th>Credit Hours</th>
+                                    <th>Completion Date</th>
+                                    <th>Expiration Date</th>
+                                    <th>Certificate</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="certificationCMEViewModel in CertificationCMEViewModel">
+                                <tr>
+                                    <td>{{certificationCMEViewModel.Certification}}</td>
+                                    <td>{{certificationCMEViewModel.CreditHours}}</td>
+                                    <td>{{certificationCMEViewModel.EndDate | date:'MM-dd-yyyy'}}</td>
+                                    <td>{{certificationCMEViewModel.ExpiryDate | date:'MM-dd-yyyy'}}</td>
+                                    <td><a href="{{certificationCMEViewModel.CertificatePath}}" target="_blank" title="{{certificationCMEViewModel.CertificatePath}}"><i><i class="fa fa-file" title=""></i></a></td>
+                                    <td>
+                                        <button data-toggle="tooltip" data-placement="left" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewcertificationCMEViewModel')" ng-hide="viewShowCME" @*ng-hide="showViewCMEBtn" ng-click="showViewCME($index, certificate)"*@><i class="fa fa-eye"></i></button>
+                                        <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editcertificationCMEViewModel',certificationCMEViewModel)" ng-hide="editShowCME" @*ng-hide="hideEditBtn" ng-click="editCertificate($index, certificate)"*@><i class="fa fa-edit"></i></button>
+                                        <button data-toggle="tooltip" data-placement="right" title="Add New" ng-hide="viewShowCME || editShowCME || newShowCME || $index+1!=CertificationCMEViewModel.length" ng-click="operateViewAndAddControl('addcertificationCMEViewModel')" @*ng-hide=" certificateformstatus || newcertificateform || $index+1!=CertificationCMEViewModel.length"*@ class="btn btn-xs btn-success" @*ng-click="addCertificate()"*@><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-show="visibilityControl==($index+'_editcertificationCMEViewModel')" @*ng-show="showingCDetails && certificate ==certificationCMEViewModel"*@>
+                                    <td colspan="5" id="certificateEditDiv{{$index}}" class=" editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditCertificationCME.cshtml")
+                                    </td>
+                                </tr>
+                                <tr ng-show="visibilityControl==($index+'_viewcertificationCMEViewModel')" @*ng-show="viewCME && certificate==certificationCMEViewModel"*@>
+                                    <td colspan="5" id="{{$index}}" class=" editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewCertificationCME.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <fieldset ng-show="visibilityControl=='addcertificationCMEViewModel'" @*ng-show="newCertificateForm && !certificateFormStatus"*@>
+                        <legend>
+                            Add Post Graduate Training/CME Details
+                        </legend>
+                        <div id="newCertificateFormDiv">
+                            @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditCertificationCME.cshtml")
+                        </div>
+                    </fieldset>
+                    <div class="clearfix"></div><br />
+                    <div ng-show="visibilityControl=='addedNewCMEDetails'" class="alert alert-success" role="alert">
+                        <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i>New PostGraduate Training/CME Details Added Successfully !!!!
+                    </div>
+                    <div ng-show="visibilityControl=='updatedCMEDetails'" class="alert alert-warning" role="alert">
+                        <button ng-click="visibilityControl=''" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i>PostGraduate Training/CME Details Updated Successfully !!!!
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

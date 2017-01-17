@@ -1,0 +1,60 @@
+﻿
+@*<script src="~/Scripts/Shared/Paginate.js"></script>*@
+<br />
+@*<p><strong>Page:</strong> {{SearchProviderTable.page()}}</p>
+<p><strong>Count per page:</strong> {{SearchProviderTable.count()}}</p>*@
+<table ng-table="SearchProviderTable" class="table table-bordered table-hover table-condensed alignTableStyle">
+
+    <thead>
+        <tr>
+            <th rowspan="2">Profile Pic</th>
+            <th>NPI Number</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Provider Type</th>
+            <th>Specialty</th>
+            <th>Group</th>
+            <th rowspan="2">Action</th>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="Filter NPI" class="form-control input-sm" ng-model="search.NPI" /></td>
+            <td><input type="text" placeholder="Filter First Name" class="form-control input-sm" ng-model="search.FirstName" /></td>
+            <td><input type="text" placeholder="Filter Middle Name" class="form-control input-sm" ng-model="search.MiddleName" /></td>
+            <td><input type="text" placeholder="Filter Last Name" class="form-control input-sm" ng-model="search.LastName" /></td>
+            <td><input type="text" placeholder="Filter Type" class="form-control input-sm" ng-model="search.Type" /></td>
+            <td><input type="text" placeholder="Filter Speciality" class="form-control input-sm" ng-model="search.Specialities" /></td>
+            <td><input type="text" placeholder="Filter Group" class="form-control input-sm" ng-model="search.Groups" /></td>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-class="{selectedProvider: p.IsSelected == true}" ng-repeat="p in $data | filter:{NPI:search.NPI,FirstName:search.FirstName,MiddleName:search.MiddleName,LastName:search.LastName,CAQH: search.CAQH,Type:search.Type,Groups:search.Groups,Specialities:search.Specialities}">
+            <td class="col-lg-1">
+                <div class="thumbnail imageStyle">
+                    <img src="~/Content/Images/Providers/{{p.Image}}" class="img-rounded">
+                </div>
+            </td>
+            <td>{{p.NPI}}</td>
+            <td>{{p.FirstName}}</td>
+            <td>{{p.MiddleName}}</td>
+            <td>{{p.LastName}}</td>
+            <td>{{p.Type}}</td>
+            <td><span ng-repeat="s in p.Specialities"><span ng-if="$index > 0">, </span>{{s}}</span></td>
+            <td><span ng-repeat="g in p.Groups"><span ng-if="$index > 0">, </span>{{g}}</span></td>
+            <td class="col-lg-1">
+                <a class="btn btn-primary btn-sm pull-right" href="~/Profile/MasterProfile/Index" data-toggle="tooltip" data-placement="right" title="View Profile" target="_blank"><i class="fa fa-search-plus"></i></a>
+
+                <a class="btn btn-primary btn-sm" ng-click="SelectProviderForCredentialingInitiation(p)" data-toggle="tooltip" data-placement="right" title="Initiate"><i class="fa fa-hand-o-up"></i></a>
+            </td>
+        </tr>
+        @*<ul>
+                <li dir-paginate="p in allProviders | itemsPerPage: 1"></li>
+            </ul>*@
+    </tbody>
+
+
+
+
+    @*<dir-pagination-controls></dir-pagination-controls>*@
+</table>

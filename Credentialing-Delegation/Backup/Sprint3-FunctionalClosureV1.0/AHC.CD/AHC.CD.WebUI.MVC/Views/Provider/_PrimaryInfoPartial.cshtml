@@ -1,0 +1,227 @@
+﻿<form name="PrimaryInfoForm" class="form-horizontal" novalidate>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div>General Information</div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-md-3 control-label">Title *</label>
+                <div class="col-md-9">
+                    <select id="selectNameTitle" name="ProviderPersonalTitle" ng-model="Provider.Personal.Title" required>
+                        <option></option>
+                        <option ng-repeat="nametitle in nameTitles" value="{{nametitle.titaleName}}">{{nametitle.titaleName}}</option>
+                    </select>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.ProviderPersonalTitle.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.ProviderPersonalTitle.$invalid }">{{Err_select}} Title.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.FirstName.$invalid && !PrimaryInfoForm.FirstName.$pristine }">
+                <label for="FirstName" class="col-md-3 control-label">First Name *</label>
+                <div class="col-md-9">
+                    <input type="text" ng-model="Provider.Personal.FirstName" name="FirstName" class="form-control input-sm" id="FirstName" placeholder="first name" onkeypress="return inputValidation(this, event, userFirstNameMaxLenght, userNamePattern);" ng-pattern="userNamePattern" required>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.FirstName.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.FirstName.$error.required }">First Name {{Err_RequiredField}}</p>
+                    </div>
+                    <div ng-show="!hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.FirstName.$error.required && !PrimaryInfoForm.FirstName.$pristine" class="help-block">First Name {{Err_RequiredField}}</p>
+                    </div>
+                    <p ng-show="PrimaryInfoForm.FirstName.$invalid && !PrimaryInfoForm.FirstName.$error.required" class="help-block">First Name Must be Alphabetic and length between 2 to 25.</p>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.MiddleName.$invalid && !PrimaryInfoForm.MiddleName.$pristine }">
+                <label for="FirstName" class="col-md-3 control-label">Middle Name</label>
+                <div class="col-md-9">
+                    <input type="text" ng-model="Provider.Personal.MiddleName" name="MiddleName" class="form-control input-sm" id="MiddleName" placeholder="middle name" onkeypress="return inputValidation(this, event, userMiddleNameMaxLenght, userNamePattern);" ng-pattern="userMiddleNamePattern">
+                    <p ng-show="PrimaryInfoForm.MiddleName.$invalid" class="help-block">Middle Name Must be Alphabetic and length between 0 to 25.</p>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.LastName.$invalid && !PrimaryInfoForm.LastName.$pristine }">
+                <label for="LastName" class="col-md-3 control-label">Last Name *</label>
+                <div class="col-md-9">
+                    <input type="text" ng-model="Provider.Personal.LastName" name="LastName" class="form-control input-sm" id="LastName" placeholder="last name" onkeypress="return inputValidation(this, event, userLastNameMaxLenght, userNamePattern);" ng-pattern="userNamePattern" required>
+
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.LastName.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.LastName.$error.required }">Last Name {{Err_RequiredField}}</p>
+                    </div>
+                    <div ng-show="!hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.LastName.$error.required && !PrimaryInfoForm.LastName.$pristine" class="help-block">Last Name {{Err_RequiredField}}</p>
+                    </div>
+                    <p ng-show="PrimaryInfoForm.LastName.$invalid && !PrimaryInfoForm.LastName.$error.required" class="help-block">Last Name Must be Alphabetic and length between 2 to 25.</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Gender" class="col-md-3 control-label">Gender *</label>
+                <div class="col-md-9 input-group input-group-sm">
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="Provider.Personal.Gender" name="Gender" id="Gender1" value="M" required> Male
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="Provider.Personal.Gender" name="Gender" id="Gender2" value="F" required> Female
+                    </label>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.Gender.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.Gender.$error.required }">Please Select Gender.</p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- End Personal Information panel -->
+    <!-- Contact Information Panel -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div>Home Contact Information</div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-md-3 control-label">Unit Number *</label>
+                <div class="col-md-9">
+                    <input type="text" ng-model="Provider.Address.UnitNumber" class="form-control input-sm" id="Street" placeholder="unit number" />
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.Street.$invalid && !PrimaryInfoForm.Street.$pristine }">
+                <label for="Street" class="col-md-3 control-label">Street *</label>
+                <div class="col-md-9">
+                    <input type="text" ng-model="Provider.Address.Street" name="Street" class="form-control input-sm" id="Street" placeholder="Street" onkeypress="return limitLength(this, event, streetMaxLenght);" ng-pattern="streetPattern" required>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.Street.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.Street.$error.required }">Street {{Err_RequiredField}}</p>
+                    </div>
+                    <div ng-show="!hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.Street.$error.required && !PrimaryInfoForm.Street.$pristine" class="help-block">Street {{Err_RequiredField}}</p>
+                    </div>
+                    <p ng-show="PrimaryInfoForm.Street.$invalid && !PrimaryInfoForm.Street.$error.required" class="help-block">Street length is between 5 to 100.</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Country *</label>
+                <div class="col-md-9">
+                    <select id="selectCountry" ng-model="Provider.Address.Country" disabled>
+                        <option ng-repeat="country in countries" value="{{country.code}}" ng-selected="country.name==Provider.Address.Country">{{country.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">State *</label>
+                <div class="col-md-9">
+                    <select id="selectState" ng-model="Provider.Address.State" name="ProviderAddressState" required>
+                        <option></option>
+                        <option ng-repeat="state in states | unique: 'State'" value="{{state.State}}">{{state.State}}</option>
+                    </select>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.ProviderAddressState.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.ProviderAddressState.$invalid }">Please Select State.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">County *</label>
+                <div class="col-md-9">
+                    <select id="selectCounty" ng-model="Provider.Address.County" name="ProviderAddressCounty" required>
+                        <option></option>
+                        <option ng-repeat="county in Counties | unique: 'County'" value="{{county.County}}">{{county.County}}</option>
+                    </select>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.ProviderAddressCounty.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.ProviderAddressCounty.$invalid }">Please Select County.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">City *</label>
+                <div class="col-md-9">
+                    <select id="selectCity" ng-model="Provider.Address.City" name="ProviderAddressCity" required>
+                        <option></option>
+                        <option ng-repeat="city in Cities | unique: 'City'" value="{{city.City}}">{{city.City}}</option>
+                    </select>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.ProviderAddressCity.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.ProviderAddressCity.$invalid }">Please Select City.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.ZipCode.$invalid && !PrimaryInfoForm.ZipCode.$pristine }">
+                <label for="ZipCode" class="col-md-3 control-label">Zip Code *</label>
+                <div class="col-md-9">
+                    <input type="text" ng-model="Provider.Address.ZipCode" name="ZipCode" class="form-control input-sm" id="ZipCode" placeholder="zip code" onkeypress="return inputValidation(this, event, zipCodeMaxLenght, zipCodePattern);" ng-pattern="zipCodePattern" required>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.ZipCode.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.ZipCode.$error.required }">Zip Code {{Err_RequiredField}}</p>
+                    </div>
+                    <div ng-show="!hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.ZipCode.$error.required && !PrimaryInfoForm.ZipCode.$pristine" ng-class="{ 'help-block' : PrimaryInfoForm.ZipCode.$error.required }">Zip Code {{Err_RequiredField}}</p>
+                    </div>
+                    <p ng-show="PrimaryInfoForm.ZipCode.$invalid && !PrimaryInfoForm.ZipCode.$error.required" class="help-block">Zip Code must be 5 digits.</p>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.Email.$invalid && !PrimaryInfoForm.Email.$pristine || IsExistEmailId=='True'}">
+                <label for="Email" class="col-md-3 control-label">Email ID *</label>
+                <div class="col-md-9">
+                    <input type="email" ng-model="Provider.Personal.Email" name="Email" class="form-control input-sm" id="Email" placeholder="email id" ng-blur="isExistEmail(PrimaryInfoForm.Email.$invalid)" onkeypress="return limitLength(this, event, 35);" ng-minlength="8" ng-maxlength="35" ng-pattern="emailPattern" required>
+
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.Email.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.Email.$error.required }">Email {{Err_RequiredField}}</p>
+                    </div>
+                    <div ng-show="!hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.Email.$error.required && !PrimaryInfoForm.Email.$pristine" class="help-block">Email {{Err_RequiredField}}</p>
+                    </div>
+                    <p ng-show="PrimaryInfoForm.Email.$invalid && !PrimaryInfoForm.Email.$error.required" class="help-block">Email is not valid.</p>
+                    <p ng-show="IsExistEmailId=='True' && !PrimaryInfoForm.Email.$invalid" class="help-block">Email already exist.</p>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.PhoneNo.$invalid && !PrimaryInfoForm.PhoneNo.$pristine || IsExistPhoneNumber=='True'}">
+                <label for="MobileNo" class="col-md-3 control-label">Mobile Number *</label>
+                <div class="col-md-9">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="showContryCodeDiv()"> {{Provider.Personal.Contact.CountryCode}} <span class="caret"></span></button>
+                        </div>
+                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="countryDailCodeContainer">
+                            <div class="arrow"></div>
+                            <h3 class="popover-title">Select Country Dial Code</h3>
+                            <div class="popover-content">
+                                <select ng-model="Provider.Personal.Contact.CountryCode" id="ContactContryCode" ng-change="isExistPhoneNumber(PrimaryInfoForm.PhoneNo.$invalid)">
+                                    <option ng-repeat="contryDail in countryDailCodes" value="{{contryDail.dial_code}}" ng-selected="Provider.Personal.Contact.CountryCode == contryDail.dial_code">{{contryDail.name}} ({{contryDail.dial_code}})</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="text" ng-model="Provider.Personal.Contact.PhoneNo" name="PhoneNo" class="form-control" id="PhoneNo" placeholder="mobile number" onkeypress="return inputValidation(this, event, moNoMaxLength, mobileNumberPattern);" ng-pattern="mobileNumberPattern" required>
+                    </div>
+                    <div ng-show="hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.PhoneNo.$error.required" ng-class="{ 'help-block' : PrimaryInfoForm.PhoneNo.$error.required }">Mobile Number {{Err_RequiredField}}</p>
+                    </div>
+                    <div ng-show="!hasError" class="has-error">
+                        <p ng-show="PrimaryInfoForm.PhoneNo.$error.required && !PrimaryInfoForm.PhoneNo.$pristine" ng-class="{ 'help-block' : PrimaryInfoForm.PhoneNo.$error.required }">Mobile Number {{Err_RequiredField}}</p>
+                    </div>
+                    <p ng-show="PrimaryInfoForm.PhoneNo.$invalid && !PrimaryInfoForm.PhoneNo.$error.required" class="help-block">Mobile Number must be 10 digits.</p>
+                    <p ng-show="IsExistPhoneNumber=='True' && !PrimaryInfoForm.PhoneNo.$invalid" class="help-block">Mobile Number already exist.</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="PreferredContact" class="col-md-3 control-label">Preferred Method Of Contact *</label>
+                <div class="col-md-9 input-group input-group-sm">
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="Provider.Personal.PreferredContact" name="PreferredContact" value="Email" required> Email
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="Provider.Personal.PreferredContact" name="PreferredContact" value="Mobile" required> Mobile
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer clearfix">
+            <!--<input id="next1" type="button" value="Continue" ng-click="previewAddProvider(PrimaryInfoForm.$invalid)" class="btn btn-success btn-sm pull-right" />-->
+            <input id="next1" type="button" value="Continue" ng-click="organizationInfoForm()" class="btn btn-primary btn-sm pull-right" />
+            <input id="next1" type="button" value="<< Prev" ng-click="nextForm(0)" class="btn btn-warning btn-sm pull-left" />
+        </div>
+    </div>
+</form>

@@ -1,0 +1,139 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.DisclosureQuestions.ProfileDisclosureViewModel
+<style>
+    .progress-wrapper {
+        position: relative;
+        margin:auto;
+        font-size: 14px;
+    }
+
+    .progress {
+        position: absolute;
+        font-weight: 100;
+        line-height: 2;
+        background-image: none;
+    }
+</style>
+<div id="dis">
+    <form class="form-style" id="disclosureForm">
+        <span ng-if="tempObject.ProfileDisclosureID != null">
+            @Html.HiddenFor(model => model.ProfileDisclosureID, new { ng_value = "tempObject.ProfileDisclosureID" })
+        </span>
+        <fieldset ng-repeat="QuestionCategory in masterQuestionCategories track by $index">
+            <legend>
+                {{QuestionCategory.Title}}
+            </legend>
+            <div class="pull-right legend2">
+                <button class="btn btn-xs btn-default" type="button" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Answer all questions. For any &quot;Yes&quot; response, provide an explanation."><i class="fa fa-question"></i></button>
+            </div>
+            <div class="zero-padding-left-right-div">
+                <div class="form-group col-md-12" ng-repeat="Question in masterQuestions track by $index" ng-if="QuestionCategory.QuestionCategoryID == Question.QuestionCategoryId">
+                    <div>
+                        <span ng-if="tempObject.ProfileDisclosureQuestionAnswers[$index].ProfileDisclosureQuestionAnswerID != null">
+                            <input type="hidden" data-ng-model="tempObject.ProfileDisclosureQuestionAnswers[$index].ProfileDisclosureQuestionAnswerID" value="{{tempObject.ProfileDisclosureQuestionAnswers[$index].ProfileDisclosureQuestionAnswerID}}" name="ProfileDisclosureQuestionAnswers[{{$index}}].ProfileDisclosureQuestionAnswerID">
+                        </span>
+                        <input type="hidden" data-ng-model="tempObject.ProfileDisclosureQuestionAnswers[$index].QuestionID" value="{{Question.QuestionID}}" name="ProfileDisclosureQuestionAnswers[{{$index}}].QuestionID">
+                        <label class="control-label small">@*<i class="fa fa-arrow-right"></i>*@{{$index+1}}. {{Question.Title}}</label>
+                        <div class="col-lg-12 zero-padding-left-right-div">
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <label class="control-label small">Answer</label>
+                                <div>
+                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                    {
+                                        <label class="radio-inline">
+                                            <input ng-change="enableSave(tempObject.ProfileDisclosureQuestionAnswers[$index],@((int)value))" type="radio" class="selectNo" name="ProfileDisclosureQuestionAnswers[{{$index}}].AnswerYesNoOption" data-ng-model="tempObject.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption" value="@((int)value)" /> @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                        </label>
+                                    }
+                                    @*<div class="col-lg-12 zero-padding-left-right-div" ng-if="tempObject.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption == '1'">
+                                        <input type='file' id='file{{$index}}' name='file{{$index}}' multiple onchange="angular.element(this).scope().setFile(this)" style=" width:0; height:0;" />
+                                        <button class="btn btn-xs btn-default pull-right" id="btn-upload{{$index}}" ng-click="addingDocument($index,Question.QuestionID,Question)" tooltip data-toggle="tooltip" data-placement="top" title="Add Document"><i class="fa fa-paperclip"></i></button>
+                                    </div>
+                                    <br />
+                                    <div class="col-md-12 zero-padding-left-right-div" style="padding-top:10px;" ng-if="tempObject.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption == '1' && Question.TableStatus">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>File Name</th>
+                                                    <th>File Size</th>
+                                                    <th>Status</th>
+                                                    <th>Cancel</th>
+                                                    <th>Remove</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="file in fileList | isQID:Question.QuestionID">
+
+                                                    <td class="col-lg-6">{{file.file.name}}</td>
+                                                    <td class="col-lg-3">{{file.file.size}}</td>
+                                                    <td class="col-lg-1">
+                                                        <div class="progress-wrapper" ng-show="current<100">
+                                                            <div class="progress ng-cloak" ng-style="getStyle()">{{ current }}</div>
+                                                            <div round-progress
+                                                                 max="max"
+                                                                 current="current"
+                                                                 color="#45ccce"
+                                                                 bgcolor="#eaeaea"
+                                                                 radius="25"
+                                                                 stroke="3"
+                                                                 semi="true"
+                                                                 rounded="true"
+                                                                 clockwise="true"
+                                                                 responsive="false"
+                                                                 duration="800"
+                                                                 animation="easeInOutSine"></div>
+                                                        </div>
+                                                        <div class="progress-wrapper" ng-show="current==100">
+                                                            <i class="fa fa-file-archive-o fa-2x"></i>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-lg-1">
+                                                        <button class="btn btn-xs btn-warning" tooltip data-toggle="tooltip" data-placement="top" title="Cancel"><i class="fa fa-warning"></i></button>
+                                                    </td>
+                                                    <td class="col-lg-1">
+                                                        <button class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="removeFile(file,Question.QuestionID,Question)"><i class="fa fa-close"></i></button>
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>*@
+                                    <br />
+
+                                    <div class="col-lg-12 zero-padding-left-right-div" ng-show="tempObject.ProfileDisclosureQuestionAnswers[$index].AnswerYesNoOption == '1'">
+                                        <label class="control-label small">Reason *</label>
+                                        <textarea class="form-control small" data-val="true" data-val-required="The Reason * is required" name="ProfileDisclosureQuestionAnswers[{{$index}}].Reason" data-ng-model="tempObject.ProfileDisclosureQuestionAnswers[$index].Reason"></textarea>
+                                        <label for="ProfileDisclosureQuestionAnswers[{{$index}}].Reason" class="error" ng-hide=true></label>
+                                        <span class="text-danger field-validation-error" data-valmsg-for="ProfileDisclosureQuestionAnswers[{{$index}}].Reason" data-valmsg-replace="true">
+                                            <span for="ProfileDisclosureQuestionAnswers[{{$index}}].Reason" class=""></span>
+                                        </span>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="clearfix"></div>
+
+        @*Error List for Disclosure Questions*@
+        <div ng-show="activeMessageDiv=='errorDisclosureQuestions'+$index" class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error Lists :<br />
+                <span ng-repeat="err in errorDisclosureQuestions track by $index">{{err}}</span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        @*Error List for Disclosure Questions*@
+
+        <div class="col-md-12 zero-padding-left-right-div" ng-show="visibilityControl=='editcategory'">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="CancelTemp(TempOBJ);operateCancelControl(''); disableSave();">Cancel</button>
+            <button ng-show="disclosureQuestions" class="btn btn-primary pull-right" ng-click="saveQuestions(tempObject,'Update')">Update</button>
+            <button ng-hide="disclosureQuestions" ng-disabled="!isDataPresent" class="btn btn-primary pull-right" ng-click="saveQuestions(tempObject,'Add')">Save</button>
+        </div>
+    </form>
+</div>
+

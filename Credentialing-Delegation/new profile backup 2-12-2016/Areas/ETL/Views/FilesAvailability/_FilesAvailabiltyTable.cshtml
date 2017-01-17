@@ -1,0 +1,35 @@
+﻿@using PortalTemplate.Areas.ETL.Models.FilesAvailability;
+@{int rowNo = 0;}
+<table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom table-striped">
+    <thead class="theme_thead">
+        <tr>
+            <th>S.No</th>
+            <th>Data Source</th>
+            <th>Files Available</th>
+            <th>Files Prestaged</th>
+            <th>Files Need to Prestage</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var FileAvailabilty in (List<FileAvailabiltyDTO>)ViewData["_FileAvailabilty"])
+        {
+            <tr>
+                <td>@(rowNo += 1)</td>
+                <td>@FileAvailabilty.DataSource</td>
+                <td>@FileAvailabilty.FilesAvailable</td>
+                <td>@FileAvailabilty.FilesPrestaged</td>
+                @if (FileAvailabilty.FilesPrestaged == FileAvailabilty.FilesAvailable)
+                {
+                <td>@(FileAvailabilty.FilesAvailable - FileAvailabilty.FilesPrestaged)&nbsp;&nbsp;<span class="fa fa-exclamation-circle" style="color:green"></span></td>    
+                }
+                else
+                {
+                    <td>@(FileAvailabilty.FilesAvailable - FileAvailabilty.FilesPrestaged) &nbsp;&nbsp;<span class="fa fa-exclamation-circle" style="color:red"></span> </td>    
+                }
+                
+            </tr>
+        }
+    </tbody>
+</table>
+

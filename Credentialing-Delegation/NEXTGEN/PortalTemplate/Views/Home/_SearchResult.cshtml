@@ -1,0 +1,173 @@
+﻿
+@*<script src="~/Scripts/CustomScripts/SearchProvider.js"></script>*@
+<link href="~/Content/AppCss/Search/searchOverlay.css" rel="stylesheet" />
+<div class="searchResult" ng-cloak hidden>
+    <div class="search-content">
+        <div class="provider_list">
+            <div class="x_title-custom">
+                <p class="margin_left_15px"><i class="fa fa-search"></i> SEARCH RESULT</p>
+
+                <ul class="nav navbar-right panel_toolbox cursor-pointer" id="close">
+                    <li>
+                        <span>Press Esc or <span class="btn custom-cls-btn"><span class="custombadge outertabclose-red custom-cls"><i class="fa fa-times fa-2x"></i></span></span>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            @*<div class="overlay-content" id="serch-default-message">
+            <h1>Enter Search Keyword</h1>
+        </div>*@
+            <div class="overlay-content col-lg-12" id="search-results" st-table="ProviderList1" st-safe-src="ProviderList">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right font-size-18">
+
+                    <div class="col-lg-5">
+                        {{ShowContent}}
+                        You searched for <b>&nbsp;"<span class="search-word"></span>"</b>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;<span class="result-message"><b>{{ProviderList1.length}}</b> results found in <b>Provider</b></span>
+                    </div>
+                    <div class="col-lg-5">
+                        <input id="searchbox" st-search="" class="paper-input paper-input--floating" type="text" placeholder="Global Provider Filter..." style="width:300px" />
+                    </div>
+                    @*&nbsp;&nbsp;|
+                <span>More Results Found in : </span>
+                <span class="more-result">UM (10)</span>
+                <span class="more-result">Claims (10)</span>
+                <span class="more-result">Census (10)</span>
+                <span class="more-result">Others (5)</span>*@
+
+
+                    <a href="javascript:void(0)" class="custom-button text-cyan pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Email">
+
+                        <img src="~/Resources/Images/Icons/Mail1.ico" />
+                    </a>
+
+                    <a href="javascript:void(0)" class="custom-button text-red pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pdf">
+                        <img src="~/Resources/Images/Icons/pdf1.png" />
+                    </a>
+
+
+                    <a href="javascript:void(0)" class="custom-button text-success pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Excel">
+                        <img src="~/Resources/Images/Icons/excel.PNG" />
+                    </a>
+                </div>
+
+                <div ng-repeat="provider in ProviderList1">
+                    <a href="/ProviderProfile/Index">
+                        <div class="ProviderDetailsFrame" @*ng-click="ShowProviderProfile(provider.ProviderID)"*@ style="cursor:pointer">
+                            <div class="col-lg-4">
+                                <img src={{provider.Photo}} class="profileImg img-circle " />
+                            </div>
+                            <div class="col-lg-8 providerInfo">
+                                <span>{{provider.Name}}</span><br />
+                                <span>NPI : {{provider.NPI}}</span><br />
+                                <span>Specialty : {{provider.Specialty}}</span><br />
+                                <span>Location : {{provider.Location}}</span><br />
+                                <span>Group : {{provider.Group}}</span><br />
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div ng-show="ProviderList1.length<=0">
+                    <span>No Record Found...</span>
+                </div>
+                @*<table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped" style="margin-bottom: 0px;" cellspacing="0">
+                <thead class="thead_access_blue">
+                    <tr>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>MBR ID</label><span></span>
+                                <i class="fa fa-sort "></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>Last Name</label><span></span><i class="fa fa-sort"></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>First Name</label><span></span><i class="fa fa-sort"></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>DOB</label><span></span><i class="fa fa-sort"></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1 gender" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>Gender</label><span></span><i class="fa fa-sort"></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1 pcp" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>PCP</label><span></span><i class="fa fa-sort "></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>PCP Phone</label><span></span><i class="fa fa-sort "></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>Effective Date</label><span></span><i class="fa fa-sort "></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>Address</label><span></span><i class="fa fa-sort "></i>
+                            </span>
+                        </th>
+                        <th class="withfilter col-lg-1" rowspan="1" colspan="1">
+                            <span class="styled-input">
+                                <input class="filer-search" type="text" required /><label>State</label><span></span><i class="fa fa-sort "></i>
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
+
+            </table>
+            <div class="table-responsive response-table" id="searchBodyDiv">
+                <table id="newSearch" class="table table-striped table-hover custom-thead-back custom-thead-font custom-tbody custom-table-striped" cellspacing="0">
+                    <tbody id="searhcResultBody"></tbody>
+                </table>
+
+            </div>*@
+
+            </div>
+        </div>
+      
+        <div id="ProviderProfile">
+
+        </div>
+    </div>
+
+    
+</div>
+
+
+<style>
+    .ProviderDetailsFrame {
+        width: 325px;
+        height: 110px;
+        background-color: #dbe2ea;
+        border-radius: 10px;
+        float: left;
+        margin-right: 5px;
+        margin-top: 5px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .profileImg {
+        width: 90px;
+        height: 90px;
+        margin-top: .5em;
+    }
+    .providerInfo {
+        float: left;
+        margin-top: .5em;
+    }
+</style>
+<script src="~/Resources/Data/SearchData.js"></script>
+@*<script src="~/Scripts/AppScripts/Home/search.js"></script>*@

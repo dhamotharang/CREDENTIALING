@@ -1,0 +1,146 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.StateLicenseViewModel
+
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+<fieldset>
+    <legend>
+        State License Information
+    </legend>
+    <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:black">
+        <label>*Non-Licensed professionals should enter certification/registration number in the space provided for license number</label>
+  
+     </div>
+    <div>
+        <form enctype="multipart/form-data" class="stateLicenseForm">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-md-12 form-group">
+                    <span ng-if="tempObject.StateLicenseInformationID">
+                        @Html.HiddenFor(model => model.StateLicenseInformationID, new { ng_value = "tempObject.StateLicenseInformationID" })
+                    </span>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.LicenseNumber, new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.LicenseNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.LicenseNumber" })
+                        @Html.ValidationMessageFor(model => model.LicenseNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.ProviderTypeID, new { @class = "control-label small" })
+                        <select class="form-control input-sm" data-ng-model="tempObject.ProviderTypeID" name="ProviderTypeID">
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="type in ProviderTypes" value="{{type.ProviderTypeID}}">{{type.Title}}</option>
+                        </select>
+                                @Html.ValidationMessageFor(model => model.ProviderTypeID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.StateLicenseStatusID, new { @class = "control-label small" })
+                        <select class="form-control input-sm" data-ng-model="tempObject.StateLicenseStatusID" name="StateLicenseStatusID">
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="status in StateLicenseStatuses" value="{{status.StateLicenseStatusID}}">{{status.Title}}</option>
+                        </select> @Html.ValidationMessageFor(model => model.StateLicenseStatusID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.IssuingState, new { @class = "control-label small" })
+                        @*  @Html.DropDownListFor(model => model.PracticeState, new[] { new SelectListItem { Value = "Florida", Text = "Florida" }, new SelectListItem { Value = "Arizona", Text = "Arizona" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "stateLicense.PracticeState" })*@
+                        <select id="statePractise" class="form-control input-sm" data-ng-model="tempObject.IssuingState" name="IssuingState">
+                            <option value="" disabled selected>--Select--</option>
+                            <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}">{{state.State}}</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.IssuingState, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-3 form-group">
+                   
+                        @Html.LabelFor(model => model.IsCurrentPracticeState, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.CurrentPracticeStateYesNoOption, (int)value, new { data_ng_model = "tempObject.CurrentPracticeStateYesNoOption" }) @value.ToString()
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CurrentPracticeStateYesNoOption, "", new { @class = "text-danger" })
+
+
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.IssueDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "tempObject.IssueDate" })
+                        @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.ExpiryDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "tempObject.ExpiryDate" })
+                        @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.CurrentIssueDate, new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.CurrentIssueDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "tempObject.CurrentIssueDate" })
+                        @Html.ValidationMessageFor(model => model.CurrentIssueDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.LicenseInGoodStanding, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.LicenseInGoodStandingYesNoOption, (int)value, new { data_ng_model = "tempObject.LicenseInGoodStandingYesNoOption" }) @value.ToString()
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.LicenseInGoodStandingYesNoOption, "", new { @class = "text-danger" })
+
+
+
+                    </div>
+                    <div class="form-group col-md-9">
+                        <div class="col-md-11">
+                            @Html.HiddenFor(model => model.StateLicenseDocumentPath, new { ng_value = "tempObject.StateLicenseDocumentPath" })
+
+
+                            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput">
+                                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                    <span class="fileinput-filename">{{tempObject.StateLicenseDocumentPath}}</span>
+                                </div>
+                                <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                    <span class="fileinput-new small">State License Document</span>
+                                    <span class="fileinput-exists">Change</span>
+                                    @*   @Html.TextBoxFor(model => model.StateLicenseDocumentFile, new { type = "file", data_ng_model = "stateLicense.StateLicenseDocumentFile" })*@
+                                    <input type="file" name="StateLicenseDocumentFile" ng-model="tempObject.StateLicenseInformationDocumentFile" autocomplete="off">
+                                </span>
+
+                                <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                            </div>
+                        </div>
+                        <div ng-show="tempObject.StateLicenseDocumentPath" class="col-md-1">
+                            <a href="{{tempObject.StateLicenseDocumentPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="ErrorSL" class="col-lg-12">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        Error List : <br />
+                        <span ng-repeat="err in SLError track by $index">{{err}}</span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-12" ng-if="visibilityControl=='addStateLicenseInformation'">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveStateLicense(tempObject,-1)">Add</button>
+                    </div>
+                    <div class="col-md-12" ng-if="visibilityControl==($index+'_editStateLicenseInformation')">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveStateLicense(tempObject,$index)">Update</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+</div>
+</fieldset>

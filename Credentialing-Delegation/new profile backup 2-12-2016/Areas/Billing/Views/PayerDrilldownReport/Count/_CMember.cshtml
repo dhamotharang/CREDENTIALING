@@ -1,0 +1,120 @@
+﻿@model PortalTemplate.Areas.Billing.Models.PayerDrilldownReport.CMemberReportViewModel
+
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+    <div id="count_member_report_donut_chart" class="report_donut_chart">
+
+    </div>
+    <div>
+        <table id="chart_table" class="table table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th>
+                      Claims Status
+                    </th>
+                    <th>
+                        Count
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="submitted_row">
+                    <td>
+                        <label class="text">Submitted</label>
+                    </td>
+                    <td>
+                        <label>@Model.ClaimSubmitted</label>
+                    </td>
+                </tr>
+                <tr class="accepted_row">
+                    <td>
+                        <label class="text">Accepted</label>
+                    </td>
+                    <td>
+                        <label>@Model.ClaimAccepted</label>
+                    </td>
+                </tr>
+                <tr class="pending_row">
+                    <td>
+                        <label class="text">Pending</label>
+                    </td>
+                    <td>
+                        <label>@Model.ClaimPending</label>
+                    </td>
+                </tr>
+                <tr class="rejected_row">
+                    <td>
+                        <label class="text">Rejected</label>
+                    </td>
+                    <td>
+                        <label>@Model.ClaimRejected</label>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+    <label class="list_title">Member List</label>
+    <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+        <thead class="theme_thead">
+            <tr>
+                <th rowspan="2">
+                    Sl No
+                </th>
+                <th rowspan="2">
+                    Member
+                </th>
+                <th colspan="4" class="text-center">
+                  No of Claims
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Claim Submitted
+                </th>
+                <th>
+                    Claim Accepted
+                </th>
+                <th>
+                    Claim Rejected
+                </th>
+                <th>
+                    Claim Pending
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Members)
+            {
+                <tr>
+                    <td>
+                        @( ((Int32)1) + @Model.Members.IndexOf(item))
+                    </td>
+                    <td>
+                        @item.MemberName
+                    </td>
+                    <td>
+                        @item.ClaimSubmitted
+                    </td>
+                    <td>
+                        @item.ClaimAccepted
+                    </td>
+                    <td>
+                        @item.ClaimRejected
+                    </td>
+                    <td>
+                        @item.ClaimPending
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+<div class="col-lg-12 margin_top_20_px margin_bottom_10_px button-styles clearfix">
+    <button class="btn btn-sm btn-warning pull-left" id="cMember_back_btn">Back</button>
+</div>
+
+<script src="~/Areas/Billing/Scripts/AppJs/PayerDrilldownReport/Unminified/Count/CMember.js"></script>

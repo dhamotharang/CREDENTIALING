@@ -1,0 +1,177 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Loading.ContractGridViewModel
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+<style>
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .ProviderTypeSelectAutoList1.popover.bottom {
+        margin-top: 54px;
+    }
+</style>
+<div id="PlanReportForm">
+    <form enctype="multipart/form-data" class="form-style">
+        <div class="col-lg-12 form-group">
+            @Html.HiddenFor(model => model.ContractGridID, new { ng_value = "tempObject.ContractGridID" })
+            @Html.HiddenFor(model => model.Report.CredentialingContractInfoFromPlanID, new { ng_value = "tempObject.Report.CredentialingContractInfoFromPlanID", data_ng_model = "tempObject.Report.CredentialingContractInfoFromPlanID" })
+            @*@Html.HiddenFor(model => model.Report.ProviderID, new { ng_value = "c.Report.ProviderID" })*@
+            <div class="col-lg-4">
+                <label class="control-label small" @*ng-init="c.Report.CredentialingApprovalStatusType = 0"*@>Credentialing Status:</label>
+                <div>
+                    @*@foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType)))
+                        {*@
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.Report.CredentialingApprovalStatusType, (int)(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.Approved), new { data_ng_model = "tempObject.Report.CredentialingApprovalStatusType" })Approved
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.Report.CredentialingApprovalStatusType, (int)(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.Rejected), new { data_ng_model = "tempObject.Report.CredentialingApprovalStatusType" })Rejected
+                    </label>
+                    @*}*@
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="control-label small">Panel Status:</label>
+                <div>
+                    @*@foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.OpenCloseOption)))
+                        {*@
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.Report.PanelStatusType, (int)(AHC.CD.Entities.MasterData.Enums.OpenCloseOption.Open), new { data_ng_model = "tempObject.Report.PanelStatusType" })Open
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.Report.PanelStatusType, (int)(AHC.CD.Entities.MasterData.Enums.OpenCloseOption.Close), new { data_ng_model = "tempObject.Report.PanelStatusType" })Close
+                    </label>
+                    @*}*@
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="control-label small">Initial Credentialing Date:</label>
+                <div>
+                    @Html.TextBoxFor(model => model.InitialCredentialingDate, new { data_val = "true", data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.InitialCredentialingDate", placeholder = "mm/dd/yyyy" })
+                </div>
+                @Html.ValidationMessageFor(model => model.InitialCredentialingDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 form-group">
+            <div class="col-lg-4">
+                <label class="control-label small">Effective Date:</label>
+                <div>
+                    @Html.TextBoxFor(model => model.Report.InitiatedDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.Report.InitiatedDate", placeholder = "mm/dd/yyyy" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="control-label small">Welcome Letter Date:</label>
+                <div>
+                    @Html.TextBoxFor(model => model.Report.CredentialedDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.Report.CredentialedDate", placeholder = "mm/dd/yyyy" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="control-label small">Termination Date:</label>
+                <div>
+                    @Html.TextBoxFor(model => model.Report.TerminationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.Report.TerminationDate", placeholder = "mm/dd/yyyy" })
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 form-group">
+            <div class="col-lg-4">
+                <label class="control-label small">Re-Credentialing Date:</label>
+                <div>
+                    @Html.TextBoxFor(model => model.Report.ReCredentialingDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.Report.ReCredentialingDate", placeholder = "mm/dd/yyyy" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="control-label small">Group ID:</label>
+                <div>
+                    @Html.TextBoxFor(model => model.Report.GroupID, new { @class = "form-control input-sm", data_ng_model = "tempObject.Report.GroupID" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="control-label small">Provider ID</label>
+                <div>
+                    @Html.TextBoxFor(model => model.Report.ProviderID, new { @class = "form-control input-sm", data_ng_model = "tempObject.Report.ProviderID" })
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        @*<div class="col-lg-12 form-group">
+                <div class="col-lg-4">
+                    <label class="control-label small">Participating Status:</label>
+                    <div>
+                        @Html.HiddenFor(model => model.Report.ParticipatingStatus, new { ng_value = "tempObject.Report.ParticipatingStatus" })
+                        <select id="ParticipatingStatus" name="ParticipatingStatus" class="form-control input-sm" ng-model="tempObject.Report.ParticipatingStatus">
+                            <option value="" selected>--Select Participating Status--</option>
+                            <option ng:repeat="p in ParticipatingStatusList" ng-value="p.ParticipatingStatus">{{p.ParticipatingStatus}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>*@
+        <div class="col-lg-12 form-group">
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Participating Status:</label>
+                @Html.HiddenFor(model => model.Report.ParticipatingStatus, new { ng_value = "tempObject.Report.ParticipatingStatus" })
+                @*<input type="hidden" name="ParticipatingStatus" value="{{tempObject.Report.ParticipatingStatus}}" />*@
+                <input class="form-control input-sm" autocomplete="off" ng-model="tempObject.Report.ParticipatingStatus" ng-focus="searchCumDropDown('statuslist')" />
+                <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="statuslist">
+                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                        <tbody>
+                            <tr ng-repeat="status in filteredstatuslist = (ParticipatingStatusList | filter:tempObject.Report.ParticipatingStatus)" ng-click="SelectStatus(status.ParticipatingStatus)" class="pointer">
+                                <td>{{status.ParticipatingStatus}}</td>
+                            </tr>
+                            <tr ng-if="ParticipatingStatusList.length == 0">
+                                <td>No data..... </td>
+                            </tr>                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label class="control-label small">Plan:</label>
+                <div>
+                    <i class="data-label">{{PlanNameEdit || 'Not Available'}}</i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="clearfix"></div>
+        <input type="hidden" name="Report.WelcomeLetterPath" value="{{tempObject.Report.WelcomeLetterPath}}" />
+        <div class="col-lg-12 form-group">
+            <div class="col-lg-12">
+                <label class="control-label small">Welcome Letter:</label><br />                
+
+                <div class="form-group" ng-class="{'col-lg-11':tempObject.Report.WelcomeLetterPath,'col-lg-12':!tempObject.Report.WelcomeLetterPath}">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">                        
+                        <div class="form-control jancyFileWrapTexts" data-trigger="fileinput">
+                            <input type="hidden" />
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename wraptext"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-sm btn-file">
+                            <span class="fileinput-new small">Select Supporting Document</span>
+                            <span class="fileinput-exists">Change</span>
+                            @Html.TextBoxFor(model => model.Report.WelcomeLetter, new { name = "Report.WelcomeLetter", ng_data_model = "tempObject.Report.WelcomeLetterPath", type = "file", onchange = "angular.element(this).scope().setFiles1(this)" })
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="clearFile()">Remove</a>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Report.WelcomeLetterPath, "", new { ng_value = "tempObject.Report.WelcomeLetterPath" })
+                </div>
+
+
+                <div ng-show="tempObject.Report.WelcomeLetterPath!=null" class="col-lg-1 pull-right">
+                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.Report.WelcomeLetterPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12">
+            <div class="col-lg-12">
+                <button type="button" class="btn btn-warning btn-sm" ng-click="cancelEdit();">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="SaveReport()">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

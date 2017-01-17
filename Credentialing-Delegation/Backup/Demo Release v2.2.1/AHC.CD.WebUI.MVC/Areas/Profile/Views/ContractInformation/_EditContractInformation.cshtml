@@ -1,0 +1,93 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ContractInformation.ContractInfoViewModel
+
+<form enctype="multipart/form-data">
+    <div class="form-style">
+        <div class="panel-body zero-padding-left-right-div">
+            <span ng-if="tempObject.ContractInfoID">
+                @Html.HiddenFor(model => model.ContractInfoID, new { ng_value = "tempObject.ContractInfoID", data_ng_model = "tempObject.ContractInfoID" })
+            </span>
+            <span ng-if="tempObject.OrganizationId">
+                @Html.HiddenFor(model => model.OrganizationId, new { ng_value = "tempObject.OrganizationId", data_ng_model = "tempObject.OrganizationId" })
+            </span>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.ProviderRelationshipOption, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <div ng-if="!providerStatus">
+                            <span ng-if="!providerStatus">
+                                @Html.HiddenFor(model => model.ProviderRelationshipOption, new { Value = "{{contractInfoes[0].ProviderRelationship}}", data_ng_model = "contractInfoes[0].ProviderRelationshipOption" })
+                            </span>
+                            <i class="data-label">{{contractInfoes[0].ProviderRelationship}}</i>
+                        </div>
+                        <div ng-show="providerStatus">
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.ProviderRelationshipOption)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.ProviderRelationshipOption, (int)value, new { data_ng_model = "tempObject.ProviderRelationshipOption", data_val = "true", data_val_required = "Please select the Provider Relationship *" }) @value.ToString()
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ProviderRelationshipOption, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(p => p.JoiningDate, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.JoiningDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.JoiningDate" })
+                    @Html.ValidationMessageFor(model => model.JoiningDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(p => p.ExpiryDate, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.ExpiryDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.ExpiryDate" })
+                    @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3 form-group">
+                    <span ng-if="!tempObject.ContractStatusOption" ng-init="tempObject.ContractStatusOption='';"></span>
+                    @Html.LabelFor(model => model.ContractStatusOption, new { @class = "control-label small" })
+                    @Html.EnumDropDownListFor(Model => Model.ContractStatusOption, "-- select a status --", new { @class = "form-control input-sm", data_ng_model = "tempObject.ContractStatusOption" })
+                    @Html.ValidationMessageFor(model => model.ContractStatusOption, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="clearfix"></div><br>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-md-12 form-group zero-padding-left-right-div">
+                    <div class="form-group" ng-class="{'col-lg-11':tempObject.ContractFilePath,'col-lg-12':!tempObject.ContractFilePath}">
+                        <label class="control-label small"></label>
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                <span class="fileinput-new small">Select Contract Document</span>
+                                <span class="fileinput-exists">Change</span>
+                                @Html.TextBoxFor(model => model.ContractFile, new { name = "ContractFile", ng_data_model = "tempObject.ContractFile", type = "file" })
+                            </span>
+                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ContractFile, "", new { @class = "text-danger" })
+                    </div>
+                    <br />
+                    <span ng-show="tempObject.ContractFilePath">
+                        @Html.HiddenFor(model => model.ContractFilePath, new { ng_value = "tempObject.ContractFilePath" })
+                        <a href="/Document/View?path={{tempObject.ContractFilePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                    </span>
+                </div>
+            </div>
+            <div ng-show="activeMessageDiv=='errorContractInformation'" class="col-lg-12 zero-padding-left-right-div">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists :<br />
+                    <span ng-repeat="err in errorContractInformation track by $index">{{err}}</span>
+                </div>
+            </div>
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <div class="col-md-12 form-group">
+                    <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                    <button ng-show="!providerStatus" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveContractInformation(tempObject,$index)">Update</button>
+                    <button ng-show="providerStatus" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveContractInformation(tempObject,$index)">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

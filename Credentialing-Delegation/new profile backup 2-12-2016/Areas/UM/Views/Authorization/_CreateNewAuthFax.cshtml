@@ -1,0 +1,52 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.AuthorizationViewModel
+<p-link filepath="~/Areas/UM/Styles/Authorization/CreateAuth.css"></p-link>
+<p-script filepath="~/Areas/UM/Scripts/Authorization/Common/NonMinified/CreateAuthCommon.js"></p-script>
+<p-script filepath="~/Areas/UM/Scripts/Authorization/Common/NonMinified/UmSearchDropDown.js"></p-script>
+<p-script filepath="~/Areas/UM/Scripts/Authorization/CreateNewAuthFax/NonMinified/CreateNewAuthFax.js"></p-script>
+
+
+
+<style>
+    #UM_auth_form label.error {
+        color: red;
+    }
+
+    #UM_auth_form input.error {
+        border: 1px solid red;
+    }
+</style>
+
+<p-script filepath="~/Areas/UM/Scripts/Authorization/CreateNewAuthFax/NonMinified/AuthSummary.js"></p-script>
+<form id="UM_auth_form" class="zero-padding-left-right createForm form_11 auth_form" onsubmit="return false;">
+    @*@Html.Raw(ViewBag.MemberData.MemberInformation.County)*@
+    @using (Ajax.BeginForm("Authorization", "Authorization", new AjaxOptions { HttpMethod = "POST", OnBegin = "validateForm", OnSuccess = "ValidateCreateDetails" }, new { id = "UM_auth_form" }))
+    {
+        <div class="hiddenMemberDetailsInformation hidden">
+            @Html.Partial("~/Areas/UM/Views/Authorization/Form/_MemberAuthorizationArea.cshtml")
+        </div>
+        <div class="col-lg-12 zero-padding-left-right" id="dynamicSection" style="z-index:1">
+            @Html.Partial("~/Areas/UM/Views/Authorization/POS/_POSProviderFurtherDetailsAreaPOS11(a).cshtml")
+            <div class="clearfix"></div>
+        </div>
+
+        @Html.Partial("~/Areas/UM/Views/Authorization/Form/_DocumentsArea.cshtml")
+
+
+        @Html.Partial("~/Areas/UM/Views/Authorization/Form/_NotesAreaForCreate.cshtml")
+
+
+        @Html.Partial("~/Areas/UM/Views/Authorization/Form/_ContactsAreaForCreate.cshtml")
+
+        <span id="summarySection">
+            @Html.Partial("~/Areas/UM/Views/Authorization/AuthorizationSummary/_AuthSummary.cshtml", Model)
+        </span>
+
+        @Html.Partial("~/Areas/UM/Views/Authorization/Form/_ODAGArea.cshtml")
+
+        @Html.Partial("~/Areas/UM/Views/Authorization/Form/_CreateAuthButtons.cshtml")
+    }
+    @*</form>*@
+
+    <script>
+
+    </script>

@@ -1,0 +1,203 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Military Service Information
+        </legend>
+        <div class="legend2 pull-right">
+            <button type="button" ng-click="showMilitaryServiceInformationHistory('MSIH')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+            <div id="MSIH" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+        </div>
+        <div class="form-style">
+            <div class="col-lg-12">
+                <table ng-hide="militaryServiceInformations.length > 0 || newShowMilitaryServiceInformation" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td ng-hide="visibilityControl=='addMilitaryServiceInformation'">
+                                No Data Available For Military Service Information !
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <span>
+                                        Please click on <button id="noDataAddNewMilitaryService" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addMilitaryServiceInformation')" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                        to add new Military Service Information
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="militaryServiceInformations.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>Military Branch</th>
+                            <th>Rank At Discharge</th>
+                            <th>Discharge Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="militaryService in militaryServiceInformations">
+                        <tr>
+                            <td ng-show="militaryService.MilitaryBranch">{{militaryService.MilitaryBranch}}</td>
+                            <td ng-show="!militaryService.MilitaryBranch"><i>Not Available</i></td>
+                            <td ng-show="militaryService.MilitaryRank">{{militaryService.MilitaryRank}}</td>
+                            <td ng-show="!militaryService.MilitaryRank"><i>Not Available</i></td>
+                            <td ng-show="militaryService.MilitaryDischarge">{{militaryService.MilitaryDischarge}}</td>
+                            <td ng-show="!militaryService.MilitaryDischarge"><i>Not Available</i></td>
+                            <td>{{militaryService.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td>{{militaryService.DischargeDate | date:'MM-dd-yyyy'}}</td>
+                            <td>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewMilitaryServiceInformation')" ng-hide="viewMilitaryServiceInformation" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editMilitaryServiceInformation',militaryService);changeButtonText()" ng-hide="editMilitaryServiceInformation" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initMilitaryServiceInformationWarning(militaryService);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                    <button id="addNewMilitaryService" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addMilitaryServiceInformation');changeButtonText()" ng-hide="viewMilitaryServiceInformation|| editShowMilitaryServiceInformation || newShowMilitaryServiceInformation || $index+1!=militaryServiceInformations.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                }
+                            </td>
+                        </tr>
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                        {
+                            <tr ng-show="visibilityControl==($index+'_viewMilitaryServiceInformation')">
+                                <td colspan="7">
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewMilitaryServiceInformation.cshtml")
+                                </td>
+                            </tr>
+                        }
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                        {
+                            <tr ng-show="visibilityControl==($index+'_editMilitaryServiceInformation')">
+                                <td colspan="7" id="militaryServiceInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                    <fieldset>
+                                        <legend>
+                                            Edit Military Service Information
+                                        </legend>
+                                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditMilitaryServiceInformation.cshtml")
+                                        <div class="col-md-12 form-group">
+                                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+                                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveMilitaryServiceInformation(tempObject, $index)">Update</button>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div ng-show="activeMessageDiv=='addedNewMilitaryServiceInformation'" class="alert alert-success" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='removeMilitaryServiceInformation'">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        Error Lists :<br />
+                        <span ng-repeat="err in errorMilitaryServiceInformation track by $index">{{err}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+            {
+                <fieldset ng-show="visibilityControl==('addMilitaryServiceInformation')">
+                    <legend>
+                        Add Military Service Information
+                    </legend>
+                    <div id="newMilitaryServiceInformationFormDiv">
+                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditMilitaryServiceInformation.cshtml")
+                        <div class="col-md-12 form-group">
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveMilitaryServiceInformation(tempObject, $index)">Add</button>
+                        </div>
+                    </div>
+                </fieldset>
+            }
+        </div>
+    </fieldset>
+    <div class="panel-default" ng-if="showMilitaryServiceInformationTable">
+        <div class="form-style">
+            <fieldset>
+                <legend>
+                    Military Service Information History
+                </legend>
+                <div class="legend2 pull-right">
+                    <button type="button" ng-click="cancelmilitaryServiceInformationHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+                </div>
+                <table ng-hide="militaryServiceInformationHistoryArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No History Available for Military Service Information!
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="militaryServiceInformationHistoryArray.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>Military Branch</th>
+                            <th>Rank At Discharge</th>
+                            <th>Discharge Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="msHistory in militaryServiceInformationHistoryArray">
+                        <tr>
+                            <td ng-if="!msHistory.MilitaryBranch"><i>Not Available</i></td>
+                            <td ng-if="msHistory.MilitaryBranch">{{msHistory.MilitaryBranch}}</td>
+                            <td ng-if="!msHistory.MilitaryRank"><i>Not Available</i></td>
+                            <td ng-if="msHistory.MilitaryRank">{{msHistory.MilitaryRank}}</td>
+                            <td ng-if="!msHistory.MilitaryDischarge"><i>Not Available</i></td>
+                            <td ng-if="msHistory.MilitaryDischarge">{{msHistory.MilitaryDischarge}}</td>
+                            <td ng-if="!msHistory.StartDate"><i>Not Available</i></td>
+                            <td ng-if="msHistory.StartDate">{{msHistory.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td ng-if="!msHistory.DischargeDate"><i>Not Available</i></td>
+                            <td ng-if="msHistory.DischargeDate">{{msHistory.DischargeDate | date:'MM-dd-yyyy'}}</td>
+                            <td>{{msHistory.HistoryStatus}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewmsHistory')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewmsHistory')">
+                            <td colspan="7" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewMilitaryServiceInformationHistory.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+    <div class="modal fade" id="militaryServiceInformationWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="removeMilitaryServiceInformation">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="modal-body">
+                        Do you really want to remove the service from <b>{{tempMilitaryServiceInformation.StartDate | date:'MM-dd-yyyy'}}</b> to <b>{{tempMilitaryServiceInformation.DischargeDate | date:'MM-dd-yyyy'}}</b> from your Military Service list ?
+                        <input type="hidden" name="MilitaryServiceInformationID" value="{{tempMilitaryServiceInformation.MilitaryServiceInformationID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" ng-click="removeMilitaryServiceInformation(militaryServiceInformations)">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

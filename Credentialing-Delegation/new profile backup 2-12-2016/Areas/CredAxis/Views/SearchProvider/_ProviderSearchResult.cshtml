@@ -1,0 +1,228 @@
+﻿@{
+    var groupcount = 0;
+    var typecount = 0;
+    var plancount = 0;
+     var abc = "hello,world";
+    //string[] values = abc.Split(',');
+}
+@foreach (var value in ViewBag.SearchResultData)
+{
+    groupcount = 0;
+    typecount = 0;
+    plancount = 0;
+    string[] Groupvalues = @value.GroupIPA.Split(',');
+    string[] Specialtyvalues = @value.Specialty.Split(',');
+    string[] Planvalues = @value.Plan.Split(',');
+    <tr>
+        <td class="sm-mbrid">
+            @value.ProviderNPI
+        </td>
+        <td class="sm-lastname">@value.LastName </td>
+        <td class="sm-firstname">
+            @value.FirstName
+
+        </td>
+        <td class="sm-rel">
+            @if (@value.Network == "In-NETWORK")
+            {<span class="label label-success">IN</span>}
+            else
+            {<span class="label label-danger">OON</span>}
+        </td>
+
+        <td class="sm-mbrid">@value.ProviderLevel</td>
+        <td class="sm-rel">
+            @*EMP..<span class="label label-info">@value.EMPCOUNT</span> AFF..<span class="label label-info">@value.AFFCOUNT</span>*@
+
+
+
+
+            @value.Relationship
+        </td>
+        @*<td class="sm-firstname">
+                  <div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="SPECIALTY" data-content="@value.Specialty">@value.Specialty</div>
+            </td>*@
+        <td class="sm-spec">
+            <div class="td-ellipsis" data-toggle="popover" data-trigger="hover" @*data-title="SPECIALTY"*@ data-html="true" data-content="
+                <ol>
+                    @{
+    foreach (var x in Specialtyvalues)
+    {
+                        <li>@x</li>
+
+    }
+
+
+                    }
+                </ol>">
+                @foreach (char c in @value.Specialty)
+                {
+                    if (typecount <= 13)
+                    {
+                        if (@c == ',')
+                        {
+                            break;
+                        }
+                        else
+                        {@c
+                            typecount++;
+                        }
+
+                    }
+                    else
+                    {
+
+                        break;
+
+                    }
+                }...
+
+
+
+
+                <span class="label label-info">@value.Typecount</span>
+            </div>
+
+
+        </td>
+        <td class="sm-group">
+            @{
+
+
+            }
+
+            <div class="td-ellipsis" data-toggle="popover" data-trigger="hover" @*data-title="Group/IPA"*@ data-html="true" data-content="
+                <ol>
+                    @{
+    foreach (var x in Groupvalues)
+    {
+                        <li>
+
+                            @x
+
+                        </li>
+
+    }
+
+
+                    }
+                </ol>">
+                @foreach (char c in @value.GroupIPA)
+                {
+                    if (groupcount <= 5)
+                    {
+                         if (@c == ',')
+                        {
+                            break;
+                        }
+                        else
+                        { @c
+                        groupcount++;
+                        }
+
+                    }
+                    else
+                    {
+
+                        break;
+
+                    }
+                }
+
+                ...<span class="label label-info">@value.Groupcount</span>
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+        </td>
+
+
+
+        <td class="sm-plan">
+            <div class="td-ellipsis" data-toggle="popover" data-trigger="hover" @*data-title="PLAN"*@ data-html="true" data-content="
+                <ol>
+                    @{
+    foreach (var x in Planvalues)
+    {
+                        <li>
+
+                            @x
+
+                        </li>
+
+    }
+
+
+                    }
+                </ol>">
+                @foreach (char c in @value.Plan)
+                {
+                    if (plancount <= 7)
+                    {
+                        if (@c == ',')
+                        {
+                            break;
+                        }
+                        else
+                        { @c
+                        plancount++;
+                        }
+
+                    }
+                    else
+                    {
+
+                        break;
+
+                    }
+                }...
+
+
+
+
+
+
+                <span class="label label-info">@value.PlanCount</span>
+            </div>
+        </td>
+        @*<td class="sm-mbrid">
+                <div class="td-ellipsis" data-toggle="popover" data-trigger="hover" data-title="PLAN" data-content="@value.Plan">@value.Plan</div>
+            </td>*@
+        <td class="sm-mbrid">@value.Status</td>
+        <td class="sm-gender">
+            @if (@value.Network == "In-NETWORK")
+            {
+                <button data-tab-action="Provider Profile" data-tab-title="Profile" data-tab-floatmenu="true" data-tab-issubtab="true" data-tab-defaultparenttab="Provider"
+                        data-tab-autoflush="true" data-tab-usertype="Provider" data-tab-userid="@value.ProviderNPI"
+                        data-tab-path="~/Areas/CredAxis/Views/ProviderProfile/_ProviderProfile.cshtml" data-tab-container="innerTabContainer" data-tab-parentcontainer="partialBodyContainer"
+                        data-tab-parenttabtitle="@value.FirstName @value.LastName" data-tab-hassubtabs="false" data-tab-memberdata="@value" data-tab-parenttabpath="~/Areas/CredAxis/Views/ProviderProfile/_ProviderHeader.cshtml"
+                        data-tab-parenttabrenderingarea="headerArea" data-tab-float-menu-path="~/Areas/CredAxis/Views/Shared/_FloatMenu.cshtml" class="btn btn-info btn-xs margin_left_12px tab-navigation">
+                    <i class="fa fa-eye"> </i>
+                </button>
+            }
+            else
+            {
+
+           <button data-tab-action="Provider Profile" data-tab-title="@value.FirstName @value.LastName" data-tab-path="/Portal/ProviderProfile/Index?profileId=1" data-tab-container="fullBodyContainer"
+                        class="btn btn-info btn-xs margin_left_12px tab-navigation">
+                    <i class="fa fa-eye"> </i>
+                </button> 
+            }
+
+
+        </td>
+    </tr>
+}

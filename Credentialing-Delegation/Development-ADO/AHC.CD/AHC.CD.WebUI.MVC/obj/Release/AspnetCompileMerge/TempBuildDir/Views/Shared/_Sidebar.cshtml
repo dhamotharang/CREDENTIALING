@@ -1,0 +1,282 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+<style>
+    .ScrollableMenuStyle {
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        overflow-y: auto;
+        max-height: 600px;
+    }
+</style>
+
+@{
+    var menus = new[]
+                {
+                   new { Link="Dashboard", Controller="Dashboard", LinkText="Dashboard", Roles="CCO,PRO"  },
+                   new { Link="Profile/MasterProfile/Index", Controller="MasterProfile", LinkText="Profile", Roles="PRO"  },
+                   //new { Link="Profile/MasterProfile/Providers", Controller="MasterProfile", LinkText="Providers", Roles="ADM,CCO,CRA,TL,CCM,MGT,HR"  },
+                   new { Link="Initiation/Provider", Controller="Provider", LinkText="Initiate Provider", Roles="HR,CCO,CCM"  },
+                   new { Link="Profile/SearchProvider/SearchProvider", Controller="SearchProvider", LinkText="Search Provider", Roles="ADM,CCO,CRA"  },
+                   new { Link="MasterDataNew", Controller="MasterDataNew", LinkText="Master Data", Roles="ADM,CCO"  },
+                   new { Link="Profile/SearchProfile/SearchProfile", Controller="SearchProfile", LinkText="Manage Profile", Roles="ADM,CCO,CRA"  },
+                   //new { Link="Profile/PlanDetail/PlanDetail", Controller="PlanDetail", LinkText="Plan Details", Roles="ADM,CCO,CRA"  },
+                   new { Link="Profile/Verification/Verification", Controller="Verification", LinkText="Verifications Links", Roles="ADM,CCO,CRA"  },
+                   new { Link="Initiation/InitiateUser/Index", Controller="InitiateUser", LinkText="Manage Users", Roles="ADM"  },
+                   new { Link="Profile/SearchProfileForTL/Index", Controller="SearchProfileForTL", LinkText="Search Provider", Roles="TL"  },
+                   //new { Link="Credentialing/Plan/PlanContract", Controller="PlanContract", LinkText="Plan Contract", Roles="ADM,CCO,CRA"  },
+                   new { Link="Credentialing/Initiation/Index", Controller="Initiation", LinkText="Credentialing Initiation", Roles="ADM,CCO"  },
+                   new { Link="Credentialing/Initiation/CredentialingList", Controller="Initiation", LinkText="Credentialing List", Roles="ADM,CCO"  },
+                   //new { Link="Credentialing/cnd/contractinfo", Controller="CnD", LinkText="Contract", Roles="ADM,CCO"  },
+                   new { Link="Credentialing/Verification/Index", Controller="Verification", LinkText="PSV", Roles="ADM,CCO"  },
+                   //new { Link="Credentialing/Plan/Index", Controller="Plan", LinkText="Plan Listing", Roles="ADM,CCO"  },
+                   new { Link="Credentialing/ProfileUpdates/Index", Controller="ProfileUpdates", LinkText="Profile Updates", Roles="CCO"  },
+                   new { Link="Credentialing/CnD/CredentialingAppointment", Controller="CnD", LinkText="Credentialing Appointment", Roles="CCO,ADM,CCM"  },
+                   new { Link="Credentialing/CCM/Index", Controller="CCM", LinkText="Credentialing Action List", Roles="CCO,ADM,CCM"  },
+
+                   //new { Link="Credentialing/DelegationProfileReport/Index", Controller="DelegationProfileReport", LinkText="Delegation Profile Report", Roles="ADM,CCO"  },
+                };
+}
+
+<div id="sidemenu" class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav ScrollableMenuStyle" id="side-menu">
+            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+
+                try
+                {
+
+                    var roles = Context.GetOwinContext().GetUserManager<ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                    //roles = (string[])Session["Roles"];
+
+                    if (roles != null)
+                    {
+                        var links = from item in menus
+                                    where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Any(x => roles.Contains(x))
+                                    select item;
+                        foreach (var link in links)
+                        {
+                            <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
+                                <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText</a>
+                            </li>
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+
+
+            <!-- /CREDENTIALING -->
+            @*<li class="@(ViewContext.RouteData.Values["controller"].Equals("Initiation") ? "active" : "")">
+                    <a href="#"><i class="fa fa-users fa-fw"></i>Credentialing<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="@(ViewContext.RouteData.Values["controller"].Equals("Initiation") ? "active" : "")">
+                            <a href="~/Credentialing/Initiation/Index"><i class="fa fa-fw fa-comments"></i>Credentialing Initiation</a>
+                        </li>
+                        <li class="@(ViewContext.RouteData.Values["controller"].Equals("Initiation") ? "active" : "")">
+                            <a href="~/Credentialing/Initiation/CredentialingList"><i class="fa fa-fw fa-users"></i>Credentialing List</a>
+                        </li>
+                    </ul>
+                </li>*@
+
+            <!-- RE-CREDENTIALING -->
+            @*<li class="@(ViewContext.RouteData.Values["controller"].Equals("ReCredentialing") ? "active" : "")">
+                    <a href="#"><i class="fa fa-users fa-fw"></i>Re-Credentialing<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="@(ViewContext.RouteData.Values["controller"].Equals("ReCredentialing") ? "active" : "")">
+                            <a href="~/Credentialing/ReCredentialing/Index"><i class="fa fa-fw fa-comments"></i>Re-Credentialing Initiation</a>
+                        </li>
+                        <li class="@(ViewContext.RouteData.Values["controller"].Equals("ReCredentialing") ? "active" : "")">
+                            <a href="~/Credentialing/ReCredentialing/List"><i class="fa fa-fw fa-users"></i>Re-Credentialing List</a>
+                        </li>
+                    </ul>
+                </li>*@
+
+            <!-- DE-CREDENTIALING -->
+            @*<li class="@(ViewContext.RouteData.Values["controller"].Equals("DeCredentialing") ? "active" : "")">
+                    <a href="#"><i class="fa fa-users fa-fw"></i>De-Credentialing<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="@(ViewContext.RouteData.Values["controller"].Equals("DeCredentialing") ? "active" : "")">
+                            <a href="~/Credentialing/DeCredentialing/Index"><i class="fa fa-fw fa-comments"></i>De-Credentialing Initiation</a>
+                        </li>
+                        <li class="@(ViewContext.RouteData.Values["controller"].Equals("DeCredentialing") ? "active" : "")">
+                            <a href="~/Credentialing/DeCredentialing/List"><i class="fa fa-fw fa-users"></i>De-Credentialing List</a>
+                            <a href="~/Credentialing/Initiation/DeCredentialingList"><i class="fa fa-fw fa-users"></i>De-Credentialing List</a>
+                        </li>
+                    </ul>
+                </li>*@
+
+            <!--Updates -->
+            @*<li class="@(viewcontext.routedata.values["controller"].equals("profileupdates") ? "active" : "")">
+                    <a href="~/credentialing/profileupdates/index"><i class="fa fa-fw fa-users"></i>profile update/renewals</a>
+                </li>*@
+            <!-- credentialing action -->
+            @*<li>
+                    <a href="~/credentialing/cnd/credentialingappointment">
+                        <i class="fa fa-fw fa-user"></i>Credentialing Appointment
+                    </a>
+                </li>
+                <li>
+                    <a href="~/credentialing/ccm/index">
+                        <i class="fa fa-fw fa-user"></i>Credentialing Action List
+                    </a>
+                </li>*@
+           @*<li>
+                    <a href="/credentialing/verification/index">
+                        <i class="fa fa-fw fa-user"></i>psv
+                    </a>
+                </li>*@
+            @*   <li>
+                <a href="#"><i class="fa fa-users fa-fw"></i>Manage Credentialing<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a href="~/Credentialing/Plan">
+                            <i class="fa fa-fw fa-user"></i>Plan Listing
+                        </a>
+                    </li>
+                   <li>
+                        <a href="~/Credentialing/LineOfBusiness/ListLOB">
+                            <i class="fa fa-fw fa-user"></i>Lines of Business
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Credentialing/DocChecklist/Index">
+                            <i class="fa fa-fw fa-user"></i>Document Checklist
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Credentialing/DocChecklist/DocChecklistPlanMapping">
+                            <i class="fa fa-fw fa-user"></i>Document Map
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Credentialing/PSVCheckList/Index">
+                            <i class="fa fa-fw fa-user"></i>PSV Checklist
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Credentialing/PSVCheckList/PSVChecklistPlanMapping">
+                            <i class="fa fa-fw fa-user"></i>PSV Map
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Credentialing/BusinessEntity/Index">
+                            <i class="fa fa-fw fa-user"></i>Business Entity Map
+                        </a>
+                    </li>
+                                </ul>
+                            </li>*@
+            @*<li>
+                    <a href="~/Credentialing/CnD/Auditing">
+                        <i class="fa fa-fw fa-user"></i>Credentialing Auditing
+                    </a>
+                </li>*@
+
+
+        </ul>
+
+    </div>
+    <!-- /.sidebar-collapse -->
+</div>
+<!-- /.navbar-static-side -->
+@*<div id="sidemenu" class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">*@
+@*<li class="@(ViewContext.RouteData.Values["controller"].Equals("Dashboard") ? "active" : "")">
+        <a href="#"><i class="fa fa-dashboard"></i> Dashboards<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level collapse @(ViewContext.RouteData.Values["controller"].Equals("Dashboard") ? "in" : "")">
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("Provider") ? "active" : "")">
+                <a href="~/Dashboard/Provider">Provider</a>
+            </li>
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("Plan") ? "active" : "")">
+                <a href="~/Dashboard/Plan">Plan</a>
+            </li>
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("TPA") ? "active" : "")">
+                <a href="~/Dashboard/TPA">TPA</a>
+            </li>
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("IPA") ? "active" : "")">
+                <a href="~/Dashboard/IPA">IPA</a>
+            </li>
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("Index") ? "active" : "")">
+                <a href="~/Dashboard/Index">HR</a>
+            </li>
+        </ul>
+        <!-- /.nav-second-level -->
+    </li>
+    <li class="@(ViewContext.RouteData.Values["controller"].Equals("Provider") ? "active" : "") @(ViewContext.RouteData.Values["controller"].Equals("Credentialing") ? "active" : "")">
+        <a href="#"><i class="fa fa-users fa-fw"></i> Providers<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level collapse @(ViewContext.RouteData.Values["controller"].Equals("Provider") ? "in" : "") @(ViewContext.RouteData.Values["controller"].Equals("Credentialing") ? "in" : "")">
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("CreateProvider") ? "active" : "")">
+                <a href="~/Provider/CreateProvider">Add Provider</a>
+            </li>
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("SearchProvider") ? "active" : "")">
+                <a href="~/Provider/SearchProvider">Search Providers</a>
+            </li>
+        </ul>
+        <!-- /.nav-second-level -->
+    </li>*@
+
+@*@if (HttpContext.Current.User.IsInRole("Provider"))
+    {
+        <li class="@(ViewContext.RouteData.Values["controller"].Equals("SampleProfile") ? "active" : "")">
+            <a href="~/Profile/SampleProfile/Index"><i class="fa fa-fw fa-user"></i>Profiles</a>
+        </li>
+    }
+
+    @if (HttpContext.Current.User.IsInRole("CCO") || HttpContext.Current.User.IsInRole("TL") || HttpContext.Current.User.IsInRole("CredAdmin") || HttpContext.Current.User.IsInRole("SuperAdmin"))
+    {
+        <li class="@(ViewContext.RouteData.Values["controller"].Equals("MasterProfile") ? "active" : "")">
+            <a href="~/Profile/MasterProfile/Index"><i class="fa fa-fw fa-user"></i>Providers Profile</a>
+        </li>
+    }*@
+
+
+@*<!-- Credentialing Initiation -->
+    <li class="@(ViewContext.RouteData.Values["controller"].Equals("InitCredentialing") ? "active" : "")">
+        <a href="~/InitCredentialing/Index"><i class="fa fa-fw fa-comments"></i>Credentialing Initiation</a>
+    </li>
+
+    <!-- Primary Source Verification -->
+    <li class="@(ViewContext.RouteData.Values["controller"].Equals("Verification") ? "active" : "")">
+        <a href="~/Verification/Index"><i class="fa fa-fw fa-search"></i>Primary Source Verification</a>
+    </li>
+
+    <!-- Credentialing Action -->
+    <li class="@(ViewContext.RouteData.Values["controller"].Equals("CredentialingApproval") ? "active" : "")">
+        <a href="~/CredentialingApproval/ProvidersList"><i class="fa fa-fw fa-check-square-o"></i>Credentialing Action</a>
+    </li>*@
+
+
+<!-- Company -->
+<!-- Company -->
+<!-- Plan -->
+@*<li class="@(ViewContext.RouteData.Values["controller"].Equals("Plan") ? "active" : "")">
+        <a href="#"><i class="fa fa-users fa-fw"></i> Plan<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level collapse @(ViewContext.RouteData.Values["controller"].Equals("Plan") ? "in" : "")">
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("Index") ? "active" : "")">
+                <a href="~/Plan/Index">Search Plan</a>
+            </li>
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("NewPlan") ? "active" : "")">
+                <a href="~/Plan/NewPlan">Add Plan</a>
+            </li>
+            <li class="@(ViewContext.RouteData.Values["action"].Equals("PlanTypeIndex") ? "active" : "")">
+                <a href="~/Plan/PlanTypeIndex">Plan Type</a>
+            </li>
+        </ul>
+
+    </li>*@
+
+<!-- Added By Sachin for different dashboards -->
+<!-- Ended By Sachin for different dashboards -->
+@*</ul>
+        </div>
+        <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->*@

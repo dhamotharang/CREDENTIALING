@@ -1,0 +1,43 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.WorkHistory.PublicHealthServiceViewModel
+
+<div>
+    <form class="publicHealthServiceForm">
+        <span ng-if="tempObject.PublicHealthServiceID">
+            @Html.HiddenFor(model => model.PublicHealthServiceID, new { ng_value = "tempObject.PublicHealthServiceID" })
+        </span>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.StartDate, new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.StartDate, new { data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.StartDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.EndDate, new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.EndDate, new { data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.EndDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.LastLocation, new { @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.LastLocation, new { @class = "form-control input-sm", placeholder = "Last Location", data_ng_model = "tempObject.LastLocation" })
+                            @Html.ValidationMessageFor(model => model.LastLocation, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <br />
+            <div ng-if="IsPublicHealthServiceHasError" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists : <br />
+                    <span ng-repeat="err in PublicHealthServiceErrorList track by $index">{{err}}</span>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>

@@ -1,0 +1,69 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.BirthInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="col-lg-12">
+    <table ng-if="!Provider.BirthInformation" class="table table-bordered table-condensed customtbodyStyle table-striped">
+        <thead>
+            <tr>
+                <td>
+                    No Data Available for Birth Information!
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                    {
+                        <span>Please click on <button id="noDataAddNewBirthInformation" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_EditBirthInformation')" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Birth Information</span>
+                    }
+                </td>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div ng-if="Provider.BirthInformation">
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label" ng-if="Provider.BirthInformation.DateOfBirth">{{Provider.BirthInformation.DateOfBirth | date: "MM-dd-yyyy"}}</i>
+                <i class="data-label" ng-if="!Provider.BirthInformation.DateOfBirth">Not Available</i>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.CityOfBirth, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words" ng-if="Provider.BirthInformation.CityOfBirth">{{Provider.BirthInformation.CityOfBirth}}</i>
+                <i class="data-label" ng-if="!Provider.BirthInformation.CityOfBirth">Not Available</i>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.CountyOfBirth, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words" ng-if="Provider.BirthInformation.CountyOfBirth">{{Provider.BirthInformation.CountyOfBirth}}</i>
+                <i class="data-label" ng-if="!Provider.BirthInformation.CountyOfBirth">Not Available</i>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.StateOfBirth, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words" ng-if="Provider.BirthInformation.StateOfBirth">{{Provider.BirthInformation.StateOfBirth}}</i>
+                <i class="data-label" ng-if="!Provider.BirthInformation.StateOfBirth">Not Available</i>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.CountryOfBirth, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label wrap-words" ng-if="Provider.BirthInformation.CountryOfBirth">{{Provider.BirthInformation.CountryOfBirth}}</i>
+                <i class="data-label" ng-if="!Provider.BirthInformation.CountryOfBirth">Not Available</i>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(model => model.BirthCertificatePath, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <a ng-if="Provider.BirthInformation.BirthCertificatePath" href="/Document/View?path={{Provider.BirthInformation.BirthCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Birth Document"><i class="fa fa-file"></i></a>
+                    <span ng-if="!Provider.BirthInformation.BirthCertificatePath">Not Available</span>
+                </i>
+            </div>
+        </div>
+    </div>
+</div>

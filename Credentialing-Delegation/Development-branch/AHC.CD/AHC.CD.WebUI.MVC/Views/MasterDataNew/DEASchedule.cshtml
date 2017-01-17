@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@section AddToHead{
+<link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+<script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+<script src="~/Scripts/Custom/MasterDataNew/DEASchedule.js"></script>
+}
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> DEA Schedule
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataDEASchedules" ng-controller="masterDataDEASchedulesController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        DEA Schedule Management
+                        <span class="pull-right">
+                            <button ng-disabled="disableAdd" ng-click="addDEASchedules()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div ng-show="activeMessageDiv=='DEASchedule'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                        <div ng-show="activeMessageDiv=='DEAScheduleError'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                           {{messageDesc}}
+                        </div>
+                         <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Schedule Title *</th>
+                                    <th>Schedule Type Title *</th>
+                                    <th>Status</th>
+                                    <th>Last Modified Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="License in CurrentPage track by $index" ng-include="getTemplate(License)"></tr>
+                            </tbody>
+                        </table>
+
+                        <script type="text/ng-template" id="displayDEASchedules">
+                            <td>{{License.ScheduleTitle}}</td>
+                            <td>{{License.ScheduleTypeTitle}}</td>
+                            <td>{{License.Status}}</td>
+                            <td>{{License.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                            <td>
+                             @*   <button ng-disabled="disableEdit" ng-click="editDEASchedules(License)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>*@
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editDEASchedules">
+                            <td><input type="text" ng-model="tempDEASchedules.ScheduleTitle" />
+                                <span class="text-danger" ng-if="error && !tempDEASchedules.ScheduleTitle">{{error}}</span>
+                                <span class="text-danger" ng-if="existErr">{{existErr}}</span></td>
+                            <td><input type="text" ng-model="tempDEASchedules.ScheduleTypeTitle" />
+                                <span class="text-danger" ng-if="error1 && !tempDEASchedules.ScheduleTypeTitle">{{error1}}</span>
+                                </td>
+
+                            <td>{{tempDEASchedule.Status}}</td>
+                            <td>{{tempDEASchedule.LastModifiedDate | date : 'MM-dd-yyyy'}}</td>
+                            <td>
+                                <button ng-if="!tempDEASchedules.DEAScheduleID" ng-click="saveDEASchedules($index)" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-if="tempDEASchedules.DEAScheduleID" ng-click="updateDEASchedules($index)" class="btn btn-xs btn-primary">Update</button>
+                                <button ng-if="tempDEASchedules.DEAScheduleID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                <button ng-if="!tempDEASchedules.DEAScheduleID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                            </td>
+                        </script>
+                        <div class="clearfix"></div>
+                        <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                        <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+﻿<div class="form-style">
+    <fieldset>
+        <legend>
+            Professional Work Experience
+        </legend>
+        <div class="form-style">
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:red">
+                <label>*Minimum of 10 years of experience</label>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide="professionalWorkExperiences.length > 0 || newShowProfessionalWorkExperience" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No Data Available ! To Add New Click
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addProfessionalWorkExperience')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="professionalWorkExperiences.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employer Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Job Title</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="workExperience in professionalWorkExperiences">
+                        <tr>
+                            <td>{{workExperience.EmployerName}}</td>
+                            <td>{{workExperience.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td>{{workExperience.EndDate | date:'MM-dd-yyyy'}}</td>
+                            <td>{{workExperience.JobTitle}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewProfessionalWorkExperience')" ng-hide="viewProfessionalWorkExperience" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editProfessionalWorkExperience',workExperience); changeButtonText()" ng-hide="editShowStateLicense" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addProfessionalWorkExperience');changeButtonText()" ng-hide="viewProfessionalWorkExperience|| editShowProfessionalWorkExperience || newShowProfessionalWorkExperience || $index+1!=professionalWorkExperiences.length" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewProfessionalWorkExperience')">
+                            <td colspan="7" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewProfessionalWorkExperience.cshtml")
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_editProfessionalWorkExperience')">
+                            <td colspan="7" id="professionalWorkExperienceEditDiv{{$index}}" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend>
+                                        Edit Professional Work Experience
+                                    </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditProfessionalWorkExperience.cshtml")
+                                </fieldset>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-show="visibilityControl=='addedNewProfessionalWorkExperience'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>New Professional Work Experience Added Successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedProfessionalWorkExperience'" class="alert alert-warning" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="clearfix"></div>
+            <fieldset ng-show="visibilityControl==('addProfessionalWorkExperience')">
+                <legend>
+                    Add Work History
+                </legend>
+                <div id="newProfessionalWorkExperienceFormDiv">
+                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditProfessionalWorkExperience.cshtml")
+                </div>
+            </fieldset>
+        </div>
+    </fieldset>
+</div>

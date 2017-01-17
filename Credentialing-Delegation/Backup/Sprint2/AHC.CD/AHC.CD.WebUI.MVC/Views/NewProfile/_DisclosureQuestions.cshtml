@@ -1,0 +1,70 @@
+﻿
+<br />
+<div class="panel-group" id="accordiondis" role="tablist" aria-multiselectable="true">
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="disheading">
+
+            <a data-toggle="collapse" data-parent="#accordiondis" href="#dis" aria-expanded="true" aria-controls="dis">
+                Disclosure Questions
+                <span class="pull-right">
+                    <span class="glyphicon glyphicon-minus"></span>
+                </span>
+            </a>
+
+        </div>
+        <div id="dis" class="panel-body panel-collapse collapse in" role="tabpanel" aria-labelledby="disheading">
+            @*<div class="panel-body table-bordered" ng-controller="DisclosureController">
+            <div class="panel panel-default" ng-repeat="category in disclosureQuestions">
+                <div class="panel-heading">
+                    <label class="control-label small">{{category.catName}}</label>
+
+                </div>*@
+            <div class="form-style" ng-controller="DisclosureController">
+                <fieldset ng-repeat="category in disclosureQuestions">
+                    <legend>
+                        {{category.catName}}
+                    </legend>
+                    <div class="panel-body">
+
+                        <div class="form-group col-md-12" ng-repeat="question in category.questions">
+                            <label class="control-label small">{{question.questionText}}</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" onclick="disclosureQuestionFeedBack(this);" name="{{category.catName+$index}}" value="Yes"> Yes
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" onclick="disclosureQuestionFeedBack(this);" name="{{category.catName+$index}}" value="No"> No
+                                </label>
+                            </div>
+                            <br />
+                            <div style="display:none;" id="textDiv">
+                                <input type="text" class="form-control small" />
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+                @*</div>*@
+                <div class="clearfix"></div>
+                <div class="col-md-12 panel-footer">
+                    <div class="col-md-12">
+                        @*<button class="btn btn-success pull-right">Initiate Verification</button>*@
+                        <button class="btn btn-success pull-right">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function disclosureQuestionFeedBack(element, name, index) {
+
+        if ($(element).val() == "Yes") {
+            $(element).parent().parent().parent().find("#textDiv").css("display", "block");
+        } else {
+            $(element).parent().parent().parent().find("#textDiv").css("display", "none");
+        }
+    }
+</script>

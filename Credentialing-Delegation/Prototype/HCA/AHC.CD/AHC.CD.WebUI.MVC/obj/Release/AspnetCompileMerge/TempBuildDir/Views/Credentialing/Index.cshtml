@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/SharedCss/bootstrap-duallistbox.css" rel="stylesheet" />
+
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+
+
+<div id="page-wrapper">
+
+    <div class="container-fluid">
+
+        @Html.Partial("_Breadcrum")
+        <!-- /.row -->
+        <script>
+            providerId=@ViewBag.Provider.ProviderID;
+        </script>
+
+        <div class="row" id="toppanel">
+            <div class="col-lg-10" ng-app="CredentialingInitiateApp" ng-controller="CredentialingInitiateAppCtrl">
+
+                <div class="panel panel-default content-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Provider Information</h3>
+                    </div>
+                    <div id="SearchProviderPanel" class="panel-body">
+                        <div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-12">
+                                    <div class="col-lg-4"><label>Title :</label> <span>@ViewBag.Provider.PersonalInfo.Title</span></div><div class="col-lg-4"><label>NPI# :</label> <span>NA</span></div>
+                                    <div class="col-lg-12">
+                                        <hr />
+                                    </div>
+                                    <div class="col-lg-4"><label>First Name :</label> <span class="text-capitalize">@ViewBag.Provider.PersonalInfo.FirstName</span></div>
+                                    @if (!String.IsNullOrEmpty(ViewBag.Provider.PersonalInfo.MiddleName))
+                                    {
+                                        <div class="col-lg-4"><label>Middle Name :</label> <span class="text-capitalize">@ViewBag.Provider.PersonalInfo.MiddleName</span></div>
+                                    }
+                                    <div class="col-lg-4"><label>Last Name :</label> <span class="text-capitalize">@ViewBag.Provider.PersonalInfo.LastName</span></div>
+                                    <div class="col-lg-12">
+                                        <hr />
+                                    </div>
+                                    <div class="col-lg-4"><label>Provider Relation :</label> <span class="text-capitalize">@ViewBag.Provider.Relation</span></div><div class="col-lg-4"><label>Speciality :</label> <span>NA</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <span class="text-danger" ng-cloak>{{error_message}}</span>
+                </div>
+                <div class="clearfix"></div>
+                <div id="formscreen">
+                    <div class="panel panel-default content-panel">
+                        <div class="panel-heading">
+                            <span class="panel-title pull-right btn-link" onclick="PanelToggle('EnrolPlanInfo');"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                            <h3 class="panel-title">Current Plans</h3>
+                        </div>
+                        <div class="panel-body" id="EnrolPlanInfo">
+                            <div>
+                                <div class="col-lg-12">
+                                    <div class="col-lg-12" ng-show="inexistingPlans.length==0">
+                                        <span class="text-danger">No Plans assigned or credentialed yet !!! Choose from the plans below to initiate the process !!!</span>
+                                    </div>
+                                    <div class="col-lg-12" ng-show="inexistingPlans.length!=0">
+                                        <div class="form-group">
+                                            <label class="control-label col-lg-3">Select Plan(s):</label>
+                                            <div class="col-lg-9 radio">
+                                                <label ng-repeat="existingPlan in inexistingPlans" class="radio-inline"><input type="checkbox" name="Plans" /><img src="{{existingPlan.Logo}}" class="insurance-logo" /> {{existingPlan.Title}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="planerror" class="panel panel-default content-panel">
+                        <div class="panel-heading">
+                            <span class="panel-title pull-right btn-link" onclick="PanelToggle('NewPlanInfo');"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                            <h3 class="panel-title">New Plan Information</h3>
+                        </div>
+                        <div class="panel-body" id="NewPlanInfo">
+                            <div class="col-lg-12">
+                                <div class="col-lg-4">
+                                  <label class="control-label">Select Group</label>
+                                    <select class="form-control">
+                                        <option value="Group1">Group 1</option>
+                                        <option value="Group2">Group 2</option>
+                                        <option value="Group3">Group 3</option>
+                                        <option value="Group4">Group 4</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <label class="control-label">Select Locality</label>
+                                    <select class="form-control">
+                                        <option value="Locality1">Locality 1</option>
+                                        <option value="Locality2">Locality 2</option>
+                                        <option value="Locality3">Locality 3</option>
+                                        <option value="Locality4">Locality 4</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <label class="control-label">Select Speciality</label>
+                                    <select class="form-control">
+                                        <option value="Speciality1">Speciality 1</option>
+                                        <option value="Speciality2">Speciality 2</option>
+                                        <option value="Speciality3">Speciality 3</option>
+                                        <option value="Speciality4">Speciality 4</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <br>
+                            <div class="col-lg-12 text-center">
+                                <span class="text-danger" ng-focus="selectPlanError!=''" ng-cloak>{{selectPlanError}}</span>
+                            </div>
+                            <div class="col-lg-12">
+                                <select multiple="multiple" size="10" name="duallistbox_demo1"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div>Additional Info</div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Remarks :</label>
+                                <div class="col-md-9">
+                                    <textarea name="name" rows="10" class="form-control" onkeydown="return limitText(this, event, 500);" onkeyup="return limitText(this, event, 500);" onkeypress="return limitText(this, event, 500);" ng-model="credentialInit.Remarks" ng-trim="false"></textarea>
+                                    <span class="small pull-right h5">(Characters Remaining: {{500-credentialInit.Remarks.length}})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <input type="button" value="Submit" class="btn btn-success btn-sm pull-right" ng-click="next()" />
+                        </div>
+                    </div>
+                </div>
+                <!--    Conformation Page Render -->
+
+                <div>
+                    @Html.Partial("_ConformCredential")
+                </div>
+
+                <div>
+                    @Html.Partial("_InitiateCredentialFinal")
+                </div>
+
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+    </div>
+</div>
+
+<!-- /#page-wrapper -->
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Bootstrap/jquery-ui.js"></script>
+
+<script src="~/Scripts/Lib/Bootstrap/jquery.bootstrap-duallistbox.js"></script>
+<script src="~/Scripts/Shared/Data/regExpressions.js"></script>
+<script src="~/Scripts/Custom/Credentialing/CredentialingInitiate.js"></script>
+

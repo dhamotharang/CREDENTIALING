@@ -1,0 +1,46 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes
+
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Partners/Associates/Covering Colleagues
+        </legend>
+        <div id="CredentialingContact">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide=" PracticeLocationDetailHistory.PracticeColleagues.length > 0 || visibilitySecondControl==('addPartner')" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No History Available For Partners/Associates/Covering Colleagues for this Practice Location!
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-if="PracticeLocationDetailHistory.PracticeColleagues" ng-hide=" PracticeLocationDetailHistory.PracticeColleagues.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Specialty</th>
+                            <th>Provider Type</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="partner in PracticeLocationDetailHistory.PracticeColleagues">
+                        <tr>
+                            <td>{{partner.FirstName}}</td>
+                            <td>{{partner.LastName}}</td>
+                            <td>
+                                <span ng-if="partner.PracticeProviderSpecialties.length > 0  && s.StatusType == 1" class="data-label wrap-words" ng-repeat="s in partner.PracticeProviderSpecialties"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{s.Specialty.Name}}</span>
+                                <i ng-if="partner.PracticeProviderSpecialties.length == 0" class="data-label">Not Available</i>
+                            </td>
+                            <td>
+                                <span ng-if="partner.PracticeProviderTypes.length > 0 && p.StatusType == 1" class="data-label wrap-words" ng-repeat="p in partner.PracticeProviderTypes"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{p.ProviderType.Title}}</span>
+                                <i ng-if="partner.PracticeProviderTypes.length == 0" class="data-label">Not Available</i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+</div>

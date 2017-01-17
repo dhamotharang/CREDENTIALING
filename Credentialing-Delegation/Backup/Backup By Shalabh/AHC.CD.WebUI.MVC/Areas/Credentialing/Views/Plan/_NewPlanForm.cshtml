@@ -1,0 +1,80 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Plan.PlanViewModel
+
+<form id="PlanForm" class="form-style">
+    <fieldset>
+        <legend>
+            General Details
+        </legend>
+        <span ng-if="tempObject.PlanID">
+            @Html.HiddenFor(model => model.PlanID, new { @data_ng_value = "tempObject.PlanID" })
+        </span>
+        <div class="col-lg-10 zero-padding-left-right-div">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.PlanName, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PlanName, new { @class = "form-control input-sm", data_ng_model = "tempObject.PlanName", placeholder = "plan name" })
+                    @Html.ValidationMessageFor(model => model.PlanName, "", new { @class = "text-danger" })
+                    
+                </div>
+                <div class="col-md-6 form-group">
+                    @Html.LabelFor(model => model.PlanCode, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PlanCode, new { @class = "form-control input-sm", data_ng_model = "tempObject.PlanCode", placeholder = "plan code" })
+                    @Html.ValidationMessageFor(model => model.PlanCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-lg-12 zero-padding-left-right-div">
+                @if (System.Configuration.ConfigurationManager.AppSettings["SupportsDelegatedPlans"] == "true")
+                {
+                    <div class="col-lg-6 form-group">
+                        @Html.LabelFor(model => model.IsDelegated, new { @class = "control-label small" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.IsDelegated)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.IsDelegated, (int)value, new { data_ng_model = "tempObject.IsDelegated" }) @value.ToString()
+                                </label>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(model => model.IsDelegated, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.IsDelegated, new { data_ng_model = "tempObject.IsDelegated",ng_value ="2" })
+                }
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.PlanDescription, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PlanDescription, new { @class = "form-control input-sm", data_ng_model = "tempObject.PlanDescription", placeholder = "plan description" })
+                    @Html.ValidationMessageFor(model => model.PlanDescription, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2 form-group zero-padding-right-right-div">
+            <label class="control-label small">Plan Logo </label>
+            @Html.HiddenFor(model => model.PlanLogoPath, new { @Value = "{{tempObject.PlanLogoPath}}" })
+            <div class="fileinput fileinput-exists" data-provides="fileinput">
+                <input type="hidden" value="" name="">
+                <div class="fileinput-preview thumbnail file_preview_upload" style="line-height: 83px; background-size: 100% 97%;" data-trigger="fileinput"><img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.PlanLogoPath}}" /></div>
+                <div>
+                    <span class="btn btn-primary btn-xs btn-file" tooltip data-toggle="tooltip" data-placement="bottom" title="Search">
+                        <span class="fileinput-new"><i class="fa fa-search"></i></span>
+                        <span class="fileinput-exists" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-search"></i></span>
+                        @Html.TextBoxFor(model => model.PlanLogoFile, new{type = "file",data_valid_file = "valid-file", @*required = "required"*@ })
+                    </span>
+                    <a ng-click="removeFile();" ng-disabled="LogoCheck" class="btn btn-danger btn-xs fileinput-exists" tooltip data-toggle="tooltip" data-placement="left" title="Remove" data-dismiss="fileinput"><i class="fa fa-remove"></i></a>
+                    @Html.ValidationMessageFor(model => model.PlanLogoFile, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    @Html.Partial("_PlanAddressDetails")
+    @Html.Partial("_PlanContactDetails")
+    <br />
+    <div class="col-lg-12">
+        <a ng-click="CancelAdd()" class="btn btn-warning btn-sm pull-left">Cancel</a>
+        <input ng-if="!PlanIsEdit" type="button" value="Proceed" ng-click="ProceedAdd(tempObject)" class="btn btn-primary btn-sm pull-right" />
+        <input ng-if="PlanIsEdit" type="button" value="Proceed" ng-click="ProceedUpdate(tempObject)" class="btn btn-primary btn-sm pull-right" />
+    </div>
+</form>

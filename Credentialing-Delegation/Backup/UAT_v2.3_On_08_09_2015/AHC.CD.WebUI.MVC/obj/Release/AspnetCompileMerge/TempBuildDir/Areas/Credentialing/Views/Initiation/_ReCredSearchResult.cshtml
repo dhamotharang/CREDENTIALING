@@ -1,0 +1,50 @@
+﻿<div ng-show="data.length==0">No result found.</div>
+<div class="col-lg-12" ng-hide="data.length==0" style="overflow-x:auto;">
+
+    <table ng-table="tableParams2" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected ng-scope">
+
+        <thead>
+            <tr>
+                <th>Picture</th>
+                <th>NPI Number</th>
+                <th>Title</th>
+                <th>Name</th>
+                <th>Speciality</th>
+                <th>IPA</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="text" placeholder="Filter NPI Number" class="form-control input-sm" ng-model="search.NPI" ng-change="filterData()" /></td>
+                <td><input type="text" placeholder="Filter Title" class="form-control input-sm" ng-model="search.Title" ng-change="filterData()" /></td>
+                <td><input type="text" placeholder="Filter Name" class="form-control input-sm" ng-model="search.Name" ng-change="filterData()" /></td>
+                <td><input type="text" placeholder="Filter Speciality" class="form-control input-sm" ng-model="search.Speciality" ng-change="filterData()" /></td>
+                <td><input type="text" placeholder="Filter IPA" class="form-control input-sm" ng-model="search.Groups" ng-change="filterData()" /></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="p in $data  | filter:{NPINumber:search.NPI,Title:search.Title,Name:search.Name,SpecialtyName:search.Speciality,Type:search.Type,GroupName:search.Groups} track by $index" ng-show="IsValidIndex($index)">
+                <td class="col-lg-1" data-title="'Picture'">
+                    <div ng-show="p.Profile.ProfilePhotoPath == null" class="thumbnail imageStyle">
+                        <img ng-src="/Content/Images/no_image.png" class="img-rounded" />
+                    </div>
+                    <div ng-hide="p.Profile.ProfilePhotoPath == null" class="thumbnail imageStyle">
+                        <img ng-src="/Document/View?path={{p.Profile.ProfilePhotoPath}}" class="img-rounded">
+                    </div>
+                </td>
+                <td class="col-lg-2 wrap-words">{{p.NPINumber}}</td>
+                <td class="col-lg-2 wrap-words">{{p.Title}}</td>
+                <td class="col-lg-2 wrap-words">{{p.Name}}</td>
+                <td class="col-lg-2 wrap-words">{{p.SpecialtyName}}</td>
+                <td class="col-lg-2 wrap-words">{{p.GroupName}}</td>
+                <td class="col-lg-1">
+                    <a href="~/Profile/MasterProfile/ProviderProfile/{{p.ProfileID}}" data-toggle="tooltip" data-placement="left" title="View Profile" class="btn btn-xs btn-info" target="_blank"><i class="fa fa-chevron-circle-right"></i></a>
+                    <a class="btn btn-primary btn-xs" ng-click="SelectProviderForReCredentialingInitiation(p)" data-toggle="tooltip" data-placement="right" title="Initiate"><i class="fa fa-hand-o-up"></i></a>
+                    @* <div ng-show="initiateSuccess" class="col-lg-6 text-right"><a class="btn btn-success btn-sm" href="~/credentialing/cnd/index"> <i class="fa fa-home"></i></a></div>*@
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

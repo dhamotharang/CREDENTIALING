@@ -1,0 +1,89 @@
+﻿<script src="~/Scripts/Custom/Profile/ProfessionalReference.js"></script>
+
+<br />
+<div class="panel-group" ng-controller="ProfessionalReference">
+  
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Professional Reference
+            </legend>
+            @*<div ng-hide="ProfessionalReferences.length > 3" class="col-md-12 text-left" style="font-style:italic;font-size:x-small;">
+                <label>*Minimum of 3 references to be entered</label>
+            </div>*@
+            <div ng-hide="ProfessionalReferences.length > 3" class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                <label>*You are required to provide at least 3 references. Your application will not be complete without this information</label>
+            </div>
+
+            <div ng-hide="ProfessionalReferences.length > 3" class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                <label>*Please check with credentialing entity for any special requirements</label>
+            </div>
+            <div id="profref" class="panel-body">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table class="table table-bordered table-condensed table-striped customtbodyStyle">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Middle Name</th>
+                                    <th>Last Name</th>
+                                    <th>Title</th>
+                                    <th>Telephone</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="pr in ProfessionalReferences">
+                                <tr>
+                                    <td>{{pr.FirstName}}</td>
+                                    <td>{{pr.MiddleName}}</td>
+                                    <td>{{pr.LastName}}</td>
+                                    <td>{{pr.ProviderType}}</td>
+                                    <td>{{pr.Telephone}}</td>
+                                    <td>
+                                    
+                                        <button class="btn btn-xs btn-default" ng-click="showProfessionalReference($index,pr)" ng-hide="showViewProfessionalReference"  data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        <button class="btn btn-xs btn-primary" ng-click="editProfessionalReference($index,pr)" ng-hide="editShowProfessionalReference" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-xs btn-success" ng-click="addProfessionalReference()" ng-hide="showViewProfessionalReference || editShowProfessionalReference || newShowProfessionalReference || $index+1!=ProfessionalReferences.length" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                    
+                                    </td>
+                                </tr>
+
+                                <tr ng-show="showViewProfessionalReference && pr==professionalReference">
+                                    <td colspan="6" id="professionalReferenceEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_ViewProfessionalReference.cshtml")
+                                    </td>
+
+                                </tr>
+
+                                <tr ng-show="editShowProfessionalReference && pr==professionalReference">
+                                    <td colspan="6" id="professionalReferenceEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_AddEditProfessionalReference.cshtml")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                    <div class="clearfix"></div>
+                    <fieldset ng-show="newShowProfessionalReference">
+                        <legend>
+                            Add Professional Reference
+                        </legend>
+                        <div id="newProfessionalReferenceFormDiv">
+                            @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_AddEditProfessionalReference.cshtml")
+                        </div>
+                    </fieldset>
+
+                    @*<div ng-hide="editShowProfessionalReference || newShowProfessionalReference" class="col-md-12 text-right">
+                        <button class="btn btn-xs btn-primary" ng-click="addProfessionalReference()"><i class="fa fa-plus"></i> Add Professional Reference</button>
+                    </div>*@
+                    @*</div>*@
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+    
+

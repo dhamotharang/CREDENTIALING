@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "PlanContract";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Custom/Plan/planContract.js"></script>
+
+<div id="page-wrapper" ng-app="planContractApp" ng-controller="PlanContractController" ng-cloak>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i><a href="/Dashboard/Index">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-search"></i> Plan Contract
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="panel panel-default content-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Plan Contract</h3>
+                    </div>
+                    <div id="SearchProviderPanel" class="panel-body">
+                        <form id="providerSearch" name="providerData">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label class="control-label small">Select Plan</label>
+                                    <select data-ng-model="plan" ng-change="selectPlan(plan)" class="form-control input-sm">
+                                        <option ng-repeat="plan in Plans" value="{{plan.PlanID}}">{{plan.PlanName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="clearfix"></div>
+                            <div class="row" ng-show="showDiv">
+                                <div class="col-lg-12 form-style">
+                                    <fieldset>
+                                        <legend>Assign Business Entities</legend>
+
+                                        <table class="table-bordered table table-condensed">
+                                            <tr>
+                                                <th>{{selectedPlan}}</th>
+                                                <th ng-repeat="be in BE_LOB_Maps[0].BEs">
+                                                    {{be.BE.Name}}
+                                                </th>
+                                            </tr>
+                                            <tr ng-repeat="pl in BE_LOB_Maps">
+                                                <td>
+                                                    <label>
+                                                        {{pl.PlanLOB.LOB.LOBName}}
+                                                    </label>
+                                                </td>
+                                                <td ng-repeat="ber in pl.BEs"><input type="checkbox" ng-model="ber.IsChecked" disabled /></td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

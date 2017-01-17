@@ -1,0 +1,115 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.MedicaidInfo>
+
+@{
+    var EditMedicaidInfo = 0;
+    bool IsEdit = true;
+}
+
+<!--label and value coming side by side-->
+@***************MEDICAID INFO Edit*********************************@
+
+
+<fieldset class="fsStyle" id="AddEditMedicaidInfo">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            @foreach (var item in Model)
+            {
+                if (item == null)
+                {
+                    <span>Add Medicaid Information</span>
+                    IsEdit = false;
+                    break;
+                }
+            }
+            @if (IsEdit)
+            {
+                <span>EDIT Medicaid Information</span>
+            }
+        </span>
+    </legend>
+    @foreach (var item in Model)
+    {
+        using (Ajax.BeginForm("AddMedicaidInfo", "Licenses", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "Medicaid" }))
+        {
+            EditMedicaidInfo = EditMedicaidInfo + 1;
+
+            <div class="x_content zero-padding-left mutiple-data">
+                @if (item != null)
+                {
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">Edit Medicaid Information-@EditMedicaidInfo</span>
+                    </div>
+                }
+                else
+                { }
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.MedicaidID)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => item.MedicaidID, new { @class = "form-control input-xs", placeholder = "MEDICAID ID" })
+                        @Html.ValidationMessageFor(m => item.MedicaidID)
+                    </span>
+                </div>
+
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.IssueDate)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.PratianUiDatePickerFor(m => item.IssueDate, new { @class = "form-control input-xs", placeholder = "ISSUE DATE" })
+                        @*@Html.TextBoxFor(m => item.IssueDate, new { @class = "form-control input-xs", placeholder = "ISSUE DATE" })*@
+                    </span>
+                </div>
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.IssueState)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.TextBoxFor(m => item.IssueState, new { @class = "form-control input-xs", placeholder = "Issue State" })
+                    </span>
+                </div>
+
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.ExpirationDate)</label>
+                    </span><span class="col-lg-1"></span>
+                    <span class="col-lg-7 nopadding">
+                        @Html.PratianUiDatePickerFor(m => item.ExpirationDate, new { @class = "form-control input-xs", placeholder = "ISSUE DATE" })
+                        @*@Html.TextBoxFor(m => item.ExpirationDate, new { @class = "form-control input-xs", placeholder = "EXPIRY DATE" })*@
+                    </span>
+                </div>
+
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                    <span class="theme_label col-lg-4 nopadding">
+                        <label class="">@Html.DisplayNameFor(e => e.SupportingDocumentPath) </label>
+                    </span>
+                    <span class="col-lg-1"></span>
+                    @*<span class="col-lg-7 nopadding">
+                            <span class="theme_label_data">@Html.TextBoxFor(e => item.SupportingDocumentPath, new { @class = "form-control input-xs", @type = "file" })</span>
+                        </span>*@
+                    <span class="col-lg-7 input-group  nopadding">
+                        @{
+                string InputId = "UploadMedicaid" + EditMedicaidInfo;
+                string InputUploadId = "InputMedicaid" + EditMedicaidInfo;
+                        }
+                        <input id=@InputId type="text" class="form-control input-xs" readonly placeholder="Document">
+                        <span class="input-group-addon File_uploadStyle" onclick="$(@InputUploadId).click();"><i class="fa fa-upload"></i></span>
+                        <input id=@InputUploadId style="display:none" onchange="$(@InputId).val(this.value);" type="file">
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        }
+
+    }
+    <div class="row col-lg-12 zero-padding-left-right margin-top-5px">
+        @*<input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save">*@
+        <button class="btn btn-success yahanClickKar btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetMedicaidInformationPartial?model=@Model&ActionType=View" data-tab-container="Medicaid" value="">Save</button>
+        <button class="btn btn-danger yahanClickKar btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/Licenses/GetMedicaidInformationPartial?model=@Model&ActionType=View" data-tab-container="Medicaid" value="">Cancel</button>
+    </div>
+</fieldset>

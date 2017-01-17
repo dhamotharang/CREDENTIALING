@@ -1,0 +1,554 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.ProfilePictureViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<style>
+    .LanguageSelectAutoList {
+        display: inherit;
+        left: 0%;
+        width: 95%;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow-y: scroll;
+        max-height: 222px;
+    }
+
+    .LanguageSelectAutoList {
+        max-width: 100%;
+    }
+
+        .LanguageSelectAutoList.popover {
+            border-radius: 0px;
+        }
+
+            .LanguageSelectAutoList.popover.bottom.providerTitle {
+                margin-top: 56px;
+            }
+
+            .LanguageSelectAutoList.popover.bottom {
+                margin-top: 77px;
+            }
+
+        .LanguageSelectAutoList > table > tbody > tr:hover {
+            background-color: rgb(36, 71, 196);
+            color: white;
+        }
+
+    .ProviderTypeSelectAutoList {
+        display: inherit;
+        left: 0%;
+        width: 95%;
+        margin-left: 15px;
+        margin-right: 15px;
+        overflow-y: scroll;
+        max-height: 222px;
+    }
+
+    .ProviderTypeSelectAutoList {
+        max-width: 100%;
+    }
+
+        .ProviderTypeSelectAutoList.popover {
+            border-radius: 0px;
+        }
+
+            .ProviderTypeSelectAutoList.popover.bottom {
+                margin-top: 56px;
+            }
+
+        .ProviderTypeSelectAutoList > table > tbody > tr:hover {
+            background-color: rgb(36, 71, 196);
+            color: white;
+        }
+
+    .profileIamge span {
+        display: none;
+    }
+
+    .profileIamge:hover span {
+        display: block;
+        z-index: 1;
+        position: absolute;
+        right: 12px;
+        top: 30px;
+        cursor: pointer;
+        color: white;
+        background-image: linear-gradient(to bottom, #337ab7 0, #265a88 100%);
+        padding: 0px 1px 0px 2px;
+        border-radius: 3px;
+    }
+</style>
+<br />
+<div class="form-style" ng-controller="profileDemographicsController">
+    <fieldset>
+        <legend>
+            Personal Details
+        </legend>
+
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <div class="legend2 pull-right">
+                <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="Do not use nicknames or initials, unless they are part of your legal names"><i class="fa fa-question"></i></button>
+                <button ng-if="ViewPersonalDetails" class="btn btn-xs btn-primary" ng-click="PersonalDetailsToggle()"><i class="fa fa-edit"></i></button>
+            </div>
+            <div ng-show="alertMessage=='alertPersonalDetailsSuccess'" class="alert alert-{{message.status}}" role="alert">
+                <button ng-click="closeAlert('alertPersonalDetailsSuccess')" class="close"><span>&times;</span></button>
+                {{message.desc}}
+            </div>
+        }
+        <div ng-if="visibilityControl!='_PersonalDetailProfilePic' && ViewPersonalDetails" class="col-lg-1 zero-padding-left-right-div pull-right text-center profileIamge">
+            <label class="control-label small">Profile Picture</label><br />
+            <img ng-if="Provider.ProfilePhotoPath" ng-src="{{Provider.ProfilePhotoPath}}" alt="Profile Picture" style="width: 83px; height: 83px;" class="img-thumbnail" />
+            <img ng-if="!Provider.ProfilePhotoPath" src="~/Content/Images/no_image.png" alt="Profile Picture" style="width: 83px; height: 83px;" class="img-thumbnail" />
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <span ng-click="operateViewAndAddControl('_PersonalDetailProfilePic', 'ProfilePicture')" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></span>
+            }
+        </div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <div ng-if="visibilityControl=='_PersonalDetailProfilePic'" class="col-lg-1 zero-padding-left-right-div pull-right text-center">
+                <label class="control-label small">Profile Picture</label><br />
+                <div class="fileinput fileinput-exists" data-provides="fileinput">
+                    <input type="hidden" value="" name="">
+                    <div class="fileinput-preview thumbnail file_preview_upload" style="line-height: 83px; background-image: url('/Content/Images/a0.jpg'); background-size: 100% 97%;" data-trigger="fileinput"><img ng-src="{{Provider.ProfilePhotoPath}}"></div>
+                    <div>
+                        <form id="ProfilePic" name="form" ng-submit="ProfileUpload('ProfilePic')" enctype="multipart/form-data">
+                            <a class="btn btn-warning btn-xs" ng-click="operateCancelControl()" data-toggle="tooltip" data-placement="top" title="Cancel"><i class="fa fa-remove"></i></a>
+                            <span class="btn btn-primary btn-xs btn-file">
+                                <span class="fileinput-new"><i class="fa fa-search"></i></span>
+                                <span class="fileinput-exists" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-search"></i></span>
+                                @Html.TextBoxFor(model => model.ProfilePictureFile, new { type = "file", data_ng_model = "document", data_valid_file = "valid-file", required = "required" })
+                            </span>
+                            <button ng-if="form.$valid" class="btn btn-success btn-xs fileinput-exists" type="submit" data-toggle="tooltip" data-placement="top" title="Upload"><i class="fa fa-upload"></i></button>
+                            <button ng-if="Provider.ProfilePhotoPath" ng-click="ProfilePictureRemove(Provider.ProfilePhotoPath)" class="btn btn-danger btn-xs fileinput-exists" data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-trash"></i></button>
+                            @Html.ValidationMessageFor(model => model.ProfilePictureFile, "", new { @class = "text-danger" })
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <div ng-if="!ViewPersonalDetails" class="zero-padding-left-right-div" ng-class="{true:'col-lg-12', false:'col-lg-11'}[!ViewPersonalDetails]">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalDetails.cshtml")
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+        {
+            <div ng-if="ViewPersonalDetails" class="col-lg-11 zero-padding-left-right-div">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalDetails.cshtml")
+            </div>
+        }
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Other Legal Names
+        </legend>
+
+        <div class="legend2 pull-right">
+            <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="Do not use nicknames or initials, unless they are part of your legal names"><i class="fa fa-question"></i></button>
+        </div>
+
+        <span ng-if="Provider.OtherLegalNames.length == 0 && visibilityControl!='_NewOtherLegalNameYesNoOption' && visibilityControl!='_NewOtherLegalName' || !Provider.OtherLegalNames && visibilityControl!='_NewOtherLegalNameYesNoOption' && visibilityControl!='_NewOtherLegalName'">
+            Have You Ever Used Another Name ? * &nbsp;&nbsp;&nbsp; NO
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <button class="btn btn-xs btn-primary pull-right" ng-click="operateViewAndAddControl('_NewOtherLegalNameYesNoOption')"><i class="fa fa-edit"></i> Edit</button>
+            }
+        </span>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <span ng-if="visibilityControl=='_NewOtherLegalNameYesNoOption'">
+                Have You Ever Used Another Name ? * &nbsp;&nbsp;&nbsp;
+                <label class="radio-inline">
+                    <input type="radio" name="newLegalNameFormYesNo" ng-checked="Provider.OtherLegalNames.length > 0" ng-click="operateViewAndAddControl('_NewOtherLegalName')"> Yes
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="newLegalNameFormYesNo" ng-checked="Provider.OtherLegalNames.length == 0" ng-click="operateCancelControl()"> No
+                </label>
+            </span>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+        {
+            <div ng-show="alertMessage=='alertOtherLegalNameSuccess'" class="alert alert-{{message.status}}" role="alert">
+                <button ng-click="closeAlert('alertOtherLegalNameSuccess')" class="close"><span>&times;</span></button>
+                {{message.desc}}
+            </div>
+
+            <div ng-if="Provider.OtherLegalNames.length > 0" class="col-lg-12 zero-padding-left-right-div">
+                <table class="table table-bordered table-condensed customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Suffix</th>
+                            <th>Started Using</th>
+                            <th>Stopped Using</th>
+                            <th>Supporting Document</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="oln in Provider.OtherLegalNames track by $index">
+                        <tr>
+                            <td>{{oln.OtherFirstName}}</td>
+                            <td>{{oln.OtherMiddleName}}</td>
+                            <td>{{oln.OtherLastName}}</td>
+                            <td>{{oln.Suffix}}</td>
+                            <td>
+                                <span ng-if="oln.StartDate">
+                                    {{oln.StartDate | date: "MM/dd/yyyy"}}
+                                </span>
+                                <span ng-if="!oln.StartDate">
+                                    Not Available
+                                </span>
+                            </td>
+                            <td>
+                                <span ng-if="oln.EndDate">
+                                    {{oln.EndDate | date: "MM/dd/yyyy"}}
+                                </span>
+                                <span ng-if="!oln.EndDate">
+                                    Not Available
+                                </span>
+                            </td>
+                            <td>
+                                <a ng-if="oln.DocumentPath" href="/Document/View?path={{oln.DocumentPath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Other Legal Name Certificate.pdf"><i class="fa fa-file"></i></a>
+                                <span ng-if="!oln.DocumentPath">Not Available</span>
+                            </td>
+                            <td>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewOtherLegalName')" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditOtherLegalName',oln)" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <button ng-if="$index == Provider.OtherLegalNames.length-1" ng-hide="visibilityControl=='_NewOtherLegalName'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewOtherLegalName')" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                }
+                            </td>
+                        </tr>
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                        {
+                            <tr ng-if="visibilityControl==$index+'_EditOtherLegalName'">
+                                <td colspan="8" id="otherLegalNameEditDiv{{$index}}" class="editTableDataStyle">
+                                    <fieldset>
+                                        <legend>
+                                            Edit Other Legal Name
+                                        </legend>
+                                        @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        }
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                        {
+                            <tr ng-if="visibilityControl==$index+'_ViewOtherLegalName'">
+                                <td colspan="8" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewOtherLegalName.cshtml")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        <div class="clearfix"></div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+        {
+            <fieldset id="newLegalNameForm" ng-if="visibilityControl=='_NewOtherLegalName'">
+                <legend>
+                    Add Other Legal Name
+                </legend>
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+            </fieldset>
+        }
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Contact Information
+        </legend>
+        <fieldset>
+            <legend>
+                Home Address
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <span ng-if="HomeAddresses.length == 0 && visibilityControl!='_NewHomeAddress' || !HomeAddresses && visibilityControl!='_NewHomeAddress'">
+                    No Data Available ! Please Provide Home Address...
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                    {
+                        <button class="btn btn-xs btn-primary pull-right" ng-click="operateViewAndAddControl('_NewHomeAddress')"><i class="fa fa-plus"></i> Home Address</button>
+                    }
+                </span>
+                <br />
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                {
+                    <div ng-show="alertMessage=='alertHomeAddressSuccess'" class="alert alert-{{message.status}}" role="alert">
+                        <button ng-click="closeAlert('alertHomeAddressSuccess')" class="close"><span>&times;</span></button>
+                        {{message.desc}}
+                    </div>
+                    <table ng-if="HomeAddresses.length > 0" class="table table-bordered table-condensed customtbodyStyle">
+                        <thead>
+                            <tr>
+                                <th>Street</th>
+                                <th>Apartment/Unit Number</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zip Code</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="ha in HomeAddresses track by $index">
+                            <tr ng-class="{isprimary:ha.AddressPreferenceType==1}">
+                                <td>
+                                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                        <span>############</span>
+                                    }
+                                    else
+                                    {
+                                        <span>{{ha.Street}}</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                        <span>############</span>
+                                    }
+                                    else
+                                    {
+                                        <span>{{ha.UnitNumber}}</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                        <span>############</span>
+                                    }
+                                    else
+                                    {
+                                        <span>{{ha.City}}</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                        <span>############</span>
+                                    }
+                                    else
+                                    {
+                                        <span>{{ha.State}}</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                    {
+                                        <span>############</span>
+                                    }
+                                    else
+                                    {
+                                        <span>{{ha.ZipCode}}</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                    {
+                                        <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_ViewHomeAddress')" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                    }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                                    {
+                                        <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditHomeAddress',ha)" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                    }
+                                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                    {
+                                        <button ng-if="$index == HomeAddresses.length-1" ng-hide="visibilityControl=='_NewHomeAddress'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewHomeAddress')" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                            {
+                                <tr ng-if="visibilityControl==$index+'_EditHomeAddress'">
+                                    <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                        <fieldset>
+                                            <legend>
+                                                Edit Home Address
+                                            </legend>
+                                            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            }
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                            {
+                                <tr ng-if="visibilityControl==$index+'_ViewHomeAddress'">
+                                    <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewHomeAddress.cshtml")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+            <div class="clearfix"></div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+            {
+                <fieldset id="newHomeAddressForm" ng-if="visibilityControl=='_NewHomeAddress'">
+                    <legend>
+                        Add Home Address
+                    </legend>
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+                </fieldset>
+            }
+        </fieldset>
+
+        <fieldset>
+            <legend>
+                Contact Details
+            </legend>
+
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div class="legend2 pull-right">
+                    <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="We will use this method for application follow-up."><i class="fa fa-question"></i></button>
+                    <button ng-if="ViewContactDetails" ng-hide="!Provider.ContactDetails.ContactDetailID" class="btn btn-xs btn-primary" ng-click="ContactDetailsToggle()"><i class="fa fa-edit"></i></button>
+                </div>
+                <div ng-show="alertMessage=='alertContactDetailsSuccess'" class="alert alert-{{message.status}}" role="alert">
+                    <button ng-click="closeAlert('alertContactDetailsSuccess')" class="close"><span>&times;</span></button>
+                    {{message.desc}}
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div ng-if="!ViewContactDetails">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditContactDetails.cshtml")
+                </div>
+            }
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                <div ng-if="ViewContactDetails">
+                    @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewContactDetails.cshtml")
+                </div>
+            }
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Personal Identification
+        </legend>
+
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+        {
+            <div class="legend2 pull-right">
+                <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="Only enter a Foreign Identification Number If you don't have SSN. Don't enter National Identification Number (NPI) here"><i class="fa fa-question"></i></button>
+                <button ng-if="visibilityControl!='_EditPersonalIdentification'" ng-hide="!Provider.PersonalIdentification" class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditPersonalIdentification',Provider.PersonalIdentification)"><i class="fa fa-edit"></i></button>
+            </div>
+            <div ng-show="alertMessage=='alertPersonalIdentificationSuccess'" class="alert alert-{{message.status}}" role="alert">
+                <button ng-click="closeAlert('alertPersonalIdentificationSuccess')" class="close"><span>&times;</span></button>
+                {{message.desc}}
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+        {
+            <div ng-if="visibilityControl=='_EditPersonalIdentification'">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalIdentification.cshtml")
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+        {
+            <div ng-if="visibilityControl!='_EditPersonalIdentification'">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalIdentification.cshtml")
+            </div>
+        }
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Birth Information
+        </legend>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <div ng-if="visibilityControl!='_EditBirthInformation'" ng-hide="!Provider.BirthInformation" class="legend2 pull-right">
+                <button class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditBirthInformation',Provider.BirthInformation)"><i class="fa fa-edit"></i></button>
+            </div>
+            <div ng-show="alertMessage=='alertBirthInformationSuccess'" class="alert alert-{{message.status}}" role="alert">
+                <button ng-click="closeAlert('alertBirthInformationSuccess')" class="close"><span>&times;</span></button>
+                {{message.desc}}
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <div ng-if="visibilityControl=='_EditBirthInformation'">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditBirthInformation.cshtml")
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+        {
+            <div ng-if="visibilityControl!='_EditBirthInformation'">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewBirthInformation.cshtml")
+            </div>
+        }
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Visa Details
+        </legend>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+        {
+            <div class="legend2 pull-right">
+                <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="Only enter a Foreign Identification Number If you don't have SSN"><i class="fa fa-question"></i></button>
+                <button ng-if="visibilityControl!='_EditVisaDetails'" ng-hide="!Provider.VisaDetails" ng-click="operateEditControl('_EditVisaDetails',Provider.VisaDetails)" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+            </div>
+            <div ng-show="alertMessage=='alertVisaDetailsSuccess'" class="alert alert-{{message.status}}" role="alert">
+                <button ng-click="closeAlert('alertVisaDetailsSuccess')" class="close"><span>&times;</span></button>
+                {{message.desc}}
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+        {
+            <div ng-if="visibilityControl=='_EditVisaDetails'">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditCitizenship.cshtml")
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+        {
+            <div ng-if="visibilityControl!='_EditVisaDetails'">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewCitizenship.cshtml")
+            </div>
+        }
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Languages Known
+        </legend>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <div ng-if="ViewLanguageKnown" ng-hide="!Provider.LanguageInfo" class="legend2 pull-right">
+                <button class="btn btn-xs btn-primary" ng-click="LanguageKnownToggle()"><i class="fa fa-edit"></i></button>
+            </div>
+            <div ng-show="alertMessage=='alertLanguageKnownSuccess'" class="alert alert-{{message.status}}" role="alert">
+                <button ng-click="closeAlert('alertLanguageKnownSuccess')" class="close"><span>&times;</span></button>
+                {{message.desc}}
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+        {
+            <div ng-if="!ViewLanguageKnown">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditLanguageInfo.cshtml")
+            </div>
+        }
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+        {
+            <div ng-if="ViewLanguageKnown">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewLanguageInfo.cshtml")
+            </div>
+        }
+    </fieldset>
+</div>

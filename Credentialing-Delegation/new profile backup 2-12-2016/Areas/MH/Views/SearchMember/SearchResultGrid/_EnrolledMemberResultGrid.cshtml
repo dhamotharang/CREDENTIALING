@@ -1,0 +1,142 @@
+﻿@using System.Web.Script.Serialization
+@using PortalTemplate.Helper
+@model List<PortalTemplate.Areas.MH.Models.ViewModels.SearchMember.SearchMemberResultViewModel>
+
+<p-script filepath="~/Areas/MH/Scripts/Member/SearchMember/NonMinified/MemberSearchResultGrid.js"></p-script>
+
+
+<div>
+    <span class="theme_label_data pull-left" id="initailCountSection">Displaying 50 Members</span>
+    <span id="resultCountSection" class="theme_label_data" style="display:none"> Search Member Result - <span id="resultCount">0</span> Result(s)</span>
+    <span id="exportOptionsForAdvanceUMSearch" class="pull-right">
+        @Html.ExportOptions("excel", "print", "filter")
+    </span>
+    <button class="btn btn-success btn-xs tab-navigation pull-right"
+            data-tab-action="New Member"
+            data-tab-title="Add New Member"
+            data-tab-floatmenu="false"
+            data-tab-issubtab="false"
+            data-tab-defaultparenttab="Member"
+            data-tab-autoflush="true"
+            data-tab-usertype=""
+            data-tab-userid=""
+            data-tab-path="~/Areas/MH/Views/NewMember/Add/_AddNewMember.cshtml"
+            data-tab-container="fullBodyContainer"
+            data-tab-parentcontainer="partialBodyContainer"
+            data-tab-parenttabtitle=""
+            data-tab-hassubtabs="false"
+            data-tab-parenttabpath="~/Areas/SharedView/Views/MemberHouse/_MemberProfileHeader.cshtml"
+            data-tab-parenttabrenderingarea="headerArea"
+            data-tab-float-menu-path="~/Areas/MH/Views/Shared/_MHFloatMenu.cshtml"
+            style="margin-top: 5px;margin-bottom: 0px;">
+        Add New Member
+    </button>
+</div>
+<table class="theme1_table" id="resultTableHeader">
+    <thead class="theme_thead">
+        <tr>
+            <th class="withfilter sm-mbrid">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required />
+                    <label>Subscriber ID</label>
+                    <span></span>
+                    <i class="fa fa-sort"></i>
+                </span>
+            </th>
+            <th class="withfilter sm-lastname">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required />
+                    <label>LAST NAME</label>
+                    <span></span>
+                    <i class="fa fa-sort"></i>
+                </span>
+            </th>
+            <th class="withfilter sm-firstname">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required />
+                    <label>FIRST NAME</label>
+                    <span></span>
+                    <i class="fa fa-sort"></i>
+                </span>
+            </th>
+            <th class="withfilter sm-middleInitial">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required />
+                    <label>Middile Initial</label>
+                    <span></span>
+                    <i class="fa fa-sort"></i>
+                </span>
+            </th>
+            <th class="withfilter sm-dob">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required />
+                    <label>DOB</label>
+                    <span></span>
+                    <i class="fa fa-sort"></i>
+                </span>
+            </th>
+            <th class="withfilter sm-gender">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required />
+                    <label>Gender</label>
+                    <span></span>
+                    <i class="fa fa-sort"></i>
+                </span>
+            </th>
+            <th class="withfilter sm-pcp">
+                <span class="styled-input">
+                    <input class="filer-search" type="text" required />
+                    <label>PCP</label>
+                    <span></span>
+                    <i class="fa fa-sort"></i>
+                </span>
+            </th>
+            <th class="withfilter sm-effdate">
+                <span class="">
+                    <label>Action</label>
+                    <span></span>
+                </span>
+            </th>
+        </tr>
+    </thead>
+</table>
+<div id="tableBodyWrapper" style="height:300px">
+    <table class="table table-striped">
+        <tbody id="searchResultGrid">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="sm-mbrid">@item.SubscriberID</td>
+                    <td class="sm-lastname">@item.LastName</td>
+                    <td class="sm-firstname">@item.FirstName</td>
+                    <td class="sm-middleInitial">@item.MiddleInitail</td>
+                    <td class="sm-dob">@item.DOB</td>
+                    <td class="sm-gender">@item.Gender</td>
+                    <td class="sm-pcp">@item.PCP</td>
+                    <td class="sm-actions">
+                        <button class="btn btn-primary btn-xs tab-navigation"
+                                data-tab-action="Member Profile"
+                                data-tab-title="Profile"
+                                data-tab-floatmenu="true"
+                                data-tab-issubtab="true"
+                                data-tab-defaultparenttab="Member"
+                                data-tab-autoflush="true"
+                                @*data-tab-usertype="Member"*@
+                                @*data-tab-userid = @item.SubscriberID*@
+                                data-tab-path="~/Areas/MH/Views/MemberProfile/_MemberDetails.cshtml"
+                                data-tab-container="innerTabContainer"
+                                data-tab-parentcontainer="partialBodyContainer"
+                                data-tab-parenttabtitle=@item.FirstName @item.LastName
+                                data-tab-hassubtabs="false"
+                                data-tab-parenttabpath="/MH/MemberProfile/GetMemberHeader?subscriberId=@item.SubscriberID&type=View&status=Enrolled"
+                                data-tab-parenttabrenderingarea="headerArea"
+                                data-tab-float-menu-path="~/Areas/MH/Views/Shared/_MHFloatMenu.cshtml">
+                            View
+                        </button>
+                        @*<button class="btn btn-primary btn-xs tab-navigation" data-tab-action="Edit Profile" data-tab-title=@item.FirstName @item.LastName data-tab-floatmenu="true" data-tab-issubtab="false" data-tab-defaultparenttab="Member" data-tab-autoflush="true" data-tab-path="~/Areas/MH/Views/NewMember/Edit/_EditNewMember.cshtml" data-tab-container="fullBodyContainer" data-tab-parentcontainer="fullBodyContainer" data-tab-parenttabtitle=@item.FirstName @item.LastName data-tab-hassubtabs="false" data-tab-parenttabpath="~/Areas/SharedView/Views/MemberHouse/_MemberProfileHeader.cshtml" data-tab-parenttabrenderingarea="headerArea" data-tab-float-menu-path="~/Areas/MH/Views/Shared/_MHFloatMenu.cshtml">Edit</button>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Master Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead{
+    @Styles.Render("~/Content/MasterProfileCSS")
+    @Scripts.Render("~/bundles/MasterProfileJS")
+    <script>
+        $(function () {
+            $("#sidemenu").addClass("menu-in");
+            $("#page-wrapper").addClass("menuup");
+            $("#menu-toggle").toggleClass("btn-menuup");
+        });
+
+        $(window).bind('beforeunload', function() {
+            return '';
+        });
+
+        profileId = @ViewBag.ProfileId;
+
+        var profileUpdates=@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ProfileUpdates));
+
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+            $('#tabhome').click(function(){
+                $('#tabDocumentationChecklist').css({'pointer-events':'auto'});
+                $('#tabContractGrid').css({ 'pointer-events': 'auto' });
+            });
+        });
+
+        var tooltip="Under Process";
+
+    </script>
+}
+
+<script src="~/Areas/Profile/Scripts/Util/clockface.js"></script>
+<script src="~/Scripts/Lib/RequireJS/angular-ui-router.min.js"></script>
+<script src="~/Scripts/Lib/RequireJS/angular-ui-router-default.js"></script>
+<script src="~/Scripts/Lib/Angular/timepickerpop.js"></script>
+<script src="~/Areas/Profile/Scripts/Util/MasterProfileAppManager.js"></script>
+
+<!--Profile Js'-->
+<script data-main="/Areas/Profile/Scripts/Util/MasterProfileConfig.js" src="~/Scripts/Lib/RequireJS/require.min.js"></script>
+
+<div id="page-wrapper" class="@(ViewContext.RouteData.Values["controller"].Equals("MasterProfile") ? "menuup" : "")">
+    <div class="container-fluid wrap-words">
+        <div ui-view></div>
+    </div>
+    <!-- /.container-fluid -->
+</div>

@@ -1,0 +1,608 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/Provider/select2.css" rel="stylesheet" />
+    <link href="~/Content/Provider/xeditable.css" rel="stylesheet" />
+}
+<style>
+    .select2-container {
+        display: block;
+    }
+</style>
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="index.html">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Add Provider
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="providerApp" ng-controller="providerController">
+            <div class="col-lg-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Add Provider</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul id="myTab" class="nav nav-tabs" role="tablist">
+                            <li class="" ng-class="{active: tabStatus == 0}"><a href="#tab0" ng-click="nextForm(0)" role="tab" data-toggle="tab">Basic Information</a></li>
+                            <li class="" ng-class="{active: tabStatus == 1}"><a href="#tab1" ng-click="nextForm(1)" role="tab" data-toggle="tab">Primary Information</a></li>
+                            <li class="" ng-class="{active: tabStatus == 2}"><a href="#tab2" ng-click="nextForm(2)" role="tab" data-toggle="tab">Preview</a></li>
+                            <li class="" ng-class="{active: tabStatus == 3}"><a href="#tab3" ng-click="nextForm(3)" role="tab" data-toggle="tab">Confirmation Email</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <!-- Basic Information Tab -->
+                            <div class="tab-pane fade" ng-class="{'active in': tabStatus == 0}" id="tab0">
+                                <br />
+                                <!-- Basic Information Panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Basic Information</div>
+                                    </div>
+                                    <div class="panel-body form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Provider Category * :</label>
+                                            <div class="col-md-9 radio">
+                                                <label ng-repeat="providerCategory in providerCategories" class="radio-inline">
+                                                    <input type="radio" name="radio_provider_category" ng-model="addProviderData.categoryId" value="{{providerCategory.categoryId}}" ng-click="getprovidertypes_by_category_Id(providerCategory.categoryId)" ng-disabled="providerCategory.categoryId!=1"> {{providerCategory.categoryName}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Provider Type * :</label>
+                                            <div class="col-md-9">
+                                                <select id="selectProviderType">
+                                                    <option></option>
+                                                    <option ng-repeat="providertype in newProviderTypes" value="{{providertype.typeId}}">{{providertype.typeName}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Provider Relationship*</label>
+                                            <div class="col-md-9 radio">
+                                                <label ng-repeat="providerRelation in providerRelations" class="radio-inline">
+                                                    <input type="radio" name="radio_provider_relation" ng-model="addProviderData.relationId" value="{{providerRelation.relationId}}"> {{providerRelation.relationName}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer clearfix">
+                                        <input id="next1" type="button" value="Next >>" ng-click="nextForm(1)" class="btn btn-default btn-sm pull-right" />
+                                    </div>
+                                </div>
+                                <!-- End Basic Information Panel -->
+                            </div>
+                            <!-- End Basic Information Tab -->
+                            <!-- Personal Information Tab -->
+                            <div class="tab-pane fade form-horizontal" ng-class="{'active in': tabStatus == 1}" id="tab1">
+                                <br />
+                                <!-- Primary Information Panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Primary Information</div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Title *:</label>
+                                            <div class="col-md-9">
+                                                <select id="selectNameTitle">
+                                                    <option></option>
+                                                    <option ng-repeat="nametitle in nameTitles" value="{{nametitle.titleId}}">{{nametitle.titaleName}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="FirstName" class="col-md-3 control-label">First Name *</label>
+                                            <div class="col-md-9">
+                                                <input type="text" ng-model="addProviderData.FirstName" name="FirstName" class="form-control" id="FirstName" placeholder="first name">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="MiddleName" class="col-md-3 control-label">Middle Name</label>
+                                            <div class="col-md-9">
+                                                <input type="text" ng-model="addProviderData.MiddleName" name="MiddleName" class="form-control" id="MiddleName" placeholder="middle name">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="LastName" class="col-md-3 control-label">Last Name *</label>
+                                            <div class="col-md-9">
+                                                <input type="text" ng-model="addProviderData.LastName" name="LastName" class="form-control" id="LastName" placeholder="last name">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="Gender" class="col-md-3 control-label">Gender *</label>
+                                            <div class="col-md-9 radio">
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.Gender" name="Gender" id="Gender1" value="Male"> Male
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.Gender" name="Gender" id="Gender2" value="Female"> Female
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="Street" class="col-md-3 control-label">Address *</label>
+                                            <div class="col-md-9">
+                                                <div class="form-group">
+                                                    <label for="Street" class="col-md-3 control-label">Street *</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" ng-model="addProviderData.Address.Street" name="Street" class="form-control" id="Street" placeholder="Street">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Country *</label>
+                                                    <div class="col-md-9">
+                                                        <select id="selectCountry">
+                                                            <option></option>
+                                                            <option ng-repeat="country in countries" value="{{country.code}}">{{country.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">State *</label>
+                                                    <div class="col-md-9">
+                                                        <select id="selectState">
+                                                            <option></option>
+                                                            <option ng-repeat="state in states" value="{{state.stateName}}">{{state.stateName}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">County *</label>
+                                                    <div class="col-md-9">
+                                                        <select id="selectCounty">
+                                                            <option></option>
+                                                            <option ng-repeat="county in counties" value="{{county.countyName}}">{{county.countyName}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">City *</label>
+                                                    <div class="col-md-9">
+                                                        <select id="selectCity">
+                                                            <option></option>
+                                                            <option ng-repeat="city in cities" value="{{city.cityName}}">{{city.cityName}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ZipCode" class="col-md-3 control-label">Zip Code *</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" ng-model="addProviderData.Address.ZipCode" name="ZipCode" class="form-control" id="ZipCode" placeholder="zip code">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Email" class="col-md-3 control-label">Email ID *</label>
+                                            <div class="col-md-9">
+                                                <input type="email" ng-model="addProviderData.Email" name="Email" class="form-control" id="Email" placeholder="email id">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="MobileNo" class="col-md-3 control-label">Mobile Number *</label>
+                                            <div class="col-md-9">
+                                                <input type="text" ng-model="addProviderData.MobileNo" name="MobileNo" class="form-control" id="MobileNo" placeholder="mobile number" ui-mobile-number>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="CV" class="col-md-3 control-label">Upload CV</label>
+                                            <div class="col-md-9">
+                                                <input type="file" name="CV" class="form-control" id="CV" placeholder="CV">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Personal Information panel -->
+                                <!-- Group Information Panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Group Information</div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label">Are you a part of any Group ?</label>
+                                            <div class="col-md-7 radio">
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.hasGroup" name="pat_of_group" ng-click="partOfGroupStatus(1)" value="1"> Yes
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.hasGroup" name="pat_of_group" ng-click="partOfGroupStatus(0)" value="0"> No
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div ng-show="partOfGroup == 1" class="form-group">
+                                            <label class="col-md-3 control-label">Group Name : </label>
+                                            <div class="col-md-9">
+                                                <select id="selectGroup">
+                                                    <option></option>
+                                                    <option ng-repeat="group in groups" value="{{group.groupName}}">{{group.groupName}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End of Group Information Panel -->
+                                <!-- Offer Information Panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Remarks</div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Remarks *</label>
+                                            <div class="col-md-9">
+                                                <textarea name="name" ng-model="addProviderData.Remarks" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer clearfix">
+                                        @*<a href="/Home/PreviewProvider" class="btn btn-success pull-right"> Submit </a>*@
+                                        <input id="next1" type="button" value="Submit" ng-click="addProvider()" class="btn btn-success btn-sm pull-right" />
+                                        <input id="next1" type="button" value="<< Prev" ng-click="nextForm(0)" class="btn btn-default btn-sm pull-left" />
+                                    </div>
+                                </div>
+                                <!-- End Offer Information Panel -->
+                            </div><!-- End Personal Information Tab -->
+                            <!-- Basic Information Preview Tab -->
+                            <div class="tab-pane fade" ng-class="{'active in': tabStatus == 2}" id="tab2">
+                                <br />
+                                <!-- Basic Information Preview panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Basic Information</div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+
+                                            <label class="col-md-3 control-label">Provider Category</label>
+                                            <div class="col-md-9  input-group">
+                                                <label class="control-label">{{addProviderData.Category.categoryName}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Provider Type</label>
+
+                                            <div class="col-md-9  input-group" editable-select="addProviderData.ProviderType.typeName" e-ng-options="pt.typeName as pt.typeName for pt in newProviderTypes">
+                                                <input type="text" name="name" value="{{addProviderData.ProviderType.typeName}}" class="form-control " readonly />
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Provider Relationship</label>
+                                            <div class="col-md-9  input-group">
+                                                <label ng-repeat="providerRelation in providerRelations" class="radio-inline">
+                                                    <input type="radio" name="radio_provider_relation" ng-model="addProviderData.relationId" value="{{providerRelation.relationId}}"> {{providerRelation.relationName}}
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div><!-- End Basic Information Preview panel -->
+                                <!-- Primary Information Preview panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Primary Information</div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Title *</label>
+                                            <div class="col-md-9  input-group" editable-select="addProviderData.NameTitle.titaleName" e-ng-options="nt.titaleName as nt.titaleName for nt in nameTitles">
+                                                <input type="text" name="name" value="{{addProviderData.NameTitle.titaleName}}" class="form-control " readonly />
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">First Name *</label>
+                                            <div class="col-md-9 input-group" editable-text="addProviderData.FirstName" e-required>
+                                                <input type="text" name="name" value="{{addProviderData.FirstName}}" class="form-control " readonly />
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Last Name *</label>
+                                            <div class="col-md-9  input-group" editable-text="addProviderData.LastName" e-required>
+                                                <input type="text" name="name" value="{{addProviderData.LastName}}" class="form-control " readonly />
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Middle Name *</label>
+                                            <div class="col-md-9  input-group" editable-text="addProviderData.MiddleName" e-required>
+                                                <input type="text" name="name" value="{{addProviderData.MiddleName}}" class="form-control " readonly />
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Gender *</label>
+
+                                            <div class="col-md-9 radio">
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.Gender" name="Gender1" id="Gender11" value="Male" ng-selected="addProviderData.Gender==Male"> Male
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.Gender" name="Gender1" id="Gender12" value="Female" ng-selected="addProviderData.Gender==Female"> Female
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Address *</label>
+                                            <div class="col-md-9">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Street *</label>
+                                                    <div class="col-md-9  input-group" editable-text="addProviderData.FirstName" e-required>
+                                                        <input type="text" name="name" value="{{addProviderData.Address.Street}}" class="form-control " readonly />
+                                                        <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                    </div>
+                                                </div>
+                                                @*<div class="form-group">
+                                                        <label class="col-md-3 control-label">Country *</label>
+                                                        <div class="col-md-9  input-group">
+                                                            <input type="text" name="name" value="{{addProviderData.Address.Country.countryName}}" class="form-control " readonly />
+                                                            <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                        </div>
+                                                    </div>*@
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">State *</label>
+                                                    <div class="col-md-9  input-group">
+                                                        <input type="text" name="name" value="{{addProviderData.Address.State.stateName}}" class="form-control " readonly />
+                                                        <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                    </div>
+                                                </div><div class="form-group">
+                                                    <label class="col-md-3 control-label">County *</label>
+                                                    <div class="col-md-9  input-group">
+                                                        <input type="text" name="name" value="{{addProviderData.Address.County.countyName}}" class="form-control " readonly />
+                                                        <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                    </div>
+                                                </div><div class="form-group">
+                                                    <label class="col-md-3 control-label">City *</label>
+                                                    <div class="col-md-9  input-group">
+                                                        <input type="text" name="name" value="{{addProviderData.Address.City.cityName}}" class="form-control " readonly />
+                                                        <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Zip Code *</label>
+                                                    <div class="col-md-9  input-group" editable-text="addProviderData.Address.ZipCode" e-required>
+                                                        <input type="text" name="name" value="{{addProviderData.Address.ZipCode}}" class="form-control " readonly />
+                                                        <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Email ID *</label>
+                                            <div class="col-md-9  input-group" editable-email="addProviderData.Email" e-required>
+                                                <input type="text" name="name" value="{{addProviderData.Email}}" class="form-control " readonly />
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Mobile Number *</label>
+                                            <div class="col-md-9  input-group" editable-tel="addProviderData.MobileNo" e-pattern="\d{3}\-\d{3}\-\d{4}" e-required>
+                                                <input type="text" name="name" value="{{addProviderData.MobileNo}}" class="form-control " readonly />
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label"> View CV </label>
+                                            <div class="col-md-2  input-group">
+                                                <div class="input-group">
+                                                    <span class="btn btn-sm btn-info"><i class="fa fa-file-word-o"></i></span>
+                                                    <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div><!-- End Primary Information Preview panel -->
+                                <!-- Group Information Preview panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Group Information</div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label">Are you a part of any Group ?</label>
+                                            <div class="col-md-7 radio">
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.hasGroup" name="pat_of_group1" ng-click="partOfGroupStatus(1)" value="1"> Yes
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" ng-model="addProviderData.hasGroup" name="pat_of_group1" ng-click="partOfGroupStatus(0)" value="0"> No
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div ng-show="partOfGroup == 1" class="form-group">
+                                            <label class="col-md-3 control-label">Group Name : </label>
+                                            <div class="col-md-9 input-group">
+                                                <select ng-model="addProviderData.GroupName" class="form-control" disabled>
+                                                    <option ng-repeat="group in groups" value="{{group.groupName}}" ng-selected="group.groupName == addProviderData.GroupName">{{group.groupName}}</option>
+                                                </select>
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- End Group Information Preview panel -->
+                                <!-- Offer Information Preview panel -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div>Remarks</div>
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Remarks *</label>
+                                            <div class="col-md-7 input-group" editable-textarea="addProviderData.Remarks" e-required>
+                                                <textarea name="name" class="form-control input-medium" readonly>{{addProviderData.Remarks}}</textarea>
+                                                <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil-square-o"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer clearfix">
+                                        <input id="next1" type="button" value="Confirm" ng-click="confirmationAddProvider()" class="btn btn-success btn-sm pull-right" />
+                                        <input id="next1" type="button" value="<< Prev" ng-click="nextForm(1)" class="btn btn-default btn-sm pull-left" />
+                                    </div>
+                                </div><!-- End Offer Information Preview panel -->
+                            </div><!-- End Personal Information Preview Tab -->
+                            <!-- Confirmation Mail send tab -->
+                            <div class="tab-pane fade" ng-class="{'active in': tabStatus == 3}" id="tab3">
+                                <br />
+                                <!-- Confirmation Mail Send panel -->
+                                <div class="panel panel-default" ng-show="!isAdded">
+                                    <div class="panel-heading">
+                                        <div>Send Email Confirmation</div>
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div name="emaildiv">
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Provider Name</label>
+                                                <div class="col-md-9  input-group">
+                                                    {{addProviderData.FirstName}} {{addProviderData.MiddleName}} {{addProviderData.LastName}}
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Provider Category</label>
+                                                <div class="col-md-9  input-group">
+                                                    {{addProviderData.Category.categoryName}}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Provider Type</label>
+                                                <div class="col-md-9  input-group">
+                                                    {{addProviderData.ProviderType.typeName}}
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Provider Relationship </label>
+                                                <div class="col-md-9 input-group">
+                                                    {{addProviderData.ProviderRelation.relationName}}
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Email ID</label>
+                                                <div class="col-md-10  input-group">
+                                                    <input type="text" name="name" value="{{addProviderData.Email}}" class="form-control " readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">Subject</label>
+                                                <div class="col-md-10  input-group">
+                                                    <input type="text" name="name" value="Your Offer {{addProviderData.Status.statusName}}" class="form-control " readonly />
+                                                    <span class="btn btn-sm btn-info input-group-addon"><i class="fa fa-pencil"></i></span>
+                                                </div>
+                                            </div>
+                                            <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer clearfix">
+                                        <input id="next1" type="button" value="Send Email" ng-click="sendMailProvider()" class="btn btn-success btn-sm pull-right" />
+                                    </div>
+                                </div><!-- Confirmation Mail Send panel -->
+                                <br />
+                                <!-- Success Message Alert Type Div -->
+                                <div ng-show="isAdded" class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <strong>Success!</strong> Email Sent Successfully
+                                    <br /><br />
+                                    <div class="clearfix">
+                                        <input id="next1" type="button" value="View Profile" class="btn btn-success btn-sm pull-right" />
+                                        <input id="next1" type="button" value="Add New Provider" class="btn btn-primary btn-sm pull-left" />
+                                    </div>
+                                </div>
+                            </div><!-- End Primary Information Preview Tab -->
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Add Provider Confirmation</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure , you want to add the provider??
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                            <button type="button" class="btn btn-primary" ng-click="confirmProvider()">Yes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of modal div -->
+                            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Success</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Provider Added Successfully !!!
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end of modal div -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
+
+<script src="~/Scripts/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Provider/jquery.mask.min.js"></script>
+
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Provider/xeditable.min.js"></script>
+
+<script src="~/Scripts/Provider/textAngular-sanitize.min.js"></script>
+<script src="~/Scripts/Provider/textAngular.min.js"></script>
+
+<script src="~/Scripts/Provider/select2.min.js"></script>
+
+<script src="~/Scripts/Provider/createProvider.js"></script>

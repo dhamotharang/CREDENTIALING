@@ -1,0 +1,77 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.ResidencyInternshipDetailViewModel
+
+<div>
+    
+        <div class="col-lg-12 form-group">
+            <span ng-if="tempSecondObject.ResidencyInternshipDetailID">
+                @Html.HiddenFor(model => model.ResidencyInternshipDetailID, new { id = "ResidencyInternshipDetailID", ng_value = "tempSecondObject.ResidencyInternshipDetailID", data_ng_model = "tempObject.ResidencyInternshipDetailID" })
+            </span>
+            @Html.LabelFor(model => model.ResidencyInternshipProgramType, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.ResidencyInternshipProgramType)))
+                {
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(model => model.ResidencyInternshipProgramType, (int)value, new { data_ng_model = "tempSecondObject.ResidencyInternshipProgramType" }) @value.ToString()
+                    </label>
+                }
+            </div>
+            @Html.ValidationMessageFor(model => model.ResidencyInternshipProgramType, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.SpecialtyID, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <select class="form-control input-sm" name="SpecialtyID" ng-model="tempSecondObject.SpecialtyID">
+                    <option>--Select--</option>
+                    <option ng-repeat=" speciality in masterSpecialties" value="{{speciality.SpecialtyID}}">{{speciality.Name}}</option>
+                </select>
+                @Html.ValidationMessageFor(model => model.SpecialtyID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+
+            @Html.LabelFor(model => model.DirectorName, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @Html.TextBoxFor(model => model.DirectorName, new { @class = "form-control input-sm", placeholder = "DirectorName", data_ng_model = "tempSecondObject.DirectorName" })
+            </div>
+            @Html.ValidationMessageFor(model => model.DirectorName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.Department, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @Html.TextBoxFor(model => model.Department, new { @class = "form-control input-sm", placeholder = "Department", data_ng_model = "tempSecondObject.Department" })
+            </div>
+            @Html.ValidationMessageFor(model => model.Department, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label small" })
+            <div>
+
+                @Html.TextBoxFor(model => model.StartDate, new { type = "date", @class = "form-control input-sm", placeholder = "Start Date", data_ng_model = "tempSecondObject.StartDate" })
+            </div>
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label small" })
+            <div>
+
+                @Html.TextBoxFor(model => model.EndDate, new { type = "date", @class = "form-control input-sm", placeholder = "End Date", data_ng_model = "tempSecondObject.EndDate" })
+            </div>
+            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-12 form-group">
+            <button ng-show="visibilitySecondControl==($index+'_editresidency')" type="button" class="btn btn-warning btn-sm" ng-click="operateSecondCancelControl('')">Cancel</button>
+            <button ng-show="visibilitySecondControl=='addresidency' || visibilitySecondControl=='addresidencyInternship'" type="button" class="btn btn-warning btn-sm" ng-click="operateSecondCancelControl('')">Cancel</button>
+            <button ng-show="visibilitySecondControl=='addresidencyInternship'" type="button" class="btn btn-primary btn-sm pull-right" ng-click="saveResidency(tempSecondObject)">Add To List</button>
+            <button ng-show="visibilitySecondControl==($index+'_editresidency')" type="button" class="btn btn-primary btn-sm pull-right" ng-click="updateResidency(tempObject,$index)">Update</button>
+            <button ng-show="visibilitySecondControl=='addresidency'" type="button" class="btn btn-primary btn-sm pull-right" ng-click="updateResidency(tempObject)">Add</button>
+        </div>
+    <div ng-show="ErrorInResidencyDetails" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="pull-right" ng-click="ErrorInResidencyDetails=false"><i class="fa fa-times"></i></span>
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists : <br />
+            <span ng-repeat="err in ResidencyDetailsErrorList track by $index">{{err}}</span>
+        </div>
+    </div>
+</div>

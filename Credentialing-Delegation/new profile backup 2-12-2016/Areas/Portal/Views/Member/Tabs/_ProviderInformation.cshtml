@@ -1,0 +1,46 @@
+﻿@model IEnumerable<PortalTemplate.Areas.Portal.Models.Member.MemberProviderViewModel>
+@using PortalTemplate.Areas.Portal.CustomHelpers
+<div class="x_panel border_on_panel">
+    <table class="table margin_bottom_zero table-white alignLeftTable noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font custom-tbody">
+        <thead class="">
+            <tr class="text-uppercase">
+                <th class="theme_label">@Html.DisplayNameFor(e => e.PhysicianName)</th>
+                <th class="theme_label">@Html.DisplayNameFor(e => e.NPI)</th>
+                <th class="theme_label">@Html.DisplayNameFor(e => e.Address)</th>
+                <th class="theme_label">@Html.DisplayNameFor(e => e.CenterNO)</th>
+                <th class="theme_label">@Html.DisplayNameFor(e => e.ISPCP)</th>
+                <th class="theme_label">@Html.DisplayNameFor(e => e.EffectiveFrom)</th>
+                <th class="theme_label">@Html.DisplayNameFor(e => e.EffectiveTo)</th>
+                <th class="theme_label">@Html.DisplayNameFor(e => e.Phone)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td class="theme_label_data">@if (item != null && item.PhysicianName != null)
+                      {
+                   <span>DR.</span>
+               }@Html.DisplayFor(e => item.PhysicianName)</td>
+            <td class="theme_label_data">@Html.DisplayFor(e => item.NPI)</td>
+            <td class="theme_label_data">@Html.DisplayFor(e => item.Address)</td>
+            <td class="theme_label_data">@Html.DisplayFor(e => item.CenterNO)</td>
+            <td class="theme_label_data">@Html.DisplayFor(e => item.ISPCP)</td>
+            <td class="theme_label_data">@Html.DisplayFor(e => item.EffectiveFrom)</td>
+            <td class="theme_label_data">@Html.DisplayFor(e => item.EffectiveTo)</td>
+            <td class="theme_label_data">@Html.ConvertToPhoneString(item.Phone)</td>
+        </tr>
+    }
+}
+@if (Model == null || Model.Count() <= 0)
+{
+    <tr id="no-data-available-row">
+        <td colspan="8" class="theme_label_data text-center">NO DATA AVAILABLE</td>
+    </tr>
+}
+        </tbody>
+    </table>
+</div>
+

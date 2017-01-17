@@ -1,0 +1,523 @@
+﻿@model PortalTemplate.Areas.CredAxis.Models.SummaryViewModel.SummaryMainViewModel
+
+<p-link filepath="~/Areas/CredAxis/CSS/ProviderProfile/ProviderProfile.css"></p-link>
+<p-link filepath="~/Areas/CredAxis/CSS/ProviderProfile/TableTemplate.css"></p-link>
+<p-link filepath="~/Areas/CredAxis/CSS/CredAxisStyleSheet.css"></p-link>
+@*<p-script filepath="~/Areas/CredAxis/Scripts/ProviderProfile/NonMinified/ProviderProfile.js"></p-script>*@
+<p-script filepath="~/Areas/CredAxis/Scripts/Common/AppScript/NonMinified/CredAxisApp.js"></p-script>
+<p-script filepath="~/Areas/CredAxis/Scripts/ProviderSummary/NonMinified/ProviderSummary.js"></p-script>
+
+<style>
+    .modal-header {
+        padding: 5px;
+    }
+</style>
+<div class="clearfix"></div>
+<div class="target profilediv col-lg-12 margin-top-5px" id="IDSummary">
+    <div class="col-lg-12 nopadding">
+        <!--Profile Sataus-->
+        <div class="col-lg-4 nopadding">
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_ProfileStatus.cshtml", Model.ProfileStatus)
+        </div>
+        <!--Data Sataus-->
+        <div class="col-lg-3 nopadding">
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_DataDocumentStatus.cshtml"@*, Model.DataDocumentStatus*@)
+        </div>
+        <!--Expiries -->
+        <div class="col-lg-5 nopadding">
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_UpcomingExpiries.cshtml")
+        </div>
+        <!--Credentialing and Data Document -->
+        <div class="col-lg-7 nopadding">
+            <!--Credentialing Sataus-->
+            <div class="col-lg-12 nopadding">
+                @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_AssociatedGroupsIPAs.cshtml")
+            </div>
+            <!--Document Sataus-->
+            <div class="col-lg-12 nopadding"></div>
+        </div>
+        <!--Running Notification Sataus-->
+        <div class="col-lg-5 nopadding">
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_RecentTasksPerformed.cshtml", Model.RecentActivities)
+        </div>
+
+
+        <!--Profile Status-->
+        <div class="col-lg-4 nopadding">
+     @*       @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_ProfileStatus.cshtml", Model.ProfileStatus)*@
+        </div>
+        <!--Recent Tasks-->
+        <div class="col-lg-4 nopadding">
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_ProfileStatus.cshtml", Model.ProfileStatus)*@
+     @*       @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_RecentTasksPerformed.cshtml", Model.RecentActivities)*@
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_Hospitals.cshtml", Model.Hospitals)*@
+        </div>
+        <div class="col-lg-4 nopadding">
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_DataDocumentStatus.cshtml", Model.DataDocumentStatus)*@
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_RecentTasksPerformed.cshtml", Model.RecentActivities)*@
+          
+            
+            @*  @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_UpcomingExpiries.cshtml")*@
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_AssociatedGroupsIPAs.cshtml", Model.AssoicateGroupPlans)*@
+        </div>
+        <!--Plan LOB Details-->
+        <div class="col-lg-12 nopadding">
+      @*      @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_AssociatedGroupsIPAs.cshtml")*@
+        </div>
+        <!--Expiries-->
+        <div class="col-lg-12 nopadding">
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_DataDocumentStatus.cshtml", Model.DataDocumentStatus)*@
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_RecentTasksPerformed.cshtml", Model.RecentActivities)*@
+        
+            
+            @*    @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_UpcomingExpiries.cshtml")*@
+            @*@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_AssociatedGroupsIPAs.cshtml", Model.AssoicateGroupPlans)*@
+        </div>
+        <!--Credentialing Details-->
+        @*<div class="col-lg-6 nopadding">
+                @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/OtherTabs/Summary/_CredentialingDetails.cshtml", Model.CredentailingDetails)
+            </div>*@
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+<!-- Modal -->
+<!--Modal For Recent Tasks Performed-->
+<div class="modal fade " tabindex="-1" role="dialog" id="SummaryModal" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">RECENT TASKS PERFORMED</span>
+                    <span data-dismiss="modal" class="pull-right"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row">
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa  fa-check-square-o"></i>  </span>
+                        12/05/2014 :&nbsp;&nbsp;<span style="color: #5a738e; text-transform: uppercase; font-weight: 500;">Updated DEA Information</span><br />
+                        <span class="theme_label_data" style="text-transform: uppercase;font-size: 1.3rem;">
+                            Recently on demand of the provider, updated the DEA number of the provider.
+                            <br />The last DEA number of  provider was expiring on 05/05/2016.
+                        </span>
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa  fa-check-square-o"></i>  </span>
+                        12/05/2014 :&nbsp;&nbsp;<span style="color: #5a738e; text-transform: uppercase; font-weight: 500;">Added New Contract with AETNA Plan</span><br />
+                        <span class="theme_label_data" style="text-transform: uppercase;font-size: 1.3rem;">  The provider got a new contrat with AETNA on his location. </span>
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa  fa-check-square-o"></i>  </span>
+                        12/05/2014 :&nbsp;&nbsp;<span style="color: #5a738e; text-transform: uppercase; font-weight: 500;">Updated Contract Grid</span><br />
+                        <span class="theme_label_data" style="text-transform: uppercase;font-size: 1.3rem;">  After the confirmation with the plan, updated the contract gird. </span>
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa  fa-check-square-o"></i>  </span>
+                        12/05/2014 :&nbsp;&nbsp;<span style="color: #5a738e; text-transform: uppercase; font-weight: 500;">Initiated Re-Credentialing for WELCARE</span><br />
+                        <span class="theme_label_data" style="text-transform: uppercase;font-size: 1.3rem;"> Initiated new credentialing for the plan WELCARE. </span>
+                    </label>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>
+<!--Modal for Credentialing Details-->
+<div class="modal fade " tabindex="-1" role="dialog" id="summarymodalcredentialingdetail" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">CREDENTIALING DETAILS</span>
+                    <span data-dismiss="modal" class="pull-right" style="padding-right:15px;"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row">
+                    <label style="margin-bottom: -3px;" class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa fa-map-marker"></i> PRIMARY LOCATION : </span>
+                        <span style="text-transform:uppercase;font-weight:500;">144, Springhill Drive,FL(34607)</span><br />
+                        <span style="color: #205493; font-size:1.3rem;">ASSOCIATED PLANS :</span>
+                        <span class="col-lg-12">
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>AETNA</li>
+                                    <li>BLUECROSS</li>
+                                    <li>WELCARE</li>
+
+                                </ul>
+                            </span>
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>HUMANA</li>
+                                    <li>MEDICARE</li>
+                                    <li>CONVENTRY</li>
+                                </ul>
+                            </span>
+                        </span>
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa fa-map-marker"></i>  </span>
+                        Secondary Location : <span style="text-transform:uppercase;font-weight:500;">144, Springhill Drive,FL(34607)</span><br />
+                        <span style="color: #205493; font-size:1.3rem;">Associated Plans:</span>
+                        <span class="col-lg-12">
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>AETNA</li>
+                                    <li>BLUECROSS</li>
+                                </ul>
+                            </span>
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>HUMANA</li>
+                                    <li>MEDICARE</li>
+                                </ul>
+                            </span>
+                        </span>
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa fa-map-marker"></i>  </span>
+                        Secondary Location : <span style="text-transform:uppercase;font-weight:500;">144, Springhill Drive,FL(34607)</span><br />
+                        <span style="color: #205493; font-size:1.3rem;">Associated Plans:</span>
+                        <span class="col-lg-12">
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>AETNA</li>
+                                    <li>BLUECROSS</li>
+                                </ul>
+                            </span>
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>HUMANA</li>
+                                    <li>MEDICARE</li>
+                                </ul>
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>
+<!--Modal For HOSPITAL Details-->
+<div class="modal fade " tabindex="-1" role="dialog" id="SummaryModalHospitalDetails" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">RECENT TASKS PERFORMED</span>
+                    <span data-dismiss="modal" class="pull-right" style="padding-right:15px;"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row">
+                    <ol class="col-lg-12 col-md-6 col-sm-12">
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                BAPTIST CHILDREN'S HOSPITAL
+                            </label>
+                        </li>
+                        <li>
+                            <label class="summaryTab">
+                                <span class=""> </span>
+                                BAY MEDICAL CENTER
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                ARNOLD PALMER HOSPITAL FOR CHILDREN
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                ALL CHILDREN'S HOSPITAL
+                            </label>
+                        </li>
+                        <li>
+                            <label class="summaryTab">
+                                <span class=""> </span>
+                                BAY MEDICAL CENTER
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                ARNOLD PALMER HOSPITAL FOR CHILDREN
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                ALL CHILDREN'S HOSPITAL
+                            </label>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>
+<!--Modal for Associated Group and IPA Details-->
+<div class="modal fade " tabindex="-1" role="dialog" id="HOAPITAL" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">HOSPITALS</span>
+                    <span data-dismiss="modal" class="pull-right" style="padding-right:15px;"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row col-lg-12">
+                    <ol class="col-lg-12 col-md-6 col-sm-12">
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                BAPTIST CHILDREN'S HOSPITAL
+                            </label>
+                        </li>
+                        <li>
+                            <label class="summaryTab">
+                                <span class=""> </span>
+                                BAY MEDICAL CENTER
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                ARNOLD PALMER HOSPITAL FOR CHILDREN
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                ALL CHILDREN'S HOSPITAL
+                            </label>
+                        </li>
+                        <li>
+                            <label class="summaryTab">
+                                <span class=""> </span>
+                                ARNOLD PALMER HOSPITAL
+                            </label>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>
+<!--Modal for Associated Group and IPA Details-->
+<div class="modal fade " tabindex="-1" role="dialog" id="SummarymodalAssociatedGroupIPA" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">ASSOCIATED IPA/GROUP</span>
+                    <span data-dismiss="modal" class="pull-right" style="padding-right:15px;"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row col-lg-12">
+                    <ol class="col-lg-12 col-md-6 col-sm-12">
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                PRIMECARE PHYSICIANS
+                            </label>
+                        </li>
+                        <li>
+                            <label class="summaryTab">
+                                <span class=""> </span>
+                                PRIMECARE DOCTORS LLC
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                CHAMPION STATE OF MIND
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                QWIKMED CLINIC
+                            </label>
+                        </li>
+                        <li>
+                            <label class="summaryTab">
+                                <span class=""> </span>
+                                PRIMECARE DOCTORS LLC
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                CHAMPION STATE OF MIND
+                            </label>
+                        </li>
+                        <li>
+                            <label class=" summaryTab">
+                                <span class=""> </span>
+                                QWIKMED CLINIC
+                            </label>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>
+<!--Modal for Data ANd Document Status Details-->
+<div class="modal fade " tabindex="-1" role="dialog" id="SummarymodalDataAndDocumentStatus" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">DATA/DOCUMENT STATUS</span>
+                    <span data-dismiss="modal" class="pull-right" style="padding-right:15px;"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row">
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        Medicare Information Document&nbsp;
+                        @*<img data-toggle="tooltip" data-placement="bottom" title="Upload" class="imgDimModal" src="/Resources/Images/Buttons/Upload.png" /><span style="background-color: #940000; margin-top: -2px; font-size: 9px;" class="badge" data-toggle="tooltip" data-placement="bottom" title="Not Applicable">X</span>*@
+                        @*     <span class=""><i style="" class="fa  fa-upload   fontstylingSummary fontstylingEdit"></i> </span>*@
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        CME Board Document
+                        @* <img class="imgDimModal" data-toggle="tooltip" data-placement="bottom" title="Upload" src="/Resources/Images/Buttons/Upload.png" /><span style="background-color: #940000; margin-top: -2px; font-size: 9px;" class="badge" data-toggle="tooltip" data-placement="bottom" title="Not Applicable">X</span>*@
+                        @*  <span class=""><i style="" class="fa fa-upload  fontstylingSummary fontstylingEdit"></i> </span>*@
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        CME Board Document
+                        @*<img class="imgDimModal" data-toggle="tooltip" data-placement="bottom" title="Upload" src="/Resources/Images/Buttons/Upload.png" /><span style="background-color: #940000; margin-top: -2px; font-size: 9px; margin-top: -4px;" class="badge" data-toggle="tooltip" data-placement="bottom" title="Not Applicable">X</span>*@
+                        @*  <span class=""><i style="" class="fa fa-upload  fontstylingSummary fontstylingEdit"></i> </span>*@
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        Visa Number :&nbsp;<input placeholder="Number" type="text" style="width: 35%;height: 13%;" />&nbsp;&nbsp;@*<span style="background-color: #940000; margin-top: -2px; font-size: 9px;" class="badge" data-toggle="tooltip" data-placement="bottom" title="Not Applicable">X</span>*@
+                        @*                            <span class=""><i style="" class="fa  fa-upload   fontstylingSummary fontstylingEdit"></i> </span>*@
+                    </label>
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        DEA Number : &nbsp;<input placeholder="Number" type="text" style="width: 35%;height: 13%;" />&nbsp;&nbsp;@*<span style="background-color: #940000; margin-top: -2px; font-size: 9px;" class="badge" data-toggle="tooltip" data-placement="bottom" title="Not Applicable">X</span>*@
+                        @*  <span class=""><i style="" class="fa fa-upload  fontstylingSummary fontstylingEdit"></i> </span>*@
+                    </label>
+
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        Visa Number :&nbsp;<input placeholder="Number" type="text" style="width: 35%;height: 13%;" />&nbsp;&nbsp;@*<span style="background-color: #940000; margin-top: -2px; font-size: 9px;" class="badge" data-toggle="tooltip" data-placement="bottom" title="Not Applicable">X</span>*@
+                        @*                            <span class=""><i style="" class="fa  fa-upload   fontstylingSummary fontstylingEdit"></i> </span>*@
+                    </label>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>
+<!--Modal for Practice Location Each Tab Details-->
+<div class="modal fade " tabindex="-1" role="dialog" id="summarymodalPracticeLocationDeatail" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">CREDENTIALING DETAILS</span>
+                    <span data-dismiss="modal" class="pull-right" style="padding-right:15px;"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row">
+                    <label style="margin-bottom: -3px;" class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa fa-map-marker"></i> PRIMARY LOCATION : </span>
+                        <span style="text-transform:uppercase;font-weight:500;">144, Springhill Drive,FL(34607)</span><br />
+                        <span style="color: #205493; font-size:1.3rem;">ASSOCIATED PLANS :</span>
+                        <span class="col-lg-12">
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>AETNA</li>
+                                    <li>BLUECROSS</li>
+                                    <li>WELCARE</li>
+                                    <li>OPTIUM</li>
+                                    <li>LIFE HEALTH</li>
+                                    <li>IPA2</li>
+                                </ul>
+                            </span>
+                            <span class="col-lg-6">
+                                <ul>
+                                    <li>HUMANA</li>
+                                    <li>MEDICARE</li>
+                                    <li>CONVENTRY</li>
+                                    <li>SUN LIFE</li>
+                                    <li>WELCARE</li>
+                                    <li>OPTIUM</li>
+                                </ul>
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>
+<!--Modal For Recent Tasks Performed-->
+<div class="modal fade " tabindex="-1" role="dialog" id="summarymodaldetailedtask" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-md ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle">RECENT TASKS PERFORMED</span>
+                    <span data-dismiss="modal" class="pull-right" style="padding-right:15px;"><i class="fa fa-times btn btn-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <div class="row">
+                    <label class="col-lg-12 col-md-4 col-sm-6 col-xs-12 summaryTab">
+                        <span class=""><i style="color: #002694; " class="fa  fa-check-square-o"></i>  </span>
+                        &nbsp;&nbsp;<span style="text-transform:uppercase;font-weight:500;">Updated DEA Information</span><br />
+                        <span style="color: #205493; font-size:1.3rem;">
+                            <span style="color:black"> 12/05/2014 :</span>  &nbsp;&nbsp;    Recently on demand of the provider, updated the DEA number of the provider.
+                            <br />The last DEA number of  provider was expiring on 05/05/2016.
+                        </span><br /><br />
+                        <span style="color: #205493; font-size:1.3rem;">
+                            <span style="color:black"> 10/04/2014 :</span>  &nbsp;&nbsp;   The DEA Number of the provider is expiring on 05/05/2016.
+                            <br />Need to initiate new request for updating DEA number.
+                        </span>
+                    </label>
+
+                </div>
+            </div>
+            @*<div class="modal-footer">
+                    <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal" id="Confirm">Close</button>
+                </div>*@
+        </form>
+    </div>
+</div>

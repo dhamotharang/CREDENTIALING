@@ -1,0 +1,134 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.BoardSpecialty.SpecialtyDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+
+<div ng-hide="ShowRenewDiv">
+    <div class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error List : <br />
+            <span>Renewal cannot be initiated. Last ReCerification Date, Expiry Date and Document is missing.</span>
+        </div>
+    </div>
+</div>
+
+<form id="specialtyForm">
+    <div class=" col-lg-12 zero-padding-left-right-div" ng-show="ShowRenewDiv">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+        @*Specialty Details ID which is used while editing and kept hidden while adding*@
+        <span ng-if="tempObject.SpecialtyDetailID">
+            @Html.HiddenFor(model => model.SpecialtyDetailID, new { ng_value = "tempObject.SpecialtyDetailID" })
+            @Html.HiddenFor(model => model.PreferenceType, new { ng_value = "tempObject.PreferenceType" })
+            @Html.HiddenFor(model => model.PercentageOfTime, new { ng_value = "tempObject.PercentageOfTime" })
+            @Html.HiddenFor(model => model.ListedInHMOYesNoOption, new { ng_value = "tempObject.ListedInHMOYesNoOption" })
+            @Html.HiddenFor(model => model.ListedInPOSYesNoOption, new { ng_value = "tempObject.ListedInPOSYesNoOption" })
+            @Html.HiddenFor(model => model.ListedInPPOYesNoOption, new { ng_value = "tempObject.ListedInPPOYesNoOption" })
+            @Html.HiddenFor(model => model.SpecialtyID, new { ng_value = "tempObject.SpecialtyID" })
+            @Html.HiddenFor(model => model.BoardCertifiedYesNoOption, new { ng_value = "tempObject.BoardCertifiedYesNoOption" })
+            @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardID, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardID" })
+
+            @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardCertifiedDetailID, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardCertifiedDetailID" })
+            @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificatePath, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath" })
+            @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.CertificateNumber, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.CertificateNumber" })
+            @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.InitialCertificationDate, new { data_ng_hide = "true", data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardCertifiedDetail.InitialCertificationDate", placeholder = "mm/dd/yyyy" })
+        </span>
+        @*Specialty Details ID which is used while editing and kept hidden while adding*@
+
+        @*Board Details section starts here*@
+        <fieldset>
+            <legend>
+                Board Details
+            </legend>
+            <div class="pull-right legend2" ng-show="visibilityControl == 'addboardSpecialty'">
+                <button class="btn btn-xs btn-default" type="button" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="If you have professional/medical specialty."><i class="fa fa-question"></i></button>
+            </div>
+            <div ng-if="tempObject.BoardCertifiedYesNoOption == 1">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-6 form-group" ng-if="tempObject.BoardCertifiedYesNoOption==1" ng-hide="tempObject.SpecialtyDetailID">
+                        @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardID, new { @class = "control-label small" })
+                        <select class="form-control input-sm" data-val="true" data-val-required="Please select the Board Name" id="SpecialtyBoardID" ng-model="tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardID" name="SpecialtyBoardCertifiedDetail.SpecialtyBoardID">
+                            <option ng-hide="tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardID" selected disabled hidden value="">--select--</option>
+                            <option ng-repeat="splBrd in masterSpecialtyBoards track by $index" value="{{splBrd.SpecialtyBoardID}}">{{splBrd.Name}}</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardID, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.SpecialtyID, new { @class = "control-label small" })
+                        @*<input type="text" id="SpecialtyID" class="form-control input-sm" data-val="true" data-val-required="The Specialty Name * Is Required" data-ng-model="tempObject.SpecialtyID" ng-options="type.SpecialtyID as type.Name for type in masterSpecialties track by $index" name="SpecialtyID" bs-typeahead>*@
+                        <select ng-model="tempObject.SpecialtyID" data-val="true" data-val-required="Please select the Specialty Name" id="SpecialtyID" name="SpecialtyID" class="form-control input-sm">
+                            <option ng-hide="tempObject.SpecialtyID" selected disabled hidden value="">--select--</option>
+                            <option ng-repeat="spl in masterSpecialties track by $index" value="{{spl.SpecialtyID}}">{{spl.Name}}</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.SpecialtyID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.CertificateNumber, new { @class = "control-label small" })
+                        <div class="wrap-words">
+                            <i class="data-label">{{boardSpecialty.SpecialtyBoardCertifiedDetail.CertificateNumber || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">New Re-Cerification Date</label>
+                        @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.LastReCerificationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardCertifiedDetail.LastReCerificationDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.LastReCerificationDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small">New Expiration Date</label>
+                        @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.ExpirationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardCertifiedDetail.ExpirationDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.ExpirationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group" ng-class="{'col-lg-11':tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath,'col-lg-12':!tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath}">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                <span class="fileinput-new small">Select Supporting Document</span>
+                                <span class="fileinput-exists">Change</span>
+                                @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile, new { name = "SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile", ng_data_model = "tempObject.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile", type = "file" })
+                            </span>
+                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="clearFile()">Remove</a>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile, "", new { @class = "text-danger" })
+                    </div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                    {
+                        <span ng-show="tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath">
+                            @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificatePath, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath" })
+                            <a href="/Document/View?path={{tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                        </span>
+                    }
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+        </fieldset>
+        @*Board Details section ends here*@
+
+        @*Error List for Specialty Details*@
+
+        <div ng-show="activeMessageDiv=='errorSpecialty'+$index" class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error Lists :<br />
+                <span ng-repeat="err in errorSpecialty track by $index">{{err}}</span>
+            </div>
+        </div>
+        @*Error List for Specialty Details*@
+
+        @*Buttons to Add/Update/Cancel Specialty Details*@
+        <div class="col-md-12 form-group">
+            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+            <button ng-show="visibilityControl == 'addboardSpecialty'" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveSpecialty(tempObject)">{{submitButtonText}}</button>
+            <button ng-show="visibilityControl == ($index + '_editboardSpecialty')" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="updateSpecialty(tempObject, $index)">Update</button>
+            <button ng-show="visibilityControl == ($index + '_renewboardSpecialty')" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="updateSpecialty(tempObject, $index)">Renew</button>
+
+        </div>
+        @*Buttons to Add/Update/Cancel Specialty Details*@
+
+    </div>
+</form>

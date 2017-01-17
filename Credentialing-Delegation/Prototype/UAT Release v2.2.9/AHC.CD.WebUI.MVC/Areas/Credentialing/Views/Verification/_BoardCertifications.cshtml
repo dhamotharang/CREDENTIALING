@@ -1,0 +1,84 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.PSVInfo.ProfileVerificationDetailViewModel
+
+<div><a class="btn btn-xs btn-warning pull-right" ng-click="BoardHistory=true" toggle data-toggle="tooltip" data-placement="bottom" title="Board Certificate History"><i class="fa fa-clock-o"></i></a></div>
+
+<div class="panel-body" ng-repeat="lisence in BoradCertifications">
+    <form enctype="multipart/form-data" id="BoardCertificationForm{{$index}}" class="form-style">
+        <input type="hidden" name="ProfileVerificationParameterId" value="{{BoardCertificationParameterID}}">
+        <input type="hidden" name="VerificationData" value="{{lisence.LincensesInfo}}">
+        <div ng-if="lisence.ProfileVerificationDetail.ProfileVerificationDetailId">
+            <input type="hidden" name="ProfileVerificationDetailId" value="{{lisence.ProfileVerificationDetail.ProfileVerificationDetailId}}">
+        </div>
+        <div ng-if="lisence.ProfileVerificationDetail.VerificationResultId">
+            <input type="hidden" name="VerificationResultId" value="{{lisence.ProfileVerificationDetail.VerificationResultId}}">
+        </div>
+        <fieldset>
+            <legend>
+                @*{{lisence.name}}*@
+                <strong>Board Certificate-{{$index+1}}</strong>
+            </legend>
+            <div class="col-lg-12">
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Speciality Board Name</th>
+                            <th>Certification Status</th>
+                            <th>Certification Date</th>
+                            <th>Expiration Date</th>
+                            <th>Document</th>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div>
+                                    <i class="control-label small wrap-words">{{lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.SpecialtyBoard.Name}}</i>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <i class="control-label small wrap-words">{{lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.SpecialtyBoard.Status}}</i>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <i class="control-label small wrap-words" ng-if="lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.InitialCertificationDate" ng-bind="reformatDate(lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.InitialCertificationDate)"></i>
+                                    @*<i ng-if="!lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.InitialCertificationDate">Not Available</i>*@
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <i class="control-label small wrap-words" ng-if="lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.ExpirationDate" ng-bind="reformatDate(lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.ExpirationDate)"></i>
+                                    @*<i ng-if="!lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.ExpirationDate">Not Available</i>*@
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a ng-if="lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.BoardCertificatePath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.BoardCertificatePath}}" target="_blank"><i class="fa fa-file"></i></a>
+                                    @*<i ng-if="!lisence.LincensesInfo.SpecialtyBoardCertifiedDetail.BoardCertificatePath">Not Available</i>*@
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-12 zero-padding-left-right-div" ng-if="lisence.ViewDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_ViewBoardCertificationVerificationResult.cshtml")
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div" ng-if="lisence.AddDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_AddEditBoardCertificationVerificationResult.cshtml")
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div" ng-if="lisence.EditDiv">
+                @Html.Partial("~/Areas/Credentialing/Views/Verification/_AddEditBoardCertificationVerificationResult.cshtml")
+            </div>
+            <div class="clearfix"></div><br />
+            <div ng-show="activeMessageDiv=='boardPSV{{$index}}'" class="alert alert-success" role="alert">
+                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                {{messageDesc}}
+            </div>
+            <div ng-show="activeMessageDiv=='boardPSVError{{$index}}'" class="alert alert-danger" role="alert">
+                @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                {{messageDesc}}
+            </div>
+        </fieldset>
+    </form>
+</div>

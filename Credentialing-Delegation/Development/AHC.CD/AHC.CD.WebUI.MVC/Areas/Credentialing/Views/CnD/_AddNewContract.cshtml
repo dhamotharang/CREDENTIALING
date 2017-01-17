@@ -1,0 +1,665 @@
+﻿@*<script src="~/Areas/Credentialing/Scripts/SingleProviderJS.js"></script>*@
+<style>
+    .ProviderTypeSelectAutoList.popover.bottom {
+        margin-top: 53px;
+    }
+    .disabledTab {
+        pointer-events: none;
+    }
+</style>
+<div class="panel-default form-style" ng-controller="singleProviderCtrl" ng-cloak>
+    <fieldset>
+        <legend>
+            ADD NEW CONTRACT
+        </legend>
+
+        <ul class="nav nav-tabs ">
+            <li id="GenInfoTab" class="active " ng-click="changeTabs('GenInfoTab','id01','GenInfo')"><a data-toggle="tab" href="#id01">General Information &nbsp;<i ng-show="Show_LOB_Green" style="color:green" class="brn brn-circle fa fa-check-circle"></i> </a></li>
+            <li id="LobTab" ng-click="changeTabs('LobTab','id03','LOBPanel');ClearVisibility();" class="disabledTab"><a data-toggle=" tab" href="#id03">Load To Plan &nbsp;<i ng-show="Show_PlanEnroll_Green" style="color:green" class="brn brn-circle fa fa-check-circle"></i></a></li>
+            <li id="PlanEnrollTab" ng-click="changeTabs('PlanEnrollTab','id04','PlanEnrollmentPanel')" class="disabledTab"><a data-toggle="tab" href="#id04">Plan Enrollment</a></li>
+        </ul>
+
+         <div class="tab-content">
+            <div @*ng-show="GenInfo"*@ id="id01" class="tab-pane fade in active">
+                @Html.Partial("~/Areas/Credentialing/Views/CnD/_NewAddContractPartial.cshtml")
+
+
+
+            </div>
+            <div id="id03" class="tab-pane fade" @*ng-controller="LoadToPlanController"*@>
+                <div ng-show="Show_LOB_Green">
+                    <div class="clearfix"></div>
+                    <a ng-click="changeTabs('PlanEnrollTab','id04','PlanEnrollmentPanel')" ng-show="Show_PlanEnroll_Green" class="pull-right pointer"   >View Enrolled Plan >></a>
+                    <br />
+                    <div><h4>Initiated credentialing for  {{ShowPlanName}}</h4></div>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div @*ng-if="ViewOnlyMode && credentialingInfo.CredentialingLogs[0].Credentialing!='ReCredentialing'"*@>
+                        <div class="col-lg-12">
+                            <div class="col-lg-3">
+                                <label class="control-label">Business Entity *:</label>
+                                <div id="BEID">
+                                    <select class="form-control input-sm" data-val="true" data-val-required="Please select Business Entity" ng-model="tempObject.BusinessEntityID" name="BE">
+                                        <option selected disabled hidden value="">-Select-</option>
+                                        <option ng-repeat="be in BusinessEntities track by $index" value="{{be.OrganizationGroupID}}" ng-click="showBE(be.GroupName);">{{be.GroupName}}</option>
+                                    </select>
+                                </div>
+                                <span ng-if="tempObject.BusinessEntityID == null && isHasError" class="text-danger field-validation-error">
+                                    <span>Please select the Business Entity.</span>
+                                </span>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="col-lg-12">
+                                    <label class="control-label">Line of Business *:</label>
+
+                                    <div class="zero-padding-left-right-div">
+                                        <input class="form-control input-sm" ng-class="{'input-validation-error':tempObject.ContractLOBs.length == 0 && isHasError}" ng-model="LOBName" ng-focus="showContryCodeDiv('LOBdiv')" placeholder="Select LOB" />
+                                        <span ng-if="tempObject.ContractLOBs.length == 0 && isHasError" class="text-danger field-validation-error">
+                                            <span>Please select the LOB.</span>
+                                        </span>
+                                        <div class="ProviderTypeSelectAutoList popover fade bottom  in" role="tooltip" id="LOBdiv">
+                                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                                <tbody>
+                                                    <tr ng-repeat="c in ContractLOBsList  track by $index" ng-click="SelectLOBName(c,'LOBdiv')" class="pointer">
+                                                        <td>{{c.LOBName}}</td>
+                                                    </tr>
+                                                    <tr ng-if="ContractLOBsList.length == 0">
+                                                        <td>No data..... </td>
+                                                    </tr>
+                                                    <tr ng-if="ContractLOBsList.length > 0 && filteredContractLOBsList.length == 0">
+                                                        <td>Title not found..... </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12" ng-if="tempObject.ContractLOBs.length > 0">
+                                    <label></label>
+                                    <div class="zero-padding-left-right-div">
+                                        <span ng-repeat="tpt in tempObject.ContractLOBs track by $index">
+                                            <span style="color: black; white-space: normal;" word-wrap:break-word" class="label label-provider-type">
+                                                {{tpt.LOBName}}
+                                                <i style="color:red" class="fa fa-close pointer" ng-click="RemoveCoveringPhysiciansType(tpt)"></i>
+                                                <input type="hidden" name="tempObject.ContractLOBs[{{$index}}].LOBID" value="{{tpt.LOBID}}" />
+                                                &nbsp;&nbsp;
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="col-lg-12">
+                                    <label class="control-label">Specialty *:</label>
+                                    <div class="zero-padding-left-right-div">
+                                        <input class="form-control input-sm" ng-class="{'input-validation-error':tempObject.ContractSpecialties.length == 0 && isHasError}" ng-model="SpecialityName" ng-focus="showContryCodeDiv('Specialitydiv')" placeholder="Select Speciality" />
+                                        <span ng-if="tempObject.ContractSpecialties.length == 0 && isHasError" class="text-danger field-validation-error">
+                                            <span>Please select the Specialty.</span>
+                                        </span>
+                                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="Specialitydiv">
+                                            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                                <tbody>
+                                                    <tr ng-repeat="c in filteredContractSpecialityList = (ContractSpecialityList     | filter:SpecialityName)" ng-click="SelectSpecialityName(c,'Specialitydiv')" class="pointer">
+                                                        <td>{{c.Specialty.Name}}</td>
+                                                    </tr>
+                                                    <tr ng-if="ContractSpecialityList.length == 0">
+                                                        <td>No data..... </td>
+                                                    </tr>
+                                                    <tr ng-if="ContractSpecialityList.length > 0 && filteredContractSpecialityList.length == 0">
+                                                        <td>Title not found..... </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12" ng-if="tempObject.ContractSpecialties.length > 0">
+                                    <label class=""></label>
+                                    <div class="zero-padding-left-right-div">
+                                        <span ng-repeat="tpt in tempObject.ContractSpecialties track by $index">
+                                            <span style="color: black; white-space: normal;" class="label label-provider-type">
+                                                {{tpt.SpecialtyName}}
+                                                <i style="color:red" class="fa fa-close pointer" ng-click="RemoveContractSpecialties(tpt)"></i>
+                                                <input type="hidden" name="tempObject.ContractContractSpecialties[{{$index}}].ProfileSpecialtyID" value="{{tpt.ProfileSpecialtyID}}" />
+                                                &nbsp;&nbsp;
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="col-lg-12">
+                                    <label class="control-label">Locations *:</label>
+                                    <div class="zero-padding-left-right-div">
+                                        <input class="form-control input-sm" ng-class="{'input-validation-error':tempObject.ContractPracticeLocations.length == 0 && isHasError}" ng-model="LocationsName" ng-focus="showContryCodeDiv('Locationsdiv')" placeholder="Select Locations" />
+                                        <span ng-if="tempObject.ContractPracticeLocations.length == 0 && isHasError" class="text-danger field-validation-error">
+                                            <span>Please select the Locations.</span>
+                                        </span>
+                                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="Locationsdiv">
+                                            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                                <tbody>
+                                                    <tr ng-repeat="c in filteredContractLocationsList = (ContractLocationsList | filter:LocationsName)" ng-click="SelectLocationsName(c,'Locationsdiv')" class="pointer">
+                                                        <td>{{c.Facility.FacilityName}} - {{c.Facility.Street}}, {{c.Facility.City}}, {{c.Facility.State}}, {{c.Facility.Country}}</td>
+                                                    </tr>
+                                                    <tr ng-if="ContractLocationsList.length == 0">
+                                                        <td>No data..... </td>
+                                                    </tr>
+                                                    <tr ng-if="ContractLocationsList.length > 0 && filteredContractLocationsList.length == 0">
+                                                        <td>Title not found..... </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12" ng-if="tempObject.ContractPracticeLocations.length > 0">
+                                    <label class=""></label>
+                                    <div class="zero-padding-left-right-div">
+                                        <span ng-repeat="tpt in tempObject.ContractPracticeLocations track by $index">
+                                            <span style="color: black; white-space: normal;" class="label label-provider-type">
+                                                {{tpt.LocationsName}} - {{tpt.StreetName}}, {{tpt.CityName}}, {{tpt.StateName}}, {{tpt.CountryName}}
+                                                <i style="color:red; " class="fa fa-close pointer" ng-click="RemoveContractLocations(tpt)"></i>
+                                                <input type="hidden" name="tempObject.ContractPracticeLocations[{{$index}}].ProfilePracticeLocationID" value="{{tpt.ProfilePracticeLocationID}}" />
+                                                &nbsp;&nbsp;
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div ng-show="activeMessageDiv=='LoadedSuccess'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div class="clearfix"></div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div ng-click="changeTabs('GenInfoTab','id01','GenInfo')" class="btn btn-sm btn-warning pull-left">Back</div>
+                            <div ng-click=" ShowDetailTable(tempObject)" class="btn btn-sm btn-primary  pull-right">Add</div>
+                         </div>
+                    </div>
+
+                </div>
+                <div ng-show="!Show_LOB_Green">
+                    <div class="clearfix"></div>
+                    <br />
+                   <div class="col-lg-offset-4"><span class="text-center">Please Wait while initiating credentialing</span></div> 
+                    <div  style="padding-left:50%"><img  style="padding-top:10px; display:block; margin-left:-80px;" src="~/Areas/Credentialing/img/loading.GIF" /></div>
+
+                </div>
+            </div>
+            <div id="id04" class="tab-pane fade">
+                <div ng-show="Show_PlanEnroll_Green" class="panel panel-default content-panel">
+                    @model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Loading.ContractGridViewModel
+                    <div class="panel-default form-style">
+
+
+                        <div ng-show="loadingAjax" style="margin-top:30px;" class="progress col-lg-11" ng-cloak>
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                Loading...Please wait...
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:red">
+                            <label>*Please complete all the sections that need to go into contract grid</label>
+                        </div>
+                        <div id="PlanReportCred" class="panel-body">
+                            <table ng-if="PlanReportList.length == 0 && !loadingAjax" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <td>
+                                            No Plan Contract is loaded. !!
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <table ng-if="PlanReportList.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Business Entity</th>
+                                        <th>LOB</th>
+                                        <th>Specialty</th>
+                                        <th>Location</th>
+                                        <th>Initial Cred. Date</th>
+                                        <th>Provider ID</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="c in PlanReportList track by $index">
+                                    <tr>
+                                        <td>{{c.BusinessEntity.GroupName}}</td>
+                                        <td>{{c.LOB.LOBName}}</td>
+                                        <td>{{c.ProfileSpecialty.Specialty.Name}}</td>
+                                        <td>{{c.ProfilePracticeLocation.Facility.FacilityName}} - {{c.ProfilePracticeLocation.Facility.Street}}, {{c.ProfilePracticeLocation.Facility.City}}, {{c.ProfilePracticeLocation.Facility.State}}, {{c.ProfilePracticeLocation.Facility.Country}}</td>
+                                        <td id="dataContainer{{$index}}">
+                                            <span ng-show="ShowVisibility =='QeditVisibility'+$index" id="dataSpan">
+                                                @Html.HiddenFor(model => model.ContractGridID, new { ng_value = "qTempObject.ContractGridID", data_ng_model = "qTempObject.ContractGridID" })
+                                                @Html.TextBoxFor(model => model.InitialCredentialingDate, new { data_ng_class = "{'input-validation-error':valid == false}", data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "qTempObject.InitialCredentialingDate", ng_change = "validityForQuickSave(c,$index)" })
+                                                <span ng-if="validRequired == false" class="text-danger field-validation-error">Initial Credentialing Date is required.</span>
+                                                <span ng-if="validFormat == false" class="text-danger field-validation-error">Please enter a valid date.</span>
+                                            </span>
+                                            <span ng-hide="ShowVisibility =='QeditVisibility'+$index">
+                                                <i class="data-label">{{c.InitialCredentialingDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                                            </span>
+                                        </td>
+                                        <td>
+
+                                            <span ng-show="ShowVisibility =='QeditVisibility'+$index">
+                                                @Html.HiddenFor(model => model.Report.CredentialingContractInfoFromPlanID, new { ng_value = "qTempObject.Report.CredentialingContractInfoFromPlanID", data_ng_model = "qTempObject.Report.CredentialingContractInfoFromPlanID" })
+                                                @Html.TextBoxFor(model => model.Report.ProviderID, new { @class = "form-control input-sm", data_ng_model = "qTempObject.Report.ProviderID" })
+                                            </span>
+                                            <span ng-hide="ShowVisibility =='QeditVisibility'+$index">
+                                                <i class="data-label">{{c.Report.ProviderID || 'Not Available'}}</i>
+                                            </span>
+                                        </td>
+                                        <td class="col-lg-2">
+                                            <button class="btn btn-xs btn-primary" ng-if="(ShowVisibility!='QeditVisibility' +$index) || ViewOnlyMode" ng-click="SetVisibility('Qedit',$index);" tooltip data-toggle="tooltip" data-placement="left" title="Quick Edit"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-sm btn-warning" ng-if="ShowVisibility == 'QeditVisibility'+$index;" ng-click="ClearVisibility();" tooltip data-toggle="tooltip" data-placement="left" title="Cancel">Cancel</button>
+                                            <button type="submit" class="btn btn-sm btn-primary" ng-if="ShowVisibility == 'QeditVisibility'+$index;" ng-click="QuickSave(qTempObject,$index);" tooltip data-toggle="tooltip" data-placement="left" title="Confirm">Save</button>
+
+                                            @*<button ng-hide="Visibility =='editVisibility'+$index" class="btn btn-xs btn-primary" ng-click="Visibility='editVisibility'+$index;"><i class="fa fa-sort-down"></i></button>
+                                    <button ng-show="Visibility =='editVisibility'+$index" class="btn btn-xs btn-primary" ng-click="Visibility='closeEdit'+$index;"><i class="fa fa-sort-up"></i></button>*@
+                                            <button class="btn btn-xs btn-primary" @*ng-if="ViewOnlyMode"*@ ng-hide="ShowVisibility == 'QeditVisibility'+$index;" ng-click="SetVisibility('edit',$index);" tooltip data-toggle="tooltip" data-placement="left" title="Edit"><i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-xs btn-default" ng-hide="ShowVisibility == 'QeditVisibility'+$index;" ng-click="SetVisibility('view',$index);" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                            <button class="btn btn-xs btn-danger" @*ng-if="ViewOnlyMode"*@ ng-hide="ShowVisibility == 'QeditVisibility'+$index;" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initWarning(c,$index);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr ng-if="ShowVisibility =='editVisibility'+$index">
+                                        <td colspan="7">
+                                            <div id="PlanReportForm_AddContractPage">
+                                                <form enctype="multipart/form-data" class="form-style">
+                                                    <div class="col-lg-12 form-group">
+                                                        @Html.HiddenFor(model => model.ContractGridID, new { ng_value = "eTempObject.ContractGridID" })
+                                                        @Html.HiddenFor(model => model.Report.CredentialingContractInfoFromPlanID, new { ng_value = "eTempObject.Report.CredentialingContractInfoFromPlanID", data_ng_model = "eTempObject.Report.CredentialingContractInfoFromPlanID" })
+                                                        @*@Html.HiddenFor(model => model.Report.ProviderID, new { ng_value = "c.Report.ProviderID" })*@
+                                                        @*<div class="col-lg-4">
+                                                <label class="control-label small">Credentialing Status:</label>
+                                                <div>*@
+                                                        @*@foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType)))
+                                                {*@
+                                                        @*<label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.Report.CredentialingApprovalStatusType, (int)(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.Approved), new { data_ng_model = "eTempObject.Report.CredentialingApprovalStatusType" })Approved
+                                                </label>
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.Report.CredentialingApprovalStatusType, (int)(AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.Rejected), new { data_ng_model = "eTempObject.Report.CredentialingApprovalStatusType" })Rejected
+                                                </label>*@
+                                                        @*}*@
+                                                        @*</div>*@
+                                                        @*</div>*@
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Panel Status:</label>
+                                                            <div>
+                                                                @*@foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.OpenCloseOption)))
+                                                        {*@
+                                                                <label class="radio-inline">
+                                                                    @Html.RadioButtonFor(model => model.Report.PanelStatusType, (int)(AHC.CD.Entities.MasterData.Enums.OpenCloseOption.Open), new { data_ng_model = "eTempObject.Report.PanelStatusType" })Open
+                                                                </label>
+                                                                <label class="radio-inline">
+                                                                    @Html.RadioButtonFor(model => model.Report.PanelStatusType, (int)(AHC.CD.Entities.MasterData.Enums.OpenCloseOption.Close), new { data_ng_model = "eTempObject.Report.PanelStatusType" })Close
+                                                                </label>
+                                                                @*}*@
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Initial Credentialing Date :</label>
+                                                            <div>
+                                                                @Html.TextBoxFor(model => model.InitialCredentialingDate, new { data_val = "true", data_val_date = "Please enter date in mm/dd/yyyy format." @*,data_val_required = "Initial Credentialing Date is required."*@, data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "eTempObject.InitialCredentialingDate", placeholder = "mm/dd/yyyy" })
+                                                            </div>
+                                                            @Html.ValidationMessageFor(model => model.InitialCredentialingDate, "", new { @class = "text-danger" })
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Effective Date:</label>
+                                                            <div>
+                                                                @Html.TextBoxFor(model => model.Report.InitiatedDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "eTempObject.Report.InitiatedDate", data_ng_change = "SetRecredentialingDate(eTempObject.Report.InitiatedDate)", placeholder = "mm/dd/yyyy" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="col-lg-12 form-group">
+                                                        @*<div class="col-lg-4">
+                                                    <label class="control-label small">Effective Date:</label>
+                                                    <div>
+                                                        @Html.TextBoxFor(model => model.Report.InitiatedDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "eTempObject.Report.InitiatedDate", placeholder = "mm/dd/yyyy" })
+                                                    </div>
+                                                </div>*@
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Welcome Letter Date:</label>
+                                                            <div>
+                                                                @Html.TextBoxFor(model => model.Report.CredentialedDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "eTempObject.Report.CredentialedDate", placeholder = "mm/dd/yyyy" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Termination Date:</label>
+                                                            <div>
+                                                                @Html.TextBoxFor(model => model.Report.TerminationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "eTempObject.Report.TerminationDate", placeholder = "mm/dd/yyyy" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Re-Credentialing Date:</label>
+                                                            <div>
+                                                                @Html.TextBoxFor(model => model.Report.ReCredentialingDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "eTempObject.Report.ReCredentialingDate", placeholder = "mm/dd/yyyy" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="col-lg-12 form-group">
+                                                        @*<div class="col-lg-4">
+                                                    <label class="control-label small">Re-Credentialing Date:</label>
+                                                    <div>
+                                                        @Html.TextBoxFor(model => model.Report.ReCredentialingDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "eTempObject.Report.ReCredentialingDate", placeholder = "mm/dd/yyyy" })
+                                                    </div>
+                                                </div>*@
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Group ID:</label>
+                                                            <div>
+                                                                @Html.TextBoxFor(model => model.Report.GroupID, new { @class = "form-control input-sm", data_ng_model = "eTempObject.Report.GroupID" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <label class="control-label small">Provider ID</label>
+                                                            <div>
+                                                                @Html.TextBoxFor(model => model.Report.ProviderID, new { @class = "form-control input-sm", data_ng_model = "eTempObject.Report.ProviderID" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 form-group">
+                                                            <label class="control-label small">Participating Status:</label>
+                                                            @Html.HiddenFor(model => model.Report.ParticipatingStatus, new { ng_value = "eTempObject.Report.ParticipatingStatus" })
+                                                            @*<input type="hidden" name="ParticipatingStatus" value="{{eTempObject.Report.ParticipatingStatus}}" />*@
+                                                            <input class="form-control input-sm" autocomplete="off" ng-model="eTempObject.Report.ParticipatingStatus" ng-focus="searchCumDropDown('statuslist_new')" />
+                                                            <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="statuslist_new">
+                                                                <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                                                    <tbody>
+                                                                        <tr ng-repeat="status in filteredstatuslist = (ParticipatingStatusList | filter:eTempObject.Report.ParticipatingStatus) track by $index" ng-click="SelectStatus(status.ParticipatingStatus)" class="pointer">
+                                                                            <td>{{status.ParticipatingStatus}}</td>
+                                                                        </tr>
+                                                                        <tr ng-if="ParticipatingStatusList.length == 0">
+                                                                            <td>No data..... </td>
+                                                                        </tr>
+                                                                        @*<tr ng-if="ParticipatingStatusList.length > 0 && filteredProvidersResults.length == 0">
+                                                                    <td>Provider not found..... </td>
+                                                                </tr>*@
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    @*<div class="col-lg-12 form-group">
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Participating Status:</label>
+                                                    <div>
+                                                        @Html.HiddenFor(model => model.Report.ParticipatingStatus, new { ng_value = "eTempObject.Report.ParticipatingStatus" })
+                                                        <select id="ParticipatingStatus" name="ParticipatingStatus" class="form-control input-sm" ng-model="eTempObject.Report.ParticipatingStatus">
+                                                            <option value="" selected>--Select Participating Status--</option>
+                                                            <option ng:repeat="p in ParticipatingStatusList" ng-value="p.ParticipatingStatus">{{p.ParticipatingStatus}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                                    @*<div class="col-lg-12 form-group">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Participating Status:</label>
+                                                @Html.HiddenFor(model => model.Report.ParticipatingStatus, new { ng_value = "eTempObject.Report.ParticipatingStatus" })
+
+                                                <input class="form-control input-sm" autocomplete="off" ng-model="eTempObject.Report.ParticipatingStatus" ng-focus="searchCumDropDown('statuslist')" />
+                                                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="statuslist">
+                                                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                                        <tbody>
+                                                            <tr ng-repeat="status in filteredstatuslist = (ParticipatingStatusList | filter:eTempObject.Report.ParticipatingStatus) track by $index" ng-click="SelectStatus(status.ParticipatingStatus)" class="pointer">
+                                                                <td>{{status.ParticipatingStatus}}</td>
+                                                            </tr>
+                                                            <tr ng-if="ParticipatingStatusList.length == 0">
+                                                                <td>No data..... </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            </div>*@
+                                                    <div class="clearfix"></div>
+
+                                                    @*<div class="col-lg-12 form-group">
+                                                <div class="col-lg-12">
+                                                    <label class="control-label small">Welcome Letter:</label>
+                                                    <div ng-class="{'col-lg-11':eTempObject.Report.WelcomeLetterPath,'col-lg-12':!eTempObject.Report.WelcomeLetterPath}" class="zero-padding-left-right-div">
+                                                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                            <div class="form-control jancyFileWrapTexts" data-trigger=" fileinput">
+                                                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                                <span class="fileinput-filename wraptext"></span>
+                                                            </div>
+                                                            <span class="input-group-addon btn btn-default btn-file">
+                                                                <span class="fileinput-new small">Select Document</span>
+                                                                <span class="fileinput-exists">Change</span>
+                                                                @Html.TextBoxFor(model => model.Report.WelcomeLetter, new { type = "file", onchange = "angular.element(this).scope().setFiles(this)" })
+                                                            </span>
+                                                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                        </div>
+                                                        @Html.HiddenFor(model => model.Report.WelcomeLetterPath, new { ng_value = "eTempObject.Report.WelcomeLetterPath" })
+                                                    </div>
+                                                    <div ng-if="eTempObject.Report.WelcomeLetterPath!=null" class="col-lg-1">
+                                                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{eTempObject.Report.WelcomeLetterPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+
+
+                                                    <input type="hidden" name="Report.WelcomeLetterPath" value="{{eTempObject.Report.WelcomeLetterPath}}" />
+                                                    <div class="col-lg-12 form-group">
+                                                        <div class="col-lg-12">
+                                                            <label class="control-label small">Welcome Letter:</label><br />
+                                                            <div class="form-group" ng-class="{'col-lg-11':eTempObject.Report.WelcomeLetterPath,'col-lg-12':!eTempObject.Report.WelcomeLetterPath}">
+                                                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                                                    <div class="form-control jancyFileWrapTexts" data-trigger="fileinput">
+                                                                        <input type="hidden" />
+                                                                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                                        <span class="fileinput-filename wraptext"></span>
+                                                                    </div>
+                                                                    <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                                                        <span class="fileinput-new small">Select Supporting Document</span>
+                                                                        <span class="fileinput-exists">Change</span>
+                                                                        @Html.TextBoxFor(model => model.Report.WelcomeLetter, new { name = "Report.WelcomeLetter", ng_data_model = "tempObject.Report.WelcomeLetterPath", type = "file", onchange = "angular.element(this).scope().setFiles(this)" })
+                                                                    </span>
+                                                                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="clearFile()">Remove</a>
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.Report.WelcomeLetterPath, "", new { ng_value = "eTempObject.Report.WelcomeLetterPath" })
+                                                            </div>
+                                                            <div ng-show="eTempObject.Report.WelcomeLetterPath" class="col-lg-1">
+                                                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{eTempObject.Report.WelcomeLetterPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="col-lg-12">
+                                                        <div class="col-lg-12">
+                                                            <button type="button" class="btn btn-warning btn-sm" ng-click="ClearVisibility();">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="SaveReport(eTempObject,$index)">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr ng-if="ShowVisibility =='viewVisibility'+$index">
+                                        <td colspan="7">
+                                            <div class="col-lg-12 form-group">
+                                                @*<div class="col-lg-4">
+                                            <label class="control-label small">Credentialing Status:</label>
+                                            <div>
+                                                <i ng-if="c.Report.CredentialingApprovalStatusType == 1" class="data-label">Approved</i>
+                                                <i ng-if="c.Report.CredentialingApprovalStatusType == 2" class="data-label">Rejected</i>
+                                                <i ng-if="c.Report.CredentialingApprovalStatusType != 2 && c.Report.CredentialingApprovalStatusType != 1" class="data-label">Not Available</i>
+                                            </div>
+                                        </div>*@
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Panel Status:</label>
+                                                    <div>
+                                                        <i ng-if="c.Report.PanelStatusType == 1" class="data-label">Open</i>
+                                                        <i ng-if="c.Report.PanelStatusType == 2" class="data-label">Close</i>
+                                                        <i ng-if="c.Report.PanelStatusType != 2 && c.Report.PanelStatusType != 1" class="data-label">Not Available</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Initial Credentialing Date:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.InitialCredentialingDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Effective Date:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.Report.InitiatedDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12 form-group">
+                                                @*<div class="col-lg-4">
+                                            <label class="control-label small">Effective Date:</label>
+                                            <div>
+                                                <i class="data-label">{{c.Report.InitiatedDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                            </div>
+                                        </div>*@
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Welcome Letter Date:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.Report.CredentialedDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Termination Date:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.Report.TerminationDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Re-Credentialing Date:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.Report.ReCredentialingDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12 form-group">
+                                                @*<div class="col-lg-4">
+                                            <label class="control-label small">Re-Credentialing Date:</label>
+                                            <div>
+                                                <i class="data-label">{{c.Report.ReCredentialingDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                            </div>
+                                        </div>*@
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Group ID:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.Report.GroupID || 'Not Available'}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Provider ID:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.Report.ProviderID || 'Not Available'}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Welcome Letter</label>
+                                                    <div ng-show="c.Report.WelcomeLetterPath">
+                                                        <i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{c.Report.WelcomeLetterPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Welcome Letter"><i class="fa fa-file"></i></a></i>
+                                                    </div>
+                                                    <div ng-hide="c.Report.WelcomeLetterPath">
+                                                        <i class="data-label">Not Available</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12">
+                                                @*<div class="col-lg-4">
+                                            <label class="control-label small">Welcome Letter</label>
+                                            <div ng-show="c.Report.WelcomeLetterPath">
+                                                <i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{c.Report.WelcomeLetterPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Welcome Letter"><i class="fa fa-file"></i></a></i>
+                                            </div>
+                                            <div ng-hide="c.Report.WelcomeLetterPath">
+                                                <i class="data-label">Not Available</i>
+                                            </div>
+                                        </div>*@
+                                                <div class="col-lg-4">
+                                                    <label class="control-label small">Participating Status:</label>
+                                                    <div>
+                                                        <i class="data-label">{{c.Report.ParticipatingStatus || 'Not Available'}}</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div><br />
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-12">
+                                                    <div ng-show="activeMessageDiv=='ReportSaveSuccess'+$index" class="alert alert-success" role="alert">
+                                                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-12">
+                                                    <button class="btn btn-sm btn-primary pull-right" @*ng-if="ViewOnlyMode"*@ ng-click="SetVisibility('edit',$index);">Edit</button>
+                                                    <button type="button" class="btn btn-warning btn-sm pull-left" ng-click="ClearVisibility();">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="modal fade" id="WarningModal_Remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form id="removeStateLicense">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to remove this contract Information?
+                                            @*<input type="hidden" name="StateLicenseInformationID" value="{{tempStateLicense.StateLicenseInformationID}}" />
+                                    <input type="hidden" name="StatusType" value="2" />*@
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary" ng-click="RemoveLoadToPlan(tempRemoveReportData)">Remove</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                   
+                    <a style="margin-top:15px;" ng-click="Add_ContractToGrid(PlanReportList);FlipingTabs('Added_Contracts_FiledSet','Add_New_Contract')" class=" btn btn-sm btn-primary pull-right">View Contract</a>
+                </div>
+                <div ng-show="!Show_PlanEnroll_Green">
+                    <div class="clearfix"></div>
+                     <br />
+                    <div class="col-lg-offset-4"><span class="text-center">{{ErrMsg}}</span></div>
+                    <div @*id="loadingid"*@ style="padding-left:50%"><img style="padding-top:10px; display:block; margin-left:-80px;" src="~/Areas/Credentialing/img/loading.GIF" /></div>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>

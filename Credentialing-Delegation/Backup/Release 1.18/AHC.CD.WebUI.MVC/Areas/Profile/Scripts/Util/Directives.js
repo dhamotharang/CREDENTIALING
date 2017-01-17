@@ -1,0 +1,33 @@
+﻿//============================ Directive for return Template ===========================
+//============================ Dynamic Form Generator ==================================
+profileApp.service('dynamicFormGenerateService', function ($compile) {
+    this.getForm = function (scope, formContain) {
+        return $compile(formContain)(scope);
+    };
+});
+
+profileApp.directive('tooltip', function () {
+    return function (scope, elem) {
+        elem.tooltip();
+    };
+});
+
+profileApp.directive('samayTimePicker', function () {
+    return function (scope, elem) {
+        elem.clockface({
+            format: 'HH:mm'
+        });
+    };
+});
+
+profileApp.directive('samayToggel', ['$compile', function ($compile) {
+    return {
+        restrict: 'AE',
+        link: function (scope, element, attr) {
+            element.bind('click', function (e) {
+                e.stopPropagation();
+                element.parent().parent().find("input").clockface('toggle');
+            });
+        }
+    };
+}]);

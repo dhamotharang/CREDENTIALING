@@ -1,0 +1,37 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.ECFMGDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+    
+    <div class="col-lg-3 form-group">
+        
+        @Html.LabelFor(model => model.ECFMGNumber, htmlAttributes: new { @class = "control-label small" })       
+        <div>
+            <i class="data-label">{{MasterProfile.EducationHistory.ECFMGDetail.ECFMGNumber || 'Not Available'}}</i>
+        </div>
+    </div>
+    <div class="col-lg-3 form-group">
+        
+        @Html.LabelFor(model => model.ECFMGIssueDate, htmlAttributes: new { @class = "control-label small" })
+        <div>
+            <i class="data-label">{{MasterProfile.EducationHistory.ECFMGDetail.ECFMGIssueDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+        </div>
+    </div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+        {
+            <div class="col-md-3 form-group">
+                @Html.LabelFor(model => model.ECFMGCertPath, htmlAttributes: new { @class = "control-label small" })
+                <div ng-if="MasterProfile.EducationHistory.ECFMGDetail.ECFMGCertPath">
+                    <i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{MasterProfile.EducationHistory.ECFMGDetail.ECFMGCertPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="ECFMG Certificate"><i class="fa fa-file"></i></a></i>
+                </div>
+                <div ng-if="!MasterProfile.EducationHistory.ECFMGDetail.ECFMGCertPath">
+                    <i class="data-label"> Not available</i>
+                </div>
+            </div>
+        }
+
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='updatedECFMGDetails'" class="alert alert-success" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+        <div class="clearfix"></div>
+

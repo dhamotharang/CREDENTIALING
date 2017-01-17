@@ -1,0 +1,238 @@
+﻿
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+@*<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Custom/Profile/Util.js"></script>
+    <script src="~/Scripts/Custom/Company/Company.js"></script>*@
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/select2/select2.css" rel="stylesheet" />
+
+<style>
+    .select2-container {
+        display: block;
+    }
+</style>
+
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<script src="~/Scripts/Lib/Jquery/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.planAddBtn').click(addEditPlan);
+        $('.planCancel').click(cancelPlan);
+        $('#groupselect').select2();
+        $('#locationselect').select2();
+    });
+
+    function addEditPlan()
+    {
+        $("#planList").slideUp();
+        $(".addEditPlan").slideDown();
+    }
+
+    function cancelPlan() {
+        $("#planList").slideDown();
+        $(".addEditPlan").slideUp();
+    }
+</script>
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i>My Plans
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row">
+            <div class="form-style col-lg-12" id="planList">
+                <fieldset>
+                    <legend>
+                        My Plan List
+                    </legend>
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <button class="btn btn-primary btn-xs planAddBtn">Add My Plan</button>
+                            </div>
+                            <div class="col-lg-6 pull-right">
+                                <input type="text" class="form-control input-sm" id="searchForm" placeholder="search">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
+
+                    <table class="table table-hover">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th>Company</th>
+                                <th>Plan Type</th>
+                                <th>Plan Name</th>
+                                <th>Form Template</th>
+                                <th>Group</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>BLUE CROSS BLUE SHIELD</td>
+                                <td>MEDICARE RISK</td>
+                                <td>FREEDOM SAVINGS PLAN RX (HMO)</td>
+                                <td>Ultimate Plan Form</td>
+                                <td>Access Physicians</td>
+                                <td>Spring Hill</td>
+                                <td style="color:green">Active</td>
+                                <td><button class="btn btn-xs btn-primary planAddBtn"><i class="fa fa-edit"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>AETNA FEE FOR SVC</td>
+                                <td>MEDICARE LOB</td>
+                                <td>FREEDOM VIP CARE COPD (HMO SNP)</td>
+                                <td>Wellcare Plan Form</td>
+                                <td>PrimeCare</td>
+                                <td>Inverness</td>
+                                <td style="color:red">Deactive</td>
+                                <td><button class="btn btn-xs btn-primary planAddBtn"><i class="fa fa-edit"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>AVMED</td>
+                                <td>MEDICARE RISK</td>
+                                <td>FREEDOM SAVINGS PLAN RX (HMO)</td>
+                                <td>Ultimate Plan Form</td>
+                                <td>Access2 IPA</td>
+                                <td>Brooksville</td>
+                                <td style="color:green">Active</td>
+                                <td><button class="btn btn-xs btn-primary planAddBtn"><i class="fa fa-edit"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>GHI</td>
+                                <td>MEDICARE LOB</td>
+                                <td>FREEDOM VIP CARE COPD (HMO SNP)</td>
+                                <td>Ultimate Plan Form</td>
+                                <td>Access2 IPA</td>
+                                <td>Largo</td>
+                                <td style="color:red">Deactive</td>
+                                <td><button class="btn btn-xs btn-primary planAddBtn"><i class="fa fa-edit"></i></button></td>
+                            </tr>
+                           
+
+                        </tbody>
+                    </table>
+
+                    <div class="col-lg-12">
+                        @Html.Partial("_pagination")
+                    </div>
+                </fieldset>
+            </div>
+            <div class="form-style col-lg-12 addEditPlan" style="display:none;">
+                <fieldset>
+                    <legend>
+                        Add My Plan
+                    </legend>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div class="col-lg-12 ">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Company Name</label>
+                            <select class="form-control input-sm">
+                                <option>Select Company Name</option>
+                                <option>BLUE CROSS BLUE SHIELD</option>
+                                <option>GHI</option>
+                                <option>AVMED</option>
+                                <option>AETNA FEE FOR SVC</option>
+                             </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Plan Type</label>
+                            <select class="form-control input-sm">
+                                <option>Select Plan Type</option>
+                                <option>MEDICARE RISK</option>
+                                <option>MEDICARE LOB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 ">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Plan Name</label>
+                            <select class="form-control input-sm">
+                                <option>Select Plan Name</option>
+                                <option>FREEDOM SAVINGS PLAN RX (HMO)</option>
+                                <option>FREEDOM VIP CARE COPD (HMO SNP)</option>
+                               
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Plan Form Template</label>
+                            <select class="form-control input-sm">
+                                <option>Select Form Template</option>
+                                <option>Ultimate Plan Form</option>
+                                <option>Wellcare Plan Form</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 ">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Group</label>
+                            <select id="groupselect" multiple>
+                                <option>Select Group</option>
+                                <option>Access2 IPA</option>
+                                <option>Access Physicians</option>
+                                <option>PrimeCare</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Location</label>
+                            <select id="locationselect" multiple>
+                                <option>Select Location</option>
+                                <option>Brooksville</option>
+                                <option>Inverness</option>
+                                <option>Largo</option>
+                                <option>Spring Hill</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 ">
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Status</label>
+                            <select class="form-control input-sm">
+                                <option>Select Status</option>
+                                <option style="color:green">Active</option>
+                                <option style="color:red">Deactive</option>
+                                <option style="color:blue">Draft</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-6 form-group">
+                            <label class="control-label small">Decription</label>
+                            <textarea class="form-control input-sm" id="planTitle" placeholder="Description about the plan"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group panel-footer">
+                        <button type="button" class="btn btn-warning btn-sm planCancel">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-sm pull-right planCancel">Add</button>
+                    </div>
+                </fieldset>
+
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->

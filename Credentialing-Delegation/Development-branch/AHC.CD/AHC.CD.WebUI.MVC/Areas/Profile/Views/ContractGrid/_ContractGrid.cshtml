@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Contract Grid";
+}
+<style>
+    .select-page {
+        width: 50px;
+        text-align: center;
+    }
+
+    .loadingHistory {
+        padding-left: 7px;
+    }
+
+    .pagination li a input {
+        padding: 0;
+        margin: -5px 0;
+    }
+</style>
+<div class="panel-group col-lg-12 " ng-controller="ContractGridController as mc" ng-cloak>
+    <div>
+        <br />
+    </div>
+    <fieldset>
+        <legend>Contract Grid</legend>
+        <div class="btn-group pull-right legend2 ng-scope">
+            <button class="dropdown-toggle btn btn-xs btn-primary" popover="" data-toggle="dropdown" aria-hidden="true"><span data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" ng-click="printCGData('Contract Grid Information')" data-content=" print" data-original-title="" title="" class="fa fa-print"></span></button>
+            <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover="" data-placement="left" data-trigger="hover" data-content="Export to excel" data-original-title="" title="" ng-click="exportToExcel1()" style="margin-left:5px;border-radius:2px;"><i class="fa fa-file-excel-o"></i></button>
+            <div ng-show="LoadForPdf" class=" pull-right "><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+        </div>
+                
+        <div class="col-lg-12 form-group  zero-padding-left-right-div">
+            <table class='table table-bordered table-condensed customtbodyStyle table-striped' st-pipe="mc.callServer" st-table="mc.displayed" id="Contract_Grid">
+            <thead>
+                <tr>
+                    <th st-sort-default="reverse" st-sort="PlanName" class="col-lg-1">PLAN</th>
+                    <th st-sort="LOB" class="col-lg-1">LOB</th>
+                    <th st-sort="ParticiPationStatus" class="col-lg-1">STATUS</th>
+                    <th st-sort="GroupID" class="col-lg-1">GROUP ID</th>
+                    <th st-sort="IndividualID" class="col-lg-1">INDIVIDUAL ID</th>
+                    <th st-sort="EffectiveDate" class="col-lg-1">EFFECTIVE DATE</th>
+                    <th st-sort="TerminationDate" class="col-lg-1">TERMINATION DATE</th>
+                </tr>
+                <tr id="hideForPdf1">
+
+                    <td class="hideData "><input st-search="PlanName" type="text" placeholder="Filter Insurance" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="LOB" type="text" placeholder="Filter LOB" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="ParticiPationStatus" type="text" placeholder="Filter Status" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="GroupID" type="text" placeholder="Filter Group ID" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="IndividualID" type="text" placeholder="Filter Individual ID" class="form-control input-sm" /></td>
+                    <td class="hideData "><input st-search="EffectiveDate" type="text" placeholder="Filter Effective Date" class="form-control input-sm" /></td>
+                    <td class="hideData "><input st-search="TerminationDate" type="text" placeholder="Filter Termination Date" class="form-control input-sm" /></td>
+                </tr>
+            </thead>
+
+                <tbody ng-show="!mc.isLoading">
+                <tr ng-repeat="c in mc.displayed">
+
+                    <td>{{c.PlanName || 'Not Available'}}</td>
+                    <td><span ng-repeat="LOB in c.LOBS"><span ng-if="$index>0">,&nbsp;</span><span class="label label-primary">{{LOB}}</span></span></td>
+                    <td>{{c.ParticiPationStatus|| 'Not Available'}}</td>
+                    <td>{{c.GroupID|| 'Not Available'}}</td>
+                    <td>{{c.IndividualID|| 'Not Available'}}</td>
+                    <td>{{c.EffectiveDate || 'Not Available'}}</td>
+                    <td>{{c.TerminationDate || 'Not Available'}}</td>
+                </tr>
+
+            </tbody>
+            <tbody ng-show="mc.isLoading">
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div class="loading-indicator"></div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot id="hideForPdf2" style="cursor:pointer">
+                <tr>
+                    <td class="text-center" st-pagination="" st-items-by-page="10" colspan="7"></td>
+                </tr>
+            </tfoot>
+        </table>
+            <table style="display:none" ng-if="AllData" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Contract_Grid1">
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>LOB</th>
+                        <th>Status</th>
+                        <th>Group ID</th>
+                        <th>Individual ID</th>
+                        <th>Effective Date</th>
+                        <th>Termination Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="c in filtered">
+
+                        <td>{{c.PlanName || 'Not Available'}}</td>
+                        <td><span ng-repeat="LOB in c.LOBS"><span ng-if="$index>0">,&nbsp;</span><span class="label label-primary">{{LOB}}</span></span></td>
+                        <td>{{c.ParticiPationStatus|| 'Not Available'}}</td>
+                        <td>{{c.GroupID|| 'Not Available'}}</td>
+                        <td>{{c.IndividualID|| 'Not Available'}}</td>
+                        <td>{{c.EffectiveDate || 'Not Available'}}</td>
+                        <td>{{c.TerminationDate || 'Not Available'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            
+        <div ng-show="mc.displayed.length==0 && !mc.isLoading " class="text-center">
+            <label>No Data Available.</label>
+        </div>
+
+        <div ng-show="!mc.displayed.length==0 && !mc.isLoading"><span class="label label-primary">C- COMMERCIAL</span>&nbsp;<span class="label label-primary">CE- COMMERCIAL EXCHANGE</span>&nbsp;<span class="label label-primary">FFS- FEE FOR SERVICE</span>&nbsp;<span class="label label-primary">MC- MEDICARE</span>&nbsp;<span class="label label-primary">MD- MEDICAID</span>&nbsp;<span class="label label-primary">MR- MEDICARE RISK</span>&nbsp;<span class="label label-primary">WC- WORKERS COMPENSATION</span></div>
+        <div ng-show="!mc.displayed.length==0 && !mc.isLoading"><span class="label label-primary">IME- IME</span>&nbsp;<span class="label label-primary">US DOL- US DOL</span></div>
+        <br />
+    </fieldset>
+</div>
+<div id="hiddenPrintDiv1" style="display:none;">
+
+
+</div>

@@ -1,0 +1,71 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.CDSCInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="col-lg-12 zero-padding-left-right-div">
+    <fieldset class="wrap-words">
+        <legend>
+            CDS Information
+        </legend>
+        <div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="CDSCInformationHistory.HistoryStatus != 'Renewed'">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.CertNumber, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{CDSCInformationHistory.CertNumber}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.State, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{CDSCInformationHistory.State}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{CDSCInformationHistory.IssueDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{CDSCInformationHistory.ExpiryDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4" ng-if="CDSCInformationHistory.HistoryStatus == 'Renewed'">
+                    @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{CDSCInformationHistory.IssueDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4" ng-if="CDSCInformationHistory.HistoryStatus == 'Renewed'">
+                    @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+                    <div>
+                        <i class="data-label">{{CDSCInformationHistory.ExpiryDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label small">Supporting Document</label>
+                    <div ng-show="CDSCInformationHistory.CDSCCerificatePath">
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                        {
+                            <i class="data-label">
+                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{CDSCInformationHistory.CDSCCerificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="CDS Certificate">
+                                    <i class="fa fa-file"></i>
+                                </a>
+                            </i>
+                        }
+                    </div>
+                    <div ng-hide="CDSCInformationHistory.CDSCCerificatePath">
+                        <i class="data-label">Not Available</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 form-group">
+                <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+            </div>
+        </div>
+    </fieldset>
+</div>

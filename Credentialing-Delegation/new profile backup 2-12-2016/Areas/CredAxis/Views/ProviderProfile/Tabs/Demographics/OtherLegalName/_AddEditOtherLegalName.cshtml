@@ -1,0 +1,121 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.DemographisViewModels.OtherLegalNameViewModel>
+@using PratianUI
+@{
+    var OtherNamesIndex = 0;
+    bool IsEdit = true;
+}
+
+@***************Personal Details Edit*********************************@
+<div class="col-lg-12 nopadding">
+    <fieldset class="fsStyle" id="AddEditotherLegalNames">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                @foreach (var item in Model)
+                {
+                    if (item == null)
+                    {
+                        <span><span class="transparent-font-color">_</span>Add OTHER LEGAL NAME</span>
+                        IsEdit = false;
+                        break;
+                    }
+                }
+                @if (IsEdit)
+                {
+                    <span><span class="transparent-font-color">_</span>EDIT OTHER LEGAL NAME</span>
+
+                }
+            </span>
+        </legend>
+        @using (Ajax.BeginForm("AddOtherLegalNameDetails", "Demographics", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "OtherlegalName" }))
+        {
+            foreach (var item in Model)
+            {
+                OtherNamesIndex = OtherNamesIndex + 1;
+                @Html.HiddenFor(e => item.OtherLegalNameID)
+                <div class="x_content mutiple-data zero-padding-left">
+                    @*<div class="row boxstyle rowmarginleft">
+                            <div class="col-lg-8 col-md-4 col-sm-6 col-xs-12">
+                                <div class="col-lg-4 nopadding">
+                                    <label class="">@Html.DisplayNameFor(e => e.IsLegalName)</label>
+                                </div>
+                                <span class="theme_label_data">
+                                    @Html.RadioButtonFor(e => item.IsLegalName, true, new { @onchange = "ShowAddView('addotherlegalnamedaetails')" }) Yes
+                                    @Html.RadioButtonFor(e => item.IsLegalName, false, new { @onchange = "ShowAddView('addotherlegalnamedaetails')" }) No
+                                </span>
+                            </div>
+                        </div>*@
+                    @if (item != null)
+{
+    <div class="SubHeaderSpacing1">
+        <span class="text-uppercase TableHeading">EDIT OTHER LEGAL NAME - @OtherNamesIndex</span>
+    </div>
+}
+                    <div class="" id="addotherlegalnamedaetails">
+                        <div class=" col-lg-3 col-md-3 col-sm-6 col-xs-12 boxstyle">
+                            <span class="col-lg-5 theme_label nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.FirstName)</label>
+                            </span><span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">@Html.TextBoxFor(m => item.FirstName, new { @class = "form-control input-xs", placeholder = "FIRST NAME" })  </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxstyle">
+                            <span class="col-lg-5 theme_label nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.MiddleName)</label>
+                            </span><span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">@Html.TextBoxFor(m => item.MiddleName, new { @class = "form-control input-xs", placeholder = "MIDDLE NAME" }) </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxstyle">
+                            <span class="col-lg-5 theme_label nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.LastName)</label>
+                            </span><span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">@Html.TextBoxFor(m => item.LastName, new { @class = "form-control input-xs", placeholder = "LAST NAME" }) </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxstyle">
+                            <span class="col-lg-5 theme_label nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.Suffix)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">@Html.TextBoxFor(m => item.Suffix, new { @class = "form-control input-xs", placeholder = "SUFFIX" })</span>
+                            </span>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="col-lg-6 theme_label nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.LegalnameStartDate)</label>
+                            </span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">@Html.PratianUiDatePickerFor(m => item.LegalnameStartDate, new { @class = "form-control input-xs", placeholder = "MM/DD/YYYY" })</span>
+                            </span>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 boxstyle">
+                            <span class="col-lg-6 theme_label nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.LegalnameEndDate)</label>
+                            </span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">@Html.PratianUiDatePickerFor(m => item.LegalnameEndDate, new { @class = "form-control input-xs", placeholder = "MM/DD/YYYY" })</span>
+                            </span>
+                        </div>
+                        <div class="col-lg-8 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="row col-lg-12 zero-padding-left-right margin-top-5px">
+                @*<input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save">*@
+                <button class="btn btn-success btn-xs yahanClickKar list-item buttonmargin pull-right margin-right-5px" type="button" data-tab-path="/CredAxis/Demographics/GetAddEditOtherNames?model=@Model&type=View" data-tab-container="OtherlegalName">Save</button>
+                <button class="btn btn-danger btn-xs yahanClickKar list-item buttonmargin pull-right margin-right-5px" type="button" data-tab-path="/CredAxis/Demographics/GetAddEditOtherNames?model=@Model&type=View" data-tab-container="OtherlegalName">Cancel</button>
+            </div>
+            @*</div>
+                <div class="col-lg-1 col-md-4 col-sm-6 col-xs-12 buttonmargin">*@
+            @* <button class="btn btn-success btn-xs ripple closeBtnCSS" onclick="ShowHideAddView('ViewPersonalDetail', 'AddEditPersonalDetail')">Save</button>*@
+
+            @*</div>*@
+        }
+    </fieldset>
+</div>

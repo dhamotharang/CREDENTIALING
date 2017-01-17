@@ -1,0 +1,126 @@
+﻿@using PortalTemplate.Helper
+
+    <link href="~/Content/AppCss/Search/searchOverlay.css" rel="stylesheet" />
+    <div class="searchResult" hidden>
+        <div class="search-content">
+            <div class="x_title-custom theme_thead" style=" background: #4469a6 !important;">
+                <p class="margin_left_15px"><i class="fa fa-search"></i> Search Result</p>
+
+                <ul class="nav navbar-right panel_toolbox cursor-pointer" id="close">
+                    <li>
+                        <span>Press Esc or <span class="btn custom-cls-btn"><span class="custombadge outertabclose-red custom-cls"><i class="fa fa-times fa-2x"></i></span></span></span>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            @*<div class="overlay-content" id="serch-default-message">
+                    <h1>Enter Search Keyword</h1>
+                </div>*@
+            <div class="overlay-content col-lg-12" id="search-results">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right theme_label_data font-size-18" style="margin-bottom: 4px;">
+                    You Searched For <b>&nbsp;"<span class="search-word"></span>"</b>
+                    &nbsp;|&nbsp;&nbsp;<span class="result-message"><b><span id="resultRealCount"></span></b> Result(s) Found</span>
+                    &nbsp;&nbsp;
+
+                    @*<a href="javascript:void(0)" class="custom-button text-cyan pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Email">
+
+                            <img src="~/Resources/Images/Icons/Mail1.ico" />
+                        </a>
+
+                        <a href="javascript:void(0)" class="custom-button text-red pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pdf">
+                            <img src="~/Resources/Images/Icons/pdf1.png" />
+                        </a>
+
+
+                        <a href="javascript:void(0)" class="custom-button text-success pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Excel">
+                            <img src="~/Resources/Images/Icons/excel.PNG" />
+                        </a>*@
+                    @*<button class="pointer MemberSearchfilterBtn btn-xs theme_label_data pull-right" style="background-color: #ffffff; border: none;">Filter <i class="fa fa-caret-down" style="cursor: pointer;color: #203764 !important;"></i></button>*@
+                    @Html.ExportOptions("filter")
+                </div>
+                <table class="table table-striped table-hover table-responsive custom-thead-back theme1_table custom-thead-font custom-tbody custom-table-striped" style="margin-bottom: 0px;" cellspacing="0" id="resultsTable">
+                    <thead class="theme_thead" id="resultTableHeaderGlobal">
+                        <tr>
+                            <th class="withfilter colHead-1">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>MBR ID</label>
+                                    <span></span>
+                                    <i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-2">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>LAST NAME</label>
+                                    <span></span><i class="fa fa-sort"></i>
+
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-3">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>FIRST NAME</label>
+                                    <span></span><i class="fa fa-sort"></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-4">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>DOB</label>
+                                    <span></span><i class="fa fa-sort"></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-5 gender">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>SEX</label>
+                                    <span></span><i class="fa fa-sort"></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-6 pcp">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>PCP</label><span></span><i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-7">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>PCP PHONE</label><span></span><i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-8">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>EFF DATE</label><span></span><i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-9">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>ADDRESS</label><span></span><i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-10">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>CITY</label><span></span><i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-11">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>ST</label><span></span><i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                            <th class="withfilter colHead-12">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required /><label>ZIP</label><span></span><i class="fa fa-sort "></i>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <div id="noRealResultFound" class="hidden">
+                    No Data Available
+                </div>
+                <div id="searchBodyDiv">
+                    <table class="table table-striped custom-table-striped  margin_bottom_zero margin_left_zero tableLayer  custom-thead-back custom-thead-font custom-tbody" cellspacing="0" cellpadding="0">
+                        <tbody id="searhcResultBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Resources/Data/SearchData.js"></script>
+    @*<script src="~/Scripts/AppScripts/Home/search.js"></script>*@

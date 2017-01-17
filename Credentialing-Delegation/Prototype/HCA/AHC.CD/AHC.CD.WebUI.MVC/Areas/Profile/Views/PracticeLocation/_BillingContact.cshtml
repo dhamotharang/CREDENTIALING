@@ -1,0 +1,67 @@
+﻿
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Billing Contact
+        </legend>
+        <div id="CredentialingContact">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide=" primaryPracticeLocations.BillingContact.length >= 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>No Data Available ! To Add New Click "Add Billing Contact"</td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide=" primaryPracticeLocations.BillingContact.length < 1" class="table table-bordered table-condensed table-striped customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Telephone</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="billingContact in primaryPracticeLocations.BillingContact">
+
+                        <tr>
+                            <td>{{billingContact.First}} {{billingContact.Middle}} {{billingContact.Last}}</td>
+                            <td>{{billingContact.BoxAddress}}</td>
+                            <td>{{billingContact.Telephone}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="viewBillingContact($index,billingContact)" ng-hide="viewShowBillingContact"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="editBillingContact($index,billingContact)" ng-hide="editShowBillingContact"><i class="fa fa-edit"></i></button>
+                                <button ng-hide="viewShowBillingContact || editShowBillingContact || newShowBillingContact || $index+1!=primaryPracticeLocations.BillingContact.length" class="btn btn-xs btn-success" ng-click="addBillingContact()"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="viewShowBillingContact && billingContact==billingContact">
+                            <td colspan="6" id="BillingContactEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_ViewBillingContact.cshtml")
+                            </td>
+                        </tr>
+                        <tr ng-show="editShowBillingContact && billingContact==billingContact">
+                            <td colspan="6" id="BillingContactEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditBillingContact.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="clearfix"></div>
+            <fieldset ng-show="newShowBillingContact">
+                <legend>
+                    Add Billing Contact
+                </legend>
+                <div id="newShowBillingContactDiv">
+                    @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_AddEditBillingContact.cshtml")
+                </div>
+            </fieldset>
+            <div ng-hide="primaryPracticeLocations.BillingContact.length > 0 || newShowBillingContact" class="col-md-12 text-right">
+                <button class="btn btn-xs btn-primary addHosPrvBtn" ng-click="addBillingContact()"><i class="fa fa-plus"></i> Add Billing Contact</button>
+            </div>
+        </div>
+    </fieldset>
+</div>

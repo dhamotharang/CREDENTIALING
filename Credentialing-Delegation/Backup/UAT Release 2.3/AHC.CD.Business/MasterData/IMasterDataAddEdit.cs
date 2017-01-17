@@ -1,0 +1,143 @@
+﻿using AHC.CD.Entities.MasterData.Tables;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AHC.CD.Entities.MasterData.Account;
+using AHC.CD.Entities.MasterData.Account.Accessibility;
+using AHC.CD.Entities.MasterData.Account.Service;
+using AHC.CD.Entities.Location;
+using AHC.CD.Entities.EmailNotifications;
+using AHC.CD.Entities.MasterData.Account.Staff;
+using AHC.CD.Entities.MasterProfile.PracticeLocation;
+
+namespace AHC.CD.Business.MasterData
+{
+   public interface IMasterDataAddEdit
+   {
+       Task<MasterEmployee> SaveCredentialingContact(MasterEmployee credentialingContact);
+
+       Task<PracticeProvider> SaveCoveringColleague(PracticeProvider practiceProvider);
+
+       Task<MasterPracticePaymentRemittancePerson> SavePaymentAndRemittance(MasterPracticePaymentRemittancePerson paymentAndRemittance);
+
+       Task<MasterEmployee> SaveBillingContact(MasterEmployee billingContact);
+
+       Task<MasterEmployee> SaveOfficeManager(MasterEmployee officeManager);
+
+       Task<EmailTemplate> SaveEmailTemplateAsync(EmailTemplate emailTemplate);
+
+       int AddProviderType(ProviderType providerType);
+
+       Task UpdateProviderType(ProviderType providerType);
+
+       int AddSchool(School school);
+
+       Task UpdateSchool(School school);
+
+       int AddAdmittingPrivileges(AdmittingPrivilege admittingPrivilege);
+
+       Task UpdateAdmittingPrivilege(AdmittingPrivilege admittingPrivilege);
+
+       int AddCertification(Certification certification);
+
+       Task UpdateCertification(Certification certification);
+
+       int AddPracticeAccessibilityQuestions(FacilityAccessibilityQuestion practiceAccessibilityQuestion);
+
+       Task UpdatePracticeAccessibilityQuestions(FacilityAccessibilityQuestion practiceAccessibilityQuestion);
+
+       int AddPracticeOpenStatusQuestion(PracticeOpenStatusQuestion practiceOpenStatusQuestion);
+
+       Task UpdatePracticeOpenStatusQuestion(PracticeOpenStatusQuestion practiceOpenStatusQuestion);
+
+       int AddPracticeServiceQuestion(FacilityServiceQuestion practiceServiceQuestion);
+
+       Task UpdatePracticeServiceQuestion(FacilityServiceQuestion practiceServiceQuestion);
+
+       int AddQualificationDegree(QualificationDegree qualificationDegree);
+
+       Task UpdateQualificationDegree(QualificationDegree qualificationDegree);
+
+       int AddSpeciality(Specialty specialty);
+       Task UpdateSpeciality(Specialty specialty);
+
+       int AddSpecialityBoard(SpecialtyBoard specialtyBoard);
+       Task UpdateSpecialityBoard(SpecialtyBoard specialtyBoard);
+
+       int AddStaffCategory(StaffCategory staffCategory);
+
+       Task UpdateStaffCategory(StaffCategory staffCategory);
+
+       int AddStateLicenseStatus(StateLicenseStatus stateLicenseStatus);
+
+       Task UpdateStateLicenseStatus(StateLicenseStatus stateLicenseStatus);
+
+       int AddVisaStatus(VisaStatus visaStatus);
+
+       Task UpdateVisaStatus(VisaStatus visaStatus);
+
+       int AddVisaType(VisaType visaType);
+
+       Task UpdateVisaType(VisaType visaType);
+
+       int AddProviderLevel(ProviderLevel providerLevel);
+
+       Task UpdateProviderLevel(ProviderLevel providerLevel);
+
+       int AddGroup(Group group);
+
+       Task UpdateGroup(Group group);
+
+       int AddDEASchedule(DEASchedule schedule);
+
+       Task UpdateDEASchedule(DEASchedule schedule);
+
+       int AddMilitaryDischarge(MilitaryDischarge militaryDischarge);
+
+       Task UpdateMilitaryDischarge(MilitaryDischarge militaryDischarge);
+
+       int AddMilitaryPresentDuty(MilitaryPresentDuty militaryPresentDuty);
+
+       Task UpdateMilitaryPresentDuty(MilitaryPresentDuty militaryPresentDuty);
+
+       int AddHospital(Hospital hospital);
+
+       Task UpdateHospital(Hospital hospital);
+
+       Task UpdateHospitalContact(HospitalContactInfo hospitalContactInfo);
+       Task UpdateHospitalContactPerson(HospitalContactPerson hospitalContactPerson);
+
+       int AddInsuranceCarrier(InsuranceCarrier insuranceCarrier);
+
+       Task UpdateInsuranceCarrier(InsuranceCarrier insuranceCarrier);
+
+       int AddInsuranceCarrierAddress( int InsuranceCarrierId, InsuranceCarrierAddress insuranceCarrierAddress);
+
+       Task UpdateInsuranceCarrierAddress(InsuranceCarrierAddress insuranceCarrierAddress);
+
+       int AddMilitaryBranch(MilitaryBranch militaryBranch);
+
+       Task UpdateMilitaryBranch(MilitaryBranch militaryBranch);
+
+       int AddMilitaryRank(MilitaryRank militaryRank);
+
+       int UpdateMilitaryRank(MilitaryRank militaryRank);
+
+       int AddHospitalContactInfo(int hospitalId, HospitalContactInfo hospitalContactInfo);
+
+       int AddHospitalContactPerson(int hospitalId, int hospitalContactInfoId, HospitalContactPerson hospitalContactPerson);
+
+       int AddQuestionCategory(QuestionCategory questionCategory);
+
+       Task UpdateQuestionCategory(QuestionCategory questionCategory);
+
+       int AddQuestion(Question question);
+
+       Task UpdateQuestion(Question question);
+
+       int AddCity(int stateId, City city);
+
+    }
+ }

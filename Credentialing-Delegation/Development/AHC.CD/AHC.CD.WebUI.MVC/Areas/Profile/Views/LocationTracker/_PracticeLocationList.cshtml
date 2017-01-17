@@ -1,0 +1,138 @@
+﻿
+
+<style>
+    table {
+        table-layout: fixed;
+    }
+
+    table th, table td {
+         overflow: hidden;
+         word-wrap: break-word;
+    }
+</style>
+
+<div class="clearfix"></div><br />
+<div class="form-style">
+    <fieldset id="LocationTracker_GeneralInformation">
+        <legend>General Information</legend>
+        <div class="legend2 pull-right hideData">
+            <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-trigger="hover" title="Print" ng-click="printData('LocationTracker_GeneralInformation','Location Information')"><i class="fa fa-print"></i></button>
+        </div>
+            <div class="col-md-12">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Facility Name</label>
+                    <div>
+                        <i class="data-label">{{location.FacilityName || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Corporate or Practice Name</label>
+                    <div>
+                        <i class="data-label">{{location.Name || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Street</label>
+
+                    <div>
+                        <i class="data-label">{{location.Street || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Building</label>
+
+                    <div>
+                        <i class="data-label">{{location.Building || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">City</label>
+
+                    <div>
+                        <i class="data-label">{{location.City || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">State</label>
+
+                    <div>
+                        <i class="data-label">{{location.State || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">ZipCode</label>
+
+                    <div>
+                        <i class="data-label">{{location.ZipCode || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Country</label>
+
+                    <div>
+                        <i class="data-label">{{location.Country || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">County</label>
+
+                    <div>
+                        <i class="data-label">{{location.County || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Telephone</label>
+
+                    <div>
+                        <i class="data-label" ng-show="location.Telephone">{{location.CountryCodeTelephone}} - </i><i class="data-label">{{location.Telephone || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Fax</label>
+
+                    <div>
+                        <i class="data-label" ng-show="location.Fax">{{location.CountryCodeFax}} - </i><i class="data-label">{{location.Fax || 'Not Available'}}</i>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Email Address</label>
+
+                    <div>
+                        <i class="data-label">{{location.EmailAddress || 'Not Available'}}</i>
+                    </div>
+                </div>
+            </div>            
+            <div class="col-md-12">
+                <fieldset class="wrap-words">
+                    <legend>Provider Information</legend>
+                    <div ng-if="practiceProvidersList.length == 0">No Data Available</div>
+                    <table ng-if="practiceProvidersList.length > 0" class="table table-hover">
+                        <thead>
+                            <tr class="small">
+                                <th>Title</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th class="hideData col-lg-2">Action</th>
+                            </tr>
+
+                        </thead>
+                        <tbody ng-repeat="prof in practiceProvidersList track by $index">
+                            <tr class="small">
+                                <td>{{prof.ProviderTitle || 'Not Available'}}</td>
+                                <td>{{prof.PersonalDetail.FirstName}}</td>
+                                <td>{{prof.PersonalDetail.LastName}}</td>
+                                <td class="hideData col-lg-2"><a href="#" data-toggle="tooltip" ng-click="getPracticeLocations(prof)" data-placement="left" title="View Practice Location" class="btn btn-xs btn-info pull-left hideData"><i class="fa fa-2x fa-chevron-circle-right"></i></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-xs btn-warning" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{prof.ProfileID}}" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="View Profile Information"><i class="glyphicon glyphicon-forward"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                
+            </div>
+</fieldset>
+</div>
+               

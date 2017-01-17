@@ -1,0 +1,154 @@
+﻿<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+
+
+
+<div ng-show="loadingmessagefordecred" ng-cloak>
+    <div style="margin-left:45%;margin-top:10%">
+        <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+        <span>Loading...Please Wait</span>
+    </div>
+</div>
+<div ng-show="!loadingmessagefordecred">
+    <div class="col-lg-6" ng-show="!initiateSuccessForDeCred">
+        <label class="control-label">Select Plan:</label>
+        <div id="BEID">
+            <select class="form-control input-sm" data-val="true" data-val-required="Please select Plan" ng-model="PlanListForDeCred[$index]" ng-change="showPlanListDeCred(PlanListForDeCred[$index])">
+                <option selected disabled hidden value="">-Select-</option>
+                <option ng-repeat="p in PlanListForDeCred track by $index" value="{{p.PlanID}}">{{p.PlanName}}</option>
+            </select>
+        </div><br />
+        <div style="float:left;margin-top:18px">
+            <input type="button" class="btn btn-warning btn-sm" ng-show="ContractGridDetailForDeCred.length==0" ng-click="SearchProviderPanelToggleDown('SearchProviderResultPanel')" value="Back to Search Result" />
+        </div>
+        <span ng-show="isHasError" class="text-danger field-validation-error">
+            <span>Please select Plan.</span>
+        </span>
+    </div>
+
+    <br /><br />
+    <div class="clearfix"></div>
+    <div ng-show="loadingAjax1" style="margin-top:30px;" class="progress col-lg-12" ng-cloak>
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            Loading...Please wait...
+        </div>
+    </div>
+
+    <br /><br />
+    <div class="col-lg-12" ng-show="ContractGridDetailForDeCred.length!=0" style="overflow-x:auto;">
+        <table ng-table="tableParams4" class="table table-hover table-bordered table-condensed">
+
+            <thead>
+                <tr>
+                    <th>Business Entity</th>
+                    <th>Speciality</th>
+                    <th>LOB</th>
+                    <th>Location</th>
+                    <th>Credentialed Date</th>
+                    <th>
+                        Select All
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" placeholder="Filter Business Entity" class="form-control input-sm" ng-model="search.GroupName" />
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Filter Speciality" class="form-control input-sm" ng-model="search.Speciality" />
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Filter LOB" class="form-control input-sm" ng-model="search.LOB" />
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Filter Location" class="form-control input-sm" ng-model="search.Location" />
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Filter Credentialed Date" class="form-control input-sm" ng-model="search.InitiationDate" />
+                    </td>
+                    <td class="text-center"><input type="checkbox" ng-checked="selectionForDecred.length==data.length" ng-model="tempo.allItemsSelectedForDecred" ng-click="selectAllForDecred()"></td>
+                </tr>
+                <tr ng-repeat="user in $data | filter:{GroupName:search.GroupName,Speciality:search.Speciality,LOB:search.LOB,Location:search.Location,InitiationDate:search.InitiationDate}">
+
+                    <td class="wrap-words">
+                        {{user.GroupName}}
+                    </td>
+                    <td class="wrap-words">
+                        {{user.Speciality}}
+                    </td>
+                    <td class="wrap-words">
+                        {{user.LOB}}
+                    </td>
+                    <td class="wrap-words">
+                        {{user.Location}}
+                    </td>
+                    <td class="wrap-words">
+                        {{user.InitiationDate}}
+                    </td>
+                    <td class="text-center">
+                        <input ng-model="user.Check" ng-checked="selectionForDecred.indexOf(user)>-1" ng-click="toggleSelectionForDecred(user)" type="checkbox" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="col-lg-12 form-group">
+            <label>Disciplinary Report</label>
+            <div class="col-lg-12 fileinput fileinput-new input-group" data-provides="fileinput" ng-init="fileinput=''">
+                <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                <span class="input-group-addon btn btn-default btn-sm btn-file">
+                    <span class="fileinput-new">Select Document</span><span class="fileinput-exists">Change</span>
+                    <input type="file" ng-model="tempobject.ffll" />
+                </span>
+                <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>
+
+        </div>
+
+        @*<div class="col-lg-6 text-left"><button class="btn btn-warning btn-sm" ng-click="SearchProviderPanelToggleDown('SearchProviderResultPanel'); tempObject.PlanId = '';"> Back to Search Result</button></div>*@
+
+        @*<div ng-hide="initiateSuccess" class="col-lg-6 text-right"><button class="btn btn-primary btn-sm" ng-click="InitiateCredentialing();"> Initiate De-Credentialing</button></div>*@
+        @*<a class="btn btn-primary btn-xs pull-right" ng-click="SelectProvidersForReCredentialingInitiation(user)" data-toggle="tooltip" data-placement="right" title="Initiate">Initiate DeCredentialing</a>*@
+        <div class="col-lg-12">
+            <div class="col-md-12 form-group">
+                <button type="reset" class="btn btn-sm btn-warning" ng-click="SearchProviderPanelToggleDown('SearchProviderResultPanel'); tempObject.PlanId = ''">Cancel</button>
+                <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="InitiateDeCredentialing()" ng-disabled="selectionForDecred.length==0">Initiate DeCredentialing</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="clearfix"></div>
+<br />
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div ng-show="activeMessageDiv=='NOData'" class="alert alert-danger" role="alert">
+        <div>
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+
+<div class="clearfix"></div>
+<br />
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div ng-show="activeMessageDiv=='Error'" class="alert alert-danger" role="alert">
+        <div>
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+
+
+

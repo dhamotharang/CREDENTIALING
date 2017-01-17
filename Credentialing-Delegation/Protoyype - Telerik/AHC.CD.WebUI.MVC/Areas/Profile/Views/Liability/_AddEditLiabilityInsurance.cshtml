@@ -1,0 +1,248 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalLiability.ProfessionalLiabilityInfoViewModel
+
+<form enctype="multipart/form-data" ng-init="parentIndex = $index">
+    <div class="form-style">
+        <span ng-if="tempObject.ProfessionalLiabilityInfoID">
+            @Html.HiddenFor(model => model.ProfessionalLiabilityInfoID, new { ng_value = "tempObject.ProfessionalLiabilityInfoID" })
+        </span>
+        @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+        <div class="panel-body zero-padding-left-right-div">
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-md-6 form-group">
+                    @Html.LabelFor(p => p.InsuranceCarrierID, htmlAttributes: new { @class = "control-label small" })
+                    <input type="text" class="form-control input-sm" data-ng-model="tempObject.InsuranceCarrier.Name" name="Name" ng-focus="searchCumDropDown('ForInsurance'+$index)" ng-change="clearInsuranceCarrierLevel();setErrorBit(tempObject.InsuranceCarrier.Name)" />
+                    <input type="hidden" name="InsuranceCarrierID" value="{{tempObject.InsuranceCarrier.InsuranceCarrierID}}" />
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForInsurance{{$index}}">
+                        <table class="table table-striped table-bordered table-hover table-condensed">
+                            <tbody>
+                                <tr ng-repeat="insuranceCarrier in filterInsuranceData=(masterInsuranceCarriers | filter : tempObject.InsuranceCarrier.Name) track by $index" ng-click="addIntoInsuranceDropDown(insuranceCarrier,'ForInsurance'+parentIndex);setErrorBit(tempObject.InsuranceCarrier.Name)" class="pointer">
+                                    <td>{{insuranceCarrier.Name}}</td>
+                                </tr>
+                                <tr ng-if="!filterInsuranceData.length">
+                                    <td>Insurance Carier Name not found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <span class="text-danger" ng-if="!tempObject.InsuranceCarrier.Name && isErrorInsuranceCarrier">Please Select Insurance Carier Name*.</span>
+                    @*@Html.ValidationMessageFor(model => model.InsuranceCarrierID, "", new { @class = "text-danger" })*@
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(p => p.InsuranceCarrierAddressID, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <input type="text" class="form-control input-sm" data-val="true" data-ng-model="tempObject.InsuranceCarrierAddress.LocationName" name="LocationName" ng-focus="searchCumDropDown('ForAddress'+$index)" ng-change="setErrorBit(tempObject.InsuranceCarrierAddress.LocationName)" />
+                        <input type="hidden" name="InsuranceCarrierAddressID" value="{{tempObject.InsuranceCarrierAddress.InsuranceCarrierAddressID}}" />
+                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForAddress{{$index}}">
+                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                <tbody>
+                                    <tr ng-repeat="insuranceCarrierAddress in filterAddressData=(Location | filter : tempObject.InsuranceCarrierAddress.LocationName) track by $index" ng-click="addIntoAddressDropDown(insuranceCarrierAddress,'ForAddress'+parentIndex);setErrorBit(tempObject.InsuranceCarrierAddress.LocationName)" class="pointer">
+                                        <td>{{insuranceCarrierAddress.LocationName}}</td>
+                                    </tr>
+                                    <tr ng-if="!filterAddressData.length">
+                                        <td>Location Name not found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.InsuranceCarrierAddressID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Street/P. O. Box No:</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.Street}}</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Building</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.Building}}</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">City</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.City}}</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">State</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.State}}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Zip Code</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.ZipCode}}</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Country</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.Country}}</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label small">County</label>
+                    <div>
+                        <label class="form-control input-sm">{{tempObject.InsuranceCarrierAddress.County}}</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.SelfInsuredYesNoOption, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.SelfInsuredYesNoOption, (int)value, new { data_ng_model = "tempObject.SelfInsuredYesNoOption" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.SelfInsuredYesNoOption, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(p => p.InsuranceCoverageType, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.InsuranceCoverageType)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.InsuranceCoverageType, (int)value, new { data_ng_model = "tempObject.InsuranceCoverageType" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.InsuranceCoverageType, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(p => p.OriginalEffectiveDate, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.OriginalEffectiveDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.OriginalEffectiveDate" })
+                    @Html.ValidationMessageFor(model => model.OriginalEffectiveDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(p => p.EffectiveDate, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.EffectiveDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.EffectiveDate" })
+                    @Html.ValidationMessageFor(model => model.EffectiveDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(p => p.ExpirationDate, htmlAttributes: new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.ExpirationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", @class = "form-control input-sm", data_ng_model = "tempObject.ExpirationDate" })
+                    @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-md-4 form-group">
+                    <div>
+                        @Html.LabelFor(p => p.PolicyNumber, htmlAttributes: new { @class = "control-label small" })
+                        @Html.TextBoxFor(model => model.PolicyNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.PolicyNumber" })
+                        @Html.ValidationMessageFor(model => model.PolicyNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(p => p.AmountOfCoveragePerOccurance, htmlAttributes: new { @class = "control-label small" })
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        @Html.TextBoxFor(model => model.AmountOfCoveragePerOccurance, new { @class = "form-control input-sm", data_ng_model = "tempObject.AmountOfCoveragePerOccurance" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.AmountOfCoveragePerOccurance, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(p => p.AmountOfCoverageAggregate, htmlAttributes: new { @class = "control-label small" })
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                          @Html.TextBoxFor(model => model.AmountOfCoverageAggregate, new { @class = "form-control input-sm", data_ng_model = "tempObject.AmountOfCoverageAggregate" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AmountOfCoverageAggregate, "", new { @class = "text-danger" })
+                    </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(p => p.UnlimitedCoverageWithInsuranceCarrierOption, htmlAttributes: new { @class = "control-label small" })
+                    &nbsp;
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.UnlimitedCoverageWithInsuranceCarrierOption, (int)value, new { data_ng_model = "tempObject.UnlimitedCoverageWithInsuranceCarrierOption" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.UnlimitedCoverageWithInsuranceCarrierOption, "", new { @class = "text-danger" })
+                </div>
+                <div class=" col-md-4 form-group">
+                    @Html.LabelFor(p => p.PolicyIncludesTailCoverageOption, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.PolicyIncludesTailCoverageOption, (int)value, new { data_ng_model = "tempObject.PolicyIncludesTailCoverageOption" }) @value.ToString()
+                            </label>
+                        }
+                        @Html.ValidationMessageFor(model => model.PolicyIncludesTailCoverageOption, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(p => p.Phone, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <span ng-if="!tempObject.PhoneCountryCode" ng-init="tempObject.PhoneCountryCode='+1'"></span>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDiv('ProfesionalLiabilityCountryCode'+$index)"> {{tempObject.PhoneCountryCode}} <span class="caret"></span></button>
+                            </div>
+                            <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="ProfesionalLiabilityCountryCode{{$index}}">
+                                <div class="arrow"></div>
+                                <h3 class="popover-title">Select Country Dial Code</h3>
+                                <div class="popover-content">
+                                    <select name="PhoneCountryCode" ng-model="tempObject.PhoneCountryCode">
+                                        <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code ==tempObject.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", data_ng_model = "tempObject.Phone", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="form-group" ng-class="{'col-lg-11':tempObject.InsuranceCertificatePath,'col-lg-12':!tempObject.InsuranceCertificatePath}">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-sm btn-file">
+                            <span class="fileinput-new small">Select Liability Document</span>
+                            <span class="fileinput-exists">Change</span>
+                            @Html.TextBoxFor(model => model.InsuranceCertificateFile, new { name = "InsuranceCertificateFile", ng_data_model = "tempObject.InsuranceCertificateFile", type = "file" })
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.InsuranceCertificateFile, "", new { @class = "text-danger" })
+                </div>
+                <span ng-show="tempObject.InsuranceCertificatePath">
+                    @Html.HiddenFor(model => model.InsuranceCertificatePath, new { ng_value = "tempObject.InsuranceCertificatePath" })
+                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.InsuranceCertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div ng-show="activeMessageDiv=='errorProfessionalLiability'+$index" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists :<br />
+            <span ng-repeat="err in errorProfessionalLiability track by $index">{{err}}</span>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <button ng-show="visibilityControl == 'addLi'" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalLiabilty(tempObject,$index)">{{submitButtonText}}</button>
+        <button ng-show="visibilityControl == ($index + '_editLi')" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalLiabilty(tempObject,$index)">Update</button>
+        <button class="btn btn-warning btn-sm pull-left" ng-click="operateCancelControl('');reseterrormessages()">Cancel</button>
+    </div>
+</form>

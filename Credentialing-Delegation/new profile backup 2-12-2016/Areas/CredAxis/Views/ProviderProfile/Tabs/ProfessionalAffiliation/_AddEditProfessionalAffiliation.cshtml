@@ -1,0 +1,116 @@
+﻿@using PratianUI
+@model    IEnumerable<PortalTemplate.Areas.CredAxis.Models.ProfessionalAffiliationViewModel.ProfessionalAffiliationViewModel>
+@{
+    var Editaffiliation = 0;
+    bool IsEdit = true;
+}
+<div id="IDProfessionalAffiliation">
+    <div class="target profilediv col-lg-12" id="AddEditaffilition">
+        <fieldset class="fsStyle" id="">
+            <legend class="legendStyle text-uppercase">
+                @foreach (var item in Model)
+                {
+                    if (item.ProfessionalAffiliationID == null)
+                    {
+                        <span class="theme_depend text-uppercase create-auth-legends">
+                            <span class="transparent-font-color">_</span>
+                            Add Professional Affiliation
+                            <span class="transparent-font-color">_</span>
+                        </span>
+                        IsEdit = false;
+                        break;
+                    }
+
+                }
+                @if (IsEdit)
+                {
+                    <span class="theme_depend text-uppercase create-auth-legends">
+                        <span class="transparent-font-color">_</span>
+                        Edit Professional Affiliation
+                        <span class="transparent-font-color">_</span>
+                    </span>
+                }
+
+
+
+            </legend>
+
+            @using (Ajax.BeginForm("AddAffiliation", "ProfessionalAffiliation", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "AffiliationTabView" }))
+            {
+                foreach (var item in Model)
+                {
+                    Editaffiliation = Editaffiliation + 1;
+                    @Html.HiddenFor(e => item.ProfessionalAffiliationID)
+                    <div class="x_content zero-padding-left-right mutiple-data">
+                        @if (item.ProfessionalAffiliationID != null)
+                        {
+                            <div class="SubHeaderSpacing1">
+                                <span class="text-uppercase TableHeading">Edit Professional Affiliation-@Editaffiliation</span>
+                            </div>
+                        }
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.OrganizationName)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.TextBoxFor(e => item.OrganizationName, new { @class = "form-control input-xs", @placeholder = "Organisation" })
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.StartDate) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label">
+                                    @Html.PratianUiDatePickerFor(e => item.StartDate, new { @class = "form-control input-xs", placeholder = "Start Date" })
+                                    @*@Html.TextBoxFor(e => item.StartDate, new { @class = "form-control input-xs", @placeholder = "Start Date" })*@
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.EndDate) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label">
+                                    @Html.PratianUiDatePickerFor(e => item.EndDate, new { @class = "form-control input-xs", placeholder = "End Date" })
+                                    @*@Html.TextBoxFor(e => item.EndDate, new { @class = "form-control input-xs", @placeholder = "End Date" })*@
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.PositionOfficeHeld) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label">
+                                    @Html.TextBoxFor(e => item.PositionOfficeHeld, new { @class = "form-control input-xs", @placeholder = "Position" })
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.MemberApplicant) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label">
+                                    @Html.TextBoxFor(e => item.MemberApplicant, new { @class = "form-control input-xs", @placeholder = "Member/Applicant" })
+                                </span>
+                            </span>
+                        </div>
+
+                    </div>
+                }
+                <div class="row col-lg-12 zero-padding-left-right" style="margin-top:5px;">
+                    <button class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px yahanClickKar" type="submit" name="submit" value="">Save</button>
+                    <button class="btn btn-danger btn-xs buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/ProfessionalAffiliation/ViewAffiliationHistory?value='kyunBhai'" data-tab-container="AffiliationTabView" value="">Cancel</button>
+                </div>
+            }
+        </fieldset>
+    </div>
+</div>

@@ -1,0 +1,113 @@
+﻿@model PortalTemplate.Areas.Auditing.Models.CreateAuditing.ICDCodesInfoViewModel
+
+<fieldset class="fieldsetStyle" style="background:white;">
+    <legend class="legendstyle">Diagnosis Codes</legend>
+    <div class="col-lg-12 AuditICDMainPanel_eDIT">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="pull-left">
+                    @Html.LabelFor(m=>m.ICDIndicatorType) 
+                    <label>@Model.ICDIndicatorType</label>
+                </div>
+            </div>
+        </div>
+        <div class="row IcdAuditMailPanel_Edit">
+            <div class="col-lg-12 zero-padding-left-right">
+                <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped">
+                    <thead class="theme_thead">
+                        <tr>
+                            <th>Code </th>
+                            <th>Description </th>
+                            <th>HCC Code</th>
+                            <th>HCC Type</th>
+                            <th>HCC Version</th>
+                            <th>HCC Description </th>
+                            <th>HCC Weight</th>
+                            <th>
+                                Review
+                            </th>
+                            <th>Category</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var icd in Model.ICDCodes)
+                            {
+                                <tr>
+                                    <td>
+                                        @icd.Code
+                                    </td>
+                                    <td>@icd.Description</td>
+                                    @*@foreach (var hcc in icd.HCCCodes)
+                                    {
+                                        <td>@hcc.HCCCode</td>
+                                        <td>@hcc.HCCType</td>
+                                        <td>@hcc.HCCVersion</td>
+                                        <td>@hcc.HCCDescription</td>
+                                        <td>@hcc.HCCWeight</td>
+                                    }*@
+                                    <td>
+                                        @foreach (var hcc in @icd.HCCCodes)
+                                        {
+                                            @hcc.HCCCode <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var hcc in @icd.HCCCodes)
+                                        {
+                                            @hcc.HCCType <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var hcc in @icd.HCCCodes)
+                                        {
+                                            @hcc.HCCVersion <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var hcc in @icd.HCCCodes)
+                                        {
+                                            @hcc.HCCDescription <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var hcc in @icd.HCCCodes)
+                                        {
+                                            @hcc.HCCWeight <br />
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @{
+                                       if(icd.IsAgree)
+                                       {
+                                          <span class="agree_btn"><i class="fa fa-check"></i></span>
+                                       }
+                                       else
+                                       {
+                                        <span class="disagree_btn"><i class="fa fa-close"></i></span>
+                                       }
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var category in icd.Categories)
+                                        {
+                                            @category.CategoryName <br/>
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var remarks in icd.Categories)
+                                        {
+                                            <label>@remarks.Remarks</label><br/>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</fieldset>

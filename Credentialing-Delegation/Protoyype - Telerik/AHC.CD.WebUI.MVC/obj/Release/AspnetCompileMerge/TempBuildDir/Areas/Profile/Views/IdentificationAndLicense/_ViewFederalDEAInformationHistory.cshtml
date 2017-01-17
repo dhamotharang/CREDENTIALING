@@ -1,0 +1,97 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.FederalDEAInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="form-style">
+    <fieldset class="wrap-words">
+        <legend>
+            Federal DEA Information
+        </legend>
+        <div>
+            <div class="panel-body zero-padding-left-right-div">
+                <div class="zero-padding-left-right-div">
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="form-group col-md-3" ng-if="DEAInformationHistory.HistoryStatus != 'Renewed'">
+                            @Html.LabelFor(model => model.DEANumber, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{DEAInformationHistory.DEANumber}}</i>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3" ng-if="DEAInformationHistory.HistoryStatus != 'Renewed'">
+                            @Html.LabelFor(model => model.StateOfReg, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{DEAInformationHistory.StateOfReg}}</i>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{DEAInformationHistory.IssueDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{DEAInformationHistory.ExpiryDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-12">
+                        <table class="col-md-12 table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Schedule</th>
+                                    <th>Schedule Type</th>
+                                    <th>Eligibility</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="sl in Schedules track by $index">
+                                <tr>
+                                    <td>
+                                        {{sl.ScheduleTitle}}
+                                    </td>
+                                    <td>
+                                        <label>{{sl.ScheduleTypeTitle}}</label>
+                                    </td>
+                                    <td>
+                                        <i ng-if="DEAInformationHistory.DEAScheduleInfoHistory[$index].YesNoOption == '1'" class="fa fa-check"></i>
+                                        <i ng-if="DEAInformationHistory.DEAScheduleInfoHistory[$index].YesNoOption == '2'" class="fa fa-close"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="form-group col-md-3" ng-if="DEAInformationHistory.HistoryStatus != 'Renewed'">
+                            @Html.LabelFor(model => model.GoodStandingYesNoOption, new { @class = "control-label small" })
+                            <div>
+                                <i ng-if="DEAInformationHistory.GoodStandingYesNoOption == 1" class="data-label">Yes</i>
+                                <i ng-if="DEAInformationHistory.GoodStandingYesNoOption == 2" class="data-label">No</i>
+                                <i ng-if="DEAInformationHistory.GoodStandingYesNoOption != 2 && DEAInformationHistory.GoodStandingYesNoOption != 1" class="data-label">Not Available</i>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-9">
+                            <label class="control-label small">Supporting Document</label>
+                            <div ng-show="DEAInformationHistory.FederalDEADocumentPath">
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                                {
+                                    <i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{DEAInformationHistory.FederalDEADocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="DEA License Document"><i class="fa fa-file"></i></a></i>
+                                }
+                            </div>
+                            <div ng-hide="DEAInformationHistory.FederalDEADocumentPath">
+                                <i class="data-label">Not Available</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>

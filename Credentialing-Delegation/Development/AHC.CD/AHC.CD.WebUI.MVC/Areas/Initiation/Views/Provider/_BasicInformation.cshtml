@@ -1,0 +1,106 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Initiation.Models.ProfileViewModel
+
+<form id="BasicInformationForm">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Basic Information
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.OtherIdentificationNumber.NPINumber, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.OtherIdentificationNumber.NPINumber, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "Profile.OtherIdentificationNumber.NPINumber", placeholder = "NPI number",data_ng_model_options="{ debounce: 1000 }", data_ng_change = "IsValid('OtherIdentificationNumber_NPINumber')", @*data_ng_blur = "IsValid('OtherIdentificationNumber_NPINumber')",*@ autocomplete = "off"
+               }
+               })
+                    @Html.ValidationMessageFor(model => model.OtherIdentificationNumber.NPINumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.OtherIdentificationNumber.NPIUserName, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.OtherIdentificationNumber.NPIUserName, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "Profile.OtherIdentificationNumber.NPIUserName", data_ng_disabled = "NPINumberValid", placeholder = "NPI user name", autocomplete = "off", data_ng_change = "NPIUserNameStatus()" } })
+                    @Html.ValidationMessageFor(model => model.OtherIdentificationNumber.NPIUserName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.OtherIdentificationNumber.NPIPassword, htmlAttributes: new { @class = "control-label small" })
+                    <div class="input-group input-group-sm">
+                        @Html.EditorFor(model => model.OtherIdentificationNumber.NPIPassword, new { htmlAttributes = new { type = "password", @class = "form-control", data_ng_model = "Profile.OtherIdentificationNumber.NPIPassword", data_ng_disabled = "NPINumberValid", placeholder = "NPI password", autocomplete = "off", data_ng_change = "NPIPasswordStatus()" } })
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-disabled="NPINumberValid" onmousedown="PasswordVisibleMouseDown('OtherIdentificationNumber_NPIPassword');" onmouseup="PasswordVisibleMouseUp('OtherIdentificationNumber_NPIPassword');" onmouseout="PasswordVisibleMouseUp('OtherIdentificationNumber_NPIPassword');"><i class="fa fa-eye"></i></button>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.OtherIdentificationNumber.NPIPassword, "", new { @class = "text-danger" })
+                </div>
+                @*<div class="col-lg-1 form-group" style="padding-top: 24px;">
+                    <button class=" btn btn-primary btn-sm pull-right" id="select" ng-click="primaryInfoForm(1,'BasicInformationForm');bindData(Profile.OtherIdentificationNumber.NPINumber)">
+                        GetReport
+                    </button>
+                </div>*@
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.OtherIdentificationNumber.CAQHNumber, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.OtherIdentificationNumber.CAQHNumber, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "Profile.OtherIdentificationNumber.CAQHNumber", placeholder = "CAQH number", data_ng_change = "IsValid('OtherIdentificationNumber_CAQHNumber')", data_ng_blur = "IsValid('OtherIdentificationNumber_CAQHNumber')", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.OtherIdentificationNumber.CAQHNumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.OtherIdentificationNumber.CAQHUserName, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.OtherIdentificationNumber.CAQHUserName, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "Profile.OtherIdentificationNumber.CAQHUserName", data_ng_disabled = "CAQHNumberValid", placeholder = "CAQH user name", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.OtherIdentificationNumber.CAQHUserName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.OtherIdentificationNumber.CAQHPassword, htmlAttributes: new { @class = "control-label small" })
+                    <div class="input-group input-group-sm">
+                        @Html.EditorFor(model => model.OtherIdentificationNumber.CAQHPassword, new { htmlAttributes = new { type = "password", @class = "form-control", data_ng_model = "Profile.OtherIdentificationNumber.CAQHPassword", data_ng_disabled = "CAQHNumberValid", placeholder = "CAQH password", autocomplete = "off" } })
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-disabled="CAQHNumberValid" onmousedown="PasswordVisibleMouseDown('OtherIdentificationNumber_CAQHPassword');" onmouseup="PasswordVisibleMouseUp('OtherIdentificationNumber_CAQHPassword');" onmouseout="PasswordVisibleMouseUp('OtherIdentificationNumber_CAQHPassword');"><i class="fa fa-eye"></i></button>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.OtherIdentificationNumber.CAQHPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <input id="next1" type="button" value="Proceed" ng-click="primaryInfoForm(1,'BasicInformationForm')" class="btn btn-primary btn-sm pull-right" />
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+@*<script>
+    var app = angular.module('app', []);
+    app.controller('MainCtrl', ['$scope', function ($scope) {
+        $scope.MyArray = [
+            {
+                "NPI_Number": 1234567890,
+                "SalutationType": "Mr.",
+                "FirstName": "ABC",
+                "MiddleName": "ABC",
+                "LastName": "ABC",
+                "Suffix": "ABC",
+                "GenderType": "ABC",
+                "ProviderLevelID": "ABC",
+                "ProviderTitles": "ABC",
+                "Street": "ABC",
+                "UnitNumber": "ABC",
+                "City": "ABC",
+                "State": "ABC",
+                "ZipCode": "ABC",
+                "Country": "ABC",
+                "EmailAddress": "ABC",
+                "Number": "ABC",
+                "ProviderRelationshipOption": "ABC",
+                "JoiningDate": "ABC",
+                "CVDocumentPath": "ABC",
+                "IndividualTaxId": "ABC",
+                "ContractFilePath": "ABC",
+                "IsPartOfGroup": "No",
+                "ProviderRelationshipOption": "ABC",
+
+            }
+        ];*@
+
+@*//$scope.bindData = function (selectedId) {
+            //    if ($scope.MyArray[i].NPI_Number == selectedId) {
+            //        $scope.PersonalDetail = $scope.MyArray[i];
+            //        }
+            //}
+        }]);
+    </script>*@

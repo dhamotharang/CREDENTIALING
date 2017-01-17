@@ -1,0 +1,42 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Timeline.TimelineActivityViewModel
+
+<br />
+<div class="form-style" id="ActivityForm">
+    <form enctype="multipart/form-data" class="form-style">
+        <div class="form-group col-md-12">
+            <label class="control-label small">Activity</label>
+            <div>
+                @Html.TextAreaFor(model => model.Activity, new { @class = "form-control input-sm", data_ng_model = "TempObj.Activity", placeholder = "Activity", cols = 35, @rows = 5 })
+            </div>
+            <br />
+            <div>
+                <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="initWarning()">Add Activity</button>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <br />
+        <div class="alert alert-success" role="alert" ng-if="IsMessage">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            Activity Added Successfuly !!!!
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="ConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="removeStateLicense">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                </div>
+                <div class="modal-body">
+                    Do you really want to add this record to Timeline ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" ng-click="SaveActivity('ActivityForm')">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

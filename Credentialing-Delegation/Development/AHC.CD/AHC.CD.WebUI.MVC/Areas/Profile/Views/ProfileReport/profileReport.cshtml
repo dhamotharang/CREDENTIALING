@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "profileReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Shared/jspdf.min.js"></script>
+    <script src="~/Scripts/Shared/jspdf.plugin.autotable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.11/angular-filter.min.js"></script>
+
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProfileReport.js"></script>
+    
+}
+
+<div id="page-wrapper" ng-app="ProfileReportApp" ng-controller="ProfileCntrl" ng-cloak>
+    <br />
+    <div>
+        <div>
+            <h4 style="margin:20px;"><b style="text-align:center">Profile Report</b><button class="btn btn-xs btn-danger pull-right" ng-disabled="disabled" tooltip data-toggle="tooltip" data-placement="top" title="Export To PDF" ng-click="PrintPDF()"><i class="fa fa-file-pdf-o"></i></button></h4>
+
+        </div>
+        <div>
+            <div id="profileReport">
+                <div class="col-md-12" ng-repeat="(key, value) in profiles | groupBy: 'county'" style="margin-bottom: 30px; page-break-after: always;">
+                    <div style="margin-top:30px;"><b>{{key == 'undefined' ? 'UnKnown': key}}</b></div>
+                    <div ng-repeat="(k,v) in value  | groupBy: 'spec'">
+                        <div>
+                            <b style=" border:1px solid #888" class="col-md-12">
+                                {{k}}
+                            </b>
+                            <div class="col-md-6" ng-repeat="obj in v " style="margin-top: 30px; page-break-inside: avoid;">
+                                <div>
+                                    <h4 class="card-title" style="color:#0094ff">{{obj.providerName}}</h4>
+                                    <p class="card-text"> {{obj.address}}</p>
+                                    <p class="card-text">OFFICE PHONE: {{obj.Office_Phone}}</p>
+                                    <p class="card-text">AGES SERVED: {{obj.Ages_Served}}</p>
+                                    <p>M-F: {{obj.MTR == '' ? 'N.A' : obj.MTR}}</p>
+                                    <p>Speciality: <span style="color:#0094ff">{{obj.specType}}</span></p>
+                                    <p>LANGUAGES: {{obj.Languages}}</p>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+﻿
+
+<div class="panel-body">
+    <form class="form-style">
+            <fieldset>
+                <legend>
+                    <strong>Verification History</strong>
+                </legend>
+                <div ng-if="StateLicenseHistory.length>0" class="col-md-12">
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>License Number</th>
+                                <th>Issue Date</th>
+                                <th>Expiration Date</th>
+                                <th>Status</th>
+                                <th>Verified Date</th>
+                                <th>Verified Document</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="license in StateLicenseHistory">
+                            <tr>
+                                <td>{{license.VerificationData.LicenseNumber}}</td>
+                                <td>{{license.VerificationData.IssueDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{license.VerificationData.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{license.VerificationResult.VerificationResultStatus}}</td>
+                                <td><i class="wrap-words">{{license.VerificationDate | date:'MM/dd/yyyy'}}</i></td>
+                                <td><a ng-if="license.VerificationResult.VerificationDocumentPath" target="_blank" href="{{license.VerificationResult.VerificationDocumentPath}}"><i class="fa fa-file"></i></a></td>
+                                <td><a class="btn btn-xs btn-default" ng-click="closeDiv('state'+$index,'stateHistoryclass')"><i class="fa fa-eye"></i></a></td>
+                            </tr>
+                            <tr id="state{{$index}}" class="stateHistoryclass" style="display:none">
+                                <td colspan="7">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <fieldset>
+                                                <legend>
+                                                    <strong>State License Details</strong>
+                                                </legend>
+                                                <div class="row">
+                                                    <div class="col-lg-4 form-group">
+                                                        <label class="control-label small" for="SalutationType">State</label>
+                                                        <div>
+                                                            <i class="wrap-words">{{license.VerificationData.IssueState}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 form-group">
+                                                        <label class="control-label small" for="SalutationType">License Number</label>
+                                                        <div>
+                                                            <i class="wrap-words">{{license.VerificationData.LicenseNumber}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 form-group">
+                                                        <label class="control-label small" for="SalutationType">Issue Date</label>
+                                                        <div>
+                                                            <i class="wrap-words" ng-if="license.VerificationData.IssueDate" ng-bind="reformatDate(license.VerificationData.IssueDate)"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 form-group">
+                                                        <label class="control-label small" for="SalutationType">Expiration Date</label>
+                                                        <div>
+                                                            <i class="wrap-words" ng-if="license.VerificationData.ExpiryDate" ng-bind="reformatDate(license.VerificationData.ExpiryDate)"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 form-group">
+                                                        <label class="control-label small" for="SalutationType">Document</label>
+                                                        <div>
+                                                            <a ng-if="license.VerificationData.StateLicenseDocumentPath" target="_blank" href="{{license.VerificationData.StateLicenseDocumentPath}}"><i class="fa fa-file"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>
+                                                    <strong>Verification Details</strong>
+                                                </legend>
+                                                <div class="row">
+                                                    <div class="col-lg-3 form-group">
+                                                        <label class="control-label small" for="SalutationType">Status</label>
+                                                        <div>
+                                                            <i class="wrap-words">{{license.VerificationResult.VerificationResultStatus}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 form-group">
+                                                        <label class="control-label small" for="SalutationType">Source</label>
+                                                        <div>
+                                                            <a style="cursor:pointer" class="data-label wrap-words" ng-if="license.VerificationResult.Source" ng-click="checkForHttp(license.VerificationResult.Source)">{{license.VerificationResult.Source}}</a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 form-group">
+                                                        <label class="control-label small" for="SalutationType">Verified Date</label>
+                                                        <div>
+                                                            <i class="wrap-words">{{license.VerificationDate | date:'MM/dd/yyyy'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-9 form-group">
+                                                        <label class="control-label small" for="SalutationType">Remark</label>
+                                                        <div>
+                                                            <i class="wrap-words">{{license.VerificationResult.Remark}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 form-group">
+                                                        <label class="control-label small" for="SalutationType">Verified Document</label>
+                                                        <div>
+                                                            <a ng-if="license.VerificationResult.VerificationDocumentPath" target="_blank" href="{{license.VerificationResult.VerificationDocumentPath}}"><i class="fa fa-file"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <a class="btn btn-xs btn-warning" ng-click="closeDivOnCancel('stateHistoryclass')">Cancel</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" ng-if="StateLicenseHistory.length==0">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No History Available for state licenses</th>
+                            </tr>
+                        </thead>
+                    </table>
+</div>
+                <div class="col-md-12">
+                    <a class="btn btn-sm btn-warning" ng-click="StateHistory=false">Cancel</a>
+                </div>
+            </fieldset>
+    </form>
+</div>

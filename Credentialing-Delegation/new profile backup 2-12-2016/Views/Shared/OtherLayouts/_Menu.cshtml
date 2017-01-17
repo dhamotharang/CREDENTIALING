@@ -1,0 +1,160 @@
+﻿<!-- sidebar menu -->
+<script src="~/Resources/Data/Menu_Data.js"></script>
+<script src="~/Scripts/AppScripts/Home/Home.js"></script>
+
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu affix glayycolor" style="">
+    @*<div class="customTab">
+            <input type="checkbox" checked data-toggle="toggle" data-on="App" data-off="Work" data-onstyle="tabOn" data-offstyle="tabOff" data-width="90" data-size="mini" id="appWorkToggle">
+        </div>
+        <p id="menu_toggle" class="menu_toggle pull-right"><i class="fa fa-align-left toggleBtn" data-role="tooltip" data-placement="bottom" title="Menu Toggle"></i></p>*@
+
+    @if (!System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("UM") || System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CM") || System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CM") || System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("ETL"))
+    {
+        <div class="float_menu_toggle bg-orange" data-role="tooltip" data-placement="left" title="Click to View Float Menu" data-original-title="Click to View Float Menu">
+            <i class="fa fa-outdent" style="cursor:pointer"></i>
+        </div>
+    }
+    <div class="menu_section" id="menu_section" style="overflow-y:auto">
+        @if (!(System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("UM") || System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("MH") || System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CM") || System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CredAxis") || System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("ETL")))
+        {
+            <div class="paper-input__wrapper">
+                @*<input class="paper-input paper-input--floating" ng-model="Search" type="text" />
+                <label>Search</label>*@
+                <span class="info-number outer_menu_item_top cursor_pointer " style="height: 34px;top: 10px; " id="backToMenu">
+                    <nobr>
+                        <span style="position: relative; left: 16px; top: 5px; font-size: 14px;">
+                            <img src="~/Resources/Images/Icons/newback.png" style="height: 14px;" />
+                            <span class="go-back-btn">Go to Main Menu </span>
+                        </span>
+                    </nobr>
+                </span>
+            </div>
+        }
+        <div id="menu-container" class="menu_container">
+            <ul class="nav side-menu app_menu">
+                @if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("UM"))
+                {
+                    @*UM MENU*@
+                    @Html.Partial("~/Areas/UM/Views/Shared/_UMSideMenu.cshtml")
+                }
+                else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CM"))
+                {
+                    @Html.Partial("~/Areas/CM/Views/Shared/_CMSideMenu.cshtml")
+                }
+                else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("CredAxis"))
+                {
+                    @Html.Partial("~/Areas/CredAxis/Views/Shared/_SideMenu.cshtml")
+                }
+                else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("MH"))
+                {
+                    @Html.Partial("~/Areas/MH/Views/Shared/_MHSideMenu.cshtml")
+                }
+                 else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("Facility"))
+                {
+                    @Html.Partial("~/Areas/Facility/Views/Shared/_FacilitySideMenu.cshtml")
+                }
+                 else if (System.Configuration.ConfigurationManager.AppSettings["ApplicationHosting"].Equals("ETL"))
+                {
+                    @Html.Partial("~/Areas/ETL/Views/Shared/_ETLSideMenu.cshtml")
+                }
+                else
+                {
+                    <li class="collapsed_click" ng-repeat="menu in menuItem | filter:Search">
+                        <a class="expand_click menu_click_expanded" ng-if="menu.childMenu.length>0">
+                            <i ng-class="menu.IconClass"></i><span class="text_beside_icon">{{menu.Heading}}</span>
+                            <span ng-if="menu.childMenu.length>0" class="menuCarat fa fa-chevron-down"></span>
+                        </a>
+                        <a class="expand_click menu_click_expanded tab-navigation" ng-if="menu.childMenu==0"
+                           data-tab-action="{{menu.Action}}"
+                           data-tab-title="{{menu.Title}}"
+                           data-tab-path="{{menu.Path}}"
+                           data-tab-container="{{menu.Container}}"
+                           data-tab-data-path="{{menu.dataPath}}"
+                           data-tab-autoflush="{{menu.AutoFlush}}">
+                            <i ng-class="menu.IconClass"></i><span class="text_beside_icon">{{menu.Heading}}</span>
+                            <span ng-if="menu.childMenu.length>0" class="menuCarat fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu" style="display: none;" ng-if="menu.childMenu.length>0">
+                            <li ng-repeat="childMenuItem in menu.childMenu">
+                                <a class="inner_menu_item tab-navigation" href=""
+                                   data-tab-action="{{childMenuItem.Action}}"
+                                   data-tab-title="{{childMenuItem.TabTitle}}"
+                                   data-tab-path="{{childMenuItem.Path}}"
+                                   data-tab-container="{{childMenuItem.Container}}"
+                                   data-tab-floatmenu="{{childMenuItem.FloatMenu}}"
+                                   data-tab-float-menu-path="{{childMenuItem.FloatMenuPath}}">{{childMenuItem.Title}}</a>
+                            </li>
+                        </ul>
+                        <span class="label_on_collapsed">{{menu.collapsedLabel}}</span>
+                    </li>
+                    <script>
+                        function slideMenu(ele) {
+                            if (ele.is('.active')) {
+                                ele.removeClass('active active-sm');
+                                $('ul:first', ele).slideUp();
+                            } else {
+                                // prevent closing menu if we are on child menu
+                                if (!ele.parent().is('.child_menu')) {
+                                    $('#sidebar-menu').find('li').removeClass('active active-sm');
+                                    $('#sidebar-menu').find('li ul').slideUp();
+                                }
+                                else {
+                                    if (ele.parent().children().hasClass('active')) {
+                                        ele.parent().find('li').removeClass('active active-sm');
+                                        ele.parent().find('li ul').slideUp();
+                                    }
+                                }
+                                ele.addClass('active');
+                                $('ul:first', ele).slideDown();
+                            }
+                        };
+                        $('#sidebar-menu').on('click', '.menu_click_expanded', function (ev) {
+                            var $li = $(this).parent();
+                            slideMenu($li);
+                        });
+                    </script>
+
+                }
+                <div class="work_menu_overlay"></div>
+                <div id="work_menu" class="work_menu">
+
+                    <div class="clearfix"></div>
+                    <ul class="nav side-menu memberinnermenu" id="FloatMenu"></ul>
+                </div>
+            </ul>
+
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- /sidebar menu -->
+<!-- /menu footer buttons -->
+@*<div class="sidebar-footer hidden-small" style="display: block;">
+            <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="" data-original-title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Logout">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </a>
+        </div><div class="sidebar-footer hidden-small" style="display: block;">
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="FullScreen">
+            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Lock">
+            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Logout">
+            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+        </a>
+    </div>*@
+<!-- /menu footer buttons -->

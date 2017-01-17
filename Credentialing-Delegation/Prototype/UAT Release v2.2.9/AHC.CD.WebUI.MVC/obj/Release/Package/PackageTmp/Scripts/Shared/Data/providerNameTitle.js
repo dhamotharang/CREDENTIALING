@@ -1,0 +1,31 @@
+﻿var providerNameTitles = [{
+    titleId: 1,
+    titaleName: "MD"
+}, {
+    titleId: 2,
+    titaleName: "DO"
+}, {
+    titleId: 3,
+    titaleName: "PA"
+}, {
+    titleId: 4,
+    titaleName: "ARNP"
+}, {
+    titleId: 5,
+    titaleName: "CSW"
+}, {
+    titleId: 6,
+    titaleName: "Mr"
+}, {
+    titleId: 7,
+    titaleName: "Mrs"
+}, {
+    titleId: 8,
+    titaleName: "Miss"
+}, {
+    titleId: 9,
+    titaleName: "Dr"
+}, {
+    titleId: 10,
+    titaleName: "Sir"
+}];

@@ -1,0 +1,171 @@
+﻿@using PortalTemplate.Helper
+@*@using PratianUI
+@model PortalTemplate.Areas.CMS.Models.PlanViewModel*@
+<p-script filepath="~/Areas/CredAxis/Scripts/Common/GlobalSearch/NonMinified/SearchProvider.js"></p-script>
+<p-link filepath="~/Areas/CredAxis/CSS/CredAxisStyleSheet.css"></p-link>
+<p-link filepath="~/Areas/CredAxis/CSS/SearchProvider/SearchProvider.css"></p-link>
+
+<div class="container serachmarginleft" id="inputFieldsTable">
+
+    <div class="col-lg-12 Divspace" >
+        <div class="col-lg-2">
+            <label class="theme_label_data1">NPI</label>
+            <input id="providernpiInput" class="form-control input-sm text-uppercase labelinputspace" type="text" placeholder="NPI" />
+        </div>
+        <div class="col-lg-3">
+            <label class="theme_label_data1">LAST NAME</label>
+            <input id="lastNameInput" class="form-control input-sm text-uppercase labelinputspace" type="text" placeholder="Last Name" />
+        </div>
+        <div class="col-lg-3">
+            <label class="theme_label_data1">FIRST NAME</label>
+            <input id="firstNameInput" class="form-control input-sm text-uppercase labelinputspace" type="text" placeholder="First Name" />
+        </div>
+        <div class="col-lg-2">
+            <label class="theme_label_data1">LEVEL</label>
+            @*<input type="text" placeholder="Level" />*@
+            <select id="providerlevelInput" class="form-control input-sm text-uppercase labelinputspace">
+                <option value="" selected disabled>--Select--</option>
+                <option value="DOCTOR">DOCTOR</option>
+                <option value="NURSE">NURSE</option>
+                <option value="MID LEVEL">MID LEVEL</option>
+            </select>
+        </div>
+        <div class="col-lg-2">
+            <label class="theme_label_data1">RELATIONSHIP</label>
+            @*<input  />*@
+            <select id="RelationshipInput" class="form-control input-sm text-uppercase labelinputspace">
+                <option value="" selected disabled>--Select--</option>
+                <option value="EMPLOYEE">EMPLOYEE</option>
+                <option value="AFFILIATE">AFFILIATE</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-lg-12 Divspace">
+
+        <div class="col-lg-4">
+            <label class="theme_label_data1 labelselectspace">SPECIALTY</label><br />
+            <select id="specialtyInput" class="form-control  text-uppercase typeMutiple " multiple="multiple">
+                <option>Cardiology</option>
+                <option>Anesthesiology</option>
+                <option>Chiropractor, Nutrition</option>
+                <option>Allergy and Immunology</option>
+            </select>
+           @* @Html.PratianUiDropDownListFor(e => e.Name, "/MasterData/GetAllPlanName", 1, "100%", "SPECIALTY", "500", "PlanTypeID", "Name", new { @class = "form-control input-xs text-uppercase", id = "specialtyInput" })*@
+            
+        </div>
+        <div class="col-lg-3">
+            <label class="theme_label_data1 labelselectspace">GROUP/IPA</label>
+            <select id="groupipaInput" class="form-control  text-uppercase groupMutiple " multiple="multiple">
+                <option>ACCESS 2</option>
+                <option>UNITY</option>
+                <option>ACO  1</option>
+                <option>MIRRA</option>
+            </select>
+           @* @Html.PratianUiDropDownListFor(e => e.Name, "/Portal/MasterData/GetAllPlanName", 1, "100%", "GROUP/IPA", "500", "CompanyID", "CompanyName", new { @class = "form-control input-xs text-uppercase", id = "groupipaInput" })*@
+        </div>
+        <div class="col-lg-3">
+            <label class="theme_label_data1 labelselectspace">PLAN</label><br />
+            <select id="planInput" class="form-control  text-uppercase planMutiple " multiple="multiple">
+                <option>ULTIMATE</option>
+                <option>WELLCARE</option>
+                <option>HUMANA</option>
+                <option>FREEDOM</option>
+            </select>
+            @*@Html.PratianUiDropDownListFor(e => e.Name, "/Portal/MasterData/GetAllPlanName", 1, "100%", "PLAN", "500", "CompanyID", "CompanyName", new { @class = "form-control input-xs text-uppercase", id = "planInput" })*@
+        </div>
+        <div class="col-lg-2 " id="searchActionItems">
+
+            <button class="btn btn-primary btn-sm labelselectspace" id="searchProviderButton" disabled><i class="fa fa-search"></i></button>
+            <button class="btn btn-cancel btn-sm labelselectspace" id="clearSearchButton" disabled><i class="fa fa-2x fa-remove removebutton"></i></button>
+        </div>
+    </div>
+
+</div>
+<div class="clearfix"></div>
+<div class="clearfix"></div>
+<div class="clearfix"></div>
+<div id="spinner_wrapper"  >
+
+
+    @*<table class="table" id="inputFieldsTable">
+        <thead>
+            <tr>
+                <th class="theme_label_data1">NPI</th>
+                <th class="theme_label_data1"> LAST NAME</th>
+                <th class="theme_label_data1"> FIRST NAME</th>
+                <th class="theme_label_data1">LEVEL</th>
+                <th class="theme_label_data1">RELATIONSHIP</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="providernpiInput" class="form-control input-sm text-uppercase" type="text" placeholder="NPI" /></td>
+                <td><input id="lastNameInput" class="form-control input-sm text-uppercase" type="text" placeholder="Last Name" /></td>
+                <td><input id="firstNameInput" class="form-control input-sm text-uppercase" type="text" placeholder="First Name" /></td>
+                <td><input id="providerlevelInput" class="form-control input-sm text-uppercase" type="text" placeholder="Level" /></td>
+                <td><input id="RelationshipInput" class="form-control input-sm text-uppercase" type="text" placeholder="Relationship" /></td>
+                
+            </tr>
+        </tbody>
+    </table>
+    <table class="table secondtable" id="inputFieldsTable">
+        <thead>
+            <tr>
+                <th class="theme_label_data1">TYPE</th>
+                <th class="theme_label_data1">GROUP/IPA</th>
+                <th class="theme_label_data1">PLAN</th>
+                <th class="theme_label_data1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+             
+                <td>
+                    <select id="specialtyInput" class="form-control  text-uppercase typeMutiple" multiple="multiple">
+                        <option>Cardiology</option>
+                        <option>Anesthesiology</option>
+                        <option>Chiropractor, Nutrition</option>
+                        <option>Allergy and Immunology</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="groupipaInput" class="form-control  text-uppercase groupMutiple" multiple="multiple">
+                        <option>ACCESS 2</option>
+                        <option>UNITY</option>
+                        <option>ACO  1</option>
+                        <option>MIRRA</option>
+                    </select>
+                </td>
+                
+                <td>
+                    <select id="planInput" class="form-control  text-uppercase planMutiple" multiple="multiple">
+                        <option>ULTIMATE</option>
+                        <option>WELLCARE</option>
+                        <option>HUMANA</option>
+                        <option>FREEDOM</option>
+                    </select>
+                </td>
+                <td id="searchActionItems" class="width_4">
+                    <button class="btn btn-primary btn-sm" id="searchProviderButton" disabled><i class="fa fa-search"></i></button>
+                    <button class="btn btn-cancel btn-sm" id="clearSearchButton" disabled><i class="fa fa-remove removebutton"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>*@
+   
+    <div id="resultCountSection" class="theme_label_data margin_top_10_px" style="display: none;" >
+        Search Provider Result(s) - <span id="resultCount"></span> out of <span id="ActualresultCount"></span>
+ @*Search Provider Result - <span id="resultCount"></span> Result(s)*@
+        <span id="exportOptionsForAdvanceUMSearch">
+            @*<button class="pointer MemberSearchfilterBtn btn-xs theme_label_data" style="background-color:#ffffff; border:none">Filter <i class="fa fa-caret-down" style="color: #203764 !important;"></i></button>*@
+            @Html.ExportOptions("excel", "print", "filter")
+        </span>
+    </div>
+    <div id="tableWrapper" style="display: none;">
+        @Html.Partial("~/Areas/CredAxis/Views/SearchProvider/_SearchProviderResultGrid.cshtml")
+    </div>
+    <div id="noResultFound" class="hidden">
+        <h5>No Data Available</h5>
+    </div>
+</div>

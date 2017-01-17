@@ -1,0 +1,282 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.DocumentRepository.OtherDocumentViewModel
+
+<br />
+<script src="~/Areas/Profile/Scripts/JavaScripts/documentRepositoryController.js"></script>
+
+<div class="panel-group" ng-controller="DocumentRepositoryController">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Document Repository Management
+            </legend>
+            <div class="legend2 pull-right">
+                <a ng-click="AddNewDocument({LicenseTypeID:0})" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add New</a>
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <ul class="list-group">
+                        <li ng-if="lt.Licenses.length != 0" ng-repeat="lt in LicenseTypes track by $index" class="list-group-item">
+                            <a ng-click="ViewLicenseList(lt, 0)" class="pointer"><i class="fa" ng-class="{'fa-minus-square-o':SelectedLicenseType.LicenseTypeID==lt.LicenseTypeID, 'fa-plus-square-o':SelectedLicenseType.LicenseTypeID!=lt.LicenseTypeID}"></i></a> {{lt.LicenseTypeName}}
+                            @*<a ng-click="AddNewDocument(lt)" class="btn btn-xs btn-primary pull-right" style="margin-left: 10px;"><i class="fa fa-plus"></i> Add</a>
+                                <a ng-click="ViewLicenseList(lt, 1)" class="btn btn-xs btn-primary pull-right" tooltip data-toggle="tooltip" data-placement="left" title="View Archive"><i class="fa fa-clock-o"></i></a>*@
+                            @*<ul ng-if="SelectedLicenseType.LicenseTypeID == lt.LicenseTypeID" class="list-group">
+                                    <li  ng-click="ViewLicense(l)" class="list-group-item pointer" ng-class="{'active':SelectedLicense.LicenseID==l.LicenseID}">{{l.LicenseName}}</li>
+
+                                </ul>*@
+                            <table ng-if="SelectedLicenseType.LicenseTypeID == lt.LicenseTypeID && !IsHistoryView" class="table table-striped" style="border:none">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th class="col-lg-4">Description</th>
+                                        <th class="col-lg-4">Uploaded Date</th>
+                                        <th ng-if="SelectedLicenseType.LicenseTypeID == 20" class="col-lg-3"></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr ng-repeat="l in lt.Licenses">
+
+                                        <td class="col-lg-4"><a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a></td>
+                                        <td class="col-lg-4">{{l.Description}}</td>
+                                        <td>{{l.ModifiedDate | date:sort}}</td>
+                                        <td ng-if="SelectedLicenseType.LicenseTypeID == 20">
+                                            <span class="badge pointer" ng-click="EditDocument(lt, l)" style="background-color: #337ab7;" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></span>
+                                            <span class="badge pointer" ng-click="RemoveDocument(lt, l)" style="background-color: #a94442;" tooltip data-toggle="tooltip" data-placement="left" title="Remove"><i class="fa fa-minus"></i></span>
+                                        </td>
+                                        @*<td ng-if="SelectedLicenseType.LicenseTypeID == 5">
+
+                                            <span class="badge pointer" ng-click="EditDocument(lt, l)" style="background-color: #337ab7;" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></span>
+                                            <span class="badge pointer" ng-click="RemoveDocument(lt, l)" style="background-color: #a94442;" tooltip data-toggle="tooltip" data-placement="left" title="Remove"><i class="fa fa-minus"></i></span>
+
+                                        </td>*@
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            @*<ul ng-if="SelectedLicenseType.LicenseTypeID == lt.LicenseTypeID && !IsHistoryView" class="list-group">
+                                    <li ng-repeat="l in lt.Licenses" class="list-group-item">
+                                        <span ng-if="SelectedLicenseType.LicenseTypeID == 20" class=" badge pointer" ng-click="EditDocument(lt, l)" style="background-color: #337ab7;" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></span>
+                                        <span ng-if="SelectedLicenseType.LicenseTypeID == 20" class="badge pointer" ng-click="RemoveDocument(lt, l)" style="background-color: #a94442;" tooltip data-toggle="tooltip" data-placement="left" title="Remove"><i class="fa fa-minus"></i></span>
+
+                                        <a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a>
+                                        <label class="pull-right">{{l.ModifiedDate | date:sort}}</label>
+                                        <label class="pull-right">{{l.Description}}</label>
+                                    </li>
+                                </ul>*@
+                            @*<ul ng-if="SelectedLicenseType.LicenseTypeID == lt.LicenseTypeID && IsHistoryView" class="list-group">
+                                    <li class="list-group-item">
+                                        <table class="table table-bordered table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Archive Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="l in lt.LicenseHistories">
+                                                    <td><a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a></td>
+                                                    <td>{{l.removeDate | date:sort}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a>
+                                    </li>
+                                </ul>*@
+                        </li>
+                        <li ng-if="PSVLicenses != null && PSVLicenses.Licenses.length != 0" class="list-group-item">
+                            <a ng-click="ViewLicenseList(PSVLicenses, 0)" class="pointer"><i class="fa" ng-class="{'fa-minus-square-o':SelectedLicenseType.LicenseTypeID==PSVLicenses.LicenseTypeID, 'fa-plus-square-o':SelectedLicenseType.LicenseTypeID!=PSVLicenses.LicenseTypeID}"></i></a> {{PSVLicenses.LicenseTypeName}}
+
+                            @*<ul ng-if="SelectedLicenseType.LicenseTypeID == PSVLicenses.LicenseTypeID && !IsHistoryView" class="list-group">*@
+                            <table ng-if="SelectedLicenseType.LicenseTypeID == PSVLicenses.LicenseTypeID && !IsHistoryView" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="col-lg-4">Document</th>
+                                        <th class="col-lg-4">Verified Parameter</th>
+                                        <th class="col-lg-4">Verified Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr ng-repeat="l in PSVLicenses.Licenses">
+                                        <td><a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a></td>
+                                        <td>{{l.Title}}</td>
+                                        <td>{{l.VerificationDate | date:sort}}</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                            @*<li ng-repeat="l in PSVLicenses.Licenses" class="list-group-item">
+
+                                    <a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a>
+
+                                    <label class="pull-right">{{l.VerificationDate | date:'MM-dd-yyyy'}}</label>
+
+                                </li>*@
+                            @*</ul>*@
+
+                        </li>
+                        <li ng-if="CCMLicenses != null && CCMLicenses.Licenses.length != 0" class="list-group-item">
+                            <a ng-click="ViewLicenseList(CCMLicenses, 0)" class="pointer"><i class="fa" ng-class="{'fa-minus-square-o':SelectedLicenseType.LicenseTypeID==CCMLicenses.LicenseTypeID, 'fa-plus-square-o':SelectedLicenseType.LicenseTypeID!=CCMLicenses.LicenseTypeID}"></i></a> {{CCMLicenses.LicenseTypeName}}
+
+                            @*<ul ng-if="SelectedLicenseType.LicenseTypeID == PSVLicenses.LicenseTypeID && !IsHistoryView" class="list-group">*@
+                            <table ng-if="SelectedLicenseType.LicenseTypeID == CCMLicenses.LicenseTypeID && !IsHistoryView" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Document</th>
+                                        <th class="pull-right">Verified Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr ng-repeat="l in CCMLicenses.Licenses">
+                                        <td><a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a></td>
+                                        <td class="pull-right">{{l.VerificationDate | date:sort}}</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </li>
+                    </ul>
+                </div>
+
+                <div ng-if="IsMessage" class="col-lg-8 col-md-8 col-sm-8 form-style">
+                    <div class="alert alert-success" role="alert">
+                        <strong>Success!</strong> {{SuccessMessage}}
+                    </div>
+                </div>
+                <div ng-if="IsFail" class="col-lg-8 col-md-8 col-sm-8 form-style">
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Failure!</strong> {{FailureMessage}}
+                    </div>
+                </div>
+
+                <div ng-if="!IsAddNewDocument && SelectedLicense.LicenseID" class="col-lg-8 col-md-8 col-sm-8 form-style">
+                    <fieldset>
+                        <legend>Document Preview</legend>
+                        <div class="legend2 pull-right">
+                            <button type="button" ng-click="cancelDocumentPreview()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Close"><i class="fa fa-times text-danger"></i></button>
+                        </div>
+                        <iframe ng-src="{{path}}" width="650" height="735" frameborder="0"></iframe>
+                    </fieldset>
+                </div>
+                <div id="newDocumentForm">
+                    <form enctype="multipart/form-data" name="DocumentForm">
+
+                        <div ng-if="IsAddNewDocument" class="col-lg-8 col-md-8 col-sm-8 form-style">
+                            <fieldset>
+                                <legend>
+
+                                    <span ng-if="isAdd">New Document</span>
+                                    <span ng-if="isUpdate">Edit Document</span>
+
+                                </legend>
+                                @*<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <label class="control-label small">Category* :</label>
+                                        <div class="form-group">
+                                            <select ng-model="TempObject.CategoryID" class="form-control input-sm">
+                                                    <option selected disabled>-Select-</option>
+                                                    <option ng-repeat="lt in LicenseTypes track by $index" value="{{lt.LicenseTypeID}}">{{lt.LicenseTypeName}}</option>
+                                                </select>
+                                            <input type="text" ng-model="TempObject.CategoryName" class="form-control input-sm" placeholder="Category" />
+                                        </div>
+                                    </div>*@
+
+                                <div ng-if="TempObject.ID" ng-hide="true">
+                                    @Html.EditorFor(model => model.OtherDocumentID, new { htmlAttributes = new { data_ng_model = "TempObject.ID" } })
+                                    @*<input type="hidden" value="TempObject.ID" id="OtherDocumentID" name="OtherDocumentID" data-ng-model="TempObject.ID" />*@
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    @*<label class="control-label small">Title* :</label>*@
+                                    <label class="control-label small">Document Name *:</label>@*@Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label small" })*@
+                                    <div class="form-group">
+                                        @*<input type="text" ng-model="TempObject.Title" class="form-control input-sm" placeholder="title" />*@
+                                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "TempObject.Title", placeholder = "title" } })
+                                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 form-group">
+                                    @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label small" })
+                                    <div class="col-lg-12 fileinput fileinput-new input-group" data-provides="fileinput">
+                                        <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                                        <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                            <span class="fileinput-new">Select Document</span><span class="fileinput-exists">Change</span>
+                                            @Html.TextBoxFor(model => model.File, new { type = "file", data_ng_model = "TempObject.FilePath", onchange = "setFileNameWith(this);" })
+                                        </span>
+                                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+
+                                    </div>
+
+                                    <a ng-if="isUpdate" href="/Document/View?path={{FilePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Other Document"><i class="fa fa-2x fa-file"></i></a>
+                                    @*<div ng-if="TempObject.FilePath" class="col-lg-1 form-group">
+
+                                            <a href="/Document/View?path={{TempObject.FilePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="left" title="Other Document"><i class="fa fa-2x fa-file"></i></a>
+
+                                        </div>*@
+                                    <p style="color:red;" ng-if="isError">{{message}}</p>
+                                    @*@Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })*@
+
+                                </div>
+
+                                <div ng-hide="true">
+
+                                    @Html.HiddenFor(model => model.DocumentPath, new { @Value = "{{TempObject.FilePath}}" })
+                                    @*<input type="hidden" value="TempObject.FilePath" name="DocumentPath" data-ng-model="TempObject.FilePath" />*@
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            @*<input type="checkbox" ng-model="TempObject.IsPrivate"> Private*@
+                                            @Html.CheckBoxFor(model => model.IsPrivate, new { data_ng_model = "TempObject.IsPrivate", id = "Private" }) Private
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <button ng-if="isAdd" type="submit" ng-click="saveOtherDocument('newDocumentForm')" class="btn btn-sm btn-primary pull-right">Add</button>
+                                    <button ng-if="isUpdate" type="submit" ng-click="updateOtherDocument('newDocumentForm')" class="btn btn-sm btn-primary pull-right">Update</button>
+                                    <button ng-click="CancelAdd();" class="btn btn-sm btn-warning pull-left">Cancel</button>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!--------------------- Alert Modal --------------->
+                        <!-- Modal -->
+                        <div class="modal fade" id="DocRemoveConfirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Confirmation - Remove Document</h4>
+                                    </div>
+                                    <div class="col-lg-12 text-center" ng-show="isRemoved">
+                                        <div style="margin-top:2%;">
+                                            <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                                        </div>
+                                    </div>
+                                    <div class="modal-body" ng-show="!isRemoved">
+                                        <span>
+                                            Are you sure, you want to remove the Document
+                                        </span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-xs btn-default" data-dismiss="modal">No</button>
+                                        <button type="submit" ng-click="removeOtherDocument('newDocumentForm')" class="btn btn-xs btn-primary">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end modal -->
+
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

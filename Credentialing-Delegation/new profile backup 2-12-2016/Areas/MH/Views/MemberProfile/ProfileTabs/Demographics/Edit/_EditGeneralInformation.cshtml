@@ -1,0 +1,172 @@
+﻿@model PortalTemplate.Areas.MH.Models.ViewModels.ProfileManagement.GeneralInformationViewModel
+@{
+    List<SelectListItem> Prefixes = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Mr" , Text = "Mr." },
+        new SelectListItem { Value = "Mrs" , Text = "Mrs." },
+        new SelectListItem { Value = "Madam" , Text = "Madam." },
+        new SelectListItem { Value = "Sir" , Text = "Sir." },
+        new SelectListItem { Value = "Dr" , Text = "Dr." },
+    };
+    List<SelectListItem> Suffixes = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Jr" , Text = "Jr." },
+        new SelectListItem { Value = "Sr" , Text = "Sr." },
+    };
+    List<SelectListItem> Religions = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Christian" , Text = "Christian" },
+        new SelectListItem { Value = "Buddhist" , Text = "Buddhist" },
+        new SelectListItem { Value = "Hindu" , Text = "Hindu" },
+        new SelectListItem { Value = "Sikh" , Text = "Sikh" },
+    };
+    List<SelectListItem> Ethnicities = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "American" , Text = "American" },
+        new SelectListItem { Value = "Asian" , Text = "Asian" },
+    };
+    List<SelectListItem> Races = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "White" , Text = "White" },
+        new SelectListItem { Value = "Black" , Text = "Black" },
+    };
+    List<SelectListItem> Genders = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Male" , Text = "Male" },
+        new SelectListItem { Value = "Female" , Text = "Female" },
+        new SelectListItem { Value = "Others" , Text = "Others" },
+    };
+    List<SelectListItem> MaritalStatus = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Married" , Text = "Married" },
+        new SelectListItem { Value = "Single" , Text = "Single" },
+        new SelectListItem { Value = "Divorced" , Text = "Divorced" },
+    };
+    List<SelectListItem> MedicareCategories = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "Part A" , Text = "Part A" },
+        new SelectListItem { Value = "Part B" , Text = "Part B" },
+        new SelectListItem { Value = "Part C" , Text = "Part C" },
+    };
+    List<SelectListItem> Languages = new List<SelectListItem>(){
+        new SelectListItem { Value = "" , Text = "select"},
+        new SelectListItem { Value = "English" , Text = "English" },
+        new SelectListItem { Value = "Hindi" , Text = "Hindi" },
+        new SelectListItem { Value = "Spanish" , Text = "Spanish" },
+    };
+}
+@using (Ajax.BeginForm("UpdateDemographics", "MemberProfile", "MH" ,new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "MemberGeneralInfo", InsertionMode = InsertionMode.Replace }, new { id = "GeneralInformationForm" }))
+{ 
+<fieldset class="fsStyle">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase">
+            General Information
+        </span>
+    </legend>
+    <div class="x_panel zero-padding-left-right" id="PreAuthFacility">
+        <div class="col-lg-12 zero-padding-left-right">
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.Prefix)</span>
+                @Html.DropDownListFor(m => m.Prefix, Prefixes, new { @class = "form-control input-xs text-uppercase", @placeholder = "SALUTATION", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.LastName)</span>
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control input-xs text-uppercase", @placeholder = "LAST NAME", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.FirstName)</span>
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control input-xs text-uppercase", @placeholder = "FIRST NAME", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.MiddleInitial)</span>
+                @Html.TextBoxFor(m => m.MiddleInitial, new { @class = "form-control input-xs text-uppercase", @placeholder = "MIDDLE INITIAL", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.Suffix)</span>
+                @Html.DropDownListFor(m => m.Suffix, Suffixes, new { @class = "form-control input-xs text-uppercase", @placeholder = "Suffix", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.Gender)</span>
+                @Html.DropDownListFor(m => m.Gender, Genders, new { @class = "form-control input-xs text-uppercase", @placeholder = "GENDER", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.MaritalStatus)</span>
+                @Html.DropDownListFor(m => m.MaritalStatus, MaritalStatus, new { @class = "form-control input-xs text-uppercase", @placeholder = "MARITAL STATUS", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.DOB)</span>
+                @Html.TextBoxFor(m => m.DOB, new { @class = "form-control input-xs text-uppercase", @placeholder = "DOB", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.DOD)</span>
+                @Html.TextBoxFor(m => m.DOD, new { @class = "form-control input-xs text-uppercase", @placeholder = "DOD", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.PlaceOfBirth)</span>
+                @Html.TextBoxFor(m => m.PlaceOfBirth, new { @class = "form-control input-xs text-uppercase", @placeholder = "Place of Birth", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.Religion)</span>
+                @Html.DropDownListFor(m => m.Religion, Religions, new { @class = "form-control input-xs text-uppercase", @placeholder = "Religion", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.Ethnicity)</span>
+                @Html.DropDownListFor(m => m.Ethnicity, Ethnicities, new { @class = "form-control input-xs text-uppercase", @placeholder = "Ethnicity", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.Race)</span>
+                @Html.DropDownListFor(m => m.Race, Races, new { @class = "form-control input-xs text-uppercase", @placeholder = "Race", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.SSN)</span>
+                @Html.TextBoxFor(m => m.SSN, new { @class = "form-control input-xs text-uppercase", @placeholder = "SSN", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.PolicyNumber)</span>
+                @Html.TextBoxFor(m => m.PolicyNumber, new { @class = "form-control input-xs text-uppercase", @placeholder = "Policy Number", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.PatientAccountNumber)</span>
+                @Html.TextBoxFor(m => m.PatientAccountNumber, new { @class = "form-control input-xs text-uppercase", @placeholder = "Patient Account Number", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.EmploymentStatus)</span>
+                @Html.TextBoxFor(m => m.EmploymentStatus, new { @class = "form-control input-xs text-uppercase", @placeholder = "Employment Status", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.FamilyLinkID)</span>
+                @Html.TextBoxFor(m => m.FamilyLinkID, new { @class = "form-control input-xs text-uppercase", @placeholder = "Family Link ID", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.PreferredLanguage)</span>
+                @Html.DropDownListFor(m => m.PreferredLanguage, Languages, new { @class = "form-control input-xs text-uppercase", @placeholder = "Preferred Language", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label"><label for="FAX_NUMBER">Are you US Citizen?</label></span><br>
+                <input id="uscitizen" type="radio" name="USCitizen" class="checkbox-radio text-uppercase" value="Yes">
+                <label for="uscitizen" class="theme_label_data"><span></span>YES</label>
+                <input id="nonuscitizen" type="radio" name="USCitizen" class="checkbox-radio text-uppercase" value="No">
+                <label for="nonuscitizen" class="theme_label_data"><span></span>NO</label>
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.HICN)</span>
+                @Html.TextBoxFor(m => m.HICN, new { @class = "form-control input-xs text-uppercase", @placeholder = "HICN", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.MedicareEffectiveDate)</span>
+                @Html.TextBoxFor(m => m.MedicareEffectiveDate, new { @class = "form-control input-xs text-uppercase", @placeholder = "Medicare Effective Date", @id = "" })
+            </div>
+            <div class="inline_block margin_right_1">
+                <span class="theme_label">@Html.LabelFor(m => m.EntitledTo)</span>
+                @Html.DropDownListFor(m => m.EntitledTo, MedicareCategories, new { @class = "form-control input-xs text-uppercase", @placeholder = "Entitled To", @id = "" })
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12">
+        <button type="submit" class="btn btn-primary pull-right">Update</button>
+        <button type="button" class="btn btn-danger pull-left cancelEditGeneralInfo" @*onclick="location.href='@Url.Action("GetDemographicsDetails", "MemberProfile", new { id = Model.HICN })'"*@>Cancel</button>
+    </div>
+</fieldset>
+}
+<br /><br /><br /><br />

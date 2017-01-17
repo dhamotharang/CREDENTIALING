@@ -1,0 +1,443 @@
+﻿//--------------------- Angular Module ----------------------
+var masterDataQuestions = angular.module("masterDataQuestions", ["ahc.cd.util", 'ui.bootstrap']);
+
+masterDataQuestions.service('messageAlertEngine', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
+
+    $rootScope.messageDesc = "";
+    $rootScope.activeMessageDiv = "";
+    $rootScope.messageType = "";
+
+    var animateMessageAlertOff = function () {
+        $rootScope.closeAlertMessage();
+    };
+
+
+    this.callAlertMessage = function (calledDiv, msg, msgType, dismissal) { //messageAlertEngine.callAlertMessage('updateHospitalPrivilege' + IndexValue, "Data Updated Successfully !!!!", "success", true);                            
+        $rootScope.activeMessageDiv = calledDiv;
+        $rootScope.messageDesc = msg;
+        $rootScope.messageType = msgType;
+        if (dismissal) {
+            $timeout(animateMessageAlertOff, 5000);
+        }
+    }
+
+    $rootScope.closeAlertMessage = function () {
+        $rootScope.messageDesc = "";
+        $rootScope.activeMessageDiv = "";
+        $rootScope.messageType = "";
+    }
+}])
+
+//=========================== Controller declaration ==========================
+masterDataQuestions.controller('masterDatamasterDataQuestionsController', ['$scope', '$http', '$filter', 'messageAlertEngine', function ($scope, $http, $filter, messageAlertEngine) {
+
+    //----------------------------Get Questions------------------------------------------
+    $http.get("/MasterDataNew/GetAllQuestions").then(function (value) {
+        console.log("Questions");
+        console.log(value);
+
+        for (var i = 0; i < value.data.length ; i++) {
+            if (value.data[i] != null) {
+                value.data[i].LastModifiedDate = $scope.ConvertDateFormat(value.data[i].LastModifiedDate);
+            }
+        }
+
+        $scope.Questions = angular.copy(value.data);       
+        console.log($scope.Questions);
+    });
+
+
+    //----------------------------Get Questions Category------------------------------------------
+    $http.get("/MasterDataNew/GetAllQuestionCategories").then(function (value) {
+        console.log("QuestionCategories");
+        console.log(value);
+
+        for (var i = 0; i < value.data.length ; i++) {
+            if (value.data[i] != null) {
+                value.data[i].LastModifiedDate = $scope.ConvertDateFormat(value.data[i].LastModifiedDate);
+            }
+        }
+
+        $scope.QuestionCategories = angular.copy(value.data);        
+        console.log($scope.QuestionCategories);
+    });
+
+    //Convert the date from database to normal
+    $scope.ConvertDateFormat = function (value) {
+        ////console.log(value);
+        var returnValue = value;
+        try {
+            if (value.indexOf("/Date(") == 0) {
+                returnValue = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+            }
+            return returnValue;
+        } catch (e) {
+            return returnValue;
+        }
+        return returnValue;
+    };
+
+    
+
+    //------------------- data init -------------------
+    $scope.tempQuestion = {};
+    $scope.tempQC = {};
+    $scope.tempQT = {};
+
+    //------------ Question Template return -------------------
+    $scope.getHospitalTemplate = function (hospital) {
+        if (hospital.QuestionID === $scope.tempQuestion.QuestionID) return 'editQuestion';
+        else return 'displayQuestion';
+    };
+
+    
+    $scope.getQCTemplate = function (qc) {
+        if (qc.QuestionCategoryID === $scope.tempQC.QuestionCategoryID) return 'editQC';
+        else return 'displayQC';
+    };
+
+    
+    $scope.getQTTemplate = function (qt) {
+        if (qt.QuestionThemeID === $scope.tempQT.QuestionThemeID) return 'editQT';
+        else return 'displayQT';
+    };
+
+    //-------------------- Edit Group ----------
+    $scope.editQuestion = function (hospital) {
+        $scope.tempQuestion = angular.copy(hospital);
+    };
+
+    //------------------- Add Group ---------------------
+    $scope.addQuestion = function () {
+        $scope.disableAdd = true;
+        var temp = {
+            QuestionID: 0,
+            QuestionCategory:{
+                QuestionCategoryID: 0,
+                Title: "",
+            },
+            Title: "",
+            Status: "Active",            
+            LastModifiedDate: new Date()
+        };
+        $scope.Questions.splice(0, 0, angular.copy(temp));
+        $scope.tempQuestion = angular.copy(temp);
+    };
+
+    //------------------- Save Question ---------------------
+    $scope.saveQuestion = function (idx) {
+
+        var addData = {
+            QuestionID: 0,
+            QuestionCategoryId: $scope.tempQuestion.QuestionCategory.QuestionCategoryID,
+            Title: $scope.tempQuestion.Title,
+            StatusType: 1,
+            
+        };
+
+        if (!addData.Title) { $scope.questionError = "Please enter the Question"; };
+        if (!addData.QuestionCategoryId) { $scope.categoryError = "Please select the Question Category"; };
+
+        if (addData.Title && addData.QuestionCategoryId){
+        $http.post('/MasterDataNew/AddQuestion', addData).
+            success(function (data, status, headers, config) {
+                //----------- success message -----------
+                if (data.status == "true") {
+                    messageAlertEngine.callAlertMessage("Question", "New Question Details Added Successfully !!!!", "success", true);
+                    data.questionDetails.LastModifiedDate = $scope.ConvertDateFormat(data.questionDetails.LastModifiedDate);
+                    var obj = $filter('filter')($scope.QuestionCategories, { QuestionCategoryID: data.questionDetails.QuestionCategoryId })[0];
+                    
+                    for (var i = 0; i < $scope.Questions.length; i++) {
+
+                        if ($scope.Questions[i].QuestionID == 0) {
+                            $scope.Questions[i] = angular.copy(data.questionDetails);
+                            $scope.Questions[i].QuestionCategory = obj;
+                        }
+                    }                    
+                    $scope.reset();                    
+                }
+            }).
+            error(function (data, status, headers, config) {
+                //----------- error message -----------
+                messageAlertEngine.callAlertMessage("QuestionError", "Sorry Unable To Add Question !!!!", "danger", true);
+            });
+        }
+        
+    };
+
+    //------------------- Update Question ---------------------
+    $scope.updateQuestion = function (idx) {
+
+        var updateData = {
+            QuestionID: $scope.tempQuestion.QuestionID,
+            QuestionCategoryId: $scope.tempQuestion.QuestionCategory.QuestionCategoryID,
+            Title: $scope.tempQuestion.Title,
+            StatusType: 1,
+            
+        };
+
+        if (!updateData.Title) { $scope.questionError = "Please enter the Question"; };
+        if (!updateData.QuestionCategoryId) { $scope.categoryError = "Please select the Question Category"; };
+
+        if (updateData.Title && updateData.QuestionCategoryId) {
+            $http.post('/MasterDataNew/UpdateQuestion', updateData).
+                success(function (data, status, headers, config) {
+                    //----------- success message -----------
+                    if (data.status == "true") {
+                        messageAlertEngine.callAlertMessage("Question", "Question Details Updated Successfully !!!!", "success", true);
+                        data.questionDetails.LastModifiedDate = $scope.ConvertDateFormat(data.questionDetails.LastModifiedDate);
+                        var obj = $filter('filter')($scope.QuestionCategories, { QuestionCategoryID: data.questionDetails.QuestionCategoryId })[0];
+                        for (var i = 0; i < $scope.Questions.length; i++) {
+
+                            if ($scope.Questions[i].QuestionID == data.questionDetails.QuestionID) {
+                                $scope.Questions[i] = angular.copy(data.questionDetails);
+                                $scope.Questions[i].QuestionCategory = obj;
+                            }
+                        }
+                        $scope.reset();
+                    }
+                }).
+                error(function (data, status, headers, config) {
+                    //----------- error message -----------
+                    messageAlertEngine.callAlertMessage("QuestionError", "Sorry Unable To Update Question !!!!", "danger", true);
+                });
+        }
+
+    };
+    
+    //----------- add new data ----------------
+    $scope.addQC = function () {
+        $scope.disableAdd = true;
+        var temp = {
+            QuestionCategoryID: 0,
+            Title: "",
+            Status: "Active",
+            LastModifiedDate: null
+        };
+
+        $scope.QuestionCategories.splice(0, 0, angular.copy(temp));
+        $scope.tempQC = angular.copy(temp);
+    };
+
+    //-------------------- Edit Group ----------
+    $scope.editQC = function (qc) {
+        $scope.disableAdd = false;
+        $scope.tempQC = angular.copy(qc);
+    };
+
+    //------------------- Save Question Category ---------------------
+    $scope.saveQC = function (idx) {
+
+        var addData = {
+            QuestionCategoryID: 0,
+            Title: $scope.tempQC.Title,
+            StatusType: 1,
+            
+        };
+
+        if (!addData.Title) { $scope.questionCategoryError = "Please enter the Question Category"; };
+        if (addData.Title){
+        $http.post('/MasterDataNew/AddQuestionCategory', addData).
+            success(function (data, status, headers, config) {
+                //----------- success message -----------
+                if (data.status == "true") {
+                    messageAlertEngine.callAlertMessage("QuestionCategory", "New QuestionCategory Details Added Successfully !!!!", "success", true);
+                    data.questionCategoryDetails.LastModifiedDate = $scope.ConvertDateFormat(data.questionCategoryDetails.LastModifiedDate);
+                    for (var i = 0; i < $scope.QuestionCategories.length; i++) {
+
+                        if ($scope.QuestionCategories[i].QuestionCategoryID == 0) {
+                            $scope.QuestionCategories[i] = angular.copy(data.questionCategoryDetails);
+                        }
+                    }
+                    $scope.reset();
+                }
+                else {
+                    messageAlertEngine.callAlertMessage("QuestionCategoryError", "Sorry Unable To Add QuestionCategory !!!!", "danger", true);
+                    $scope.QuestionCategories.splice(0, 1);
+                }
+            }).
+            error(function (data, status, headers, config) {
+                //----------- error message -----------
+                messageAlertEngine.callAlertMessage("QuestionCategoryError", "Sorry Unable To Add QuestionCategory !!!!", "danger", true);
+                $scope.QuestionCategories.splice(0, 1);
+            });
+        }
+       
+    };
+
+    //------------------- Update Question Category ---------------------
+    $scope.updateQC = function (idx) {
+
+        var updateData = {
+            QuestionCategoryID: $scope.tempQC.QuestionCategoryID,
+            Title: $scope.tempQC.Title,
+            StatusType: 1,
+            
+        };
+        if (!updateData.Title) { $scope.questionCategoryError = "Please enter the Question Category"; };
+        if (updateData.Title){
+        $http.post('/MasterDataNew/UpdateQuestionCategory', updateData).
+            success(function (data, status, headers, config) {
+                //----------- success message -----------
+                if (data.status == "true") {
+                    messageAlertEngine.callAlertMessage("QuestionCategory", "QuestionCategory Details Updated Successfully !!!!", "success", true);
+                    data.questionCategoryDetails.LastModifiedDate = $scope.ConvertDateFormat(data.questionCategoryDetails.LastModifiedDate);
+                    for (var i = 0; i < $scope.QuestionCategories.length; i++) {
+
+                        if ($scope.QuestionCategories[i].QuestionCategoryID == data.questionCategoryDetails.QuestionCategoryID) {
+                            $scope.QuestionCategories[i] = angular.copy(data.questionCategoryDetails);
+                        }
+                    }
+                    $scope.reset();
+                }
+            }).
+            error(function (data, status, headers, config) {
+                //----------- error message -----------
+                messageAlertEngine.callAlertMessage("QuestionCategoryError", "Sorry Unable To Update QuestionCategory !!!!", "danger", true);
+            });
+        }
+        
+    };
+
+    //----------------- Group new add cancel ---------------
+    $scope.cancelAdd = function (data) {
+        $scope.disableAdd = false;
+        data.splice(0, 1);
+        $scope.tempQT = {};
+        $scope.questionCategoryError = "";
+    };
+
+    //-------------------- Reset Group ----------------------
+    $scope.reset = function () {
+        $scope.disableAdd = false;
+        $scope.tempQuestion = {};
+        $scope.tempQC = {};
+        $scope.questionCategoryError="";
+    };
+
+    //------------------------ hide show manage ----------------------
+    $scope.viewQuestions = true;
+
+    $scope.showQuestions = function () {
+        $scope.viewQuestions = true;
+        $scope.viewQuestionCategories = false;
+    };
+
+    $scope.showQuestionCategories = function () {
+        $scope.viewQuestions = false;
+        $scope.viewQuestionCategories = true;
+    };
+
+    //----------------- get Question Category ---------------------
+    $scope.getQuestionCategory = function (categoryId) {
+        for (var i in $scope.QuestionCategories) {
+            if (categoryId == $scope.QuestionCategories[i].QuestionCategoryID) {
+                $scope.tempQuestion.QuestionCategory = $scope.QuestionCategories[i];
+                break;
+            }
+        }
+    };
+
+    $scope.CurrentPage = [];
+
+    //-------------------------- angular bootstrap pagger with custom-----------------
+    $scope.maxSize = 5;
+    $scope.bigTotalItems = 0;
+    $scope.bigCurrentPage = 1;
+
+    //-------------------- page change action ---------------------
+    $scope.pageChanged = function (pagnumber) {
+        $scope.bigCurrentPage = pagnumber;
+    };
+
+    //-------------- current page change Scope Watch ---------------------
+    $scope.$watch('bigCurrentPage', function (newValue, oldValue) {
+        $scope.CurrentPage = [];
+        var startIndex = (newValue - 1) * 10;
+        var endIndex = startIndex + 9;
+        if ($scope.Questions) {
+            for (startIndex; startIndex <= endIndex ; startIndex++) {
+                if ($scope.Questions[startIndex]) {
+                    $scope.CurrentPage.push($scope.Questions[startIndex]);
+                } else {
+                    break;
+                }
+            }
+        }
+        //console.log($scope.CurrentPageProviders);
+    });
+    //-------------- License Scope Watch ---------------------
+    $scope.$watchCollection('Questions', function (newValue, oldValue) {
+        if (newValue) {
+            $scope.bigTotalItems = newValue.length;
+
+            $scope.CurrentPage = [];
+            $scope.bigCurrentPage = 1;
+
+            var startIndex = ($scope.bigCurrentPage - 1) * 10;
+            var endIndex = startIndex + 9;
+
+            for (startIndex; startIndex <= endIndex ; startIndex++) {
+                if ($scope.Questions[startIndex]) {
+                    $scope.CurrentPage.push($scope.Questions[startIndex]);
+                } else {
+                    break;
+                }
+            }
+            //console.log($scope.CurrentPageProviders);
+        }
+    });
+    //------------------- end ------------------
+
+    $scope.CurrentPage1 = [];
+
+    //-------------------------- angular bootstrap pagger with custom-----------------
+    $scope.maxSize1 = 5;
+    $scope.bigTotalItems1 = 0;
+    $scope.bigCurrentPage1 = 1;
+
+    //-------------------- page change action ---------------------
+    $scope.pageChanged1 = function (pagnumber) {
+        $scope.bigCurrentPage1 = pagnumber;
+    };
+
+    //-------------- current page change Scope Watch ---------------------
+    $scope.$watch('bigCurrentPage1', function (newValue, oldValue) {
+        $scope.CurrentPage1 = [];
+        var startIndex = (newValue - 1) * 10;
+        var endIndex = startIndex + 9;
+        if ($scope.QuestionCategories) {
+            for (startIndex; startIndex <= endIndex ; startIndex++) {
+                if ($scope.QuestionCategories[startIndex]) {
+                    $scope.CurrentPage1.push($scope.QuestionCategories[startIndex]);
+                } else {
+                    break;
+                }
+            }
+        }
+        //console.log($scope.CurrentPageProviders);
+    });
+    //-------------- License Scope Watch ---------------------
+    $scope.$watchCollection('QuestionCategories', function (newValue, oldValue) {
+        if (newValue) {
+            $scope.bigTotalItems1 = newValue.length;
+
+            $scope.CurrentPage1 = [];
+            $scope.bigCurrentPage1 = 1;
+
+            var startIndex = ($scope.bigCurrentPage1 - 1) * 10;
+            var endIndex = startIndex + 9;
+
+            for (startIndex; startIndex <= endIndex ; startIndex++) {
+                if ($scope.QuestionCategories[startIndex]) {
+                    $scope.CurrentPage1.push($scope.QuestionCategories[startIndex]);
+                } else {
+                    break;
+                }
+            }
+            //console.log($scope.CurrentPageProviders);
+        }
+    });
+    //------------------- end ------------------
+
+}]);

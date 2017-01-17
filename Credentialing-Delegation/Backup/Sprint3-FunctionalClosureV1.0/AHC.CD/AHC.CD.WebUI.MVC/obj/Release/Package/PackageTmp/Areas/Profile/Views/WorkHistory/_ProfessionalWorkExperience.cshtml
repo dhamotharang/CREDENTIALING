@@ -1,0 +1,125 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Professional Work Experience
+        </legend>
+        <div class="form-style">
+            <div class="legend2 pull-right">
+                <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="focus" data-content="*Minimum of 10 years of experience"><i class="fa fa-question"></i></button>
+            </div>
+            <div class="col-md-12 text-right">
+                <label>CV :</label> @*<a href="#" class="fa fa-file"></a>*@ Not Available
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide="professionalWorkExperiences.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No Data Available ! 
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <span>To Add New Click</span> <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addProfessionalWorkExperience')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                }
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="professionalWorkExperiences.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employer Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Job Title</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="workExperience in professionalWorkExperiences track by $index">
+                        <tr>
+                            <td>{{workExperience.EmployerName}}</td>
+                            <td>{{workExperience.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td>
+                                <div ng-hide="workExperience.CurrentlyWorking=='YES'">
+                                    <i class="data-label">{{workExperience.EndDate | date:'MM-dd-yyyy'}}</i>
+                                </div>
+                                <div ng-hide="workExperience.CurrentlyWorking!='YES'">
+                                    <i class="data-label">Currently Working Here</i>
+                                </div>
+                            </td>
+                            <td>{{workExperience.JobTitle || 'Not Available'}}</td>
+                            <td>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewProfessionalWorkExperience')" ng-hide="viewProfessionalWorkExperience" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editProfessionalWorkExperience',workExperience);" ng-hide="editShowStateLicense" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addProfessionalWorkExperience');" ng-hide="$index+1!=professionalWorkExperiences.length" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                }
+                            </td>
+                        </tr>
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                        {
+                            <tr ng-show="visibilityControl==($index+'_viewProfessionalWorkExperience')">
+                                <td colspan="7">
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewProfessionalWorkExperience.cshtml")
+                                </td>
+                            </tr>
+                        }
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                        {
+                            <tr ng-show="visibilityControl==($index+'_editProfessionalWorkExperience')">
+                                <td colspan="7" id="professionalWorkExperienceEditDiv{{$index}}">
+                                    <fieldset>
+                                        <legend>
+                                            Edit Professional Work Experience
+                                        </legend>
+                                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditProfessionalWorkExperience.cshtml")
+                                        <div class="col-md-12 form-group">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                                                <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalWorkExperience(tempObject, $index)">Update</button>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div ng-show="visibilityControl=='addedNewProfessionalWorkExperience'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Professional Work experience Information saved successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedProfessionalWorkExperience'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Professional Work experience Information updated successfully !!!!
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+            { 
+            <fieldset ng-show="visibilityControl==('addProfessionalWorkExperience')">
+                <legend>
+                    Add Work History
+                </legend>
+                <div id="newProfessionalWorkExperienceFormDiv">
+                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditProfessionalWorkExperience.cshtml")
+                    <div class="col-md-12 form-group">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveProfessionalWorkExperience(tempObject, $index)">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            }
+        </div>
+    </fieldset>
+</div>
+

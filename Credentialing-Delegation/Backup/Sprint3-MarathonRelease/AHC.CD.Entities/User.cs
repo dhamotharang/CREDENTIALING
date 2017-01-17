@@ -1,0 +1,54 @@
+﻿using AHC.CD.Entities.MasterData.Enums;
+using AHC.CD.Entities.MasterProfile;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AHC.CD.Entities
+{
+    public class User
+    {
+        public User()
+        {
+            LastModifiedDate = DateTime.Now;
+        }
+        
+        public int UserID { get; set; }
+
+        public string AuthenicateUserId { get; set; }
+
+        public int? ProfileId { get; set; }
+        [ForeignKey("ProfileId")]
+        public virtual Profile Profile { get; set; }
+
+        public virtual UserRelation UserRelation { get; set; }
+
+        #region Status
+
+        public string Status { get; private set; }
+
+        [NotMapped]
+        public StatusType? StatusType
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(this.Status))
+                    return null;
+
+                return (StatusType)Enum.Parse(typeof(StatusType), this.Status);
+            }
+            set
+            {
+                this.Status = value.ToString();
+            }
+        }
+
+        #endregion
+
+        [Column(TypeName = "datetime2")]
+        public DateTime LastModifiedDate { get; set; }
+    }
+}

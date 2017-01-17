@@ -1,0 +1,49 @@
+﻿@model IEnumerable<PortalTemplate.Areas.UM.Models.ViewModels.AuthPreview.ICDPreviewViewModel>
+@{PortalTemplate.Areas.UM.Models.ViewModels.AuthPreview.ICDPreviewViewModel emptyObject = new PortalTemplate.Areas.UM.Models.ViewModels.AuthPreview.ICDPreviewViewModel();}
+
+
+<div class="row col-md-12">
+    <table class="table authpreview-table table-bordered remove-padding-td-a uppercase">
+        <thead>
+            <tr>
+
+                @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/ICDCodes/_ICDCodeHeaderPreview.cshtml", emptyObject)
+                @if (Model.Count() > 1)
+                {
+                    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/ICDCodes/_ICDCodeHeaderPreview.cshtml", emptyObject)
+
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int index = 0; index < Model.Count(); index++)
+            {
+                <tr>
+                    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/ICDCodes/_ICDCodePreview.cshtml", Model.ElementAt(index))
+
+                    @{index++;}
+                    @if (index < Model.Count())
+                    {
+
+                        @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/ICDCodes/_ICDCodePreview.cshtml", Model.ElementAt(index))
+                    }
+                    else if (Model.Count() > 1)
+                    {
+                        @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/ICDCodes/_ICDCodePreview.cshtml", emptyObject)
+
+                    }
+
+
+
+                </tr>
+
+            }
+
+
+
+        </tbody>
+
+    </table>
+
+</div>
+

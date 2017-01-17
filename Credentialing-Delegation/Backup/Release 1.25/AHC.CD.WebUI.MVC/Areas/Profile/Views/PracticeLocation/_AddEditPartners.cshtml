@@ -1,0 +1,282 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.PracticeProviderViewModel
+
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Add Partner/Associate/Covering Colleague
+        </legend>
+        <form id="CoveringCollegueForm">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })            
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            @Html.HiddenFor(model => model.PracticeType, new { Value = @AHC.CD.Entities.MasterData.Enums.PracticeType.CoveringColleague })
+            <span ng-if="tempSecondObject.PracticeProviderID">
+                @Html.HiddenFor(model => model.PracticeProviderID, new { ng_value = "tempSecondObject.PracticeProviderID", data_ng_model = "tempSecondObject.PracticeProviderID" })
+                @Html.HiddenFor(model => model.RelationType, new { ng_value = "tempSecondObject.RelationType" })
+            </span>
+            <div class="form-group">
+                <div ng-if="!tempSecondObject.PracticeProviderID"  class="col-md-12 zero-padding-left-right-div">
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small  ">Use Existing Covering Colleagues Details </label><br />
+                        <label class="radio-inline"><input type="radio" name="RelationType" ng-click="clear()" value="@AHC.CD.Entities.MasterData.Enums.RelationType.Internal" ng-model="tempSecondObject.RelationType" /> Yes </label>
+                        <label class="radio-inline"><input type="radio" name="RelationType" ng-click="clear()" value="@AHC.CD.Entities.MasterData.Enums.RelationType.External" ng-model="tempSecondObject.RelationType" /> No</label>
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small  ">Select Covering Colleague </label>
+                        @*<input type="text" class="form-control input-sm" name="tempSupervisingProvider"  data-practitioners="supervisingProviders" data-onselect="setSupervisor" data-autocomplete="practitioner" practitionersearch />*@
+                        <input type="text" ng-disabled="tempSecondObject.RelationType != '@AHC.CD.Entities.MasterData.Enums.RelationType.Internal'" class="form-control input-sm" name="tempProvider" ng-model="practitioner" ng-focus="searchCumDropDown($event)" />
+
+                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                            <table class="table table-striped table-bordered table-hover table-condensed">
+                                <tbody>
+                                    <tr ng-repeat="super in filterSupervisor=(supervisingProviders | filter : practitioner) track by $index" ng-click="addIntoSupervisorDropDown(super, $event)" class="pointer">
+                                        <td>{{super.PersonalDetail.FirstName}}({{super.OtherIdentificationNumber.NPINumber}})</td>
+                                    </tr>
+                                    <tr ng-if="!filterSupervisor.length">
+                                        <td>Supervisor Name not found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div ng-if="tempSecondObject.NPINumber || tempSecondObject.FirstName || tempSecondObject.LastName || tempSecondObject.RelationType == 'External'">
+                    <div class=" col-md-12 zero-padding-left-right-div">
+                        <div class="col-lg-4 form-group">
+
+                            @Html.LabelFor(model => model.NPINumber, htmlAttributes: new { @class = "control-label small" })
+                            @Html.TextBoxFor(model => model.NPINumber, new { @class = "form-control input-sm", placeholder = "npi number", data_ng_model = "tempSecondObject.NPINumber" })
+                            @Html.ValidationMessageFor(model => model.NPINumber, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-lg-4 form-group">
+
+                            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label small" })
+                            @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", placeholder = "first name", data_ng_model = "tempSecondObject.FirstName" })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-lg-4 form-group">
+                            @Html.LabelFor(model => model.MiddleName, htmlAttributes: new { @class = "control-label small" })
+                            @Html.TextBoxFor(model => model.MiddleName, new { @class = "form-control input-sm", placeholder = "middle name", data_ng_model = "tempSecondObject.MiddleName" })
+                            @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="col-lg-4 form-group">
+
+                            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label small" })
+                            @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-sm", placeholder = "last name", data_ng_model = "tempSecondObject.LastName" })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+
+                            @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label small" })
+                            <div>
+                                @Html.TextBoxFor(model => model.Street, new { @class = "form-control input-sm", placeholder = "street", data_ng_model = "tempSecondObject.Street" })
+                                @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+
+                            @Html.LabelFor(model => model.Building, htmlAttributes: new { @class = "control-label small" })
+                            <div>
+                                @Html.TextBoxFor(model => model.Building, new { @class = "form-control input-sm", placeholder = "building", data_ng_model = "tempSecondObject.Building" })
+                                @Html.ValidationMessageFor(model => model.Building, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 zero-padding-left-right-div">
+                        <div class="form-group col-md-4">
+
+                            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label small" })
+                            <div>
+                                @Html.TextBoxFor(model => model.City, new { @class = "form-control input-sm", data_val = "true", data_val_required = "Please enter City *.", data_ng_model = "tempSecondObject.City", placeholder = "city", data_ng_change = "addressAutocomplete3(tempSecondObject.City)", data_selectmethod = "selectedLocation3", data_autocomplete = "addressautocomplete" })
+                                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+
+                            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label small" })
+                            <div>
+                                @Html.TextBoxFor(model => model.State, new { @class = "form-control input-sm", placeholder = "state", data_ng_model = "tempSecondObject.State" })
+                                @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+
+                            @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label small" })
+                            <div>
+                                @Html.TextBoxFor(model => model.ZipCode, new { @class = "form-control input-sm", placeholder = "zip code", data_ng_model = "tempSecondObject.ZipCode" })
+                                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12 zero-padding-left-right-div">
+                            <div class="form-group col-md-4">
+
+                                @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label small" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.Country, new { @class = "form-control input-sm", placeholder = "country", data_ng_model = "tempSecondObject.Country" })
+                                    @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+
+                                @Html.LabelFor(model => model.County, htmlAttributes: new { @class = "control-label small" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.County, new { @class = "form-control input-sm", placeholder = "county", data_ng_model = "tempSecondObject.County" })
+                                    @Html.ValidationMessageFor(model => model.County, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                @Html.LabelFor(model => model.Telephone, htmlAttributes: new { @class = "control-label small" })
+                                <div>
+                                    <div class="input-group">
+                                        <span ng-if="!tempSecondObject.CountryCodeTelephone" ng-init="tempSecondObject.CountryCodeTelephone='+1'"></span>
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-click="showContryCodeDivForColleague('CountryCodeTelephone'+$index)"> {{tempSecondObject.CountryCodeTelephone}} <span class="caret"></span></button>
+                                        </div>
+                                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id='CountryCodeTelephone{{$index}}'>
+                                            <div class="arrow"></div>
+                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                            <div class="popover-content">
+                                                <select ng-model="tempSecondObject.CountryCodeTelephone" name="CountryCodeTelephone">
+                                                    <option ng-repeat="code in CountryDialCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSecondObject.CountryCodeTelephone">{{code.name}}({{code.dial_code}})</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            @Html.TextBoxFor(model => model.Telephone, new { @class = "form-control", placeholder = "telephone", data_ng_model = "tempSecondObject.Telephone", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" })
+                                        </div>                                        
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.Telephone, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 zero-padding-left-right-div">
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.PracticeProviderSpecialties, htmlAttributes: new { @class = "control-label small" })                                
+                                <input class="form-control input-sm" ng-model="searchSpecialty" ng-focus="showProviderTypeList($event)" placeholder="specialty" />
+
+                                <div ng-show="searchSpecialty.length > 0" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                    <table class="table table-striped table-bordered table-hover table-condensed">
+                                        <tbody>
+                                            <tr ng-repeat="specialty in filteredSpecialtiesResults = (masterSpecialties | filter:searchSpecialty)" ng-click="SelectSpecalties(specialty)" class="pointer">
+                                                <td>{{specialty.Name}}</td>
+                                            </tr>
+                                            <tr ng-if="filteredSpecialtiesResults.length == 0">
+                                                <td>Specialty Name not found..... </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @Html.ValidationMessageFor(model => model.PracticeProviderSpecialties, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-6 form-group">
+                                @Html.LabelFor(model => model.PracticeProviderTypes, htmlAttributes: new { @class = "control-label small" })                                
+                                <input class="form-control input-sm" ng-model="searchproviderType" ng-focus="showProviderTypeList($event)" placeholder="provider type" />                                
+                                <div ng-show="searchproviderType.length > 0" class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                    <table class="table table-striped table-bordered table-hover table-condensed">
+                                        <tbody>
+                                            <tr ng-repeat="providertype in filteredProviderTypeResults = (masterProviderTypes | filter:searchproviderType)" ng-click="SelectProviderType(providertype)" class="pointer">
+                                                <td>{{providertype.Title}}</td>
+                                            </tr>
+                                            <tr ng-if="filteredProviderTypeResults.length == 0">
+                                                <td>Provider Type not found..... </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.PracticeProviderTypes, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-12 zero-padding-left-right-div">
+                            <div ng-if="PracticeSpecialties.length > 0" class="col-lg-6 form-group">
+                                <label class=""></label>
+                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-lg-10">Specialty Name</th>
+                                            <th class="col-lg-2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="tpt in PracticeSpecialties track by $index">
+                                            <td ng-class="{'success':tpt.StatusType==1,'warning':tpt.StatusType==2}">
+                                                <span>{{tpt.Specialty.Name}}</span>
+                                                <input type="hidden" name="PracticeProviderSpecialties[{{$index}}].SpecialtyID" value="{{tpt.SpecialtyID}}" />
+                                                <input type="hidden" name="PracticeProviderSpecialties[{{$index}}].PracticeProviderSpecialtyId" value="{{tpt.PracticeProviderSpecialtyId}}" />
+                                                <input type="hidden" name="PracticeProviderSpecialties[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+                                            </td>
+                                            <td>
+                                                <span class="label label-danger pointer" ng-if="tpt.StatusType==1" ng-click="ActionSpecialty(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                    <i class="fa fa-minus-circle"></i>
+                                                </span>
+                                                <span class="label label-danger pointer" ng-if="tpt.StatusType==2" ng-click="ActionSpecialty(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                    <i class="fa fa-minus-circle"></i> Removed
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div ng-if="PracticeProviderTypes.length > 0" class="col-lg-6 form-group">
+                                <label class=""></label>
+                                <table class="table table-striped table-bordered table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-lg-10">Provider Type Name</th>
+                                            <th class="col-lg-2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="tpt in PracticeProviderTypes track by $index">
+                                            <td ng-class="{'success':tpt.StatusType==1,'warning':tpt.StatusType==2}">
+                                                <span>{{tpt.ProviderType.Title}}</span>
+                                                <input type="hidden" name="PracticeProviderTypes[{{$index}}].ProviderTypeID" value="{{tpt.ProviderTypeID}}" />
+                                                <input type="hidden" name="PracticeProviderTypes[{{$index}}].PracticeProviderTypeId" value="{{tpt.PracticeProviderTypeId}}" />
+                                                <input type="hidden" name="PracticeProviderTypes[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+                                            </td>
+                                            <td>
+                                                <span class="label label-danger pointer" ng-if="tpt.StatusType==1" ng-click="ActionProviderType(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                    <i class="fa fa-minus-circle"></i>
+                                                </span>
+                                                <span class="label label-danger pointer" ng-if="tpt.StatusType==2" ng-click="ActionProviderType(tpt)" tooltip data-toggle="tooltip" data-placement="right" title="Remove">
+                                                    <i class="fa fa-minus-circle"></i> Removed
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div ng-show="activeMessageDiv=='ErrorInPartners'+$index" class="alert alert-danger" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-12 form-group">
+                        <button class="btn btn-warning btn-sm" ng-click="operateSecondCancelControl('');">Cancel</button>
+                        <button class="btn btn-success btn-sm pull-right" ng-disabled="!(tempSecondObject.NPINumber || tempSecondObject.FirstName || tempSecondObject.LastName || tempSecondObject.RelationType == 'External')" ng-click="savePatner(PracticeLocationDetail, $index)"><span ng-if="!tempSecondObject.PracticeProviderID">Add</span><span ng-if="tempSecondObject.PracticeProviderID">Update</span></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+</div>

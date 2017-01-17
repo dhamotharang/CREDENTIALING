@@ -1,0 +1,79 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxisProduct.Models.ProviderProfileViewModel.WorkHistoryViewModel.WorkGapViewModel>
+@{
+    var WorkGapCount = 0;
+    var ObjectPresent = 1;
+}
+<fieldset class="fsStyle" id="AddEditWorkGap">
+    <legend class="legendStyle">
+        @foreach (var item in Model)
+        {
+            if (item == null)
+            {
+                <span class="theme_depend text-uppercase create-auth-legends">
+                    Add WORK GAP
+                </span>
+                ObjectPresent = 0;
+            }
+        }
+        @if (ObjectPresent != 0)
+        {
+            <span class="theme_depend text-uppercase create-auth-legends">
+                Edit WORK GAP
+            </span>
+        }
+    </legend>
+    @foreach (var item in Model)
+    {
+        WorkGapCount = WorkGapCount + 1;
+        <div class="x_content zero-padding-left mutiple-data">
+            @if (item != null)
+            {
+                <div class="SubHeaderSpacing1">
+                    <span class="text-uppercase TableHeading">Edit WORK GAP - @WorkGapCount</span>
+                </div>
+            }
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.StartDate) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.PratianUiDatePickerFor(e => item.StartDate, new { @class = "form-control input-xs", placeholder = "START DATE" })
+                        @*@Html.TextBoxFor(e => item.StartDate, new { @class = "form-control input-xs", @placeholder = "Start Date" })*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.EndDate) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.PratianUiDatePickerFor(e => item.EndDate, new { @class = "form-control input-xs", placeholder = "END DATE" })
+                        @*@Html.TextBoxFor(e => item.EndDate, new { @class = "form-control input-xs", @placeholder = "End Date" })*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.Description) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.TextBoxFor(e => item.Description, new { @class = "form-control input-xs", @placeholder = "DESCRIPTION" })
+                    </span>
+                </span>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="row col-lg-12 zero-padding-left-right margin-top-5px">
+            <button class="btn btn-success btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/WorkHistory/GetWorkGapAddEditPartial" data-tab-container="WorkGapDiv" value=""> Save</button>
+            <button class="btn btn-danger btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/WorkHistory/GetWorkGapAddEditPartial" data-tab-container="WorkGapDiv" value="">Cancel</button>
+        </div>
+    </div>
+</fieldset>

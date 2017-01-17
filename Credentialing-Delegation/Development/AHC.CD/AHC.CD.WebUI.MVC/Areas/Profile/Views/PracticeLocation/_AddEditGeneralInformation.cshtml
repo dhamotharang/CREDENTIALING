@@ -1,0 +1,157 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.PracticeLocationDetailViewModel
+
+<span ng-if="tempSecondObject.PracticeLocationDetailID">
+    @Html.HiddenFor(model => model.PracticeLocationDetailID, new { ng_value = "tempSecondObject.PracticeLocationDetailID" })
+</span>
+@if (System.Configuration.ConfigurationManager.AppSettings["SupportsDelegatedPlans"] == "true")
+{
+    <span ng-if="!tempSecondObject.PracticeLocationDetailID" ng-init="tempSecondObject.PracticeLocationCorporateName = 'Access Healthcare LLC'; tempSecondObject.GroupName = 'Access Healthcare Physician LLC'"></span>
+}
+@Html.HiddenFor(model => model.UpdateHistory, new { id = "UpdateHistoryHiddenOtherInformation" })
+@Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+<div class="col-md-12 zero-padding-left-right-div">
+    <span ng-if="tempSecondObject.PracticeLocationDetailID">
+        <select id="SelectFacility_PracticeLocation" ng-hide="true" class="form-control input-sm" ng-model="tempSecondObject.FacilityId" ng-change="fillCorporateName(tempSecondObject.FacilityId)">
+            <option selected disabled hidden value="">--Select--</option>
+            <option ng-repeat="facility in facilities" value="{{facility.FacilityID}}" ng-selected="facility.FacilityID == tempSecondObject.FacilityId">{{facility.FacilityName}} - {{facility.Street}},{{facility.Building}},{{facility.City}},{{facility.State}}</option>
+        </select>
+    </span>
+    @*<div class="col-md-5 form-group">
+            <label class="control-label small">Select Facility(Choose or Click on Add to add new) *</label>
+            <select class="form-control input-sm" data-val="true" data-val-required="Please select practice location" name="FacilityId" ng-model="tempSecondObject.FacilityId" ng-change="fillCorporateName(tempSecondObject.FacilityId)" ng-disabled="tempSecondObject.PracticeLocationDetailID">
+                <option selected disabled hidden value="">--Select--</option>
+                <option ng-repeat="facility in facilities" value="{{facility.FacilityID}}" ng-selected="facility.FacilityID == tempSecondObject.FacilityId">{{facility.FacilityName}} - {{facility.Street}},{{facility.Building}},{{facility.City}},{{facility.State}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.FacilityId, "", new { @class = "text-danger" })
+        </div>*@
+    <div class="col-md-5 form-group">
+        @*<label class="control-label small">Select Facility(Choose or Click on Add to add new) *</label>*@
+        <label class="control-label small">Select Facility *</label>
+        <input class="form-control input-sm" ng-model="FacilityName" data-searchdropdown="searchdropdown" placeholder="select Facility" />
+        <br />
+        <span class="table table-bordered table-condensed customtbodyStyle table-striped control-label small" style="padding:5px; border-radius:5px;" ng-if="displayMe">
+            <label>Selected Facility: </label> {{displayMe}}{{tempSecondObject.FacilityID}}
+        </span>
+        <input type="hidden" data-ng-model="tempSecondObject.FacilityID" data-val="true" data-val-required="Please select practice location" id="FacilityId" name="FacilityId" value="{{tempSecondObject.FacilityID}}" />
+        <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip">
+            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                <tbody>
+                    <tr ng-repeat="type in ffacilities = (facilities | filter:FacilityName)" ng-click="hideDiv(type); tempSecondObject.FacilityName = type.FacilityName; tempSecondObject.FacilityID = type.FacilityID" class="pointer">
+                        <td>{{type.FacilityName}} - {{type.Street}}<span ng-if="type.Building">,</span> {{type.Building}}<span ng-if="type.City">,</span> {{type.City}}<span ng-if="type.State">,</span> {{type.State}}</td>
+                    </tr>
+                    <tr ng-if="facilities.length == 0">
+                        <td>No data..... </td>
+                    </tr>
+                    <tr ng-if="facilities.length > 0 && ffacilities.length == 0">
+                        <td>Type not found..... </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-danger field-validation-error" style="color: #b94a48" ng-if="errorMsg">Please select a Facility</div>
+        @*@Html.ValidationMessageFor(model => model.FacilityId, "", new { @class = "text-danger" })*@
+    </div>
+    @*<div class="col-md-2 form-group" ng-if="visibilityControlPracLoc==('addPracticeLocation')">
+            <label class="control-label small"></label>
+            <div>
+                <i class="fa fa-plus-circle fa-3x" ng-click="operateAddControlPracLoc('addPracticeLocationNew'); resetPracticeDaysList();operateMidlevelAddControl('add')"></i>
+            </div>
+        </div>*@
+    @*<div class="col-md-5 form-group">
+            <label class="control-label small">Select IPA</label>
+            @*<select name="PracticingGroupId" class="form-control input-sm" data-ng-model="tempSecondObject.PracticingGroupId">
+                <option ng-hide="tempSecondObject.PracticingGroupId" disabled hidden value="">-- Select IPA --</option>
+                <option ng-repeat="group in groups track by $index" value="{{group.Group.GroupID}}">{{group.Group.Name}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.PracticingGroupId, "", new { @class = "text-danger" })
+        </div>*@
+    @Html.HiddenFor(model => model.PracticingGroupId, new { ng_value = "tempSecondObject.PracticingGroupId" })
+</div>
+<div class="col-md-12 zero-padding-left-right-div">
+    <div class="col-md-3 form-group">
+        @Html.LabelFor(model => model.PracticeLocationCorporateName, new { @class = "control-label small", id = "UHPracticeLocationCorporateName" })
+        @Html.TextBoxFor(model => model.PracticeLocationCorporateName, new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.PracticeLocationCorporateName" })
+        @Html.ValidationMessageFor(model => model.PracticeLocationCorporateName, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-md-3 form-group">
+        @Html.LabelFor(model => model.GroupName, new { @class = "control-label small", id = "UHGroupName" })
+        @Html.TextBoxFor(model => model.GroupName, new { @class = "form-control input-sm", data_ng_model = "tempSecondObject.GroupName" })
+        @Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.PrimaryYesNoOption, htmlAttributes: new { @class = "control-label small", id = "UHPrimaryYesNoOption" })
+        <div class="radio">
+            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+            {
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.PrimaryYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.PrimaryYesNoOption", data_ng_click = "fillCurrentlyPracticingYesNoOption(tempSecondObject.PrimaryYesNoOption)", id = "PrimaryYesNoOption" }) @value.ToString()
+                </label>
+            }
+        </div>
+        @Html.ValidationMessageFor(model => model.PrimaryYesNoOption, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.CurrentlyPracticingYesNoOption, htmlAttributes: new { @class = "control-label small", id = "UHCurrentlyPracticingYesNoOption" })
+        <div class="radio">
+            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+            {
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.CurrentlyPracticingYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.CurrentlyPracticingYesNoOption", id = "CurrentlyPracticingYesNoOption" }) @value.ToString()
+                </label>
+            }
+        </div>
+        @Html.ValidationMessageFor(model => model.CurrentlyPracticingYesNoOption, "", new { @class = "text-danger" })
+    </div>
+
+</div>
+<div class="col-md-12 zero-padding-left-right-div">
+    <div class="form-group col-md-3">
+        <label class="control-label small" id="UHStartDate" ng-hide="tempSecondObject.CurrentlyPracticingYesNoOption=='NO'">Start Date</label>
+        <label class="control-label small" id="UHStartDate" ng-show="tempSecondObject.CurrentlyPracticingYesNoOption=='NO'">What Is Your Expected Start Date ? </label>
+        @Html.TextBoxFor(model => model.StartDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempSecondObject.StartDate", placeholder = "mm/dd/yyyy" })
+        @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.GeneralCorrespondenceYesNoOption, htmlAttributes: new { @class = "control-label small", id = "UHGeneralCorrespondenceYesNoOption" })
+        <div class="radio">
+            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+            {
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.GeneralCorrespondenceYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.GeneralCorrespondenceYesNoOption", id = "GeneralCorrespondenceYesNoOption" }) @value.ToString()
+                </label>
+            }
+        </div>
+        @Html.ValidationMessageFor(model => model.GeneralCorrespondenceYesNoOption, "", new { @class = "text-danger" })
+
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.PrimaryTax, htmlAttributes: new { @class = "control-label small", id = "UHPrimaryTax" })
+        <div class="radio">
+            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.PrimaryTaxId)))
+            {
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.PrimaryTax, (int)value, new { data_ng_model = "tempSecondObject.PrimaryTax" }) @value.ToString()
+                </label>
+            }
+        </div>
+        @Html.ValidationMessageFor(model => model.PrimaryTax, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-3">
+        @Html.LabelFor(model => model.PracticeExclusivelyYesNoOption, htmlAttributes: new { @class = "control-label small", id = "UHPracticeExclusivelyYesNoOption" })
+        <div class="radio">
+            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+            {
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.PracticeExclusivelyYesNoOption, (int)value, new { data_ng_model = "tempSecondObject.PracticeExclusivelyYesNoOption" }) @value.ToString()
+                </label>
+            }
+        </div>
+        @Html.ValidationMessageFor(model => model.PracticeExclusivelyYesNoOption, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="clearfix"></div>
+<div ng-show="activeMessageDiv=='otherInformationErrorMsg'" class="alert alert-danger" role="alert">
+    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+    {{messageDesc}}
+</div>
+<div class="clearfix"></div>

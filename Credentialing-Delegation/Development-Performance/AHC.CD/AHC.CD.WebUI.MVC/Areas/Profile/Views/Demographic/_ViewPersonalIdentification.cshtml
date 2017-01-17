@@ -1,0 +1,98 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.PersonalIdentificationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div class="col-lg-12">
+    <table ng-if="!MasterProfile.Demographics.PersonalIdentification" class="table table-bordered table-condensed customtbodyStyle table-striped">
+        <thead>
+            <tr>
+                <td>
+                    No Data Available for Personal Identification!
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                    {
+                        <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateEditControl('_EditPersonalIdentification',MasterProfile.Demographics.PersonalIdentification)" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Personal Identification</span>
+                    }
+                </td>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div ng-if="MasterProfile.Demographics.PersonalIdentification" class="wrap-words">
+    <div ng-if="MasterProfile.Demographics.PersonalIdentification.SSN" class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.SSN, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                {
+                    <i class="data-label">
+                        <span ng-if="MasterProfile.Demographics.PersonalIdentification.SSN">
+                            ############
+                        </span>
+                        <span ng-if="!MasterProfile.Demographics.PersonalIdentification.SSN">
+                            Not Available
+                        </span>
+                    </i>
+                }
+                else
+                {
+                    <i class="data-label">
+                        <span ng-if="MasterProfile.Demographics.PersonalIdentification.SSN">
+                            {{MasterProfile.Demographics.PersonalIdentification.SSN}}
+                        </span>
+                        <span ng-if="!MasterProfile.Demographics.PersonalIdentification.SSN">
+                            Not Available
+                        </span>
+                    </i>
+                }
+            </div>
+        </div>
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.SSNCertificatePath, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                    {
+                        <span ng-if="MasterProfile.Demographics.PersonalIdentification.SSNCertificatePath"><i class="fa fa-file"></i></span>
+                        <span ng-if="!MasterProfile.Demographics.PersonalIdentification.SSNCertificatePath">Not Available</span>
+                    }
+                    else
+                    {
+                        <a ng-if="MasterProfile.Demographics.PersonalIdentification.SSNCertificatePath" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{MasterProfile.Demographics.PersonalIdentification.SSNCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="SSN Document"><i class="fa fa-file"></i></a>
+                        <span ng-if="!MasterProfile.Demographics.PersonalIdentification.SSNCertificatePath">Not Available</span>
+                    }
+                </i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.DL, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <span ng-if="MasterProfile.Demographics.PersonalIdentification.DL">
+                        {{MasterProfile.Demographics.PersonalIdentification.DL}}
+                    </span>
+                    <span ng-if="!MasterProfile.Demographics.PersonalIdentification.DL">
+                        Not Available
+                    </span>
+                </i>
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            @Html.LabelFor(model => model.DLState, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    {{MasterProfile.Demographics.PersonalIdentification.DLState || 'Not Available'}}
+                </i>
+            </div>
+        </div>
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.DLCertificatePath, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <a ng-if="MasterProfile.Demographics.PersonalIdentification.DLCertificatePath" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{MasterProfile.Demographics.PersonalIdentification.DLCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Driver's License Document"><i class="fa fa-file"></i></a>
+                    <span ng-if="!MasterProfile.Demographics.PersonalIdentification.DLCertificatePath">Not Available</span>
+                </i>
+            </div>
+        </div>
+    </div>
+</div>

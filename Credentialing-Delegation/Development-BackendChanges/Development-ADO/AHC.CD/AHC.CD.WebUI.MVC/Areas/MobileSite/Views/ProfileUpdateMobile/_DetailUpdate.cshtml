@@ -1,0 +1,299 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+
+<style>
+    .sizebtn {
+        padding: 7px 6px;
+        font-size: 10px;
+        line-height: 0.428571;
+    }
+
+    .scroll {
+        overflow-x: auto;
+    }
+
+    .sizee {
+        font-size: 12px;
+    }
+    .panel1 {
+        padding: 5px;
+        text-align: center;
+        background-color: #eff0ea;
+        border: solid 1px #c3c3c3;
+    }
+    .btn1 {
+        margin-top: 3px;
+        margin-left: 2px;
+        border: solid 1px #c3c3c3;
+    }
+    .btn2 {
+        margin-top: 3px;
+        margin-left: 2px;
+        border: solid 1px #c3c3c3;
+    }
+    .btn3 {
+        margin-top: 3px;
+        margin-left: 3px;
+        border: solid 1px #c3c3c3;
+    }
+
+    .setdiv {
+        margin-top: -19px;
+        margin-left: -20px;
+        margin-right: -29px;
+    }
+
+
+
+</style>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <header>
+        <span class="pull-right pointer" ng-click="HideDetails()"><i class="fa fa-close"></i></span>
+        <div style="height:10px">
+            <h3>{{temp.Type}}</h3>
+        </div>
+    </header>
+    @*<div class="form-style" style="margin-left:5px">
+            <fieldset>
+                <legend>
+                    Provider Details
+                </legend>
+                <div class="col-lg-8" style="margin-left:-18px">
+                    <div>
+                        <label class="control-label small"></label> <i class="small">{{temp.Profile.OtherIdentificationNumber.NPINumber}}</i>
+                    </div>
+                    <div>
+                        <label class="control-label small"></label> <i class="small">{{temp.Profile.PersonalDetail.Salutation}} {{temp.Profile.PersonalDetail.FirstName}} {{temp.Profile.PersonalDetail.MiddleName}} {{temp.Profile.PersonalDetail.LastName}}</i>
+                    </div>
+                </div>
+                @*<div class="col-lg-2">
+                        @if (ProfileActionValidator.IsMask(ViewBag.Roles))
+                        {
+                            <a href="~/Profile/MasterProfile/ProviderProfile/{{temp.Profile.ProfileID}}" target="_blank" class="pull-right btn btn-primary btn-xs">View Profile</a>
+                        }
+                    </div>
+            </fieldset>
+
+        </div>*@
+    <div class="panel panel-default content-panel setdiv">
+        <div class="panel-heading" style="height:4em">
+            <span class="panel-title pull-right btn-link" data-toggle="collapse" data-target="#1"></span>
+            <h5 class="panel-title" style="font-size:14px">{{temp.Type}} {{temp.Profile.PersonalDetail.Salutation}} {{temp.Profile.PersonalDetail.FirstName}} {{temp.Profile.PersonalDetail.MiddleName}} {{temp.Profile.PersonalDetail.LastName}}</h5>
+            <div>
+                <label class="control-label small">NPI No:</label> <i class="small">{{temp.Profile.OtherIdentificationNumber.NPINumber}}</i>
+            </div>
+            @*<div>
+                    <label class="control-label small">Name :</label> <i class="small">{{temp.Profile.PersonalDetail.Salutation}} {{temp.Profile.PersonalDetail.FirstName}} {{temp.Profile.PersonalDetail.MiddleName}} {{temp.Profile.PersonalDetail.LastName}}</i>
+                </div>*@
+        </div>
+        <div id="1" class="panel-body collapse in" style="padding-bottom:1em">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-6 col-md-12 col-sm-1 col-xs-12">
+                    <label class="control-label small">Section:</label>
+                    <i class="small">{{temp.Section}}</i>
+                </div><br />
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <label class="control-label small">Sub-Section:</label>
+                    <i class="small">{{temp.SubSection}}</i>
+                </div>
+            </div>
+            <div ng-if="chnagedData.length > 0" class="col-md-12 col-sm-12 col-xs-12">
+                <table class="table table-hover" style=" border: solid 1px #c3c3c3; ">
+
+                    <tr class="sizee panel1">
+                        <th class="col-lg-4 col-md-4 col-xs-4 col-sm-4">Item</th>
+                        <th class="col-lg-4 col-md-4 col-xs-4 col-sm-4">Old Data</th>
+                        <th class="col-lg-4 col-md-4 col-xs-4 col-sm-4">New Data</th>
+                    </tr>
+
+                    <tbody ng-repeat="new in chnagedData track by $index">
+                        <tr>
+                            <td class="small wrap-words" ng-if="!(new.FieldName.indexOf('Path')>-1)">{{new.FieldName || 'Not Available'}}</td>
+                            <td class="small wrap-words" ng-if="!(new.FieldName.indexOf('Path')>-1)">{{new.OldValue || 'Not Available'}}</td>
+                            <td class="small wrap-words" ng-if="!(new.FieldName.indexOf('Path')>-1)">{{new.NewValue || 'Not Available'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            @if (ProfileActionValidator.IsMask(ViewBag.Roles))
+            {
+                <div id="updateFail" style="display:none;">
+                    <div class="clearfix"></div>
+                    <br />
+                    <label class="control-label small">Reason to send back</label>
+                    <textarea ng-model="rejectionReason" class="form-control col-lg-8"></textarea>
+                    <br />
+                    <div class="clearfix"></div>
+                    <br />
+                    <button class="pull-left btn btn-danger btn-xs" ng-click="closedivUpdate();">Cancel</button>
+                    <button ng-show="showReject" class="pull-right btn btn-success btn-xs" ng-click="SetReject(temp, rejectionReason);">Send</button>
+                    <button ng-show="showHold" class="pull-right btn btn-success btn-xs" ng-click="SetOnHold(temp, rejectionReason);">Send</button>
+                </div>
+
+                <div ng-hide="hideApprovalBtn">
+                    <div class="clearfix"></div>
+                    <br />
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                            <button class="btn btn-success sizebtn" ng-click="UpdateSuccess(temp);">Accept</button>
+                            <button ng-if=" temp.approvalstatus !='OnHold' " class=" btn btn-warning sizebtn" ng-click="OnHold(temp);">
+                                OnHold
+                            </button>
+                            <button class="btn btn-danger sizebtn " ng-click="UpdateFail();">Reject</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div ng-if="businessError">
+                    <label class="control-label small text-danger">{{businessError}}.<br />Please reject the changes.</label>
+                </div>
+            }
+            else
+            {
+
+            }
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    @*<div ng-if="chnagedData.length > 0" class="col-lg-12">
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Item</label>
+            </div>
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Old Data</label>
+            </div>
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">New Data</label>
+            </div>
+        </div>
+        <div class="progress col-lg-12" ng-show="loadBar" ng-cloak>
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                Loading...Please wait...
+            </div>
+        </div>*@
+    @*<div ng-if="chnagedData.length > 0" class="col-lg-12" ng-repeat="new in chnagedData track by $index">
+        <div class="col-lg-4 form-group" @*ng-init="new=getValue(new)"*@
+    @*<i class="small wrap-words" ng-if="new.FieldName.indexOf('Path')>-1">Supporting Document</i>
+                <i class="small wrap-words" ng-if="!(new.FieldName.indexOf('Path')>-1)">{{new.FieldName || 'Not Available'}}</i>
+            </div>
+            <div ng-if="new.FieldName.indexOf('Path')>-1">
+                <div class="col-lg-4 form-group">
+                    <i class="data-label" ng-if="new.OldValue"><a href="/Document/View?path={{new.OldValue}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Old Document"><i class="fa fa-file"></i></a></i>
+                    <i class="small wrap-words" ng-if="!new.OldValue">Not Available</i>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <i class="data-label" ng-if="new.NewValue"><a href="/Document/View?path={{new.NewValue}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="New Document"><i class="fa fa-file"></i></a></i>
+                    <i class="small wrap-words" ng-if="!new.NewValue">Not Available</i>
+                </div>
+            </div>
+            <div ng-if="!(new.FieldName.indexOf('Path')>-1)">
+                <div class="col-lg-4 form-group">
+                    <i class="small wrap-words">{{new.OldValue || 'Not Available'}}</i>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <i class="small wrap-words">{{new.NewValue || 'Not Available'}}</i>
+                </div>
+            </div>
+        </div>*@
+    <div class="col-lg-12" ng-if="chnagedData.length == 0">
+        <div class="col-lg-4 form-group" ng-init="new=getValue(new)">
+            <i class="wrap-words">No changes</i>
+
+        </div>
+
+    </div>
+    <div ng-if="temp.ApprovalStatus == 'OnHold'" class=" col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+            <label class="control-label small">On Hold Reason :</label>
+        </div>
+    </div>
+    <div ng-if="temp.ApprovalStatus == 'OnHold'" class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+            <i class="small wrap-words">{{temp.RejectionReason}}</i>
+        </div>
+    </div>
+    @*<div class="col-lg-12 form-group">
+            <label class="control-label small">Old Data</label>
+            <div>
+                <i ng-repeat="new in chnagedData" class="small wrap-words">{{new.OldValue || 'Not Available'}} ,</i>
+            </div>
+        </div>
+        <div class="col-lg-12 form-group">
+            <label class="control-label small">New Data:</label>
+            <div>
+                <i ng-repeat="new in chnagedData" class="small wrap-words">{{new.NewValue || 'Not Available'}}  ,</i>
+            </div>
+        </div>*@
+
+
+</div>
+@*@if (ProfileActionValidator.IsMask(ViewBag.Roles))
+{
+    <div class="form-style" ng-hide="historyMode">
+        <fieldset>
+            <legend>
+                Action
+            </legend>
+
+            @*<div>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div class="alert alert-success alert-dismissible" id="updateSuccess" role="alert" style="display:none;">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        The Submission is Successful and Email is Sent !!!!
+                    </div>
+                </div>*@
+            @*<div id="updateFail" style="display:none;">
+                <div class="clearfix"></div>
+                <br />
+                <label class="control-label small">Reason to send back</label>
+                <textarea ng-model="rejectionReason" class="form-control col-lg-8"></textarea>
+                <br />
+                <div class="clearfix"></div>
+                <br />
+                <button class="pull-left btn btn-danger btn-xs" ng-click="closedivUpdate();">Cancel</button>
+                <button ng-show="showReject" class="pull-right btn btn-success btn-xs" ng-click="SetReject(temp, rejectionReason);">Send</button>
+                <button ng-show="showHold" class="pull-right btn btn-success btn-xs" ng-click="SetOnHold(temp, rejectionReason);">Send</button>
+            </div>
+
+            <div ng-hide="hideApprovalBtn">
+                <div class="clearfix"></div>
+                <br />
+                <div class="col-lg-6">
+                    <div class="form-group col-lg-2">
+                        <button class="btn btn-success sizebtn" ng-click="UpdateSuccess(temp);">Accept</button>
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <button ng-if="temp.ApprovalStatus != 'OnHold'" class="btn btn-warning sizebtn" ng-click="OnHold(temp);">OnHold</button>
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <button class="btn btn-danger sizebtn" ng-click="UpdateFail();">Reject</button>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="businessError">
+                <label class="control-label small text-danger">{{businessError}}.<br />Please reject the changes.</label>
+            </div>
+        </fieldset>
+    </div>
+}
+else
+{
+
+}*@
+</div>
+
+

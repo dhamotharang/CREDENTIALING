@@ -1,0 +1,113 @@
+﻿@using PortalTemplate.Helper
+<p-link filepath="~/Areas/CMS/Content/CSS/CMSTableCss.css" rel="stylesheet"></p-link>
+<p-script filepath="~/Areas/CMS/Scripts/CMSData/CMSTableSupport.js"></p-script>
+
+<div class="col-lg-12">
+    <fieldset class="fsStyle createClaim">
+        <legend class="legendStyle">
+            <span class="theme_depend text-initial title_heading">Add New @ViewBag.Title</span>
+        </legend>
+
+        <div class="c_panel_body">
+            <table class="table table-condensed table-responsive">
+                <thead>
+                    <tr>
+                        @foreach (var headdata in ViewBag.TableData.addeditfields)
+                            {
+                            <th>@headdata</th>
+                            }
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @{var i = 0;}
+                        @foreach (var headdata in ViewBag.TableData.addeditfields)
+                            {
+                            <td><input type="text" id="addeditfield@(i)" class="form-control input-xs addeditinputclass" /></td>
+                                i++;
+                            }
+                        <td class="col-md-1">
+
+                            <button type="button" class="btn btn-xs btn-primary"><i class="fa fa-save"></i></button>
+                            <button type="button" class="btn btn-xs btn-warning refresh"><i class="fa fa-refresh"></i></button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </fieldset>
+</div>
+<div class="clearfix"></div>
+<div class="col-lg-12">
+    <fieldset class="fsStyle createClaim">
+        <legend class="legendStyle">
+            <span class="theme_depend text-initial title_heading">@ViewBag.Title</span>
+        </legend>
+        <div class="legend2 exportbtn">@Html.ExportOptions("excel", "print", "filter")</div>
+        <div class="panel-body" id="cmstablecontainer">
+            <div class="c_panel_body">
+                <table class="table table-striped table-hover table-responsive custom-thead-back queue_table queue_table_head custom-thead-font custom-tbody custom-table-striped">
+                    <thead class="theme_thead">
+
+                        <tr>
+                            @foreach (var headdata in ViewBag.TableData.columns)
+                            {
+                                <th class="withfilter sm-mbrid">
+                                    <span class="styled-input">
+                                        <input class="filer-search" type="text" required="">
+                                        <label>@headdata</label>
+                                        <span></span>
+                                        <i class="fa fa-sort" style="color: rgb(255, 255, 255);"></i>
+                                    </span>
+                                </th>
+                            }
+                            <th class="withfilter sm-mbrid">
+                                <span class="styled-input">
+                                    <input class="filer-search" type="text" required="">
+                                    <label>STATUS</label>
+                                    <span></span>
+                                    <i class="fa fa-sort" style="color: rgb(255, 255, 255);"></i>
+                                </span>
+                            </th>
+                            <th>ACTION</th>
+                        </tr>
+
+                    </thead>
+                    <tbody class="tabletdcontrol">
+                        @{var j = 0;}
+                        @foreach (var headdata in ViewBag.TableData.data)
+                        {
+
+
+                            <tr id="tabledata@(j)">
+
+                                @foreach (var data in headdata)
+                                    {
+
+                                        <td class="maxWidthXLem "><div class="td-ellipsis text-uppercase" data-toggle="tooltip" data-trigger="hover" data-title="@data">@data</div></td>
+                                    }
+                                <td>
+                                    <input type="checkbox" class="switchCss" checked="" data-size="mini" data-off-color="danger" data-on-color="success" data-on-text="Active" data-off-text="Inactive" data-label-width="1">
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" name="edit" data-product-name="@headdata" class="btn btn-xs btn-primary editclass"><i class="fa fa-edit"></i></button>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                j++;
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+<div class="clearfix"></div>

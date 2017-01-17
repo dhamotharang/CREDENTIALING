@@ -1,0 +1,238 @@
+﻿<!-- author : krglv-->
+@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.CredentialingCheckList.CredentialingAppointmentDetailViewModel
+
+
+<br />
+
+<style>
+    .ProviderTypeSelectAutoList.popover.bottom {
+        margin-top: 32px;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+    .label-provider-type:hover {
+        background-color: #eee;
+        text-decoration: none;
+    }
+    .label-provider-type {
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        font-weight: 100;
+        /* padding: 4px 4px 5px 7px; */
+    }
+</style>
+<div>
+    
+        <div class="col-lg-12 col-md-12 zero-padding-left-right-div" ng-cloak>
+            <fieldset>
+                <legend>CCM Action</legend>
+                <form id="CCMAction" class="form-horizontal" ng-submit="ccmAction('CCMAction')">
+                    @Html.HiddenFor(model => model.CredentialingAppointmentDetailID, new { ng_value = "tempObject.CredentialingAppointmentDetailID" })
+                    @*@Html.HiddenFor(model => model.CredentialingAppointmentResult.SignedDate, new { ng_value = "tempObject.CredentialingAppointmentResult.SignedDate" })*@
+                    @Html.HiddenFor(model => model.CredentialingAppointmentResult.SignedByID, new { ng_value = "tempObject.CredentialingAppointmentResult.SignedByID" })
+                    @Html.HiddenFor(model => model.CredentialingAppointmentResult.CredentialingLevel, new { ng_value = "tempObject.CredentialingAppointmentResult.CredentialingLevel" })
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Name :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="control-label"><i style="font-weight:100">{{temp.Profile.PersonalDetail.Salutation}} {{tempObject.FirstName}} {{tempObject.MiddleName}} {{tempObject.LastName}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Type of Practice :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.ProviderType}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">County :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.County}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group" @*ng-if="tempObject.CredentialingSpecialityLists.length>0"*@>
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Specialty :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="control-label" ng-repeat="tpt in tempObject.CredentialingSpecialityLists track by $index" ng-if="tpt.Status=='Active'">
+                                <i class="label label-default">{{tpt.Name}}</i>&nbsp;&nbsp;
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Board Certification :</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.BoardCertified}}</i></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.RemarksForBoardCertification}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Hospital Privileges :</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.HospitalPrivileges}}</i></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.RemarksForHospitalPrivileges}}</i></label>
+                        </div>
+                    </div>
+
+                    <div @*ng-if="tempObject.CredentialingCoveringPhysicians.length > 0"*@ class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">CoveringPhysicians : </label>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="control-label" ng-repeat="tpt in tempObject.CredentialingCoveringPhysicians track by $index" ng-if="tpt.Status=='Active'">
+                                <i class="label label-default">{{tpt.FirstName}} {{tpt.LastName}} </i>&nbsp;&nbsp;
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Gaps in Practice :</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.GapsInPractice}}</i></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.RemarksForGapsInPractice}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Clean license :</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.CleanLicense}}</i></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.RemarksForCleanLicense}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">NPDB Issues :</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.NPDBIssue}}</i></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.RemarksForNPDBIssue}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Malpractice Issues :</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.MalpracticeIssue}}</i></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.RemarksForMalpracticeIssue}}</i></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Years in Practice :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.YearsInPractice}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Site Visit Required. If yes, were there any issues :</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.SiteVisitRequired}}</i></label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <label class="control-label"><i style="font-weight:100">{{tempObject.RemarksForSiteVisitRequired}}</i></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Provider Level :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.CredentialingLevel)))
+                        {
+                                <label class="radio-inline control-label">
+                                    @Html.RadioButtonFor(model => model.RecommendedCredentialingLevel, (int)value, new { data_ng_model = "tempObject.RecommendedCredentialingLevel", data_ng_click = "getProviderLevelValue('@value')" }) @value.ToString()
+                                </label>
+                        }
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Signature* :</label>
+                        <div class="fileinput fileinput-exists col-lg-6 col-md-6 col-sm-6 control-label" data-provides="fileinput">
+                            <div class="fileinput-preview thumbnail file_preview_upload" style="width:100%;line-height: 83px; background-image: url('/Content/Images/no-img.jpg'); background-size: 100% 97%;" data-trigger="fileinput"><img ng-src="/Document/View?path={{tempObject.CredentialingAppointmentResult.SignaturePath}}"></div>
+                            <div>
+                                <span class="btn btn-primary btn-xs btn-file">
+                                    <span class="fileinput-new"><i class="fa fa-search"></i></span>
+                                    <span class="fileinput-exists" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-search"></i></span>
+                                    @Html.TextBoxFor(model => model.CredentialingAppointmentResult.SignatureFile, new { type = "file", data_ng_model = "tempObject.CredentialingAppointmentResult.SignatureFile", data_valid_file = "valid-file", required = "required" })
+                                </span>
+                                <button ng-if="form.$valid" class="btn btn-success btn-xs fileinput-exists" ng-init="check='true'" type="submit" tooltip data-toggle="tooltip" data-placement="bottom" title="Upload"><i class="fa fa-upload"></i></button>
+                                <button ng-if="tempObject.CredentialingAppointmentResult.SignaturePath && !form.$valid" ng-click="ProfilePictureRemove(Provider.ProfilePhotoPath)" class="btn btn-danger btn-xs fileinput-exists" tooltip data-toggle="tooltip" data-placement="bottom" title="Remove"><i class="fa fa-trash"></i></button>
+                                @Html.ValidationMessageFor(model => model.CredentialingAppointmentResult.SignatureFile, "", new { data_ng_hide = "check", @class = "text-danger" })
+                                <br />
+                                <span ng-if="form.$valid" ng-hide="valstaus">Please click on upload button to upload the selected picture.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Date :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6 control-label">
+                            @Html.TextBoxFor(model => model.CredentialingAppointmentResult.SignedDate, new { style = "width:100%", data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", data_ng_model = "tempObject.CredentialingAppointmentSchedule.AppointmentDate" })
+                        </div>
+                    </div>
+                    <div class="form-group" id="approvestat">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Status* :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6 control-label">
+                            @Html.EnumDropDownListFor(Model => Model.CredentialingAppointmentResult.ApprovalStatusType, "-- select --", new { @class = "form-control input-sm", data_ng_model = "approvalStatusType" })
+                            @Html.ValidationMessageFor(m => m.CredentialingAppointmentResult.ApprovalStatusType, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-5 col-md-5 col-sm-5 control-label">Remark :</label>
+                        <div class="col-lg-6 col-md-6 col-sm-6 control-label">
+                            @Html.TextAreaFor(Model => Model.CredentialingAppointmentResult.RemarkForApprovalStatus, new { style = "width:100%" })
+                        </div>
+                    </div>
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {{ConfirmTitle}}
+                                    <button type="button" ng-disabled="saving" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                </div>
+                                <div class="panel-body">
+                                    {{ConfirmMessage}}
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="clearfix">
+                                        <button class="btn btn-primary btn-sm pull-right" type="submit">Yes</button>
+                                        <button type="button" class="btn btn-default btn-sm pull-right" style="margin-right: 6px;" data-dismiss="modal">No</button>
+                                        <div class="pull-right" style="margin: 3px;">
+                                            <saving></saving>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-6 col-md-6 col-sm-6 control-label">
+                            <a class="btn btn-warning btn-sm" href="/credentialing/ccm/index">Cancel</a>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 control-label">
+                            <a class="btn btn-primary btn-sm" ng-click="confirmationAddCCMAction()">Submit</a>
+                        </div>
+                    </div>
+                </form>
+
+
+
+                <div class="col-lg-12" id="errorCCM">
+                    <div ng-show="activeMessageDiv=='ccmAccepted'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+</div>
+

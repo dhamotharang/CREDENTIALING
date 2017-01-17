@@ -1,0 +1,148 @@
+﻿
+<br />
+<div class="panel-group" ng-controller="ServiceInfoController">
+    <div class="form-style">
+
+        <fieldset>
+            <legend>
+                Military Service Information
+            </legend>
+
+            <div id="MSI" class="panel-body">
+
+                @*@Html.Partial("~/Areas/Profile/Views/WorkHistory/_MilitaryDuty.cshtml")*@
+
+                Have you ever performed military duty ?*  &nbsp;&nbsp;&nbsp;
+                <label><input type="radio" name="IsMilitary" value="Yes" ng-model="IsMilitary" /> Yes</label>&nbsp;&nbsp;
+                <label><input type="radio" name="IsMilitary" value="No" ng-model="IsMilitary" /> No</label>
+                <div class="clearfix"></div>
+                <br />
+                <div class="form-style" ng-show="IsMilitary=='Yes'">
+
+                    <div class="col-lg-12 zero-padding-left-right-div">
+
+                        <div class="clearfix"></div>
+                        <table class="table table-bordered table-condensed table-striped customtbodyStyle" ng-show="MilitaryServiceInformations.length>=1">
+                            <thead>
+                                <tr>
+                                    <th>Military Branch</th>
+                                    <th>Rank At Discharge</th>
+                                    <th>Discharge Type</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="msi in MilitaryServiceInformations">
+                                <tr>
+                                    <td>{{msi.MilitaryBranch}}</td>
+                                    <td>{{msi.RankAtDischarge}}</td>
+                                    <td>{{msi.DischargeType}}</td>
+                                    <td>{{msi.StartDate}}</td>
+                                    <td>{{msi.EndDate}}</td>
+                                    <td>
+                                        <button data-toggle="tooltip" data-placement="left" title="View" ng-click="viewMilitaryServiceInformation($index,msi)" ng-hide="viewStateLicense" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></button>
+                                        <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="editMilitaryServiceInformation($index,msi)"><i class="fa fa-edit"></i></button>
+                                        <button data-toggle="tooltip" data-placement="right" title="Add New" class="btn btn-xs btn-success" ng-click="addMilitaryServiceInformation()" ng-hide="editShowMilitaryServiceInformation || newShowMilitaryServiceInformation || $index+1!=MilitaryServiceInformations.length"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+
+                                <tr ng-show="editShowMilitaryServiceInformation && msi==militaryServiceInformation">
+                                    <td colspan="6" id="militaryServiceInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditMilitaryServiceInformation.cshtml")
+                                    </td>
+                                </tr>
+                                <tr ng-show="viewShowMilitaryServiceInformation && msi==militaryServiceInformation">
+                                    <td colspan="6" id="militaryServiceInformationEditDiv{{$index}}">
+                                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewMilitaryServiceInformation.cshtml")
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                    <fieldset ng-show="newShowMilitaryServiceInformation">
+                        <legend>
+                            Add Military Service Information
+                        </legend>
+                        <div id="newShowMilitaryServiceInformationDiv">
+                            @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditMilitaryServiceInformation.cshtml")
+                        </div>
+                    </fieldset>
+                    <div ng-hide="editShowMilitaryServiceInformation || newShowMilitaryServiceInformation" class="col-md-12 text-right" ng-show="MilitaryServiceInformations.length==0">
+                        <button class="btn btn-xs btn-primary addHosPrvBtn" ng-click="addMilitaryServiceInformation()"><i class="fa fa-plus"></i> Add Military Service Information</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </fieldset>
+    </div>
+
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Public Health Service
+            </legend>
+            <br />
+            Have you performed public health Service?* &nbsp;&nbsp;&nbsp;
+            <label><input type="radio" ng-model="IsPublicHealthService" value="Yes" /> Yes</label>&nbsp;&nbsp;
+            <label><input type="radio" ng-model="IsPublicHealthService" value="No" /> No</label>
+
+            <div class="clearfix"></div>
+            <br />
+            <div class="form-style" ng-show="IsPublicHealthService=='Yes'">
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <table class="table table-bordered table-condensed table-striped customtbodyStyle" ng-show="PublicHealthServices.length>0">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="phs in PublicHealthServices">
+                            <tr>
+                                <td>{{phs.Location}}</td>
+                                <td>{{phs.StartDate}}</td>
+                                <td>{{phs.EndDate}}</td>
+                                <td>
+                                    <button data-toggle="tooltip" data-placement="left" title="View" ng-click="viewPublicHealthService($index,phs)" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></button>
+                                    <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="editPublicHealthService($index,phs)"><i class="fa fa-edit"></i></button>
+                                    <button data-toggle="tooltip" data-placement="right" title="Add New" class="btn btn-xs btn-success" ng-click="addPublicHealthService()" ng-hide="editShowPublicHealthServiceFormStatus || newShowPublicHealthService || $index+1!=PublicHealthServices.length"><i class="fa fa-plus"></i></button>
+                                </td>
+                            </tr>
+                            <tr ng-show="editShowPublicHealthService && phs==publicHealthService">
+                                <td colspan="4" id="publicHealthServiceEditDiv{{$index}}" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditPublicHealthService.cshtml")
+                                </td>
+                            </tr>
+                            <tr ng-show="viewPublicHealthServiceDetails && phs==publicHealthService">
+                                <td colspan="4" id="publicHealthServiceEditDiv{{$index}}">
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewPublicHealthService.cshtml")
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clearfix"></div>
+                <fieldset ng-show="newShowPublicHealthService">
+                    <legend>
+                        Add Public Health Service
+                    </legend>
+                    <div id="newPublicHealthServiceFormDiv">
+                        @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditPublicHealthService.cshtml")
+                    </div>
+                </fieldset>
+                <div ng-hide="editShowPublicHealthServiceFormStatus || newShowPublicHealthService" class="col-md-12 text-right" ng-show="PublicHealthServices.length==0">
+                    <button class="btn btn-xs btn-primary" ng-click="addPublicHealthService()"><i class="fa fa-plus"></i> Add Public Health Service</button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+

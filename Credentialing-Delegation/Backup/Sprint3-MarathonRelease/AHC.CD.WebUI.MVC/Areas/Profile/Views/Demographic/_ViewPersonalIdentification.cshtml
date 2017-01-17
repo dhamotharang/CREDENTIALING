@@ -1,0 +1,95 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.PersonalIdentificationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+@*<div ng-if="!Provider.PersonalIdentification" class="col-md-12 zero-padding-left-right-div">
+    No Data Available ! Please Provide Personal Identification...
+    <button class="btn btn-xs btn-primary pull-right" ng-click="operateEditControl('_EditPersonalIdentification',Provider.PersonalIdentification)"><i class="fa fa-plus"></i> Personal Identification</button>
+</div>*@
+<div class="col-lg-12">
+    <table ng-if="!Provider.PersonalIdentification" class="table table-bordered table-condensed customtbodyStyle table-striped">
+        <thead>
+            <tr>
+                <td>
+                    No Data Available for Personal Identification!
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                    {
+                        <span>Please click on <button class="btn btn-xs btn-success" ng-click="operateEditControl('_EditPersonalIdentification',Provider.PersonalIdentification)" data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Personal Identification</span>
+                    }
+                </td>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div ng-if="Provider.PersonalIdentification">
+    <div ng-if="Provider.PersonalIdentification.SSN" class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.SSN, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                {
+                    <i class="data-label">
+                        <span ng-if="Provider.PersonalIdentification.SSN">
+                            ############
+                        </span>
+                        <span ng-if="!Provider.PersonalIdentification.SSN">
+                            Not Available
+                        </span>
+                    </i>
+                }
+                else
+                {
+                    <i class="data-label">
+                        <span ng-if="Provider.PersonalIdentification.SSN">
+                            {{Provider.PersonalIdentification.SSN}}
+                        </span>
+                        <span ng-if="!Provider.PersonalIdentification.SSN">
+                            Not Available
+                        </span>
+                    </i>
+                }
+            </div>
+        </div>
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.SSNCertificatePath, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                    {
+                        <span ng-if="Provider.PersonalIdentification.SSNCertificatePath"><i class="fa fa-file"></i></span>
+                        <span ng-if="!Provider.PersonalIdentification.SSNCertificatePath">Not Available</span>
+                    }
+                    else
+                    {
+                        <a ng-if="Provider.PersonalIdentification.SSNCertificatePath" href="/Document/View?path={{Provider.PersonalIdentification.SSNCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="SSN Document"><i class="fa fa-file"></i></a>
+                        <span ng-if="!Provider.PersonalIdentification.SSNCertificatePath">Not Available</span>
+                    }
+                </i>
+               
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.DL, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <span ng-if="Provider.PersonalIdentification.DL">
+                        {{Provider.PersonalIdentification.DL}}
+                    </span>
+                    <span ng-if="!Provider.PersonalIdentification.DL">
+                        Not Available
+                    </span>
+                </i>
+            </div>
+        </div>
+        <div class="col-lg-6 form-group">
+            @Html.LabelFor(model => model.DLCertificatePath, htmlAttributes: new { @class = "control-label small" })
+            <div>
+                <i class="data-label">
+                    <a ng-if="Provider.PersonalIdentification.DLCertificatePath" href="/Document/View?path={{Provider.PersonalIdentification.DLCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Driver's License Document"><i class="fa fa-file"></i></a>
+                    <span ng-if="!Provider.PersonalIdentification.DLCertificatePath">Not Available</span>
+                </i>
+            </div>
+        </div>
+    </div>
+</div>

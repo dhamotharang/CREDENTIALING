@@ -1,0 +1,290 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.ProfessionalLiabilityViewModel.ProfessionalLiabilityViewModel>
+@using PratianUI
+@{
+    var Liability = 0;
+    var ObjectPresent = 1;
+}
+<div class="target profilediv col-lg-12" id="IDProfessionalLiability">
+    <fieldset class="fsStyle" id="AddEditProfessionalLiability">
+        <legend class="legendStyle text-uppercase">
+            @*@if (Model.FirstOrDefault().ProfessionalLiabilityID == null)
+                {
+                    <span class="theme_depend text-uppercase TabHeading">ADD Professional Liability</span>
+                }
+                else
+                {
+                    <span class="theme_depend text-uppercase ">Edit Professional Liability</span>
+                }*@
+            @foreach (var item in Model)
+            {
+                if (item == null)
+                {
+                    <span class="theme_depend text-uppercase create-auth-legends">
+                        <span class="transparent-font-color">__</span>
+                        ADD Professional Liability
+                        <span class="transparent-font-color">__</span>
+                    </span>
+                    ObjectPresent = 0;
+                }
+            }
+            @if (ObjectPresent != 0)
+            {
+                <span class="theme_depend text-uppercase create-auth-legends">
+                    <span class="transparent-font-color">__</span>
+                    Edit Professional Liability
+                    <span class="transparent-font-color">__</span>
+                </span>
+            }
+
+        </legend>
+        @using (Ajax.BeginForm("AppendLiabilitydata", "ProfessionalLiability", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "LiabilityTabView" }))
+        {
+            foreach (var item in Model)
+            {
+                Liability = Liability + 1;
+                @Html.HiddenFor(e => item.ProfessionalLiabilityID)
+
+
+                <div class="x_content zero-padding-left mutiple-data">
+                    @if (item != null)
+                    {
+                        <div class="SubHeaderSpacing1">
+                            <span class="text-uppercase TableHeading">Edit Professional Liability-@Liability</span>
+                        </div>
+                    }
+                    else
+                    {
+                    }
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.InsuranceCarrier)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(e => item.InsuranceCarrier, new { @class = "form-control input-xs", @placeholder = "Insurance Carrier" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.InsuranceAddress)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(e => item.InsuranceAddress, new { @class = "form-control input-xs", @placeholder = "Insurance Address" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.Suite)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(e => item.Suite, new { @class = "form-control input-xs", @placeholder = "Suite/Building" })
+                        </span>
+                    </div>
+                    <div class="col-lg-12 nopadding">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.StreetNo)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.TextBoxFor(e => item.StreetNo, new { @class = "form-control input-xs", @placeholder = "Street/PO Box" })
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.City)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.TextBoxFor(e => item.City, new { @class = "form-control input-xs", @placeholder = "City" })
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.State)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.TextBoxFor(e => item.State, new { @class = "form-control input-xs", @placeholder = "State" })
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.County)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(e => item.County, new { @class = "form-control input-xs", @placeholder = "County" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.Country)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(e => item.Country, new { @class = "form-control input-xs", @placeholder = "Country" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.ZipCode)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(e => item.ZipCode, new { @class = "form-control input-xs", @placeholder = "Zip Code" })
+                        </span>
+                    </div>
+                    <div class="col-lg-12 nopadding">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle nopadding">
+                            <span class="theme_label col-lg-5 ">
+                                <label class="">@Html.DisplayNameFor(e => e.SelfInsured) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">
+                                    @Html.PratianUiRadioButtonFor(e => item.SelfInsured, new { color = "green", @checked = "checked" }) YES
+                                    @Html.PratianUiRadioButtonFor(e => item.SelfInsured, new { color = "red" }) NO
+                                    @*@Html.RadioButtonFor(e => item.SelfInsured, true) Yes
+                                        @Html.RadioButtonFor(e => item.SelfInsured, false) No*@
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.TypeofCoverage) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">
+                                    @Html.PratianUiRadioButtonFor(e => item.TypeofCoverage, new { color = "green", @checked = "checked" })INDIVIDUAL
+                                    @Html.PratianUiRadioButtonFor(e => item.TypeofCoverage, new { color = "green" })SHARED
+                                    @*@Html.RadioButtonFor(e => item.TypeofCoverage, true) Individual
+                                        @Html.RadioButtonFor(e => item.TypeofCoverage, false) Shared*@
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.OrginialDate)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.PratianUiDatePickerFor(e => item.OrginialDate, new { @class = "form-control input-xs", @placeholder = "Orginial Date" })
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.EffectiveDate)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.PratianUiDatePickerFor(e => item.EffectiveDate, new { @class = "form-control input-xs", @placeholder = "Effective Date" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.ExpirationDate)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.PratianUiDatePickerFor(e => item.ExpirationDate, new { @class = "form-control input-xs", @placeholder = "Expiration Date" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="theme_label col-lg-5 nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.PolicyNumber)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(e => item.PolicyNumber, new { @class = "form-control input-xs", @placeholder = "Policy Number" })
+                        </span>
+                    </div>
+                    <div class="col-lg-12 nopadding">
+
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.AmountCoverage)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.TextBoxFor(e => item.AmountCoverage, new { @class = "form-control input-xs", @placeholder = "Amount of Coverage" })
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.AmountcoverageAggregate)</label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.TextBoxFor(e => item.AmountcoverageAggregate, new { @class = "form-control input-xs", @placeholder = "Coverage Amount" })
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.InsuranceCarrierCoverage) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">
+                                    @Html.PratianUiRadioButtonFor(e => item.InsuranceCarrierCoverage, new { color = "green", @checked = "checked" }) YES
+                                    @Html.PratianUiRadioButtonFor(e => item.InsuranceCarrierCoverage, new { color = "red" }) NO
+                                    @*@Html.RadioButtonFor(e => item.InsuranceCarrierCoverage, true) Yes
+                                        @Html.RadioButtonFor(e => item.InsuranceCarrierCoverage, false) No*@
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.PolicyTailCoverage) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                <span class="theme_label_data">
+                                    @Html.PratianUiRadioButtonFor(e => item.PolicyTailCoverage, new { color = "green", @checked = "checked" }) YES
+                                    @Html.PratianUiRadioButtonFor(e => item.PolicyTailCoverage, new { color = "red" }) NO
+                                    @*@Html.RadioButtonFor(e => item.PolicyTailCoverage, true) Yes
+                                        @Html.RadioButtonFor(e => item.PolicyTailCoverage, false) No*@
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-5 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.PhoneNumber) </label>
+                            </span>
+                            <span class="col-lg-1"></span>
+                            <span class="col-lg-6 nopadding">
+                                @Html.TextBoxFor(e => item.PhoneNumber, new { @class = "form-control input-xs", @placeholder = "PHONE NUMBER" })
+                            </span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                            <span class="theme_label col-lg-4 nopadding">
+                                <label class="">@Html.DisplayNameFor(e => e.Document) </label>
+                            </span>
+                            <span class="col-lg-2"></span>
+                            @*<span class="col-lg-7 nopadding">
+                                    <span class="theme_label_data">@Html.TextBoxFor(e => item.Document, new { @class = "form-control input-xs", @placeholder = "Document", @type = "file" })</span>
+                                </span>*@
+                            <span class="col-lg-6 input-group  nopadding">
+                                <input type="text" class="form-control input-xs" placeholder="Document">
+                                <span class="input-group-addon File_uploadStyle"><i class="fa fa-upload"></i></span>
+                            </span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            }
+            <div class="row col-lg-12 zero-padding-left-right" style="margin-top:5px;">
+                <button class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px yahanClickKar" type="submit" name="submit" value="">Save</button>
+                <button class="btn btn-danger btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/ProfessionalLiability/Index" data-tab-container="LiabilityTabView" value="">Cancel</button>
+            </div>
+        }
+    </fieldset>
+</div>

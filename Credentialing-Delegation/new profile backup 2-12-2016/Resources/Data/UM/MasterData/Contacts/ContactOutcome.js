@@ -1,0 +1,134 @@
+﻿var ContactOutcomes = [
+	{
+	    "OutcomeID": 32,
+	    "OutcomeType": "Agrees With Plan Decision"
+	},
+	{
+	    "OutcomeID": 33,
+	    "OutcomeType": "Coverage Determination Requested"
+	},
+	{
+	    "OutcomeID": 20,
+	    "OutcomeType": "Fax Sent"
+	},
+	{
+	    "OutcomeID": 1,
+	    "OutcomeType": "Information received"
+	},
+	{
+	    "OutcomeID": 2,
+	    "OutcomeType": "Left Message"
+	},
+	{
+	    "OutcomeID": 3,
+	    "OutcomeType": "Left Message – VM"
+	},
+	{
+	    "OutcomeID": 4,
+	    "OutcomeType": "Left message with other"
+	},
+	{
+	    "OutcomeID": 19,
+	    "OutcomeType": "Letter Pending"
+	},
+	{
+	    "OutcomeID": 18,
+	    "OutcomeType": "Letter Sent"
+	},
+	{
+	    "OutcomeID": 5,
+	    "OutcomeType": "Notified member of approval"
+	},
+	{
+	    "OutcomeID": 6,
+	    "OutcomeType": "Notified member of denial"
+	},
+	{
+	    "OutcomeID": 17,
+	    "OutcomeType": "Notified Partial Approval"
+	},
+	{
+	    "OutcomeID": 7,
+	    "OutcomeType": "Number busy"
+	},
+	{
+	    "OutcomeID": 8,
+	    "OutcomeType": "Number Disconnected"
+	},
+	{
+	    "OutcomeID": 31,
+	    "OutcomeType": "Pending For PCP Answer"
+	},
+	{
+	    "OutcomeID": 24,
+	    "OutcomeType": "Spoke To Admitting Provider"
+	},
+	{
+	    "OutcomeID": 9,
+	    "OutcomeType": "Spoke To Attending Provider"
+	},
+	{
+	    "OutcomeID": 10,
+	    "OutcomeType": "Spoke to Facility"
+	},
+	{
+	    "OutcomeID": 11,
+	    "OutcomeType": "Spoke to Health Plan"
+	},
+	{
+	    "OutcomeID": 12,
+	    "OutcomeType": "Spoke to Home Care"
+	},
+	{
+	    "OutcomeID": 13,
+	    "OutcomeType": "Spoke to Hospice"
+	},
+	{
+	    "OutcomeID": 26,
+	    "OutcomeType": "Spoke To Hospital"
+	},
+	{
+	    "OutcomeID": 28,
+	    "OutcomeType": "Spoke To MD"
+	},
+	{
+	    "OutcomeID": 29,
+	    "OutcomeType": "Spoke To Nurse"
+	},
+	{
+	    "OutcomeID": 14,
+	    "OutcomeType": "Spoke to Office"
+	},
+	{
+	    "OutcomeID": 22,
+	    "OutcomeType": "Spoke To PCP"
+	},
+	{
+	    "OutcomeID": 23,
+	    "OutcomeType": "Spoke To Requesting Provider"
+	},
+	{
+	    "OutcomeID": 27,
+	    "OutcomeType": "Spoke To SNF"
+	},
+	{
+	    "OutcomeID": 21,
+	    "OutcomeType": "Spoke To Specialist"
+	},
+	{
+	    "OutcomeID": 25,
+	    "OutcomeType": "Spoke To Surgeon"
+	},
+	{
+	    "OutcomeID": 15,
+	    "OutcomeType": "Spoke with Member"
+	},
+	{
+	    "OutcomeID": 30,
+	    "OutcomeType": "SUBMITTED TO PLAN"
+	},
+	{
+	    "OutcomeID": 16,
+	    "OutcomeType": "Wrong Number"
+	}
+];

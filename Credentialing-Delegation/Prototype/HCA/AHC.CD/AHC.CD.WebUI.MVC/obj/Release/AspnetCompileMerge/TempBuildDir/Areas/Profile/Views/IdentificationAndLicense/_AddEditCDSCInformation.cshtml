@@ -1,0 +1,72 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.CDSCInformationViewModel
+
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+<fieldset>
+    <legend>
+        CDS Information
+    </legend>
+    <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+        <label>*Provide all current and previous licenses/certifications</label>
+    </div>
+    <div>
+        <form class="cDSCInformationForm">
+           
+                <div class="col-md-12">
+                    <div class="form-group col-md-3">
+                        @*@Html.LabelFor(model => model.CertNumber, new { @class = "control-label small" })*@
+                        <label class="control-label small">CDS Number *</label>
+                        <div>
+                            @Html.TextBoxFor(model => model.CertNumber, new { @class = "form-control input-sm", data_ng_model = "cDSCInformation.CertNumber" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CertNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.State, new { @class = "control-label small" })
+                        <div>
+                         @*   @Html.DropDownListFor(model => model.State, new[] { new SelectListItem { Value = "Florida", Text = "Florida" }, new SelectListItem { Value = "Arizona", Text = "Arizona" } }, "-- select --", new { @class = "form-control input-sm", data_ng_model = "cDSCInformation.StateOfRegistration" })*@
+                            <select id="state" class="form-control input-sm" data-ng-model="cDSCInformation.State">
+                                <option value="" disabled selected>--Select--</option>
+                                <option ng-repeat="state in States | unique: 'State'" value="{{state.State}}">{{state.State}}</option>
+                            </select>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.IssueDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "cDSCInformation.IssueDate" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+                        <div>
+                            @Html.TextBoxFor(model => model.ExpiryDate, new { @class = "form-control input-sm", type = "date", data_ng_model = "cDSCInformation.ExpiryDate" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12">
+                    <div class="form-group col-md-11">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new small">Select CDS Certificate</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.CDSCCertPath, new { type = "file", data_ng_model = "cDSCInformation.CDSCCertPath" })</span>
+                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <a href="{{cDSCInformation.CDSCCertPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            <div class="col-md-12 form-group">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-warning btn-sm" ng-click="cancelCDSCInformation()">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveCDSCInformation(cDSCInformation)">{{submitButtonText}}</button>
+                </div>
+            </div>
+          
+        </form>
+</div></fieldset>

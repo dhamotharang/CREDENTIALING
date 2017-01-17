@@ -1,0 +1,240 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.DemographisViewModels.OtherLegalNameViewModel>
+@{
+    var OtherLegal = 0;
+}
+<div class="col-lg-12 nopadding">
+    <fieldset class="fsStyle" id="ViewOtherLegalNames">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                <span class="transparent-font-color">___</span>Other Legal Names<span class="transparent-font-color">__</span>
+            </span>
+            &nbsp;&nbsp;
+            <span class="text-uppercase ">
+                <span class="fstyleBtnStyle">
+                    <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Demographics/GetAddEditOtherNames?model=@Model&type=Add" data-tab-container="OtherlegalName">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/Demographics/GetAddEditOtherNames?model=@Model&type=Edit" data-tab-container="OtherlegalName">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-warning btn-xs historyBtnCSS list-item" data-tab-path="/CredAxis/Demographics/GetOtherLegalNamesHistoryPartial?id=2" data-tab-container="OtherLegalNamesHistory">
+                        <i class="fa fa-history"></i>
+                    </button>
+                </span>
+                <a class="print_button_for_otherlegalnames hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                    <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                </a>
+            </span>
+        </legend>
+        @foreach (var item in Model)
+        {
+            OtherLegal = OtherLegal + 1;
+            if (OtherLegal <= 2)
+            {
+                <div class="x_content mutiple-data zero-padding-left" @*class="@(OtherLegal % 2 == 0 ? " x_content mutiple-data zero-padding-left" : "classblue x_content mutiple-data zero-padding-left")"*@>
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">Other Legal Name-@OtherLegal </span> &nbsp; <button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                        @*&nbsp;<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Demographics/GetOtherLegalNamesHistoryPartial?id=@item.OtherLegalNameID" data-tab-container="OtherLegalNames_@item.OtherLegalNameID">
+                                <i class="fa fa-history"></i>
+                            </button>*@
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.FirstName) :</label>
+                        @if (item.FirstName != "")
+                        {
+                            <span class="theme_label_data">@item.FirstName</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.MiddleName) :</label>
+                        @if (item.MiddleName != "")
+                        {
+                            <span class="theme_label_data">@item.MiddleName</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.LastName) :</label>
+                        @if (item.LastName != "")
+                        {
+                            <span class="theme_label_data">@item.LastName</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Suffix) :</label>
+                        @if (item.Suffix != "")
+                        {
+                            <span class="theme_label_data">@item.Suffix</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.LegalnameStartDate) :</label>
+                        @if (item.LegalnameStartDate != "")
+                        {
+                            <span class="theme_label_data">@item.LegalnameStartDate</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.LegalnameEndDate) :</label>
+                        @if (item.LegalnameEndDate != "")
+                        {
+                            <span class="theme_label_data">@item.LegalnameEndDate</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div id="OtherLegalNames_@item.OtherLegalNameID">
+                    </div>
+                </div>
+                if (OtherLegal > 2)
+                {
+                    <span class="view-more pull-right" id="groupmore" data-toggle="collapse" data-target=".ViewMoregroup" onclick="ShowHideAddView('groupless', 'groupmore')">View More</span>
+                }
+            }
+            else
+            {
+                <div class="@(OtherLegal % 2 == 0 ? "x_content mutiple-data zero-padding-left ViewMoregroup collapse" : "classblue x_content mutiple-data zero-padding-left ViewMoregroup collapse")">
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">Other Legal Name-@OtherLegal</span> &nbsp; <button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.FirstName) :</label>
+                        @if (item.FirstName != "")
+                        {
+                            <span class="theme_label_data">@item.FirstName</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.MiddleName) :</label>
+                        @if (item.MiddleName != "")
+                        {
+                            <span class="theme_label_data">@item.MiddleName</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.LastName) :</label>
+                        @if (item.LastName != "")
+                        {
+                            <span class="theme_label_data">@item.LastName</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Suffix) :</label>
+                        @if (item.Suffix != "")
+                        {
+                            <span class="theme_label_data">@item.Suffix</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.LegalnameStartDate) :</label>
+                        @if (item.LegalnameStartDate != "")
+                        {
+                            <span class="theme_label_data">@item.LegalnameStartDate</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle text_adjust">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.LegalnameEndDate) :</label>
+                        @if (item.LegalnameEndDate != "")
+                        {
+                            <span class="theme_label_data">@item.LegalnameEndDate</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div id="OtherLegalNames_@item.OtherLegalNameID">
+                    </div>
+                </div>
+            }
+            if (OtherLegal == Model.Count())
+            {
+                <span class="view-more hidden pull-right" id="groupless" data-toggle="collapse" data-target=".ViewMoregroup" onclick="ShowHideAddView('groupmore', 'groupless')">View Less</span>
+            }
+        }
+        <div id="OtherLegalNamesHistory">
+        </div>
+    </fieldset>
+
+    <!--Add-->
+</div>
+
+<div class="modal fade " tabindex="-1" role="dialog" id="BhaukalId" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-lg ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                @*<div class="row" style="text-align: center;">
+                        <span class="modalTitle text-uppercase">REMOVE DETAIL</span>
+                        <span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+
+                    </div>*@
+                <div class="col-lg-12">
+                    <div class="col-lg-8">
+                        <h4 style="color:white"><i class="fa fa-question-circle"></i> &nbsp; REMOVE DETAILS </h4>
+                    </div>
+                    <div class="col-lg-4" style=" top: 14px;">
+                        <button type="button" class="btn btn-danger btn-xs pull-right" data-dismiss="modal" id="closeModal">X</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                @* <span class="text-uppercase label" style="background-color: #C5CAE9; color: black;">Specialty Detail</span>*@
+                <div class="x_content zero-padding-left text-uppercase">
+                    <span class="AddProviderModal">
+                        <h3>&nbsp;&nbsp;&nbsp;&nbsp;DO YOU WANT TO REMOVE THESE DETAILS?</h3>
+                    </span>
+
+                </div>
+
+            </div>
+            <div class="modal-footer   ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 button-styles text-right">
+                    <span><button data-dismiss="modal" class="btn btn-danger close_modal_btn">NO</button></span>
+                    <button data-dismiss="modal" class="btn btn-success close_modal_btn">YES</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

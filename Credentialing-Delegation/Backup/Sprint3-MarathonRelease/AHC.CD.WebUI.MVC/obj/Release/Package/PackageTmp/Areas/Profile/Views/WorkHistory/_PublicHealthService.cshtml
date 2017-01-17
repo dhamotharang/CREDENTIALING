@@ -1,0 +1,77 @@
+﻿
+<div class="form-style">
+    <fieldset>
+        <legend>
+            Public Health Service
+        </legend>
+        <div class="form-style">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-hide="publicHealthServices.length > 0 || newShowPublicHealthService" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No Data Available ! To Add New Click
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addPublicHealthService')" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="publicHealthServices.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="publicHealthService in publicHealthServices">
+                        <tr>
+                            <td>{{publicHealthService.LastLocation}}</td>
+                            <td>{{publicHealthService.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td>{{publicHealthService.EndDate | date:'MM-dd-yyyy'}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewPublicHealthService')" ng-hide="viewPublicHealthService" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editPublicHealthService',publicHealthService);changeButtonText()" ng-hide="editPublicHealthService" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addPublicHealthService');changeButtonText()" ng-hide="viewPublicHealthService|| editShowPublicHealthService || newShowPublicHealthService || $index+1!=publicHealthServices.length" data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewPublicHealthService')">
+                            <td colspan="7" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/WorkHistory/_ViewPublicHealthService.cshtml")
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_editPublicHealthService')">
+                            <td colspan="7" id="publicHealthServiceEditDiv{{$index}}" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend>
+                                        Edit Public Health Service
+                                    </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditPublicHealthService.cshtml")
+                                </fieldset>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-show="visibilityControl=='addedNewPublicHealthService'" class="alert alert-success" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>New Public Health Service Added Successfully !!!!
+                </div>
+                <div ng-show="visibilityControl=='updatedPublicHealthService'" class="alert alert-warning" role="alert">
+                    <button ng-click="operateCancelControl('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i>Data Updated Successfully !!!!
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <fieldset ng-show="visibilityControl==('addPublicHealthService')">
+                <legend>
+                    Add Public Health Service
+                </legend>
+                <div id="newPublicHealthServiceFormDiv">
+                    @Html.Partial("~/Areas/Profile/Views/WorkHistory/_AddEditPublicHealthService.cshtml")
+                </div>
+            </fieldset>
+        </div>
+    </fieldset>
+</div>

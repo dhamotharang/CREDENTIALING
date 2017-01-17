@@ -1,0 +1,133 @@
+﻿<script src="~/Scripts/Lib/Jquery/select2.min.js"></script>
+<link href="~/Content/SharedCss/select2/select2.css" rel="stylesheet" />
+<br/>
+<div class="col-lg-12">
+    <div class="col-lg-4">
+        <label class="control-label">Business Entity :</label>
+        <div>
+            <select class="form-control input-sm">
+                <option selected disabled>-Select-</option>
+                <option>Welcare Medicare</option>
+                <option>Welcare Medicaid</option>
+                <option>Welcare Commercial</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <label class="control-label">Specialty :</label>
+        <div>
+            <select class="zero-padding-left-right-div col-lg-12" id="planSpecialty" placeholder="-Select Specialty-" multiple>
+                <option selected disabled>-Select-</option>
+                <option>Allergy & Immunology</option>
+                <option> Clinical & Laboratory Immunology</option>
+                <option>Anesthesiology</option>
+                <option> Addiction Medicine</option>
+                <option>Critical Care Medicine</option>
+                <option>Clinical Pharmacology</option>
+                <option>Colon & Rectal Surgery</option>
+                <option>Dermatology</option>
+                <option>Dermatology, Clinical & Laboratory Dermatological Immunology</option>
+                <option>Dermatological Surgery</option>
+                <option>Dermatopathology</option>
+                <option>Dermatology, MOHS-Micrographic Surg</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <label class="control-label">Location :</label>
+        <div>
+            <select class="zero-padding-left-right-div col-lg-12" id="planLoc" placeholder="-Select Location-" multiple>
+                <option selected disabled>-Select-</option>
+                <option>5350 Spring Hill Drive</option>
+                <option>5356 Florida</option>
+                <option></option>
+                <option></option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<br />
+<div class="col-lg-12">
+    <div class="col-lg-3 pull-right"><button class="btn btn-xs btn-primary pull-right" onclick="ShowDetailTable();">Add</button></div>
+</div>
+<div class="col-lg-12" id="LoadPlan" style="display:none">
+    <table class="text-capitalize table table-hover ng-table-resizable-columns ng-table-rowselected ng-scope ng-table">
+        <!-- ngInclude: templates.header -->
+        <thead>
+            <tr>
+                <th class="col-lg-2 col-md-2">Business Entity</th>
+                <th class="col-lg-2 col-md-2">Specialty</th>
+                <th class="col-lg-2 col-md-2">Location</th>
+                <th class="col-lg-2 col-md-2">Initial Credentialing Date</th>
+                <th class="col-lg-2 col-md-2">Plan</th>
+                <th class="col-lg-1 col-md-1">Line Of Business</th>
+                <th class="col-lg-1 col-md-1">Action</th>
+            </tr>
+            <tr>
+                <th><input type="text" class="form-control input-sm"></th>
+                <th><input type="text" class="form-control input-sm"></th>
+                <th><input type="text" class="form-control input-sm"></th>
+                <th><input type="text" class="form-control input-sm"></th>
+                <th><input type="text" class="form-control input-sm"></th>
+                <th><input type="text" class="form-control input-sm"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="c in LoadData">
+                <td>{{c.BusinessEntity}}</td>
+                <td>{{c.Splty}}</td>
+                <td>{{c.Loc}}</td>
+                <td>{{c.Date}}</td>
+                <td>{{c.Plan}}</td>
+                <td>{{c.LOB}}</td>
+                <td>
+                 <button class="btn btn-xs btn-danger pull-right" ><i class="fa fa-minus-circle"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+    <script>
+        $(document).ready(function () {
+            //$("#sidemenu").addClass("menu-in");
+            //$("#page-wrapper").addClass("menuup");
+            $('#planLoc').select2();
+            $('#planSpecialty').select2();
+
+        });
+
+        var LoadData = [
+    {
+        BusinessEntity: "PCP",
+        Splty: "Ontology",
+        Loc: "Usher Street",
+        Date: "05-09-2014",
+        Plan: "Wellcare",
+        LOB: "Wellcare Medicare",
+
+    },
+    {
+        BusinessEntity: "PCP",
+        Splty: "Dentist",
+        Loc: "Spring Hill Drive",
+        Date: "05-09-2014",
+        Plan: "Wellcare",
+        LOB: "Wellcare Medicare",
+    },
+    {
+        BusinessEntity: "PCP",
+        Splty: "Ontology",
+        Loc: "Cortez Boulevard",
+        Date: "05-09-2014",
+        Plan: "Wellcare",
+        LOB: "Wellcare Medicare",
+    }
+        ];
+        var ShowDetailTable = function () {
+            $('#LoadPlan').show();
+
+        };
+    </script>

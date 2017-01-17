@@ -1,0 +1,787 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+@{
+    ViewBag.Title = "Index";
+}
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+    <script src="~/Scripts/Lib/AHC_Lib/UtilDirectivesLib.js"></script>
+    <script src="~/Scripts/Lib/Angular-DatePicker/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="~/Scripts/Custom/MasterDataNew/School.js"></script>
+}
+<div id="page-wrapper">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/MasterDataNew"><i class="fa fa-database"></i> Master Data</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-list"></i> School
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+        <div class="row" ng-app="masterDataSchools" ng-controller="masterDataSchoolsController" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a ng-click="showSchools()" class="pointer"><i class="fa fa-School-o"></i> Schools Management</a>
+                        &nbsp;&nbsp;<a ng-click="showSchoolContacts()" class="pointer"><i class="fa fa-location-arrow"></i> School Contact Information</a>
+                        @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                        {
+                            var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                            if (roles.Contains("CRA"))
+                            {
+                                <span ng-if="viewSchools" class="pull-right">
+                                    <button ng-disabled="disableAdd" ng-click="addSchools()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                                </span>
+                                <span ng-if="viewSchoolContacts" class="pull-right">
+                                    <button ng-if="!AddNewSchoolContact" ng-disabled="!SchoolID" ng-click="addSchoolContacts()" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add</button>
+                                </span>
+                            }
+                        }
+
+                    </div>
+                    <div class="panel-body">
+                        <div ng-show="activeMessageDiv=='School'" class="alert alert-success" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            {{messageDesc}}
+                        </div>
+                        <div class="clearfix"></div>
+                        <div ng-show="activeMessageDiv=='SchoolError'" class="alert alert-danger" role="alert">
+                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                            {{messageDesc}}
+                        </div>
+                        <div ng-if="viewSchools">
+                            <div id="newSchoolInfo" ng-if="AddNewSchool" class="form-style">
+                                <form>
+                                    <fieldset>
+                                        <legend>
+                                            School Details
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-6 form-group">
+                                                <label class="control-label small">School Name*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the School Name*" name="SchoolName" ng-model="tempSchool.Name" class="form-control input-sm" />
+                                                <span class="text-danger">{{SchoolExist}}</span>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="SchoolName" data-valmsg-replace="true">
+                                                    <span for="SchoolName" class=""></span>
+                                                </span>
+                                                <input type="hidden" ng-model="tempSchool.statustype" value="1" />
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend>
+                                            School Contact
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Location Name*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Location Name*" name="LocationName" ng-model="tempSchool.SchoolContactInfoes[0].LocationName" class="form-control input-sm" />
+                                                <span class="text-danger">{{locationExist}}</span>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="LocationName" data-valmsg-replace="true">
+                                                    <span for="LocationName" class=""></span>
+                                                </span>
+                                                <input type="hidden" ng-model="tempHospital.HospitalContactInfoes[0].statustype" value="1" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Street*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Street*" name="Street" ng-model="tempSchool.SchoolContactInfoes[0].Street" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Street" data-valmsg-replace="true">
+                                                    <span for="Street" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Building</label>
+                                                <input type="text" ng-model="tempSchool.SchoolContactInfoes[0].UnitNumber" class="form-control input-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            @*<div class="col-lg-4 form-group">
+                                                    <label class="control-label small">City*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempSchool.SchoolContactInfoes[0].City" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                        <span for="City" class=""></span>
+                                                    </span>
+
+                                                </div>*@
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">City*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempSchool.SchoolContactInfoes[0].City" ng-change="addressAutocomplete1(tempSchool.SchoolContactInfoes[0].City)" onfocus="showLocationList(this)" class="form-control input-sm" />
+                                                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                    <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                                                        <tbody>
+                                                            <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation1(location)" class="pointer">
+                                                                <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                                                            </tr>
+                                                            <tr ng-if="Locations.length == 0">
+                                                                <td>Not Available..... </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                    <span for="City" class=""></span>
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">State*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the State*" name="State" ng-model="tempSchool.SchoolContactInfoes[0].State" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="State" data-valmsg-replace="true">
+                                                    <span for="State" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Country*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Country*" name="Country" ng-model="tempSchool.SchoolContactInfoes[0].Country" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Country" data-valmsg-replace="true">
+                                                    <span for="Country" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">County</label>
+                                                <input type="text" name="State" ng-model="tempSchool.SchoolContactInfoes[0].County" class="form-control input-sm" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Zip Code*</label>
+                                                <input type="text" data-val="true" data-val-regex-pattern="/^([a-zA-Z0-9_-]){3,5}$/" data-val-required="Please enter the Zip code*" data-val-length="Zip code must be between 5 and 10 characters in length." data-val-length-max="10" data-val-length-min="5" name="ZipCode" ng-model="tempSchool.SchoolContactInfoes[0].ZipCode" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="ZipCode" data-valmsg-replace="true">
+                                                    <span for="ZipCode" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Phone Number*</label>
+                                                <div class="input-group">
+
+                                                    <span ng-if="!tempSchool.SchoolContactInfoes[0].PhoneCountryCode" ng-init="tempSchool.SchoolContactInfoes[0].PhoneCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="tempSchool.SchoolContactInfoes[0].PhoneCountryCode='+1'" ng-click="showContryCodeDiv('SchoolTelePhoneCountryCode'+$index)"> {{tempSchool.SchoolContactInfoes[0].PhoneCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="SchoolTelePhoneCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="PhoneCountryCode" ng-model="tempSchool.SchoolContactInfoes[0].PhoneCountryCode">
+                                                                <option ng-repeat="code in countryCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSchool.SchoolContactInfoes[0].PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="PhoneNumber" ng-model="tempSchool.SchoolContactInfoes[0].Phone" data-val-regex="Please enter valid Mobile Number. Only Numeric Digits accepted." data-val-regex-pattern="(^[1-9]\d*$)" class="form-control input-sm" />
+                                                    </div>
+
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="PhoneNumber" data-valmsg-replace="true">
+                                                    <span for="Phone" class=""></span>
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Email Address*</label>
+                                                <input type="text" data-val="true" data-val-required="Please Enter Email" name="Email" ng-model="tempSchool.SchoolContactInfoes[0].Email" data-val-length="Email Id must be between 6 and 50 characters." data-val-length-max="50" data-val-length-min="6" data-val-regex="Please enter the valid email address." data-val-regex-pattern="^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true">
+                                                    <span for="Email" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Fax Number*</label>
+                                                <div class="input-group">
+                                                    <span ng-if="!tempSchool.SchoolContactInfoes[0].FaxCountryCode" ng-init="tempSchool.SchoolContactInfoes[0].FaxCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('SchoolTeleFaxCountryCode'+$index)"> {{tempSchool.SchoolContactInfoes[0].FaxCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="SchoolTeleFaxCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="FaxCountryCode" ng-model="tempSchool.SchoolContactInfoes[0].FaxCountryCode">
+                                                                <option ng-repeat="code in countryCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSchool.SchoolContactInfoes[0].FaxCountryCode" ng-click="CloseDiv()">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        @*<input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="PhoneNumber" ng-model="tempSC.SchoolContactInfoes[0].Phone" data-val-regex="Please enter valid Mobile Number. Only Numeric 10 Digits accepted." data-val-regex-pattern="(^\d{10}$)" class="form-control input-sm" />*@
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Fax Number*" name="FaxNumber" ng-model="tempSchool.SchoolContactInfoes[0].Fax" data-val-regex="Please enter valid Home Fax. Only Numeric Digits accepted." data-val-regex-pattern="(^[1-9]\d*$)" class="form-control input-sm" />
+                                                    </div>
+
+
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="FaxNumber" data-valmsg-replace="true">
+                                                    <span for="Fax" class=""></span>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+
+                                    <div class="clearfix"></div>
+                                    <div ng-show="activeMessageDiv=='SchoolAddError'" class="alert alert-danger" role="alert">
+                                        @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                        {{messageDesc}}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-lg-12">
+                                        <input id="next1" type="button" ng-disabled="LoadingAjax" value="Save" ng-click="saveSchool()" class="btn btn-primary btn-sm pull-right" /><img src="~/Content/Images/ajax-loader.gif" ng-show="LoadingAjax" style="width:28px" class="pull-right" />
+                                        <input @*id="next1"*@ type="button" value="Cancel" ng-click="reset(); Schools.splice(0, 1);" class="btn btn-warning btn-sm pull-left" />
+                                    </div>
+                                </form>
+                            </div>
+
+
+
+                            <table ng-if="!AddNewSchool" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name *</th>
+                                        <th>Status</th>
+                                        <th>Last Modified Date</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                    <tr ng-show="Schools.length>0">
+                                        <td><input type="text" placeholder="Filter Name" class="form-control input-sm" ng-model="search.Name" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Status" class="form-control input-sm" ng-model="search.Status" ng-change="filterData()" /></td>
+                                        <td><input type="text" placeholder="Filter Last Modified Date" class="form-control input-sm" ng-model="search.LastModifiedDate" ng-change="filterData()" /></td>
+                                        <td></td>
+
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="Schools.length>0">
+                                    <tr ng-repeat="License in SchoolsData=(Schools |filter:{Name:search.Name,Status:search.Status,LastModifiedDate:search.LastModifiedDate}) track by $index" ng-include="getTemplate(License)" ng-show="IsValidIndex($index)"></tr>
+                                </tbody>
+                                <tbody ng-show="SchoolsData.length==0 || Schools.length==0 ">
+                                    <tr class="text-center">
+                                        <td colspan="7"><b>No Data Available</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+
+
+
+                            <div class="clearfix"></div>
+                            <div ng-hide="AddNewSchool" ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-hide="AddNewSchool" ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                            <script type="text/ng-template" id="displaySchools">
+                                <td>{{License.Name}}</td>
+                                <td>{{License.Status}}</td>
+                                <td>{{License.LastModifiedDate @*| date : sortDate()*@}}</td>
+                                <td>
+                                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                                    {
+                                        var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                                        if (roles.Contains("CRA"))
+                                        {
+                                            <button ng-disabled="disableEdit" ng-click="editSchools(License)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>
+                                        }
+                                    }
+                                </td>
+                            </script>
+                            <script type="text/ng-template" id="editSchools">
+                                <td>
+                                    <input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempSchools.Name" />
+                                    <span class="text-danger" name="title" ng-if="error && !tempSchools.Name">{{error}}</span>
+                                    <span class="text-danger" name="title" ng-if="existErr && tempSchools.Name">{{existErr}}</span>
+                                </td>
+
+                                <td>{{tempSchools.Status}}</td>
+                                <td>{{tempSchools.LastModifiedDate @*|  date:'MM-dd-yyyy'*@}}</td>
+                                <td>
+                                    <button ng-if="!tempSchools.SchoolID" ng-click="saveSchools($index)" class="btn btn-xs btn-primary">Save</button>
+                                    <button ng-if="tempSchools.SchoolID" ng-click="updateSchools($index)" class="btn btn-xs btn-primary">Update</button>
+                                    <button ng-if="tempSchools.SchoolID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                    <button ng-if="!tempSchools.SchoolID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                                </td>
+                            </script>
+                        </div>
+
+                        <div ng-if="viewSchoolContacts">
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-6 form-group zero-padding-left-right-div">
+                                    <label class="control-label small">School Name</label>
+                                    <select ng-model="SelectedSchoolID" class="form-control input-sm" ng-change="getSchoolContacts(SelectedSchoolID, false)">
+                                        <option value="">---- select ----</option>
+                                        <option ng-repeat="s in Schools track by $index" value="{{s.SchoolID}}" ng-selected="s.SchoolID == SelectedSchoolID" ng-if="s.SchoolName!=''">{{s.Name}}</option>
+                                    </select>
+                                    <span class="text-danger">{{SchoolNameError}}</span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            @*<div ng-show="activeMessageDiv=='School'" class="alert alert-success" role="alert">
+                                
+                                {{messageDesc}}
+                            </div>*@
+                            <div id="newSchoolContactInfo" ng-if="AddNewSchoolContact" class="form-style">
+                                <form>
+                                    <fieldset>
+                                        <legend>
+                                            School Contact
+                                        </legend>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Location Name*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Location Name*" name="LocationName" ng-model="tempSC.SchoolContactInfoes[0].Location" class="form-control input-sm" />
+                                                <span class="text-danger">{{locationExist}}</span>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="LocationName" data-valmsg-replace="true">
+                                                    <span for="LocationName" class=""></span>
+                                                </span>
+                                                <input type="hidden" ng-model="tempSC.SchoolContactInfoes[0].statustype" value="1" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Street*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Street*" name="Street" ng-model="tempSC.SchoolContactInfoes[0].Street" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Street" data-valmsg-replace="true">
+                                                    <span for="Street" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Building</label>
+                                                <input type="text" ng-model="tempSC.SchoolContactInfoes[0].UnitNumber" class="form-control input-sm" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            @*<div class="col-lg-4 form-group">
+                                                    <label class="control-label small">City*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempSC.SchoolContactInfoes[0].City" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                        <span for="City" class=""></span>
+                                                    </span>
+
+                                                </div>*@
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">City *</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempSC.SchoolContactInfoes[0].City" ng-change="addressAutocomplete(tempSC.SchoolContactInfoes[0].City)" onfocus="showLocationList(this)" class="form-control input-sm" />
+                                                <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                    <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                                                        <tbody>
+                                                            <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation(location)" class="pointer">
+                                                                <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                                                            </tr>
+                                                            <tr ng-if="Locations.length == 0">
+                                                                <td>Not Available..... </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+                                                <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                    <span for="City" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">State*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the State*" name="State" ng-model="tempSC.SchoolContactInfoes[0].State" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="State" data-valmsg-replace="true">
+                                                    <span for="State" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Country*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Country*" name="Country" ng-model="tempSC.SchoolContactInfoes[0].Country" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Country" data-valmsg-replace="true">
+                                                    <span for="Country" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">County</label>
+                                                <input type="text" name="State" ng-model="tempSC.SchoolContactInfoes[0].County" class="form-control input-sm" />
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Zip Code*</label>
+                                                <input type="text" data-val="true" data-val-required="Please enter the Zip code*" name="ZipCode" data-val-length="Zip code must be between 5 and 10 characters in length." data-val-length-max="10" data-val-length-min="5" ng-model="tempSC.SchoolContactInfoes[0].ZipCode" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="ZipCode" data-valmsg-replace="true">
+                                                    <span for="ZipCode" class=""></span>
+                                                </span>
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Phone Number*</label>
+                                                <div class="input-group">
+
+                                                    <span ng-if="!tempSC.SchoolContactInfoes[0].PhoneCountryCode" ng-init="tempSC.SchoolContactInfoes[0].PhoneCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="tempSC.SchoolContactInfoes[0].PhoneCountryCode='+1'" ng-click="showContryCodeDiv('SchoolTelePhoneCountryCode'+$index)"> {{tempSC.SchoolContactInfoes[0].PhoneCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="SchoolTelePhoneCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="PhoneCountryCode" ng-model="tempSC.SchoolContactInfoes[0].PhoneCountryCode">
+                                                                <option ng-repeat="code in countryCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSC.SchoolContactInfoes[0].PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="PhoneNumber" ng-model="tempSC.SchoolContactInfoes[0].Phone" data-val-regex="Please enter valid Mobile Number. Only Numeric Digits accepted." data-val-regex-pattern="(^[1-9]\d*$)" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="PhoneNumber" data-valmsg-replace="true">
+                                                    <span for="Phone" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Email Address*</label>
+                                                <input type="text" data-val="true" data-val-required="Please Enter Email" name="Email" ng-model="tempSC.SchoolContactInfoes[0].Email" data-val-length="Email Id must be between 6 and 50 characters." data-val-length-max="50" data-val-length-min="6" data-val-regex="Please enter the valid email address." data-val-regex-pattern="^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}" class="form-control input-sm" />
+                                                <span class="text-danger field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true">
+                                                    <span for="Email" class=""></span>
+                                                </span>
+                                            </div>
+
+                                            @*<div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Email Address</label>
+                                                    <input type="text" ng-model="tempSC.SchoolContactInfoes[0].Email" data-val-length="Email Id must be between 6 and 50 characters." data-val-length-max="50" data-val-length-min="6" data-val-regex="Please enter the valid email address." data-val-regex-pattern="^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}" class="form-control input-sm" />
+                                                </div>*@
+                                            <div class="col-lg-4 form-group">
+                                                <label class="control-label small">Fax Number*</label>
+                                                <div class="input-group">
+                                                    <span ng-if="!tempSC.SchoolContactInfoes[0].FaxCountryCode" ng-init="tempSC.SchoolContactInfoes[0].FaxCountryCode='+1'"></span>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('SchoolTeleFaxCountryCode'+$index)"> {{tempSC.SchoolContactInfoes[0].FaxCountryCode}} <span class="caret"></span></button>
+                                                    </div>
+                                                    <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="SchoolTeleFaxCountryCode{{$index}}">
+                                                        <div class="arrow"></div>
+                                                        <h3 class="popover-title">Select Country Dial Code</h3>
+                                                        <div class="popover-content">
+                                                            <select name="FaxCountryCode" ng-model="tempSC.SchoolContactInfoes[0].FaxCountryCode">
+                                                                <option ng-repeat="code in countryCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSC.SchoolContactInfoes[0].FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        @*<input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="PhoneNumber" ng-model="tempSC.SchoolContactInfoes[0].Phone" data-val-regex="Please enter valid Mobile Number. Only Numeric 10 Digits accepted." data-val-regex-pattern="(^\d{10}$)" class="form-control input-sm" />*@
+                                                        <input type="text" data-val="true" data-val-required="Please enter the Fax Number*" name="FaxNumber" ng-model="tempSC.SchoolContactInfoes[0].Fax" data-val-regex="Please enter valid Home Fax. Only Numeric Digits accepted." data-val-regex-pattern="(^[1-9]\d*$)" class="form-control input-sm" />
+                                                    </div>
+
+                                                </div>
+                                                <span class="text-danger field-validation-error" data-valmsg-for="FaxNumber" data-valmsg-replace="true">
+                                                    <span for="Fax" class=""></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <div class="clearfix"></div>
+                                    <div ng-show="activeMessageDiv=='ContactAddError'" class="alert alert-danger" role="alert">
+                                        @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                        {{messageDesc}}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="col-lg-12">
+                                        <input id="next1" type="button" value="Save" ng-click="saveSC()" class="btn btn-primary btn-sm pull-right" />
+                                        <input id="next1" type="button" value="Cancel" ng-click="reset();" class="btn btn-warning btn-sm pull-left" />
+                                    </div>
+                                </form>
+
+                            </div>
+
+
+                            <table ng-if="!AddNewSchoolContact" class="table table-striped table-bordered table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Location Name</th>
+                                        <th>Building</th>
+                                        <th>Street</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Country</th>
+                                        <th>County</th>
+                                        <th>Zip Code</th>
+                                        <th>Phone Number</th>
+                                        <th>Email Address</th>
+                                        <th>Fax Number</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="SC in SchoolContacts track by $index" ng-include="getSCTemplate(SC)"></tr>
+                                </tbody>
+                                <tbody ng-if="SchoolContacts.length == 0 || !SchoolContacts" ng-hide="!SchoolId">
+                                    <tr>
+                                        <td colspan="12">No data available for the selected school</td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-if="!SchoolId && disableEdit">
+                                    <tr>
+                                        <td colspan="12">Select a school to add contact info</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <script type="text/ng-template" id="displaySC">
+                                <td>{{SC.Location}}</td>
+                                <td>{{SC.UnitNumber}}</td>
+                                <td>{{SC.Street}}</td>
+                                <td>{{SC.City}}</td>
+                                <td>{{SC.State}}</td>
+                                <td>{{SC.Country}}</td>
+                                <td>{{SC.County}}</td>
+                                <td>{{SC.ZipCode}}</td>
+                                <td>{{SC.PhoneNumber}}</td>
+                                <td>{{SC.Email}}</td>
+                                <td>{{SC.FaxNumber}}</td>
+                                <td>
+                                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                                    {
+                                        var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                                        if (roles.Contains("CRA"))
+                                        {
+                                            <button ng-disabled="disableEdit" ng-click="editSchoolsSC(SC)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>
+                                        }
+                                    }
+                                </td>
+                            </script>
+
+                            <script type="text/ng-template" id="editSC">
+                                <td id="editSchoolContactInfo" colspan="12">
+                                    <form class="form-style">
+                                        <fieldset>
+                                            <legend>
+                                                School Contact
+                                            </legend>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Location Name*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Location Name*" name="LocationName" ng-model="tempSC.Location" class="form-control input-sm" />
+                                                    <span class="text-danger">{{locationExist}}</span>
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="LocationName" data-valmsg-replace="true">
+                                                        <span for="LocationName" class=""></span>
+                                                    </span>
+                                                    <input type="hidden" ng-model="tempSC.statustype" value="1" />
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Street*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Street*" name="Street" ng-model="tempSC.Street" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="Street" data-valmsg-replace="true">
+                                                        <span for="Street" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Building</label>
+                                                    <input type="text" ng-model="tempSC.UnitNumber" class="form-control input-sm" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                @*<div class="col-lg-4 form-group">
+                                                        <label class="control-label small">City*</label>
+                                                        <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempSC.SchoolContactInfoes[0].City" class="form-control input-sm" />
+                                                        <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                            <span for="City" class=""></span>
+                                                        </span>
+
+                                                    </div>*@
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">City *</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the City*" name="City" ng-model="tempSC.City" ng-change="addressAutocomplete(tempSC.City)" onfocus="showLocationList(this)" class="form-control input-sm" />
+                                                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                                                        <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                                                            <tbody>
+                                                                <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation(location)" class="pointer">
+                                                                    <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                                                                </tr>
+                                                                <tr ng-if="Locations.length == 0">
+                                                                    <td>Not Available..... </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="City" data-valmsg-replace="true">
+                                                        <span for="City" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">State*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the State*" name="State" ng-model="tempSC.State" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="State" data-valmsg-replace="true">
+                                                        <span for="State" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Country*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Country*" name="Country" ng-model="tempSC.Country" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="Country" data-valmsg-replace="true">
+                                                        <span for="Country" class=""></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">County</label>
+                                                    <input type="text" name="State" ng-model="tempSC.County" class="form-control input-sm" />
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Zip Code*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please enter the Zip code*" data-val-length="Zip code must be between 5 and 10 characters in length." data-val-length-max="10" data-val-length-min="5" name="ZipCode" ng-model="tempSC.ZipCode" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="ZipCode" data-valmsg-replace="true">
+                                                        <span for="ZipCode" class=""></span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Phone Number*</label>
+                                                    <div class="input-group">
+
+                                                        <span ng-if="!tempSC.PhoneCountryCode" ng-init="tempSC.PhoneCountryCode='+1'"></span>
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code"  ng-click="showContryCodeDiv('SchoolTelePhoneCountryCode'+$index)"> {{tempSC.PhoneCountryCode}} <span class="caret"></span></button>
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="SchoolTelePhoneCountryCode{{$index}}">
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select name="PhoneCountryCode" ng-model="tempSC.PhoneCountryCode">
+                                                                    <option ng-repeat="code in countryCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSC.PhoneCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="PhoneNumber" ng-model="tempSC.PhoneNumber" data-val-regex="Please enter valid Mobile Number. Only Numeric Digits accepted." data-val-regex-pattern="(^[1-9]\d*$)" class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="PhoneNumber" data-valmsg-replace="true">
+                                                        <span for="Phone" class=""></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 zero-padding-left-right-div">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Email Address*</label>
+                                                    <input type="text" data-val="true" data-val-required="Please Enter Email" name="Email" ng-model="tempSC.Email" data-val-length="Email Id must be between 6 and 50 characters." data-val-length-max="50" data-val-length-min="6" data-val-regex="Please enter the valid email address." data-val-regex-pattern="^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}" class="form-control input-sm" />
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true">
+                                                        <span for="Email" class=""></span>
+                                                    </span>
+                                                </div>
+
+                                                @*<div class="col-lg-4 form-group">
+                                                        <label class="control-label small">Email Address</label>
+                                                        <input type="text" ng-model="tempSC.SchoolContactInfoes[0].Email" data-val-length="Email Id must be between 6 and 50 characters." data-val-length-max="50" data-val-length-min="6" data-val-regex="Please enter the valid email address." data-val-regex-pattern="^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}" class="form-control input-sm" />
+                                                    </div>*@
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small">Fax Number*</label>
+                                                    <div class="input-group">
+                                                        <span ng-if="!tempSC.FaxCountryCode" ng-init="tempSC.FaxCountryCode='+1'"></span>
+                                                        <div class="input-group-btn">
+                                                            <button type="button" class="btn btn-default countryCodeClass" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code" ng-init="+1" ng-click="showContryCodeDiv('SchoolTeleFaxCountryCode'+$index)"> {{tempSC.FaxCountryCode}} <span class="caret"></span></button>
+                                                        </div>
+                                                        <div class="countryDailCodeContainer popover fade bottom in" style="display:none" role="tooltip" id="SchoolTeleFaxCountryCode{{$index}}">
+                                                            <div class="arrow"></div>
+                                                            <h3 class="popover-title">Select Country Dial Code</h3>
+                                                            <div class="popover-content">
+                                                                <select name="FaxCountryCode" ng-model="tempSC.FaxCountryCode">
+                                                                    <option ng-repeat="code in countryCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == tempSC.FaxCountryCode">{{code.name}}({{code.dial_code}})</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            @*<input type="text" data-val="true" data-val-required="Please enter the Phone Number*" name="PhoneNumber" ng-model="tempSC.SchoolContactInfoes[0].Phone" data-val-regex="Please enter valid Mobile Number. Only Numeric 10 Digits accepted." data-val-regex-pattern="(^\d{10}$)" class="form-control input-sm" />*@
+                                                            <input type="text" data-val="true" data-val-required="Please enter the Fax Number*" name="FaxNumber" ng-model="tempSC.FaxNumber" data-val-regex="Please enter valid Home Fax. Only Numeric 10 Digits accepted." data-val-regex-pattern="(^[1-9]\d*$)" class="form-control input-sm" />
+                                                        </div>
+
+                                                    </div>
+                                                    <span class="text-danger field-validation-error" data-valmsg-for="FaxNumber" data-valmsg-replace="true">
+                                                        <span for="Fax" class=""></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <div class="clearfix"></div>
+                                        <div ng-show="activeMessageDiv=='ContactAddError'" class="alert alert-danger" role="alert">
+                                            @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                                            {{messageDesc}}
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-lg-12">
+                                            <input id="next1" type="button" value="Save" ng-click="updateSchoolsContactInfo($index)" class="btn btn-primary btn-sm pull-right" />
+                                            <input id="next1" type="button" value="Cancel" ng-click="reset();" class="btn btn-warning btn-sm pull-left" />
+                                        </div>
+                                    </form>
+                                </td>
+                            </script>
+
+                            <div class="clearfix"></div>
+                            <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-show="CurrentPage.length > 0" ng-if="!AddNewSchoolContact" total-items="bigTotalItemsSC" ng-model="bigCurrentPageSC" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPageSC)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+
+
+
+
+
+
+                        </div>
+
+                        <script type="text/ng-template" id="displaySchools">
+                            <td>{{License.Name}}</td>
+                            <td>{{License.Status}}</td>
+                            <td>{{License.LastModifiedDate @*| date : sortDate()*@}}</td>
+                            <td>
+                                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                                {
+                                    var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                                    if (roles.Contains("CRA"))
+                                    {
+                                        <button ng-disabled="disableEdit" ng-click="editSchools(License)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-edit"></i></button>
+                                    }
+                                }
+                                
+                            </td>
+                        </script>
+                        <script type="text/ng-template" id="editSchools">
+                            <td>
+                                <input type="text" class="form-group form-control input-sm inputMarginBottoomZero" ng-model="tempSchools.Name" />
+                                <span class="text-danger" name="title" ng-if="error && !tempSchools.Name">{{error}}</span>
+                                <span class="text-danger" name="title" ng-if="existErr && tempSchools.Name">{{existErr}}</span>
+                            </td>
+
+                            <td>{{tempSchools.Status}}</td>
+                            <td>{{tempSchools.LastModifiedDate @*|  date:'MM-dd-yyyy'*@}}</td>
+                            <td>
+                                <button ng-if="!tempSchools.SchoolID" ng-click="saveSchools($index)" class="btn btn-xs btn-primary">Save</button>
+                                <button ng-if="tempSchools.SchoolID" ng-click="updateSchools(tempSchools,tempSchools.SchoolID)" class="btn btn-xs btn-primary">Update</button>
+                                <button ng-if="tempSchools.SchoolID" ng-click="reset()" class="btn btn-xs btn-warning">Cancel</button>
+                                <button ng-if="!tempSchools.SchoolID" ng-click="cancelAdd()" class="btn btn-xs btn-warning">Cancel</button>
+                            </td>
+                        </script>
+                        @*<div class="clearfix"></div>
+                            <div ng-if="CurrentPage.length > 0" ccolicensedetailstable></div>
+                            <pagination ng-show="CurrentPage.length > 0" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+
+
+

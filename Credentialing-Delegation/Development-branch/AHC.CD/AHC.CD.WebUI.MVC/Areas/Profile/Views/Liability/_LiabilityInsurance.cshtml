@@ -1,0 +1,247 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<br />
+<div class="panel-group" ng-controller="LiabilityCtrl" id="ProfessionalLibility">
+    <div class="panel-default">
+        <div class="form-style">
+            <fieldset>
+                <legend>
+                    @if (!ViewBag.Roles.Contains("CCO"))
+                    {
+                        <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ProfessionalLiabilityPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                    }
+                    Professional Liability
+                </legend>
+                <div class="pull-right legend2">
+                    @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="ProfessionalLiabilityInfoes.length <= 0" ng-click="downloadTableData('Profile_Liability_LiabilityInsurance_ProfessionalLiability', 'Professional Liability')"><i class="fa fa-download"></i></button>*@
+                    <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="ProfessionalLiabilityInfoes.length <= 0" ng-click="printData('Profile_Liability_LiabilityInsurance_ProfessionalLiability','Professional Liability')"><i class="fa fa-print"></i></button>
+                    <button type="button" ng-click="showLiabilityHistory('PLHID')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+                    <div id="PLHID" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+                </div>
+                <div id="Liabiltyqwe">
+                    <div class="col-lg-12">
+                        <table ng-hide="ProfessionalLiabilityInfoes.length > 0 || visibilityControl=='addLi' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No Data Available for Professional Liability
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                        {
+                                            <span>Please click on  <button id="noDataAddNewProfessionalLiability" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addLi')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button> to add new Professional Liability</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="ProfessionalLiabilityInfoes.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_Liability_LiabilityInsurance_ProfessionalLiability">
+                            <thead>
+                                <tr>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Insurance Carrier</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Policy Number</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Address</th>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hideData">Supporting Document</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2 hideData">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="Li in ProfessionalLiabilityInfoes track by $index">
+                                <tr>
+                                    <td ng-if="Li.InsuranceCarrier.Name" class="wrap-words">{{Li.InsuranceCarrier.Name}}</td>
+                                    <td ng-if="!Li.InsuranceCarrier.Name" class="wrap-words"><i class="data-label">Not Available</i></td>
+                                    <td ng-if="Li.PolicyNumber" class="wrap-words">
+                                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                        {
+                                            <i class="data-label">#######</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="data-label">{{Li.PolicyNumber}}</i>
+                                        }
+                                    </td>
+                                    <td ng-if="!Li.PolicyNumber" class="wrap-words"><i class="data-label">Not Available</i></td>
+                                    <td ng-if="Li.InsuranceCarrierAddress.LocationName" class="wrap-words">{{Li.InsuranceCarrierAddress.LocationName}}</td>
+                                    <td ng-if="!Li.InsuranceCarrierAddress.LocationName" class="wrap-words"><i>Not Available</i></td>
+                                    <td ng-if="Li.InsuranceCertificatePath!=null" class="wrap-words hideData"><i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{Li.InsuranceCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Liability Insurance Certificate"><i class="fa fa-file"></i></a></i></td>
+                                    <td ng-if="!Li.InsuranceCertificatePath" class="wrap-words hideData"><i>Not Available</i></td>
+                                    <td class="wrap-words hideData">
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewLi')" ng-hide="showViewLiabilityInsurance" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editLi',Li);editliabilityisurance(Li)" ng-hide="editShowProfessionalLiabilty" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                        }
+                                        <button class="btn btn-xs btn-default" ng-click="operateRenewControl($index+'_RenewLiability',Li); RenewDiv(Li); " ng-hide="RenewProfessionalLiabilty" tooltip data-toggle="tooltip" data-placement="top" title="Renew"><i class="fa fa-repeat"></i></button>
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initProfessionalLiabilityWarning(Li);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                            <button id="addNewProfessionalLiability" class="btn btn-xs btn-success" ng-show="$index == ProfessionalLiabilityInfoes.length-1" ng-click="operateViewAndAddControl('addLi');reseterrormessages();" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                {
+                                    <tr ng-if="visibilityControl==($index+'_viewLi')" class="hideData">
+                                        <td colspan="6" class="editTableDataStyle">
+
+                                            @Html.Partial("~/Areas/Profile/Views/Liability/ViewLiabilityInsurance.cshtml")
+                                        </td>
+                                    </tr>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                                {
+                                    <tr ng-if="visibilityControl==($index+'_editLi')" class="hideData">
+                                        <td colspan="6" id="professionalLiabiltyEditDiv{{$index}}" class="editTableDataStyle">
+                                            <fieldset>
+                                                <legend>
+                                                    Edit Professional Liability
+                                                </legend>
+                                                @Html.Partial("~/Areas/Profile/Views/Liability/_AddEditLiabilityInsurance.cshtml")
+                                            </fieldset>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr ng-if="visibilityControl==($index+'_RenewLiability')" class="hideData">
+                                    <td colspan="6" id="professionalLiabiltyRenewDiv{{$index}}" class="editTableDataStyle">
+                                        <fieldset>
+                                            <legend>
+                                                Renew Professional Liability
+                                            </legend>
+                                            @Html.Partial("~/Areas/Profile/Views/Liability/_RenewLiabilityInformation.cshtml")
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="clearfix"></div>
+                        <div ng-show="activeMessageDiv=='addedNewProfessionalLiability'" class="alert alert-success" role="alert">
+                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                        <div ng-show="activeMessageDiv=='removeProfessionalLiability'">
+                            <div class="alert alert-danger" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                <span class="sr-only">Error:</span>
+                                Error Lists :<br />
+                                <span ng-repeat="err in errorProfessionalLiability track by $index">{{err}}</span>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                    {
+                        <fieldset ng-show="visibilityControl=='addLi'">
+                            <legend>
+                                Add Professional Liability
+                            </legend>
+                            <div id="newShowProfessionalLiabiltyDiv">
+                                @Html.Partial("~/Areas/Profile/Views/Liability/_AddEditLiabilityInsurance.cshtml")
+                            </div>
+                        </fieldset>
+                    }
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal fade" id="professionalLiabilityWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="removeProfessionalLiability">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                        </div>
+                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                            <div style="margin-top:2%;">
+                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                            </div>
+                        </div>
+                        <div class="modal-body" ng-show="!isRemoved">
+                            Do you really want to remove <b>{{tempProfessionalLiability.InsuranceCarrier.Name}}</b> from your Professional Liability list ?
+                            <input type="hidden" name="ProfessionalLiabilityInfoID" value="{{tempProfessionalLiability.ProfessionalLiabilityInfoID}}" />
+                            <input type="hidden" name="StatusType" value="2" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="removeProfessionalLiability(ProfessionalLiabilityInfoes)">Remove</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-style">
+            <fieldset ng-if="showLiabilityHistoryTable">
+                <legend>
+                    Professional Liability History
+                </legend>
+                <div class="pull-right legend2">
+                    @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="ProfessionalLiabilityInfoHistory.length <= 0" ng-click="downloadTableData('Profile_Liability_LiabilityInsurance_ProfessionalLiabilityHistory', 'Professional Liability History')"><i class="fa fa-download"></i></button>*@
+                    <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="ProfessionalLiabilityInfoHistory.length <= 0" ng-click="printData('Profile_Liability_LiabilityInsurance_ProfessionalLiabilityHistory','Professional Liability History')"><i class="fa fa-print"></i></button>
+                    <button type="button" ng-click="cancelLiabilityHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Close" data-original-title="" title=""><i class="fa fa-times text-danger"></i></button>
+                </div>
+                <div>
+                    <div class="col-lg-12">
+                        <table ng-hide="ProfessionalLiabilityInfoHistory.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No History Available for Professional Liability!
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="ProfessionalLiabilityInfoHistory.length <= 0" class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_Liability_LiabilityInsurance_ProfessionalLiabilityHistory">
+                            <thead>
+                                <tr>
+                                    <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Insurance Carrier</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Policy Number</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Address</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2 hideData">Supporting Document</th>
+                                    <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Status</th>
+                                    <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2 hideData">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="LiHistory in ProfessionalLiabilityInfoHistory track by $index">
+                                <tr>
+                                    <td class="wrap-words" ng-if="LiHistory.InsuranceCarrier.Name">{{LiHistory.InsuranceCarrier.Name}}</td>
+                                    <td class="wrap-words" ng-if="!LiHistory.InsuranceCarrier.Name"><i>Not Available</i></td>
+                                    <td class="wrap-words" ng-if="LiHistory.PolicyNumber">
+                                        @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
+                                        {
+                                            <i class="data-label">#######</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="data-label">{{LiHistory.PolicyNumber}}</i>
+                                        }
+                                    </td>
+                                    <td class="wrap-words" ng-if="!LiHistory.PolicyNumber"><i>Not Available</i></td>
+                                    <td ng-if="LiHistory.InsuranceCarrierAddress.LocationName" class="wrap-words">{{LiHistory.InsuranceCarrierAddress.LocationName}}</td>
+                                    <td ng-if="!LiHistory.InsuranceCarrierAddress.LocationName" class="wrap-words"><i>Not Available</i></td>
+                                    <td ng-show="LiHistory.InsuranceCertificatePath!=null" class="wrap-words hideData"><i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{LiHistory.InsuranceCertificatePath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Liability Insurance Certificate"><i class="fa fa-file"></i></a></i></td>
+                                    <td ng-show="!LiHistory.InsuranceCertificatePath" class="wrap-words hideData"><i>Not Available</i></td>
+                                    <td>{{LiHistory.HistoryStatus}}</td>
+                                    <td class="wrap-words hideData">
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewLiHistory')" ng-hide="showViewLiabilityInsurance" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                {
+                                    <tr ng-show="visibilityControl==($index+'_viewLiHistory')" class="hideData">
+                                        <td colspan="7" class="editTableDataStyle">
+                                            @Html.Partial("~/Areas/Profile/Views/Liability/_ViewLiabilityInsuranceHistory.cshtml")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

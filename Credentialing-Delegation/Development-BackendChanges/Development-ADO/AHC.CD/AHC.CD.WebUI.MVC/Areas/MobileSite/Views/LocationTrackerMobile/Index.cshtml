@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+<script src="~/Areas/Profile/Scripts/JavaScripts/LocationTracker.js"></script>
+<script>
+    $(function () {
+        $("#sidemenu").addClass("menu-in");
+        $("#page-wrapper").addClass("menuup");
+        $("#menu-toggle").toggleClass("btn-menuup");
+    });
+
+</script>
+
+
+@section AddToHead{
+    @Scripts.Render("~/bundles/jquery")
+
+    @Scripts.Render("~/bundles/angular")
+
+}
+
+<div id="page-wrapper" ng-app="locationApp" ng-controller="locationController" ng-cloak>
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-list"></i>
+                        Profiles
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="selectedOption = 'Provider'; error = false" href="#">Provider</a></li>
+                            <li><a ng-click="selectedOption = 'Location'; error = false" href="#">Location</a></li>
+                        </ul>
+
+                        @*<select class="form-control input-sm" ng-change="selectedOption" ng-model="selectedOption">
+                                <option disabled value="">Select</option>
+                                <option value="1">Provider</option>
+                                <option value="2">Location</option>
+                            </select>*@
+                    </div>
+                    <input type="text" class="form-control input-sm" placeholder="Search for..." name="search" ng-change="errorText=false" ng-model="searchFor" />
+
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary btn-sm" ng-click="getDetails(searchFor)" type="button">Go!</button>{{selectedOption}}
+                    </span>
+                </div>
+                @*<div  class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    Loading...Please wait...
+                </div>*@
+                <div class="clearfix"></div><br />
+               
+                <div id="myCarousel" ng-if="showProviderDetails" data-ride="carousel" data-interval="false" class="col-lg-12 carousel slide">
+                    <div class="col-lg-1 pull-left " style="color:aqua">
+                        <a href="#myCarousel" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="carousel-inner" role="listbox">
+                            <div id="div1" class="item active">
+                                @*<div class="row">*@
+                                <div class="panel panel-default content-panel">
+                                    <div class="panel-heading">
+                                        <span class="panel-title pull-right btn-link" data-toggle="collapse" data-target="#1"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                                        <h4 class="panel-title">Provider Information</h4>
+                                    </div>
+                                    <div id="1" class="panel-body collapse in">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <table ng-if="providersList.length > 0" class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        @*<th class="col-lg-4 col-md-4 col-sm-4 col-xs-4">Title</th>*@
+                                                        <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6">First Name</th>
+                                                        <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6">Last Name</th>
+
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody ng-repeat="profile in providersList track by $index">
+                                                    <tr style="font-size: 10px;">
+                                                        @*<td>{{profile.PersonalDetail.Title}}</td>*@
+                                                        @*<td ng-if="$even" style="background-color:#ffffff">{{profile.PersonalDetail.Title}}</td>*@
+                                                        <td>{{profile.PersonalDetail.FirstName}}</td>
+                                                        @*<td ng-if="$even" style="background-color:#ffffff">{{profile.PersonalDetail.FirstName}}</td>*@
+                                                        <td>{{profile.PersonalDetail.LastName}}</td>
+                                                        @*<td ng-if="$even" style="background-color:#ffffff">{{profile.PersonalDetail.LastName}}</td>*@
+                                                        <td>
+                                                            <a href="#" data-toggle="tooltip" ng-click="getPracticeLocations(profile)" data-placement="left" title="View Practice Location" class="btn btn-xs btn-info pull-right">
+                                                                <i class="fa fa-x fa-chevron-circle-right">
+                                                                </i>
+                                                            </a>
+                                                        </td>
+                                                        @*<td ng-if="$even" style="background-color:#ffffff">
+                                                    <a href=" #" data-toggle="collapse" data-target="#1" ng-click="getPracticeLocations(profile)" data-placement="left" title="View Practice Location" class="btn btn-xs btn-info pull-right">
+                                                        <i class="fa fa-x fa-chevron-circle-right">
+                                                        </i>
+                                                    </a>
+                                                </td>*@
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div ng-if="providersList.length == 0">No Data Available</div>
+                                    </div>
+                                </div>
+                                @*</div>*@
+                            </div>
+                            <div id="div2" class="item">
+                                <div class="panel panel-default content-panel">
+                                    <div class="panel-heading">
+                                        <span class="panel-title pull-right btn-link" data-toggle="collapse" data-target="#a"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
+                                        <h4 class="panel-title">Location Information</h4>
+                                    </div>
+                                    <div id="a" class="panel-body collapse in">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6">Facility Name</th>
+                                                        <th class="col-lg-6 col-md-6 col-sm-6 col-xs-6">Address</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-repeat="place in locationList track by $index">
+                                                    <tr style="font-size: 10px;">
+                                                        <td>{{place.Facility.FacilityName}}</td>
+                                                        <td>
+                                                            City:-{{place.Facility.City}}, <br />
+                                                            State:-{{place.Facility.State}} ,<br />
+                                                            Country:-{{place.Facility.Country}}
+                                                        </td>
+                                                        <td><a href="#myCarousel" ng-click="getProvidersList(place)" data-toggle="tooltip" data-placement="left" title="View Providers" class="btn btn-xs btn-info pull-right"><i class="fa fa-x fa-chevron-circle-right"></i></a></td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div ng-if="locationList.length == 0"><td>No Data Available</td></div>
+                                        @*<button type="button">View Map</button>*@
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-danger" ng-if="error">Please select an option</div>
+                            <div class="text-danger" ng-if="errorText">Please provide your input to search</div>
+                            <div id="div3" class="item">
+                                <div class="col-lg-12">
+                                    @Html.Partial("~/Areas/Profile/Views/LocationTracker/_PracticeLocationList.cshtml")
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <!-- Indicators -->
+                        @*<ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>*@
+                    </div>
+                    <div class="col-lg-1 pull-right">
+                        <a href="#myCarousel" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,236 @@
+﻿
+<script src="~/Scripts/Custom/Profile/demographics.js"></script>
+
+<style>
+    .instruction-style {
+        font-style: italic;
+        font-size: x-small;
+    }
+</style>
+
+<br />
+<div class="form-style" ng-controller="profileDemographicsController">
+    <fieldset>
+        <legend>
+            Personal Details
+        </legend>
+        <div ng-if="ViewPersoanlDetails" class="legend2 pull-right">
+            <button ng-click="PersonalDetailsToggle()" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+        </div>
+        <div class="col-lg-12 text-right">
+            <span class="instruction-style">
+                Do not use nicknames or initials, unless they are part of your legal names
+            </span>
+        </div>
+        <div ng-if="viewProfilePicture" class="col-lg-1 zero-padding-left-right-div pull-right text-center">
+            <img src="{{Provider.PersonalDetails.ProfilePhotoPath}}" alt="Image 1" style="width: 83px; height: 83px;" class="img-thumbnail pull-right" />
+            <button ng-click="ProfilePictureToggle()" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-if="!viewProfilePicture" class="col-lg-1 zero-padding-left-right-div pull-right text-center">
+            <div class="fileinput fileinput-exists" data-provides="fileinput">
+                <input type="hidden" value="" name="">
+                <div class="fileinput-preview thumbnail file_preview_upload" style="line-height: 83px; background-image: url('/Content/Images/a0.jpg'); background-size: 100% 97%;" data-trigger="fileinput"><img src="{{Provider.PersonalDetails.ProfilePhotoPath}}"></div>
+                <div>
+                    <span class="btn btn-primary btn-xs btn-file">
+                        <span class="fileinput-new">Profile Image</span>
+                        <span class="fileinput-exists"><i class="fa fa-edit"></i></span><input type="file" name="PhotoImage" ng-model="TempPersonalDetailsForEdit.PhotoImage" autocomplete="off">
+                    </span>
+                    <a href="#" class="btn btn-warning btn-xs fileinput-exists" data-dismiss="fileinput"><i class="fa fa-remove"></i></a>
+                    <a href="#" class="btn btn-success btn-xs fileinput-exists" ng-click="ProfileUpload()"><i class="fa fa-upload"></i></a>
+                </div>
+            </div>
+        </div>
+        <div ng-if="!ViewPersoanlDetails" class="col-lg-11 zero-padding-left-right-div">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalDetails.cshtml")
+        </div>
+        <div ng-if="ViewPersoanlDetails" class="col-lg-11 zero-padding-left-right-div">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalDetails.cshtml")
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Other Legal Names
+        </legend>
+        <span ng-if="Provider.OtherLegalNames.length == 0">
+            Have You Ever Used Another Name ? * &nbsp;&nbsp;&nbsp;
+            <label class="radio-inline">
+                <input type="radio" ng-model="IsUseAnotherName" ng-click="tempMethod(true)" ng-value="true"> Yes
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="IsUseAnotherName" ng-click="tempMethod(false)" ng-value="false"> No
+            </label>
+            @*&nbsp;&nbsp;&nbsp;
+            <button ng-if="IsUseAnotherName && !newlegalnameform" class="btn btn-xs btn-primary" ng-click="addOtherLegalName()"><i class="fa fa-plus"></i> Add Other Legal Name</button>*@
+        </span>
+        <div ng-if="Provider.OtherLegalNames.length > 0" class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-12 text-right">
+                <span class="instruction-style">
+                    Do not use nicknames or initials, unless they are part of your legal names
+                </span>
+            </div>
+            <table class="table table-bordered table-condensed customtbodyStyle">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Suffix</th>
+                        <th>Start Using</th>
+                        <th>Stop Using</th>
+                        <th>Certificate</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="oln in Provider.OtherLegalNames">
+                    <tr>
+                        <td>{{oln.OtherFirstName}}</td>
+                        <td>{{oln.OtherMiddleName}}</td>
+                        <td>{{oln.OtherLastName}}</td>
+                        <td>{{oln.Suffix}}</td>
+                        <td>{{oln.StartDate | date: "MM-dd-yyyy"}}</td>
+                        <td>{{oln.EndDate | date: "MM-dd-yyyy"}}</td>
+                        <td><a href="{{oln.DocumentPath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Other Legal Name Certificate.pdf"><i class="fa fa-file"></i></a></td>
+                        <td>
+                            <button class="btn btn-xs btn-default" ng-click="viewEditOtherLegalName($index,oln,'view')" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                            <button class="btn btn-xs btn-primary" ng-click="viewEditOtherLegalName($index,oln,'edit')" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                            <button ng-if="$index == Provider.OtherLegalNames.length-1" ng-hide="newLegalNameForm" class="btn btn-xs btn-success" ng-click="addOtherLegalName()" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                        </td>
+                    </tr>
+                    <tr ng-if="legalNameFormStatus && $index==SelectedOtherLegalNameIndex">
+                        <td colspan="8" id="otherLegalNameEditDiv{{$index}}" class="editTableDataStyle">
+                            <fieldset>
+                                <legend>
+                                    Edit Other Legal Name
+                                </legend>
+                                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr ng-if="!legalNameFormStatus && $index==SelectedOtherLegalNameIndex">
+                        <td colspan="8" class="editTableDataStyle">
+                            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewOtherLegalName.cshtml")
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix"></div>
+
+        <fieldset id="newLegalNameForm1" ng-show="newLegalNameForm">
+            <legend>
+                Add Other Legal Name
+            </legend>
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditOtherLegalName.cshtml")
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Contact Information
+        </legend>
+        <fieldset>
+            <legend>
+                Home Address
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <span ng-if="HomeAddresses==0">Home Address is empty. Please Add Home Address <button ng-hide="homeAddressFormStatus || newHomeAddressForm" class="btn btn-xs btn-primary" ng-click="addHomeAddress()"><i class="fa fa-plus"></i> Add</button></span>
+                <br />
+                <table class="table table-bordered table-condensed customtbodyStyle">
+                    <thead>
+                        <tr>
+                            <th>Street</th>
+                            <th>State</th>
+                            <th>County</th>
+                            <th>City</th>
+                            <th>Zip code</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="ha in HomeAddresses">
+                        <tr>
+                            <td>{{ha. UnitNumber+" " +ha.Street}}</td>
+                            <td>{{ha.State}}</td>
+                            <td>{{ha.County}}</td>
+                            <td>{{ha.City}}</td>
+                            <td>{{ha.ZipCode}}</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" ng-click="viewEditHomeAddress($index,ha,'view')" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="viewEditHomeAddress($index,ha,'edit')" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button ng-if="$index == HomeAddresses.length-1" ng-hide="newHomeAddressForm" class="btn btn-xs btn-success" ng-click="addHomeAddress()" data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-if="homeAddressFormStatus && $index==SelectedHomeAddressIndex">
+                            <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend>
+                                        Edit Home Address
+                                    </legend>
+                                    @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr ng-if="!homeAddressFormStatus && $index==SelectedHomeAddressIndex">
+                            <td colspan="6" id="homeAddressEditDiv{{$index}}" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewHomeAddress.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+
+            <fieldset id="newHomeAddressForm1" ng-show="newHomeAddressForm">
+                <legend>
+                    Add Home Address
+                </legend>
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditHomeAddress.cshtml")
+            </fieldset>
+        </fieldset>
+
+        <fieldset>
+            <legend>
+                Contact Details
+            </legend>
+            <div ng-if="ViewContactDetails" class="legend2 pull-right">
+                <button class="btn btn-xs btn-primary" ng-click="ContactDetailsToggle()"><i class="fa fa-edit"></i></button>
+            </div>
+            <div ng-if="!ViewContactDetails">
+                <div class="col-lg-12 text-right">
+                    @*<span class="instruction-style">
+                        We will use this method for application follow-up.
+                    </span>*@
+                </div>
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditContactDetails.cshtml")
+            </div>
+            <div ng-if="ViewContactDetails">
+                @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewContactDetails.cshtml")
+            </div>
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Personal Identification
+        </legend>
+
+        <div ng-if="ViewPersoanlIdentification" class="legend2 pull-right">
+            <button class="btn btn-xs btn-primary" ng-click="PersonalIdentificationToggle()"><i class="fa fa-edit"></i></button>
+        </div>
+        <div ng-if="!ViewPersoanlIdentification">
+            <div class="col-lg-12 text-right">
+                <span class="instruction-style">
+                    Only enter a Foreign Identification Number If you don't have SSN. Don't enter National Identification Number (NPI) here
+                </span>
+            </div>
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_AddEditPersonalIdentification.cshtml")
+        </div>
+        <div ng-if="ViewPersoanlIdentification">
+            @Html.Partial("~/Areas/Profile/Views/Demographic/_ViewPersonalIdentification.cshtml")
+        </div>
+    </fieldset>
+
+    <!---Ethnicity partial starts here-->
+    @Html.Partial("~/Areas/Profile/Views/Demographic/_Ethnicity.cshtml")
+    <!---Ethnicity partial ends here-->
+</div>

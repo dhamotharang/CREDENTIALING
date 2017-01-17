@@ -1,0 +1,861 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Model1" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="Model1Container" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="PersonalDetails" EntityType="Model1.PersonalDetail" />
+    <EntitySet Name="ProviderTypes" EntityType="Model1.ProviderType" />
+    <EntitySet Name="OtherLegalNames" EntityType="Model1.OtherLegalName" />
+    <EntitySet Name="Users" EntityType="Model1.User" />
+    <EntitySet Name="Profiles" EntityType="Model1.Profile" />
+    <EntitySet Name="Roles" EntityType="Model1.Role" />
+    <AssociationSet Name="RoleUser" Association="Model1.RoleUser">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="UserProfile" Association="Model1.UserProfile">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Profile" EntitySet="Profiles" />
+    </AssociationSet>
+    <AssociationSet Name="PersonalDetailProviderType" Association="Model1.PersonalDetailProviderType">
+      <End Role="PersonalDetail" EntitySet="PersonalDetails" />
+      <End Role="ProviderType" EntitySet="ProviderTypes" />
+    </AssociationSet>
+    <AssociationSet Name="ProfileOtherLegalName" Association="Model1.ProfileOtherLegalName">
+      <End EntitySet="Profiles" Role="Profile" />
+      <End EntitySet="OtherLegalNames" Role="OtherLegalName" />
+    </AssociationSet>
+    <AssociationSet Name="ProfilePersonalDetail" Association="Model1.ProfilePersonalDetail">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="PersonalDetail" EntitySet="PersonalDetails" />
+    </AssociationSet>
+    <EntitySet Name="HomeAddresses" EntityType="Model1.HomeAddress" />
+    <EntitySet Name="Hospitals" EntityType="Model1.Hospital" />
+    <EntitySet Name="HospitalContactInfoes" EntityType="Model1.HospitalContactInfo" />
+    <EntitySet Name="HospitalContactPersons" EntityType="Model1.HospitalContactPerson" />
+    <AssociationSet Name="HospitalContactInfoHospitalContactPerson" Association="Model1.HospitalContactInfoHospitalContactPerson">
+      <End Role="HospitalContactInfo" EntitySet="HospitalContactInfoes" />
+      <End Role="HospitalContactPerson" EntitySet="HospitalContactPersons" />
+    </AssociationSet>
+    <AssociationSet Name="HospitalHospitalContactInfo" Association="Model1.HospitalHospitalContactInfo">
+      <End Role="Hospital" EntitySet="Hospitals" />
+      <End Role="HospitalContactInfo" EntitySet="HospitalContactInfoes" />
+    </AssociationSet>
+    <EntitySet Name="HospitalPrivileges" EntityType="Model1.HospitalPrivilege" />
+    <AssociationSet Name="HospitalPrivilegeHospital" Association="Model1.HospitalPrivilegeHospital">
+      <End Role="HospitalPrivilege" EntitySet="HospitalPrivileges" />
+      <End Role="Hospital" EntitySet="Hospitals" />
+    </AssociationSet>
+    <AssociationSet Name="HospitalPrivilegeHospitalContactInfo" Association="Model1.HospitalPrivilegeHospitalContactInfo">
+      <End Role="HospitalPrivilege" EntitySet="HospitalPrivileges" />
+      <End Role="HospitalContactInfo" EntitySet="HospitalContactInfoes" />
+    </AssociationSet>
+    <AssociationSet Name="HospitalPrivilegeHospitalContactPerson" Association="Model1.HospitalPrivilegeHospitalContactPerson">
+      <End Role="HospitalPrivilege" EntitySet="HospitalPrivileges" />
+      <End Role="HospitalContactPerson" EntitySet="HospitalContactPersons" />
+    </AssociationSet>
+    <EntitySet Name="StaffCategories" EntityType="Model1.StaffCategory" />
+    <AssociationSet Name="HospitalPrivilegeStaffCategory" Association="Model1.HospitalPrivilegeStaffCategory">
+      <End Role="HospitalPrivilege" EntitySet="HospitalPrivileges" />
+      <End Role="StaffCategory" EntitySet="StaffCategories" />
+    </AssociationSet>
+    <EntitySet Name="AdmittingPrivileges" EntityType="Model1.AdmittingPrivilege" />
+    <AssociationSet Name="HospitalPrivilegeAdmittingPrivilege" Association="Model1.HospitalPrivilegeAdmittingPrivilege">
+      <End Role="HospitalPrivilege" EntitySet="HospitalPrivileges" />
+      <End Role="AdmittingPrivilege" EntitySet="AdmittingPrivileges" />
+    </AssociationSet>
+    <EntitySet Name="Specialties" EntityType="Model1.Specialty" />
+    <AssociationSet Name="SpecialtyProviderType" Association="Model1.SpecialtyProviderType">
+      <End Role="Specialty" EntitySet="Specialties" />
+      <End Role="ProviderType" EntitySet="ProviderTypes" />
+    </AssociationSet>
+    <AssociationSet Name="HospitalPrivilegeSpecialty" Association="Model1.HospitalPrivilegeSpecialty">
+      <End Role="HospitalPrivilege" EntitySet="HospitalPrivileges" />
+      <End Role="Specialty" EntitySet="Specialties" />
+    </AssociationSet>
+    <AssociationSet Name="ProfileHospitalPrivilege" Association="Model1.ProfileHospitalPrivilege">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="HospitalPrivilege" EntitySet="HospitalPrivileges" />
+    </AssociationSet>
+    <EntitySet Name="StateLicenses" EntityType="Model1.StateLicense" />
+    <EntitySet Name="StateLicenseTypes" EntityType="Model1.StateLicenseType" />
+    <AssociationSet Name="StateLicenseStateLicenseType" Association="Model1.StateLicenseStateLicenseType">
+      <End Role="StateLicense" EntitySet="StateLicenses" />
+      <End Role="StateLicenseType" EntitySet="StateLicenseTypes" />
+    </AssociationSet>
+    <EntitySet Name="StateLicenceStatus" EntityType="Model1.StateLicenceStatus" />
+    <AssociationSet Name="StateLicenseStateLicenceStatus" Association="Model1.StateLicenseStateLicenceStatus">
+      <End Role="StateLicense" EntitySet="StateLicenses" />
+      <End Role="StateLicenceStatus" EntitySet="StateLicenceStatus" />
+    </AssociationSet>
+    <AssociationSet Name="ProfileStateLicense" Association="Model1.ProfileStateLicense">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="StateLicense" EntitySet="StateLicenses" />
+    </AssociationSet>
+    <EntitySet Name="FederalDEAInfoes" EntityType="Model1.FederalDEAInfo" />
+    <EntitySet Name="DEASchedules" EntityType="Model1.DEASchedule" />
+    <EntitySet Name="DEAScheduleTypes" EntityType="Model1.DEAScheduleType" />
+    <AssociationSet Name="DEAScheduleDEAScheduleType" Association="Model1.DEAScheduleDEAScheduleType">
+      <End Role="DEASchedule" EntitySet="DEASchedules" />
+      <End Role="DEAScheduleType" EntitySet="DEAScheduleTypes" />
+    </AssociationSet>
+    <EntitySet Name="DEAScheduleInfoes" EntityType="Model1.DEAScheduleInfo" />
+    <AssociationSet Name="DEAScheduleInfoDEASchedule" Association="Model1.DEAScheduleInfoDEASchedule">
+      <End Role="DEAScheduleInfo" EntitySet="DEAScheduleInfoes" />
+      <End Role="DEASchedule" EntitySet="DEASchedules" />
+    </AssociationSet>
+    <AssociationSet Name="FederalDEAInfoDEAScheduleInfo" Association="Model1.FederalDEAInfoDEAScheduleInfo">
+      <End Role="FederalDEAInfo" EntitySet="FederalDEAInfoes" />
+      <End Role="DEAScheduleInfo" EntitySet="DEAScheduleInfoes" />
+    </AssociationSet>
+    <AssociationSet Name="DEAScheduleInfoDEAScheduleType" Association="Model1.DEAScheduleInfoDEAScheduleType">
+      <End Role="DEAScheduleInfo" EntitySet="DEAScheduleInfoes" />
+      <End Role="DEAScheduleType" EntitySet="DEAScheduleTypes" />
+    </AssociationSet>
+    <AssociationSet Name="ProfileFederalDEAInfo" Association="Model1.ProfileFederalDEAInfo">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="FederalDEAInfo" EntitySet="FederalDEAInfoes" />
+    </AssociationSet>
+    <EntitySet Name="MedicareMedicaidInfoes" EntityType="Model1.MedicareMedicaidInfo" />
+    <AssociationSet Name="ProfileMedicareMedicaidInfo" Association="Model1.ProfileMedicareMedicaidInfo">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="MedicareMedicaidInfo" EntitySet="MedicareMedicaidInfoes" />
+    </AssociationSet>
+    <EntitySet Name="CDSCInfoes" EntityType="Model1.CDSCInfo" />
+    <AssociationSet Name="ProfileCDSCInfo" Association="Model1.ProfileCDSCInfo">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="CDSCInfo" EntitySet="CDSCInfoes" />
+    </AssociationSet>
+    <EntitySet Name="OtherIdentifications" EntityType="Model1.OtherIdentification" />
+    <AssociationSet Name="ProfileOtherIdentification" Association="Model1.ProfileOtherIdentification">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="OtherIdentification" EntitySet="OtherIdentifications" />
+    </AssociationSet>
+    <AssociationSet Name="ProfileAddress" Association="Model1.ProfileAddress">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="Address" EntitySet="HomeAddresses" />
+    </AssociationSet>
+    <EntitySet Name="BirthInfoes" EntityType="Model1.BirthInfo" />
+    <EntitySet Name="PersonalIdentifications" EntityType="Model1.PersonalIdentification" />
+    <AssociationSet Name="ProfilePersonalIdentification" Association="Model1.ProfilePersonalIdentification">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="PersonalIdentification" EntitySet="PersonalIdentifications" />
+    </AssociationSet>
+    <EntitySet Name="VisaDetails" EntityType="Model1.VisaDetail" />
+    <AssociationSet Name="ProfileVisaDetail" Association="Model1.ProfileVisaDetail">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="VisaDetail" EntitySet="VisaDetails" />
+    </AssociationSet>
+    <EntitySet Name="LanguageInfoes" EntityType="Model1.LanguageInfo" />
+    <AssociationSet Name="ProfileLanguageInfo" Association="Model1.ProfileLanguageInfo">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="LanguageInfo" EntitySet="LanguageInfoes" />
+    </AssociationSet>
+    <EntitySet Name="ContactDetails" EntityType="Model1.ContactDetails" />
+    <EntitySet Name="PhoneDetails" EntityType="Model1.PhoneDetail" />
+    <EntitySet Name="EmailDetails" EntityType="Model1.EmailDetail" />
+    <AssociationSet Name="ContactDetailsPhoneDetail" Association="Model1.ContactDetailsPhoneDetail">
+      <End Role="ContactDetails" EntitySet="ContactDetails" />
+      <End Role="PhoneDetail" EntitySet="PhoneDetails" />
+    </AssociationSet>
+    <AssociationSet Name="ContactDetailsEmailDetail" Association="Model1.ContactDetailsEmailDetail">
+      <End Role="ContactDetails" EntitySet="ContactDetails" />
+      <End Role="EmailDetail" EntitySet="EmailDetails" />
+    </AssociationSet>
+    <AssociationSet Name="ProfileContactDetails" Association="Model1.ProfileContactDetails">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="ContactDetails" EntitySet="ContactDetails" />
+    </AssociationSet>
+    <EntitySet Name="Dcocuments" EntityType="Model1.Dcocuments" />
+    <EntitySet Name="StateLice" EntityType="Model1.StateLice" />
+    <EntitySet Name="Profile1" EntityType="Model1.Profile1" />
+    <AssociationSet Name="StateLiceDcocuments" Association="Model1.StateLiceDcocuments">
+      <End Role="StateLice" EntitySet="StateLice" />
+      <End Role="Dcocuments" EntitySet="Dcocuments" />
+    </AssociationSet>
+    <AssociationSet Name="Profile1Dcocuments" Association="Model1.Profile1Dcocuments">
+      <End Role="Profile1" EntitySet="Profile1" />
+      <End Role="Dcocuments" EntitySet="Dcocuments" />
+    </AssociationSet>
+    <EntitySet Name="ProfessionalLiabilties" EntityType="Model1.ProfessionalLiabilty" />
+    <EntitySet Name="Accounts" EntityType="Model1.Account" />
+    <EntitySet Name="Services" EntityType="Model1.Service" />
+    <AssociationSet Name="AccountService" Association="Model1.AccountService">
+      <End Role="Account" EntitySet="Accounts" />
+      <End Role="Service" EntitySet="Services" />
+    </AssociationSet>
+    <AssociationSet Name="AccountUser" Association="Model1.AccountUser">
+      <End Role="Account" EntitySet="Accounts" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="UserInfoes" EntityType="Model1.UserInfo" />
+    <AssociationSet Name="UserAccountInfo" Association="Model1.UserAccountInfo">
+      <End Role="User" EntitySet="Users" />
+      <End Role="AccountInfo" EntitySet="UserInfoes" />
+    </AssociationSet>
+    <EntitySet Name="SpouseNames" EntityType="Model1.SpouseName" />
+    <AssociationSet Name="PersonalDetailSpouseName" Association="Model1.PersonalDetailSpouseName">
+      <End Role="PersonalDetail" EntitySet="PersonalDetails" />
+      <End Role="SpouseName" EntitySet="SpouseNames" />
+    </AssociationSet>
+    <EntitySet Name="DocumentCategories" EntityType="Model1.DocumentCategory" />
+    <AssociationSet Name="DcocumentsDocumentCategory" Association="Model1.DcocumentsDocumentCategory">
+      <End Role="Dcocuments" EntitySet="Dcocuments" />
+      <End Role="DocumentCategory" EntitySet="DocumentCategories" />
+    </AssociationSet>
+    <AssociationSet Name="ProfileBirthInfo" Association="Model1.ProfileBirthInfo">
+      <End Role="Profile" EntitySet="Profiles" />
+      <End Role="BirthInfo" EntitySet="BirthInfoes" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="PersonalDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" />
+    <Property Name="MiddleName" Type="String" Nullable="true" />
+    <Property Name="LastName" Type="String" Nullable="false" />
+    <Property Name="Suffix" Type="String" Nullable="true" />
+    <Property Name="Gender" Type="String" Nullable="false" />
+    <Property Name="MaritalStatus" Type="String" Nullable="false" />
+    <Property Name="MaidenName" Type="String" Nullable="true" />
+    <Property Name="SpouseName" Type="String" Nullable="true" />
+    <Property Name="ImagePath" Type="String" Nullable="true" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="ProviderTypes" Relationship="Model1.PersonalDetailProviderType" FromRole="PersonalDetail" ToRole="ProviderType" />
+    <NavigationProperty Name="SpouseNames" Relationship="Model1.PersonalDetailSpouseName" FromRole="PersonalDetail" ToRole="SpouseName" />
+  </EntityType>
+  <EntityType Name="ProviderType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" />
+    <Property Name="Code" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="OtherLegalName">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" />
+    <Property Name="MiddleName" Type="String" Nullable="true" />
+    <Property Name="LastName" Type="String" Nullable="false" />
+    <Property Name="Suffix" Type="String" Nullable="true" />
+    <Property Name="StartDate" Type="DateTime" Nullable="false" />
+    <Property Name="EndDate" Type="DateTime" Nullable="false" />
+    <Property Name="CertificatePath" Type="String" Nullable="true" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="Roles" Relationship="Model1.RoleUser" FromRole="User" ToRole="Role" />
+    <NavigationProperty Name="Profile" Relationship="Model1.UserProfile" FromRole="User" ToRole="Profile" />
+    <NavigationProperty Name="Account" Relationship="Model1.AccountUser" FromRole="User" ToRole="Account" />
+    <NavigationProperty Name="AccountInfoes" Relationship="Model1.UserAccountInfo" FromRole="User" ToRole="AccountInfo" />
+  </EntityType>
+  <EntityType Name="Profile">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsCitizenOfUSA" Type="Boolean" Nullable="true" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="OtherLegalNames" Relationship="Model1.ProfileOtherLegalName" FromRole="Profile" ToRole="OtherLegalName" />
+    <NavigationProperty Name="PersonalDetail" Relationship="Model1.ProfilePersonalDetail" FromRole="Profile" ToRole="PersonalDetail" />
+    <NavigationProperty Name="HospitalPrivileges" Relationship="Model1.ProfileHospitalPrivilege" FromRole="Profile" ToRole="HospitalPrivilege" />
+    <NavigationProperty Name="StateLicenses" Relationship="Model1.ProfileStateLicense" FromRole="Profile" ToRole="StateLicense" />
+    <NavigationProperty Name="FederalDEAInfoes" Relationship="Model1.ProfileFederalDEAInfo" FromRole="Profile" ToRole="FederalDEAInfo" />
+    <NavigationProperty Name="MedicareMedicaidInfoes" Relationship="Model1.ProfileMedicareMedicaidInfo" FromRole="Profile" ToRole="MedicareMedicaidInfo" />
+    <NavigationProperty Name="CDSCInfoes" Relationship="Model1.ProfileCDSCInfo" FromRole="Profile" ToRole="CDSCInfo" />
+    <NavigationProperty Name="OtherIdentifications" Relationship="Model1.ProfileOtherIdentification" FromRole="Profile" ToRole="OtherIdentification" />
+    <NavigationProperty Name="HomeAddresses" Relationship="Model1.ProfileAddress" FromRole="Profile" ToRole="Address" />
+    <NavigationProperty Name="PersonalIdentifications" Relationship="Model1.ProfilePersonalIdentification" FromRole="Profile" ToRole="PersonalIdentification" />
+    <NavigationProperty Name="VisaDetails" Relationship="Model1.ProfileVisaDetail" FromRole="Profile" ToRole="VisaDetail" />
+    <NavigationProperty Name="LanguageInfoes" Relationship="Model1.ProfileLanguageInfo" FromRole="Profile" ToRole="LanguageInfo" />
+    <NavigationProperty Name="ContactDetails" Relationship="Model1.ProfileContactDetails" FromRole="Profile" ToRole="ContactDetails" />
+    <NavigationProperty Name="BirthInfoes" Relationship="Model1.ProfileBirthInfo" FromRole="Profile" ToRole="BirthInfo" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="Users" Relationship="Model1.RoleUser" FromRole="Role" ToRole="User" />
+  </EntityType>
+  <Association Name="RoleUser">
+    <End Type="Model1.Role" Role="Role" Multiplicity="*" />
+    <End Type="Model1.User" Role="User" Multiplicity="*" />
+  </Association>
+  <Association Name="UserProfile">
+    <End Type="Model1.User" Role="User" Multiplicity="*" />
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="*" />
+  </Association>
+  <Association Name="PersonalDetailProviderType">
+    <End Type="Model1.PersonalDetail" Role="PersonalDetail" Multiplicity="*" />
+    <End Type="Model1.ProviderType" Role="ProviderType" Multiplicity="*" />
+  </Association>
+  <Association Name="ProfileOtherLegalName">
+    <End Type="Model1.Profile" Multiplicity="1" Role="Profile" />
+    <End Type="Model1.OtherLegalName" Multiplicity="*" Role="OtherLegalName" />
+  </Association>
+  <Association Name="ProfilePersonalDetail">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.PersonalDetail" Role="PersonalDetail" Multiplicity="1" />
+  </Association>
+  <EntityType Name="HomeAddress">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="String" Nullable="false" />
+    <Property Name="ApartmentOrBuildingNumber" Type="String" Nullable="false" />
+    <Property Name="Street" Type="String" Nullable="false" />
+    <Property Name="Country" Type="String" Nullable="false" />
+    <Property Name="State" Type="String" Nullable="false" />
+    <Property Name="County" Type="String" Nullable="false" />
+    <Property Name="City" Type="String" Nullable="false" />
+    <Property Name="ZipCode" Type="String" Nullable="false" />
+    <Property Name="IsPresentHomeAddress" Type="Boolean" Nullable="false" />
+    <Property Name="LivingFrom" Type="DateTime" Nullable="false" />
+    <Property Name="LivingTill" Type="DateTime" Nullable="false" />
+    <Property Name="AddressPreference" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="PreferenceType" Type="String" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Hospital">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <NavigationProperty Name="HospitalContactInfoes" Relationship="Model1.HospitalHospitalContactInfo" FromRole="Hospital" ToRole="HospitalContactInfo" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="HospitalContactInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LocationName" Type="String" Nullable="false" />
+    <Property Name="Number" Type="String" Nullable="false" />
+    <Property Name="SuiteOrBuilding" Type="String" Nullable="false" />
+    <Property Name="Street" Type="String" Nullable="false" />
+    <Property Name="County" Type="String" Nullable="false" />
+    <Property Name="State" Type="String" Nullable="false" />
+    <Property Name="Country" Type="String" Nullable="false" />
+    <Property Name="ZipCode" Type="String" Nullable="false" />
+    <Property Name="Phone" Type="String" Nullable="false" />
+    <Property Name="Fax" Type="String" Nullable="false" />
+    <Property Name="Email" Type="String" Nullable="false" />
+    <NavigationProperty Name="HospitalContactPersons" Relationship="Model1.HospitalContactInfoHospitalContactPerson" FromRole="HospitalContactInfo" ToRole="HospitalContactPerson" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <NavigationProperty Name="HospitalPrivilege" Relationship="Model1.HospitalPrivilegeHospitalContactInfo" FromRole="HospitalContactInfo" ToRole="HospitalPrivilege" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="HospitalContactPerson">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ContactPersonName" Type="String" Nullable="false" />
+    <Property Name="ContactPersonPhone" Type="String" Nullable="false" />
+    <Property Name="ContactPersonFax" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <NavigationProperty Name="HospitalPrivilege" Relationship="Model1.HospitalPrivilegeHospitalContactPerson" FromRole="HospitalContactPerson" ToRole="HospitalPrivilege" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="HospitalContactInfoHospitalContactPerson">
+    <End Type="Model1.HospitalContactInfo" Role="HospitalContactInfo" Multiplicity="1" />
+    <End Type="Model1.HospitalContactPerson" Role="HospitalContactPerson" Multiplicity="*" />
+  </Association>
+  <Association Name="HospitalHospitalContactInfo">
+    <End Type="Model1.Hospital" Role="Hospital" Multiplicity="1" />
+    <End Type="Model1.HospitalContactInfo" Role="HospitalContactInfo" Multiplicity="*" />
+  </Association>
+  <EntityType Name="HospitalPrivilege">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Hospital" Relationship="Model1.HospitalPrivilegeHospital" FromRole="HospitalPrivilege" ToRole="Hospital" />
+    <NavigationProperty Name="HospitalContactInfo" Relationship="Model1.HospitalPrivilegeHospitalContactInfo" FromRole="HospitalPrivilege" ToRole="HospitalContactInfo" />
+    <NavigationProperty Name="HospitalContactPerson" Relationship="Model1.HospitalPrivilegeHospitalContactPerson" FromRole="HospitalPrivilege" ToRole="HospitalContactPerson" />
+    <NavigationProperty Name="StaffCategory" Relationship="Model1.HospitalPrivilegeStaffCategory" FromRole="HospitalPrivilege" ToRole="StaffCategory" />
+    <Property Name="StatusExplanation" Type="String" Nullable="false" />
+    <Property Name="DepartmentName" Type="String" Nullable="false" />
+    <Property Name="DepartmentChief" Type="String" Nullable="false" />
+    <Property Name="StaffChief" Type="String" Nullable="false" />
+    <NavigationProperty Name="AdmittingPrivilege" Relationship="Model1.HospitalPrivilegeAdmittingPrivilege" FromRole="HospitalPrivilege" ToRole="AdmittingPrivilege" />
+    <Property Name="AnnualAdmittingPercentage" Type="Double" Nullable="false" />
+    <Property Name="IsPrivilegeTemporary" Type="Boolean" Nullable="false" />
+    <Property Name="IsPrimary" Type="Boolean" Nullable="false" />
+    <Property Name="IsPrivilegeFullUnrestricted" Type="Boolean" Nullable="false" />
+    <Property Name="AffiliationStartDate" Type="DateTime" Nullable="false" />
+    <Property Name="AffiliationEndDate" Type="DateTime" Nullable="false" />
+    <Property Name="ExplanationForAffiliationTermination" Type="String" Nullable="false" />
+    <NavigationProperty Name="Specialty" Relationship="Model1.HospitalPrivilegeSpecialty" FromRole="HospitalPrivilege" ToRole="Specialty" />
+    <Property Name="PrivilegeLetterPath" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="PreferenceType" Type="String" Nullable="false" />
+  </EntityType>
+  <Association Name="HospitalPrivilegeHospital">
+    <End Type="Model1.HospitalPrivilege" Role="HospitalPrivilege" Multiplicity="1" />
+    <End Type="Model1.Hospital" Role="Hospital" Multiplicity="1" />
+  </Association>
+  <Association Name="HospitalPrivilegeHospitalContactInfo">
+    <End Type="Model1.HospitalPrivilege" Role="HospitalPrivilege" Multiplicity="1" />
+    <End Type="Model1.HospitalContactInfo" Role="HospitalContactInfo" Multiplicity="1" />
+  </Association>
+  <Association Name="HospitalPrivilegeHospitalContactPerson">
+    <End Type="Model1.HospitalPrivilege" Role="HospitalPrivilege" Multiplicity="1" />
+    <End Type="Model1.HospitalContactPerson" Role="HospitalContactPerson" Multiplicity="1" />
+  </Association>
+  <EntityType Name="StaffCategory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="HospitalPrivilegeStaffCategory">
+    <End Type="Model1.HospitalPrivilege" Role="HospitalPrivilege" Multiplicity="1" />
+    <End Type="Model1.StaffCategory" Role="StaffCategory" Multiplicity="1" />
+  </Association>
+  <EntityType Name="AdmittingPrivilege">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="HospitalPrivilegeAdmittingPrivilege">
+    <End Type="Model1.HospitalPrivilege" Role="HospitalPrivilege" Multiplicity="1" />
+    <End Type="Model1.AdmittingPrivilege" Role="AdmittingPrivilege" Multiplicity="1" />
+  </Association>
+  <EntityType Name="Specialty">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <NavigationProperty Name="ProviderTypes" Relationship="Model1.SpecialtyProviderType" FromRole="Specialty" ToRole="ProviderType" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="SpecialtyProviderType">
+    <End Type="Model1.Specialty" Role="Specialty" Multiplicity="*" />
+    <End Type="Model1.ProviderType" Role="ProviderType" Multiplicity="*" />
+  </Association>
+  <Association Name="HospitalPrivilegeSpecialty">
+    <End Type="Model1.HospitalPrivilege" Role="HospitalPrivilege" Multiplicity="1" />
+    <End Type="Model1.Specialty" Role="Specialty" Multiplicity="1" />
+  </Association>
+  <Association Name="ProfileHospitalPrivilege">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.HospitalPrivilege" Role="HospitalPrivilege" Multiplicity="*" />
+  </Association>
+  <EntityType Name="StateLicense">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="String" Nullable="false" />
+    <NavigationProperty Name="StateLicenseType" Relationship="Model1.StateLicenseStateLicenseType" FromRole="StateLicense" ToRole="StateLicenseType" />
+    <NavigationProperty Name="StateLicenceStatus" Relationship="Model1.StateLicenseStateLicenceStatus" FromRole="StateLicense" ToRole="StateLicenceStatus" />
+    <Property Name="IssueState" Type="String" Nullable="false" />
+    <Property Name="PracticeState" Type="String" Nullable="false" />
+    <Property Name="OriginalIssueDate" Type="DateTime" Nullable="false" />
+    <Property Name="ExpiryDate" Type="DateTime" Nullable="false" />
+    <Property Name="CurrentIssueDate" Type="DateTime" Nullable="false" />
+    <Property Name="IsInGoodStanding" Type="Boolean" Nullable="false" />
+    <Property Name="IsRelinquished" Type="Boolean" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" />
+    <Property Name="RelinquishedDate" Type="DateTime" Nullable="false" />
+    <Property Name="CertificatePath" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="StateLicenseType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="StateLicenseStateLicenseType">
+    <End Type="Model1.StateLicense" Role="StateLicense" Multiplicity="1" />
+    <End Type="Model1.StateLicenseType" Role="StateLicenseType" Multiplicity="1" />
+  </Association>
+  <EntityType Name="StateLicenceStatus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="StateLicenseStateLicenceStatus">
+    <End Type="Model1.StateLicense" Role="StateLicense" Multiplicity="1" />
+    <End Type="Model1.StateLicenceStatus" Role="StateLicenceStatus" Multiplicity="1" />
+  </Association>
+  <Association Name="ProfileStateLicense">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.StateLicense" Role="StateLicense" Multiplicity="*" />
+  </Association>
+  <EntityType Name="FederalDEAInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="String" Nullable="false" />
+    <Property Name="RegistrationState" Type="String" Nullable="false" />
+    <Property Name="IssueDate" Type="DateTime" Nullable="false" />
+    <Property Name="ExpiryDate" Type="DateTime" Nullable="false" />
+    <Property Name="IsInGoodStanding" Type="Boolean" Nullable="false" />
+    <Property Name="LimitedOrRestricted" Type="String" Nullable="false" />
+    <Property Name="RestrictionExplanation" Type="String" Nullable="false" />
+    <Property Name="HasSCRCertificate" Type="Boolean" Nullable="false" />
+    <Property Name="CertificatePath" Type="String" Nullable="false" />
+    <NavigationProperty Name="DEAScheduleInfoes" Relationship="Model1.FederalDEAInfoDEAScheduleInfo" FromRole="FederalDEAInfo" ToRole="DEAScheduleInfo" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="DEASchedule">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <NavigationProperty Name="DEAScheduleTypes" Relationship="Model1.DEAScheduleDEAScheduleType" FromRole="DEASchedule" ToRole="DEAScheduleType" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="DEAScheduleType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="DEAScheduleDEAScheduleType">
+    <End Type="Model1.DEASchedule" Role="DEASchedule" Multiplicity="*" />
+    <End Type="Model1.DEAScheduleType" Role="DEAScheduleType" Multiplicity="*" />
+  </Association>
+  <EntityType Name="DEAScheduleInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="FederalDEAInfo" Relationship="Model1.FederalDEAInfoDEAScheduleInfo" FromRole="DEAScheduleInfo" ToRole="FederalDEAInfo" />
+    <NavigationProperty Name="DEAScheduleTypes" Relationship="Model1.DEAScheduleInfoDEAScheduleType" FromRole="DEAScheduleInfo" ToRole="DEAScheduleType" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="DEAScheduleInfoDEASchedule">
+    <End Type="Model1.DEAScheduleInfo" Role="DEAScheduleInfo" Multiplicity="1" />
+    <End Type="Model1.DEASchedule" Role="DEASchedule" Multiplicity="1" />
+  </Association>
+  <Association Name="FederalDEAInfoDEAScheduleInfo">
+    <End Type="Model1.FederalDEAInfo" Role="FederalDEAInfo" Multiplicity="*" />
+    <End Type="Model1.DEAScheduleInfo" Role="DEAScheduleInfo" Multiplicity="*" />
+  </Association>
+  <Association Name="DEAScheduleInfoDEAScheduleType">
+    <End Type="Model1.DEAScheduleInfo" Role="DEAScheduleInfo" Multiplicity="*" />
+    <End Type="Model1.DEAScheduleType" Role="DEAScheduleType" Multiplicity="*" />
+  </Association>
+  <Association Name="ProfileFederalDEAInfo">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.FederalDEAInfo" Role="FederalDEAInfo" Multiplicity="*" />
+  </Association>
+  <EntityType Name="MedicareMedicaidInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+    <Property Name="Number" Type="String" Nullable="false" />
+    <Property Name="State" Type="String" Nullable="false" />
+    <Property Name="IssueDate" Type="DateTime" Nullable="false" />
+    <Property Name="ExpiryDate" Type="DateTime" Nullable="false" />
+    <Property Name="IsSanctionImposed" Type="Boolean" Nullable="false" />
+    <Property Name="CertificatePath" Type="String" Nullable="false" />
+    <Property Name="MedicareOrMedicaidType" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="ProfileMedicareMedicaidInfo">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.MedicareMedicaidInfo" Role="MedicareMedicaidInfo" Multiplicity="*" />
+  </Association>
+  <EntityType Name="CDSCInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="String" Nullable="false" />
+    <Property Name="State" Type="String" Nullable="false" />
+    <Property Name="IssueDate" Type="DateTime" Nullable="false" />
+    <Property Name="ExpiryDate" Type="DateTime" Nullable="false" />
+    <Property Name="CertificatePath" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="ProfileCDSCInfo">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.CDSCInfo" Role="CDSCInfo" Multiplicity="*" />
+  </Association>
+  <EntityType Name="OtherIdentification">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NPINumber" Type="String" Nullable="false" />
+    <Property Name="CAQHNumber" Type="String" Nullable="true" />
+    <Property Name="UPINNumber" Type="String" Nullable="true" />
+    <Property Name="USMLENumber" Type="String" Nullable="true" />
+    <NavigationProperty Name="Profile" Relationship="Model1.ProfileOtherIdentification" FromRole="OtherIdentification" ToRole="Profile" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="ProfileOtherIdentification">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.OtherIdentification" Role="OtherIdentification" Multiplicity="1" />
+  </Association>
+  <Association Name="ProfileAddress">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.HomeAddress" Role="Address" Multiplicity="*" />
+  </Association>
+  <EntityType Name="BirthInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DateOfBirth" Type="DateTime" Nullable="false" />
+    <Property Name="BirthCountry" Type="String" Nullable="false" />
+    <Property Name="BirthCity" Type="String" Nullable="false" />
+    <Property Name="BirthState" Type="String" Nullable="false" />
+    <Property Name="BirthCounty" Type="String" Nullable="true" />
+    <Property Name="CertificatePath" Type="String" Nullable="true" />
+  </EntityType>
+  <EntityType Name="PersonalIdentification">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SocialSecurityNumber" Nullable="false" Type="String" />
+    <Property Name="SSNCertificatePath" Nullable="true" Type="String" />
+    <Property Name="DriverLicenseNumber" Nullable="false" Type="String" />
+    <Property Name="DLCertificatePath" Nullable="true" Type="String" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="ProfilePersonalIdentification">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.PersonalIdentification" Role="PersonalIdentification" Multiplicity="1" />
+  </Association>
+  <EntityType Name="VisaDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VisaNumber" Type="String" Nullable="false" />
+    <Property Name="VisaType" Type="String" Nullable="false" />
+    <Property Name="VisaStatus" Type="String" Nullable="false" />
+    <Property Name="VisaSponsor" Type="String" Nullable="false" />
+    <Property Name="ExpiryDate" Type="DateTime" Nullable="false" />
+    <Property Name="CertificatePath" Type="String" Nullable="false" />
+    <Property Name="GreenCardNumber" Type="String" Nullable="true" />
+    <Property Name="NationalIdNumber" Type="String" Nullable="true" />
+    <Property Name="IssuedCountry" Type="String" Nullable="false" />
+    <Property Name="IsAuthorizedToWorkInUs" Type="Boolean" Nullable="false" />
+    <Property Name="GreenCardCertificatePath" Type="String" Nullable="true" />
+    <Property Name="NationalIdCertificatePath" Type="String" Nullable="true" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="ProfileVisaDetail">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.VisaDetail" Role="VisaDetail" Multiplicity="1" />
+  </Association>
+  <EntityType Name="LanguageInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CanSpeak" Type="Boolean" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="CanWrite" Type="Boolean" Nullable="false" />
+    <Property Name="CanSpeakSign" Type="Boolean" Nullable="false" />
+    <Property Name="ProficiencyIndex" Type="Int16" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Name" Type="String" Nullable="false" />
+  </EntityType>
+  <Association Name="ProfileLanguageInfo">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.LanguageInfo" Role="LanguageInfo" Multiplicity="*" />
+  </Association>
+  <EntityType Name="ContactDetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="PhoneDetails" Relationship="Model1.ContactDetailsPhoneDetail" FromRole="ContactDetails" ToRole="PhoneDetail" />
+    <NavigationProperty Name="EmailDetails" Relationship="Model1.ContactDetailsEmailDetail" FromRole="ContactDetails" ToRole="EmailDetail" />
+    <Property Name="PreferredWrittenContact" Type="String" Nullable="false" />
+    <Property Name="PreferredContact" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="PhoneDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="String" Nullable="false" />
+    <Property Name="CountryCode" Type="String" Nullable="false" />
+    <Property Name="Type" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="IsPrimary" Type="Boolean" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="EmailDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmailId" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="ContactDetailsPhoneDetail">
+    <End Type="Model1.ContactDetails" Role="ContactDetails" Multiplicity="1" />
+    <End Type="Model1.PhoneDetail" Role="PhoneDetail" Multiplicity="*" />
+  </Association>
+  <Association Name="ContactDetailsEmailDetail">
+    <End Type="Model1.ContactDetails" Role="ContactDetails" Multiplicity="1" />
+    <End Type="Model1.EmailDetail" Role="EmailDetail" Multiplicity="*" />
+  </Association>
+  <Association Name="ProfileContactDetails">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.ContactDetails" Role="ContactDetails" Multiplicity="*" />
+  </Association>
+  <EntityType Name="Dcocuments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Path" Type="String" Nullable="false" />
+    <NavigationProperty Name="DocumentCategories" Relationship="Model1.DcocumentsDocumentCategory" FromRole="Dcocuments" ToRole="DocumentCategory" />
+  </EntityType>
+  <EntityType Name="StateLice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Dcocuments" Relationship="Model1.StateLiceDcocuments" FromRole="StateLice" ToRole="Dcocuments" />
+  </EntityType>
+  <EntityType Name="Profile1">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Dcocuments" Relationship="Model1.Profile1Dcocuments" FromRole="Profile1" ToRole="Dcocuments" />
+  </EntityType>
+  <Association Name="StateLiceDcocuments">
+    <End Type="Model1.StateLice" Role="StateLice" Multiplicity="1" />
+    <End Type="Model1.Dcocuments" Role="Dcocuments" Multiplicity="1" />
+  </Association>
+  <Association Name="Profile1Dcocuments">
+    <End Type="Model1.Profile1" Role="Profile1" Multiplicity="1" />
+    <End Type="Model1.Dcocuments" Role="Dcocuments" Multiplicity="*" />
+  </Association>
+  <EntityType Name="ProfessionalLiabilty">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="Account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="Services" Relationship="Model1.AccountService" FromRole="Account" ToRole="Service" />
+    <NavigationProperty Name="Users" Relationship="Model1.AccountUser" FromRole="Account" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Service">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="Account" Relationship="Model1.AccountService" FromRole="Service" ToRole="Account" />
+  </EntityType>
+  <Association Name="AccountService">
+    <End Type="Model1.Account" Role="Account" Multiplicity="*" />
+    <End Type="Model1.Service" Role="Service" Multiplicity="*" />
+  </Association>
+  <Association Name="AccountUser">
+    <End Type="Model1.Account" Role="Account" Multiplicity="*" />
+    <End Type="Model1.User" Role="User" Multiplicity="*" />
+  </Association>
+  <EntityType Name="UserInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="UserAccountInfo">
+    <End Type="Model1.User" Role="User" Multiplicity="1" />
+    <End Type="Model1.UserInfo" Role="AccountInfo" Multiplicity="1" />
+  </Association>
+  <EntityType Name="SpouseName">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
+    <Property Name="LastUpdatedOn" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <Association Name="PersonalDetailSpouseName">
+    <End Type="Model1.PersonalDetail" Role="PersonalDetail" Multiplicity="1" />
+    <End Type="Model1.SpouseName" Role="SpouseName" Multiplicity="*" />
+  </Association>
+  <EntityType Name="DocumentCategory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Dcocument" Relationship="Model1.DcocumentsDocumentCategory" FromRole="DocumentCategory" ToRole="Dcocuments" />
+  </EntityType>
+  <Association Name="DcocumentsDocumentCategory">
+    <End Type="Model1.Dcocuments" Role="Dcocuments" Multiplicity="1" />
+    <End Type="Model1.DocumentCategory" Role="DocumentCategory" Multiplicity="1" />
+  </Association>
+  <Association Name="ProfileBirthInfo">
+    <End Type="Model1.Profile" Role="Profile" Multiplicity="1" />
+    <End Type="Model1.BirthInfo" Role="BirthInfo" Multiplicity="1" />
+  </Association>
+</Schema>

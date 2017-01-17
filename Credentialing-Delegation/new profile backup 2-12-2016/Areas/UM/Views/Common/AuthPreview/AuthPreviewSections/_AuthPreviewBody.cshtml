@@ -1,0 +1,287 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.AuthPreview.AuthPreviewViewModal
+@using PortalTemplate.Helper
+<link href="~/Areas/UM/Styles/Common/AuthPreview.css" rel="stylesheet" />
+<script src="~/Areas/UM/Scripts/Common/AuthPreview/AuthPreview.js"></script>
+@{  string CPTPreview = ViewBag.AuthPreviewContent.CPTPreviewView; }
+
+
+<div class="row col-md-12 heading-block">
+    <center><b>@Html.DisplayNameFor(m => m.Member)</b></center>
+</div>
+
+@Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_MemberInformationPreview.cshtml", Model.Member)
+
+<div class="row col-md-12 heading-block">
+    <center><b>@Html.DisplayNameFor(m => m.ReferenceNumber)</b></center>
+</div>
+<div class="x_content preview-content authDetailsDiv">
+
+    <span class="whitespace-nowrap padding-previewfields preview-highlight-font">
+        @Html.DisplayNameFor(m => m.PlaceOfService)
+        <b>@Html.DisplayFor(m => m.PlaceOfService)</b>
+    </span>
+    <span class="whitespace-nowrap padding-previewfields preview-highlight-font">
+        @Html.DisplayNameFor(m => m.RequestType)
+        <b>@Html.DisplayFor(m => m.RequestType)</b>
+    </span>
+    <span class="whitespace-nowrap padding-previewfields preview-highlight-font">
+        @Html.DisplayNameFor(m => m.AuthorizationType)
+        <b>@Html.DisplayFor(m => m.AuthorizationType)</b>
+    </span>
+    <span class="whitespace-nowrap padding-previewfields preview-highlight-font">
+        @Html.DisplayNameFor(m => m.TypeOfCare)
+        <b>@Html.DisplayFor(m => m.TypeOfCare)</b>
+    </span>
+    <span class="whitespace-nowrap padding-previewfields preview-highlight-font">
+        @Html.DisplayNameFor(m => m.ReceivedDate)
+        <b>@Html.DisplayFor(m => m.ReceivedDate)</b>
+    </span>
+
+    @if (Model.Constraint.IsOutPatient)
+    {
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.OutPatientType)
+            @Html.DisplayFor(m => m.OutPatientType)
+        </span>
+        if (!Model.Constraint.IsAdmissionAuthorization)
+        {
+            <span class="whitespace-nowrap padding-previewfields">
+                @Html.DisplayNameFor(m => m.FromDate)
+                <b>@Html.DisplayFor(m => m.FromDate)</b>
+            </span>
+            <span class="whitespace-nowrap padding-previewfields">
+                @Html.DisplayNameFor(m => m.ToDate)
+                <b>@Html.DisplayFor(m => m.ToDate)</b>
+            </span>
+        }
+    }
+
+    @if (Model.Constraint.IsAdmissionAuthorization)
+    {
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.NextReviewDate)
+            <b>@Html.DisplayFor(m => m.NextReviewDate)</b>
+        </span>
+    }
+
+    <span class="whitespace-nowrap padding-previewfields">
+        @if (Model.Constraint.IsAdmissionAuthorization && !Model.Constraint.IsOutPatient)
+        {
+            @Html.ShortNameFor(m => m.ExpectedDOS)
+        }
+        else
+        {
+            @Html.DisplayNameFor(m => m.ExpectedDOS)
+        }
+        <b>@Html.DisplayFor(m => m.ExpectedDOS)</b>
+    </span>
+    @if (Model.Constraint.IsAdmissionAuthorization)
+    {
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.ReviewType)
+            <b>@Html.DisplayFor(m => m.ReviewType)</b>
+        </span>
+    }
+    @if (Model.Constraint.HasDRGCode)
+    {
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.DRGCode)
+            <b>@Html.DisplayFor(m => m.DRGCode)</b>
+        </span>
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.DRGDescription)
+            <b>@Html.DisplayFor(m => m.DRGDescription)</b>
+        </span>
+    }
+    @if (Model.Constraint.HasRUGCode)
+    {
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.ShortNameFor(m => m.DRGCode)
+            <b>@Html.DisplayFor(m => m.DRGCode)</b>
+        </span>
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.ShortNameFor(m => m.DRGDescription)
+            <b>@Html.DisplayFor(m => m.DRGDescription)</b>
+        </span>
+    }
+    @if (Model.Constraint.HasMDCCode)
+    {
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.MDCCode)
+            <b>@Html.DisplayFor(m => m.MDCCode)</b>
+        </span>
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.MDCDescription)
+            <b>@Html.DisplayFor(m => m.MDCDescription)</b>
+        </span>
+    }
+
+</div>
+
+
+
+@if (Model.RequestingProvider != null)
+{
+    <div class="row col-md-12 heading-block">
+        <center>
+            <b>@Html.DisplayNameFor(m => m.RequestingProvider)</b>
+            @if (Model.RequestingProvider.ProviderNetwork !=null)
+            {
+                <span class="label label-success network-badge" >@Html.DisplayFor(m => m.RequestingProvider.ProviderNetwork)</span>
+            }
+        </center>
+
+    </div>
+    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_ProviderInfoPreview.cshtml", Model.RequestingProvider)
+}
+@if (Model.ServicingProvider != null)
+{
+    <div class="row col-md-12 heading-block">
+        <center>
+            <b>@Html.DisplayNameFor(m => m.ServicingProvider)</b>
+            @if (Model.ServicingProvider.ProviderNetwork != null)
+            {
+                <span class="label label-success network-badge">@Html.DisplayFor(m => m.ServicingProvider.ProviderNetwork)</span>
+            }
+
+        </center>
+    </div>
+    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_ProviderInfoPreview.cshtml", Model.ServicingProvider)
+}
+@if (Model.AttendingProvider != null)
+{
+    <div class="row col-md-12 heading-block">
+        <center>
+            <b>@Html.DisplayNameFor(m => m.AttendingProvider)</b>
+            @if (Model.AttendingProvider.ProviderNetwork != null)
+            {
+                <span class="label label-success network-badge">@Html.DisplayFor(m => m.AttendingProvider.ProviderNetwork)</span>
+            }
+
+        </center>
+    </div>
+    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_ProviderInfoPreview.cshtml", Model.AttendingProvider)
+}
+@if (Model.AdmittingProvider != null)
+{
+    <div class="row col-md-12 heading-block">
+        <center>
+            <b>@Html.DisplayNameFor(m => m.AdmittingProvider)</b>
+            @if (Model.AdmittingProvider.ProviderNetwork != null)
+            {
+                <span class="label label-success network-badge">@Html.DisplayFor(m => m.AdmittingProvider.ProviderNetwork)</span>
+            }
+
+        </center>
+    </div>
+    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_ProviderInfoPreview.cshtml", Model.AdmittingProvider)
+}
+@if (Model.SurgeonProvider != null)
+{
+    <div class="row col-md-12 heading-block">
+        <center>
+            <b>@Html.DisplayNameFor(m => m.SurgeonProvider)</b>
+            @if (Model.SurgeonProvider.ProviderNetwork != null)
+            {
+                <span class="label label-success network-badge">@Html.DisplayFor(m => m.SurgeonProvider.ProviderNetwork)</span>
+            }
+
+        </center>
+    </div>
+    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_ProviderInfoPreview.cshtml", Model.SurgeonProvider)
+}
+
+@if (Model.Facility != null)
+{
+    <div class="row col-md-12 heading-block">
+        <center>
+            @if (Model.Constraint.IsAgencyOrSupplier)
+            {
+                <b>@Html.DisplayNameFor(m => m.Facility)</b>
+            }
+            else
+            {
+                <b>@Html.ShortNameFor(m => m.Facility)</b>
+
+            }
+
+
+            @if (Model.Facility.FacilityNetworkName != null)
+            {
+                <span class="label label-success network-badge">@Html.DisplayFor(m => m.Facility.FacilityNetworkName)</span>
+            }
+
+        </center>
+    </div>
+    @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_FacilityInfoPreview.cshtml", Model.Facility)
+}
+
+@if (Model.Constraint.IsAdmissionAuthorization)
+{
+     
+    <div class="row col-md-12 heading-block">
+        <center><span><b>@Html.DisplayNameFor(m => m.Admission) / @Html.DisplayNameFor(m => m.Discharge) </b></span></center>
+    </div>
+
+    <div class="x_content preview-content datesDetailsDiv ">
+
+
+
+        @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_AdmissionPreview.cshtml", Model.Admission)
+
+        @Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/_DischargePreview.cshtml", Model.Discharge)
+
+    </div>
+
+
+    <div class="row col-md-12 heading-block">
+        <center><span><b>Length Of Stay </b></span></center>
+    </div>
+    <div class="x_content preview-content losDetailsDiv">
+
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.TotalRequestedLOS)
+            <b>@Html.DisplayFor(m => m.TotalRequestedLOS)</b>
+        </span>
+        <span class="whitespace-nowrap padding-previewfields">
+            @Html.DisplayNameFor(m => m.TotalActualLOS)
+            <b>@Html.DisplayFor(m => m.TotalActualLOS)</b>
+        </span>
+
+    </div>
+
+}
+
+<div class="row col-md-12 heading-block">
+    <center><span><b>@Html.DisplayNameFor(m => m.ICDCodes)</b></span></center>
+</div>
+@Html.Partial("~/Areas/UM/Views/Common/AuthPreview/AuthPreviewSections/ICDCodes/_ICDCodesDivision2.cshtml", Model.ICDCodes)
+
+<div class="row col-md-12 heading-block">
+    <center><span><b>@Html.DisplayNameFor(m => m.CPTCodes)</b></span></center>
+</div>
+@Html.Partial(CPTPreview, Model.CPTCodes);
+
+<div class="x_content paddingtop-10px disclaimer-content">
+    <div class="row col-md-12">
+        <span class="auth-disclaimer">
+            <span class="disclaimer-heading">This form may be returned unprocessed if not completely filled out with all requested information.</span>
+            <span>
+                Authorizations will be given for medically necessary services only. This request cannot be processed without supporting documentation such as office visit notes, pertinent laboratory data, prior treatment note(s), etc. Payment is subject to verification of member eligibility, benefit coverage and appropriate coding guidelines. Emergencies do not require prior authorization.
+            </span>
+        </span>
+    </div>
+    <div class="row col-md-12 padding-right-0px ">
+        <span class="auth-notice">
+            <span class="fontweight-bold">Confidentiality Notice:</span>
+            <span>
+                This facsimile and/or email message, including any attachments, is for the sole use of the intended recipient(s) and may contain confidential and privileged information or otherwise be protected by law. Any unauthorized review, use, disclosure or distribution is prohibited. If you are not the intended recipient, please contact the sender by reply email and destroy all copies of the original message.
+            </span>
+        </span>
+        <br /><br />
+    </div>
+</div>
+
+
+
+

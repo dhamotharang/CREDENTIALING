@@ -1,0 +1,95 @@
+﻿@model AHC.CD.WebUI.MVC.Models.TaskTracker.TaskTrackerViewModel
+
+<style>
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .input-validation-error {
+        border: 1px solid silver !important;
+    }
+</style>
+
+<form id="taskHistory" name="taskHistory">
+    <div class="panel-body">
+        
+        <table class="table table-bordered table-condensed customtbodyStyle table-striped" id="Profile_Tasks_History" st-pipe="mc.callServer" st-table="mc.displayed" st-safe-src="trackerItems2">
+            <thead>
+                <tr>
+                    @*<th st-sort="ProviderName" class='col-lg-2'>
+                        Provider Name
+                    </th>*@
+                    <th st-sort="Subject" class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                        Subject
+                    </th>
+                    <th st-sort="SubSectionName" class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                            Sub Section Name
+                        </th>
+                    <th st-sort-default="false" st-sort="NextFollowUpDate" class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                        Next FollowUp Date
+                    </th>
+                    <th st-sort="AssignedTo" class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                            Assigned To
+                        </th>
+                    @*<th st-sort="CompleteStatus" class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                        Task Status
+                    </th>*@
+                    <th st-sort-default="false" st-sort="LastUpdatedBy" class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                        Updated By
+                    </th>
+                    <th st-sort-default="false" st-sort="ModifiedDate" class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                        Updated On
+                    </th>
+                    @*<th st-sort="InsuranceCompanyName" class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                            Insurance Company
+                        </th>
+                        <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                            Mode Of Follow Up
+                        </th>*@
+                    <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                </tr>
+                <tr>
+                    @*<td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'><input st-search="ProviderName" type="text" placeholder="Filter Provider Name" class="form-control input-sm"></td>*@
+                    <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'><input st-search="Subject" type="text" placeholder="Filter Subject" class="form-control input-sm" /></td>
+                    <td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><input st-search="SubSectionName" type="text" placeholder="Filter Sub Section Name" class="form-control input-sm" /></td>
+                    <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'><input st-search="NextFollowUpDate" type="text" placeholder="Filter Next FollowUp Date" class="form-control input-sm" /></td>
+                    <td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><input st-search="AssignedTo" type="text" placeholder="Filter Assigned To" class="form-control input-sm" /></td>
+                    @*<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><input st-search="CompleteStatus" type="text" placeholder="Filter Task Status" class="form-control input-sm" /></td>*@
+                    @*<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><input st-search="InsuranceCompanyName" type="text" placeholder="Filter Insurance Company" class="form-control input-sm" /></td>
+                        <td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><input st-search="ModeOfFollowUp" type="text" placeholder="Filter Follow Up Mode" class="form-control input-sm" /></td>*@
+                    <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'><input st-search="LastUpdatedBy" type="text" placeholder="Filter Updated By" class="form-control input-sm" /></td>
+                    <td class='col-lg-2 col-md-2 col-sm-2 col-xs-2'><input st-search="ModifiedDate" type="text" placeholder="Filter Date" class="form-control input-sm" /></td>
+                    <td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="c in mc.displayed">
+                    @*<td>{{c.ProviderName}}</td>*@
+                    <td>{{c.Subject}}</td>
+                    <td>{{c.SubSectionName}}</td>
+                    <td>{{c.NextFollowUpDate}}</td>
+                    <td>{{c.AssignedTo}}</td>
+                    @*<td>{{c.Status}}</td>*@
+                    @*<td><p ng-repeat="m in c.InsuranceCompanyName"><span class="label label-info">{{m}}</span></p><p ng-if="m==null">Not Available</p></td>
+                        <td><p ng-repeat="m in c.ModeOfFollowUp"><span class="label label-info">{{m.Name}}</span></p></td>*@
+                    <td>{{c.LastUpdatedBy}}</td>
+                    <td>{{c.ModifiedDate}}</td>
+                    <td>
+                        <button class="btn btn-xs btn-default" ng-click="showDetailViewforTab1(c)" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot style="cursor:pointer" ng-show="TaskHistory.length>10">
+                <tr>
+                    <td class="text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
+                </tr>
+            </tfoot>
+        </table>
+        <br />
+        <div ng-show="mc.displayed.length==0 && !mc.isLoading " class="text-center">
+            <label>No History Available.</label>
+        </div>
+    </div>
+</form>

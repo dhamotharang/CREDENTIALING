@@ -1,0 +1,139 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxisProduct.Models.ProviderProfileViewModel.WorkHistoryViewModel.MilitaryServiceViewModel>
+@{
+    var MilitaryServiceInfoCount = 0;
+    var ObjectPresent = 1;
+}
+<fieldset class="fsStyle " id="AddEditMilitaryServiceInfo">
+    <legend class="legendStyle">
+        @foreach (var item in Model)
+        {
+            if (item == null)
+            {
+                <span class="theme_depend text-uppercase create-auth-legends">
+                    <span class="transparent-font-color">_______</span>
+                    Add MILITARY SERVICE INFORMATION
+                    <span class="transparent-font-color">_______</span>
+                </span>
+                ObjectPresent = 0;
+            }
+        }
+        @if (ObjectPresent != 0)
+        {
+            <span class="theme_depend text-uppercase create-auth-legends">
+                <span class="transparent-font-color">______</span>
+                Edit MILITARY SERVICE INFORMATION
+                <span class="transparent-font-color">_______</span> 
+            </span>
+        }
+    </legend>
+    @{
+        List<SelectListItem> listItems = new List<SelectListItem>();
+        listItems.Add(new SelectListItem
+             {
+                 Text = "Exemplo1",
+                 Value = "Exemplo1"
+             });
+        listItems.Add(new SelectListItem
+             {
+                 Text = "Exemplo2",
+                 Value = "Exemplo2",
+                 Selected = true
+             });
+        listItems.Add(new SelectListItem
+             {
+                 Text = "Exemplo3",
+                 Value = "Exemplo3"
+             });
+    }
+    @*@using (Html.BeginForm("Upload", "Upload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(true)*@
+    @foreach (var item in Model)
+    {
+        MilitaryServiceInfoCount = MilitaryServiceInfoCount + 1;
+        <div class="x_content zero-padding-left mutiple-data">
+            @if (item != null)
+{
+                <div>
+                    <span class="text-uppercase TableHeading">Edit MILITARY SERVICE Information - @MilitaryServiceInfoCount</span>
+    </div>
+}
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.MilitaryBranch)</label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    @Html.TextBoxFor(e => item.MilitaryBranch, new { @class = "form-control input-xs", @placeholder = "Military Branch" })
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.StartDate) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.PratianUiDatePickerFor(e => item.StartDate, new { @class = "form-control input-xs", placeholder = "START DATE" })
+                        @*@Html.TextBoxFor(e => item.StartDate, new { @class = "form-control input-xs", @placeholder = "Start Date" })*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.EndDate) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.PratianUiDatePickerFor(e => item.EndDate, new { @class = "form-control input-xs", placeholder = "END DATE" })
+                        @*@Html.TextBoxFor(e => item.EndDate, new { @class = "form-control input-xs", @placeholder = "End Date" })*@
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.RankAtDischarge) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.TextBoxFor(e => item.RankAtDischarge, new { @class = "form-control input-xs", @placeholder = "Rank" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.DischargeType) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.DropDownList("DischargeType", listItems, "Select", new { @class = "form-control input-xs" })
+                    </span>
+                </span>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                <span class="theme_label col-lg-5 nopadding">
+                    <label class="">@Html.DisplayNameFor(e => e.DutyStatus) </label>
+                </span>
+                <span class="col-lg-1"></span>
+                <span class="col-lg-6 nopadding">
+                    <span class="theme_label">
+                        @Html.DropDownList("DutyStatus", listItems, "Select", new { @class = "form-control input-xs" })
+                    </span>
+                </span>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="row col-lg-12 zero-padding-left-right margin-top-5px">
+            <button class="btn btn-success btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/WorkHistory/GetMilitaryServiceAddEditPartial" data-tab-container="MilitaryServiceDiv" value="">Save</button>
+                <button class="btn btn-danger btn-xs list-item buttonmargin pull-right margin-right-5px yahanClickKar" data-tab-path="/CredAxis/WorkHistory/GetMilitaryServiceAddEditPartial" data-tab-container="MilitaryServiceDiv" value="">Cancel</button>
+</div>
+    </div>
+    @*}*@
+
+</fieldset>

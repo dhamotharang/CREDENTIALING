@@ -1,0 +1,50 @@
+﻿
+<br />
+
+<div class="panel-group" ng-controller="CustomFieldController">
+    <div class="form-style" ng-if="CustomFieldLoaded">
+        <fieldset>
+            <legend>
+                Custom Field
+            </legend>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="NoCustomField" border="">
+                No CustomField is there.......
+            </div>
+            <div class="col-md-12 zero-padding-left-right-div" ng-if="!NoCustomField">
+                <div class="form-group" ng-repeat="c in ListOfCustomField track by $index">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="control-label pull-right">{{c.CustomFieldTitle}}&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <i class="data-label" ng-if="c.TitleValue=='' && c.displayStatus==false">Not available</i>
+                        <label class="control-label small" ng-if="(c.TitleValue!=''||c.TitleValue!=null) && c.displayStatus==false">{{c.TitleValue}}</label>
+                        <input type="text" ng-if="c.displayStatus==true" ng-model="c.TitleValue" class="form-control input-sm" />
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1" ng-if="c.displayStatus==false">
+                        <button class="btn btn-xs btn-primary" ng-click="AddingCustomFieldValue(c);" tooltip="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="fa fa-edit"></i></button>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1" ng-if="c.displayStatus==true">
+                        <button class="btn btn-primary btn-sm" ng-click="AddCustomField(c.TitleValue,c.CustomFieldID,c)" ng-class="{'disabled': c.TitleValue==''}">Save</button>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1" ng-if="c.displayStatus==true">
+                        <button class="btn btn-warning btn-sm" ng-click="Cancel(c)">Cancel</button>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+
+            </div>
+
+            <div class="col-lg-12">
+                <div ng-if="activeMessageDiv=='CustomFieldSaveSuccess'" class="col-lg-12 alert alert-{{messageType}}" role="alert">
+                    <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+

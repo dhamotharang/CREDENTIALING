@@ -1,0 +1,162 @@
+﻿@model PortalTemplate.Areas.UM.Models.ViewModels.Authorization.LengthOfStayViewModel
+<style>
+    .LOS_count_header {
+        margin: 10px 0px 10px 0px;
+        text-align: center;
+    }
+</style>
+<div class="col-lg-12">
+    <div class="row LOS_count_header">
+        <div class="col-lg-6"><span class="theme_label">@Html.DisplayNameFor(e => e.TotalApprovedLos):&nbsp;</span><span class="losDataBold" id="total_app">@Html.DisplayFor(e => e.TotalApprovedLos)</span></div>
+        <div class="col-lg-6"><span class="theme_label">@Html.DisplayNameFor(e => e.TotalDeniedLos):&nbsp;</span><span class="losDataBold" id="total_denied">@Html.DisplayFor(e => e.TotalDeniedLos)</span></div>
+    </div>
+    <div>
+        <div class="row">
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.ReceivedDate):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.ReceivedDate, new { @class = "form-control input-xs datePicker",  placeholder = "MM/DD/YYYY", data_val = "true" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.RequiredLOS)*:
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.RequiredLOS, new { @class = "form-control input-xs" , data_val = "true" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.ApprovedLos):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.ApprovedLos, new { @class = "form-control input-xs", data_val = "true" })
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.Denied):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.Denied, new { @class = "form-control input-xs", data_val = "true" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-3">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.AuthType):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        <select class="form-control inp" id="authtype"></select>
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-3">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.Review):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        <select class="form-control inp" id="review">
+                            <option value="Admission">ADMISSION</option>
+                            <option value="Concurrent" selected="selected">CONCURRENT</option>
+                            <option value="Discharge">DISCHARGE</option>
+                            <option value="PreAdmission">PREADMISSION</option>
+                        </select>
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-3">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.RoomType):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        <select class="form-control inp" id="roomType"></select>
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <div id="rowsForDenialDateAndReason"></div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.AuthFrom):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.AuthFrom, new { @class = "form-control input-xs datePicker", data_val = "true" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.AuthTo):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.AuthTo, new { @class = "form-control input-xs datePicker", data_val = "true" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.NextReviewDate):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.NextReviewDate, new { @class = "form-control input-xs datePicker", data_val = "true" })
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.ExpectedDate):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.ExpectedDate, new { @class = "form-control input-xs datePicker", data_val = "true" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.TotalApprovedLos):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.TotalApprovedLos, new { @class = "form-control input-xs read_only_field", data_val = "true", placeholder = "TOTAL AUTHORIZED", disabled = "disabled" })
+                    </span>
+                </span>
+            </div>
+            <div class="col-lg-4">
+                <span class="theme_label">
+                    @Html.DisplayNameFor(e => e.TotalDeniedLos):
+                </span>
+                <span class="summary_data">
+                    <span class="text-uppercase posexplanation theme_label_data">
+                        @Html.TextBoxFor(e => e.TotalDeniedLos, new { @class = "form-control input-xs read_only_field", data_val = "true", placeholder = "TOTAL DENIED", disabled = "disabled" })
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<p-script filepath="~/Areas/UM/Scripts/ViewAuth/LOS/AddNewLOSForm.js"></p-script>

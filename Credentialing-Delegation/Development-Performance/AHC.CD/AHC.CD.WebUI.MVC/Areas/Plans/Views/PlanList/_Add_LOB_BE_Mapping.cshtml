@@ -1,0 +1,132 @@
+﻿
+<div class="panel-group">
+    <div class="form-style">
+        <div id="profref" class="panel-body">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <table ng-if="tempPlanAddEditObject.PlanLOBs.length > 0 " class="table table-bordered table-condensed table-striped customtbodyStyle zero-padding-left-right-div">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2">LOB Name</th>
+                            <th class="col-md-3">Sub Plan Name</th>
+                            <th class="col-md-2">Contact Person Name</th>
+                            <th class="col-md-2">Address Detail</th>
+                            <th class="col-md-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="plob in tempPlanAddEditObject.PlanLOBs track by $index" ng-init="parentindex=$index">
+                        <tr>
+                            <td>{{plob.LOB.LOBName}}</td>
+                            <td><span ng-repeat="sub in plob.SubPlans">{{sub.SubPlanName}}&nbsp;&nbsp;</span></td>
+                            <td><span ng-repeat="con in plob.LOBContactDetails">{{con.ContactPersonName}}&nbsp;&nbsp;</span></td>
+                            <td>
+                                <span ng-repeat="addr in plob.LOBAddressDetails">
+                                    {{addr.Street}} {{addr.Appartment}} {{addr.City}} {{addr.State}}
+                                    {{addr.ZipCode}}  {{addr.Country}}  {{addr.County}}&nbsp;&nbsp;
+                                </span>
+                            </td>
+                            <td ng-show="CurrentPageMasterViewData.Type=='Add'">
+                                <a ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="EditLOB(parentindex+'EditLOB', plob,$index);" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="left" title="Edit"><i class="fa fa-edit"></i></a>
+                                <a ng-if="!PlanIsEdit" ng-disabled="tempPlanAddEditObject.PlanLOBs.length == '1'" ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="RemoveLOB($index, plob);CancelLOBEdit()" class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-remove"></i></a>
+                                <a ng-if="$index == tempPlanAddEditObject.PlanLOBs.length - 1 && !PlanIsEdit" ng-disabled="tempPlanAddEditObject.PlanLOBs.length == MasterLOBs.length" ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="AddNewLOB(tempPlanAddEditObject.PlanLOBs.length+'EditLOB')" class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="right" title="Add New LOB"><i class="fa fa-plus"></i></a>
+                            </td>
+                            <td ng-show="CurrentPageMasterViewData.Type=='Edit'">
+                                <a ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="EditLOB(parentindex+'EditLOB', plob,$index);" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="left" title="Edit"><i class="fa fa-edit"></i></a>
+                                <a ng-if="$index>LOBCount" ng-disabled="tempPlanAddEditObject.PlanLOBs.length == '1'" ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="RemoveLOB($index, plob);CancelLOBEdit()" class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-remove"></i></a>
+                                <a ng-if="$index == tempPlanAddEditObject.PlanLOBs.length - 1 && !PlanIsEdit" ng-disabled="tempPlanAddEditObject.PlanLOBs.length == MasterLOBs.length" ng-hide="visibilityControl == parentindex+'EditLOB'" ng-click="AddNewLOB(tempPlanAddEditObject.PlanLOBs.length+'EditLOB')" class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="right" title="Add New LOB"><i class="fa fa-plus"></i></a>
+
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl == parentindex+'EditLOB'">
+                            <td colspan="5" class="editTableDataStyle">
+                                <fieldset>
+                                    <legend ng-if="!($index == tempPlanAddEditObject.PlanLOBs.length - 1) && !PlanIsEdit">
+                                        Edit LOB Information
+                                    </legend>
+                                    <legend ng-if="$index == tempPlanAddEditObject.PlanLOBs.length - 1 && !PlanIsEdit">
+                                        Add LOB Information
+                                    </legend>
+                                    <div class="legend2 pull-right">
+                                        <button type="button" ng-click="CancelLOBEdit()" class="btn btn-xs btn-default"><i class="fa fa-remove" tooltip data-toggle="tooltip" data-placement="left" title="Back to Plan LOB List"></i></button>
+                                    </div>
+                                    @Html.Partial("_AddLOBDetails")
+                                </fieldset>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-12">
+        <input type="button" value="Back" ng-click="BackAdd();" class="btn btn-warning btn-sm pull-left" />
+        @*<input ng-if="!PlanIsEdit" type="button" value="Save" ng-click="confirmationAddPlan()" class="btn btn-success btn-sm pull-right" />*@
+        @*<input ng-if="PlanIsEdit" type="button" value="Update" ng-click="confirmationUpdatePlan()" class="btn btn-primary btn-sm pull-right" />*@
+        <button ng-if="CurrentPageMasterViewData.Type=='Add'" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#PlanModalForAdd" ng-click="AddingPlanData()" tooltip data-toggle="tooltip" data-placement="right" title="Save plan data">Save</button>
+        <button ng-if="CurrentPageMasterViewData.Type=='Edit'" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#PlanModalForAdd" ng-click="AddingPlanData()" tooltip data-toggle="tooltip" data-placement="right" title="Update plan data">Update</button>
+
+    </div>
+</div>
+
+<form id="LOB_BE_Mapping" style="display:none">
+    <span ng-repeat="plob in tempPlanAddEditObject.PlanLOBs track by $index" ng-init="parentindex=$index">
+        <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBID" value="{{plob.LOBID}}" />
+        <input type="hidden" name="PlanLOBs[{{parentindex}}].StatusType" value="{{plob.StatusType}}" />
+        <input ng-if="CurrentPageMasterViewData.Type=='Edit'" type="hidden" name="PlanLOBs[{{parentindex}}].PlanLOBID" value="{{plob.PlanLOBID}}" />
+        <input ng-if="CurrentPageMasterViewData.Type=='Edit'" type="hidden" name="PlanLOBs[{{parentindex}}].PlanID" value="{{plob.PlanID}}" />
+
+        <span ng-repeat="sub in plob.SubPlans track by $index">
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].SubPlans[{{$index}}].SubPlanId" value="{{sub.SubPlanId}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].SubPlans[{{$index}}].SubPlanName" value="{{sub.SubPlanName}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].SubPlans[{{$index}}].SubPlanCode" value="{{sub.SubPlanCode}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].SubPlans[{{$index}}].SubPlanDescription" value="{{sub.SubPlanDescription}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].SubPlans[{{$index}}].Status" value="{{sub.Status}}" />
+        </span>
+
+        <span ng-repeat="addr in plob.LOBAddressDetails track by $index">
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].LOBAddressDetailID" value="{{addr.LOBAddressDetailID}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].Appartment" value="{{addr.Appartment}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].Street" value="{{addr.Street}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].City" value="{{addr.City}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].State" value="{{addr.State}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].ZipCode" value="{{addr.ZipCode}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].Country" value="{{addr.Country}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBAddressDetails[{{$index}}].County" value="{{addr.County}}" />
+        </span>
+
+        <!-- Contact Details Faddu Data-->
+
+        <span ng-repeat="con in plob.LOBContactDetails track by $index" ng-init="InnerParentindex=$index">
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{$index}}].LOBContactDetailID" value="{{con.LOBContactDetailID}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{$index}}].ContactPersonName" value="{{con.ContactPersonName}}" />
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{$index}}].StatusType" value="{{con.StatusType}}" />
+
+            <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{$index}}].ContactDetail.ContactDetailID" value="{{con.ContactDetail.ContactDetailID}}" />
+
+            <span ng-repeat="cd in con.ContactDetail.PhoneDetails track by $index">
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PhoneDetails[{{$index}}].PhoneDetailID" value="{{cd.PhoneDetailID}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PhoneDetails[{{$index}}].Number" value="{{cd.Number}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PhoneDetails[{{$index}}].CountryCode" value="{{cd.CountryCode}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PhoneDetails[{{$index}}].PhoneTypeEnum" value="{{cd.PhoneTypeEnum}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PhoneDetails[{{$index}}].PreferenceType" value="{{cd.PreferenceType}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PhoneDetails[{{$index}}].StatusType" value="{{cd.StatusType}}" />
+            </span>
+
+            <span ng-repeat="email in con.ContactDetail.EmailIDs track by $index">
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.EmailIDs[{{$index}}].EmailDetailID" value="{{email.EmailDetailID}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.EmailIDs[{{$index}}].EmailAddress" value="{{email.EmailAddress}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.EmailIDs[{{$index}}].PreferenceType" value="{{email.PreferenceType}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.EmailIDs[{{$index}}].StatusType" value="{{email.StatusType}}" />
+            </span>
+
+            <span ng-repeat="pc in con.ContactDetail.PreferredContacts track by $index">
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PreferredContacts[{{$index}}].PreferredContactID" value="{{pc.PreferredContactID}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PreferredContacts[{{$index}}].PreferredWrittenContactType" value="{{pc.PreferredWrittenContactType}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PreferredContacts[{{$index}}].StatusType" value="{{pc.StatusType}}" />
+                <input type="hidden" name="PlanLOBs[{{parentindex}}].LOBContactDetails[{{InnerParentindex}}].ContactDetail.PreferredContacts[{{$index}}].PreferredIndex" value="{{pc.PreferredIndex}}" />
+            </span>
+
+        </span>
+
+    </span>
+</form>

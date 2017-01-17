@@ -1,0 +1,113 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.CDSCInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+<div>
+    <form class="cDSCInformationForm">
+        <div class="col-md-12 zero-padding-left-right-div">
+            <span ng-if="tempObject.CDSCInformationID">
+                @Html.HiddenFor(model => model.CDSCInformationID, new { ng_value = "tempObject.CDSCInformationID" })
+            </span>
+            @Html.HiddenFor(model => model.UpdateHistory, new { id = "UpdateHistoryHiddenForCDSC" })
+            @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.CertNumber, new { @class = "control-label small", id = "UHCertNumber" })
+                <div>
+                    @Html.TextBoxFor(model => model.CertNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.CertNumber" })
+                    <span id="errorid" style="color:red" ng-if="Errormessage">{{Errormessage}}</span>
+                </div>
+                @Html.ValidationMessageFor(model => model.CertNumber, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.State, new { @class = "control-label small", id = "UHState" })
+                <div>
+                    <input class="form-control input-sm" data-ng-model="tempObject.State" name="State" ng-focus="showStates($event)" placeholder="select state" />
+                    <span id="errorid" class="text-danger" ng-if="ErrormessageforCDSstate">Please enter Issue State *.</span>
+
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr ng-repeat="state in filteredState = (States | filter:tempObject.State)" ng-click="hideDiv(); tempObject.State = state" class="pointer">
+                                    <td>{{state}}</td>
+                                </tr>
+                                <tr ng-if="States.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="States.length > 0 && filteredState.length == 0">
+                                    <td>State not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*@Html.ValidationMessageFor(model => model.State, "Please select the State", new { @class = "text-danger" })*@
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small", id = "UHIssueDate" })
+                <div>
+                    @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy", data_ng_change = "tempObject.ExpiryDate = autoFillExpiryDate(tempObject.CDSCInformationID, tempObject.IssueDate, tempObject.ExpiryDate)" })
+                </div>
+                @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-3">
+                @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small", id = "UHExpiryDate" })
+                <div>
+                    @Html.TextBoxFor(model => model.ExpiryDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ExpiryDate", placeholder = "mm/dd/yyyy" })
+                </div>
+                @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 zero-padding-left-right-div">
+            <div ng-class="{'col-lg-11':tempObject.CDSCCerificatePath,'col-lg-12':!tempObject.CDSCCerificatePath}">
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control jancyFileWrapTexts" data-trigger="fileinput">
+                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                        <span class="fileinput-filename wraptext"></span>
+                    </div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file">
+                        <span class="fileinput-new small">Select CDS Document</span>
+                        <span class="fileinput-exists">Change</span>
+                        @Html.TextBoxFor(model => model.CDSCCerificateFile, new { name = "CDSCCerificateFile", ng_data_model = "tempObject.CDSCCerificateFile", type = "file", onchange = "angular.element(this).scope().setFiles(this)" })
+                    </span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+                @Html.HiddenFor(model => model.CDSCCerificatePath, new { ng_value = "tempObject.CDSCCerificatePath" })
+                @Html.ValidationMessageFor(model => model.CDSCCerificateFile, "", new { @class = "text-danger" })
+            </div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+            {
+                <div ng-show="tempObject.CDSCCerificatePath" class="col-lg-1">
+                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.CDSCCerificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                </div>
+            }
+        </div>
+        <div class="clearfix"></div>
+        @*<div ng-show="activeMessageDiv=='CDSCError'" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="pull-right" ng-click="CDSCError=''"><i class="fa fa-times"></i></span>
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error List : <br />
+                    <span ng-repeat="err in CDSCError track by $index">{{err}}</span>
+                </div>
+            </div>*@
+        <div class="clearfix"></div>
+        <div ng-show="activeMessageDiv=='CDSErrorForexpiryDate'" class="col-lg-12">
+            <br />
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Error List : <br />
+                <span>{{messageDesc}}</span>
+            </div>
+        </div>
+        <div class="col-md-12 zero-padding-left-right-div">
+            <div class="col-md-12">
+                <button id="CDS_ADD_CancelButton" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();CDSCError=''">Cancel</button>
+                <button id="CDS_ADD_AddButton" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveCDSCInformation(tempObject,$index)">{{buttonLabel}}</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Title = "PrimarySource";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Custom/Validation/PostedFileExtension.js"></script>
+<script src="~/Scripts/Custom/Validation/PostedFileSize.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<script src="~/Scripts/Custom/Checklist/ChecklistIndex.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        //$('.checkListDocClick').click(checkListDocClick);
+    });
+
+    $(window).load(function () {
+        $('#accordionProviderInfo').on('shown.bs.collapse', function (e) {
+            var id = $(e.target).prev().find("[id]")[0].id;
+            navigateToElement(id);
+        })
+
+        function navigateToElement(id) {
+            $('html, body').animate({
+                scrollTop: $("#" + id).offset().top
+            }, 1000);
+        }
+    });
+
+    function checkListDocClick() {
+        //$('#grid3').removeClass('active');
+        //$('#grid4').addClass('active');
+
+        $('.psvTab>ul>li:eq(1)').find('a').trigger('click');
+    }
+
+
+</script>
+
+<style>
+    label.small {
+        color: #337ab7;
+    }
+</style>
+
+
+<div id="page-wrapper" ng-app="primarySourceApp" ng-controller="profileAppCtrl" ng-init="LoadPendingPSV(@ViewBag.PendingPSVData)" ng-cloak>
+    <div class="container-fluid" ng-init="LoadVerification(@ViewBag.VerificationId)">
+        <!-- Page Heading -->
+        <div class="row" ng-init="LoadCredInfo(@ViewBag.CredentialingInfoId)">
+            <div class="col-lg-12" ng-init="Load(@ViewBag.Profile)">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>
+                        <a href="~/Dashboard/Index">Dashboard</a>
+                    </li>
+                    @*<li class="active">
+                        <a href="~/Verification/Index"><i class="fa fa-list"></i> Verification List</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i>Primary Source
+                    </li>*@
+                </ol>
+            </div>
+        </div>
+
+        <div class="row col-lg-12">
+            <table class="table table-striped">
+                <thead class="bg-gray">
+                    <tr>
+                        <th>Title</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Plan</th>
+                        <th>Initiation Date</th>
+                        <th>Action</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ProfileObj.Profile.PersonalDetail.ProviderTitles[0].ProviderType.Code || 'Not Available'}}</td>
+                        <td>{{ProfileObj.Profile.PersonalDetail.FirstName}}</td>
+                        <td>{{ProfileObj.Profile.PersonalDetail.LastName}}</td>
+                        <td>{{ProfileObj.Plan.PlanName}}</td>
+                        <td ng-bind="reformatDate(ProfileObj.InitiationDate)"></td>
+                        <td><a href="~/Credentialing/Verification/SetAllVerified?credinfoId=@ViewBag.CredentialingInfoId&credVerificationId=@ViewBag.VerificationId"><button ng-disabled="enableVerified" class="btn btn-primary btn-xs">All Verified</button></a></td>
+                        <td><a target="_blank" href="~/Profile/MasterProfile/ProviderProfile/@ViewBag.ProfileId"><button class="btn btn-primary btn-xs"> View Profile</button></a></td>
+
+
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <script>
+            var savedata = function () {
+                $("#successAlert").show();
+            };
+        </script>
+        <div class="clearfix"></div>
+        <div>
+            <div id="successAlert" class="alert alert-success" role="alert" style="display:none;">Data is saved successfully !!!</div>
+        </div>
+        <div class="row">
+            @*<div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>  Application Form</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div role="tabpanel">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#grid1" aria-controls="grid1" role="tab" data-toggle="tab">Application Form</a></li>
+                                    <li role="presentation"><a href="#grid2" aria-controls="grid2" role="tab" data-toggle="tab">Checklist</a></li>
+                                    <li class="pull-right"><input type="text" class="form-control input" id="searchForm" placeholder="search"></li>
+                                </ul>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+
+                                    <!-- Application Form -->
+                                    <div role="tabpanel" class="tab-pane active" id="grid1">
+                                        @Html.Partial("_ApplicationFormView")
+                                    </div>
+
+                                    <!-- Checklist Form -->
+                                    <div role="tabpanel" class="tab-pane" id="grid2">
+                                        @Html.Partial("_ChecklistView")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            <div class="col-lg-12" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-money fa-fw"></i>  Primary Source Verification</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div role="tabpanel" class="psvTab">
+                            <!-- Nav tabs -->
+                            @*<ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#grid3" aria-controls="grid3" role="tab" data-toggle="tab">PSV</a></li>
+                                    <li role="presentation"><a href="#grid4" aria-controls="grid4" role="tab" data-toggle="tab">Document</a></li>
+
+                                </ul>*@
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="grid3">
+                                    @Html.Partial("_PSVView")
+                                </div>
+                                @*<div role="tabpanel" class="tab-pane" id="grid4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <iframe src="~/Content/Document/ATTESTATIONOFSITEVISIT.pdf" class="col-lg-12" style="height:500px;"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

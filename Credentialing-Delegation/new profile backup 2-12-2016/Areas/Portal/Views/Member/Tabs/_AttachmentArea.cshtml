@@ -1,0 +1,62 @@
+﻿@model IEnumerable<PortalTemplate.Areas.Portal.Models.Attachment.AttachmentViewModel>
+@using PratianUI
+<div style="position:relative;">
+    <fieldset class="fsStyle">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase"><span class="transparent-font-color">______.</span>Attachments<span class="transparent-font-color">______.</span></span>
+            @*<span class="text-uppercase pull-right">
+                    <a class="custom-button print_button_beside_table table_print_btn pull-right PrintBtnStyle" style="margin-top: -5px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print">
+                        <img src="/Resources/Images/Icons/print_icon.png">
+                    </a>
+                </span>*@
+        </legend>
+        <div class="x_content zero-padding-left attachments-tablediv">
+            <table class="table margin_bottom_zero table-white noBorderTable boldBody zeroPaddingBottomTh theadBorder width_99 custom-thead-back custom-thead-font  custom-tbody">
+                <thead class="">
+                    <tr>
+                        <th class="theme_label">Uploaded date</th>
+                        <th class="theme_label">Title</th>
+                        <th class="theme_label">Attachment Type</th>
+                        <th class="theme_label">Created By</th>
+
+                        <th class="theme_label" style=" width: 8%;">
+                            <span class="action_Class">File</span>
+                            @*<a class="notes_print_button_beside_table hover_effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print">
+                                <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                            </a>*@
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="" class="theme_label_data">
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td class="theme_label_data">@Html.DisplayFor(e => item.CreatedDate)</td>
+                                <td class="theme_label_data">@Html.DisplayFor(e=>item.Name)</td>
+                                <td class="theme_label_data">@Html.DisplayFor(e => item.AttachmentTypeName)</td>
+                                <td class="theme_label_data">@Html.DisplayFor(e => item.CreatedBy)</td>
+                                <td><button onclick="PreviewDoc('@item.DocKey','@item.FileName')" class="btn btn-xs btn-primary" ><i class="fa fa-file"></i></button></td>
+                            </tr>
+                        }
+
+                    }
+                    else
+                    {
+                        <tr id="" style="text-align:center">
+                            <td colspan="6" align="center" class="theme_label_data theme_a">No Data Available</td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>
+
+<p-script filepath="~/Areas/Portal/Scripts/Member/MemberProfile/NonMinified/Attachment.js"></p-script>
+<p-script filepath="~/Areas/Portal/Scripts/Member/MemberProfile/NonMinified/FilterByModule.js"></p-script>

@@ -1,0 +1,27 @@
+﻿@model PortalTemplate.Areas.Coding.Models.CreateCoding.CreateCodingViewModel
+<p-link filepath="~/Areas/Coding/Contents/CSS/AppCss/CreateCoding/NonMinified/CreateCoding.css" rel="stylesheet"></p-link>
+
+@*********************Uncomment this if you want to show the Encounter Details also******************************@
+@*@Html.Partial("~/Areas/SharedView/Views/Encounter/_EncounterTemplate.cshtml", Model.EncounterDetails)*@
+@using (Ajax.BeginForm("SaveDetails", "Coding", new AjaxOptions { HttpMethod = "POST", LoadingElementId = "SaveCodingDetails", OnBegin = "validateForm", OnSuccess = "onSuccessFn" }, new { id = "createsavedetailsForm" }))
+    {
+    @Html.AntiForgeryToken()
+    <div>
+<div class="row greybackground">
+    <div class="col-lg-12">
+        <div class="x_panel border_on_panel">
+            <div class="x_content">
+                <div class="col-lg-12" style="margin-top:7px;">
+                    <label class="title_text">Coding Details</label>
+                </div>
+                @Html.Partial("~/Areas/Coding/Views/CreateCoding/CodingDetails.cshtml",Model.CodingDetails)
+            </div>
+        </div>
+    </div>
+</div>
+    <button type="submit">Submit</button>
+        </div>
+}
+
+<p-script filepath="~/Areas/Coding/Scripts/AppJs/CreateCoding/NonMinified/CreateCoding.js"></p-script>
+

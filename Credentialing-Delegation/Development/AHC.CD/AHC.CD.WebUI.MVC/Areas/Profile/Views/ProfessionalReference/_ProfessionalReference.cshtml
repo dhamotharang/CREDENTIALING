@@ -1,0 +1,228 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<br />
+<div class="panel-group" ng-controller="ProfessionalReference">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                {
+                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ProfessionalReferencePendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                }
+                Professional Reference
+            </legend>
+            <div class="legend2 pull-right">
+                @*<button type="button" ng-if="ProfessionalReferences.length > 0 " class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-click="downloadTableData('Profile_ProfessionalReference_ProfessionalReference','Professional Reference')"><i class="fa fa-download"></i></button>*@
+                <button id="Print_ProfessionalReference " type="button" ng-if="ProfessionalReferences.length > 0 " class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-click="printData('Profile_ProfessionalReference_ProfessionalReference','Professional Reference')"><i class="fa fa-print"></i></button>
+                <button id="ViewHistory_PR" type="button" ng-click="showProfessionalReferenceHistory('PRHID')" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+                <button id="Help_PR" type="button" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="You are required to provide exactly 3 references. Your application will not be complete without this information *Please check with credentialing entity for any special requirements"><i class="fa fa-question"></i></button>
+                <div id="PRHID" class="loading pull-right loadingHistory"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+            </div>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;color:red">
+                <label>*Please list minimum 3 references</label>
+            </div>
+            <table ng-hide="ProfessionalReferences.length >0 || visibilityControl=='addpr' " class="table table-bordered table-condensed customtbodyStyle table-striped">
+                <thead>
+                    <tr>
+                        <td>
+                            No Data Available for Professional Reference
+                            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                            {
+                                <span>Please click on <button id="noDataAddNewProfessionalReference" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addpr')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button> to add new Professional Reference</span>
+                            }
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <div id="profref" class="panel-body">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-if="ProfessionalReferences.length > 0 " class="table table-bordered table-condensed table-striped customtbodyStyle zero-padding-left-right-div" id="Profile_ProfessionalReference_ProfessionalReference">
+                            <thead>
+                                <tr>
+                                    <th class="col-lg-2">First Name</th>
+                                    <th class="col-lg-2">Middle Name</th>
+                                    <th class="col-lg-2">Last Name</th>
+                                    <th class="col-lg-2">Provider Type</th>
+                                    <th class="col-lg-2">Telephone</th>
+                                    <th class="col-lg-2 hideData">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="pr in ProfessionalReferences track by $index">
+                                <tr>
+                                    <td ng-show="pr.FirstName">{{pr.FirstName}}</td>
+                                    <td ng-show="!pr.FirstName"><i>Not Available</i></td>
+                                    <td ng-show="pr.MiddleName">{{pr.MiddleName}}</td>
+                                    <td ng-show="!pr.MiddleName"><i>Not Available</i></td>
+                                    <td ng-show="pr.LastName">{{pr.LastName}}</td>
+                                    <td ng-show="!pr.LastName"><i>Not Available</i></td>
+                                    <td ng-show="pr.ProviderType.Title">{{pr.ProviderType.Title}}</td>
+                                    <td ng-show="!pr.ProviderType.Title"><i>Not Available</i></td>
+                                    <td ng-show="pr.PhoneNumber">{{pr.PhoneNumber}}</td>
+                                    <td ng-show="!pr.PhoneNumber"><i>Not Available</i></td>
+                                    <td class="hideData">
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                        {
+                                            <button id="View_ProfessionalReference" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewpr')" ng-hide="showViewProfessionalReference" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                        {
+                                            <button id="Edit_ProfessionalReference" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editpr',pr)" ng-hide="editShowProfessionalReference" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                        }
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                        {
+                                            <button id="Remove_ProfessionalReference " class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initProfessionalReferenceWarning(pr);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                            <button id="addNewProfessionalReference" ng-if="$index == ProfessionalReferences.length-1" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addpr')" ng-hide="$index+1!=ProfessionalReferences.length" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                        }
+                                        <button class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="sectionWiseVisibilityControlForUpdateHistory($index+'ProfessionalReference');OperateUpdateHistory(pr.ProfessionalReferenceInfoID,'ProfessionalReferenceInfoID');" tooltip><i class="fa fa-history"></i></button>
+                                    </td>
+                                </tr>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+                                {
+                                    <tr ng-show="visibilityControl==($index+'_viewpr')" class="hideData">
+                                        <td colspan="6" class="editTableDataStyle">
+                                            @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_ViewProfessionalReference.cshtml")
+                                        </td>
+                                    </tr>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                {
+                                    <tr ng-show="visibilityControl==($index+'_editpr')" class="hideData">
+                                        <td colspan="6" id="professionalReferenceEditDiv{{$index}}" class="editTableDataStyle">
+                                            <fieldset>
+                                                <legend>
+                                                    Edit Professional Reference
+                                                </legend>
+                                                @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_AddEditProfessionalReference.cshtml")
+                                            </fieldset>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr ng-show="UpdateHistorySectionVisibility == ($index+'ProfessionalReference')" class="hideData">
+                                    <td colspan="8" class="editTableDataStyle">
+                                        <div>
+                                            <fieldset>
+                                                <legend>
+                                                    Personal Detail History
+                                                </legend>
+                                                @Html.Partial("~/Areas/Profile/Views/MasterProfile/_ProfileUpdateHistory.cshtml")
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div ng-if="activeMessageDiv=='addedNewProfessionalReference'" class="alert alert-success" role="alert">
+                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                    </div>
+                    <div ng-if="activeMessageDiv=='removeProfessionalReference'">
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error Lists :<br />
+                            <span ng-repeat="err in errorProfessionalReference track by $index">{{err}}</span>
+                        </div>
+                    </div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                    {
+                        <fieldset ng-if="visibilityControl=='addpr'">
+                            <legend>
+                                Add Professional Reference
+                            </legend>
+                            <div id="newProfessionalReferenceFormDiv">
+                                @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_AddEditProfessionalReference.cshtml")
+                            </div>
+                        </fieldset>
+                    }
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="panel-default" ng-if="showProfessionalReferenceHistoryTable">
+        <div class="form-style">
+            <fieldset>
+                <legend>
+                    Professional Reference History
+                </legend>
+                <div class="legend2 pull-right">
+                    @*<button type="button" ng-hide="professionalReferenceHistoryArray.length <= 0" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-click="downloadTableData('Profile_ProfessionalReference_ProfessionalReferenceHistory','Professional Reference History')"><i class="fa fa-download"></i></button>*@
+                    <button id="Print_ProfessionalReference_History" type="button" ng-hide="professionalReferenceHistoryArray.length <= 0" class="btn btn-xs btn-primary" data-container="body" popover data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-click="printData('Profile_ProfessionalReference_ProfessionalReferenceHistory','Professional Reference History')"><i class="fa fa-print"></i></button>
+                    <button id="Close_ViewHistory_PR" type="button" ng-click="cancelProfessionalReferenceHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+                </div>
+                <table ng-hide="professionalReferenceHistoryArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No History Available for Professional Reference!
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="professionalReferenceHistoryArray.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle" id="Profile_ProfessionalReference_ProfessionalReferenceHistory">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-1">First Name</th>
+                            <th class="col-lg-1">Middle Name</th>
+                            <th class="col-lg-1">Last Name</th>
+                            <th class="col-lg-1">Provider Type</th>
+                            <th class="col-lg-1">Telephone</th>
+                            <th class="col-lg-1">Status</th>
+                            <th class="col-lg-1">Deleted By</th>
+                            <th class="col-lg-1">Deleted On</th>
+                            <th class="col-lg-1 hideData">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="prHistory in professionalReferenceHistoryArray">
+                        <tr>
+                            <td>{{prHistory.FirstName || 'Not Available'}}</td>
+                            <td>{{prHistory.MiddleName || 'Not Available'}}</td>
+                            <td>{{prHistory.LastName || 'Not Available'}}</td>
+                            <td>{{prHistory.ProviderType.Title || 'Not Available'}}</td>
+                            <td>{{prHistory.PhoneNumber || 'Not Available'}}</td>
+                            <td>{{prHistory.HistoryStatus || 'Not Available'}}</td>
+                            <td>{{prHistory.DeletedBy || 'Not Available'}}</td>
+                            <td>{{prHistory.DeletedDate  || 'Not Available'}}</td>
+                            <td class="hideData">
+                                <button id="View_History_New_PR" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewprHistory')" ng-hide="showViewProfessionalAffiliation" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewprHistory')" class="hideData">
+                            <td colspan="9" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_ViewProfessionalReferenceHistory.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+    <div class="modal fade" id="professionalReferenceWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editProfessionalReference">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="col-lg-12 text-center" ng-show="isRemoved">
+                        <div style="margin-top:2%;">
+                            <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                        </div>
+                    </div>
+                    <div class="modal-body" ng-show="!isRemoved">
+                        Do you really want to remove <b>{{tempReference.FirstName}} {{tempReference.LastName}}</b> from your Professional References list ?
+                        <input type="hidden" name="ProfessionalReferenceInfoID" value="{{tempReference.ProfessionalReferenceInfoID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button id="CancleWarning_Remove_ProfessionalReference " type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button id="Warning_Remove_ProfessionalReference " type="button" class="btn btn-primary" ng-click="removeProfessionalReference(ProfessionalReferences)">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

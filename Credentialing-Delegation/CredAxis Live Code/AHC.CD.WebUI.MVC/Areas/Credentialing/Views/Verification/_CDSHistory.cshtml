@@ -1,0 +1,130 @@
+﻿
+
+<div class="panel-body">
+    <form class="form-style">
+        <fieldset>
+            <legend>
+                <strong>Verification History</strong>
+            </legend>
+            <div class="col-md-12" ng-if="CDSHistory.length>0">
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>CDS Number</th>
+                            <th>Issue Date</th>
+                            <th>Expiration Date</th>
+                            <th>Status</th>
+                            <th>Verified Date</th>
+                            <th>Verified Document</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="license in CDSHistory">
+                        <tr>
+                            <td>{{license.VerificationData.CertNumber}}</td>
+                            <td>{{license.VerificationData.IssueDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{license.VerificationData.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                            <td>{{license.VerificationResult.VerificationResultStatus}}</td>
+                            <td><i class="wrap-words">{{license.VerificationDate | date:'MM/dd/yyyy'}}</i></td>
+                            <td><a tooltip data-toggle="tooltip" title="preview" data-placement="bottom" ng-if="license.VerificationResult.VerificationDocumentPath" target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{license.VerificationResult.VerificationDocumentPath}}"><i class="fa fa-file"></i></a></td>
+                            <td><a tooltip data-toggle="tooltip" title="view" data-placement="bottom" class="btn btn-xs btn-default" ng-click="closeDiv('CDS'+$index,'CDSHistoryclass')"><i class="fa fa-eye"></i></a></td>
+                        </tr>
+                        <tr id="CDS{{$index}}" class="CDSHistoryclass" style="display:none">
+                            <td colspan="7">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <fieldset>
+                                            <legend>
+                                                <strong>CDS Details</strong>
+                                            </legend>
+                                            <div class="row">
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small" for="SalutationType">CDS Number</label>
+                                                    <div>
+                                                        <i class="wrap-words">{{license.VerificationData.CertNumber}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small" for="SalutationType">Issue Date</label>
+                                                    <div>
+                                                        <i class="wrap-words" ng-if="license.VerificationData.IssueDate" ng-bind="reformatDate(license.VerificationData.IssueDate)"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small" for="SalutationType">Expiration Date</label>
+                                                    <div>
+                                                        <i class="wrap-words" ng-if="license.VerificationData.ExpiryDate" ng-bind="reformatDate(license.VerificationData.ExpiryDate)"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 form-group">
+                                                    <label class="control-label small" for="SalutationType">Document</label>
+                                                    <div>
+                                                        <a ng-if="license.VerificationData.CDSCCerificatePath" target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{license.VerificationData.CDSCCerificatePath}}"><i class="fa fa-file"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend>
+                                                <strong>Verification Details</strong>
+                                            </legend>
+                                            <div class="row">
+                                                <div class="col-lg-3 form-group">
+                                                    <label class="control-label small" for="SalutationType">Status</label>
+                                                    <div>
+                                                        <i class="wrap-words">{{license.VerificationResult.VerificationResultStatus}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 form-group">
+                                                    <label class="control-label small" for="SalutationType">Source</label>
+                                                    <div>
+                                                        <a style="cursor:pointer" class="data-label wrap-words" ng-if="license.VerificationResult.Source" ng-click="checkForHttp(license.VerificationResult.Source)">{{license.VerificationResult.Source}}</a>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label class="control-label small" for="SalutationType">Verified Date</label>
+                                                    <div>
+                                                        <i class="wrap-words">{{license.VerificationDate | date:'MM/dd/yyyy'}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-9 form-group">
+                                                    <label class="control-label small" for="SalutationType">Remark</label>
+                                                    <div>
+                                                        <i class="wrap-words">{{license.VerificationResult.Remark}}</i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 form-group">
+                                                    <label class="control-label small" for="SalutationType">Verified Document</label>
+                                                    <div>
+                                                        <a ng-if="license.VerificationResult.VerificationDocumentPath" target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{license.VerificationResult.VerificationDocumentPath}}"><i class="fa fa-file"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <a class="btn btn-xs btn-warning" ng-click="closeDivOnCancel('CDSHistoryclass')">Cancel</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12" ng-if="CDSHistory.length==0">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No History Available for CDS</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-md-12">
+                <a class="btn btn-sm btn-warning" ng-click="CDSHistoryDiv=false">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+</div>
+

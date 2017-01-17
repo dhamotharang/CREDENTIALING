@@ -1,0 +1,78 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Plan.PlanViewModel
+
+<form id="PlanForm" class="form-style">
+    <fieldset>
+        <legend>
+            General Details
+        </legend>
+        <span ng-if="tempEditObject.PlanID">
+            @Html.HiddenFor(model => model.PlanID, new { @data_ng_value = "tempEditObject.PlanID" })
+        </span>
+        <div class="col-lg-10 zero-padding-left-right-div">
+            <div class="col-lg-6 form-group">
+                @Html.LabelFor(model => model.PlanName, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.PlanName, new { @class = "form-control input-sm", data_ng_model = "tempEditObject.PlanName", placeholder = "plan name" })
+                @Html.ValidationMessageFor(model => model.PlanName, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6 form-group">
+                @Html.LabelFor(model => model.PlanCode, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.PlanCode, new { @class = "form-control input-sm", data_ng_model = "tempEditObject.PlanCode", placeholder = "plan code" })
+                @Html.ValidationMessageFor(model => model.PlanCode, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3 form-group">
+                <label class="control-label small">Attach Application Form *</label>
+                <select data-ng-model="tempEditObject.AttachedFormID" class="form-control input-sm">
+                    <option value="-Select-" selected disabled>-Select-</option>
+                    <option value="1">Form1</option>
+                    <option value="2">Form2</option>
+                    <option value="3">Form3</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2 form-group zero-padding-right-right-div">
+            <label class="control-label small">Plan Logo</label>
+            <div class="fileinput fileinput-exists" data-provides="fileinput">
+                <input type="hidden">
+                <div class="fileinput-preview thumbnail file_preview_upload" style="line-height: 83px; background-image: url('/Content/Images/a0.jpg'); background-size: 100% 97%;" data-trigger="fileinput"></div>
+            </div>
+        </div>
+    </fieldset>
+    @Html.Partial("_EditPlanAddressDetails")
+    @Html.Partial("_EditPlanContactDetails")
+    <fieldset>
+        <legend>
+            LOB Details
+        </legend>
+        @Html.Partial("_Edit_LOB_BE_Mapping")
+    </fieldset>
+    <br />
+    <div class="col-lg-12">
+        <a class="btn btn-warning btn-sm pull-left" ng-click="CalcelEditing()">Cancel</a>
+        <input type="button" value="Update" class="btn btn-primary btn-sm pull-right" ng-click="UpdatePlan(tempEditObject)" />
+    </div>
+
+    <!-- Modal -->
+    @*<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Confirm - Add New Plan
+                    <button type="button" ng-disabled="saving" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="panel-body">
+                    Are you sure, you want to Add New Plan?
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <a class="btn btn-primary btn-sm pull-right" ng-click="saving = true; confirmPlan();">Yes</a>
+                        <button type="button" class="btn btn-default btn-sm pull-right" style="margin-right: 6px;" data-dismiss="modal">No</button>
+                        <div class="pull-right" style="margin: 3px;">
+                            <saving></saving>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+    <!-- end of modal div -->
+</form>

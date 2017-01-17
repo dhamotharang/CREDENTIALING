@@ -1,0 +1,74 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.StateLicense>
+
+@{
+    var StateLicense = 2;
+}
+
+@foreach (var item in Model)
+{
+    StateLicense = StateLicense + 1;
+    <div class="x_content zero-padding-left">
+        <div class="col-lg-12 nopadding">
+            <span class="text-uppercase TableHeading">State License- @StateLicense</span>&nbsp;
+             <button data-toggle="modal" data-target="#BhaukalId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+            &nbsp;  <button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Licenses/getStateHistory?value=@item.StateLicenseID" data-tab-container="StateLicenseHistory_@StateLicense">
+                <i class="fa fa-history"></i>
+            </button>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.LicenseID) :</label>
+            <span class="theme_label_data">@item.LicenseID</span>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.LicenseType) :</label>
+            <span class="theme_label_data">@item.LicenseType</span>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.LicenseStatus) :</label>
+            <span class="theme_label_data">@item.LicenseStatus</span>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.IssueState) :</label>
+            <span class="theme_label_data">@item.IssueState</span>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.IssueDate) :</label>
+            <span class="theme_label_data">@item.IssueDate</span>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.CurrentIssueDate) :</label>
+            <span class="theme_label_data">@item.CurrentIssueDate</span>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+            <span class="theme_label_data">@item.ExpirationDate</span>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.IsThisState) :</label>
+            @if (item.IsThisState)
+            {
+                <span class="theme_label_data">YES</span>
+            }
+            else
+            {
+                <span class="theme_label_data">NO</span>
+            }
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+            <label class="theme_label">@Html.DisplayNameFor(e => e.IsLicenseGood) :</label>
+            @if (item.IsLicenseGood)
+            {
+                <span class="theme_label_data">YES</span>
+            }
+            else
+            {
+                <span class="theme_label_data">NO</span>
+            }
+        </div>
+
+    </div>
+     <div id="StateLicenseHistory_@StateLicense">
+            </div>
+}
+
+<span class="view-more pull-right" id="lessStateLicense" data-toggle="collapse" data-target=".ViewMoreStateLicense" onclick="ShowHideAddView('moreStateLicense', 'lessStateLicense')">View Less</span>

@@ -1,0 +1,146 @@
+﻿@using PratianUI
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.DemographisViewModels.HomeAddressViewModel>
+@{
+    var HomeAddressIndex = 0;
+    bool IsEdit = true;
+}
+@***************Home Address Edit*********************************@
+<div class="col-lg-12 nopadding">
+    <fieldset class="fsStyle" id="AddEditHomeAddress">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                @foreach (var item in Model)
+                {
+                    if (item == null)
+                    {
+                        <span><span class="transparent-font-color">______</span>Add Home Address<span class="transparent-font-color">______</span></span>
+                        IsEdit = false;
+                        break;
+                    }
+                }
+                @if (IsEdit)
+                {
+                    <span><span class="transparent-font-color">______</span>EDIT Home Address<span class="transparent-font-color">______</span></span>
+
+                }
+
+            </span>
+        </legend>
+        @using (Ajax.BeginForm("AddHomeAddress", "Demographics", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "HomeAddressDiv" }))
+        {
+            foreach (var item in Model)
+            {
+                HomeAddressIndex = HomeAddressIndex + 1;
+                //if (GraduationIndex <= 2)
+                //{
+                <div class="x_content mutiple-data zero-padding-left">
+                    @if (item != null)
+                    {
+                        <div class="SubHeaderSpacing1">
+                            <span class="text-uppercase TableHeading">EDIT HOME ADDRESS - @HomeAddressIndex</span>
+                        </div>
+                    }
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-6 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.PrimaryHomeAddress) ?</label>
+                        </span>
+                        <span class="col-lg-6 nopadding">
+                            <span class="theme_label_data">
+                                @Html.PratianUiRadioButtonFor(e => item.PrimaryHomeAddress, new { color = "green", @checked = "checked" }) YES
+                                @Html.PratianUiRadioButtonFor(e => item.PrimaryHomeAddress, new { color = "red" }) NO
+                                @*@Html.RadioButtonFor(e => item.PrimaryHomeAddress, true) Yes
+                                    @Html.RadioButtonFor(e => item.PrimaryHomeAddress, true) NO*@
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-5 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.ApartmentOrUnit) #</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(m => item.ApartmentOrUnit, new { @class = "form-control input-xs", placeholder = "APARTMENT OR UNIT" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-6 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.StreetOrPOBox) #</label>
+                        </span>
+                        <span class="col-lg-1 "></span>
+                        <span class="col-lg-5 nopadding">
+                            @Html.TextBoxFor(m => item.StreetOrPOBox, new { @class = "form-control input-xs", placeholder = "STREET OR PO BOX" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-5 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.City)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(m => item.City, new { @class = "form-control input-xs", placeholder = "CITY" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-5 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.State)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(m => item.State, new { @class = "form-control input-xs", placeholder = "STATE" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-6 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.County)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-5 nopadding">
+                            @Html.TextBoxFor(m => item.County, new { @class = "form-control input-xs", placeholder = "COUNTY" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-5 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.Country)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(m => item.Country, new { @class = "form-control input-xs", placeholder = "COUNTRY" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-5 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.ZipCode)</label>
+                        </span>
+                        <span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.TextBoxFor(m => item.ZipCode, new { @class = "form-control input-xs", placeholder = "ZIP CODE" })
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-6 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.PresnetHomeAddress)?</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-5 nopadding">
+                            <span class="theme_label_data">
+                                @Html.PratianUiRadioButtonFor(e => item.PresnetHomeAddress, new { color = "green", @checked = "checked" }) YES
+                                @Html.PratianUiRadioButtonFor(e => item.PresnetHomeAddress, new { color = "red" }) NO
+                                @*@Html.RadioButtonFor(e => item.PresnetHomeAddress, true) Yes
+                                    @Html.RadioButtonFor(e => item.PresnetHomeAddress, true) NO*@
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 boxstyle">
+                        <span class="col-lg-5 theme_label nopadding">
+                            <label class="">@Html.DisplayNameFor(e => e.LivingHereFrom)</label>
+                        </span><span class="col-lg-1"></span>
+                        <span class="col-lg-6 nopadding">
+                            @Html.PratianUiDatePicker(new { @class = "form-control input-xs", placeholder = "MM/DD/YYYY", Value = "12/31/2010" })
+
+                            @*@Html.TextBoxFor(m => item.LivingHereFrom, new { @class = "form-control input-xs", placeholder = "LIVING HERE FROM" })*@
+                        </span>
+                    </div>
+                </div>
+            }
+            <div class="row col-lg-12 zero-padding-left-right margin-top-5px">
+                @*<input class="btn btn-success btn-xs  buttonmargin pull-right margin-right-5px" type="submit" name="submit" value="Save">*@
+                <button type="button" class="btn btn-success btn-xs yahanClickKar list-item buttonmargin pull-right margin-right-5px" data-tab-autoflush="true" data-tab-path="/CredAxis/Demographics/GetAddEditHomeAddress?model=@Model&type=View" data-tab-container="HomeAddressDiv">Save</button>
+                <button type="button" class="btn btn-danger btn-xs yahanClickKar  list-item buttonmargin pull-right margin-right-5px" data-tab-autoflush="true" data-tab-path="/CredAxis/Demographics/GetAddEditHomeAddress?model=@Model&type=View" data-tab-container="HomeAddressDiv">Cancel</button>
+            </div>
+        }
+    </fieldset>
+</div>

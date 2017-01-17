@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+    .xy-tooltip> h3{
+
+        font-size:12px !important;
+    }
+
+</style>
+
+<script src="~/Scripts/Lib/D3/d3.min.js"></script>
+<script src="~/Scripts/Lib/D3/nv.d3.min.js"></script>
+<link href="~/Content/SharedCss/nv.d3.min.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Custom/DashBoard/DashBoardApp.js"></script>
+
+
+
+<div id="page-wrapper" ng-app="dashBoardApp" ng-controller="GraphController">
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h3>
+                        Provider Dashboard
+                    </h3>
+                   
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" ng-cloak>
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="progress col-lg-6 pull-right" ng-show="progressbar" ng-cloak>
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                Loading...
+                            </div>
+                        </div>
+                        <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Provider Statistics.</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="morris-area-chart">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 text-right">Provider Relationship</label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" ng-model="SelectedRelationId" ng-change="updatePie()">
+                                            <option value="All">All</option>
+                                            <option ng-repeat="providerRelation in providerRelations" value="{{providerRelation.relationId}}">{{providerRelation.relationName}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div id="chart2">
+                                    <svg></svg>
+                                </div>
+                                <div class="text-center h4">Provider Composition</div>
+                            </div>
+                           
+                            <div class="col-md-7" ng-show="pieReady && providerType" ng-animate="'fade'" id="providerbar">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 text-right">Year </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" ng-model="selectedYear" ng-change="updateBar()">
+                                            <option ng-repeat="i in range((maxYear-10),maxYear)" value="{{i}}">{{i}}</option>
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="">
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div id="chartbar">
+                                    <svg></svg>
+                                </div>
+                                <div class="text-center h4">Provider Acquisition For {{providerType}}</div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container-fluid -->
+
+</div>
+<!-- /#page-wrapper -->
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>

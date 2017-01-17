@@ -1,0 +1,35 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.DEAScheduleViewModel
+
+
+
+<table  class="table table-bordered table-condensed customtbodyStyle table-striped">
+    <thead>
+        <tr>
+            <th>Schedules</th>
+            <th>Narcotics</th>
+            @*<th>Non-Narcotic</th>*@
+
+        </tr>
+    </thead>
+    <tbody ng-repeat="sl in DEASchedules">
+        <tr>
+            <td>
+             @*   @Html.HiddenFor(model => model.DEAScheduleID, new { ng_value = "tempObject.DEAScheduleID" })*@
+
+
+                <i ng-if="sl.Status=='Active'" class="fa fa-check"></i>
+                <i ng-if="sl.Status=='Inactive'" class="fa fa-close"></i>
+                {{sl.Title}}
+            </td>
+            <td ng-repeat="s in sl.DEAScheduleTypes">
+                <i ng-if="s.Status=='Active'" class="fa fa-check"></i>
+                <i ng-if="s.Status=='Inactive'">-</i>
+           
+                <label ng-if="s.Status!='Inactive'">{{s.Title}}</label>
+            </td>
+
+
+        </tr>
+
+    </tbody>
+</table>

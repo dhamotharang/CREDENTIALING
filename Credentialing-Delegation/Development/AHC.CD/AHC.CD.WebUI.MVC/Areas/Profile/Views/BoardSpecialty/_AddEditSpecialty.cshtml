@@ -1,0 +1,296 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+@model AHC.CD.WebUI.MVC.Areas.Profile.Models.BoardSpecialty.SpecialtyDetailViewModel
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<form id="specialtyForm">
+    <div class=" col-lg-12 zero-padding-left-right-div">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+        @*Specialty Details ID which is used while editing and kept hidden while adding*@
+        <span ng-if="tempObject.SpecialtyDetailID">
+            @Html.HiddenFor(model => model.SpecialtyDetailID, new { ng_value = "tempObject.SpecialtyDetailID" })
+        </span>
+        @Html.HiddenFor(model => model.UpdateHistory, new { id = "UpdateHistoryHiddenSpeciialty" })
+        @*Specialty Details ID which is used while editing and kept hidden while adding*@
+        @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+        @*Specialty Details section starts here*@
+        <fieldset>
+            <legend>
+                Specialty
+            </legend>
+            <div class="pull-right legend2" ng-show="visibilityControl == 'addboardSpecialty'">
+                <button class="btn btn-xs btn-default" type="button" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Enter first three letters and select the appropriate one from the given drop-down."><i class="fa fa-question"></i></button>
+            </div>
+            <div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-6 form-group">
+                        @Html.LabelFor(model => model.PreferenceType, new { @class = "control-label small", id = "UHPreferenceType" })
+                        <div>
+                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.PreferenceType)))
+                            {
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.PreferenceType, (int)value, new { data_ng_model = "tempObject.PreferenceType", data_ng_click = "fillPercentageOfTime(tempObject.PreferenceType)", id = "SpecialtyDetails_AddSpecialty_SpecialtyType" }) @value.ToString()
+                                </label>
+                            }
+                        </div>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PreferenceType, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        @Html.LabelFor(model => model.PercentageOfTime, new { @class = "control-label small", id = "UHPercentageOfTime" })
+                        <input class="form-control input-sm ng-valid ng-dirty ng-valid-parse valid ng-touched" maxlength="6" data-ng-change="fillPreferenceType(tempObject.PercentageOfTime)" data-ng-model="tempObject.PercentageOfTime" data-val="true" data-val-number="The field % Of Time * must be a number." data-val-range="The field % Of Time * must be between 0 and 100." data-val-range-max="100" data-val-range-min="0" data-val-regex="Please enter valid Percentage Of Time. Only numbers and decimal accepted." data-val-regex-pattern="(^[0-9]\d{0,4}(\.\d{1,1})?%?)\d{0,1}$" id="PercentageOfTime" name="PercentageOfTime" />
+                        @Html.ValidationMessageFor(model => model.PercentageOfTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-6">
+                        <label class="control-label small">Do you wish to be listed in the directory under this specialty?</label>
+                        <div class="col-lg-10 zero-padding-left-right-div">
+                            <table class="col-lg-12">
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ListedInHMOYesNoOption, new { @class = "control-label small", id = "UHListedInHMOYesNoOption" })
+                                    </td>
+                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                    {
+                                        <td>
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.ListedInHMOYesNoOption, (int)value, new { data_ng_model = "tempObject.ListedInHMOYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                            </label>
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        @Html.ValidationMessageFor(model => model.ListedInHMOYesNoOption, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ListedInPOSYesNoOption, new { @class = "control-label small", id = "UHListedInPOSYesNoOption" })
+                                    </td>
+                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                    {
+                                        <td>
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.ListedInPOSYesNoOption, (int)value, new { data_ng_model = "tempObject.ListedInPOSYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                            </label>
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        @Html.ValidationMessageFor(model => model.ListedInPOSYesNoOption, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.ListedInPPOYesNoOption, new { @class = "control-label small", id = "UHListedInPPOYesNoOption" })
+                                    </td>
+                                    @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                    {
+                                        <td>
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.ListedInPPOYesNoOption, (int)value, new { data_ng_model = "tempObject.ListedInPPOYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                            </label>
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        @Html.ValidationMessageFor(model => model.ListedInPPOYesNoOption, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                    </div>
+                    @*Master data for Specialties start here*@
+                    <div class="col-lg-6 form-group">
+                        @Html.LabelFor(model => model.SpecialtyID, new { @class = "control-label small", id = "UHSpecialtyID" })
+                        @*<span class="text-danger" ng-show="specialtyForm.SpecialtyName.$error.required">Specialty Name is Required!</span>*@
+                        @*<input type="text" id="SpecialtyID" class="form-control input-sm" data-val="true" data-val-required="The Specialty Name * Is Required" data-ng-model="tempObject.SpecialtyID" ng-options="type.SpecialtyID as type.Name for type in masterSpecialties track by $index" name="SpecialtyID" bs-typeahead>*@
+                        @*<select ng-model="tempObject.SpecialtyID" data-val="true" data-val-required="Please select the Specialty Name" id="SpecialtyID" name="SpecialtyID" class="form-control input-sm">
+                                <option ng-hide="tempObject.SpecialtyID" selected disabled hidden value="">--select--</option>
+                                <option ng-repeat="spl in masterSpecialties track by $index" value="{{spl.SpecialtyID}}">{{spl.Name}}</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.SpecialtyID, "", new { @class = "text-danger" })*@
+
+                        <input data-val="true" data-val-required="Please select the Specialty Name" class="form-control input-sm" data-ng-model="tempObject.Specialty.Name" name="SpecialtyName" ng-change="setErrorBit(tempObject.Specialty.Name)" data-searchdropdown="searchdropdown" placeholder="select specialty" />
+                        <span class="text-danger field-validation-error" data-valmsg-for="SpecialtyName" data-valmsg-replace="true">
+                            @*<span for="SpecialtyName" class=""></span>*@
+                        </span>                    
+                            @*<span style="color: #b94a48;" ng-if="hasSpecialityError">{{errorSpecialty}}</span>*@
+                            @*<span style="color:maroon" ng-if="errormessage" ng-repeat="err in errorSpecialty track by $index">{{err}}</span>*@
+                            <input type="hidden" data-ng-model="tempObject.SpecialtyID" name="SpecialtyID" value="{{tempObject.SpecialtyID}}" />
+                            <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip">
+                                <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                    <tbody>
+                                        <tr ng-repeat="type in fmasterSpecialties = (masterSpecialties | filter:tempObject.Specialty.Name)" ng-click="errorSpecialty='';hideDiv(); tempObject.Specialty.Name = type.Name; tempObject.SpecialtyID = type.SpecialtyID;setErrorBit(tempObject.Specialty.Name)" class="pointer">
+                                            <td>{{type.Name}}</td>
+                                        </tr>
+                                        <tr ng-if="masterSpecialties.length == 0">
+                                            <td>No data..... </td>
+                                        </tr>
+                                        <tr ng-if="masterSpecialties.length > 0 && fmasterSpecialties.length == 0">
+                                            <td>Specialty not found..... </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            @*<span ng-if="!tempObject.Specialty.Name && hasError" class="text-danger">
+                                Please select the Specialty Name*.
+                            </span>*@
+                            @*@Html.ValidationMessageFor(model => model.SpecialtyID, "", new { @class = "text-danger" })*@
+
+                            @*Master data for Specialties end here*@
+</div>
+                    <div class="col-lg-4 form-group">
+                        <label class="control-label small" id="UHTaxonomyCode">TaxonomyCode</label>
+                        <input disabled="disabled" tooltip title="Please Select Specialty" id="SpecialtyDetails_AddSpecialty_TaxonomyCode" type="text" name="TaxonomyCode" ng-model="tempObject.Specialty.TaxonomyCode" class="form-control input-sm" />
+                    </div>
+                    <div class="clearfix"></div><br />
+                </div>
+            </div>
+        </fieldset>
+        @*Specialty Details section ends here*@
+        @*Board Details section starts here*@
+        <fieldset>
+            <legend>
+                Board Details
+            </legend>
+            <div class="pull-right legend2" ng-show="visibilityControl == 'addboardSpecialty'">
+                <button class="btn btn-xs btn-default" type="button" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="If you have professional/medical specialty."><i class="fa fa-question"></i></button>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-6 form-group">
+                    @Html.LabelFor(model => model.BoardCertifiedYesNoOption, new { @class = "control-label small", id = "UHBoardCertifiedYesNoOption" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.BoardCertifiedYesNoOption, (int)value, new { data_ng_model = "tempObject.BoardCertifiedYesNoOption", data_ng_change = "clearOtherModel(tempObject.BoardCertifiedYesNoOption)" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                            </label>
+                        }
+                    </div>
+                    <div>
+                        @Html.ValidationMessageFor(model => model.BoardCertifiedYesNoOption, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @*Master data for Boards start here*@
+                <div class="col-lg-6 form-group" ng-if="tempObject.BoardCertifiedYesNoOption==1">
+                    @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardID, new { @class = "control-label small", id = "UHSpecialtyBoardID" })
+                    <select class="form-control input-sm" data-val="true" data-val-required="Please select the Board Name" id="SpecialtyBoardID" name="SpecialtyBoardCertifiedDetail.SpecialtyBoardID" ng-model="tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardID">
+                        <option ng-hide="tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardID" selected disabled hidden value="">--select--</option>
+                        <option ng-repeat="splBrd in masterSpecialtyBoards track by $index" value="{{splBrd.SpecialtyBoardID}}" ng-selected="{{splBrd.SpecialtyBoardID == tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardID}}">{{splBrd.Name}}</option>
+                    </select>
+                    @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardID, "", new { @class = "text-danger" })
+                </div>
+                @*Master data for Boards end here*@
+            </div>
+            <div ng-if="tempObject.BoardCertifiedYesNoOption == 1">
+                <span ng-if="tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardCertifiedDetailID">
+                    @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.SpecialtyBoardCertifiedDetailID, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardCertifiedDetailID" })
+                    @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificatePath, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath" })
+                </span>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.CertificateNumber, new { @class = "control-label small", id = "UHCertificateNumber" })
+                        @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.CertificateNumber, new { @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardCertifiedDetail.CertificateNumber" })
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.CertificateNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.InitialCertificationDate, new { @class = "control-label small", id = "UHInitialCertificationDate" })
+                        @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.InitialCertificationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardCertifiedDetail.InitialCertificationDate", placeholder = "mm/dd/yyyy", data_ng_change = "tempObject.SpecialtyBoardCertifiedDetail.ExpirationDate = autoFillExpiryDate(tempObject.SpecialtyBoardCertifiedDetail.SpecialtyBoardCertifiedDetailID, tempObject.SpecialtyBoardCertifiedDetail.InitialCertificationDate, tempObject.SpecialtyBoardCertifiedDetail.ExpirationDate)" })
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.InitialCertificationDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.LastReCerificationDate, new { @class = "control-label small", id = "UHLastReCerificationDate" })
+                        @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.LastReCerificationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardCertifiedDetail.LastReCerificationDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.LastReCerificationDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SpecialtyBoardCertifiedDetail.ExpirationDate, new { @class = "control-label small", id = "UHExpirationDate" })
+                        @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.ExpirationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardCertifiedDetail.ExpirationDate", placeholder = "mm/dd/yyyy" })
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.ExpirationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group" ng-class="{'col-lg-11':tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath,'col-lg-12':!tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath}">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control jancyFileWrapTexts" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename wraptext"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-sm btn-file">
+                                <span class="fileinput-new small">Select Supporting Document</span>
+                                <span class="fileinput-exists">Change</span>
+                                @Html.TextBoxFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile, new { name = "SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile", ng_data_model = "tempObject.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile", type = "file", onchange = "angular.element(this).scope().setFiles(this)" })
+                            </span>
+                            <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="clearFile()">Remove</a>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile, "", new { @class = "text-danger" })
+                    </div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                    {
+                        <span ng-show="tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath">
+                            @Html.HiddenFor(model => model.SpecialtyBoardCertifiedDetail.BoardCertificatePath, new { ng_value = "tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath" })
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.SpecialtyBoardCertifiedDetail.BoardCertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+                        </span>
+                    }
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div ng-if="tempObject.BoardCertifiedYesNoOption == 2">
+                <span ng-if="tempObject.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardNotCertifiedDetailID">
+                    @Html.HiddenFor(model => model.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardNotCertifiedDetailID, new { ng_value = "tempObject.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardNotCertifiedDetailID" })
+                </span>
+                <div class="col-lg-12 form-group">
+                    @Html.LabelFor(model => model.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus, new { @class = "control-label small", id = "UHSpecialtyBoardExamStatus" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.SpecialtyBoardExamStatus)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus, (int)value, new { data_ng_model = "tempObject.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus", data_ng_click = "clearOtherOptions(tempObject.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus)" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-6 form-group" ng-if="tempObject.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus == 2">
+                    @Html.LabelFor(model => model.SpecialtyBoardNotCertifiedDetail.ExamDate, new { @class = "control-label small", id = "UHExamDatee" })
+                    @Html.TextBoxFor(model => model.SpecialtyBoardNotCertifiedDetail.ExamDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardNotCertifiedDetail.ExamDate", placeholder = "mm/dd/yyyy" })
+                    @Html.ValidationMessageFor(model => model.SpecialtyBoardNotCertifiedDetail.ExamDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-6 form-group" ng-if="tempObject.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus == 3">
+                    @Html.LabelFor(model => model.SpecialtyBoardNotCertifiedDetail.ReasonForNotTakingExam, new { @class = "control-label small", id = "UHReasonForNotTakingExam" })
+                    @Html.TextAreaFor(model => model.SpecialtyBoardNotCertifiedDetail.ReasonForNotTakingExam, new { @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardNotCertifiedDetail.ReasonForNotTakingExam" })
+                    @Html.ValidationMessageFor(model => model.SpecialtyBoardNotCertifiedDetail.ReasonForNotTakingExam, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-6 form-group" ng-if="tempObject.SpecialtyBoardNotCertifiedDetail.SpecialtyBoardExamStatus == 4">
+                    @Html.LabelFor(model => model.SpecialtyBoardNotCertifiedDetail.RemarkForExamFail, new { @class = "control-label small", id = "UHRemarkForExamFail" })
+                    @Html.TextAreaFor(model => model.SpecialtyBoardNotCertifiedDetail.RemarkForExamFail, new { @class = "form-control input-sm", data_ng_model = "tempObject.SpecialtyBoardNotCertifiedDetail.RemarkForExamFail" })
+                    @Html.ValidationMessageFor(model => model.SpecialtyBoardNotCertifiedDetail.RemarkForExamFail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+        @*Board Details section ends here*@
+        @*Error List for Specialty Details*@
+        @*<div ng-show="activeMessageDiv=='errorSpecialty'+$index" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists :<br />
+                    <span ng-repeat="err in errorSpecialty track by $index">{{err}}</span>
+                </div>
+            </div>*@
+        @*Error List for Specialty Details*@
+        @*Buttons to Add/Update/Cancel Specialty Details*@
+        <div class="col-md-12 form-group">
+            <button id="SpecialtyDetails_AddSpecialty_CancelButton" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');errorSpecialty='';hasError=false">Cancel</button>
+            <button id="SpecialtyDetails_AddSpecialty_AddButton" ng-show="visibilityControl == 'addboardSpecialty'" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveSpecialty(tempObject, $index)">{{submitButtonText}}</button>
+            <button id="SpecialtyDetails_Edit_AddButton" ng-show="visibilityControl == ($index + '_editboardSpecialty')" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="updateSpecialty(tempObject, $index);errorSpecialty=''">Update</button>
+        </div>
+        @*Buttons to Add/Update/Cancel Specialty Details*@
+    </div>
+</form>

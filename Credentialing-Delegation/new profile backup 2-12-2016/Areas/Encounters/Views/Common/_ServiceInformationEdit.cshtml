@@ -1,0 +1,262 @@
+﻿@model PortalTemplate.Areas.Encounters.Models.ServiceInfoViewModel
+<fieldset class="fieldsetStyle">
+    <legend class="legendstyle">Service Information</legend>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" id="RenderingProvider" style="display: none;">
+                Rendering Provider
+                <div class="RenProvSearch" style="display: none;">
+                    <div class="col-lg-10" style="padding-right:0px;padding-left:0px;">
+                        @Html.TextBoxFor(m => m.RenderingProvider.ProviderFirstName, new { @class = "form-control input-xs non_mandatory_field_halo renderprovelement", @placeholder = "Rendering Provider Name" })
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-xs btn-primary selectReferprovider" onclick="searchrenderingprovider()">Search</button>
+                    </div>
+                </div>
+                <div class="RenderingProviderNameField">
+                    <label id="RenderingProvName">
+                        @Model.RenderingProvider.ProviderFirstName
+                    </label>&nbsp;&nbsp;
+                    <a class="renprov_edit_link btn btn-xs btn-info"><i class="fa fa-edit"></i> Edit</a>
+                </div>
+            </div>
+            <div id="removecolumn" class="">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    Referring Provider
+                    <div class="RefProvSearch" style="display: none;">
+                        <div class="col-lg-10" style="padding-right: 0px; padding-left: 0px;">
+                            @Html.TextBoxFor(m => m.ReferringProvider.ProviderFirstName, new { @class = "form-control input-xs non_mandatory_field_halo refprovelement", @placeholder = "Referring Provider Name" })
+
+
+                        </div>
+                        <div class="col-lg-2">
+
+                            <button class="btn btn-xs btn-primary selectReferprovider" onclick="searchreferringprovider()">Search</button>
+                        </div>
+                    </div>
+                    <div class="ReferringProviderNameField" style="display: block;">
+                        <label id="ReferringProvName">@Model.ReferringProvider.ProviderFirstName</label>
+                        <a class="refprov_edit_link btn btn-xs btn-info"><i class="fa fa-edit"></i> Edit</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    Billing Provider
+                    <div class="BillProvSearch" style="display: none;">
+                        <div class="col-lg-10" style="padding-right: 0px; padding-left: 0px;">
+                            @Html.TextBoxFor(m => m.BillingProvider.ProviderFirstName, new { @class = "form-control input-xs non_mandatory_field_halo billprovelement", @placeholder = "Billing Provider Name" })
+
+                        </div>
+                        <div class="col-lg-1">
+                            <button class="btn btn-xs btn-primary selectBillingprovider" onclick="searchbillingprovider()">Search</button>
+                        </div>
+                    </div>
+                    <div class="BillingProviderNameField" style="display: block;">
+                        <label id="BillingProvName">@Model.BillingProvider.ProviderFirstName</label>
+                        <a class="billprov_edit_link btn btn-xs btn-info"><i class="fa fa-edit"></i> Edit</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    Service Facility
+                    <div class="servicefacilitySearch" style="display: none;">
+                        <div class="col-lg-10" style="padding-right: 0px; padding-left: 0px;">
+                            @Html.TextBoxFor(m => m.ServiceFacility.FacilityName, new { @class = "form-control input-xs non_mandatory_field_halo servicefacilityelement", @placeholder = "SERVICE FACILITY" })
+
+
+                        </div>
+                        <div class="col-lg-1">
+
+                            <button class="btn btn-xs btn-primary selectservicefacility" onclick="searchservicefacility()">Search</button>
+                        </div>
+                    </div>
+                    <div class="ServieFacilityNameField" style="display: block;">
+                        <label id="ServiceFacName">@Model.ServiceFacility.FacilityName</label>
+                        <a class="servicefacility_edit_link btn btn-xs btn-info"><i class="fa fa-edit"></i> Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row searchrenderingprovtable" style="padding-right: 10px; margin-top: 10px; display: none;">
+        <div class="col-lg-12">
+            <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped p_body_data_background" id="readytocodeid" style="margin-bottom: 0px;" cellspacing="0">
+                <thead class="theme_thead">
+                    <tr>
+                        <th>Provider NPI</th>
+                        <th>Provider First Name</th>
+                        <th>Provider Last Name</th>
+                        <th>Speciality</th>
+                        <th>Taxonomy Code</th>
+                    </tr>
+                </thead>
+                <tbody id="renderingprovresults">
+                    @foreach (var provider in Model.ProviderList)
+                    {
+                        <tr onclick="renprovselected('@provider.ProviderFirstName')">
+                            <td>@provider.ProviderNPI</td>
+                            <td><a href="javascript:void(0)">@provider.ProviderFirstName</a></td>
+                            <td>@provider.ProviderLastName</td>
+                            <td>@provider.Specialty</td>
+                            <td>@provider.TaxonomyCode</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row searchreferringprovtable" style="padding-right: 10px; margin-top: 10px; display: none;">
+        <div class="col-lg-12">
+            <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped p_body_data_background" id="readytocodeid" style="margin-bottom: 0px;" cellspacing="0">
+                <thead class="theme_thead">
+                    <tr>
+                        <th>Provider NPI</th>
+                        <th>Provider First Name</th>
+                        <th>Provider Last Name</th>
+                        <th>Speciality</th>
+                        <th>Taxonomy Code</th>
+                    </tr>
+                </thead>
+                <tbody id="referringprovresults">
+                    @foreach (var provider in Model.ProviderList)
+                    {
+                        <tr onclick="refprovselected('@provider.ProviderFirstName')">
+                            <td>@provider.ProviderNPI</td>
+                            <td><a href="javascript:void(0)">@provider.ProviderFirstName</a></td>
+                            <td>@provider.ProviderLastName</td>
+                            <td>@provider.Specialty</td>
+                            <td>@provider.TaxonomyCode</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row searchbillingprovtable" style="padding-right: 10px; margin-top: 10px; display: none;">
+        <div class="col-lg-12">
+            <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped p_body_data_background" id="readytocodeid" style="margin-bottom: 0px;" cellspacing="0">
+                <thead class="theme_thead">
+                    <tr>
+                        <th>Provider NPI</th>
+                        <th>Provider First Name</th>
+                        <th>Provider Last Name</th>
+                        <th>Speciality</th>
+                        <th>Taxonomy Code</th>
+                    </tr>
+                </thead>
+                <tbody id="billingprovresults">
+                    @foreach (var provider in Model.ProviderList)
+                    {
+                        <tr onclick="billprovselected('@provider.ProviderFirstName')">
+                            <td>@provider.ProviderNPI</td>
+                            <td><a href="javascript:void(0)">@provider.ProviderFirstName</a></td>
+                            <td>@provider.ProviderLastName</td>
+                            <td>@provider.Specialty</td>
+                            <td>@provider.TaxonomyCode</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row searchservicefacilitytable" style="padding-right: 10px; margin-top: 10px; display: none;">
+        <div class="col-lg-12">
+            <table class="table table-striped table-hover table-responsive custom-thead-back custom-thead-font custom-tbody custom-table-striped p_body_data_background" id="readytocodeid" style="margin-bottom: 0px;" cellspacing="0">
+                <thead class="theme_thead">
+                    <tr>
+                        <th>Facility Id</th>
+                        <th>Facility Name</th>
+                        <th>Facility Address</th>
+                    </tr>
+                </thead>
+                <tbody id="servicefacilityresults">
+                    @foreach (var facility in Model.FacilityList)
+                    {
+                        <tr onclick="servfacilityselected('@facility.FacilityName')">
+                            <td>@facility.FacilityID</td>
+                            <td>@facility.FacilityName</td>
+                            <td>@facility.FacilityAddress</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+        <div class="col-lg-12">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.DOSFrom, new { @class = "enlabelheader" })
+                <div>
+                    @Html.TextBoxFor(m => m.DOSFrom, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "mm/dd/yyyy" })
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.DOSTo, new { @class = "enlabelheader" })
+                <div>
+                    @Html.TextBoxFor(m => m.DOSTo, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "mm/dd/yyyy" })
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.PlaceOfService.Name, new { @class = "enlabelheader" })
+                <div>
+                    <input list="pos" value="@Model.PlaceOfService.Name" class="form-control input-xs non_mandatory_field_halo">
+                    <datalist id="pos">
+                        <option value="@Model.PlaceOfService.Name"></option>
+                        <option value="11-Office"></option>
+                        <option value="22-Outpatient Hospital"></option>
+                        <option value="31-SNF"></option>
+                    </datalist>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.NextAppointmentDate, new { @class = "enlabelheader" })
+                <div>
+                    @Html.TextBoxFor(m => m.NextAppointmentDate, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "mm/dd/yyyy" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:15px;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.CheckInTime, new { @class = "enlabelheader" })
+                <div>
+                    @Html.TextBoxFor(m => m.CheckInTime, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "HH:MM" })
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.CheckOutTime, new { @class = "enlabelheader" })
+                <div>
+                    @Html.TextBoxFor(m => m.CheckOutTime, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "HH:MM" })
+
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.VisitLength, new { @class = "enlabelheader" })
+                <div>
+                    <input list="Visitlength" placeholder="Length" class="form-control input-xs non_mandatory_field_halo">
+                    <datalist id="Visitlength">
+                        <option value="15 min"></option>
+                        <option value="30 min"></option>
+                        <option value="45 min"></option>
+                        <option value="60 min"></option>
+                    </datalist>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                @Html.LabelFor(m => m.ReasonForVisit, new { @class = "enlabelheader" })
+                <div>
+                    @Html.TextBoxFor(m => m.ReasonForVisit, new { @class = "form-control input-xs non_mandatory_field_halo", @placeholder = "Reason" })
+
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>

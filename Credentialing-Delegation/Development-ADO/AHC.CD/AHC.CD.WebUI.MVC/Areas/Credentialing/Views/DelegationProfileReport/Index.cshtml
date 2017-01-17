@@ -1,0 +1,136 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/Content/SharedCss/bootstrap-duallistbox.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/select2/select2.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+<script src="~/Areas/Credentialing/Scripts/CnDJS.js"></script>
+<script src="~/Areas/Credentialing/Scripts/DelegationProfileReport.js"></script>
+
+
+<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+
+<style>
+    td {
+        padding: 10px;
+        border-spacing: 2px;
+        border-collapse: separate;
+    }
+
+        
+</style>
+<script type="text/javascript">
+
+    function PrintElem(elem) {
+        Popup($(elem).html());
+    }
+
+    function Popup(data) {
+        var mywindow = window.open('', data, 'height=800,width=800');
+        mywindow.document.write('<html><head><title></title>');
+        mywindow.document.write('<link rel="stylesheet" href="/Content/SharedCss/bootstrap.min.css" type="text/css" />');
+        mywindow.document.write('<link rel="stylesheet" href="/Content/SharedCss/app.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10
+
+        setTimeout(function () {
+            mywindow.print();
+            mywindow.close();
+        }, 1000);
+        return true;
+    }
+
+</script>
+<img src="~/Areas/Credentialing/img/715.GIF" />
+<div id="page-wrapper" ng-app="cred_SPA_App" ng-controller="delegationProfileCtrl" ng-cloak>
+    <span ng-init="display=true"></span>
+    <span ng-if="edited && display" ng-init="GetProfileDataByIdAsync()"></span>
+    <span ng-if="!edited" ng-init="ViewDelegationProfileReport()"></span>
+    <div class="container-fluid">
+        <div ng-show="showLoading" style="margin-left:45%;margin-top:15%">
+
+            <img src="~/Areas/Credentialing/img/712.GIF" />
+        </div>
+        <div ng-hide="showLoading">
+            <div ng-if="edited">
+                <div>
+                    <a target="_blank" href="/Profile/MasterProfile/ProviderProfile/{{ProfileID}}" class="btn btn-primary btn-xs pull-right"> View Profile</a>
+                </div>
+                <form enctype="multipart/form-data" class="form-style">
+                    <div class="text-center">
+                        <h4>{{templateName}}</h4>
+                    </div>
+                    @Html.Partial("_GeneralInformation")
+                    @Html.Partial("_EducationalInformation")
+                    @Html.Partial("_ProviderInformation")
+                    @Html.Partial("_PracticeInformation")
+                    @Html.Partial("_remarks")
+
+                </form>
+                <a class="btn btn-primary pull-right" ng-click="SaveDelegationProfileReport(remarks,'delegateprof')">Save PDF</a>
+
+                <a class="btn btn-warning" data-toggle="modal" data-target="#cancel">Cancel</a>
+                <br /><br /><br /><br />
+            </div>
+            <div id="delegateprof" style="display:none">
+
+                @Html.Partial("_DisplayForPrint")
+
+            </div>
+            <div ng-if="!edited">
+                <div>
+                    <div class="col-lg-11  zero-padding-left-right-div">
+                        <br />
+                        <a target="_blank" href="/Profile/MasterProfile/ProviderProfile/{{ProfileID}}" class="btn btn-primary btn-xs pull-right">View Profile</a>
+                    </div>
+                    <div class="col-lg-1">
+                        <br />
+                        <a class="btn btn-primary btn-xs pull-right" style="margin-left:10px" ng-click="PrintElem1('delegateprof')">Print<i class="fa fa-print"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    @Html.Partial("_DisplayForPrint")
+                    <a class="btn btn-success pull-right" ng-if="ViewOnlyMode" ng-click="showEditDiv()">Edit</a>
+                    <a class="btn btn-warning" data-toggle="modal" data-target="#cancel">Cancel</a>
+                    <br /><br /><br /><br />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @* model *@
+    <div class="modal fade" id="cancel" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button type="button" ng-disabled="saving" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="panel-body">
+                    Do you want to cancel the process?
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal" ng-click="GoToLOB()" style="margin-left:10px">Yes</button>
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">No</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* model *@
+</div>
+

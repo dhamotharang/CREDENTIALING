@@ -1,0 +1,310 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<br />
+@model AHC.CD.WebUI.MVC.Areas.Profile.Models.HospitalPrivilege.HospitalPrivilegeInformationViewModel
+<div class="panel-group" ng-controller="hospitalcltr">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="HospitalInformationPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                Hospital Privilege Information
+            </legend>
+            <div ng-hide="visibilityControl=='_EditHospitalPrivilegeInformation' || !HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption" class="legend2 pull-right">
+                <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-if="contractInfoes[0].ContractGroupInfoes.length> 0" ng-click="printData('Profile_GroupInformation','GroupInformation')"><i class="fa fa-print"></i></button> 
+                <button id="editHospitalPrivyesNo" ng-click="operateEditControl('_EditHospitalPrivilegeInformation',HospitalPrivilegeInformations)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+            </div>
+            <div class="col-lg-12">
+                <table ng-show="!HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption && visibilityControl!='_EditHospitalPrivilegeInformation'" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>
+                                No Data Available for Hospital Privileges!
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                                {
+                                    <span>
+                                        Please click on <button class="btn btn-xs btn-success" ng-click="operateEditControl('_EditHospitalPrivilegeInformation',HospitalPrivilegeInformations)" data-toggle="tooltip" data-placement="top" title="Add New">
+                                            <i class="fa fa-plus"></i>
+                                        </button> to add new Hospital Privilege Information.
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-md-12" ng-hide="visibilityControl=='_EditHospitalPrivilegeInformation'">
+                <div class="col-lg-12 zero-padding-left-right-div" ng-hide="!HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption">
+                    <div class="form-group col-md-6 zero-padding-left-right-div">
+                        @Html.LabelFor(model => model.HospitalPrivilegeYesNoOption, new { @class = "control-label small" })
+                        <div>
+                            <i class="small">{{{'1':'YES', '2':'NO'}[HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption]}}</i>
+                        </div>
+                    </div>
+                    <div ng-show="HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption=='2'" class="form-group col-md-6">
+                        @Html.LabelFor(model => model.OtherAdmittingArrangements, new { @class = "control-label small" })
+                        <div class="wrap-words">
+                            {{HospitalPrivilegeInformations.OtherAdmittingArrangements || 'Not Available'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div ng-show="activeMessageDiv=='alertHospitalPrivilegeInformation'" class="alert alert-{{messageType}}" role="alert">
+                    <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='removeHospitalPrivilegeInformation'">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        Error Lists :<br />
+                        <span ng-repeat="err in errorHospitalPrivilegeInformation track by $index">{{err}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" ng-show="visibilityControl=='_EditHospitalPrivilegeInformation'">
+                <form id="hospitalPrivilegeInfoForm">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+                    <span ng-if="HospitalPrivilegeInformations.HospitalPrivilegeInformationID">
+                        @Html.HiddenFor(model => model.HospitalPrivilegeInformationID, new { ng_value = "HospitalPrivilegeInformations.HospitalPrivilegeInformationID" })
+                    </span>
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <div class="form-group col-md-6 zero-padding-left-right-div">
+                            @Html.LabelFor(model => model.HospitalPrivilegeYesNoOption, new { @class = "control-label small" })
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButtonFor(model => model.HospitalPrivilegeYesNoOption, "1", new { data_ng_model = "tempObject.HospitalPrivilegeYesNoOption" }) Yes
+                                </label>
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(model => model.HospitalPrivilegeYesNoOption, "2", new { data_ng_model = "tempObject.HospitalPrivilegeYesNoOption" }) No
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.HospitalPrivilegeYesNoOption, "", new { @class = "text-danger" })
+                        </div>
+                        <div ng-show="tempObject.HospitalPrivilegeYesNoOption=='2'" class="form-group col-md-6 zero-padding-left-right-div">
+                            @Html.LabelFor(model => model.OtherAdmittingArrangements, new { @class = "control-label small" })
+                            @Html.TextAreaFor(model => model.OtherAdmittingArrangements, new { @class = "form-control input-sm  wrap-words", data_ng_model = "tempObject.OtherAdmittingArrangements" })
+                            @Html.ValidationMessageFor(model => model.OtherAdmittingArrangements, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div ng-show="activeMessageDiv=='alertHospitalPrivilegeInformation'" class="alert alert-{{messageType}}" role="alert">
+                        <button ng-click="closeAlertMessage()" class="close"><span>&times;</span></button>
+                        {{messageDesc}}
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-12 zero-padding-left-right-div">
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                        <button class="btn btn-primary pull-right" ng-click="saveHopitalPrivilegeInformation(tempObject)">Update</button>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+    </div>
+    <div class="form-style" ng-show="HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption=='1'">
+        <fieldset>
+            <legend>
+                <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="HospitalPrivilegeInformationPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+                Hospital Privilege Detail
+            </legend>
+            <div class="pull-right legend2">
+                @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="HospitalPrivilegeInformations.HospitalPrivilegeDetails.length <= 0" ng-click="downloadTableData('Profile_HospitalPrivilegeDetail', 'Hospital Privilege Detail')"><i class="fa fa-download"></i></button>*@
+                <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="HospitalPrivilegeInformations.HospitalPrivilegeDetails.length <= 0" ng-click="printData('Profile_HospitalPrivilegeDetail','Hospital Privilege Detail')"><i class="fa fa-print"></i></button>
+                <button type="button" ng-click="showHospitalHistory()" class="btn btn-xs btn-warning" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-clock-o"></i></button>
+            </div>
+            <div id="hospital1" class="panel-body">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-hide="HospitalPrivilegeInformations.HospitalPrivilegeDetails.length > 0 || visibilityControl=='addhospitalPrivilegeInformation'" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No Data Available for Hospital Privilege Detail!
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                        {
+                                        <span>Please click on <button id="noDataAddNewHospitalPriv" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addhospitalPrivilegeInformation')" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button> to add new Hospital Privilege Detail information.</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-if="HospitalPrivilegeInformations.HospitalPrivilegeDetails" ng-hide="HospitalPrivilegeInformations.HospitalPrivilegeDetails.length <= 0" class="table table-bordered table-condensed customtbodyStyle" id="Profile_HospitalPrivilegeDetail">
+                            <thead>
+                                <tr>
+                                    <th>Hospital Name</th>
+                                    <th>Specialty</th>
+                                    <th>Street/P. O. Box No:</th>
+                                    <th>Contact Person</th>
+                                    <th>Primary</th>
+                                    <th class="hideData">Document</th>
+                                    <th class="col-sm-1 hideData">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="hospitalPrivilegeInformation in HospitalPrivilegeInformations.HospitalPrivilegeDetails track by $index">
+                                <tr ng-class="{'1':'isprimary', '2':''}[hospitalPrivilegeInformation.PreferenceType]">
+                                    <td>{{hospitalPrivilegeInformation.Hospital.HospitalName || 'Not Available'}}</td>
+                                    <td>{{getSpecialityForProvider(hospitalPrivilegeInformation.SpecialtyID).Specialty.Name || 'Not Available'}}</td>
+                                    <td>{{hospitalPrivilegeInformation.HospitalContactInfo.Street || 'Not Available'}}</td>
+                                    <td>{{hospitalPrivilegeInformation.HospitalContactPerson.ContactPersonName || 'Not Available'}}</td>
+                                    <td><i class="data-label " ng-class="{'1':'fa fa-check', '2':'fa fa-times'}[hospitalPrivilegeInformation.PreferenceType]"></i>@*{{hospitalPrivilegeInformation.PreferenceType || 'Not Available'}}*@</td>
+                                    <td class="hideData"><span ng-show="hospitalPrivilegeInformation.HospitalPrevilegeLetterPath==null">Not Available</span><a ng-hide="hospitalPrivilegeInformation.HospitalPrevilegeLetterPath==null" href="/Document/View?path={{hospitalPrivilegeInformation.HospitalPrevilegeLetterPath}}" tooltip data-toggle="tooltip" data-placement="top" title="Hospital Privilege Document" target="_blank"><i class="fa fa-file"></i></a></td>
+                                    <td class="col-lg-2 hideData">
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewhospitalPrivilegeInformation')" ng-hide="viewShowHosPrv" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_edithospitalPrivilegeInformation',hospitalPrivilegeInformation)" ng-hide="editShowHosPrv" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                        }
+                                        <button class="btn btn-xs btn-default" ng-click="operateRenewControl($index+'_renewhospitalPrivilegeInformation',hospitalPrivilegeInformation); RenewDiv(hospitalPrivilegeInformation);" ng-hide="renewHosPrv" tooltip data-toggle="tooltip" data-placement="top" title="Renew"><i class="fa fa-repeat"></i></button>
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-danger" ng-disabled="hospitalPrivilegeInformation.PreferenceType == '1'" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initHospitalPrivilegeWarning(hospitalPrivilegeInformation);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                            <button class="btn btn-xs btn-success text-right" id="addNewHospitalPriv" ng-hide="$index+1!=HospitalPrivilegeInformations.HospitalPrivilegeDetails.length" ng-click="operateViewAndAddControl('addhospitalPrivilegeInformation')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                {
+                                    <tr ng-show="visibilityControl==($index+'_viewhospitalPrivilegeInformation')" class="hideData">
+                                        <td colspan="7" class="editTableDataStyle">
+                                            @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_ViewHospitalPriviledge.cshtml")
+                                        </td>
+                                    </tr>
+                                }
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
+                                {
+                                    <tr ng-show="visibilityControl==($index+'_edithospitalPrivilegeInformation')" class="hideData">
+                                        <td colspan="7" id="hospitalPrivilegeInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                            <fieldset>
+                                                <legend>
+                                                    Edit Hospital Privilege Information
+                                                </legend>
+                                                @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_AddEditHospitalPriviledge.cshtml")
+                                            </fieldset>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr ng-show=" visibilityControl == ($index+'_renewhospitalPrivilegeInformation')">
+                                    <td colspan="7" id="hospitalPrivilegeInformationRenewDiv{{$index}}" class="editTableDataStyle">
+                                        <fieldset>
+                                            <legend>
+                                                Renew Hospital Privilege Information
+                                            </legend>
+                                            @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_RenewHospitalPrivilegeInfo.cshtml")
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div ng-if="activeMessageDiv=='addedNewHospitalPrivilege'" class="alert alert-success" role="alert">
+                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
+                    {
+                    <fieldset ng-if="visibilityControl=='addhospitalPrivilegeInformation'">
+                        <legend>
+                            Add Hospital Privilege Information
+                        </legend>
+                        <div id="newShowHosPrvDiv">
+                            @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_AddEditHospitalPriviledge.cshtml")
+                        </div>
+                    </fieldset>
+                    }
+                </div>
+            </div>
+        </fieldset>
+        <div class="modal fade" id="hospitalPrivilegeWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="removeHospitalPrivilege">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                        </div>
+                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                            <div style="margin-top:2%;">
+                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                            </div>
+                        </div>
+                        <div class="modal-body" ng-show="!isRemoved">
+                            Do you really want to remove <b>{{tempHospitalPrivilege.Hospital.HospitalName}} - {{tempHospitalPrivilege.HospitalContactInfo.LocationName}}</b> from your Hospital Privilege list ?
+                            <input type="hidden" name="HospitalPrivilegeDetailID" value="{{tempHospitalPrivilege.HospitalPrivilegeDetailID}}" />
+                            <input type="hidden" name="StatusType" value="2" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="removeHospitalPrivilege(HospitalPrivilegeInformations.HospitalPrivilegeDetails)">Remove</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <fieldset ng-if="showHospitalHistoryTable">
+            <legend>
+                Hospital Privilege Detail History
+            </legend>
+            <div class="pull-right legend2">
+                @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="HospitalPrivilegeDetailsHistory.length <= 0" ng-click="downloadTableData('Profile_HospitalPrivilegeDetailHistory', 'Hospital Privilege Detail History')"><i class="fa fa-download"></i></button>*@
+                <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="HospitalPrivilegeDetailsHistory.length <= 0" ng-click="printData('Profile_HospitalPrivilegeDetailHistory','Hospital Privilege Detail History')"><i class="fa fa-print"></i></button>
+                <button type="button" ng-click="cancelHospitalHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
+            </div>
+            <div class="panel-body">
+                <div class="form-style">
+                    <div class="col-lg-12 zero-padding-left-right-div">
+                        <table ng-hide="HospitalPrivilegeDetailsHistory.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        No History Available for Hospital Privilege Details!
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table ng-hide="HospitalPrivilegeDetailsHistory.length <= 0" class="table table-bordered table-striped table-condensed customtbodyStyle" id="Profile_HospitalPrivilegeDetailHistory">
+                            <thead>
+                                <tr>
+                                    <th>Hospital Name</th>
+                                    <th>Specialty</th>
+                                    <th>Street/P. O. Box No:</th>
+                                    <th>Contact Person</th>
+                                    <th class="hideData">Document</th>
+                                    <th>Status</th>
+                                    <th class="col-sm-1 hideData">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="hospitalPrivilegeInformationHistory in HospitalPrivilegeDetailsHistory track by $index">
+                                <tr>
+                                    <td>{{hospitalPrivilegeInformationHistory.Hospital.HospitalName || 'Not Available'}}</td>
+                                    <td>{{getSpecialityForProvider(hospitalPrivilegeInformationHistory.SpecialtyID).Specialty.Name || 'Not Available'}}</td>
+                                    <td>{{hospitalPrivilegeInformationHistory.HospitalContactInfo.Street || 'Not Available'}}</td>
+                                    <td>{{hospitalPrivilegeInformationHistory.HospitalContactPerson.ContactPersonName || 'Not Available'}}</td>
+                                    <td class="hideData"><span ng-show="hospitalPrivilegeInformationHistory.HospitalPrevilegeLetterPath==null">Not Available</span><a ng-hide="hospitalPrivilegeInformationHistory.HospitalPrevilegeLetterPath==null" href="/Document/View?path={{hospitalPrivilegeInformationHistory.HospitalPrevilegeLetterPath}}" tooltip data-toggle="tooltip" data-placement="top" title="Hospital Privilege Document" target="_blank"><i class="fa fa-file"></i></a></td>
+                                    <td>{{hospitalPrivilegeInformationHistory.HistoryStatus}}</td>
+                                    <td class="col-lg-2 hideData">
+                                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                        {
+                                            <button class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewhospitalPrivilegeInformationHistory')" ng-hide="viewShowHosPrv" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, true))
+                                {
+                                    <tr ng-show="visibilityControl==($index+'_viewhospitalPrivilegeInformationHistory')" class="hideData">
+                                        <td colspan="7" class="editTableDataStyle">
+                                            @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_ViewHospitalPrivilegeHistory.cshtml")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

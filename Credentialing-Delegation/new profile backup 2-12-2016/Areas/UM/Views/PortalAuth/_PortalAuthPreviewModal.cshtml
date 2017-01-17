@@ -1,0 +1,421 @@
+﻿@model PortalTemplate.Areas.UM.Models.Authorization.AuthorizationViewModel
+
+<style>
+    .preAuthTable > thead > tr > th {
+        border: 1px solid #4484bb !important;
+    }
+    .preAuthTable > tbody > tr > td {
+        border: 1px solid #4484bb !important;
+    }
+</style>
+<div class="PortalAuthPreviewModal" id="PortalAuthPreviewModal">
+        <div class="headerzero_padding_bottom">
+            <div class="col-md-12 text-center theme_label">
+                <img src="/Resources/Images/Common/ahc_logo.png" class="pull-left" style=" width: 140px; height: 68px;">
+                <h3>
+                    <b style="">PRIOR AUTHORIZATION</b>
+                </h3>
+            </div>
+            <div class="col-lg-12 theme_label"><center>SUBMITTED BY: <b>BARBARA JOY</b></center></div>
+        </div>
+        <div class="uppercase previewModalStyle text-uppercase">
+            <div class="row col-md-12 heading-block">
+                <center><b>BASIC DETAILS</b></center>
+            </div>
+            <div class="zero-padding-left-right">
+                <div class="col-lg-10">
+                    <span class="col-lg-5 zero-padding-left-right theme_label">
+                        <b class="">AUTHORIZATION TYPE</b>
+                    </span>
+                    <div class="col-lg-4 ">
+                        <input type="radio" 
+                               name="RequestType" 
+                               value="Standard" 
+                               class="checkbox-radio" 
+                               checked>
+                        <label for="standard" class="theme_label_data"><span></span>STANDARD</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="radio" 
+                               name="RequestType" 
+                               value="Expedited" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="expedited" class="theme_label_data"><span></span>EXPEDITED</label>
+                    </div>
+                </div>
+            </div>
+            <!-----member info details-->
+            <div class="row col-md-12 heading-block">
+                <center><b>MEMBER INFORMATION</b></center>
+            </div>
+            <div class="zero-padding-left-right">
+                <div class="col-lg-6">
+                    <span class="theme_label">Member ID:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Member.SubscriberID)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Requested Date:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ReceivedDate)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Last Name:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Member.Name)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">First Name:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">-</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Phone Number:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Member.MemberInformation.ContactViewModel.PrimaryContact)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Date of Birth:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Member.DateOfBirth)</span></span>
+                </div>
+            </div>
+
+            <!------start of provider details-->
+            <div class="row col-md-12 heading-block">
+                <center>
+                    <b>REQUESTING PROVIDER</b>
+                    <a class="label label-success marginleft-10px">IN</a>
+                </center>
+
+            </div>
+            <div class="zero-padding-left-right">
+                <div class="col-lg-6">
+                    <span class="theme_label">First Name:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.RequestingProvider.FirstName)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Last Name:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.RequestingProvider.LastName)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">TaxID/NPI ID:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.RequestingProvider.TaxID)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <div class="summary_data">
+                        <span class="theme_label pull-left">Type:</span>
+                        <span class="col-lg-4 ">
+                            <input type="radio" 
+                                   name="PriorAuthorization.IsPCP" 
+                                   value="Standard" 
+                                   class="checkbox-radio" 
+                                   checked>
+                            <label for="standard" class="theme_label_data"><span></span>PCP</label>
+                        </span>
+                        <span class="col-lg-4">
+                            <input type="radio" 
+                                   name="PriorAuthorization.IsPCP" 
+                                   value="Expedited" 
+                                   class="checkbox-radio" 
+                                   onclick="return false">
+                            <label for="expedited" class="theme_label_data"><span></span>SPECIALIST</label>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Phone Number:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.RequestingProvider.PhoneNumber)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Fax Number:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.RequestingProvider.FaxNumber)</span></span>
+                </div>
+            </div>
+
+            <!--Start of Servicing Provider Details-->
+            <div class="row col-md-12 heading-block">
+                <center>
+                    <b>REFFERED TO/SERVICING PROVIDER</b>
+                </center>
+            </div>
+            <div class="zero-padding-left-right">
+                <div class="col-lg-6">
+                    <span class="theme_label">Practitioner Name:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ServiceProvider.FirstName) @Html.DisplayFor(e => e.ServiceProvider.LastName)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Tax ID/NPI:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ServiceProvider.TaxID)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Speciality:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ServiceProvider.Speciality)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Contact Name</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ServiceProvider.ContactName)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Phone Number</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ServiceProvider.PhoneNumber)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Fax Number</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ServiceProvider.FaxNumber)</span></span>
+                </div>
+            </div>
+            <!------------Start of Facility Details-->
+            <div class="row col-md-12 heading-block">
+                <center>
+                    <b>FACILITY</b>
+                    <a class="label label-success marginleft-10px">IN</a>
+                </center>
+            </div>
+            <div class="zero-padding-left-right">
+                <div class="col-lg-6">
+                    <span class="theme_label">Facility Name</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Facility.FullName)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Tax ID/NPI:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Facility.TaxID)</span></span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Facility Type</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Facility.FacilityType)</span>
+                    </span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Contact Name</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Facility.ContactName)</span>
+                    </span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Phone Number</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Facility.PhoneNumber)</span>
+                    </span>
+                </div>
+                <div class="col-lg-6">
+                    <span class="theme_label">Fax Number</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.Facility.FaxNumber)</span>
+                    </span>
+                </div>
+            </div>
+
+            <!------------start of Service Requested-->
+            <div class="row col-md-12 heading-block">
+                <center><b>SERVICE REQUESTED</b></center>
+            </div>
+            <div class="zero-padding-left-right">
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" checked>
+                        <label for="standard" class="theme_label"><span></span>IN-OFFICE</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>FREE STANDING FACILITY</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>DIALYSIS</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>THERAPY</label>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>OBSERVATION</label>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>REHAB FACILITY</label>
+                    </div><div class="col-lg-3">
+                              <input type="radio" 
+                                     name="PlaceOfService" 
+                                     class="checkbox-radio" 
+                                     onclick="return false">
+                              <label for="standard" class="theme_label"><span></span>Hospice</label>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>In-Patient Hospital</label>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>SNF</label>
+                    </div><div class="col-lg-3">
+                              <input type="radio" 
+                                     name="PlaceOfService" 
+                                     class="checkbox-radio" 
+                                     onclick="return false">
+                              <label for="standard" class="theme_label"><span></span>DME</label>
+                    </div>
+                </div><div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>Out-patient Hospital</label>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <input type="radio" 
+                               name="PlaceOfService" 
+                               class="checkbox-radio" 
+                               onclick="return false">
+                        <label for="standard" class="theme_label"><span></span>Home Health</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <!------------start of Planned Date of Service-->
+            <div class="row col-md-12 heading-block">
+                <center><b>Planned Date of Service</b></center>
+            </div>
+            <div class="zero-padding-left-right">
+                <div class="col-lg-4">
+                    <span class="theme_label">From:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data ">@Html.DisplayFor(e => e.FromDate)</span></span>
+                </div>
+                <div class="col-lg-4">
+                    <span class="theme_label">To:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ToDate)</span>
+                    </span>
+                </div>
+                <div class="col-lg-4">
+                    <span class="theme_label">Appointment Date:</span>
+                    <span class="summary_data"><span class="text-uppercase theme_label_data">@Html.DisplayFor(e => e.ReceivedDate)</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-------start of Primary DX-->
+            <div class="row col-md-12 heading-block">
+                <center><b>Primary ICD</b></center>
+            </div>
+            <div class="row col-md-12">
+                <table class="table wrap-words table_align_middle table_custom_th_border_right preAuthTable" style="padding-bottom:0">
+                    <thead>
+                        <tr>
+                            <th class="width_25 theme_label">PR DX</th>
+                            <th class="width_75 theme_label">PR DX DESC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ICDCodes.Count() > 0)
+                        {
+                            foreach (var e in Model.ICDCodes)
+                            {
+                                <tr>
+                                    <td class="width_25 theme_label_data">@e.ICDCode</td>
+                                    <td class="width_75 theme_label_data">@e.ICDCodeDescription</td>
+                                </tr>
+                            }
+                        }
+                        @if (Model.ICDCodes.Count() <= 0)
+                        {
+                            <tr>
+                                <td colspan="2" class="text-center">NO DATA AVAILABLE </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-------start of CPT-->
+            <div class="row col-md-12 heading-block">
+                <center><b>CPT/HCPCS CODE</b></center>
+            </div>
+            <div class="row col-md-12">
+                <table class="table wrap-words table_align_middle table_custom_th_border_right preAuthTable" style="padding-bottom:0">
+                    <thead>
+                        <tr>
+                            <th class="width_15 theme_label">CPT/HCPCS</th>
+                            <th class="width_70 theme_label">DESC</th>
+                            <th class="width_15 theme_label">TOTAL UNITS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.CPTCodes.Count() > 0)
+                        {
+                            foreach (var e in Model.CPTCodes)
+                            {
+                                <tr>
+                                    <td class="width_15 theme_label_data">@e.CPTCode</td>
+                                    <td class="width_70 theme_label_data">@e.CPTDesc</td>
+                                    <td class="width_15 theme_label_data">@e.TotalUnits</td>
+                                </tr>
+                            }
+                        }
+                        @if (Model.CPTCodes.Count() <= 0)
+                        {
+                            <tr>
+                                <td colspan="2" class="text-center">NO DATA AVAILABLE </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-------start of CPT-->
+            <div class="row col-md-12 heading-block">
+                <center><b>Notes</b></center>
+            </div>
+            <div class="row col-lg-12">
+                <textarea id="" rows="4" cols="170" style="resize: none; font-size:inherit;" class="form-control input-xs read_only_field" data-content="Could not paste text as it is exceeding<br>maximum word's limit of textarea." data-container="body" data-original-title="Cannot Paste Text" readonly></textarea>
+            </div>
+
+            <!------Disclaimer-->
+            <div class="row col-md-12" style="">
+                <span style="color:red">
+                    Authorizations will be given for medically necessary services only. This request cannot be processed without supporting documentation such as office visit notes, pertinent laboratory data, prior treatment note(s), etc. Payment is subject to verification of member eligibility, benefit coverage and appropriate coding guidelines. Emergencies do not require prior authorization.
+                </span>
+
+            </div>
+            <div class="row col-md-12">
+                <span style="font-size: 12px;text-transform: none;">
+                    <span style="font-weight: bold;" class="bold">Confidentiality Notice:</span>
+                    <span>
+                        This facsimile and/or email message, including any attachments, is for the sole use of the intended recipient(s) and may contain confidential and privileged information or otherwise be protected by law. Any unauthorized review, use, disclosure or distribution is prohibited. If you are not the intended recipient, please contact the sender by reply email and destroy all copies of the original message.
+                    </span>
+                </span>
+                <br><br>
+            </div>
+        </div>
+        <div class="footer">
+            <span>
+                <button class="btn btn-sm btn-success pull-right confirmPreauthReqBtn" onclick="ConfirmPreAuthRequest()">Confirm</button>
+            </span>
+            <button class="btn btn-sm btn-danger pull-right" onclick="$('.modal_background').click();">Cancel</button>
+        </div>
+</div>
+

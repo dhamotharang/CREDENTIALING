@@ -1,0 +1,128 @@
+﻿@model IEnumerable<PortalTemplate.Areas.UM.Models.ViewModels.Authorization.ODAGViewModel>
+@using PratianUI
+<p-link filepath="~/Areas/UM/Styles/Common/Odag.css"></p-link>
+
+<div class="x_content" id="ODAGContainerDiv">
+    <div id="ODAGmainDiv" class="ODAGMainClass displayNone">
+        <div class="col-lg-12" id="odagQuestionContent">
+            @{int index = 0;}
+            @foreach (var value in Model)
+            {
+                <div class="col-lg-3">
+                    <b class="font-size-odag-100 theme_label question-description"> @value.Description </b><br>
+                    <input type="hidden" name="ODAGs[@index].QuestionID" value="@value.QuestionID">
+                    <input type="hidden" name="ODAGs[@index].Description" value="@value.Description">
+                    <input type="hidden" name="ODAGs[@index].QuestionType" value="@value.QuestionType">
+                    @if (value.QuestionType == "Single Choice Question")
+                    {
+
+
+                        int innerIndex = 0;
+                        var nameField = "ODAGs[" + index + "].OptionAnswer";
+                        foreach (var innerValue in value.Options)
+                        {
+                            var radioClass = "radio-inline radioStyle  font-size-odag-100 theme_label_data";
+                            var odagStyleClass = "ClassSuccess";
+                            if (innerIndex == 0)
+                            {
+                                odagStyleClass = "ClassSuccess";
+                                radioClass = "font-size-odag-100 theme_label_data";
+                            }
+                            if (innerIndex == 1)
+                            {
+                                odagStyleClass = "ClassDanger";
+                            }
+                            if (innerIndex == 2)
+                            {
+                                odagStyleClass = "ClassPrimary";
+                            }
+                            var buttonId = "radio" + index + "" + innerIndex;
+                            
+                            var optionsnameFieldID = "ODAGs[" + index + "].Options[" + innerIndex + "].OptionID";
+
+                            var optionsnameFieldValue = "ODAGs[" + index + "].Options[" + innerIndex + "].Value";
+                            
+                            @Html.PratianUiSquareRadioButton(innerValue.Value, new { @name = nameField, @class = odagStyleClass, @value = innerValue.Value, @labelClass = radioClass })
+                          <input type="hidden" name="@optionsnameFieldID" value="@innerValue.OptionID">
+                        <input type="hidden" name="@optionsnameFieldValue" value="@innerValue.Value">
+                           
+                           innerIndex++;
+                        }
+                         @Html.PratianUiSquareRadioButton("NULL", new { @name = nameField, @value = "", @class = "displayNoneOdag", @labelClass = "displayNoneOdag" })
+                         var nameFieldClose = nameField + "_close";
+                            <span class="btn theme_label_data negativeMargin15px pull-right closeFieldElement" id="@nameFieldClose"><i class="fa fa-close "></i> </span>
+                    }
+                    else if (value.QuestionType.ToLower() == "ObjectiveWithDateTime".ToLower())
+                    {
+
+
+                        int innerIndex = 0;
+                        var nameField = "ODAGs[" + index + "].OptionAnswer";
+                        foreach (var innerValue in value.Options)
+                        {
+                            var radioClass = "radio-inline radioStyle  font-size-odag-100 theme_label_data";
+                            var odagStyleClass = "ClassSuccess";
+                            if (innerIndex == 0)
+                            {
+                                odagStyleClass = "ClassSuccess";
+                                radioClass = "font-size-odag-100 theme_label_data";
+                            }
+                            if (innerIndex == 1)
+                            {
+                                odagStyleClass = "ClassDanger";
+                            }
+                            if (innerIndex == 2)
+                            {
+                                odagStyleClass = "ClassPrimary";
+                            }
+                            var buttonId = "radio" + index + "" + innerIndex;
+                           
+                            var optionsnameFieldID = "ODAGs[" + index + "].Options[" + innerIndex + "].OptionID";
+
+                            var optionsnameFieldValue = "ODAGs[" + index + "].Options[" + innerIndex + "].Value";
+                         
+                                @Html.PratianUiSquareRadioButton(innerValue.Value, new { @name = nameField, @class = odagStyleClass, @value = innerValue.Value, @labelClass = radioClass })
+                         <input type="hidden" name="@optionsnameFieldID" value="@innerValue.OptionID">
+                        <input type="hidden" name="@optionsnameFieldValue" value="@innerValue.Value">
+                            innerIndex++;
+                        }
+                         @Html.PratianUiSquareRadioButton("NULL", new { @name = nameField, @value = "", @class = "displayNoneOdag", @labelClass = "displayNoneOdag" })
+                        var nameDate = "ODAGs[" + index + "].OptionDate";
+                        var nameFieldClose = nameField + "_close";
+                        <div class="theme_label_data col-lg-6 col-at-90  padding-zero-left-right-odag pull-right">
+                            <div class="theme_label_data col-lg-9  padding-zero-left-right-odag">
+                            @Html.PratianUiDateTimePicker("bottom", new { @class = "displayNone form-control input-xs text-uppercase theme_label_data", @placeholder = "MM/DD/YYYY HH:MM:SS", @name = nameDate, @id = nameDate })
+                        </div>
+                            <div class="theme_label_data col-lg-1  col-lg-offset-2 padding-zero-left-right-odag"  >
+                                <span class="btn theme_label_data negativeMargin15px pull-right closeFieldWithDateElement" id="@nameFieldClose"><i class="fa fa-close "></i> </span>  
+                             </div>
+                      </div>
+                        
+                        
+                    }
+                    else if (value.QuestionType.ToLower() == "Descriptive".ToLower())
+                    {
+
+<input name="ODAGs[@index].OptionAnswer" id="ODAGs[@index].OptionAnswer" type="text" class="form-control input-xs text-uppercase theme_label_data read_only_field" autocomplete="off" value="@value.OptionAnswer" readonly="readonly">
+                    }
+                    else if (value.QuestionType.ToLower() == "OnlyDateTime".ToLower())
+                    {
+                        var nameDate = "ODAGs[" + index + "].OptionDate";
+                        @Html.PratianUiDateTimePicker("bottom", new { @class = "form-control input-xs text-uppercase theme_label_data width80", @placeholder = "MM/DD/YYYY HH:MM:SS", @name = nameDate, @id = nameDate })
+                        var nameDateClose = nameDate + "_close";
+<span class="btn theme_label_data negativeMargin28px pull-right closedateElement" id="@nameDateClose"><i class="fa fa-close "></i> </span>
+                    }
+                </div>
+                if (index % 4 == 3)
+                {
+
+                    <div class="clearfix"></div>
+                }
+                index++;
+            }
+
+
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>

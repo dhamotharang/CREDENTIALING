@@ -1,0 +1,73 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.MidLevelPractitionerViewModel
+
+@*ng-if="visibilitySecondControl == 'MidLevelPractitionerEdit'"*@
+<div  id="MidLevelPractitionerDiv">
+    <fieldset>
+        <legend>
+            Add Mid-Level Practitioner
+        </legend>
+        <form id="MidLevelPractitionerForm{{$index}}">
+            <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+                @Html.HiddenFor(model => model.PracticeLocationDetailID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+            </span>
+            <span ng-if="MidLevelPractitioner.ProfileID">
+                @Html.HiddenFor(model => model.ProfileID, new { ng_value = "MidLevelPractitioner.ProfileID" })
+            </span>
+            <span ng-if="MidLevelPractitioner.MidLevelPractitionerID">
+                @Html.HiddenFor(model => model.MidLevelPractitionerID, new { ng_value = "MidLevelPractitioner.MidLevelPractitionerID" })
+            </span>
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <div class="form-group col-md-3">
+                    <label class="control-label small">Select Mid-Level Practitioner </label>
+                    <input type="text" class="form-control input-sm" name="midLevelPractioner" ng-model="practitioner" data-practitioners="midLevelPractitioners" data-onselect="setMidLevelPractitioner" data-autocomplete="practitioner" practitionersearch />
+                </div>
+            </div>
+
+            <div  class="col-md-12 form-group">
+                
+                <table ng-if="!MidLevelPractitioner.PersonalDetail" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>Please select a Mid-Level Practitioner.</td>
+                        </tr>
+                    </thead>
+                </table>
+
+                <table ng-if="MidLevelPractitioner.PersonalDetail" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Middle name</th>
+                            <th>Last Name</th>
+                            <th>NPI Number </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i>{{MidLevelPractitioner.PersonalDetail.FirstName || 'Not Available'}}</i></td>
+                            <td><i>{{MidLevelPractitioner.PersonalDetail.MiddleName || 'Not Available'}}</i></td>
+                            <td><i>{{MidLevelPractitioner.PersonalDetail.LastName || 'Not Available'}}</i></td>
+                            <td><i>{{MidLevelPractitioner.OtherIdentificationNumber.NPINumber || 'Not Available'}}</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div>
+                <input type="hidden" name="StatusType" value="1" />
+            </div>
+            <div class="clearfix"></div>
+            <div ng-show="activeMessageDiv=='midlevelPractionersErrorMsg'" class="alert alert-danger" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                {{messageDesc}}
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 form-group">
+                <button class="btn btn-warning btn-sm" ng-click="MidLevelPractitionerEdit=false; operateThirdCancelControl('MidLevelPractitionerDiv'); resetMidLevelPractitioner();">Cancel</button>
+                <button class="btn btn-success btn-sm pull-right" ng-disabled="!MidLevelPractitioner.PersonalDetail" ng-click="addMidlevelPractioners(PracticeLocationDetail, $index)">Add</button>
+            </div>
+
+        </form>
+    </fieldset>
+</div>

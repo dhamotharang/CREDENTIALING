@@ -1,0 +1,140 @@
+﻿<script src="~/Scripts/Lib/Jquery/select2.min.js"></script>
+<link href="~/Content/SharedCss/select2/select2.css" rel="stylesheet" />
+
+<br />
+@*<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-3">
+        <label class="control-label">Business Entity :</label>
+        <div>
+            <select class="form-control input-sm">
+                <option selected disabled>-Select-</option>
+                <option>Access</option>
+                <option>Access2</option>
+                <option>MIRA</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <label class="control-label">Line Of Business :</label>
+        <div>
+            <select class="zero-padding-left-right-div col-lg-12" id="planLOB" placeholder="-Select LOB-" multiple>
+                <option selected disabled>-Select-</option>
+                <option value="Medicare">Medicare</option>
+                <option value="Medicaid">Medicaid</option>
+                <option value="MedicareCommercial">Medicare Commercial</option>
+                <option value="MedicareRisk">Medicare Risk</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <label class="control-label">Specialty :</label>
+        <div>
+            <select class="zero-padding-left-right-div col-lg-12" id="planSpecialty" placeholder="-Select Specialty-" multiple>
+                <option selected disabled>-Select-</option>
+                <option>Allergy & Immunology</option>
+                <option>Anesthesiology</option>
+                <option> Addiction Medicine</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <label class="control-label">Location :</label>
+        <div>
+            <select class="zero-padding-left-right-div col-lg-12" id="planLoc" placeholder="-Select Location-" multiple>
+                <option selected disabled>-Select-</option>
+                <option>5350 Spring Hill Drive</option>
+                <option>5356 Florida</option>
+            </select>
+        </div>
+    </div>
+</div>*@
+
+<div class="clearfix"></div>
+@*<br />
+<div class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-3 pull-right"><button class="btn btn-xs btn-primary pull-right" onclick="ShowDetailTable();">Add</button></div>
+</div>*@
+
+<div class="col-lg-12 zero-padding-left-right-div" id="LoadPlan">
+    <br />
+    <table class="table table-bordered table-striped table-hover">
+        <!-- ngInclude: templates.header -->
+        <thead>
+            <tr>
+                <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3">Business Entity</th>
+                <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3">Specialty</th>
+                <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Location</th>
+                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Initial Credentialing Date</th>
+                <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Line Of Business</th>
+                <th class="col-lg-2 col-md-2 hidden-sm hidden-xs">Select Template</th>
+                <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Action</th>
+            </tr>
+            <tr>
+                <th class="col-lg-2 col-md-2 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                <th class="col-lg-1 col-md-1 col-sm-3 col-xs-3"><input type="text" class="form-control input-sm"></th>
+                <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><input type="text" class="form-control input-sm"></th>
+                <th class="col-lg-1 col-md-1 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                <th class="col-lg-2 col-md-2 hidden-sm hidden-xs"><input type="text" class="form-control input-sm"></th>
+                <th class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="c in LoadData">
+                <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3">{{c.BusinessEntity}}</td>
+                <td class="col-lg-1 col-md-1 col-sm-3 col-xs-3">{{c.Splty}}</td>
+                <td class="col-lg-2 col-md-2 col-sm-3 col-xs-3">{{c.Loc}}</td>
+                <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">{{c.Date}}</td>
+                <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">{{c.LOB}}</td>
+                <td class="col-lg-2 col-md-2 hidden-sm hidden-xs">
+                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#selectDoc">Select Template</button> <button class="btn btn-xs btn-default"><i class="fa fa-eye"></i></button>
+                </td>
+                <td class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                    @*<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-minus-circle"></i></button>*@
+                    <a class="btn btn-xs btn-primary"><i class="fa fa-envelope"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+    <script>
+        $(document).ready(function () {
+            $('#planLoc').select2();
+            $('#planSpecialty').select2();
+            $('#planLOB').select2();
+
+        });
+
+        var LoadData = [
+    {
+        BusinessEntity: "PCP",
+        Splty: "Ontology",
+        Loc: "5350 Spring Hill Drive",
+        Date: "05-09-2014",
+        Plan: "Wellcare",
+        LOB: "Wellcare Medicare",
+
+    },
+    {
+        BusinessEntity: "PCP",
+        Splty: "Dentist",
+        Loc: "5356 Florida",
+        Date: "05-09-2014",
+        Plan: "Wellcare",
+        LOB: "Wellcare Medicare",
+    },
+    {
+        BusinessEntity: "PCP",
+        Splty: "Ontology",
+        Loc: "5350 Spring Hill Drive",
+        Date: "05-09-2014",
+        Plan: "Wellcare",
+        LOB: "Wellcare Medicare",
+    }
+        ];
+        var ShowDetailTable = function () {
+            $('#LoadPlan').show();
+
+        };
+
+    </script>

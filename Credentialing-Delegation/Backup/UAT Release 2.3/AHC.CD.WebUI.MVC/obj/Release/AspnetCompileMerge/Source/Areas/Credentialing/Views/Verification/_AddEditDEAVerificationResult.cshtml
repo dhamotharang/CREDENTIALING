@@ -1,0 +1,94 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.PSVInfo.ProfileVerificationDetailViewModel
+
+<fieldset>
+    <legend>
+        @*{{lisence.name}}*@
+        <strong>Verification Result</strong>
+    </legend>
+    <div ng-if="lisence.ProfileVerificationDetail.VerificationResult.VerificationResultId">
+        <input type="hidden" name="VerificationResult.VerificationResultId" value="{{lisence.ProfileVerificationDetail.VerificationResult.VerificationResultId}}">
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-3 form-group" ng-init="lisence.ProfileVerificationDetail.VerificationResult.VerificationResultStatusType ==2?lisence.ProfileVerificationDetail.VerificationResult.VerificationResultStatusType = 2:lisence.ProfileVerificationDetail.VerificationResult.VerificationResultStatusType = 1">
+            <label class="control-label small">Status</label><br />
+            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.VerificationResultStatusType)))
+            {
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.VerificationResult.VerificationResultStatusType, (int)value, new { data_ng_model = "lisence.ProfileVerificationDetail.VerificationResult.VerificationResultStatusType" }) @value.ToString()
+                </label>
+            }
+        </div>
+        <div class="col-lg-4 form-group">
+            <span ng-if="!lisence.ProfileVerificationDetail.VerificationDate" ng-init="lisence.ProfileVerificationDetail.VerificationDate = todayDate;">
+            </span>
+            <label class="control-label small">Verified Date</label>
+            @Html.TextBoxFor(model => model.VerificationDate, new { @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_ng_model = "lisence.ProfileVerificationDetail.VerificationDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker" })
+            @*@Html.TextBoxFor(model => model.VerificationDate, new { @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_ng_Model = "lisence.ProfileVerificationDetail.VerificationDate" })*@
+        </div>
+        <div class="col-lg-5 form-group">
+            @*<label class="control-label small">Source</label>
+            @Html.TextBoxFor(model => model.VerificationResult.Source, new { @class = "form-control input-sm", placeholder = "Verification Source", data_ng_Model = "lisence.ProfileVerificationDetail.VerificationResult.Source" })*@
+            <div class="col-lg-12">
+                <label class="control-label small">Source</label>
+            </div>
+            <div class="col-lg-10">
+                <span ng-if="!lisence.ProfileVerificationDetail.VerificationResult" ng-init="lisence.ProfileVerificationDetail={VerificationResult:{}};"></span>
+
+                <input type="text" data-searchdropdown="searchdropdown" class="form-control input-sm" name="VerificationResult.Source" ng-model="lisence.ProfileVerificationDetail.VerificationResult.Source" ng-focus="ShowDivDropDOwn('DEASourceDiv'+$index);" placeholder="Source" />
+                <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="DEASourceDiv{{$index}}" style="margin-top: 30px;">
+                    <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                        <tbody>
+                            <tr ng-repeat="src in filteredSources=(Sources | filter:lisence.ProfileVerificationDetail.VerificationResult.Source)" class="pointer" ng-click="setValue(lisence.ProfileVerificationDetail.VerificationResult,src.Link);">
+                                <td>{{src.Name}}</td>
+
+                            </tr>
+                            <tr ng-if="filteredSources.length == 0">
+                                <td>No data..... </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-2" ng-show="lisence.ProfileVerificationDetail.VerificationResult.Source">
+                <a style="cursor:pointer" ng-click="checkForHttp(lisence.ProfileVerificationDetail.VerificationResult.Source)">Link</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group">
+            <label class="control-label small">Remarks</label>
+            @*<input type="text" class="form-control input-sm" id="exampleInputEmail1" placeholder="Remarks" ng-model="lisence.remarks">*@
+            @Html.TextBoxFor(model => model.VerificationResult.Remark, new { @class = "form-control input-sm", placeholder = "Remarks", data_ng_Model = "lisence.ProfileVerificationDetail.VerificationResult.Remark" })
+
+        </div>
+    </div>
+    <div ng-class="{'col-lg-11':lisence.ProfileVerificationDetail.VerificationResult.VerificationDocumentPath,'col-lg-12':!lisence.ProfileVerificationDetail.VerificationResult.VerificationDocumentPath}">
+        <div class="form-group">
+            <label class="control-label small">Verified Document</label>
+            <div class="fileinput fileinput-new input-group input-group-sm" data-provides="fileinput">
+                @Html.HiddenFor(model => model.VerificationResult.VerificationDocumentPath, new { data_ng_Model = "lisence.ProfileVerificationDetail.VerificationResult.VerificationDocumentPath", ng_value = "lisence.ProfileVerificationDetail.VerificationResult.VerificationDocumentPath" })
+                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                <span class="input-group-addon btn btn-default btn-file">
+                    <span class="fileinput-new">Select Verified Document</span><span class="fileinput-exists">Change</span>@*<input type="file" name="...">*@
+                    @Html.TextBoxFor(model => model.VerificationResult.VerificationResultDocument, new { type = "file", data_ng_Model = "lisence.ProfileVerificationDetail.VerificationResult.VerificationResultDocument" })
+                </span>
+                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>
+            @Html.ValidationMessageFor(model => model.VerificationResult.VerificationResultDocument, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div ng-if="lisence.ProfileVerificationDetail.VerificationResult.VerificationDocumentPath" class="col-lg-1">
+        <br />
+        <a toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="{{lisence.ProfileVerificationDetail.VerificationResult.VerificationDocumentPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <a class="btn btn-success pull-right" ng-show="lisence.AddDiv" ng-click="AddDEAProfileVerificationDetail($index,lisence)" @*ng-click="AddBoardCertificationProfileVerificationDetail($index)"*@>Add</a>
+            <a class="btn btn-primary pull-right" ng-show="lisence.EditDiv" ng-click="UpdateDEAProfileVerificationDetail($index,lisence)" @*ng-click="AddBoardCertificationProfileVerificationDetail($index)"*@>Update</a>
+
+            @*<a class="btn btn-warning pull-left">Cancel</a>*@
+            <a ng-click="lisence.EditDiv=false;lisence.ViewDiv=true;cancelDEA($index)" class="btn btn-warning pull-left">Cancel</a>
+        </div>
+    </div>
+</fieldset>
+

@@ -1,0 +1,122 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.StateLicenseViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+
+<form class="stateLicenseForm">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                State License Information
+            </legend>
+            <div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-md-12">
+                        <div class="col-lg-4 form-group">
+                            @Html.LabelFor(model => model.LicenseNumber, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{StateLicenseInformation.LicenseNumber}}</i>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 form-group">
+                            @Html.LabelFor(model => model.ProviderTypeID, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{StateLicenseInformation.ProviderType.Title}}</i>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 form-group">
+                            @Html.LabelFor(model => model.StateLicenseStatusID, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{StateLicenseInformation.StateLicenseStatus.Title}}</i>
+                            </div>
+                        </div>
+                        </div>
+                  
+                    <div class="col-md-12">
+
+                        <div class="col-lg-4 form-group">
+                            @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{StateLicenseInformation.IssueDate | date: "MM-dd-yyyy"}}</i>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 form-group">
+                            @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{StateLicenseInformation.ExpiryDate | date: "MM-dd-yyyy"}}</i>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 form-group">
+                            @Html.LabelFor(model => model.CurrentIssueDate, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{StateLicenseInformation.CurrentIssueDate | date: "MM-dd-yyyy"}}</i>
+                            </div>
+                        </div>
+
+                    </div>
+                      <div class="col-md-12">
+
+                        <div class="col-md-4 form-group">
+                            @Html.LabelFor(model => model.IssueState, new { @class = "control-label small" })
+                            <div>
+                                <i class="data-label">{{StateLicenseInformation.IssueState}}</i>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            @Html.LabelFor(model => model.IsCurrentPracticeState, new { @class = "control-label small" })
+                            <div>
+                                <i ng-if="StateLicenseInformation.CurrentPracticeStateYesNoOption == 1" class="data-label">Yes</i>
+                                <i ng-if="StateLicenseInformation.CurrentPracticeStateYesNoOption == 2" class="data-label">No</i>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-4">
+                            @Html.LabelFor(model => model.LicenseInGoodStanding, new { @class = "control-label small" })
+                            <div>
+                                <i ng-if="StateLicenseInformation.GoodStandingYesNoOption==1" class="data-label">Yes</i>
+                                <i ng-if="StateLicenseInformation.GoodStandingYesNoOption==2" class="data-label">No</i>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div class="col-lg-12">
+                        
+                        <div class="form-group col-lg-12">
+                            <label class="control-label small">Supporting Document</label>
+                            <div>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                                {
+                                    <i class="data-label"><a href="/Document/View?path={{StateLicenseInformation.StateLicenseDocumentPath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="{{StateLicenseInformation.StateLicenseDocumentPath}}"><i class="fa fa-file">State License Document</i></a></i>
+                                }
+                            </div>
+                        </div>
+                  
+                    </div>
+                    <div class="form-group col-md-12">
+                       
+                         @*<div class="col-md-2 form-group">
+                            <span>@Html.LabelFor(model => model.StateLicenseDocumentPath, htmlAttributes: new { @class = "control-label small" })</span>
+                            <i class="data-label">{{StateLicenseInformation.StateLicenseDocumentPath}}</i>
+
+                        </div>
+                        <div class="col-md-1 form-group">
+                            <div>
+                                <a href="/Content/Document/ATTESTATIONOFSITEVISIT.pdf" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Preview"><i class="fa fa-file"></i></a>
+                            </div>
+                        </div>*@
+                    </div>
+
+                    <div class="col-md-12 form-group">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+                                 {
+                              <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="operateEditControl($index+'_editStateLicenseInformation',StateLicenseInformation)">Edit</button>
+                                     }
+                        </div>
+                    </div>
+                </div>
+</div>
+            </fieldset>
+        </div>
+</form>

@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "CCM COntroller";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+
+    <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    <script src="~/Areas/Credentialing/Scripts/CCM/CCMController.js"></script>
+}
+<div id="page-wrapper">
+    <div class="container-fluid" ng-app="CCMApp" ng-controller="CCMController" ng-cloak>
+        <!-- Page Heading -->
+        <div class="row" ng-cloak>
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> CCM Credentialing Action
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="panel panel-default content-panel">
+                <div class="panel-heading">
+                    CCM Credentialing Action
+                    @*<a style="cursor: pointer; text-decoration: none;" ng-click="getDataByMenu(CCMData[0])" ng-class="{'btn btn-xs btn-info': selectedAction==1}">Credentialing</a> &nbsp;*@
+                    @*<a style="cursor: pointer; text-decoration: none;" ng-click="getDataByMenu(CCMData[1])" ng-class="{'btn btn-xs btn-info': selectedAction==2}">Re-Credentialing</a> &nbsp;
+                        <a style="cursor: pointer; text-decoration: none;" ng-click="getDataByMenu(CCMData[2])" ng-class="{'btn btn-xs btn-info': selectedAction==3}">De-Credentialing</a>*@
+                </div>
+                <div class="panel-body" >
+                    <div ng-show="loadingAjax" class="progress col-lg-12" ng-cloak>
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            Loading...Please wait...
+                        </div>
+                    </div>
+                    <div ng-show="!loadingAjax && data.length<1">
+                        <label>No Pending Request Available.</label>
+                    </div>
+                    <div ng-show="!loadingAjax && data.length>0" ng-cloak>
+                        <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+                            <h4>Select Plan</h4>
+                            <select class="form-control input-sm" ng-model="Plans[$index]" ng-change="getValue(Plans[$index]) ">
+                                <option value="">ALL</option>
+                                <option ng-repeat="c in Plans track by $index">{{c}} </option>
+                            </select>
+                        </div>
+                        <br />
+                        <table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+
+                            <tbody>
+                                <tr ng-repeat="c in $data track by $index" ng-if="PlanNames==c.Plan || PlanNames==''">
+                                    <td class="col-lg-1" data-title="'Picture'">
+                                        <div ng-show="c.ProfilePhoto == null" class="thumbnail imageStyle">
+                                            <img ng-src="/Content/Images/no_image.png" class="img-rounded" />
+                                        </div>
+                                        <div ng-hide="c.ProfilePhoto == null" class="thumbnail imageStyle">
+                                            <img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{c.ProfilePhoto}}" class="img-rounded">
+                                        </div>
+                                    </td>
+                                    <td class=" wrap-words" data-title="'Name'" header-class="text-left" sortable="'Name'" filter="{ 'Name': 'text' }">{{c.Name}}</td>
+                                    <td class=" wrap-words" data-title="'Provider Type'" header-class="text-left" sortable="'ProviderTitle'" filter="{ 'ProviderTitle': 'text' }"><span ng-repeat="d in c.ProviderTitles track by $index"><span ng-if="$index>0">,<br /></span>{{d.ProviderType.Title}}</span></td>
+                                    <td class=" wrap-words" data-title="'Specialty'" header-class="text-left" sortable="'Specialty'" filter="{ 'Specialty': 'text' }"><span ng-repeat="e in c.Specialities track by $index" ng-if="e.Status=='Active'"><span ng-if="$index>0">,<br /></span>{{e.Name}}</span></td>
+                                    @*<td class=" wrap-words" data-title="'Specialty'" header-class="text-left" sortable="'Specialty'" filter="{ 'Specialty': 'text' }">{{c.Specialty}}</td>*@
+                                    <td class=" wrap-words" data-title="'Credentialing Initiated Date'" header-class="text-left" sortable="'CredentialingDate'" filter="{ 'CredentialingDate': 'text' }">{{c.CredentialingDate}}</td>
+                                    <td class=" wrap-words" data-title="'Appointment Date'" header-class="text-left" sortable="'AppointmentDate'" filter="{ 'AppointmentDate': 'text' }">{{c.AppointmentDate}}</td>
+                                    <td class=" wrap-words" data-title="'Recommended Level'" header-class="text-left" sortable="'RecommendedLevel'" filter="{ 'RecommendedLevel': 'text' }">{{c.RecommendedLevel}}</td>
+
+                                    <td>
+                                        <a ng-if="selectedAction==1" class="btn btn-xs btn-info" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/CCM/Application/{{c.CredentialingInfoId}}" data-toggle="tooltip" data-placement="top" title="View Application"><i class="fa fa-caret-right"></i></a>
+                                        <a ng-if="selectedAction==2" class="btn btn-xs btn-info" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/CCM/Application/{{c.CredentialingInfoId}}" target="_blank"><i class="fa fa-caret-right"></i></a>
+                                        <a ng-if="selectedAction==3" class="btn btn-xs btn-info" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/CCM/Application/{{c.CredentialingInfoId}}" target="_blank"><i class="fa fa-caret-right"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

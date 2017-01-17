@@ -1,0 +1,191 @@
+﻿@*@model PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.StateLicense*@
+@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.LicensesViewModel.StateLicense>
+
+@{
+    var StateLicense = 0;
+
+}
+
+<!--label and value coming side by side-->
+
+
+<fieldset class="fsStyle ViewStateLicense" id="ViewStateLicenses">
+    <legend class="legendStyle">
+        <span class="theme_depend text-uppercase create-auth-legends">
+            <span class="transparent-font-color">__</span>
+            STATE LICENSE INFORMATION
+            <span class="transparent-font-color">__</span>
+        </span>
+        &nbsp;&nbsp; <span class="text-uppercase ">
+            <span class="fstyleBtnStyle">
+                @*<button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetStateLicensePartial" data-tab-container="StateLicense">
+                        <i class="fa fa-plus"></i>
+                    </button>*@
+
+                <button class="btn btn-success btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetStateLicensePartial?model=@Model&ActionType=Add" data-tab-container="StateLicense">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn btn-primary btn-xs list-item" data-tab-path="/CredAxis/Licenses/GetStateLicensePartial?model=@Model&ActionType=Edit" data-tab-container="StateLicense">
+                    <i class="fa fa-pencil"></i>
+                </button>
+
+            </span>
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-warning btn-xs historyBtnCSS StateSectionHistoryBtn" data-toggle="collapse" data-target="#StateLicenseHistory">
+                    <i class="fa fa-history"></i>
+                </button>
+            </span>
+            <span class="fstyleBtnStyle">
+                <button class="btn btn-default btn-xs helpBtnCSS" data-toggle="popover" data-trigger="hover" data-html="true" data-content="*If you have additional State Licenses include all state license
+                    </br> certification numbers here.">
+                    <i class="fa fa-question"></i>
+                </button>
+            </span>
+            <a class="print_button_for_stateLicense hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+            </a>
+        </span>
+    </legend>
+
+
+    @foreach (var item in Model)
+    {
+        StateLicense++;
+
+
+        <div class="x_content zero-padding-left mutiple-data ViewMorStateLicense_@StateLicense collapse in">
+            <div class="SubHeaderSpacing1">
+                <span class="text-uppercase TableHeading">State License- @StateLicense</span>&nbsp;
+                <button onclick="groupmodalhistory('Licenses','removeStateInfo','@item.StateLicenseID','StateLicense')" @*data-toggle="modal" data-target="#BhaukalId"*@ class="btn btn-danger btn-xs RemoveButtonStyleModal "><i class="fa fa-minus"></i></button>
+                &nbsp; <button class="btn btn-primary btn-xs RemoveButtonStyleModal "><i class="fa fa-refresh"></i></button>
+                &nbsp;  <button type="button" class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal StateHistoryBtn list-item" data-tab-path="/CredAxis/Licenses/getStateHistory?value=@item.StateLicenseID" data-tab-container="StateLicenseHistory_@item.StateLicenseID">
+                    <i class="fa fa-history"></i>
+                </button>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.LicenseID) :</label>
+                @if (item.LicenseID != "")
+                {
+                    <span class="theme_label_data">@item.LicenseID</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.LicenseType) :</label>
+                @if (item.LicenseType != "")
+                {
+                    <span class="theme_label_data">@item.LicenseType</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.LicenseStatus) :</label>
+                @if (item.LicenseStatus != "")
+                {
+                    <span class="theme_label_data">@item.LicenseStatus</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.IssueState) :</label>
+                @if (item.IssueState != "")
+                {
+                    <span class="theme_label_data">@item.IssueState</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.IssueDate) :</label>
+                @if (item.IssueDate != "")
+                {
+                    <span class="theme_label_data">@item.IssueDate</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.CurrentIssueDate) :</label>
+                @if (item.CurrentIssueDate != "")
+                {
+                    <span class="theme_label_data">@item.CurrentIssueDate</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+                @if (item.ExpirationDate != "")
+                {
+                    <span class="theme_label_data">@item.ExpirationDate</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NOT AVAILABLE</span>
+                }
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.IsThisState) :</label>
+                @if (item.IsThisState)
+                {
+                    <span class="theme_label_data">YES</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NO</span>
+                }
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">@Html.DisplayNameFor(e => e.IsLicenseGood) :</label>
+                @if (item.IsLicenseGood)
+                {
+                    <span class="theme_label_data">YES</span>
+                }
+                else
+                {
+                    <span class="theme_label_data">NO</span>
+                }
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                <label class="theme_label">SUPPORTING DOCUMENT:</label>
+                <span class="theme_label_data">NOT AVAILABLE</span>
+            </div>
+        </div>
+        <br />
+
+
+
+    }
+    <span class="view-more  pull-right" id="lessStateLicense" data-toggle="collapse" data-target=".ViewMorStateLicense_3" onclick="ShowHideAddView('moreStateLicense', 'lessStateLicense')">View Less</span>
+    <span class="view-more hidden pull-right" id="moreStateLicense" data-toggle="collapse" data-target=".ViewMorStateLicense_3" onclick="ShowHideAddView('lessStateLicense', 'moreStateLicense')">View More</span>
+    <div id="ViewMoreStateLicenses" class="collapse ViewMoreStateLicense">
+
+    </div>
+
+
+
+
+    <fieldset class="fsStyle collapse remove_shadow width-100" id="StateLicenseHistory">
+        @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/Licenses/StateLicense/_HistoryStateLicense.cshtml")
+
+    </fieldset>
+    <div class="StateHistoryClass">
+    </div>
+</fieldset>
+@Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/_RemoveModal.cshtml")
+

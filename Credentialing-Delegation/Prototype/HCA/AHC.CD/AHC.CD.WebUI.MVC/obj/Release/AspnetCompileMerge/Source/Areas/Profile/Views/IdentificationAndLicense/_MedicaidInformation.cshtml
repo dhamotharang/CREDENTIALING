@@ -1,0 +1,87 @@
+﻿
+<div class="panel-default">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Medicaid Information
+            </legend>
+            <div class="col-md-12 text-right" style="font-style:italic;font-size:x-small;">
+                <label>*If you have additional Medicaid Numbers include here.</label>
+            </div>
+            <div id="MedicaidInfo" class="panel-body">
+                @*<table ng-hide="MedicaidInformations.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>No Data Available ! To Add New Click "Add Medicaid Information"</td>
+                        </tr>
+                    </thead>
+                </table>*@
+                <div class="col-md-12" ng-hide="MedicaidInformations.length > 0">
+                    <div class="form-group col-md-4">
+                        <label class=" control-label small">Medicaid Approved*</label>
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="cdsc" value="Y" checked="checked" ng-click="addMedicaidInformation()"> Yes
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="cdsc" value="N" checked="checked"> No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <table ng-hide="MedicaidInformations.length < 1" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <th>Medicaid Number</th>
+                                <th>State</th>
+                                <th>Issue Date</th>
+                                @*<th>Expiration Date</th>
+                                <th>Certificate</th>*@
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="mcd in MedicaidInformations">
+                            <tr>
+                                <td>{{mcd.LicenseNumber}}</td>
+                                <td>{{mcd.State}}</td>
+                                <td>{{mcd.IssueDate| date: "MM-dd-yyyy"}}</td>
+                                @*<td>{{mcd.ExpiryDate| date: "MM-dd-yyyy"}}</td>
+
+                                <td><a href="{{mcd.LicenseCertPath}}" class="pointer" target="_blank" title="{{mcd.LicenseCertPath}}"><i class="fa fa-file" title=""></i></a></td>*@
+                                <td>
+                                    <button class="btn btn-xs btn-default" ng-click="viewMedicaidInformation($index,mcd)" ng-hide="viewMedicaid" data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                    <button class="btn btn-xs btn-primary" ng-click="editMedicaidInformation($index,mcd)" ng-hide="editShowMedicaidInformation" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-xs btn-success" ng-click="addMedicaidInformation()" data-toggle="tooltip" data-placement="right" title="Add new" ng-hide="viewMedicaid ||editShowMedicaidInformation || newShowMedicaidInformation || $index+1!=MedicaidInformations.length"><i class="fa fa-plus"></i></button>
+                                </td>
+                            </tr>
+                            <tr ng-show="viewMedicaid &&  mcd==MedicaidInformation">
+                                <td colspan="6" id="cDSCInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewMedicaidInformation.cshtml")
+                                </td>
+                            </tr>
+                            <tr ng-show="editShowMedicaidInformation && mcd==MedicaidInformation">
+                                <td colspan="6" id="MedicaidInformationEditDiv{{$index}}" class="editTableDataStyle">
+                                    @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditMedicaidInformation.cshtml")
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="clearfix"></div>
+                    <div class="form-style">
+                        <fieldset ng-show="newShowMedicaidInformation">
+                            <legend>
+                                Add Medicaid Information
+                            </legend>
+                            <div id="newStateLicenseDiv">
+                                @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_AddEditMedicaidInformation.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                    @*<div ng-hide="editShowMedicaidInformation || newShowMedicaidInformation" class="col-md-12 text-right">
+                <button class="btn btn-xs btn-primary addHosPrvBtn" ng-click="addMedicaidInformation()"><i class="fa fa-plus"></i> Add Medicaid Information</button>
+            </div>*@
+</div>
+        </fieldset>
+    </div>
+</div>

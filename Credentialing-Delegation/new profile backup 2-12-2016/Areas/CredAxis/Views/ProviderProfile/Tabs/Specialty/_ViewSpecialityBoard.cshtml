@@ -1,0 +1,544 @@
+﻿@model IEnumerable<PortalTemplate.Areas.CredAxis.Models.SpecialtyViewModel.SpecialtyDetailViewModel>
+@{
+    var Specialty = 0;
+}
+<style>
+    input[type="checkbox"] {
+        margin: 0px 0 0;
+        margin-top: 1px \9;
+        line-height: normal;
+    }
+</style>
+<div class="target profilediv col-lg-12" id="IDSpecialty">
+    <fieldset class="fsStyle col-lg-12 padding_top_down_5px nopadding" id="ViewSpecialtyBoard">
+        <legend class="legendStyle">
+            <span class="theme_depend text-uppercase create-auth-legends">
+                SPECIALTY/BOARD DETAILS
+            </span>
+            &nbsp;&nbsp; <span class="text-uppercase ">
+
+                <span class="fstyleBtnStyle">
+                    <button class="btn btn-success btn-xs list-item" id="AddSpecialtyID" data-tab-path="/CredAxis/Speciality/GetSpecialityBoardDetailPartial?model=@Model&ActionType=Add" data-tab-container="SpecialityTabView">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button class="btn btn-primary btn-xs list-item" id="EditSpecialtyID" data-tab-path="/CredAxis/Speciality/GetSpecialityBoardDetailPartial?model=@Model&ActionType=Edit" data-tab-container="SpecialityTabView">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-warning btn-xs historyBtnCSS" id="HistorySpecialtyID" data-toggle="collapse" data-target="#SpecialityHistory">
+                        <i class="fa fa-history"></i>
+                    </button>
+                    <a class="print_button_for_Specailty hover_effect pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Print" tabindex="-1">
+                        <img class="printIcon_image" src="/Resources/Images/Icons/print_icon.png">
+                    </a>
+                </span>
+            </span>
+        </legend>
+        @foreach (var item in Model)
+        {
+            Specialty = Specialty + 1;
+            if (Specialty <= 2)
+            {
+                <div class="x_content zero-padding-left mutiple-data">
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">SPECIALTY/BOARD DETAILS- @Specialty</span>&nbsp; <button data-toggle="modal" data-target="#SpecialtyConfirmationId" class="btn btn-danger btn-xs RemoveButtonStyleModal" onclick="AssignSpecialtyID(@item.SpecialtyDetailId)"><i class="fa fa-minus"></i></button>
+                        @*&nbsp;<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Speciality/ViewSpecialityDetailshistory?value=@item.SpecialtyDetailId" data-tab-container="SpecialityDetailHistory_@item.SpecialtyDetailId">
+                            <i class="fa fa-history"></i>
+                        </button>*@
+                    </div>
+                    <div class="col-lg-12"><br /></div>
+                    <div class="col-lg-12 zero-padding-left">
+                        <span class="text-uppercase label TabSubHeading" style="border-radius: 0;">Specialty Detail</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.SpecialtyType) :</label>
+                        @if (item.SpecialtyType != "")
+                        {
+                        <span class="theme_label_data">@item.SpecialtyType</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Specialty) :</label>
+                        @if (item.Specialty != "")
+                        {
+                        <span class="theme_label_data">@item.Specialty</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.PercentageOfTime) :</label>
+                        @if (item.PercentageOfTime != "")
+                        {
+                        <span class="theme_label_data">@item.PercentageOfTime</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.TaxonomyCode) :</label>
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.PercentageOfTime) :</label>
+                        @if (item.TaxonomyCode != "")
+                        {
+                        <span class="theme_label_data">@item.TaxonomyCode</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.DirectorySpecialty) </label>
+                        @if (item.DirectorySpecialty == "True" )
+                        {
+                        <span class="theme_label_data">YES</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NO</span>
+                        }
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Hmo) :</label>
+                        @if (item.Hmo == true)
+                        {
+                        <span class="theme_label_data">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">No</span>
+                        }
+                        <label class="theme_label"> &nbsp;@Html.DisplayNameFor(e => e.Pos)</label>
+                        @if (item.Pos==true)
+                        {
+                        <span class="theme_label_data">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">No</span>
+                        }
+                        <label class="theme_label"> &nbsp;@Html.DisplayNameFor(e => e.Ppo) :</label>
+                        @if (item.Ppo==true)
+                        {
+                        <span class="theme_label_data">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">No</span>
+                        }
+                    </div>
+                    <div class="col-lg-12 zero-padding-left SubHeaderSpacing2">
+                        <span class="text-uppercase label TabSubHeading" style="border-radius: 0;">Board Details</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.BoardCertified) :</label>
+                        @if (item.BoardCertified==true)
+                        {
+                        <span class="theme_label_data">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NO</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.BoardName) :</label>
+                        @if (item.BoardName!="")
+                        {
+                        <span class="theme_label_data">@item.BoardName</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.Certificatenumber) :</label>
+                        @if (item.Certificatenumber != "")
+                        {
+                        <span class="theme_label_data">@item.Certificatenumber</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.CertificationDate) :</label>
+                        @if (item.CertificationDate != "")
+                        {
+                        <span class="theme_label_data">@item.CertificationDate</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ReCertificationDate) :</label>
+                        @if (item.ReCertificationDate != "")
+                        {
+                        <span class="theme_label_data">@item.ReCertificationDate</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+                        @if (item.ExpirationDate != "")
+                        {
+                        <span class="theme_label_data">@item.ExpirationDate</span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">@Html.DisplayNameFor(e => e.SupportingDocumentPath) :</label>
+                        @if (item.SupportingDocumentPath != "")
+                        {
+                        <span class="theme_label_data"><i class="fa fa-file"></i></span>
+                        }
+                        else
+                        {
+                            <span class="theme_label_data">NOT AVAILABLE</span>
+                        }
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                    </div>
+                </div>
+                <div id="SpecialityDetailHistory_@item.SpecialtyDetailId">
+
+                </div>
+                if (Specialty == 2)
+                {
+                    <span class="view-more pull-right" id="moreSpecialty" data-toggle="collapse" data-target=".ViewMoreSpecialty" onclick="ShowHideAddView('lessSpecialty', 'moreSpecialty')">View More</span>
+                }
+            }
+
+            else
+            {
+                <div class="x_content zero-padding-left ViewMoreSpecialty collapse mutiple-data">
+                    <div class="SubHeaderSpacing1">
+                        <span class="text-uppercase TableHeading">SPECIALTY/BOARD DETAIL- @item.SpecialtyDetailId</span>&nbsp; <button data-toggle="modal" data-target="#SpecialtyConfirmationId" class="btn btn-danger btn-xs RemoveButtonStyleModal"><i class="fa fa-minus"></i></button>
+                        @*&nbsp;<button class="btn btn-warning btn-xs historyBtnCSS RemoveButtonStyleModal list-item" data-tab-path="/CredAxis/Speciality/ViewSpecialityDetailshistory?value=@item.SpecialtyDetailId" data-tab-container="SpecialityDetailHistory_@item.SpecialtyDetailId">
+                            <i class="fa fa-history"></i>
+                        </button>*@
+                    </div>
+                    <div class="col-lg-12"><br /></div>
+                    <span class="text-uppercase TableHeading">Specialty Detail</span>
+                    <div class="x_content zero-padding-left">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.SpecialtyType) :</label>
+                            @if (item.SpecialtyType != "")
+                            {
+                            <span class="theme_label_data">@item.SpecialtyType</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.Specialty) :</label>
+                            @if (item.Specialty != "")
+                            {
+                            <span class="theme_label_data">@item.Specialty</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.PercentageOfTime) :</label>
+                            @if (item.PercentageOfTime != "")
+                            {
+                            <span class="theme_label_data">@item.PercentageOfTime</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.TaxonomyCode) :</label>
+                            @if (item.TaxonomyCode != "")
+                            {
+                            <span class="theme_label_data">@item.TaxonomyCode</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.DirectorySpecialty) </label>
+                            @if (item.DirectorySpecialty != "")
+                            {
+                                <span class="theme_label_data">@item.DirectorySpecialty</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div><br />
+                        <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.Hmo) :</label>
+                            @if (item.Hmo)
+                            {
+                            <span class="theme_label_data">@item.Hmo</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                            <label class="theme_label"> &nbsp;@Html.DisplayNameFor(e => e.Pos)</label>
+                            @if (item.Pos)
+                            {
+                            <span class="theme_label_data">@item.Pos</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                            <label class="theme_label"> &nbsp;@Html.DisplayNameFor(e => e.Ppo) :</label>
+                            @if (item.Ppo)
+                            {
+                            <span class="theme_label_data">@item.Ppo</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="SubHeaderSpacing2">
+                        <span class="text-uppercase TableHeading">Board Details</span>
+                    </div>
+                    <div class="x_content zero-padding-left">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.BoardCertified) :</label>
+                            @if (item.BoardCertified)
+                            {
+                            <span class="theme_label_data">@item.BoardCertified</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.BoardName) :</label>
+                            @if (item.BoardName!="")
+                            {
+                            <span class="theme_label_data">@item.BoardName</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.Certificatenumber) :</label>
+                            @if (item.Certificatenumber != "")
+                            {
+                            <span class="theme_label_data">@item.Certificatenumber</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.CertificationDate) :</label>
+                            @if (item.CertificationDate != "")
+                            {
+                            <span class="theme_label_data">@item.CertificationDate</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.ReCertificationDate) :</label>
+                            @if (item.ReCertificationDate != "")
+                            {
+                            <span class="theme_label_data">@item.ReCertificationDate</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.ExpirationDate) :</label>
+                            @if (item.ExpirationDate != "")
+                            {
+                            <span class="theme_label_data">@item.ExpirationDate</span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                            <label class="theme_label">@Html.DisplayNameFor(e => e.SupportingDocumentPath) :</label>
+                            @if (item.SupportingDocumentPath != "")
+                            {
+                            <span class="theme_label_data"><i class="fa fa-file"></i></span>
+                            }
+                            else
+                            {
+                                <span class="theme_label_data">NOT AVAILABLE</span>
+                            }
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        </div>
+                    </div>
+                </div>
+                <div id="SpecialityDetailHistory_@item.SpecialtyDetailId">
+
+                </div>
+            }
+            if (Specialty == Model.Count())
+            {
+                <span class="view-more hidden pull-right" id="lessSpecialty" data-toggle="collapse" data-target=".ViewMoreSpecialty" onclick="ShowHideAddView('moreSpecialty', 'lessSpecialty')">View Less</span>
+            }
+        }
+        <fieldset class="fsStyle collapse remove_shadow width-100" id="SpecialityHistory">
+            @Html.Partial("~/Areas/CredAxis/Views/ProviderProfile/Tabs/Specialty/_HistorySpecialtyDetails.cshtml")
+        </fieldset>
+    </fieldset>
+</div>
+
+<div class="modal fade " tabindex="-1" role="dialog" id="SpecialtyHistoryView" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-lg ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                <div class="row" style="text-align: center;">
+                    <span class="modalTitle text-uppercase">Specialty / Board Details History</span>
+                    <span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+                    @*<span data-dismiss="modal" class="pull-right"><i class="fa fa-times btn btn-danger"></i></span>*@
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                <span class="text-uppercase label" style="background-color: #C5CAE9; color: black;">Specialty Detail</span>
+                <div class="x_content zero-padding-left text-uppercase">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Specialty Type :</label>
+                        <span class="theme_label_data">Primary</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Specialty :</label>
+                        <span class="theme_label_data">Adult Neurology</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Percentage Of Time :</label>
+                        <span class="theme_label_data">100</span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Taxonomy Code :</label>
+                        <span class="theme_label_data">1234567891</span>
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Do you wish to be listed in the directory under this specialty? </label>
+                        <span class="theme_label_data"></span>
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">HMO :</label>
+                        <span class="theme_label_data">YES</span>
+                        <label class="theme_label"> &nbsp;POS</label>
+                        <span class="theme_label_data">YES</span>
+                        <label class="theme_label"> &nbsp;PPO :</label>
+                        <span class="theme_label_data">YES</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-uppercase label" style="background-color: #C5CAE9; color: black;">Board Details</span>
+                </div>
+                <div class="x_content zero-padding-left text-uppercase">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Board Certified? * :</label>
+                        <span class="theme_label_data">YES</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Board Name :</label>
+                        <span class="theme_label_data">ABFM</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Certificate Number :</label>
+                        <span class="theme_label_data">NOT AVAILABLE</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Initial Certification Date :</label>
+                        <span class="theme_label_data">NOT AVAILABLE</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Last Re-Certification Date :</label>
+                        <span class="theme_label_data">NOT AVAILABLE</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Expiration Date :</label>
+                        <span class="theme_label_data">NOT AVAILABLE</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 text_adjust boxstyle">
+                        <label class="theme_label">Supporting Document :</label>
+                        <span class="theme_label_data">NOT AVAILABLE</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade " tabindex="-1" role="dialog" id="SpecialtyConfirmationId" style="overflow: auto; top: 8%;">
+    <div class="modal-dialog modal-lg ">
+        <form class="modal-content">
+            <div class="modal-header zero_padding_bottom">
+                @*<div class="row" style="text-align: center;">
+                        <span class="modalTitle text-uppercase">REMOVE DETAIL</span>
+                        <span><button type="button" class="btn btn-xs btn-danger closeBtnCSS pull-right" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+
+                    </div>*@
+                <div class="col-lg-12">
+                    <div class="col-lg-8">
+                        <h4 style="color:white"><i class="fa fa-question-circle"></i> &nbsp; REMOVE DETAILS </h4>
+                    </div>
+                    <div class="col-lg-4" style=" top: 14px;">
+                        <button type="button" class="btn btn-danger btn-xs pull-right" data-dismiss="modal" id="closeModal">X</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body modalbodyheight  ">
+                @* <span class="text-uppercase label" style="background-color: #C5CAE9; color: black;">Specialty Detail</span>*@
+                <div class="x_content zero-padding-left text-uppercase">
+                    <span class="AddProviderModal">
+                        <h3>&nbsp;&nbsp;&nbsp;&nbsp;DO YOU WANT TO REMOVE THESE DETAILS?</h3>
+                    </span>
+
+                </div>
+
+            </div>
+            <div class="modal-footer   ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 button-styles text-right">
+                    <span><button data-dismiss="modal" class="btn btn-danger close_modal_btn">NO</button></span>
+                    <button data-dismiss="modal" class="btn btn-success close_modal_btn" onclick="RemoveSpecialtyInfo()">YES</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

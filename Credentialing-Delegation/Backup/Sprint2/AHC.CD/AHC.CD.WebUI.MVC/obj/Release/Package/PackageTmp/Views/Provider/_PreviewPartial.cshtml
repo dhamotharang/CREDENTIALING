@@ -1,0 +1,298 @@
+﻿<!-- Safari Browser issue Solving for Add Group edit button height fixing -->
+<style>
+    .input-group-sm > .input-group-addon {
+        height: 18px !important;
+        border-radius: 0px 3px 3px 0px;
+    }
+</style>
+
+<!-- Safari Browser issue End -->
+
+
+<div ng-show="AddProviderFail" class="alert alert-danger" role="alert">
+    <strong>Sorry!</strong> Unable to add provider , Try later
+</div>
+<!-- Basic Information Preview panel -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>Basic Information</div>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-md-3 control-label">Provider Category</label>
+            <div class="col-md-9 input-group">
+                <label class="control-label">{{selectedCategory.categoryName}}</label>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">NPI Number *</label>
+            <div class="col-md-9 input-group input-group-sm" editable-text="Provider.NPINumber" e-required>
+                <input type="text" value="{{Provider.NPINumber}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+        </div>
+
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">CAQH Number</label>
+            <div class="col-md-9 input-group input-group-sm" editable-text="Provider.CAQHNumber" e-required>
+                <input type="text" value="{{Provider.CAQHNumber}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+        </div>
+    </div>
+</div><!-- End Basic Information Preview panel -->
+<!-- Primary Information Preview panel -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>Primary Information</div>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-md-3 control-label">Title *</label>
+            <div class="col-md-9 input-group" editable-select="Provider.Personal.Title" e-ng-options="nt.titaleName as nt.titaleName for nt in nameTitles">
+                <input type="text" name="name" value="{{Provider.Personal.Title}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.FirstName.$invalid}">
+            <label class="col-md-3 control-label">First Name *</label>
+            <div class="col-md-9 input-group input-group-sm" editable-text="Provider.Personal.FirstName" e-pattern="^[a-zA-Z]([a-zA-Z ,.-]{1,24})$" e-maxlength="25" e-title="First Name Must be Alphabetic and length between 2 to 25." e-required>
+                <input type="text" name="name" value="{{Provider.Personal.FirstName}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3 has-error">
+                <p ng-show="PrimaryInfoForm.FirstName.$error.required" class="help-block">First Name {{Err_RequiredField}}</p>
+                <p ng-show="PrimaryInfoForm.FirstName.$invalid && !PrimaryInfoForm.FirstName.$error.required" class="help-block">First Name Must be Alphabetic and length between 2 to 25.</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.MiddleName.$invalid}">
+            <label class="col-md-3 control-label">Middle Name</label>
+            <div class="col-md-9 input-group input-group-sm" editable-text="Provider.Personal.MiddleName" e-pattern="^[a-zA-Z][a-zA-Z ,.-]*$" e-maxlength="25" e-title="Middle Name Must be Alphabetic.">
+                <input type="text" name="name" value="{{Provider.Personal.MiddleName}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3 has-error">
+                <p ng-show="PrimaryInfoForm.MiddleName.$invalid" class="help-block">First Name Must be Alphabetic and length between 0 to 25.</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.LastName.$invalid}">
+            <label class="col-md-3 control-label">Last Name *</label>
+            <div class="col-md-9 input-group input-group-sm" editable-text="Provider.Personal.LastName" e-pattern="^[a-zA-Z]([a-zA-Z ,.-]{1,24})$" e-maxlength="25" e-title="Last Name Must be Alphabetic and length between 2 to 25." e-required>
+                <input type="text" name="name" value="{{Provider.Personal.LastName}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3 has-error">
+                <p ng-show="PrimaryInfoForm.LastName.$error.required" class="help-block">Last Name {{Err_RequiredField}}</p>
+                <p ng-show="PrimaryInfoForm.LastName.$invalid && !PrimaryInfoForm.LastName.$error.required" class="help-block">Last Name Must be Alphabetic and length between 2 to 25.</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Gender *</label>
+            <div class="col-md-9 input-group input-group-sm">
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.Personal.Gender" name="Gender1" id="Gender11" value="M" ng-selected="Provider.Personal.Gender==M"> Male
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.Personal.Gender" name="Gender1" id="Gender12" value="F" ng-selected="Provider.Personal.Gender==F"> Female
+                </label>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3 has-error">
+                <p ng-show="PrimaryInfoForm.Gender.$error.required" class="help-block">Please Select Gender.</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <br />
+        <div class="form-group">
+            <label class="col-md-3 control-label">Home Address</label>
+            <div class="col-md-9">
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Unit Number *</label>
+                    <div class="col-md-9 input-group input-group-sm" editable-text="Provider.Address.UnitNumber" e-required>
+                        <input type="text" value="{{Provider.Address.UnitNumber}}" class="form-control" readonly />
+                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.Street.$invalid}">
+                    <label class="col-md-3 control-label">Street *</label>
+                    <div class="col-md-9 input-group input-group-sm" editable-text="Provider.Address.Street" e-pattern="^.{5,100}$" e-maxlength="100" e-title="Street length is between 5 to 100." e-required>
+                        <input type="text" name="name" value="{{Provider.Address.Street}}" class="form-control" readonly />
+                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                    </div>
+                    <div class="col-lg-12 col-lg-offset-3 has-error">
+                        <p ng-show="PrimaryInfoForm.Street.$error.required" class="help-block">Street {{Err_RequiredField}}</p>
+                        <p ng-show="PrimaryInfoForm.Street.$invalid && !PrimaryInfoForm.Street.$error.required" class="help-block">Street length is between 5 to 100.</p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Country *</label>
+                    <div class="col-md-9 input-group">
+                        <input type="text" name="name" value="{{Provider.Address.Country}}" class="form-control" disabled />
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">State *</label>
+                    <div class="col-md-9 input-group input-group-sm" editable-select="Provider.Address.State" e-ng-options="state.State as state.State for state in states | unique: 'State'" e-required>
+                        <input type="text" name="name" value="{{Provider.Address.State}}" class="form-control" readonly />
+                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                    </div>
+                    <div class="col-lg-12 col-lg-offset-3 has-error">
+                        <p ng-show="PrimaryInfoForm.ProviderAddressState.$error.required" class="help-block">Please Select State.</p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">County *</label>
+                    <div class="col-md-9 input-group input-group-sm" editable-select="Provider.Address.County" e-ng-options="county.County as county.County for county in Counties | unique: 'County'" e-required>
+                        <input type="text" name="name" value="{{Provider.Address.County}}" class="form-control" readonly />
+                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                    </div>
+                    <div class="col-lg-12 col-lg-offset-3 has-error">
+                        <p ng-show="PrimaryInfoForm.ProviderAddressCounty.$error.required" class="help-block">Please Select County.</p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">City *</label>
+                    <div class="col-md-9 input-group input-group-sm" editable-select="Provider.Address.City" e-ng-options="city.City as city.City for city in Cities | unique: 'City'" e-required>
+                        <input type="text" name="name" value="{{Provider.Address.City}}" class="form-control" readonly />
+                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                    </div>
+                    <div class="col-lg-12 col-lg-offset-3 has-error">
+                        <p ng-show="PrimaryInfoForm.ProviderAddressCity.$error.required" class="help-block">Please Select City.</p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.ZipCode.$invalid}">
+                    <label class="col-md-3 control-label">Zip Code *</label>
+                    <div class="col-md-9 input-group input-group-sm" editable-text="Provider.Address.ZipCode" e-pattern="^[0-9]{5}$" e-maxlength="5" e-title="Zip Code must be 5 digits." e-required>
+                        <input type="text" name="name" value="{{Provider.Address.ZipCode}}" class="form-control" readonly />
+                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                    </div>
+                    <div class="col-lg-12 col-lg-offset-3">
+                        <p ng-show="PrimaryInfoForm.ZipCode.$error.required" class="help-block">Zip Code {{Err_RequiredField}}</p>
+                        <p ng-show="PrimaryInfoForm.ZipCode.$invalid && !PrimaryInfoForm.ZipCode.$error.required" class="help-block">Zip Code must be 5 digits.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group" ng-class="{ 'has-error' : PrimaryInfoForm.Email.$invalid || IsExistEmailId=='True'}">
+            <label class="col-md-3 control-label">Email ID *</label>
+            <div class="col-md-9 input-group input-group-sm" editable-email="Provider.Personal.Email" e-title="Email is not valid." e-maxlength="35" e-ng-change="isexistemail(primaryinfoform.email.$invalid)" e-required>
+                <input type="text" name="name" value="{{Provider.Personal.Email}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3">
+                <p ng-show="PrimaryInfoForm.Email.$error.required" class="help-block">Email {{Err_RequiredField}}</p>
+                <p ng-show="PrimaryInfoForm.Email.$invalid && !PrimaryInfoForm.Email.$error.required" class="help-block">Email is not valid.</p>
+                <p ng-show="IsExistEmailId=='True' && !PrimaryInfoForm.Email.$invalid" class="help-block">Email already exist.</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group" ng-class="{ 'has-error' : IsExistPhoneNumber=='True' || PrimaryInfoForm.PhoneNo.$invalid}">
+            <label class="col-md-3 control-label">Mobile Number *</label>
+            <div class="col-md-9 input-group input-group-sm">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="showContryCodeDiv1()"> {{Provider.Personal.Contact.CountryCode}} <span class="caret"></span></button>
+                </div>
+                <div editable-text="Provider.Personal.Contact.PhoneNo" e-pattern="^[1-9]([0-9]{9})$" e-title="Mobile Number must be 10 digits" e-maxlength="10" e-required>
+                    <input type="text" name="PhoneNo" class="form-control input-sm" id="PhoneNo" value="{{Provider.Personal.Contact.PhoneNo}}" readonly>
+                </div>
+                <div class="popover fade bottom in" role="tooltip" id="countryDailCodeContainer1">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title">Select Country Dial Code</h3>
+                    <div class="popover-content">
+                        <select ng-model="Provider.Personal.Contact.CountryCode" id="ContactContryCode1" ng-change="isExistPhoneNumber(PrimaryInfoForm.PhoneNo.$invalid)">
+                            <option ng-repeat="contryDail in countryDailCodes" value="{{contryDail.dial_code}}" ng-selected="Provider.Personal.Contact.CountryCode == contryDail.dial_code">{{contryDail.name}} ({{contryDail.dial_code}})</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3">
+                <p ng-show="PrimaryInfoForm.PhoneNo.$error.required" class="help-block">Mobile Number {{Err_RequiredField}}</p>
+                <p ng-show="PrimaryInfoForm.PhoneNo.$invalid && !PrimaryInfoForm.PhoneNo.$error.required" class="help-block">Mobile Number must be 10 digits.</p>
+                <p ng-show="IsExistPhoneNumber=='True' && !PrimaryInfoForm.PhoneNo.$invalid" class="help-block">Mobile Number already exist.</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+            <label for="PreferredContact" class="col-md-3 control-label">Preferred Method Of Contact *</label>
+            <div class="col-md-9 input-group input-group-sm">
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.Personal.PreferredContact" name="PreferredContact1" value="Email" required> Email
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.Personal.PreferredContact" name="PreferredContact1" value="Mobile" required> Mobile
+                </label>
+            </div>
+        </div>
+    </div>
+</div><!-- End Primary Information Preview panel -->
+<!-- Group Information Preview panel -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>Organization Information</div>
+    </div>
+    <div class="panel-body">
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">Provider Relationship</label>
+            <div class="col-md-9 input-group input-group-sm">
+                <label ng-repeat="providerRelation in providerRelations" class="radio-inline">
+                    <input type="radio" name="radio_provider_relation" ng-model="Provider.ProviderRelation" value="{{providerRelation.relationId}}"> {{providerRelation.relationName}}
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">Are you a part of any Group ?</label>
+            <div class="col-md-9 input-group input-group-sm">
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.IsPartOfGroup" name="pat_of_group" value="true" ng-click="isPartOfGroup()"> Yes
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="Provider.IsPartOfGroup" name="pat_of_group" value="false" ng-click="isPartOfGroup()"> No
+                </label>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div ng-show="Provider.IsPartOfGroup == 'true'" class="form-group">
+            <label class="col-md-3 control-label">Group Name : </label>
+            <div class="col-md-9 input-group input-group-sm" editable-select="Provider.GroupID" e-ng-options="pt.GroupID as pt.GroupName for pt in groups">
+                <input type="text" name="name" value="{{selectedGroup.GroupName}}" class="form-control" readonly />
+                <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+            </div>
+            <div class="col-lg-12 col-lg-offset-3 has-error">
+                <p ng-show="!Provider.GroupID" class="help-block">Please Select Group.</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Upload CV</label>
+            <div class="col-md-7">
+                <a href="#">ProviderCV.docx</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 form-group">
+            <label class="col-md-3 control-label">Upload Contract</label>
+            <div class="col-md-7">
+                <a href="#">providercontract.docx</a>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer clearfix">
+        <input id="next1" type="button" value="Confirm" ng-click="confirmationAddProvider()" class="btn btn-primary btn-sm pull-right" />
+        <input id="next1" type="button" value="<< Prev" ng-click="nextForm(1)" class="btn btn-warning btn-sm pull-left" />
+    </div>
+</div><!-- End Group Information Preview panel -->

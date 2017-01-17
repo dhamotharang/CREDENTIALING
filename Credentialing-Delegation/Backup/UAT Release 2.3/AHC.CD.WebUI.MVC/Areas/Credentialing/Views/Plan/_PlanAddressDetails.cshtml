@@ -1,0 +1,74 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.Plan.PlanAddressViewModel
+
+<fieldset>
+    <legend>
+        Address Details
+    </legend>
+    @*<div class="pull-right legend2">
+        <button type="button" class="btn btn-xs btn-success" tooltip data-toggle="tooltip" data-placement="top" title="Add More" ng-click="AddPlanAddress();"><i class="fa fa-plus"></i></button>
+    </div>*@
+    <div ng-repeat="pl in tempObject.Locations track by $index" @*class="col-lg-12 zero-padding-right-right-div"*@>
+        @*<fieldset>
+            <div ng-if="$index > 0" class="pull-right legend2">
+                <button type="button" class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="RemovePlanAddress($index);"><i class=" fa fa-minus"></i></button>
+            </div>*@
+        <span ng-if="pl.PlanAddressID">
+            @Html.HiddenFor(model => model.PlanAddressID, new { @Name = "Locations[{{$index}}].PlanAddressID", @Value = "{{pl.PlanAddressID}}" })
+        </span>
+        <div class="col-lg-12 zero-padding-right-right-div">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.Street, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.Street, new {@Name = "Locations[{{$index}}].Street", @class = "form-control input-sm", data_ng_model = "pl.Street", placeholder = "street" })
+                @Html.ValidationMessageFor(model => model.Street, "", new { @data_valmsg_for = "Locations[{{$index}}].Street", @class = "text-danger" })
+            </div>
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.Appartment, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.Appartment, new { @Name = "Locations[{{$index}}].Appartment", @class = "form-control input-sm", data_ng_model = "pl.Appartment", placeholder = "Suite/Building" })
+                @Html.ValidationMessageFor(model => model.Appartment, "", new { @data_valmsg_for = "Locations[{{$index}}].Appartment", @class = "text-danger" })
+            </div>
+            <div class="col-lg-4 form-group">
+                <span ng-if="!pl.City" ng-init="pl.City=''"></span>
+                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.City, new { @Name = "Locations[{{$index}}].City", @class = "form-control input-sm", data_ng_model = "pl.City", placeholder = "city name", data_ng_change = "addressHomeAutocomplete(pl.City , pl)", onfocus = "showLocationList(this)" })
+                <div @*ng-if="Locations.length > 0"*@ class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
+                    <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
+                        <tbody>
+                            <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation(location, pl)" class="pointer">
+                                <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
+                            </tr>
+                            <tr ng-if="Locations.length == 0">
+                                <td>Not Available..... </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @Html.ValidationMessageFor(model => model.City, "", new { @data_valmsg_for = "Locations[{{$index}}].City", @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-right-right-div">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.State, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.State, new { @Name = "Locations[{{$index}}].State", @class = "form-control input-sm", data_ng_model = "pl.State", placeholder = "state" })
+                @Html.ValidationMessageFor(model => model.State, "", new { @data_valmsg_for = "Locations[{{$index}}].State", @class = "text-danger" })
+            </div>
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.ZipCode, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.ZipCode, new { @Name = "Locations[{{$index}}].ZipCode", @class = "form-control input-sm", data_ng_model = "pl.ZipCode", placeholder = "ZipCode" })
+                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @data_valmsg_for = "Locations[{{$index}}].ZipCode", @class = "text-danger" })
+            </div>
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.Country, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.Country, new { @Name = "Locations[{{$index}}].Country", @class = "form-control input-sm", data_ng_model = "pl.Country", placeholder = "country" })
+                @Html.ValidationMessageFor(model => model.Country, "", new { @data_valmsg_for = "Locations[{{$index}}].Country", @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-right-right-div">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.County, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.County, new { @Name = "Locations[{{$index}}].County", @class = "form-control input-sm", data_ng_model = "pl.County", placeholder = "county" })
+                @Html.ValidationMessageFor(model => model.County, "", new { @data_valmsg_for = "Locations[{{$index}}].County", @class = "text-danger" })
+            </div>
+        </div>
+        @*</fieldset>*@
+    </div>
+</fieldset>

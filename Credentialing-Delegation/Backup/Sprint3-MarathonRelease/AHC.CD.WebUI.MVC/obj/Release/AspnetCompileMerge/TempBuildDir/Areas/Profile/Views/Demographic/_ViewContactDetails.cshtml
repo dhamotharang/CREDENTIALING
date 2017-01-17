@@ -1,0 +1,77 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.ContactDetailViewModel
+
+<div ng-if="!Provider.ContactDetails.ContactDetailID" class="col-md-12 zero-padding-left-right-div">
+    No Data Available ! Please Provide Contact Details...
+    <button class="btn btn-xs btn-primary pull-right" ng-click="ContactDetailsToggle()"><i class="fa fa-plus"></i> Contact Details</button>
+</div>
+
+<div ng-if="Provider.ContactDetails.ContactDetailID">
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="form-group col-md-4" ng-model="search1.PhoneTypeEnum" ng-init="search1.PhoneTypeEnum=1">
+            <label class="control-label small">Home Phone</label>
+            <div ng-repeat="hp in Provider.ContactDetails.PhoneDetails | filter:search1 track by $index" class="input-group input-group-sm" ng-if="hp.Status=='Active'">
+                <span class="input-group-addon">
+                    {{hp.CountryCode}}-{{hp.Number}}
+                </span>
+                <span class="input-group-addon">
+                    <i ng-if="hp.PreferenceType==1" class="fa fa-check"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-md-4" ng-model="search2.PhoneTypeEnum" ng-init="search2.PhoneTypeEnum=2">
+            <label class="control-label small">Home Fax *</label>
+            <div ng-repeat="hf in Provider.ContactDetails.PhoneDetails | filter:search2 track by $index" class="input-group input-group-sm" ng-if="hf.Status=='Active'">
+                <span class="input-group-addon">
+                    {{hf.CountryCode}}-{{hf.Number}}
+                </span>
+                <span class="input-group-addon">
+                    <i ng-if="hf.PreferenceType==1" class="fa fa-check"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-md-4" ng-model="search3.PhoneTypeEnum" ng-init="search3.PhoneTypeEnum=3">
+            <label class="control-label small">Mobile Number *</label>
+            <div ng-repeat="mn in Provider.ContactDetails.PhoneDetails | filter:search3 track by $index" class="input-group input-group-sm" ng-if="mn.Status=='Active'">
+                <span class="input-group-addon">
+                    {{mn.CountryCode}}-{{mn.Number}}
+                </span>
+                <span class="input-group-addon">
+                    <i ng-if="mn.PreferenceType==1" class="fa fa-check"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 zero-padding-left-right-div">
+        <div class="col-lg-4 zero-padding-left-right-div">
+            <div class="col-lg-12 form-group">
+                @Html.LabelFor(model => model.PreferredWrittenContacts, new { @class = "control-label small" })
+                <div ng-init="statusSearch1.StatusType=1">
+                    <span ng-repeat="pwc in Provider.ContactDetails.PreferredWrittenContacts | filter:statusSearch1">
+                        <span ng-if="$index > 0">, </span> {{pwc.ContactType}}
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-12 form-group">
+                @Html.LabelFor(model => model.PreferredContacts, new { @class = "control-label small" })
+                <div ng-init="statusSearch2.StatusType=1">
+                    <span ng-repeat="pc in Provider.ContactDetails.PreferredContacts | filter:statusSearch2">
+                        <span ng-if="$index > 0">, </span> {{pc.ContactType}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 zero-padding-left-right-div" style="margin-bottom: 10px;">
+            <div class="col-lg-12">
+                <label class="control-label small">Email Id *</label>
+                <div ng-repeat="email in Provider.ContactDetails.EmailIDs track by $index" class="input-group input-group-sm" ng-if="email.Status=='Active'">
+                    <span class="input-group-addon">
+                        {{email.EmailAddress}}
+                    </span>
+                    <span class="input-group-addon">
+                        <i ng-if="email.PreferenceType==1" class="fa fa-check"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
