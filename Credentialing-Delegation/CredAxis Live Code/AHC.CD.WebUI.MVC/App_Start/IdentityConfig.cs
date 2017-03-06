@@ -13,6 +13,7 @@ using Microsoft.Owin.Security;
 using System.Security.Claims;
 using AHC.CD.Entities.MasterProfile;
 using AHC.CD.Business;
+using System.Configuration;
 
 namespace AHC.CD.WebUI.MVC
 {
@@ -20,13 +21,104 @@ namespace AHC.CD.WebUI.MVC
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+        private int UsedPasswordLimit = int.Parse(ConfigurationManager.AppSettings["UsedPasswordLimit"]);
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
         }
 
-        public ApplicationUser FindByNameSync(ApplicationUser user)
+        public override async Task<IdentityResult> ResetPasswordAsync(string UserID, string UsedToken, string NewPassword)
         {
+            
+            var Result = await base.ResetPasswordAsync(UserID, UsedToken, NewPassword);
+
+            if (Result.Succeeded)
+            {
+                var appuser = await FindByIdAsync(UserID);
+                var PasswordHash = PasswordHasher.HashPassword(NewPassword);
+                await AddToPasswordHistoryAsync(PasswordHash, NewPassword, appuser, "Reset");
+            }
+
+            return Result;
+        }
+
+        public override async Task<IdentityResult> ChangePasswordAsync(string UserID, string CurrentPassword, string NewPassword)
+        {
+
+            if (await IsMinimumPasswwordAge(UserID, CurrentPassword, NewPassword))
+            {
+                return await Task.FromResult(IdentityResult.Failed("You have to wait for atleast one day to change your password "));
+            }
+            if (await IsPreviousPassword(UserID, CurrentPassword, NewPassword))
+            {
+                return await Task.FromResult(IdentityResult.Failed("You cannot reuse previous password"));
+            }
+
+            var Result = await base.ChangePasswordAsync(UserID, CurrentPassword, NewPassword);
+
+            if (Result.Succeeded)
+            {
+                var appuser = await FindByIdAsync(UserID);
+                var PasswordHash = PasswordHasher.HashPassword(NewPassword);
+                await AddToPasswordHistoryAsync(PasswordHash, NewPassword, appuser, "Change");
+            }
+            return Result;
+        }
+        public override async Task<IdentityResult> CreateAsync(ApplicationUser appuser, string Password)
+        {
+            var PasswordHash = PasswordHasher.HashPassword(Password);
+            var Result = await base.CreateAsync(appuser, Password);
+            await AddToUsedPasswordAsync(appuser, appuser.PasswordHash);
+            return Result;
+        }
+        public Task AddToUsedPasswordAsync(ApplicationUser appuser, string userpassword)
+        {
+            appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = userpassword });
+            return UpdateAsync(appuser);
+        }
+        private async Task AddToPasswordHistoryAsync(string PasswordHash,string NewPassword, ApplicationUser appuser ,string Type)
+        {
+            if (Type=="Change")
+            {
+                appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash });
+                await UpdateAsync(appuser);
+            }
+            else
+            {
+                appuser.UserUsedPassword.FirstOrDefault(a => PasswordHasher.VerifyHashedPassword(a.HashPassword, NewPassword) == PasswordVerificationResult.Success).CreatedDate = DateTimeOffset.Now;
+                await UpdateAsync(appuser);
+            }
+            
+        }
+
+        private async Task<bool> IsPreviousPassword(string UserID, string CurrentPassword, string NewPassword)
+        {
+            var User = await FindByIdAsync(UserID);
+            if (User.UserUsedPassword.OrderByDescending(up => up.CreatedDate).Select(up => up.HashPassword).Take(UsedPasswordLimit).Where(up => PasswordHasher.VerifyHashedPassword(up, NewPassword) != PasswordVerificationResult.Failed).Any())
+            {
+                return true;
+            }
+            return false;
+        }
+        private async Task<bool> IsMinimumPasswwordAge(string UserID, string CurrentPassword, string NewPassword)
+        {
+            var User = await FindByIdAsync(UserID);
+            var tempDate = User.UserUsedPassword.OrderByDescending(up => up.CreatedDate).FirstOrDefault();
+            int _minimumPasswordAge=int.Parse(ConfigurationManager.AppSettings["MinimumPasswordAge"]);
+            if (tempDate != null)
+            {
+                if ((DateTime.Today - tempDate.CreatedDate.Date).Days < _minimumPasswordAge)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        public ApplicationUser FindByNameSync(ApplicationUser user)
+        {   
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             return userManager.FindByName(user.UserName);
         }
@@ -44,16 +136,16 @@ namespace AHC.CD.WebUI.MVC
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = false,
-                RequireDigit = false,
-                RequireLowercase = false,
-                RequireUppercase = false,
+                RequiredLength = int.Parse(ConfigurationManager.AppSettings["MinimumPasswordLength"]),
+                RequireNonLetterOrDigit = bool.Parse(ConfigurationManager.AppSettings["RequireNonLetterOrDigit"]),
+                RequireDigit = bool.Parse(ConfigurationManager.AppSettings["RequireDigit"]),
+                RequireLowercase = bool.Parse(ConfigurationManager.AppSettings["RequireLowercase"]),
+                RequireUppercase = bool.Parse(ConfigurationManager.AppSettings["RequireUppercase"]),
             };
             // Configure user lockout defaults
             manager.UserLockoutEnabledByDefault = true;
-            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(int.Parse(ConfigurationManager.AppSettings["LockoutDuration"]));
+            manager.MaxFailedAccessAttemptsBeforeLockout = int.Parse(ConfigurationManager.AppSettings["LockoutThreshold"]);
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug in here.
             manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
@@ -140,7 +232,7 @@ namespace AHC.CD.WebUI.MVC
             if (userManager.FindByName(appUser.UserName) == null)
             {
                 var result = userManager.Create(appUser, password);
-                
+
                 // Add user admin to Role Admin if not already added
                 var rolesForUser = userManager.GetRoles(appUser.Id);
                 if (!rolesForUser.Contains("SuperAdmin"))
@@ -166,4 +258,6 @@ namespace AHC.CD.WebUI.MVC
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
         }
     }
+
+
 }

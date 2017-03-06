@@ -350,11 +350,11 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                 //        loginUsers.Add(user);
                 //    }
                 //}
-                return JsonConvert.SerializeObject(users);
+                return JsonConvert.SerializeObject(users, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
         }
 

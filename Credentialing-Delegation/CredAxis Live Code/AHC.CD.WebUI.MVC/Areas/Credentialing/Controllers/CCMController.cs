@@ -135,7 +135,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                         loginUsers.Add(user);
                     }
                 }
-                return JsonConvert.SerializeObject(loginUsers);
+                return JsonConvert.SerializeObject(loginUsers, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
             }
             catch (Exception)
             {

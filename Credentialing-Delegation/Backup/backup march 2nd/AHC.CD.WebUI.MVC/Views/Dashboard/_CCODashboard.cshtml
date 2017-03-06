@@ -1,0 +1,1186 @@
+﻿<!--Style sheet for new implementation, to be removed after completion-->
+<style>
+    .biscuits_3D > .panel > .panel-body {
+        color: whitesmoke;
+        position: relative;
+        text-decoration: none;
+        width: 105%;
+        display: block;
+        padding: 4px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        /*-webkit-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        -moz-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        box-shadow: 0px 9px 0px rgb(195, 195, 195), 0px 9px 25px rgba(0,0,0,.7);*/
+        text-align: center;
+        -webkit-transition: all .1s ease;
+        -moz-transition: all .1s ease;
+        -ms-transition: all .1s ease;
+        -o-transition: all .1s ease;
+        transition: all .1s ease;
+    }
+
+    /*a:active {
+            -webkit-box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
+            -moz-box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
+            box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
+            position: relative;
+            top: 6px;
+        }*/
+    .biscuits > .panel > .panel-body {
+        width: 105%;
+        text-align: center;
+        color: white;
+        background-color: grey;
+        border-radius: 8px;
+    }
+</style>
+<!--Style sheet end here-->
+<script src="~/Scripts/Custom/DashBoard/CCODashboardController.js"></script>
+<script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+<script src="~/Scripts/Lib/Moment/moment.js"></script>
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.2.min.js"></script>
+<script src="~/Scripts/Lib/ngiriraj/tableExport.js"></script>
+<script src="~/Scripts/Lib/ngiriraj/jquery.base64.js"></script>
+<script src="~/Scripts/Shared/jspdf.min.js"></script>
+<script src="~/Scripts/Shared/jspdf.plugin.autotable.js"></script>
+<script src="~/Scripts/Lib/ngiriraj/base64.js"></script>
+<!--Style for dropdown question (color coding for legend expiries)-->
+<style>
+    .dropbtn {
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 190px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    }
+
+    .newbtn {
+        margin-left: -175px;
+        margin-top: 32px;
+        z-index: 99;
+    }
+
+        .newbtn > span {
+            padding-top: 4px;
+        }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+
+<style>
+    .violet {
+        background-color: violet;
+    }
+
+    .lightviolet {
+        background-color: #fce9fc !important;
+    }
+
+    .bluecolor {
+        background-color: #e6e6ff !important;
+    }
+
+    .yellow {
+        background-color: #B8860B !important;
+    }
+
+    .lightyellow {
+        background-color: #cccc00 !important;
+    }
+
+    .purple {
+        background-color: purple !important;
+    }
+
+    .orange {
+        background-color: orange !important;
+    }
+
+    .lightorange {
+        background-color: #ffe3b3 !important;
+    }
+
+    .blue {
+        background-color: blue !important;
+    }
+
+    .lightpurple {
+        background-color: #ffccff !important;
+    }
+</style>
+<div ng-controller="CCODashboardController" ng-cloak>
+    <div class="row ">
+        <div class="col-lg-12 biscuits_3D">
+            <!--Active Providers Biscuit-->
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 panel ">
+                <div class=" row panel-body" style="background-color: rgba(51, 122, 183, 0.85);">
+                    <div class="col-lg-3 col-md-3 col-sm-3"><i class="fa fa-users fa-3x"></i> </div>
+                    <div class="col-lg-9 col-md-9 col-sm-9" style="text-align:center"><div></div><h4> All Providers  {{InitBiscuitData.ALL}}</h4> </div>
+                </div>
+            </div>
+            <!--MidLevels Biscuit-->
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 panel ">
+                <div class=" row panel-body" style="background-color:rgba(0, 170, 169, 0.83);">
+                    <div class="col-lg-3 col-md-3 col-sm-3"><i class="fa fa-user fa-3x"></i> </div>
+                    <div class="col-lg-9 col-md-9 col-sm-9" style="text-align:center"><div></div><h4>MidLevels  {{InitBiscuitData.MIDLEVEL}}</h4> </div>
+                </div>
+            </div>
+            <!--Registered PCPs Biscuit-->
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 panel">
+                <div class=" row panel-body" style="background-color:rgba(147, 32, 145, 0.75); ">
+                    <div class="col-lg-3 col-md-3 col-sm-3"><i class="fa fa-user-md fa-3x"></i> </div>
+                    <div class="col-lg-9 col-md-9 col-sm-9" style="text-align:center"><div></div><h4> PCPs  {{InitBiscuitData.PCP - InitBiscuitData.NURSE}} </h4> </div>
+                </div>
+            </div>
+            <!--Total Specialist Biscuit-->
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 panel ">
+                <div class=" row panel-body" style="background-color:#8ABB25; ">
+                    <div class="col-lg-3 col-md-3 col-sm-3"><i class="fa fa-user-md fa-3x"></i> </div>
+                    <div class="col-lg-9 col-md-9 col-sm-9" style="text-align:center"><div></div><h4> Specialists  {{InitBiscuitData.NURSE}}</h4> </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="panel panel-default">
+
+        <div class=" panel-heading">
+            <div class="row">
+                @*<span class=""><i class="fa fa-check fa-fw"></i> Upcoming Renewals</span>*@
+                <span class="col-lg-3">
+                    <i class="fa fa-check fa-fw"></i> Upcoming Renewals
+                </span>
+                <span class="row col-lg-4">
+
+
+
+                </span>
+                <span style="margin-top: 8px;" class="col-lg-2">
+                    <span class="pull-right">
+                        <span class="h4">Total Count : {{GrandTotalLicenses}}</span>
+
+                    </span>
+                </span>
+                <span class="col-lg-2">
+                    <span class="input-group">
+                        <span class="input-group-addon input-sm">Filter</span>
+                        <input ng-change="getDataAccordingDays(newday)" type="text" class="form-control input-sm" placeholder="Enter days" ng-model="newday" />
+                    </span>
+                </span>
+                <span class="col-lg-1">
+                    <button class="btn btn-xs btn-danger" ng-disabled="disabled" tooltip data-toggle="tooltip" data-placement="top" title="Export To PDF" ng-click="GeneratePDF()"><i class="fa fa-file-pdf-o"></i></button>
+                    <span style="margin: -6px; margin-top: 2px;" class="dropdown pull-right">
+                        <button class="btn btn-circle dropbtn btn-info btn-xs pull-right dropbtn "><i class="fa fa-question"></i> </button>
+                        <span class="newbtn dropdown-content">
+                            @*   <span >Color Coding For Upcoming Renewals</span>*@
+                            <span class="col-lg-12"><i style="color: grey;" class="fa fa-square"></i>&nbsp; No Upcoming Renewals</span>
+                            <span class="col-lg-12"><i style="color: #d9534f;" class="fa fa-square"></i>&nbsp; Expired</span>
+                            <span class="col-lg-12"><i style="color: #B8860B;" class="fa fa-square"></i>&nbsp;Less than 30 Days left</span>
+                            <span class="col-lg-12"><i style="color: orange; " class="fa fa-square"></i>&nbsp;Less than 60 Days left</span>
+                            <span class="col-lg-12"><i style="color: purple;" class="fa fa-square"></i>&nbsp;Less than 90 Days left</span>
+                            <span class="col-lg-12"><i style="color: Blue;" class="fa fa-square"></i>&nbsp;Less than 180 Days left</span>
+                        </span>
+                    </span>
+                </span>
+
+
+                @*<button class="btn btn-xs btn-primary pull-right" ng-click="controlpanel=true;"><i class="fa fa-cog"></i></button>*@
+                @*<div ng-show="controlpanel" class="affix bg-gray col-lg-2 table-bordered" style="z-index:1000; right:3%; background-color:white">
+                        <br />
+                        <table class="table table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th>Tab Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="ld in LicenseData track by $index">
+                                    <td><input type="checkbox" ng-model="ld.Show" ng-click="newSelection($index, ld.Show)" /></td>
+                                    <td>{{ld.LicenseType}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="col-lg-12 text-center" style="margin-bottom:5px;">
+                            <button class="btn btn-xs btn-success" ng-click="saveIt()">Save</button>
+                            <button class="btn btn-xs btn-danger" ng-click="revertIt()">Cancel</button>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <ul class="nav nav-tabs" style="border-bottom: 0px;">
+                        <li ng-repeat="ld in LicenseData track by $index">
+                            <a class="renewals pointer" ng-class="{active:LicenseType == ld.LicenseType, 'license-validation-expired':ld.LicenseStatus.ExpiredLicense > 0, 'license-validation-warning':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense > 0), 'license-validation-success':(ld.LicenseStatus.ExpiredLicense == 0 && ld.LicenseStatus.PendingDaylicense == 0 && ld.LicenseStatus.ValidLicense > 0)}">
+                                <span ng-click="getLicensTypeData(ld)">{{ld.LicenseType}}</span>
+                                <span ng-if="ld.LicenseStatus.ExpiredLicense > 0" class="label label-danger" ng-click="getExpiredLicense(ld)" data-toggle="tooltip" data-placement="bottom" title="Expired">{{ld.LicenseStatus.ExpiredLicense}}</span>
+                                <span ng-if="(ld.LicenseStatus.PendingDaylicenseLessThan30 > 0 && ld.LicenseStatus.PendingDaylicenseLessThan30 <= 60)" ng-click="getRenewalNeededforDaysLessThan30(ld)" class="label label-default yellow" data-toggle="tooltip" data-placement="bottom" title="Less than 30 Days left">{{ld.LicenseStatus.PendingDaylicenseLessThan30}}</span>
+                                <span ng-if="(ld.LicenseStatus.PendingDaylicenseLessThan60 > 0 && ld.LicenseStatus.PendingDaylicenseLessThan30 <= 90)" ng-click="getRenewalNeededforDaysLessThan60(ld)" class="label label-default orange" data-toggle="tooltip" data-placement="bottom" title="Less than 60 Days left">{{ld.LicenseStatus.PendingDaylicenseLessThan60}}</span>
+                                <span ng-if="(ld.LicenseStatus.PendingDaylicenseLessThan90 > 0 && ld.LicenseStatus.PendingDaylicenseLessThan30 <=180)" ng-click="getRenewalNeededforDaysLessThan90(ld)" class="label label-default purple" data-toggle="tooltip" data-placement="bottom" title=" Less than 90 Days left">{{ld.LicenseStatus.PendingDaylicenseLessThan90}}</span>
+                                <span ng-if="ld.LicenseStatus.ValidLicense > 0" ng-click="getUpcomingRenewals(ld)" class="label label-default blue" data-toggle="tooltip" data-placement="bottom" title="Upcoming Renewals">{{ld.LicenseStatus.ValidLicense}}</span>
+
+
+
+                                @*<span ng-if=" ld.LicenseStatus.PendingDaylicense > 0" ng-click="getRenewalNeeded(ld)" class="label label-warning" tooltip data-toggle="tooltip" data-placement="top" title="Renewal Needed">{{ld.LicenseStatus.PendingDaylicense}}</span>*@
+
+                                <span ng-if="ld.TotalLicenses == 0" class="label label-default" data-toggle="tooltip" data-placement="bottom" title="No Upcoming Renewals">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                @*<div class="col-lg-2 col-md-2 col-sm-2">
+                        <span class="h4">Total Count : {{GrandTotalLicenses}}</span>
+                        <div class="row form-inline">
+                            <div class="form-group col-lg-11">
+                                <div class="input-group">
+                                    <span class="input-group-addon input-sm">Filter</span>
+                                    <input ng-change="getDataAccordingDays(newday)" type="text" class="form-control input-sm" placeholder="Enter days" ng-model="newday" />
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>*@
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
+
+                    <!--to be removed from here-->
+                    @*<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div">
+                            <hr style=" margin-top: 11px;" />
+                        </div>*@
+                    <div class="clearfix"></div>
+                    <fieldset>
+                        <legend>
+                            {{LicenseType}}
+                        </legend>
+
+                        <!--And Added here-->
+                        <div ng-if="Show">
+                            <span class="pull-left" style="margin-right: 10px;">
+                                <select id="Dashboard_ProviderType" ng-model="providerType" ng-change="getDataAccordingProviderTypeAndProviderLevel(providerType, providerLevel,LicenseTypeCode)" class="form-control input-sm">
+                                    <option value="" ng-selected="true">All Provider Type</option>
+                                    <option ng-repeat="pt in ProviderTypes track by $index" value="{{pt.Title}}">{{pt.Title}}</option>
+                                </select>
+                            </span>
+                            <span class="pull-left" style="margin-right: 10px;">
+                                <select id="Dashboard_ProviderLevel" ng-model="providerLevel" ng-change="getDataAccordingProviderTypeAndProviderLevel(providerType, providerLevel,LicenseTypeCode)" class="form-control input-sm">
+                                    <option value="" ng-selected="true">All Provider Level</option>
+                                    <option ng-repeat="pl in ProviderLevels track by $index" value="{{pl.Name}}">{{pl.Name}}</option>
+                                </select>
+                            </span>
+                            <div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon input-sm">Filter</span>
+                                        <input id="selectedDay" ng-model="Selected_Day" ng-change="getDaysLeftForSelectedTab(Selected_Day,LicenseTypeCode)" type="text" class="form-control input-sm " placeholder="Enter days" style="width: 15%" />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div style=" margin-top: 11px;" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div">
+
+                        </div>
+                        <div class="btn-group pull-right legend2" ng-if="tempLicenseData.length > 0">
+                            <button class="dropdown-toggle btn btn-xs btn-primary" data-toggle="dropdown" aria-hidden="true"><span data-container="body" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="Print" class="glyphicon glyphicon-print"></span></button>
+                            <ul class="dropdown-menu" aria-disabled="true">
+                                <li><a href="" ng-click="printData('All')">All</a></li>
+                                <li><a href="" ng-click="printData('Current')">Current Page</a></li>
+                            </ul>
+                            @*<div class="pull-right legend2">*@
+                            <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="tooltip" popover data-placement="left" data-trigger="hover" data-content="Export to excel" data-original-title="" title="Export to excel" ng-click="exportToExcel()" style="margin-left:5px;border-radius:2px;"><i class="fa fa-file-text"></i></button>
+                            @*<button class="dropdown-toggle btn btn-xs btn-primary" popover data-toggle="dropdown" aria-hidden="true" style="margin-left:5px;border-radius:2px;"><span data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Export to excel" data-original-title="" title="" class="fa fa-file-excel-o"></span></button>
+                                <ul class="dropdown-menu" aria-disabled="true">
+                                    <li><a href="" ng-click="exportToExcel('All')">All</a></li>
+                                    <li><a href="" ng-click="exportToExcel('Current')">Current Page</a></li>
+                                </ul>*@
+                            @*</div>*@
+                            @*<button class="dropdown-toggle btn btn-xs btn-primary" popover da><span data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Export to excel"  data-original-title="" title="" class="fa fa-file-excel-o"></span></button>*@
+                        </div>
+                        @* <div ng-if="tempLicenseData.length > 0" ng-include="LicenseTypeCode"></div>*@
+                        <div ng-if="Show" ng-include="LicenseTypeCode"></div>
+                        <pagination ng-show="Show" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged(bigCurrentPage)" boundary-links="true" rotate="false" num-pages="numPages" style="margin:0;"></pagination>
+                        @*<pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>*@
+
+                        @*   <div ng-if="tempLicenseData.length == 0">No provider with upcoming {{LicenseType}} expiries</div>*@
+                        <div ng-if="!Show">No provider with upcoming {{LicenseType}} expiries</div>
+                    </fieldset>
+
+                    <div class="clearfix"></div>
+                    @*@Html.Partial("~/Views/Dashboard/_DashBoardTaskTracker.cshtml");*@
+
+
+                </div>
+
+                <!-- angular template for access data selected license type -->
+                <script type="text/ng-template" id="StateLicense">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="State License">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,8)" class="pointer">PROVIDER RELATIONSHIP<i ng-if="selectedSection==8 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==8 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">NAME <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.LicenseNumber',reverse,3)" class="pointer">LICENSE NUMBER<i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-2 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.IssueState',reverse,4)" class="pointer">STATE<i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.StateLicenseStatus.Title',reverse,7)" class="pointer">STATUS<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">EXPIRY DATE<i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">DAY LEFT<i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><a href="#">ACTION</a></th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.LicenseNumber" placeholder="License Number" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.IssueState" placeholder="State" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Title" placeholder="Status" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpiryDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index | orderBy:"-License.dayLeft"' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}} </td>
+                                <td>{{p.License.LicenseNumber}}</td>
+                                <td>{{p.License.IssueState}}</td>
+                                <td>{{p.License.StateLicenseStatus.Title}}</td>
+                                <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}#identification#StateLicense' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'StateLicense')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+                <script type="text/ng-template" id="FederalDEA">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Federal DEA">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.DEANumber',reverse,3)" class="pointer">DEA Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.StateOfReg',reverse,4)" class="pointer">State <i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.DEANumber" placeholder="DEANumber " /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.StateOfReg" placeholder="State Of Reg" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpiryDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.DEANumber}}</td>
+                                <td>{{p.License.StateOfReg}}</td>
+                                <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}#identification#FederalDEA' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'FederalDEA')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+                <script type="text/ng-template" id="CDSInformation">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="CDS Information">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.CertNumber',reverse,3)" class="pointer">CDS Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.State',reverse,4)" class="pointer">State <i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.CertNumber" placeholder="Cert Number" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.State" placeholder="State" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpiryDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}} </td>
+                                <td>{{p.License.CertNumber}}</td>
+                                <td>{{p.License.State}}</td>
+                                <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}#identification#CDSInformation' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'CDSInformation')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+                <script type="text/ng-template" id="SpecialityBoard">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Specialty/Board">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.SpecialtyBoardName',reverse,3)" class="pointer">Specialty Board Name <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpiryDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.SpecialtyBoardName" placeholder="Specialty Board Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpiryDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.SpecialtyBoardName}}</td>
+                                <td>{{p.License.ExpiryDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}#specialty#SpecialtyBoard' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'SpecialityBoard')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+                <script type="text/ng-template" id="HospitalPrivilages">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Hospital Privileges">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.HospitalName',reverse,3)" class="pointer">Hospital Name <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.AffiliationEndDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.HospitalName" placeholder="Hospital Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.AffiliationEndDate" placeholder="Affiliation End Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60,bluecolor:p.License.dayLeft <= 180 && p.License.dayLeft > 90}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.HospitalName}}</td>
+                                <td>{{p.License.AffiliationEndDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}#hospital#HospitalPrivileges' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'HospitalPrivilages')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+                <script type="text/ng-template" id="ProfessionalLiability">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Professional Liability">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.PolicyNumber',reverse,3)" class="pointer">Policy Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.InsuranceCarrier',reverse,4)" class="pointer">Insurance Carrier <i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpirationDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.PolicyNumber" placeholder="Policy Number " /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.InsuranceCarrier" placeholder="Insurance Carrier" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpirationDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.PolicyNumber}}</td>
+                                <td>{{p.License.InsuranceCarrier}}</td>
+                                <td>{{p.License.ExpirationDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}#liability#ProfessionalLibility' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'ProfessionalLiability')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+                <script type="text/ng-template" id="WorkerCompensation">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Worker Compensation">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.WorkersCompensationNumber',reverse,3)" class="pointer">Workers Compensation Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpirationDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.WorkersCompensationNumber" placeholder="Workers Compensation Number" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpirationDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.WorkersCompensationNumber}}</td>
+                                <td>{{p.License.ExpirationDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'WorkerCompensation')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+                <script type="text/ng-template" id="MedicareInformation">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Medicare Information">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.LicenseNumber',reverse,3)" class="pointer">Medicare Licence Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpirationDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.LicenseNumber" placeholder="License Number" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpirationDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.LicenseNumber}}</td>
+                                <td>{{p.License.ExpirationDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'MedicareInformation')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+
+                <script type="text/ng-template" id="MedicaidInformation">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="Medicaid Information">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.LicenseNumber',reverse,3)" class="pointer">Medicaid Licence Number <i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.ExpirationDate',reverse,5)" class="pointer">Expiry Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.LicenseNumber" placeholder="License Number" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ExpirationDate" placeholder="Expiry Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.LicenseNumber}}</td>
+                                <td>{{p.License.ExpirationDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'MedicaidInformation')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+
+                <script type="text/ng-template" id="CAQHExpiries">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="CAQH">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('ProviderRelationShip',reverse,7)" class="pointer">Provider RelationShip<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('CAQHNumber',reverse,8)" class="pointer">CAQH Number <i ng-if="selectedSection==8 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==8 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>
+                                    <a ng-click="reverse=!reverse;order('License.NextAttestationDate',reverse,5)" class="pointer">NextAttestation Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderRelationShip" placeholder="Provider RelationShip" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.CAQHNumber" placeholder="CAQH Number" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NextAttestationDate" placeholder="Next Attestation Date" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!Licenses.length==0">
+                            <tr ng-repeat='p in Licenses track by $index' ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.ProviderRelationShip}}</td>
+                                <td>{{p.License.CAQHNumber}}</td>
+                                <td>{{p.License.NextAttestationDate | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{p.ProfileId}}' data-toggle='tooltip' data-placement='right' title='View Profile'><i class="glyphicon glyphicon-forward"></i></a>
+                                    <a ng-click="DeactivateData(p,'CAQHExpiries')" ng-if="p.License.dayLeft < 0" class="btn btn-xs btn-danger" data-placement='right' title='Deactivate Profile' data-toggle="modal"><i class="fa fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="9" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+
+                <script type="text/ng-template" id="UpComingRecredentials">
+                    <table class='table table-striped table-bordered customtbodyStyle small wrap-words' id="UpComing Recredentials">
+                        <thead>
+                            <tr>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('NPINumber',reverse,1)" class="pointer">NPI <i ng-if="selectedSection==1 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==1 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('FirstName',reverse,2)" class="pointer">Name <i ng-if="selectedSection==2 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==2 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.PlanName',reverse,3)" class="pointer">Plan<i ng-if="selectedSection==3 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==3 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.LOBName',reverse,4)" class="pointer">LOB<i ng-if="selectedSection==4 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==4 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.ParticipatingStatus',reverse,12)" class="pointer">Participating Status<i ng-if="selectedSection==12 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==12 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.GroupID',reverse,6)" class="pointer">GroupID<i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.ProviderID',reverse,7)" class="pointer">ProviderID<i ng-if="selectedSection==7 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==7 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.InitiatedDate',reverse,8)" class="pointer">Effective Date <i ng-if="selectedSection==8 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==8 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                @*<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.TerminationDate',reverse,9)" class="pointer">Termination Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                    </th>*@
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.ReCredentialingDate',reverse,10)" class="pointer">Recredentialing Date <i ng-if="selectedSection==5 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==5 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+                                    <a ng-click="reverse=!reverse;order('License.dayLeft',reverse,6)" class="pointer">Day Left <i ng-if="selectedSection==6 && !reverse" class="fa fa-caret-up"></i><i ng-if="selectedSection==6 && reverse" class="fa fa-caret-down"></i></a>
+                                </th>
+                                <th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Action</th>
+                            </tr>
+                            <tr class="skip">
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.NPINumber" placeholder="NPI" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Fullname" placeholder="Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.Plan" placeholder="Plan Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.LOBName" placeholder="LOB Name" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ParticipatingStatus" placeholder="Participating Status" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.GroupID" placeholder="GroupID" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ProviderID" placeholder="ProviderID" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.InitiatedDate" placeholder="Effective Date" /></td>
+                                @* <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.TerminationDate" placeholder="TerminationDate" /></td>*@
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.ReCredentialingDate" placeholder="ReCredentialingDate" /></td>
+                                <td><input class="form-control input-sm textalign " type="text" ng-model="filterData.dayLeft" placeholder="Days Left" /></td>
+                                <td></td>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="p in Licenses  track  by $index | orderBy:'License.dayLeft'" ng-show="IsValidIndex($index)" ng-class='{danger:p.License.dayLeft <= 0, warning:p.License.dayLeft <= 30 && p.License.dayLeft > 0,lightorange:p.License.dayLeft <= 60 && p.License.dayLeft > 30, lightpurple:p.License.dayLeft <= 90 && p.License.dayLeft > 60}'>
+                                <td>{{p.NPINumber}}</td>
+                                <td>{{p.Fullname}}</td>
+                                <td>{{p.License.PlanName}}</td>
+                                <td>{{p.License.LOBName}}</td>
+                                <td>{{p.License.ParticipatingStatus|| 'Not Available'}}</td>
+                                <td>{{p.License.GroupID || 'Not Available'}}</td>
+                                <td>{{p.License.ProviderID || 'Not Available'}}</td>
+                                <td>
+                                    {{p.License.InitiatedDate|| 'Not Available' | date:'MM/dd/yyyy'}}
+                                    @*       <td>{{p.License.TerminationDate|| 'Not Available' | date:'MM/dd/yyyy'}}  *@
+                                <td>{{p.License.ReCredentialingDate|| 'Not Available' | date:'MM/dd/yyyy'}}</td>
+                                <td>{{p.License.dayLeft}}</td>
+                                @*<td><a ng-click=UpCome(p,'UpComingRecredentials')"navigateToRecred(p)"ng-href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Initiation/Index' prevent-right-click target="_blank" class='btn btn-xs btn-warning' tooltip data-toggle='tooltip' data-placement='right' title='Redirect to Initiate Recred'><i class='fa fa-share'></i></a></td>*@
+                                <td><a ng-click=UpCome(p,'UpComingRecredentials') class="btn btn-primary btn-xs" data-toggle='tooltip' data-placement='bottom' title='Initiate Re-Credentialing'><i class='fa fa-hand-o-up'></i></a></td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Licenses.length==0">
+                            <tr>
+                                <td colspan="11" style="text-align:center;font-weight:bolder">No Records Available for {{LicenseType}} expiries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </script>
+
+            </div>
+        </div>
+        <!-- Modal -->
+        <div id="upcomingReCred" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+
+                <!-- Modal content-->
+                <div class="modal-content new_data">
+                    <div class="modal-header ">
+                        <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title center-block" style="color:white;text-align:center">Initiate ReCredentialing</h4>
+                    </div>
+                    <div class="modal-body" style="min-height:250px;">
+                        <div>
+                            <div class="col-lg-12 ">
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">NPI Number</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.NPINumber || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">Name</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.Fullname  || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">Plan</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.Plan || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">LOB</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.LOBName || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="col-lg-12 ">
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">Panel Status</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.PanelStatus || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">Initial Credentialing Date</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.InitialCredentialingDate  || 'Not Available'| date:'MM/dd/yyyy'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">Effective Date</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.InitiatedDate  || 'Not Available'| date:'MM/dd/yyyy'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">Termination Date</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.TerminationDate  || 'Not Available'| date:'MM/dd/yyyy'}}</i>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                            <br />
+                            <div class="col-lg-12 ">
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">ReCredentialing Date</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.ReCredentialingDate  || 'Not Available'| date:'MM/dd/yyyy'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">GroupID</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.GroupID || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">ProviderID</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.ProviderID  || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 form-group">
+                                    <label class="control-label small">ParticipatingStatus</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{UpComingRecredentialData.License.ParticipatingStatus || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <div style="text-align: center; margin-top: 150px;" class="well well-sm" ng-show="SucessMessage">ReCredentialing Initiated Successfully. !!!!</div>
+                        @*<div ng-show="!SucessMessage" class="well well-sm">ReCredentialing Declined. !!!!</div>*@
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cancel</button>
+                        <button ng-show="!SucessMessage" ng-click="InitiateReCredentialing(UpComingRecredentialData)" type="button" class="btn btn-primary pull-right" @*data-dismiss="modal"*@>Initiate Recredentialing</button>
+                        @*<button ng-show="SucessMessage" id="btn_Suucess" ng-click="InitiateReCredentialing(UpComingRecredentialData)" type="button" class="btn btn-success pull-right" data-dismiss="modal">Perform PSV</button>*@
+                        @*<div ng-show="SucessMessage" id="btn_Suucess"><a class="btn btn-success btn-sm pull-right" data-dismiss="modal" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/CnD/Application/{{tempID}}"> View ReCredentialing Application </a></div>*@
+                        <div ng-show="SucessMessage"><a ng-click="hidemodal()" class="btn btn-success btn-sm" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/CnD/Application/{{tempID}}"> View ReCredentialing Application </a></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--Deactivate Profile Modal-->
+        <!-- Modal -->
+        <div id="DeactivateProfile" class="modal fade" role="dialog">
+            <div class="modal-dialog ">
+
+                <!-- Modal content-->
+                <div class="modal-content new_data">
+                    <div class="modal-header">
+                        <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title center-block" style="color:white;text-align:center">Deactivate Profile</h4>
+                    </div>
+                    <div class="modal-body" style="min-height:150px;">
+                        <div>
+                            <div class="col-lg-12 ">
+
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">NPI Number</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{DeactivatedProfile.NPINumber || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">First Name</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{DeactivatedProfile.FirstName || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Last Name</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{DeactivatedProfile.LastName || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 ">
+
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Title</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{DeactivatedProfile.ProviderTitles[0] || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Provider Relation</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{DeactivatedProfile.ProviderRelationShip || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    <label class="control-label small">Status</label>
+                                    <div>
+                                        <i class="data-label wrap-words">{{DeactivatedProfile.ProfileStatus  || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cancel</button>
+                        <button ng-click="ConfirmDeacivatoin(DeactivatedProfile)" type="button" class="btn btn-primary pull-right" data-dismiss="modal">Deactivate</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

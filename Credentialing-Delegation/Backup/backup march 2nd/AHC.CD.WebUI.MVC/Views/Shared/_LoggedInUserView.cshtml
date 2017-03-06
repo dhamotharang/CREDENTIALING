@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    <i class="fa fa-user fa-fw"></i> @User.Identity.GetUserName() @*@Session["FullName"]*@ <i class="fa fa-caret-down"></i>    
+</a>
+@*<input type="hidden" value="@Session.SessionID" id="userSessionId">*@
+<ul class="dropdown-menu dropdown-user">
+    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+    {
+        var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+            
+            <li><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/manage/index"><i class="fa fa-cogs"></i> Manage Account</a></li>
+        if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CRA"))
+        {
+            <li><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/AdminConfig/Index"><i class="fa fa-cogs"></i> Admin Config</a></li>
+        }
+    }
+    <li class="divider"></li>
+   
+    @if (Request.IsAuthenticated)
+{
+    <form action="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Account/LogOff" method="post" id="logoutForm">
+        @Html.AntiForgeryToken()
+
+
+        <li class="text-center text-danger cursor_point" id="logoutBtn"><i class="fa fa-fw fa-power-off"></i> Log off</li>
+    </form>
+}
+</ul>
+<input type="hidden" value="@Session.SessionID" id="userSessionId">
+
+

@@ -1,0 +1,49 @@
+﻿<div class="panel panel-default content-panel">
+    <div class="panel-heading">
+        Credentialing Appointment Details &nbsp;&nbsp;
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-5 zero-padding-left-right">
+            <section>
+                <section>
+                    <div class="well well-sm">
+                        <calendar ng-model="currentDate" calendar-mode="mode" event-source="eventSource"
+                                  range-changed="reloadSource(startTime, endTime)"
+                                  event-selected="onEventSelected(event)"
+                                  time-selected="onTimeSelected(selectedTime)">
+                        </calendar>
+                    </div>
+                    @*<div class="alert alert-success" ng-show="event">
+                            Event selected:{{event.endTime|date:'MMM/dd,yyyy'}}, {{event.title}}
+                        </div>*@
+                </section>
+            </section>
+        </div>
+        <div class="panel panel-default content-panel col-lg-7 zero-padding-left-right">
+            <div class="panel-heading CenterBold">
+                Date : &nbsp;{{selectedDate|date:'MMM/dd,yyyy'}}
+            </div>
+            <div class="panel-body zero-padding-left-right">
+                <table class="table table-hover">
+                    <thead style="background-color: #464957; border-color: #337AB7; color:white">
+                        <tr style="cursor:pointer">
+                            <th class="col-lg-2">Provider Details</th>
+                            <th class="col-lg-2">Status          </th>
+                            <th class="col-lg-2">CCM             </th>
+                        </tr>
+                    </thead>
+                    <tbody class="scrollable" style="height: 80px">
+                        <tr style="cursor:pointer" ng-repeat="ApointmentList in filteredCCMAppointmentsByDate">
+                            <td class="col-lg-2 wrap-words">{{ApointmentList.ProviderName}}</td>
+                            <td class="col-lg-2 wrap-words">{{ApointmentList.Status}}</td>
+                            <td class="col-lg-2 wrap-words">{{ApointmentList.CCM}}</td>
+                        </tr>
+                        <tr ng-if="filteredCCMAppointmentsByDate.length == 0">
+                            <td colspan="3" style="text-align:center">No Appointments On {{selectedDate|date:'dd MMM'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

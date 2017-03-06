@@ -1,0 +1,221 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.EducationHistory.ProgramDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div id="viewprogram">
+    <fieldset>
+        <legend>
+            View Residency/Internship/Fellowship Details
+        </legend>
+
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <fieldset class="wrap-words">
+                <legend>
+                    Program Details
+                </legend>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.PreferenceType, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label">{{residencyInternshipViewModel.Preference}}</i>
+                        </div>
+                        <div ng-if="!residencyInternshipViewModel.Preference">
+                            <i class="data-label">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.ResidencyInternshipProgramType, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i ng-if="residencyInternshipViewModel.ResidencyInternshipProgramType!= 3" class="data-label">{{residencyInternshipViewModel.ProgramType}}</i>
+                            <i ng-if="residencyInternshipViewModel.ResidencyInternshipProgramType== 3" class="data-label">Residency</i>
+                            <i ng-if="!residencyInternshipViewModel.ResidencyInternshipProgramType" class="data-label">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SpecialtyID, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label">{{residencyInternshipViewModel.Specialty.Name || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.DirectorName, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.DirectorName || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.Department, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.Department || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label">{{residencyInternshipViewModel.StartDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label">{{residencyInternshipViewModel.EndDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                        </div>
+                    </div>
+                    @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+                {
+                        <div class="form-group col-md-3">
+                            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                @Html.LabelFor(model => model.DocumentPath, htmlAttributes: new { @class = "control-label small" })
+                                <div ng-if="residencyInternshipViewModel.DocumentPath">
+                                    <i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{residencyInternshipViewModel.DocumentPath}}" class="pointer" target="_blank" data-toggle="tooltip" data-placement="top" title="Certificate"><i class="fa fa-file"></i></a></i>
+                                </div>
+                                <div ng-if="!residencyInternshipViewModel.DocumentPath">
+                                    <i class="data-label">Not available</i>
+                                </div>
+                            </div>
+                        </div>
+                }
+                </div>
+                <div class="clearfix"></div>
+            </fieldset>
+        </div>
+        <div class=" col-lg-12 zero-padding-left-right-div">
+            <fieldset class="wrap-words">
+                <legend>
+                    School Details
+                </legend>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SchoolInformation.SchoolName, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.SchoolName || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.HospitalName, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.HospitalName || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Location, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.Location || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Street, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.Street || 'Not Available'}}</i>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Building, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i ng-if="residencyInternshipViewModel.SchoolInformation.Building" class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.Building}}</i>
+                            <i ng-if="!residencyInternshipViewModel.SchoolInformation.Building" class="data-label">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.City, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.City || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.State, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.State || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.ZipCode, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i ng-if="residencyInternshipViewModel.SchoolInformation.ZipCode" class="data-label">{{residencyInternshipViewModel.SchoolInformation.ZipCode}}</i>
+                            <i ng-if="!residencyInternshipViewModel.SchoolInformation.ZipCode" class="data-label">Not Available</i>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Country, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.Country || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        @Html.LabelFor(model => model.SchoolInformation.County, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i ng-if="residencyInternshipViewModel.SchoolInformation.County" class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.County}}</i>
+                            <i ng-if="!residencyInternshipViewModel.SchoolInformation.County" class="data-label">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.SchoolInformation.Email, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i ng-if="residencyInternshipViewModel.SchoolInformation.Email" class="data-label wrap-words">{{residencyInternshipViewModel.SchoolInformation.Email}}</i>
+                            <i ng-if="!residencyInternshipViewModel.SchoolInformation.Email" class="data-label">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SchoolInformation.Phone, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i ng-if="residencyInternshipViewModel.SchoolInformation.Phone" class="data-label">{{residencyInternshipViewModel.SchoolInformation.PhoneCountryCode}}-{{residencyInternshipViewModel.SchoolInformation.Phone}}</i>
+                            <i ng-if="!residencyInternshipViewModel.SchoolInformation.Phone" class="data-label">Not Available</i>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 zero-padding-left-right-div">
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.SchoolInformation.Fax, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i ng-if="residencyInternshipViewModel.SchoolInformation.Fax" class="data-label">{{residencyInternshipViewModel.SchoolInformation.FaxCountryCode}}-{{residencyInternshipViewModel.SchoolInformation.Fax}}</i>
+                            <i ng-if="!residencyInternshipViewModel.SchoolInformation.Fax" class="data-label">Not Available</i>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.CompletedYesNoOption, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label">{{residencyInternshipViewModel.IsCompleted || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                    <div ng-show="residencyInternshipViewModel.CompletedYesNoOption == 2" class="col-lg-3 form-group">
+                        @Html.LabelFor(model => model.InCompleteReason, htmlAttributes: new { @class = "control-label small" })
+                        <div>
+                            <i class="data-label wrap-words">{{residencyInternshipViewModel.InCompleteReason || 'Not Available'}}</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div ng-show="activeMessageDiv=='updatedProgramDetails'+$index" class="alert alert-success" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='addedNewProgramDetails'+$index" class="alert alert-success" role="alert">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                </div>
+                <div class="clearfix"></div>
+            </fieldset>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-md-12 form-group">
+                <button id="RIFD_View_CancelButton" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('')">Cancel</button>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+{
+                    <button id="RIFD_View_EditButton" type="button" class="btn btn-primary btn-sm pull-right" ng-click="operateEditControl($index+'_editProgramDetail',residencyInternshipViewModel); SetAddView('Add')">Edit</button>
+}
+            </div>
+        </div>
+    </fieldset>
+</div>

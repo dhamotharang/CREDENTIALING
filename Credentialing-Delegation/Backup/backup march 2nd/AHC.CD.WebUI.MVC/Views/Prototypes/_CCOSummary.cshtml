@@ -1,0 +1,115 @@
+﻿<link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+
+<div class="row" ng-init="RefreshData('CCO')">
+    <h3 style=" color: #6b98e7; margin-left: 2%;">CCO Summary Status</h3>
+    <div class="col-lg-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
+            <div>
+                <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="PrototypeData">
+                    <thead>
+                        <tr class="theadColor">
+                            <th st-sort="CCOName" st-ratio="10">
+                                CCO Name
+                            </th>
+                            <th st-sort="NoOfProviders" st-ratio="8">
+                                No. of providers worked on
+                            </th>
+                            <th st-sort="NoOfTasks" st-ratio="11">
+                                No. of tasks performed
+                            </th>
+                            <th st-sort-default="false" st-sort="ApplnSubmitted" st-ratio="10">
+                                Application submitted
+                            </th>
+                            <th st-sort="PackagePending" st-ratio="11">
+                                Credentialing package pending
+                            </th>
+                            <th st-sort="CredPackage" st-ratio="10">
+                                Credentialing package completed
+                            </th>
+                            <th st-sort="NoOfActivities" st-ratio="9">
+                                No. of activities performed
+                            </th>
+                            <th st-ratio="4">Action</th>
+                        </tr>
+                        <tr>
+                            <td st-ratio="10"><input st-search="CCOName" type="text" placeholder="Filter CCO Name" class="form-control input-sm"></td>
+                            <td st-ratio="8"><input st-search="NoOfProviders" type="text" placeholder="Filter no. of providers worked on" class="form-control input-sm" /></td>
+                            <td st-ratio="11"><input st-search="NoOfTasks" type="text" placeholder="Filter no. of tasks performed" class="form-control input-sm" /></td>
+                            <td st-ratio="10"><input st-search="ApplnSubmitted" type="text" placeholder="Filter application submitted" class="form-control input-sm" /></td>
+                            <td st-ratio="11"><input st-search="PackagePending" type="text" placeholder="Filter credentialing package pending" class="form-control input-sm" /></td>
+                            <td st-ratio="10"><input st-search="CredPackage" type="text" placeholder="Filter credentialing package completed" class="form-control input-sm" /></td>
+                            <td st-ratio="8"><input st-search="NoOfActivities" type="text" placeholder="Filter no. of activities performed" class="form-control input-sm" /></td>
+                            <td st-ratio="4"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="c in pc.displayed">
+                            <td>{{c.CCOName}}</td>
+                            <td>{{c.NoOfProviders}}</td>
+                            <td>{{c.NoOfTasks}}</td>
+                            <td>{{c.ApplnSubmitted}}</td>
+                            <td ng-click="showCred('CCO')" style="color:red"><u>{{c.PackagePending}}</u></td>
+                            <td>{{c.CredPackage}}</td>
+                            <td>{{c.NoOfActivities||'Not Available'}}</td>
+                            <td>
+                                <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="Redirect"><i class="glyphicon glyphicon-forward"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot style="cursor:pointer">
+                        <tr>
+                            <td class=" text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+
+
+        <div ng-if="showCCOCredData" ng-cloak>
+            <h3 style=" color: #6b98e7; margin-left: 1%;">Credentialing Details</h3>
+            <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words'>
+                <thead>
+                    <tr class="theadColor">
+                        <th>
+                            Plan Name
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+                        <th>
+                            Initiated To
+                        </th>
+                        <th>
+                            Phase Of Credentialing
+                        </th>
+                        <th>
+                            Credentialing Status
+                        </th>
+                        <th>
+                            No. of Days Pending From
+                        </th>
+                        <th>
+                            Avg. Time To Complete(Hrs)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in credDetailsData" onclick="window.document.location = '/Credentialing/CnD/Application/1';">
+                        @*<a class="btn btn-xs btn-info pull-right ng-scope" href="/Credentialing/CnD/Application/1" tooltip="" data-toggle="tooltip" data-placement="top" title="Redirect to credetialing page"</a>*@
+                        <td>{{data.PlanName}}</td>
+                        <td>{{data.Start}}</td>
+                        <td>{{data.Initiated}}</td>
+                        <td>{{data.CredPhase}}</td>
+                        <td>{{data.CredStat}}</td>
+                        <td>{{data.Pending}}</td>
+                        <td>{{data.AvgTime}}</td>
+                        <a href="/Credentialing/CnD/Application/1"</a>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

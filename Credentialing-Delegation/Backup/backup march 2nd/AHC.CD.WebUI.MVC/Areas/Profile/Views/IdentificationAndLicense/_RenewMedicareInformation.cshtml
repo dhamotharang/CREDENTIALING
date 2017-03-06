@@ -1,0 +1,90 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.MedicareInformationViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<div ng-hide="ShowRenewDivMedicareInformation">
+    <div class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error List : <br />
+            <span>Renewal cannot be initiated.Expiry Date is missing.</span>
+        </div>
+    </div>
+</div>
+<div ng-show="ShowRenewDivMedicareInformation">
+    <form enctype="multipart/form-data" class="MedicareInformationForm">
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <span ng-if="tempObject.MedicareInformationID">
+                @Html.HiddenFor(model => model.MedicareInformationID, new { ng_value = "tempObject.MedicareInformationID" })
+            </span>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model=>model.LicenseNumber,new {@class="control-label small"})
+                @Html.HiddenFor(model=>model.LicenseNumber,new{ng_value="tempObject.LicenseNumber" })
+                @*@Html.TextBoxFor(model => model.IssueDate, new {data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy" })*@
+                @*@Html.HiddenFor(model => model.IssueState, new { ng_value = "tempObject.IssueState" })*@
+                @Html.HiddenFor(model => model.CertificatePath, new { ng_value = "tempObject.CertificatePath" })
+                <div>
+                    <i class="data-label">{{tempObject.LicenseNumber}}</i>
+                </div>
+                @Html.ValidationMessageFor(model => model.LicenseNumber, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-4 form-group">
+                @Html.LabelFor(model => model.IssueDate, new { @class = "control-label small" })
+                @Html.TextBoxFor(model => model.IssueDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.IssueDate", placeholder = "mm/dd/yyyy" })
+                @Html.ValidationMessageFor(model => model.IssueDate, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">New Expiry Date</label>
+                @Html.TextBoxFor(model => model.ExpirationDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ExpirationDate", placeholder = "mm/dd/yyyy" })
+                @Html.ValidationMessageFor(model => model.ExpirationDate, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+
+                <div ng-class="{'col-lg-11':tempObject.CertificatePath,'col-lg-12':!tempObject.CertificatePath}">
+
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                            <span class="fileinput-new small">Select Medicare Document</span>
+                            <span class="fileinput-exists">Change</span>
+                            @Html.TextBoxFor(model => model.CertificatePath, new { type = "file" })
+                        </span>
+
+                        <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                    @Html.HiddenFor(model => model.CertificatePath, new { ng_value = "tempObject.CertificatePath" })
+                    @Html.ValidationMessageFor(model => model.CertificatePath, "", new { @class = "text-danger" })
+
+
+                </div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+            {
+    <div ng-if="tempObject.CertificatePath!=null" class="col-lg-1">
+        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.CertificatePath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a>
+    </div>
+            }
+        </div>
+            <div ng-show="activeMessageDiv=='StateLicenseError'" class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    @*   <span class="pull-right" ng-click="SLError=''"><i class="fa fa-times"></i></span>*@
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error List : <br />
+                    <span ng-repeat="err in MedicareError track by $index">{{err}}</span>
+                </div>
+            </div>
+            <div class="col-md-12 form-group">
+
+                <div class="col-md-12 zero-padding-left-right-div">
+                    <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveMedicareInformation(tempObject,$index)">{{buttonLabel}}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

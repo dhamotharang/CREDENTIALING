@@ -1,0 +1,305 @@
+﻿
+<style>
+    .table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td {
+        padding: 3px;
+    }
+</style>
+
+
+<div class="text-center zero-margin-top-bottom-hr" style="font-family:Calibri;font-size:14px">
+    <strong>{{templateName}}</strong>
+</div>
+<table class="table table-condensed small" style="font-family:Calibri;font-size:10px;">
+    <tbody>
+        <tr>
+            <td colspan="6"> <label for="textinput">Provider Name:</label>&nbsp;{{delegationProfileObj.ProviderName | uppercase}}</td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <label for="npi">NPI:</label>{{delegationProfileObj.NPINumber}}
+            </td>
+            <td colspan="3" style="border-left: solid; border-left-width: 1px; border-left-color: #ddd">
+                <label for="tin">TIN:</label>{{delegationProfileObj.TIN}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <label for="textinput">Cred. Date<br />(Initial):</label><br />{{delegationProfileObj.CredentialDate}}
+            </td>
+            <td colspan="2" style="border-left: solid; border-left-width: 1px; border-left-color: #ddd">
+                <label for="textinput">
+                    Recred Date <br />
+                    Cycle 1
+                </label><br />
+                {{delegationProfileObj.ReCredentialCycle1Date}}
+            </td>
+            <td colspan="2" style="border-left: solid; border-left-width: 1px; border-left-color: #ddd">
+                <label for="textinput">
+                    Recred Date <br />
+                    Cycle 2
+                </label><br />
+                {{delegationProfileObj.ReCredentialCycle2Date}}
+            </td>
+        </tr>
+        <tr style="border-bottom: solid; border-bottom-width: 1px; border-bottom-color: #ddd; ">
+            <td colspan="3">
+                <label for="textinput">Medical License:</label> {{delegationProfileObj.MedicalLicense[0]}}
+            </td>
+            <td colspan="3" style="border-left: solid; border-left-width: 1px; border-left-color: #ddd">
+                <label for="textinput">DEA:</label>{{delegationProfileObj.DEA[0]}}
+            </td>
+        </tr>
+</table>
+
+
+<i><strong style="font-family:Calibri;font-size:11px">Education/Personal Information:</strong></i>
+<table class="table table-bordered table-condensed small" style="font-family:Calibri;font-size:10px;">
+    <tr ng-repeat="med in medicalEducation track by $index">
+        <td colspan="1" ng-if="$index==0" rowspan="{{medicalEducation.length}}">
+            <label for="textarea">
+                Medical Education:<br />
+                (School Name,yrs <br />Attended,Degree Earned)
+            </label>
+        </td>
+        <td colspan="6">
+            {{med}}
+        </td>
+    </tr>
+    <tr ng-repeat="internship in filteredProviderProgramDetails=(delegationProfileObj.ProviderProgramDetails | filter:{ProgramName:'internship'}) track by $index">
+        <td ng-if="$index==0" rowspan="{{(delegationProfileObj.ProviderProgramDetails | filter:{ProgramName:'internship'}).length}}">
+            <label>
+                Internship:<br />
+                (Facility,<br />Specality,<br />From/To)
+            </label>
+        </td>
+
+        <td colspan="2">
+            {{internship.Facility}}
+        </td>
+        <td colspan="2">
+            {{internship.Specialty}}
+        </td>
+        <td colspan="2">
+            {{internship.FromToDate}}
+        </td>
+    </tr>
+    <tr ng-repeat="internship in filteredProviderProgramDetails=(delegationProfileObj.ProviderProgramDetails | filter:{ProgramName:'Resident'}) track by $index">
+        <td ng-if="$index==0" rowspan="{{(delegationProfileObj.ProviderProgramDetails | filter:{ProgramName:'Resident'}).length}}">
+            <label for="textinput">
+                Residency(ies):
+                (Facility,Speciality,From/To)
+            </label>
+        </td>
+        <td colspan="2">
+            {{internship.Facility}}
+        </td>
+
+        <td colspan="2">
+            {{internship.Specialty}}
+        </td>
+        <td colspan="2">
+
+            {{internship.FromToDate}}
+        </td>
+    </tr>
+    <tr ng-repeat="internship in filteredProviderProgramDetails=(delegationProfileObj.ProviderProgramDetails | filter:{ProgramName:'Fellowship'}) track by $index">
+        <td ng-if="$index==0" rowspan="{{(delegationProfileObj.ProviderProgramDetails | filter:{ProgramName:'Fellowship'}).length}}">
+            <label for="textinput">Fellowship(s):</label>
+        </td>
+        <td colspan="2">
+            {{internship.Facility}}
+        </td>
+
+        <td colspan="2">
+            {{internship.Specialty}}
+        </td>
+        <td colspan="2">
+
+            {{internship.FromToDate}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="textinput">SSN:</label>
+        </td>
+        <td>
+            {{delegationProfileObj.SSN}}
+        </td>
+        <td>
+            <label for="textinput">DOB:</label>
+        </td>
+
+        <td>
+            {{delegationProfileObj.DOB}}
+        </td>
+        <td>
+            <label for="textinput">Ethnic Origin:</label>
+        </td>
+
+        <td>
+            {{delegationProfileObj.EthnicOrigin}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="selectbasic">Gender:</label>
+        </td>
+
+        <td colspan="2">
+            {{delegationProfileObj.Gender}}
+        </td>
+        <td>
+            <label for="selectmultiple">Provider Languages:</label>
+        </td>
+        <td colspan="2">
+            {{languagesKnown}}
+        </td>
+    </tr>
+</table>
+
+
+<i><strong style="font-family:Calibri;font-size:11px">Provider Information:</strong></i>
+<table class="table table-bordered table-condensed small" style="font-family:Calibri;font-size:10px;">
+    <tr>
+        <td colspan="1">
+            <label for="selectbasic">PCP or Specialist:</label>
+        </td>
+        <td colspan="2">
+            {{PrimarySpecility.PcpOrSpecialist}}
+        </td>
+        <td colspan="1">
+            <label for="textinput">Primary Specality:</label>
+        </td>
+        <td colspan="2">
+            {{PrimarySpecility.Specialty}}
+        </td>
+        <td colspan="1">
+            <label for="textinput">Secondary Specality:</label>
+        </td>
+        <td colspan="1">
+            {{SecondarySpecility[0].Specialty}}
+        </td>
+    <tr>
+        <td>
+            <label for="radios">Board Certified:</label> <br />
+        </td>
+        <td colspan="2">
+            {{PrimarySpecility.BoardCertified}}
+        </td>
+        <td>
+            <label for="textinput">Certified In:</label>
+        </td>
+        <td colspan="2">
+            {{PrimarySpecility.BoardName}}
+        </td>
+        <td colspan="1">
+            {{PrimarySpecility.SpecialtyEffectiveDates}}
+
+        </td>
+        <td colspan="1">
+            {{SecondarySpecility[0].SpecialtyEffectiveDates}}
+        </td>
+    </tr>
+    <tr ng-repeat="phy in delegationProfileObj.CoveringPhysicians track by $index">
+        <td ng-if="$index==0" rowspan="{{delegationProfileObj.CoveringPhysicians.length}}">
+            <label for="textinput">Covering Physicians:</label>
+        </td>
+        <td colspan="4">
+            {{phy}}
+        </td>
+        <td colspan="3">
+        </td>
+    </tr>
+    <tr ng-repeat="hospital in ProviderHospitalAffiliations track by $index">
+
+        <td ng-if="$index==0" rowspan="{{delegationProfileObj.ProviderHospitalAffiliations.length}}">
+            <label for="textinput">Hospital Affiliations:</label>
+        </td>
+        <td colspan="4">
+            {{hospital.leftObj.HospitalName}}<br />{{hospital.leftObj.EffectiveDates}}
+        </td>
+        <td colspan="3">
+            {{hospital.rightObj.HospitalName}}<br />{{hospital.rightObj.EffectiveDates}}
+        </td>
+    </tr>
+</table>
+
+<i><strong style="font-family:Calibri;font-size:11px">Practice Information:</strong></i>
+<table class="table table-bordered table-condensed small" style="font-family:Calibri;font-size:10px;">
+    <tbody ng-repeat="practice in delegationProfileObj.ProviderPracitceInfos track by $index">
+        <tr>
+            <td rowspan="2">
+                <label for="textarea">
+                    Location {{$index+1}}:<br />
+                    Phone/Fax:
+                </label>
+            </td>
+            <td colspan="6">
+                {{practice.Address}}
+            </td>
+        <tr>
+            <td colspan="3">
+                {{practice.PhoneNumber}}
+            </td>
+            <td colspan="3">
+                {{practice.FaxNumber}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="1">
+                <label for="textinput">Office Hours:</label>
+            </td>
+            <td colspan="1">
+                <p ng-repeat="c in practice.OfficeHourMondays track by $index"> {{c}}</p>
+            </td>
+            <td colspan="1">
+                <p ng-repeat="c in practice.OfficeHourTuesdays track by $index"> {{c}}</p>
+                
+            </td>
+            <td colspan="1">
+                <p ng-repeat="c in practice.OfficeHourWednesdays track by $index"> {{c}}</p>
+                
+            </td>
+            <td colspan="1">
+                <p ng-repeat="c in practice.OfficeHourThursdays track by $index"> {{c}}</p>
+                
+            </td>
+            <td colspan="1">
+                <p ng-repeat="c in practice.OfficeHourFridays track by $index"> {{c}}</p>
+                
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2">
+                <label for="textarea">
+                    Billing<br />
+                    Information:
+                </label>
+            </td>
+            <td colspan="6">
+                {{practice.BillingAddress}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                {{practice.BillingPhoneNumber}}
+            </td>
+            <td colspan="3">
+                {{practice.BillingFaxNumber}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div ng-if="remarks">
+    <i><strong style="font-family:Calibri;font-size:11px">Remarks</strong></i>
+    <table class="table table-bordered table-condensed small" style="font-family:Calibri;font-size:10px;">
+        <tr>
+            <td>
+                {{remarks}}
+            </td>
+        </tr>
+    </table>
+</div>
+
+

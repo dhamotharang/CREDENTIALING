@@ -1,0 +1,222 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+    <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+    <script src="~/Scripts/Custom/TaskTracker/LoadingInterceptor.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    @*<script src="~/Scripts/angular-timer-all.min.js"></script>*@
+    <script src="~/Scripts/Custom/TaskTracker/TaskTracker.js"></script>
+    <script src="~/Scripts/Custom/TaskTracker/trackerPageDirective.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Moment/moment.js"></script>
+}
+<script>
+    var onLoad = 0;
+</script>
+<style>
+    /* styles for validation helpers */
+    .field-validation-error {
+        color: #b94a48;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    input.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    select.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    input[type="checkbox"].input-validation-error {
+        border: 0 none;
+    }
+
+    .validation-summary-errors {
+        color: #b94a48;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+
+    .emptyData {
+        color: "#E27B7B";
+    }
+
+    /*Provider Type Style*/
+    .label-provider-type {
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        /*padding: 4px 4px 5px 7px;*/
+    }
+
+        .label-provider-type > i {
+            padding-left: 10px;
+            color: #b94a48;
+        }
+
+        .label-provider-type:hover {
+            background-color: #eee;
+            text-decoration: none;
+        }
+
+    .select-page {
+        width: 50px;
+        text-align: center;
+    }
+</style>
+
+
+<div id="page-wrapper" ng-app="TrackerApp">
+
+    <div class="container-fluid" ng-controller="TrackerCtrl as mc" ng-init="progressbar = false;LoadData()">
+
+        <div class="row">
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                </li>
+            </ol>
+        </div>
+        <div ng-show="showLoading" class="row" ng-cloak>
+            <div style="margin-left:45%;margin-top:15%">
+                <img src="~/Areas/Credentialing/img/loading.GIF" />&nbsp;
+                <span>Loading...Please Wait</span>
+            </div>
+        </div>
+        <div id="tasktrackerdiv" hidden>
+            <div class="panel panel-body form-style">
+                <fieldset>
+                    <legend>
+                        Tasks Overview
+                    </legend>
+                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                        if (roles != null)
+                        {
+                            if (roles.Contains("CCO") || roles.Contains("CRA"))
+                            {
+                                <div id="addButton" class="legend2 pull-right">
+                                    <button ng-click="showAddView()" class="btn btn-xs btn-primary" id="NewwAdd" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
+                                </div>
+                            }
+                        }
+                    }
+                    @*<div id="addButton" class="legend2 pull-right">
+                            <button ng-click="showAddView()" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
+                        </div>*@
+                    <div class="col-lg-12" ng-if="!addView && !editView && !detailView" ng-cloak>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="active"><a id="tabs1" data-toggle="tab" ng-click="showtabdata();tabName('DailyTasks')" href="#tab1">My Daily Tasks</a></li>
+                            @*<li><a id="tabs2" data-toggle="tab" ng-click="showtabdata();tabName('TasksAssigned')" href="#tab1">Assigned By Me</a></li>*@
+                            <li><a id="tabs3" data-toggle="tab" ng-click="showtabdata();tabName('AllTasks')" href="#tab1">All Tasks</a></li>
+                            <li><a id="tabs4" data-toggle="tab" ng-click="showtabdata();tabName('ClosedTasks')" href="#tab1">Closed Tasks</a></li>
+                            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                            {
+                                var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+                                if (roles != null)
+                                {
+                                    if (roles.Contains("ADM"))
+                                    {
+                                        <li><a id="tabs5" data-toggle="tab" ng-click="showtabdata();tabName('AllTaskForAdmin')" href="#tab1">All Tasks</a></li>
+                                    }
+                                }
+                            }
+                            <li><a id="tabs6" data-toggle="tab" ng-click="showtabdata();tabName('History')" href="#tab1" ng-show="history">Task History</a></li>
+                            <label tooltip data-toggle="tooltip" data-placement="top" title="Close" ng-show="history" style="color:red;cursor:pointer" class="fa fa-close" ng-click="closeHistory()"></label>
+                        </ul>
+                        <div class="clearfix"></div>
+                        <div class="col-lg-12 zero-padding-left-right-div">
+                            <div ng-show="activeMessageDiv=='successfullySaved'" class="alert alert-success" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                {{messageDesc}}
+                            </div>
+                            <div ng-show="activeMessageDiv=='errorInitiated'" class="col-lg-12">
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    <span>{{messageDesc}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div id="tab1" ng-if="tabStatus.TabStatus" class="tab-pane fade in active">@Html.Partial("_DailyTasks")</div>
+                            @*<div id="tab1" ng-if="tabStatus.TabStatus" class="tab-pane fade">@Html.Partial("_TasksAssigned")</div>
+                                <div id="tab1" ng-if="tabStatus.TabStatus" class="tab-pane fade">@Html.Partial("_AllTasks")</div>
+                                <div id="tab1" ng-if="tabStatus.TabStatus" class="tab-pane fade">@Html.Partial("ClosedTasks")</div>*@
+                            @*<div id="tab1" class="tab-pane fade" >@Html.Partial("updateHistory")</div>*@
+                        </div>
+                    </div>
+
+
+                    <div ng-if="addView" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" ng-cloak>
+                        <fieldset>
+                            <legend>
+                                Add New Task
+                            </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="cancelAdd()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="close"><i class="fa fa-close"></i></button>
+                            </div>
+                            <div id="newFormDiv">
+                                @Html.Partial("~/Views/TaskTracker/_AddEditTask.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="modal fade" id="inactiveWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="removeTask">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                        </div>
+                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                            <div style="margin-top:2%;">
+                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                            </div>
+                        </div>
+                        <div class="modal-body" ng-show="!isRemoved">
+                            Do you really want to Close the Task ?
+                            <input type="hidden" name="TaskTrackerId" value="{{task.TaskTrackerId}}" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="CloseTask();cancelForRemoveTask()" data-dismiss="modal">Continue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

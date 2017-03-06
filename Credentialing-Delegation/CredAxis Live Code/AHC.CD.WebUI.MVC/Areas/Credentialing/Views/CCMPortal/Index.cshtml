@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <link href="~/Content/calendar.min.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+    <link href="~/Content/nvd3/nv.d3.min.css" rel="stylesheet" />
+    <link href="~/Content/CCMDashboard/CCMDashboard.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.2.min.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/tableExportnigraj.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jquery.base64.js"></script>
+    <script src="~/Scripts/Lib/pdfGeneration/html2canvas.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/sprintf.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jspdf.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/base64.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/angular-route.js"></script>
+    <script src="~/Scripts/ng-signature-pad.js"></script>
+    <script src="~/Scripts/signature_pad.js"></script>
+    <script src="~/Scripts/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    <script src="~/Scripts/calendar-tpls.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/d3.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/nv.d3.min.js"></script>
+    <script src="~/Scripts/Lib/angularjs-ncd-directive/angular-nvd3.min.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CCMdashboard/CCMApp.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CCMdashboard/CCMServices.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CCMdashboard/CCMFactories.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CCMdashboard/CCMDirectives.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CCMdashboard/CCMFiltters.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/CCMdashboard/CCMController.js"></script>
+}
+
+
+<div id="page-wrapper" ng-app="CCMDashboard">
+    <toaster-container toaster-options="{'time-out': 2000,'position-class': 'toast-top-right','close-button':true}"></toaster-container>
+    <div class="container-fluid" ng-controller="CCMDashboardController" ng-init="MasterData()" ng-cloak>
+        <!-- Page Heading -->
+        <div class="row" ng-cloak>
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> CCM Credentialing Action
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="Biscuits" class="col-lg-12 zero-padding-left-right margin_top_6px">
+                            <biscuit-tile action-type="Total" grid-data="GridData('Total')" biscuit-id="TotalAppointment" biscuit-title="Appointment" biscuit-value="100" biscuit-color="blue" biscuit-symbol="Total"></biscuit-tile>
+                            <biscuit-tile action-type="Approved" grid-data="GridData('Approved')" biscuit-id="Approved" biscuit-title="Approved" biscuit-value="70" biscuit-color="green" biscuit-symbol="Approved"></biscuit-tile>
+                            <biscuit-tile action-type="Rejected" grid-data="GridData('Rejected')" biscuit-id="Rejected" biscuit-title="Rejected" biscuit-value="20" biscuit-color="time" biscuit-symbol="Rejected"></biscuit-tile>
+                            <biscuit-tile action-type="Pending" grid-data="GridData('Pending')" biscuit-id="Pending" biscuit-title="Pending" biscuit-value="10" biscuit-color="sea" biscuit-symbol="Pending"></biscuit-tile>
+
+                        </div>
+                        <div class="clearfix">
+                        </div>
+                        <div ng-controller="AppointmentGridController as pc">
+                            <div ng-if="TempObjectForStatus.CredebtailingApprovalRequest">
+                                @Html.Partial("~/Areas/Credentialing/Views/CCMPortal/_AppointmentsGrid_GraphView.cshtml")
+                            </div>
+                        </div>
+                        <div ng-if="TempObjectForStatus.AppointmentDashboard">
+                            @Html.Partial("~/Areas/Credentialing/Views/CCMPortal/_CalendarDashboard.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

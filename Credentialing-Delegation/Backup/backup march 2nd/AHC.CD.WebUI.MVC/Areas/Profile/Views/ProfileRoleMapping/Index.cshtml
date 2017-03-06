@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProfileRoleMapping.js"></script>
+}
+<script>
+    ProfileData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ProfileDisplayData));
+    UserRoles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ExistingRoles));
+</script>
+<div id="page-wrapper" ng-app="ProfileRoleMappingApp" ng-controller="ProfileRoleMappingController" ng-cloak>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Profile Delegation
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Add Provider content form div -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="newUser" class="panel panel-default content-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Profile Role Mapping</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="clearfix"></div><br />
+                            <div class="panel-body">
+                                <div class="clearfix"></div>
+                                <div class="col-lg-12" style="overflow-x:auto;">
+                                    <table class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                                        <thead>
+                                            <tr>
+                                                <th>NPI Number</th>
+                                                <th>Name</th>
+                                                <th>Email Id</th>
+                                                <th>Existing Roles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{profile.OtherIdentificationNumber.NPINumber}}</td>
+                                                <td>{{profile.PersonalDetail.FirstName}} {{profile.PersonalDetail.LastName}}</td>
+                                                <td><div ng-repeat="email in profile.ContactDetail.EmailIDs track by $index">{{email.EmailAddress}}</div></td>
+                                                <td><div ng-repeat="role in userRoles track by $index">{{role.CDRole.Name}}</div></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            @*<select>
+                                <option ng-model ="roleId" ng-repeat="role in Roles track by $index" value="role.CDRoleID">{{role.Name}}</option>
+                            </select>*@
+                            <input type="hidden" ng-model="roleId" ng-value="4">
+                            <div class="clearfix"></div><br />
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div class="col-lg-12 form-group">
+                                    <input type="button" value="Make CCM Member" ng-click="addCCMMember(@ViewBag.ProfileId)" class="btn btn-primary btn-sm pull-right" />
+                                    <input type="button" value="Clear" ng-click="clear()" class="btn btn-warning btn-sm pull-left" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- /.row -->
+                </div>
+                <div ng-show="activeMessageDiv=='TL'" class="alert alert-success" role="alert">
+                    {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='TLError'" class="alert alert-danger" role="alert">
+                    {{messageDesc}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</div>

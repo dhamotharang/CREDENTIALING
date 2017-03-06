@@ -1,5 +1,6 @@
 ﻿using AHC.CD.WebUI.MVC;
 using AHC.CD.WebUI.MVC.Controllers;
+using AHC.CD.WebUI.MVC.CustomHelpers;
 using AHC.CD.WebUI.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -226,6 +227,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
         //
         // GET: /Manage/ChangePassword
+        [AllowAnonymous]
+        [SkipPasswordExpirationCheck]
         public ActionResult ChangePassword()
         {
             return View();
@@ -235,6 +238,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
         // POST: /Account/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        [SkipPasswordExpirationCheck]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)

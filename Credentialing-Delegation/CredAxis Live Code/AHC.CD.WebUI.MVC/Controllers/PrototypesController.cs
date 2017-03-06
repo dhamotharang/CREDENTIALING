@@ -38,5 +38,14 @@ namespace AHC.CD.WebUI.MVC.Controllers
         {
             return View();
         }
-	}
+
+        /// <summary>
+        /// Provider Directory View Action Method
+        /// </summary>
+        /// <returns>cshtml viewpage</returns>
+        public ActionResult ProviderDirectory()
+        {
+            return View();
+        }
+    }
 }

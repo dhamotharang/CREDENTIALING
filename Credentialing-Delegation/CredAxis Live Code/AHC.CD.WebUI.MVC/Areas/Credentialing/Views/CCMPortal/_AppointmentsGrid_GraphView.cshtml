@@ -1,0 +1,137 @@
+﻿<div class="col-lg-4">
+    <div class="btn-group btn-group-md pull-left" ng-if="!TempObjectForStatus.QuickApprovalAction">
+        <button class="btn" style="background-color: #464957; border-color: #337AB7; color:white" data-toggle="tooltip" data-placement="top" ng-click="SwitchViews();" title="Return To Appointment DashBoard"><span><i class="fa fa-arrow-left bigger-120"></i></span></button>
+    </div>
+</div>
+<div class="col-lg-4 tripijodal">
+    <i class="fa" ng-class="{'fa-users': tableCaption == 'Appointments','fa-check': tableCaption == 'Approved','fa-ban': tableCaption == 'Rejected','fa-exclamation-circle': tableCaption == 'Pending'}"></i> {{tableCaption}}
+</div>
+<div class="col-lg-4">
+    <div class="btn-group btn-group-md pull-right">
+        <button class="btn" style="background-color: #464957; border-color: #337AB7; color:white" data-toggle="tooltip" data-placement="top" ng-click="GridView=!GridView" title="Statistics"><span><i class="fa fa-bar-chart bigger-120"></i></span></button>
+    </div>
+    <div class="btn-group btn-group-md pull-right">
+        <a class="btn btn-white" data-toggle="tooltip" data-placement="top" title="Search"><span><i class="fa fa-search bigger-120"></i></span></a>
+        <a class="btn btn-white" style="margin-left: 2px;color:orange" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#CCMGrid')"><span><i class="fa fa-file-code-o bigger-120"></i></span></a>
+        <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#CCMGrid')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></a>
+        <a class="btn btn-white" style="margin-left: 2px; color: red; " data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#CCMGrid')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></a>
+        <a class="btn btn-white" style="margin-left: 2px; color: grey; " data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></a>
+    </div>
+</div>
+<div class="clearfix">
+
+</div>
+<div class="col-lg-12" ng-show="GridView">
+    <div class="divborder">
+        <table id="CCMGrid" class="table table-hover" st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="CCMAppointments">
+            <thead style="background-color: #464957; border-color: #337AB7; color:white">
+                <tr style="cursor:pointer">
+                    <th st-sort="ProviderName" class="col-lg-2">Provider name</th>
+                    <th st-sort="Specialty" class="col-lg-2">Specialty</th>
+                    <th st-sort="PlanName" class="col-lg-2">Plan</th>
+                    <th st-sort="CredInitiationDate" class="col-lg-2">Initiation Date</th>
+                    <th st-sort="AppointmentDate" class="col-lg-1">Appointment</th>
+                    <th st-sort="RecommendedLevel" class="col-lg-1">Level</th>
+                    <th st-sort="Status" class="col-lg-1">Status</th>
+                    <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="TempObjectForStatus.QuickApprovalAction"><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#ActionModal">Proceed</button></th>
+                </tr>
+            </thead>
+            <tbody ng-show="!pc.isLoading">
+                <tr ng-repeat="appointment in pc.displayed track by $index" id="firstrow" style="cursor:pointer" ng-click="CheckStatus(appointment)" ng-style="appointment.SelectStatus ? { 'background-color':'rgb(114, 58, 115)',color:'white','font-weight':'bold' } : {'background-color':'white',color:'black'}">
+                    <td class="col-lg-2 wrap-words">{{appointment.ProviderName || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words">{{appointment.Specialty || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words">{{appointment.PlanName || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words">{{appointment.CredInitiationDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words">{{appointment.AppointmentDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words">{{appointment.RecommendedLevel || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words">{{appointment.Status || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" style="width: 3%;" ng-if="TempObjectForStatus.QuickApprovalAction">
+                        <span ng-show="appointment.SelectStatus"> <i class="fa fa-check"></i></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-show="pc.isLoading">
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <div class="loading-indicator"></div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="8"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div class="col-lg-12" ng-show="!GridView">
+    <div class="panel" style="border: 3px solid rgba(13, 1, 25, 0.4); border-radius: 3px; background-color: #FFF;">
+        <div class="panel-heading" style="background-color: #464957; border-color: #337AB7;color:white">
+            <h3 class="panel-title">
+                Statistics
+                <span class="pull-right"><img src="~/Content/Images/svg-loaders/spinning-circles.svg" alt="" height="15"></span>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <nvd3 options="options" data="data"></nvd3>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12" ng-show="!GridView">
+    <div class="panel" style="border: 3px solid rgba(13, 1, 25, 0.4); border-radius: 3px; background-color: #FFF;">
+        <div class="panel-heading" style="background-color: #464957; border-color: #337AB7;color:white">
+            <h3 class="panel-title">
+                Statistics
+                <span class="pull-right"><img src="~/Content/Images/svg-loaders/ball-triangle.svg" alt="" height="15"></span>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <nvd3 options="options1" data="data1"></nvd3>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="ActionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title CenterBold">Do you want to Accept/Reject Selected Requests ?</h4>
+            </div>
+            <div class="modal-body" style="border-top: 1px solid #eee; padding-top: 10px;background-color:#cfc3c3">
+                <div>
+                    Signature : <select class="input-xs" style="color:black">
+                        <option value="Digital Signature">Digital Signature</option>
+                        <option value="Digital Signature">Use Previous Signature</option>
+                        <option value="Digital Signature">Upload Signature</option>
+                    </select>
+                </div>
+                <div style="background-color:white;">
+                    <div class="panel panel-body">
+                        <canvas id="SignatureCanvas" height="140" width="300" style="border: solid;" ng-signature-pad="signature"></canvas>
+                        <button id="clear" ng-click="cleardigitalsignature()" class="btn btn-primary btn-xs" style=" margin-bottom: 14px;">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <div class="panel panel-body">
+                        <button class="btn btn-danger pull-left" ng-click="ResponseToRequest">Reject</button>
+                        <button class="btn btn-warning" style="margin-left: 160px;" ng-click="ResponseToRequest">Pending</button>
+                        <button class="btn btn-primary pull-right" ng-click="ResponseToRequest">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="~/Areas/Credentialing/Scripts/CCMdashboard/AppointmentsGridController.js"></script>
+<script>
+    var canvas;
+    canvas = document.getElementById('SignatureCanvas');
+    context = canvas.getContext('2d');
+</script>
