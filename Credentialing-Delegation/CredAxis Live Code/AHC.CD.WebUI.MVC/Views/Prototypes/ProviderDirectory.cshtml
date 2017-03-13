@@ -237,9 +237,12 @@
             background-image: linear-gradient(to bottom, #fff 0, #fff 100%);
         }
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
+
     <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
     <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
-    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    @*<script src="~/Scripts/Lib/Angular/ng-table.js"></script>*@
+    <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
     <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
     <script src="~/Scripts/Custom/Credentialing/ProviderDirectory.js"></script>
 
@@ -267,7 +270,7 @@
                         </div>
                     </div>
                     <div class="col-sm-5 datasize">
-                        <b>100</b>
+                        <b>212</b>
                     </div>
                     <div class="col-sm-2 padding_5"></div>
                 </div>
@@ -390,7 +393,22 @@
                         </div><!-- /input-group -->
                     </td>
                     <td>
-                        <button class="btn btn-default btn-sm">Customize Search Result</button>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Customize Search Result <span class="caret"></span></button>
+                                <ul class="dropdown-menu customize_column">
+                                    <li><a class="small" data-value="option1"><input type="checkbox" checked />&nbsp;S. No.</a></li>
+                                    <li><a class="small" data-value="option2"><input type="checkbox" checked />&nbsp;Salutation</a></li>
+                                    <li><a class="small" data-value="option3"><input type="checkbox" checked />&nbsp;Provider Name</a></li>
+                                    <li><a class="small" data-value="option4"><input type="checkbox" checked />&nbsp;NPI Number</a></li>
+                                    <li><a class="small" data-value="option5"><input type="checkbox" checked />&nbsp;Specialty</a></li>
+                                    <li><a class="small" data-value="option6"><input type="checkbox" checked />&nbsp;Primary Practice Location</a></li>
+                                    <li><a class="small" data-value="option7"><input type="checkbox" checked />&nbsp;IPA/Group</a></li>
+                                    <li><a class="small" data-value="option8"><input type="checkbox" checked />&nbsp;Plan</a></li>
+                                    <li><a class="small" data-value="option9"><input type="checkbox" checked />&nbsp;LOB</a></li>
+                                </ul>
+                            </div>
+                        </div><!-- /input-group -->
                     </td>
                     <td colspan="2">
                         <div class="input-group input-group-sm">
@@ -403,14 +421,17 @@
                 </tr>
             </tbody>
         </table>
-        <table ng-table="tableParams" class="table table-condensed table-bordered table-striped">
+        <table ng-table="tableParams" class="table table-condensed table-bordered table-striped" show-filter="true">
             <tr ng-repeat="row in $data">
                 <td data-title="'S. No.'">{{$index+1}}</td>
-                <td data-title="'Name'" filter="{ Name: 'text'}" sortable="'Name'">{{row.Name}}</td>
-                <td data-title="'NPI'" filter="{ NPI: 'text'}" sortable="'NPI'">{{row.NPI}}</td>
-                <td data-title="'Specialty'" filter="{ Specialty: 'text'}" sortable="'Specialty'">{{row.Specialty}}</td>
-                <td data-title="'Location'" filter="{ Location: 'text'}" sortable="'Location'">{{row.Location}}</td>
-                <td data-title="'Group'" filter="{ age: 'Group'}" sortable="'Group'">{{row.Group}}</td>
+                <td data-title="'Salutation'" filter="{ Salutation: 'text'}" sortable="'Salutation'">{{row.Salutation}}</td>
+                <td data-title="'Provider Name'" filter="{ Name: 'text'}" sortable="'Name'">{{row.Name}}</td>
+                <td data-title="'NPI Number'" filter="{ NPI: 'text'}" sortable="'NPI'">{{row.NPI}}</td>
+                <td data-title="'Specialty'" filter="{ Specialty: 'text'}" @*filter-data="Specialties"*@ sortable="'Specialty'">{{row.Specialty}}</td>
+                <td data-title="'Primary Practice Location'" filter="{ PrimaryPracticeLocation: 'text'}" sortable="'PrimaryPracticeLocation'">{{row.PrimaryPracticeLocation}}</td>
+                <td data-title="'IPA/Group'" filter="{ Groups: 'text'}" sortable="'Groups'">{{row.Groups}}</td>
+                <td data-title="'Plan'" filter="{ Plan: 'text'}" sortable="'Plan'">{{row.Plan}}</td>
+                <td data-title="'LOB'" filter="{ LOB: 'text'}" sortable="'LOB'">{{row.LOB}}</td>
             </tr>
         </table>
     </div>

@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 
 namespace AHC.CD.WebUI.MVC.Models
 {
@@ -19,7 +20,6 @@ namespace AHC.CD.WebUI.MVC.Models
         }
 
         public virtual IList<UsedPassword> UserUsedPassword { get; set; }
-
         public string FullName { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -65,7 +65,6 @@ namespace AHC.CD.WebUI.MVC.Models
             return new ApplicationDbContext();
         }
     }
-
     //public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     //{
     //    public ApplicationDbContext()

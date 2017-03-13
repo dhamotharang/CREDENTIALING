@@ -42,23 +42,23 @@ delegationApp.controller("delegationController", ['$scope', '$timeout', '$http',
         return returndate;
     }
     $scope.TeamLeads = [];
-    if (TeamLeads.length >0)
-    $scope.TeamLeads = angular.copy(TeamLeads);
+    if (TeamLeads.length > 0)
+        $scope.TeamLeads = angular.copy(TeamLeads);
 
-    //$http.get(rootDir + "/Profile/ProfileDelegation/GetAllTeamLeadsAsync").then(function (value) {
-
-    for (var i = 0; i < $scope.TeamLeads.length ; i++) {
-        if ($scope.TeamLeads[i].Gender == 0)
-            $scope.TeamLeads[i].Gender = "Not Available";
-        if ($scope.TeamLeads[i] != null && $scope.TeamLeads[i].DateOfBirth!=null) {
-            $scope.TeamLeads[i].DateOfBirth = $scope.ConvertDate($scope.TeamLeads[i].DateOfBirth);
+    $http.get(rootDir + "/Profile/ProfileDelegation/GetAllTeamLeadsAsync").then(function (value) {
+        $scope.TeamLeads = angular.copy(value.data);
+        for (var i = 0; i < $scope.TeamLeads.length ; i++) {
+            if ($scope.TeamLeads[i].Gender == 0)
+                $scope.TeamLeads[i].Gender = "Not Available";
+            if ($scope.TeamLeads[i] != null && $scope.TeamLeads[i].DateOfBirth != null) {
+                $scope.TeamLeads[i].DateOfBirth = $scope.ConvertDate($scope.TeamLeads[i].DateOfBirth);
+            }
         }
-    }
-   
+    });
 
-    //    $scope.TeamLeads = angular.copy(value.data);
 
-    //});
+
+
 
     //To Display the drop down div
     $scope.searchCumDropDown = function (divId) {
@@ -97,7 +97,7 @@ delegationApp.controller("delegationController", ['$scope', '$timeout', '$http',
         return returnValue;
     };
 
-   
+
 
     //------------------- Form Reset Function ------------------------
     var FormReset = function ($form) {

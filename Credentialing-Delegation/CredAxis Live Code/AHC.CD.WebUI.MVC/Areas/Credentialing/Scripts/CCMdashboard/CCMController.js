@@ -2,7 +2,7 @@
     toaster.pop('Success', "Success", 'Welcome');
     var AppointmentDate = new Date();
     //================================== Temporary function Declaration Start ===============================================================================
-
+    
     $scope.MasterData = function () {
         CCMDashboardService.GetCCMAppointments().then(function (result) {
             $rootScope.CCMAppointments = result.data;

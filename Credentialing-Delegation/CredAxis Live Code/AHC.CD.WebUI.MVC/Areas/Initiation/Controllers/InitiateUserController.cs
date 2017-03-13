@@ -22,6 +22,7 @@ using AHC.CD.Exceptions;
 using AHC.CD.Entities;
 using Newtonsoft.Json;
 using System.Dynamic;
+using System.Configuration;
 
 namespace AHC.CD.WebUI.MVC.Areas.Initiation.Controllers
 {
@@ -224,13 +225,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Initiation.Controllers
         private async Task<string> CreateUser(ApplicationUser appUser, string roleCode)
         {
 
-            string password = "Password@123456";
+            string password = ConfigurationManager.AppSettings["DefaultPassword"].ToString(); ;
 
             try
             {
                 var result = await AuthUserManager.CreateAsync(appUser, password);
                 await AddUserToRole(appUser, roleCode);
-                appUser.UserUsedPassword.Add(new UsedPassword() { UserID = appUser.Id, HashPassword = appUser.PasswordHash });
                 await AuthUserManager.UpdateAsync(appUser);
                 return appUser.Id;
 

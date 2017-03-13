@@ -7,6 +7,9 @@
     //================================= Variable Declaration End====================================================================================
     //================================== Temporary function Declaration Start ===============================================================================
     this.callServer = function callServer(tableState) {
+        if (tableState===undefined) {
+            return;
+        }
         $self.isLoading = true;
         var pagination = tableState.pagination;
         var start = pagination.start || 0;
@@ -56,13 +59,21 @@
         $scope.tableStateValue = CCMDashboardFactory.resetTableState($scope.tableStateValue);
         $self.callServer($scope.tableStateValue);
     });
+    $scope.OpenAppointmentDetailsControl = function (sectionValue) {
+        $rootScope.VisibilityControl = sectionValue;
+        $rootScope.TempObjectForStatus.SingleDetailedApprovalAction = true;
+    }
+    $scope.CloseAppointmentDetailsControl = function (sectionValue) {
+        $rootScope.VisibilityControl = '';
+        $rootScope.TempObjectForStatus.SingleDetailedApprovalAction = false;
+    }
     //==================================================Report Approval Form Submission Script Start ======================================================
     $scope.cleardigitalsignature = function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
     //==================================================Report Approval Form Submission Script End   ======================================================
     $scope.CheckStatus = function (appointment) {
-        if (appointment.Status == 'Pending') {
+        if (appointment.Status == 'Pending' && !$rootScope.TempObjectForStatus.SingleDetailedApprovalAction) {
             $rootScope.TempCCMAppointments[$rootScope.TempCCMAppointments.indexOf(appointment)].SelectStatus = !appointment.SelectStatus;
             $scope.tableStateValue = CCMDashboardFactory.resetTableState($scope.tableStateValue);
             $self.callServer($scope.tableStateValue);

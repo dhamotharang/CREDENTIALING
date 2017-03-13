@@ -1,115 +1,231 @@
-﻿<link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
-
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.StateLicenseViewModel
+@*<link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />*@
+<style>
+    .pagination li a input {
+        padding: 0;
+        margin: -5px 0;
+    }
+</style>
 <div class="row" ng-init="RefreshData('CCO')">
-    <h3 style=" color: #6b98e7; margin-left: 2%;">CCO Summary Status</h3>
-    <div class="col-lg-12">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
-            <div>
-                <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="PrototypeData">
-                    <thead>
-                        <tr class="theadColor">
-                            <th st-sort="CCOName" st-ratio="10">
-                                CCO Name
-                            </th>
-                            <th st-sort="NoOfProviders" st-ratio="8">
-                                No. of providers worked on
-                            </th>
-                            <th st-sort="NoOfTasks" st-ratio="11">
-                                No. of tasks performed
-                            </th>
-                            <th st-sort-default="false" st-sort="ApplnSubmitted" st-ratio="10">
-                                Application submitted
-                            </th>
-                            <th st-sort="PackagePending" st-ratio="11">
-                                Credentialing package pending
-                            </th>
-                            <th st-sort="CredPackage" st-ratio="10">
-                                Credentialing package completed
-                            </th>
-                            <th st-sort="NoOfActivities" st-ratio="9">
-                                No. of activities performed
-                            </th>
-                            <th st-ratio="4">Action</th>
-                        </tr>
-                        <tr>
-                            <td st-ratio="10"><input st-search="CCOName" type="text" placeholder="Filter CCO Name" class="form-control input-sm"></td>
-                            <td st-ratio="8"><input st-search="NoOfProviders" type="text" placeholder="Filter no. of providers worked on" class="form-control input-sm" /></td>
-                            <td st-ratio="11"><input st-search="NoOfTasks" type="text" placeholder="Filter no. of tasks performed" class="form-control input-sm" /></td>
-                            <td st-ratio="10"><input st-search="ApplnSubmitted" type="text" placeholder="Filter application submitted" class="form-control input-sm" /></td>
-                            <td st-ratio="11"><input st-search="PackagePending" type="text" placeholder="Filter credentialing package pending" class="form-control input-sm" /></td>
-                            <td st-ratio="10"><input st-search="CredPackage" type="text" placeholder="Filter credentialing package completed" class="form-control input-sm" /></td>
-                            <td st-ratio="8"><input st-search="NoOfActivities" type="text" placeholder="Filter no. of activities performed" class="form-control input-sm" /></td>
-                            <td st-ratio="4"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="c in pc.displayed">
-                            <td>{{c.CCOName}}</td>
-                            <td>{{c.NoOfProviders}}</td>
-                            <td>{{c.NoOfTasks}}</td>
-                            <td>{{c.ApplnSubmitted}}</td>
-                            <td ng-click="showCred('CCO')" style="color:red"><u>{{c.PackagePending}}</u></td>
-                            <td>{{c.CredPackage}}</td>
-                            <td>{{c.NoOfActivities||'Not Available'}}</td>
-                            <td>
-                                <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="Redirect"><i class="glyphicon glyphicon-forward"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot style="cursor:pointer">
-                        <tr>
-                            <td class=" text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
-                        </tr>
-                    </tfoot>
-                </table>
+    <div class="col-lg-12 ">
+        <br />
+        <div id="CCO_Summmary" class="row panel panel-default tab-pane fade in active" ng-cloak>
+
+
+            <div class="panel-heading">
+                <button class="pull-right btn btn-xs" ng-click="CCOSummaryPanelToggle('CCO_Summary_Panel');" ng-disabled="packageLoading" toggle data-toggle="tooltip" data-placement="top" title="Expand/Collapse"><i class="fa fa-th-list"></i></button>
+                <div>CCO Summary</div>
             </div>
+            <br />
+            <div class="form-horizontal" style="padding-left: 14px;" id="CCO_Summary_Panel">
+                <div class="form-group">
 
+                    <div class="col-lg-12">
+                        <div class="col-lg-4 col-sm-4 hidden-xs"></div>
+
+                        <div class="col-lg-3 col-sm-3 col-xs-12">
+                            <label class="small col-lg-2 col-xs-2" style="float: left; padding-top: 5px; ">From:</label>
+                            <div class="col-lg-10 col-xs-10">
+                                <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="tempObject.IssueDate" placeholder="mm/dd/yyyy">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-sm-3 col-xs-12">
+
+                            <label class="small col-lg-2 col-xs-2" style="float: left; padding-top: 5px; ">To:</label>
+                            <div class="col-lg-10 col-xs-10">
+                                <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="tempObject.IssueDate" placeholder="mm/dd/yyyy">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-sm-2 col-xs-12">
+                            <button id="searchBtn" type="button" class="btn btn-sm btn-info col-lg-5 col-xs-3" ><i class=" fa fa-search"></i> Search</button>
+                            <button id="resetBtn" type="button" class="btn btn-sm btn-warning col-lg-5 col-xs-3" style="margin-left: 5px;"><i class=" fa fa-refresh"></i> Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-12">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
+                        <div>
+                            <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="PrototypeData">
+                                <colgroup>
+                                    <col class="col-lg-2 col-sm-2 col-xs-3" >
+                                    <col class="col-lg-2 col-sm-2 col-xs-1" >
+                                    <col class="col-lg-1 col-sm-1 hidden-xs">
+                                    <col class="col-lg-1 col-sm-1 col-xs-2" >
+                                    <col class="col-lg-1 col-sm-1 col-xs-2" >
+                                    <col class="col-lg-1 col-sm-1 hidden-xs">
+                                    <col class="col-lg-2 col-sm-2 hidden-xs">
+                                    <col class="col-lg-2 col-sm-2 col-xs-2" >
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th st-sort="CCOName" st-ratio="10">
+                                            CCO Name
+                                        </th>
+                                        <th st-sort="NoOfProviders" st-ratio="8">
+                                            Providers worked on
+                                        </th>
+                                        <th st-sort="NoOfTasks" st-ratio="11">
+                                            Tasks performed
+                                        </th>
+                                        <th st-sort-default="false" st-sort="ApplnSubmitted" st-ratio="10">
+                                            Application submitted
+                                        </th>
+                                        <th st-sort="PackagePending" st-ratio="11">
+                                            Pending Credentialing
+                                        </th>
+                                        <th st-sort="CredPackage" st-ratio="10">
+                                            Completed Credentialing
+                                        </th>
+                                        <th st-sort="NoOfActivities" st-ratio="9">
+                                            Activities performed
+                                        </th>
+                                        <th st-ratio="4">Action</th>
+                                    </tr>
+                                    <tr>
+                                        <td st-ratio="10"><input st-search="CCOName" type="text" placeholder="Filter CCO Name" class="form-control input-sm"></td>
+                                        <td st-ratio="8"><input st-search="NoOfProviders" type="text" placeholder="Filter no. of providers worked on" class="form-control input-sm" /></td>
+                                        <td st-ratio="11"><input st-search="NoOfTasks" type="text" placeholder="Filter no. of tasks performed" class="form-control input-sm" /></td>
+                                        <td st-ratio="10"><input st-search="ApplnSubmitted" type="text" placeholder="Filter application submitted" class="form-control input-sm" /></td>
+                                        <td st-ratio="11"><input st-search="PackagePending" type="text" placeholder="Filter credentialing package pending" class="form-control input-sm" /></td>
+                                        <td st-ratio="10"><input st-search="CredPackage" type="text" placeholder="Filter credentialing package completed" class="form-control input-sm" /></td>
+                                        <td st-ratio="8"><input st-search="NoOfActivities" type="text" placeholder="Filter no. of activities performed" class="form-control input-sm" /></td>
+                                        <td st-ratio="4"></td>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="c in pc.displayed">
+                                    @*<tr class="accordion-toggle" data-toggle="collapse" data-target="#CredentialingDetailsRow">*@
+                                    <tr class="accordion-toggle">
+                                        <td>{{c.CCOName}}</td>
+                                        <td ng-click="CCOSummaryPanelToggle('ProviderList'+ $index )" style="color:blue;cursor:pointer" id="providerList"><u>{{c.NoOfProviders}}</u></td>
+                                        @*<td>{{c.NoOfProviders}}</td>*@
+                                        <td>{{c.NoOfTasks}}</td>
+                                        <td>{{c.ApplnSubmitted}}</td>
+                                        @*<td ng-click="CCOSummaryPanelToggle('CCO_Summary_Panel');showCred('CCO')" style="color:red" id="pendingCredential"><u>{{c.PackagePending}}</u></td>*@
+                                        <td ng-click="CCOSummaryPanelToggle('CredentialingDetailsRow'+ $index )" style="color:red;cursor:pointer" id="pendingCredential"><u>{{c.PackagePending}}</u></td>
+                                        <td>{{c.CredPackage}}</td>
+                                        <td>{{c.NoOfActivities||'Not Available'}}</td>
+                                        <td>
+                                            <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="Redirect"><i class="glyphicon glyphicon-forward"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" ng-attr-id="{{ 'CredentialingDetailsRow' + $index }}" id="CredentialingDetailsRow" hidden>
+                                            <div>
+                                                <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words'>
+                                              
+                                                    <thead>
+                                                        <tr class="theadColor">
+                                                            <th>
+                                                                Plan Name
+                                                            </th>
+                                                            <th>
+                                                                Start Date
+                                                            </th>
+                                                            <th>
+                                                                Initiated To
+                                                            </th>
+                                                            <th>
+                                                                Phase Of Credentialing
+                                                            </th>
+                                                            <th>
+                                                                Credentialing Status
+                                                            </th>
+                                                            <th>
+                                                                No. of Days Pending From
+                                                            </th>
+                                                            <th>
+                                                                Avg. Time To Complete(Hrs)
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="data in credDetailsData">
+                                                            <td>{{data.PlanName}}</td>
+                                                            <td>{{data.Start}}</td>
+                                                            <td>{{data.Initiated}}</td>
+                                                            <td>{{data.CredPhase}}</td>
+                                                            <td>{{data.CredStat}}</td>
+                                                            <td>{{data.Pending}}</td>
+                                                            <td>{{data.AvgTime}}</td>
+                                                            <a href="/Credentialing/CnD/Application/1"</a>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12" ng-attr-id="{{ 'ProviderList' + $index }}" hidden>
+                                            <div>
+                                                <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words'>
+                                                    <colgroup>
+                                                        <col class="col-lg-3">
+                                                        <col class="col-lg-3">
+                                                        <col class="col-lg-3">
+                                                        <col class="col-lg-3">
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr class="theadColor">
+
+                                                            <th>
+                                                                Provider Name
+                                                            </th>
+                                                            <th>
+                                                                NPI
+                                                            </th>
+                                                            <th>
+                                                                Location
+                                                            </th>
+                                                            <th>
+                                                                Specialty
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr  ng-repeat="provider in ProviderList1">
+                                                   
+                                                            <td><img style="height: 36px; margin-left: 5%;" ng-src="{{provider.Photo}}" class="grow img-circle" />{{provider.Name}}</td>
+                                                            <td>{{provider.NPI}}</td>
+                                                            <td>{{provider.Location}}</td>
+                                                            <td>{{provider.Specialty}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="5" colspan="8"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
         </div>
-
-
-        <div ng-if="showCCOCredData" ng-cloak>
-            <h3 style=" color: #6b98e7; margin-left: 1%;">Credentialing Details</h3>
-            <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words'>
-                <thead>
-                    <tr class="theadColor">
-                        <th>
-                            Plan Name
-                        </th>
-                        <th>
-                            Start Date
-                        </th>
-                        <th>
-                            Initiated To
-                        </th>
-                        <th>
-                            Phase Of Credentialing
-                        </th>
-                        <th>
-                            Credentialing Status
-                        </th>
-                        <th>
-                            No. of Days Pending From
-                        </th>
-                        <th>
-                            Avg. Time To Complete(Hrs)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="data in credDetailsData" onclick="window.document.location = '/Credentialing/CnD/Application/1';">
-                        @*<a class="btn btn-xs btn-info pull-right ng-scope" href="/Credentialing/CnD/Application/1" tooltip="" data-toggle="tooltip" data-placement="top" title="Redirect to credetialing page"</a>*@
-                        <td>{{data.PlanName}}</td>
-                        <td>{{data.Start}}</td>
-                        <td>{{data.Initiated}}</td>
-                        <td>{{data.CredPhase}}</td>
-                        <td>{{data.CredStat}}</td>
-                        <td>{{data.Pending}}</td>
-                        <td>{{data.AvgTime}}</td>
-                        <a href="/Credentialing/CnD/Application/1"</a>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <br />
     </div>
+
+
+
 </div>
+
 

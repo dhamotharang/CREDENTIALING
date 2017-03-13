@@ -85,6 +85,7 @@ prototypeApp.directive('pageSelect', function () {
 
 prototypeApp.run(function ($rootScope) {
     $rootScope.PrototypeData = [];
+    $rootScope.datepickerVal = "";
     $rootScope.CCOData = [
   {
       "CCOName": "Anjali",
@@ -94,6 +95,15 @@ prototypeApp.run(function ($rootScope) {
       "PackagePending": "10",
       "CredPackage": "1",
       "NoOfActivities": "112"
+  },
+  {
+      "CCOName": "Carlos",
+      "NoOfProviders": "3",
+      "NoOfTasks": "24",
+      "ApplnSubmitted": "20",
+      "PackagePending": "5",
+      "CredPackage": "2",
+      "NoOfActivities": "78"
   },
   {
       "CCOName": "Sherry",
@@ -121,6 +131,15 @@ prototypeApp.run(function ($rootScope) {
       "PackagePending": "3",
       "CredPackage": "5",
       "NoOfActivities": "98"
+  },
+  {
+      "CCOName": "Edward",
+      "NoOfProviders": "8",
+      "NoOfTasks": "30",
+      "ApplnSubmitted": "9",
+      "PackagePending": "4",
+      "CredPackage": "6",
+      "NoOfActivities": "143"
   }
     ]
 
@@ -208,7 +227,7 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
         ctrl.callServer(tableState);
     }
 
-    $scope.showCred = function (role) {
+    $scope.showCred = function (role) {        
         $scope.showProCredData = role == 'Pro' ? true : false;
         $scope.showCCOCredData = role == 'CCO' ? true : false;
     }
@@ -476,15 +495,15 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
     }
 
     var ProviderList = [
-      { ProviderID: 1, Photo: "/Resources/Images/author.jpg", Name: 'Dr. Jennine Martin', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access',ProAssigned:'13',TaskAssigned:'670',Pending:'270' },
-      { ProviderID: 2, Photo: '/Resources/Images/images (2).jpg', Name: 'Dr. Barbara Joy', NPI: 1111111111, Specialty: ' Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 3, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 2222222222, Specialty: ' Dentist', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 4, Photo: '/Resources/Images/images (4).jpg', Name: 'Dr. Parikshit Singh', NPI: 3333333333, Specialty: ' Dentist, Neuro Surgon', Location: 'Alaska', Group: 'Access2', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 5, Photo: '/Resources/Images/images (1).jpg', Name: 'Dr. Sanjay Singh', NPI: 4444444444, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 6, Photo: '/Resources/Images/images (2).jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 7, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 8, Photo: '/Resources/Images/images (4).jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 9, Photo: '/Resources/Images/images (4).jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' }
+      { ProviderID: 1, Photo: '/Content/Images/Providers/provider3.jpg', Name: 'Dr. Tony Martin', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      { ProviderID: 2, Photo: '/Content/Images/Providers/provider2.jpg', Name: 'Dr. Barbara Joy', NPI: 1111111111, Specialty: ' Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      { ProviderID: 3, Photo: '/Content/Images/Providers/provider2.jpg', Name: 'Dr. Daina Jeccob', NPI: 2222222222, Specialty: ' Dentist', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      { ProviderID: 4, Photo: '/Content/Images/Providers/Pariksith_Singh.jpg', Name: 'Dr. Parikshit Singh', NPI: 3333333333, Specialty: ' Dentist, Neuro Surgon', Location: 'Alaska', Group: 'Access2', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      { ProviderID: 5, Photo: '/Content/Images/Providers/provider1.jpg', Name: 'Dr. Sanjay Singh', NPI: 4444444444, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      //{ ProviderID: 6, Photo: '~/Content/Images/Providers/provider2.jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      { ProviderID: 6, Photo: '/Content/Images/Providers/provider2.jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      { ProviderID: 7, Photo: '/Content/Images/Providers/Pariksith_Singh.jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
+      //{ ProviderID: 9, Photo: '~/Content/Images/Providers/Pariksith_Singh.jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' }
       //{ ProviderID: 10, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
       //{ ProviderID: 11, Photo: '/Resources/Images/images (2).jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
       //{ ProviderID: 12, Photo: '/Resources/Images/images (1).jpg', Name: 'Dr. Sanjay Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
@@ -502,7 +521,15 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
         { ProviderID: 14, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
         { ProviderID: 15, Photo: '/Resources/Images/images (4).jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
     ]
-    $scope.ProviderList1 = angular.copy(ProviderList);    
+    $scope.ProviderList1 = angular.copy(ProviderList);
+
+    //To toggle the Credentialing Details and Provider Details panel
+    $scope.CCOSummaryPanelToggle = function (divId) {
+        $('div').tooltip.title = "show";
+        $("#" + divId).slideToggle();
+        $scope.initiate = false;
+
+    };
 
     $scope.AssignToCCO = function () {
         $scope.ShowProfileDelegation = true;
@@ -566,7 +593,7 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
         else {
             $scope.IsProviderApprovedRejected = false;
         }
-        
+
     }
 
     $scope.assignTask = function () {

@@ -454,5 +454,141 @@ where p.Status='Active'
 where  new.Name='Doctor'";
 
         #endregion
+
+
+
+
+        #region Request For Approval
+
+        public static readonly string UPDATECOUNT = @"SELECT count(*) as UpdateCount
+                                                        FROM [dbo].[ProfileUpdatesTrackers] 
+                                                        where ([ApprovalStatus]='Pending' or [ApprovalStatus]='OnHold') and [Modification]='Update';";
+        public static readonly string RENEWALCOUNT = @"SELECT count(*) as RenewalCount
+                                                        FROM [dbo].[ProfileUpdatesTrackers] 
+                                                        where ([ApprovalStatus]='Pending' or [ApprovalStatus]='OnHold') and [Modification]='Renewal';";
+        public static readonly string REQUESTCOUNT = @"Select sum(p2) as RequestCount from (SELECT count(*) p2 FROM [dbo].[CredentialingRequestTrackers]
+                                                        Where [Status] != 'Inactive' Union ALL SELECT count(*) p2 FROM [dbo].[CredentialingRequests]
+                                                        Where [Status] != 'Inactive') as s;";
+        public static readonly string HISTORYCOUNT = @"SELECT count(*) as HistoryCount
+                                                        FROM [dbo].[ProfileUpdatesTrackers] 
+                                                        where ([ApprovalStatus]='Rejected' or [ApprovalStatus]='Approved');";
+
+
+
+        public static readonly string PROFILEUPDATERENEWAL = @"SELECT [ProfileUpdatesTrackerId]
+	                                                          ,p4.NPINumber
+                                                              ,p.[ProfileId]
+	                                                          ,CONCAT( p3.[FirstName],' ', p3.[LastName] ) as [ProviderName]
+                                                              ,p2.ProfilePhotoPath
+                                                              ,[Section]
+                                                              ,[SubSection]
+                                                              ,[ApprovalStatus]
+                                                              ,[Modification]
+                                                              ,[RejectionReason]
+                                                              ,[oldData]
+                                                              ,[NewData]
+                                                              ,[NewConvertedData]
+                                                              ,[Url]
+                                                              ,[ModifiedDate]
+                                                              ,'false' as [IsSelected]
+                                                         FROM (SELECT TOP 1000 [ProfileUpdatesTrackerId]
+                                                              ,[Section]
+                                                              ,[SubSection]
+                                                              ,[ApprovalStatus]
+                                                              ,[Modification]
+                                                              ,[ProfileId]
+                                                              ,[RejectionReason]
+                                                              ,[oldData]
+                                                              ,[NewData]
+                                                              ,[NewConvertedData]
+                                                              ,[Url]
+                                                              ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                          FROM [dbo].[ProfileUpdatesTrackers]
+                                                          where [ApprovalStatus]='Pending' or [ApprovalStatus]='OnHold') as p 
+                                                          inner join [dbo].[Profiles] as p2
+                                                          on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
+                                                          on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
+                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID;";
+
+
+
+        public static readonly string CREDREQUEST = @"Select [CredentialingRequestID],[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],[ModifiedDate] from (SELECT [CredentialingRequestID]
+                                                      ,[NPINumber]
+	                                                  ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
+	                                                  ,[PlanID]
+                                                      ,[ApprovalStatus] as [CurrentStatus]
+                                                      ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                  FROM [dbo].[CredentialingRequestTrackers]
+                                                  Where [Status] != 'Inactive'
+
+                                                  Union ALL
+
+                                                  SELECT [CredentialingRequestID]
+		                                                ,[NPINumber]
+		                                                ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
+		                                                ,[PlanID]
+		                                                ,'Active' as [CurrentStatus]
+		                                                ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                      FROM [dbo].[CredentialingRequests]
+	                                                  Where [Status] != 'Inactive') as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID;";
+
+
+        public static readonly string UPDATERENEWALHISTORY = @"SELECT [ProfileUpdatesTrackerId]
+	                                                          ,p4.NPINumber
+                                                              ,p.[ProfileId]
+	                                                          ,CONCAT( p3.[FirstName],' ', p3.[LastName] ) as [ProviderName]
+                                                              ,p2.ProfilePhotoPath
+                                                              ,[Section]
+                                                              ,[SubSection]
+                                                              ,[ApprovalStatus]
+                                                              ,[RejectionReason]
+                                                              ,[oldData]
+                                                              ,[NewData]
+                                                              ,[NewConvertedData]
+                                                              ,[Url]
+                                                              ,[Modification]
+                                                              ,[ModifiedDate]
+                                                              ,'false' as [IsSelected]
+                                                         FROM (SELECT TOP 1000 [ProfileUpdatesTrackerId]
+                                                              ,[Section]
+                                                              ,[SubSection]
+                                                              ,[ApprovalStatus]
+                                                              ,[Modification]
+                                                              ,[ProfileId]
+                                                              ,[RejectionReason]
+                                                              ,[oldData]
+                                                              ,[NewData]
+                                                              ,[NewConvertedData]
+                                                              ,[Url]
+                                                              ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                          FROM [dbo].[ProfileUpdatesTrackers]
+                                                          where [ApprovalStatus]='Rejected' or [ApprovalStatus]='Approved') as p 
+                                                          inner join [dbo].[Profiles] as p2
+                                                          on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
+                                                          on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
+                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID;";
+        public static readonly string CREDREQUESTDATABYID = @"Select [CredentialingRequestID],s.[ProfileID],pf.ProfilePhotoPath,[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],[ModifiedDate] from (SELECT [CredentialingRequestID]
+                                                              ,[NPINumber]
+	                                                          ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
+													          ,[ProfileID]
+	                                                          ,[PlanID]
+                                                              ,[Status] as [CurrentStatus]
+                                                              ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                          FROM [dbo].[CredentialingRequests]
+                                                          Where [Status] != 'Inactive' and [CredentialingRequestID] =@ID)as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID
+												          inner join [dbo].[Profiles] as pf on s.[ProfileID]=pf.ProfileID";
+        public static readonly string CREDREQUESTHISTORYDATABYID = @"Select [CredentialingRequestID],s.[ProfileID],pf.ProfilePhotoPath,[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],s.[RejectionReason],[ModifiedDate] from (SELECT [CredentialingRequestID]
+                                                                      ,[NPINumber]
+	                                                                  ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
+													                  ,[ProfileID]
+	                                                                  ,[PlanID]
+													                  ,[RejectionReason]
+                                                                      ,[ApprovalStatus] as [CurrentStatus]
+                                                                      ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                                  FROM [dbo].[CredentialingRequestTrackers]
+                                                                  Where [Status] != 'Inactive' and [CredentialingRequestID] =@ID)as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID
+												                  inner join [dbo].[Profiles] as pf on s.[ProfileID]=pf.ProfileID";
+        #endregion
+
     }
 }

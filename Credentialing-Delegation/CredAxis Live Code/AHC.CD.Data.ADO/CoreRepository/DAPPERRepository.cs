@@ -203,6 +203,28 @@ namespace AHC.CD.Data.ADO.CoreRepository
                 }
             }
         }
+        public async Task<T> ExecuteAsyncQueryFirstOrDefault<T>(Dapper.DynamicParameters DP, string Query)
+        {
+            using (IDbConnection connection = OpenConnection())
+            {
+                try
+                {
+                    var result = await connection.QueryAsync<T>(Query, DP);
+                    return result.FirstOrDefault();
+                }
+                catch (ArgumentNullException ex)
+                {
+                    throw ex;
+                }
+
+
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
 
         public List<T> ExecuteQuery<T>(Dapper.DynamicParameters DP, string Query)
         {
@@ -274,6 +296,8 @@ namespace AHC.CD.Data.ADO.CoreRepository
 
             }
         }
+
+
         
         public List<T> ExecuteQueryForASPNETUsers<T>(string Query)
         {
@@ -321,5 +345,26 @@ namespace AHC.CD.Data.ADO.CoreRepository
 
             }
         }
+
+
+        public T QueryMultiple<T>(string Query, DynamicParameters dp, Func<SqlMapper.GridReader, T> ObjectMapping)
+        {
+            using (IDbConnection connection = OpenConnection())
+            {
+                SqlMapper.GridReader result = connection.QueryMultiple(Query, param: dp, commandType: CommandType.StoredProcedure);
+                return ObjectMapping(result);
+            }
+        }
+
+        public SqlMapper.GridReader QueryMultiple(string Query, DynamicParameters dp)
+        {
+            using (IDbConnection connection = OpenConnection())
+            {
+                SqlMapper.GridReader result = connection.QueryMultiple(Query, param: dp, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
+
+        
     }
 }

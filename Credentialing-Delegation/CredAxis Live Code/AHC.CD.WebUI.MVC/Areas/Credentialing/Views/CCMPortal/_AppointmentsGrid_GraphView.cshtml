@@ -10,7 +10,7 @@
     <div class="btn-group btn-group-md pull-right">
         <button class="btn" style="background-color: #464957; border-color: #337AB7; color:white" data-toggle="tooltip" data-placement="top" ng-click="GridView=!GridView" title="Statistics"><span><i class="fa fa-bar-chart bigger-120"></i></span></button>
     </div>
-    <div class="btn-group btn-group-md pull-right">
+    <div class="btn-group btn-group-md pull-right" id="ExportPanel">
         <a class="btn btn-white" data-toggle="tooltip" data-placement="top" title="Search"><span><i class="fa fa-search bigger-120"></i></span></a>
         <a class="btn btn-white" style="margin-left: 2px;color:orange" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#CCMGrid')"><span><i class="fa fa-file-code-o bigger-120"></i></span></a>
         <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#CCMGrid')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></a>
@@ -34,19 +34,30 @@
                     <th st-sort="RecommendedLevel" class="col-lg-1">Level</th>
                     <th st-sort="Status" class="col-lg-1">Status</th>
                     <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="TempObjectForStatus.QuickApprovalAction"><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#ActionModal">Proceed</button></th>
+                    <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="!TempObjectForStatus.QuickApprovalAction">Details</th>
                 </tr>
             </thead>
-            <tbody ng-show="!pc.isLoading">
-                <tr ng-repeat="appointment in pc.displayed track by $index" id="firstrow" style="cursor:pointer" ng-click="CheckStatus(appointment)" ng-style="appointment.SelectStatus ? { 'background-color':'rgb(114, 58, 115)',color:'white','font-weight':'bold' } : {'background-color':'white',color:'black'}">
-                    <td class="col-lg-2 wrap-words">{{appointment.ProviderName || 'Not Available'}}</td>
-                    <td class="col-lg-2 wrap-words">{{appointment.Specialty || 'Not Available'}}</td>
-                    <td class="col-lg-2 wrap-words">{{appointment.PlanName || 'Not Available'}}</td>
-                    <td class="col-lg-2 wrap-words">{{appointment.CredInitiationDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
-                    <td class="col-lg-1 wrap-words">{{appointment.AppointmentDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
-                    <td class="col-lg-1 wrap-words">{{appointment.RecommendedLevel || 'Not Available'}}</td>
-                    <td class="col-lg-1 wrap-words">{{appointment.Status || 'Not Available'}}</td>
+            <tbody ng-show="!pc.isLoading" ng-repeat="appointment in pc.displayed track by $index">
+                <tr id="firstrow" style="cursor:pointer" ng-style="appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction ? { 'background-color':'rgb(114, 58, 115)',color:'white','font-weight':'bold' } : {'background-color':'white',color:'black'}">
+                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.ProviderName || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.Specialty || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.PlanName || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.CredInitiationDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.AppointmentDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.RecommendedLevel || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.Status || 'Not Available'}}</td>
                     <td class="col-lg-1 wrap-words" style="width: 3%;" ng-if="TempObjectForStatus.QuickApprovalAction">
                         <span ng-show="appointment.SelectStatus"> <i class="fa fa-check"></i></span>
+                    </td>
+                    <td class="col-lg-1 wrap-words" style="width: 3%;" ng-if="!TempObjectForStatus.QuickApprovalAction">
+                        <button get-siblings class="btn btn-default btn-xs ViewDetail" ng-click="OpenAppointmentDetailsControl($index+'_AppointMentView');"> <i class="fa fa-eye"></i></button>
+                        <button get-siblings class="btn btn-danger btn-xs hidden CloseDetail" ng-click="CloseAppointmentDetailsControl($index+'_AppointMentView',this);"> <i class="fa fa-times"></i></button>
+                    </td>
+                </tr>
+                <tr ng-if="VisibilityControl==($index+'_AppointMentView')" ng-controller="SPAIndexController as spa" style="background-color: #464957;">
+                    <td colspan="8" style="padding-left:0px;padding-right:0px">
+                        <div ng-include="'/Credentialing/CCMPortal/SPAIndexPage'" style="background-color: white;">
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -130,6 +141,7 @@
     </div>
 </div>
 <script src="~/Areas/Credentialing/Scripts/CCMdashboard/AppointmentsGridController.js"></script>
+<script src="~/Areas/Credentialing/Scripts/CCMdashboard/SPAPageController.js"></script>
 <script>
     var canvas;
     canvas = document.getElementById('SignatureCanvas');

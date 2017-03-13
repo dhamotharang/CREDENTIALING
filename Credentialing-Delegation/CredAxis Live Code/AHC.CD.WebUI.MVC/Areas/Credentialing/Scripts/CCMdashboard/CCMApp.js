@@ -1,25 +1,30 @@
-﻿var CCMDashboard = angular.module("CCMDashboard", ['toaster', 'smart-table', 'ui.rCalendar', 'nvd3', 'ngSignaturePad','ngRoute']);
+﻿var CCMDashboard = angular.module("CCMDashboard", ['toaster', 'smart-table', 'ui.rCalendar', 'nvd3', 'ngSignaturePad', 'ngRoute', 'mgcrea.ngStrap']);
 
-CCMDashboard.run(["$rootScope", "$timeout", "$window", function ($rootScope, $timeout, $window) {
+CCMDashboard.run(["$rootScope", "$timeout", "$window", "$route", function ($rootScope, $timeout, $window, $route) {
+    $route.reload();
     $rootScope.CCMAppointments = [];
     $rootScope.filtered = [];
     $rootScope.TempCCMAppointments = [];
     $rootScope.filteredCCMAppointmentsByDate = [];
-    $rootScope.TempObjectForStatus = { CredebtailingApprovalRequest: false, AppointmentDashboard: true, QuickApprovalAction: false };
+    $rootScope.TempObjectForStatus = { CredebtailingApprovalRequest: false, AppointmentDashboard: true, QuickApprovalAction: false, SingleDetailedApprovalAction: false };
+    $rootScope.VisibilityControl = '';
 }]);
 CCMDashboard.config(["$routeProvider", function ($routeProvider) {
     $routeProvider
-    .when("/", {
-        templateUrl: "main.htm"
+    .when("/CCM_ACTION", {
+        templateUrl: "/Credentialing/CCMPortal/SPA_CCMAction",
+        controller: "SPAIndexController"
     })
-    .when("/red", {
-        templateUrl: "red.htm"
+    .when("/CCM_PSV", {
+        templateUrl: "/Credentialing/CCMPortal/SPA_PSV",
+        controller: "SPAIndexController"
     })
-    .when("/green", {
-        templateUrl: "green.htm"
+    .when("/CCM_DOCUMENTS", {
+        templateUrl: "/Credentialing/CCMPortal/SPA_Document",
+        controller: "SPAIndexController"
     })
-    .when("/blue", {
-        templateUrl: "blue.htm"
+    .otherwise({
+        templateUrl: "/Credentialing/CCMPortal/SPA_CCMAction",
+        controller: "SPAIndexController"
     });
 }]);
-

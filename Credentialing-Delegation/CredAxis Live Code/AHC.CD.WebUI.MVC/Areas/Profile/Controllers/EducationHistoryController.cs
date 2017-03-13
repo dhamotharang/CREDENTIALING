@@ -90,7 +90,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         educationType = "Education History - Under Graduate/Professional Schools Details";
                     }
                     else if (educationDetails.EducationQualificationType == EducationQualificationType.Graduate){
-                        educationType = "Education History - Graduate/Medical School Details Details";
+                        educationType = "Education History - Graduate/Medical School Details";
                     }
 
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, educationType, "Added");
@@ -151,7 +151,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         }
                         else if (educationDetails.EducationQualificationType == EducationQualificationType.Graduate)
                         {
-                            educationType = "Education History - Graduate/Medical School Details Details";
+                            educationType = "Education History - Graduate/Medical School Details";
                         }
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, educationType, "Updated");
                         await notificationManager.SaveNotificationDetailAsync(notification);
@@ -245,7 +245,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
               }
               else if (educationDetails.EducationQualificationType == EducationQualificationType.Graduate)
               {
-                  educationType = "Education History - Graduate/Medical School Details Details";
+                  educationType = "Education History - Graduate/Medical School Details";
               }
               ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, educationType, "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -835,7 +835,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 var UserAuthID = UserDetail.Id;
                
                 await profileManager.RemoveProgramDetailAsync(profileId, dataModelProgramDetail, UserAuthID);
-                ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Program Detail", "Removed");
+                ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - Residency/Internship/Fellowship Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
             }
             catch (DatabaseValidationException ex)
