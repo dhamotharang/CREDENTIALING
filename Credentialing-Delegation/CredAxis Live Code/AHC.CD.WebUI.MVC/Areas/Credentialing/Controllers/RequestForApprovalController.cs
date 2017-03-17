@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
+using AHC.CD.WebUI.MVC.Models;
+using AHC.CD.WebUI.MVC.CustomHelpers;
 
 namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 {
     public class RequestForApprovalController : Controller
     {
-
         private readonly IRequestForApprovalManager iRequestForApprovalManager = null;
 
         public RequestForApprovalController(IRequestForApprovalManager iRequestForApprovalManager)
@@ -50,19 +51,30 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 
         [HttpGet]
         [Authorize(Roles = "CCO,PRO,CRA")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            ViewBag.IsProvider = await GetUserRole();
             return View();
         }
 
         [HttpGet]
+        [AjaxAction]
         [Authorize(Roles = "CCO,PRO,CRA")]
         public async Task<string> GetAllUpdatesAndRenewals()
         {
             dynamic UpdateAndRenwalDTO = null;
             try
             {
-                UpdateAndRenwalDTO = await iRequestForApprovalManager.GetAllUpdatesAndRenewalsAsync();
+                bool isPRO = await GetUserRole();
+                if (isPRO)
+                {
+                    string UserAuthId = await GetUserAuthId();
+                    int ProfileID = Convert.ToInt32(await iRequestForApprovalManager.GetProfileID(UserAuthId));
+                    UpdateAndRenwalDTO = await iRequestForApprovalManager.GetAllUpdatesAndRenewalsForProviderAsync(ProfileID);
+                }
+                else{
+                    UpdateAndRenwalDTO = await iRequestForApprovalManager.GetAllUpdatesAndRenewalsAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -72,13 +84,24 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         }
 
         [HttpGet]
+        [AjaxAction]
         [Authorize(Roles = "CCO,PRO,CRA")]
         public async Task<string> GetAllCredentialingRequest()
         {
             dynamic CredentialRequestDTO = null;
             try
             {
-                CredentialRequestDTO = await iRequestForApprovalManager.GetAllCredentialRequestsAsync();
+                bool isPRO = await GetUserRole();
+                if (isPRO)
+                {
+                    string UserAuthId = await GetUserAuthId();
+                    int ProfileID = Convert.ToInt32(await iRequestForApprovalManager.GetProfileID(UserAuthId));
+                    CredentialRequestDTO = await iRequestForApprovalManager.GetAllCredentialRequestsForProviderAsync(ProfileID);
+                }
+                else
+                {
+                    CredentialRequestDTO = await iRequestForApprovalManager.GetAllCredentialRequestsAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -88,13 +111,24 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         }
 
         [HttpGet]
+        [AjaxAction]
         [Authorize(Roles = "CCO,PRO,CRA")]
         public async Task<string> GetAllHistory()
         {
             dynamic HistoryDTO = null;
             try
             {
-                HistoryDTO = await iRequestForApprovalManager.GetAllHistoryAsync();
+                bool isPRO = await GetUserRole();
+                if (isPRO)
+                {
+                    string UserAuthId = await GetUserAuthId();
+                    int ProfileID = Convert.ToInt32(await iRequestForApprovalManager.GetProfileID(UserAuthId));
+                    HistoryDTO = await iRequestForApprovalManager.GetAllHistoryForProviderAsync(ProfileID);
+                }
+                else
+                {
+                    HistoryDTO = await iRequestForApprovalManager.GetAllHistoryAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -104,6 +138,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         }
 
         [HttpGet]
+        [AjaxAction]
         [Authorize(Roles = "CCO,PRO,CRA")]
         public async Task<string> GetCredRequestDataByID(int ID)
         {
@@ -120,6 +155,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         }
 
         [HttpGet]
+        [AjaxAction]
         [Authorize(Roles = "CCO,PRO,CRA")]
         public async Task<string> GetCredRequestHistoryDataByID(int ID)
         {
@@ -136,7 +172,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "CCO,PRO,CRA")]
+        [AjaxAction]
+        [Authorize(Roles = "CCO,CRA")]
         public async Task<string> SetDecesionForCredRequestByID(int ID, string ApprovalType,string Reason)
         {
             bool Status = false;
@@ -150,6 +187,48 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             }
             return JsonConvert.SerializeObject(Status);
         }
+
+        [HttpPost]
+        [AjaxAction]
+        [Authorize(Roles = "CCO,CRA")]
+        public async Task<string> SetMultipleApproval(List<int> ProfileUpdatesTrackerIds)
+        {
+            bool Status = false;
+            try
+            {
+                Status = await iRequestForApprovalManager.SetApprovalByIDs(ProfileUpdatesTrackerIds, await GetUserAuthId());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return JsonConvert.SerializeObject(Status);
+        }
+
+
+        #region Private Methods
+
+        private async Task<string> GetUserAuthId()
+        {
+            var currentUser = HttpContext.User.Identity.Name;
+            var appUser = new ApplicationUser() { UserName = currentUser };
+            var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
+
+            return user.Id;
+        }
+
+        private async Task<bool> GetUserRole()
+        {
+            var currentUser = HttpContext.User.Identity.Name;
+            var appUser = new ApplicationUser() { UserName = currentUser };
+            var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
+            var Role = RoleManager.Roles.FirstOrDefault(r => r.Name == "PRO");
+
+            return user.Roles.Any(r => r.RoleId == Role.Id);
+        }
+
+        #endregion
+
 
     }
 }

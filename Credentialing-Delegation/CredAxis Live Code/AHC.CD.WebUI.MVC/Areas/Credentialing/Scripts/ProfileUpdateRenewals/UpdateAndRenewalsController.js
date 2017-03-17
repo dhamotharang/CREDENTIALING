@@ -1,13 +1,18 @@
-﻿UpdateAndRenewalsApp.controller("UpdateAndRenewalsController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "UpdateAndRenewalsService", "UpdateAndRenewalsFactory", function ($rootScope, $scope, toaster, $timeout, $filter, UpdateAndRenewalsService, UpdateAndRenewalsFactory) {
-    //toaster.pop('Success', "Success", 'Welcome');
+﻿UpdateAndRenewalsApp.controller("UpdateAndRenewalsController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "$loadash", "UpdateAndRenewalsService", "UpdateAndRenewalsFactory", "tracking", function ($rootScope, $scope, toaster, $timeout, $filter, $loadash, UpdateAndRenewalsService, UpdateAndRenewalsFactory, tracking) {
+
+    //=================================== Variable Declaration Start ===================================
 
     var $self = this;
+    $scope.popoverIsVisible = false;
     $scope.HistorySwitchButton = true;
     $scope.CredRequestSwitchButton = true;
     $scope.SelectAllButton = false;
     $scope.LoadingStatus = false;
     $scope.SavingStatus = false;
     $scope.RejectStatus = false;
+    $scope.ProfileUpdateandRenewalFilter = false;
+    $scope.CredentialingReqFilter = false;
+    $scope.ApproveAllStatus = false;
     $scope.RejectionType = '';
     $scope.tableStateValueUpdateAndHistory = {};
     $scope.tableStateValueCredentialingRequest = {};
@@ -15,10 +20,15 @@
     $scope.BicuitValue = { UpdateCount: 0, RenewalCount: 0, CredRequestCount: 0, HistoryCount: 0 };
     $self.displayedUpdateAndRenewals = [];
     $self.displayedCredentialingRequest = [];
+    $scope.SelectedData = [];
     $scope.MasterSettings = $filter("MasterSettingFiltter")("Updates");
+    $scope.Traffic = tracking;
+
+    //=================================== Variable Declaration End ===================================
 
 
-    //Smart Table update
+
+    //==================================== Smart Table update Start ======================================
 
     this.callServerUpdateAndHistory = function callServerUpdateAndHistory(tableState) {
         $self.isLoadingUpdateAndRenewals = true;
@@ -54,9 +64,11 @@
         });
     }
 
+    //==================================== Smart Table update  End ======================================
 
 
-    //Temporary Methods
+
+    //==================================== Temporary Methods Start ========================================
 
     $scope.HistoryChange = function () {
         $scope.HistorySwitchButton = !$scope.HistorySwitchButton;
@@ -75,36 +87,44 @@
             $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Active" });
         }
         else {
-            $rootScope.TempCredentialingRequests = $rootScope.CredentialingRequests.filter(function (CredentialingRequest) { return CredentialingRequest.CurrentStatus == "Approved" || CredentialingRequest.CurrentStatus == "Rejected" });
+            $rootScope.TempCredentialingRequests = $rootScope.CredentialingRequests.filter(function (CredentialingRequest) { return CredentialingRequest.CurrentStatus == "Approved" || CredentialingRequest.CurrentStatus == "Rejected" || CredentialingRequest.CurrentStatus == "Dropped" });
         }
         $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
         $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
     }
     $scope.CheckStatus = function ($event, profileUpdates) {
-        if ($event.target.className.indexOf('skip')>-1) {
+        if (IsProvider) {
+            return;
+        }
+        if ($event.target.className.indexOf('skip') > -1) {
             return;
         }
         if (profileUpdates.ApprovalStatus == 'Pending' || profileUpdates.ApprovalStatus == 'OnHold') {
             if (profileUpdates.IsSelected == "false") {
+
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)].IsSelected = "true";
+                $scope.SelectedData.push($rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)]);
 
             } else {
+                $scope.SelectedData.splice($scope.SelectedData.indexOf($rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)]), 1)
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)].IsSelected = "false";
-
             }
         }
     }
     $scope.SelectAll = function () {
+        $scope.SelectedData = [];
         $scope.SelectAllButton = !$scope.SelectAllButton;
         if ($scope.SelectAllButton) {
             for (i in $rootScope.TempProfileUpdates) {
                 $rootScope.TempProfileUpdates[i].IsSelected = "true";
             }
+            $scope.SelectedData = angular.copy($rootScope.TempProfileUpdates);
         }
         else {
             for (i in $rootScope.TempProfileUpdates) {
                 $rootScope.TempProfileUpdates[i].IsSelected = "false";
             }
+            $scope.SelectedData = [];
         }
     }
     $scope.GridData = function (type) {
@@ -136,12 +156,26 @@
         UpdateAndRenewalsFactory.exportToTable(type, tableID);
         toaster.pop('Success', "Success", 'Exporting data into ' + type + ' successfull');
     }
+    $scope.FilterForProfileUpdateandRequest = function () {
+        if ($scope.MasterSettings.TableType == 1) {
+            $scope.ProfileUpdateandRenewalFilter = !$scope.ProfileUpdateandRenewalFilter;
+        }
+        else {
+            $scope.CredentialingReqFilter = !$scope.CredentialingReqFilter;
+        }
+    }
 
-    //==================================== Crud Operations =========================================
+    //==================================== Temporary Methods End ========================================
+
+
+
+    //==================================== Crud Operations Start =========================================
 
     $scope.GetAllUpdatesAndRenewals = function (Type) {
         $scope.SelectAllButton = false;
+        $scope.ProfileUpdateandRenewalFilter = false;
         $self.displayedUpdateAndRenewals = [];
+        $scope.SelectedData = [];
         UpdateAndRenewalsService.GetAllUpdatesAndRenewals().then(function (result) {
             $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
             $rootScope.ProfileUpdates = result.data.PROFILEUPDATERENEWAL;
@@ -167,9 +201,17 @@
     }
     $scope.GetAllUpdatesAndRenewalsHistory = function () {
         $scope.HistorySwitchButton = true;
+        $scope.ProfileUpdateandRenewalFilter = false;
+        $scope.SelectedData = [];
         UpdateAndRenewalsService.GetAllUpdatesAndRenewalsHistory().then(function (result) {
             $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
-            $rootScope.ProfileUpdates = result.data;
+            $rootScope.ProfileUpdates = result.data.PROFILEUPDATEHISTORY;
+            $scope.BicuitValue = {
+                UpdateCount: result.data.UPDATECOUNT,
+                RenewalCount: result.data.RENEWALCOUNT,
+                CredRequestCount: result.data.REQUESTCOUNT,
+                HistoryCount: result.data.HISTORYCOUNT
+            };
             $rootScope.TempProfileUpdates = $filter('filter')($rootScope.ProfileUpdates, { Modification: "Update" });
             $scope.MasterSettings = $filter("MasterSettingFiltter")("History");
             $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
@@ -179,9 +221,16 @@
     }
     $scope.GetAllCredentialingRequests = function () {
         //$scope.CredRequestSwitchButton = true;
+        $scope.CredentialingReqFilter = false;
         UpdateAndRenewalsService.GetAllCredentialingRequests().then(function (result) {
             $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
-            $rootScope.CredentialingRequests = result.data;
+            $rootScope.CredentialingRequests = result.data.CREDENTIALINGREQUEST;
+            $scope.BicuitValue = {
+                UpdateCount: result.data.UPDATECOUNT,
+                RenewalCount: result.data.RENEWALCOUNT,
+                CredRequestCount: result.data.REQUESTCOUNT,
+                HistoryCount: result.data.HISTORYCOUNT
+            };
             $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Active" });
             $scope.MasterSettings = $filter("MasterSettingFiltter")("Requests");
             $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
@@ -231,19 +280,19 @@
         }
         UpdateAndRenewalsService.SetDecesionForCredRequestByID(data).then(function (result) {
             $rootScope.CredentialingRequests[$rootScope.CredentialingRequests.indexOf($filter('filter')($rootScope.CredentialingRequests, { CredentialingRequestID: ID })[0])].CurrentStatus = ApprovalType;
-            $rootScope.TempCredentialingRequests = $rootScope.TempCredentialingRequests.splice($rootScope.TempCredentialingRequests.indexOf($filter('filter')($rootScope.TempCredentialingRequests, { CredentialingRequestID: ID })[0]), 1);
+            $rootScope.TempCredentialingRequests.splice($rootScope.TempCredentialingRequests.indexOf($filter('filter')($rootScope.TempCredentialingRequests, { CredentialingRequestID: ID })[0]), 1);
             $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
             $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
             $scope.SavingStatus = false;
             UpdateAndRenewalsFactory.modalDismiss();
-            toaster.pop('Success', "Success", 'Welcome');
+            toaster.pop('Success', "Success", ApprovalType);
 
         }, function (error) {
             UpdateAndRenewalsFactory.modalDismiss();
             toaster.pop('error', "", 'Please try after sometime !!!');
         })
     }
-    $scope.SetRejectionAndOnHoldForProfileUpdatesAndRenewal = function (Data, ApprovalStatus) {
+    $scope.SetRejectionDropAndOnHoldForProfileUpdatesAndRenewal = function (Data, ApprovalStatus) {
         $scope.SavingStatus = true;
         var data = {
             tracker: {
@@ -269,7 +318,6 @@
                 $rootScope.TempProfileUpdates.splice($rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: Data.ProfileUpdatesTrackerId })[0]), 1);
             }
             else {
-                $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: Data.ProfileUpdatesTrackerId })[0])].ApprovalStatus = ApprovalStatus;
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: Data.ProfileUpdatesTrackerId })[0])].ApprovalStatus = ApprovalStatus;
             }
             $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
@@ -317,5 +365,68 @@
         })
 
     }
+    $scope.SetApprovalForAll = function () {
+        if ($scope.ApproveAllStatus) {
+            return;
+        }
+        $scope.ApproveAllStatus = true;
+        UpdateAndRenewalsService.MultipleAsyncServices($scope.SelectedData).then(function (Mainresults) {
+            var ProfileUpdaetIDs = $loadash.map($loadash.filter(Mainresults, { Status: true }), 'ID');
+            if (ProfileUpdaetIDs.length > 0) {
+                var obj = { ProfileUpdatesTrackerIds: ProfileUpdaetIDs }
+                UpdateAndRenewalsService.SetMultipleApproval(obj).then(function (results) {
+                    $scope.ApproveAllStatus = false;
+                    $scope.BicuitValue.HistoryCount += ProfileUpdaetIDs.length
+                    if ($scope.SelectedData[0].Modification == "Update") {
+                        $scope.BicuitValue.UpdateCount -= ProfileUpdaetIDs.length;
+
+                    }
+                    else {
+                        $scope.BicuitValue.RenewalCount -= ProfileUpdaetIDs.length;
+
+                    }
+                    for (i in ProfileUpdaetIDs) {
+                        $rootScope.ProfileUpdates[$rootScope.ProfileUpdates.indexOf($filter('filter')($rootScope.ProfileUpdates, { ProfileUpdatesTrackerId: ProfileUpdaetIDs[i] })[0])].ApprovalStatus = "Approved";
+                        $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: ProfileUpdaetIDs[i] })[0])].ApprovalStatus = "Approved";
+                        $rootScope.TempProfileUpdates.splice($rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: ProfileUpdaetIDs[i] })[0]), 1);
+                    }
+                    for (i in $rootScope.TempProfileUpdates) {
+                        $rootScope.TempProfileUpdates[i].IsSelected = "false";
+                    }
+                    $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
+                    $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
+                    toaster.pop('Success', "Success", ProfileUpdaetIDs.length+" Appprovd");
+                    if (ProfileUpdaetIDs.length != Mainresults.length) {
+                        toaster.pop('error', "", (Mainresults.length - ProfileUpdaetIDs.length + ' Failed ' + 'Please try after sometime !!!'));
+                    }
+
+                }, function (errors) {
+                    for (i in $rootScope.TempProfileUpdates) {
+                        $rootScope.TempProfileUpdates[i].IsSelected = "false";
+                    }
+                    $scope.ApproveAllStatus = false;
+                    $scope.SelectedData = [];
+                })
+            }
+            else {
+                for (i in $rootScope.TempProfileUpdates) {
+                    $rootScope.TempProfileUpdates[i].IsSelected = "false";
+                }
+                $scope.SelectedData = [];
+                $scope.ApproveAllStatus = false;
+                toaster.pop('error', "", (Mainresults.length - ProfileUpdaetIDs.length + ' Failed ' + 'Please try after sometime !!!'));
+            }
+        },
+        function (errors) {
+            for (i in $rootScope.TempProfileUpdates) {
+                $rootScope.TempProfileUpdates[i].IsSelected = "false";
+            }
+            $scope.SelectedData = [];
+            $scope.ApproveAllStatus = false;
+            toaster.pop('error', "", 'Please try after sometime !!!');
+        })
+    }
+
+    //==================================== Crud Operations Start =========================================
 
 }]);

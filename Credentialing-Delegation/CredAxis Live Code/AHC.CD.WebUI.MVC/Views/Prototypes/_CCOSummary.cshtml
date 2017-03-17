@@ -5,6 +5,14 @@
         padding: 0;
         margin: -5px 0;
     }
+
+    .st-sort-ascent:before {
+        content: '\25B2';
+    }
+
+    .st-sort-descent:before {
+        content: '\25BC';
+    }
 </style>
 <div class="row" ng-init="RefreshData('CCO')">
     <div class="col-lg-12 ">
@@ -26,7 +34,7 @@
                         <div class="col-lg-3 col-sm-3 col-xs-12">
                             <label class="small col-lg-2 col-xs-2" style="float: left; padding-top: 5px; ">From:</label>
                             <div class="col-lg-10 col-xs-10">
-                                <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="tempObject.IssueDate" placeholder="mm/dd/yyyy">
+                                <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="tempObject.FromDate" placeholder="mm/dd/yyyy">
                             </div>
                         </div>
 
@@ -34,7 +42,7 @@
 
                             <label class="small col-lg-2 col-xs-2" style="float: left; padding-top: 5px; ">To:</label>
                             <div class="col-lg-10 col-xs-10">
-                                <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="tempObject.IssueDate" placeholder="mm/dd/yyyy">
+                                <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="tempObject.ToDate" placeholder="mm/dd/yyyy">
                             </div>
                         </div>
 
@@ -49,16 +57,16 @@
                 <div class="col-lg-12">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
                         <div>
-                            <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="PrototypeData">
+                            <table class='paginated table table-striped table-bordered table-responsive customtbodyStyle medium wrap-words' st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="PrototypeData">
                                 <colgroup>
-                                    <col class="col-lg-2 col-sm-2 col-xs-3" >
-                                    <col class="col-lg-2 col-sm-2 col-xs-1" >
-                                    <col class="col-lg-1 col-sm-1 hidden-xs">
-                                    <col class="col-lg-1 col-sm-1 col-xs-2" >
-                                    <col class="col-lg-1 col-sm-1 col-xs-2" >
+                                    <col class="col-lg-3 col-sm-2 col-xs-3">
+                                    <col class="col-lg-2 col-sm-2 col-xs-1">
+                                    <col class="col-lg-2 col-sm-1 hidden-xs">
+                                    <col class="col-lg-1 col-sm-1 col-xs-2">
+                                    <col class="col-lg-1 col-sm-1 col-xs-2">
                                     <col class="col-lg-1 col-sm-1 hidden-xs">
                                     <col class="col-lg-2 col-sm-2 hidden-xs">
-                                    <col class="col-lg-2 col-sm-2 col-xs-2" >
+                                    @*<col class="col-lg-2 col-sm-2 col-xs-2" >*@
                                 </colgroup>
                                 <thead>
                                     <tr>
@@ -72,7 +80,7 @@
                                             Tasks performed
                                         </th>
                                         <th st-sort-default="false" st-sort="ApplnSubmitted" st-ratio="10">
-                                            Application submitted
+                                            Applications submitted
                                         </th>
                                         <th st-sort="PackagePending" st-ratio="11">
                                             Pending Credentialing
@@ -83,7 +91,7 @@
                                         <th st-sort="NoOfActivities" st-ratio="9">
                                             Activities performed
                                         </th>
-                                        <th st-ratio="4">Action</th>
+                                        @*<th st-ratio="4">Action</th>*@
                                     </tr>
                                     <tr>
                                         <td st-ratio="10"><input st-search="CCOName" type="text" placeholder="Filter CCO Name" class="form-control input-sm"></td>
@@ -93,30 +101,30 @@
                                         <td st-ratio="11"><input st-search="PackagePending" type="text" placeholder="Filter credentialing package pending" class="form-control input-sm" /></td>
                                         <td st-ratio="10"><input st-search="CredPackage" type="text" placeholder="Filter credentialing package completed" class="form-control input-sm" /></td>
                                         <td st-ratio="8"><input st-search="NoOfActivities" type="text" placeholder="Filter no. of activities performed" class="form-control input-sm" /></td>
-                                        <td st-ratio="4"></td>
+                                        @*<td st-ratio="4"></td>*@
                                     </tr>
                                 </thead>
                                 <tbody ng-repeat="c in pc.displayed">
                                     @*<tr class="accordion-toggle" data-toggle="collapse" data-target="#CredentialingDetailsRow">*@
                                     <tr class="accordion-toggle">
                                         <td>{{c.CCOName}}</td>
-                                        <td ng-click="CCOSummaryPanelToggle('ProviderList'+ $index )" style="color:blue;cursor:pointer" id="providerList"><u>{{c.NoOfProviders}}</u></td>
+                                        <td ng-click="PanelToggle('ProviderList'+ $index, 'CredentialingDetailsRow'+ $index,'Provider' )" style="color:blue;cursor:pointer" id="providerList"><u>{{c.ProviderWorkedOn}}</u></td>
                                         @*<td>{{c.NoOfProviders}}</td>*@
-                                        <td>{{c.NoOfTasks}}</td>
-                                        <td>{{c.ApplnSubmitted}}</td>
-                                        @*<td ng-click="CCOSummaryPanelToggle('CCO_Summary_Panel');showCred('CCO')" style="color:red" id="pendingCredential"><u>{{c.PackagePending}}</u></td>*@
-                                        <td ng-click="CCOSummaryPanelToggle('CredentialingDetailsRow'+ $index )" style="color:red;cursor:pointer" id="pendingCredential"><u>{{c.PackagePending}}</u></td>
-                                        <td>{{c.CredPackage}}</td>
-                                        <td>{{c.NoOfActivities||'Not Available'}}</td>
-                                        <td>
-                                            <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="Redirect"><i class="glyphicon glyphicon-forward"></i></a>
-                                        </td>
+                                        <td>{{c.TasksPerformed}}</td>
+                                        <td>{{c.ApplicationsSubmitted}}</td>
+                                        @*<td ng-click="PanelToggle('CCO_Summary_Panel');showCred('CCO')" style="color:red" id="pendingCredential"><u>{{c.PackagePending}}</u></td>*@
+                                        <td ng-click="PanelToggle('ProviderList'+ $index, 'CredentialingDetailsRow'+ $index,'Credentialing' )" style="color:red;cursor:pointer" id="pendingCredential"><u>{{c.PendingCredentialing}}</u></td>
+                                        <td>{{c.CompletedCredentialing}}</td>
+                                        <td>{{c.ActivitiesPErformed||'Not Available'}}</td>
+                                        @*<td>
+                            <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="Redirect"><i class="glyphicon glyphicon-forward"></i></a>
+                        </td>*@
                                     </tr>
                                     <tr>
                                         <td colspan="8" ng-attr-id="{{ 'CredentialingDetailsRow' + $index }}" id="CredentialingDetailsRow" hidden>
                                             <div>
-                                                <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words'>
-                                              
+                                                <table class='paginated table table-striped table-bordered table-condensed customtbodyStyle medium wrap-words'>
+
                                                     <thead>
                                                         <tr class="theadColor">
                                                             <th>
@@ -140,18 +148,24 @@
                                                             <th>
                                                                 Avg. Time To Complete(Hrs)
                                                             </th>
+                                                            <th>
+                                                                Action
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr ng-repeat="data in credDetailsData">
-                                                            <td>{{data.PlanName}}</td>
-                                                            <td>{{data.Start}}</td>
-                                                            <td>{{data.Initiated}}</td>
-                                                            <td>{{data.CredPhase}}</td>
-                                                            <td>{{data.CredStat}}</td>
-                                                            <td>{{data.Pending}}</td>
-                                                            <td>{{data.AvgTime}}</td>
-                                                            <a href="/Credentialing/CnD/Application/1"</a>
+                                                        <tr ng-repeat="cred in c.PendingCredentialingDetails">
+                                                            <td>{{cred.Plan}}</td>
+                                                            <td>{{cred.StartDate}}</td>
+                                                            <td>{{cred.InitiatedTo}}</td>
+                                                            <td>{{cred.PhaseOfCredentialing}}</td>
+                                                            <td>{{cred.CredentialingStatus}}</td>
+                                                            <td>{{cred.DaysPendingFrom}}</td>
+                                                            <td>{{cred.AvgTimeToComplete}}</td>
+                                                            @*<a href="/Credentialing/CnD/Application/1"</a>*@
+                                                            <td>
+                                                                <a class="btn btn-xs btn-info" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/CnD/Application/2' tooltip data-toggle="tooltip" data-placement="top" title="View Application"><i class="fa fa-caret-right"></i></a>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -162,12 +176,13 @@
                                     <tr>
                                         <td colspan="12" ng-attr-id="{{ 'ProviderList' + $index }}" hidden>
                                             <div>
-                                                <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words'>
+                                                <table class='paginated table table-striped table-bordered table-condensed customtbodyStyle medium wrap-words'>
                                                     <colgroup>
                                                         <col class="col-lg-3">
                                                         <col class="col-lg-3">
+                                                        <col class="col-lg-2">
                                                         <col class="col-lg-3">
-                                                        <col class="col-lg-3">
+                                                        <col class="col-lg-1">
                                                     </colgroup>
                                                     <thead>
                                                         <tr class="theadColor">
@@ -184,15 +199,21 @@
                                                             <th>
                                                                 Specialty
                                                             </th>
+                                                            <th>
+                                                                Action
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr  ng-repeat="provider in ProviderList1">
-                                                   
-                                                            <td><img style="height: 36px; margin-left: 5%;" ng-src="{{provider.Photo}}" class="grow img-circle" />{{provider.Name}}</td>
+                                                        <tr ng-repeat="provider in c.ProviderDetails">
+
+                                                            <td><img style="height: 36px; margin-left: 5%;" ng-src="{{provider.ProfilePicURL}}" class="grow img-circle" />{{provider.ProviderName}}</td>
                                                             <td>{{provider.NPI}}</td>
-                                                            <td>{{provider.Location}}</td>
+                                                            <td>{{provider.PrimaryPracticeLocation}}</td>
                                                             <td>{{provider.Specialty}}</td>
+                                                            <td>
+                                                                <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="View Profile"><i class="glyphicon glyphicon-forward"></i></a>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -207,7 +228,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="5" colspan="8"></td>
+                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="8"></td>
                                     </tr>
                                 </tfoot>
                             </table>

@@ -443,16 +443,13 @@ namespace AHC.CD.Business.Profiles
             foreach (var tracker in trackers)
             {
                 var updatedData = trackerRepo.Find(p => p.ProfileUpdatesTrackerId == tracker.TrackerId);
-
                 updatedData.ApprovalStatus = tracker.ApprovalStatus;
                 updatedData.RejectionReason = tracker.RejectionReason;
                 updatedData.LastModifiedBy = user.CDUserID;
                 updatedData.LastModifiedDate = DateTime.Now;
-
                 trackerRepo.Update(updatedData);
-
-                trackerRepo.Save();
             }
+            trackerRepo.Save();
         }
 
 

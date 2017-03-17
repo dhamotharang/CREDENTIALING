@@ -1,8 +1,10 @@
 ﻿using AHC.CD.Data.ADO.Profile;
 using AHC.CD.Data.Repository;
+using AHC.CD.Entities;
 using AHC.CD.Entities.Credentialing.CredentialingRequestTracker;
 using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Entities.MasterProfile.CredentialingRequest;
+using AHC.CD.Entities.MasterProfile.ProfileUpdateRenewal;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -118,5 +120,102 @@ namespace AHC.CD.Business.Profiles
             }
             return Status;
         }
+
+        public async Task<dynamic> GetAllUpdatesAndRenewalsForProviderAsync(int ID)
+        {
+            dynamic UpdateAndRenwalDTO = null;
+            try
+            {
+                UpdateAndRenwalDTO = await iRequestForApprovalRepo.GetAllUpdatesAndRenewalsForProviderRepo(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return UpdateAndRenwalDTO;
+        }
+
+        public async Task<dynamic> GetAllCredentialRequestsForProviderAsync(int ID)
+        {
+            dynamic CredRequestDataByIDDTO = null;
+            try
+            {
+                CredRequestDataByIDDTO = await iRequestForApprovalRepo.GetAllCredentialRequestsForProviderRepo(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return CredRequestDataByIDDTO;
+        }
+
+        public async Task<dynamic> GetAllHistoryForProviderAsync(int ID)
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllHistoryForProviderRepo(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<int?> GetProfileID(string AuthID)
+        {
+            var userRepo = uow.GetGenericRepository<CDUser>();
+            var user = await userRepo.FindAsync(u => u.AuthenicateUserId == AuthID);
+            return user.ProfileId;
+        }
+
+
+        public async Task<bool> SetApprovalByIDs(List<int> trackerIDs, string userAuthID)
+        {
+            bool status = false;
+            try
+            {
+                var trackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+                var userID = GetCDUserID(userAuthID);
+
+                foreach (var trackerID in trackerIDs)
+                {
+                    var requestObject = await trackerRepo.FindAsync(p => p.ProfileUpdatesTrackerId == trackerID);
+
+                    requestObject.ApprovalStatus = ApprovalStatusType.Approved.ToString();
+                    requestObject.LastModifiedBy = userID;
+                    requestObject.LastModifiedDate = DateTime.Now;
+                    trackerRepo.Update(requestObject);
+                }
+
+                await trackerRepo.SaveAsync();
+                status = true;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+
+            return status;
+        }
+
+        #region Private Methods
+
+        private int GetCDUserID(string userAuthID)
+        {
+            try
+            {
+                var userRepo = uow.GetGenericRepository<CDUser>();
+                var user = userRepo.Find(u => u.AuthenicateUserId == userAuthID);
+                return user.CDUserID;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
     }
 }

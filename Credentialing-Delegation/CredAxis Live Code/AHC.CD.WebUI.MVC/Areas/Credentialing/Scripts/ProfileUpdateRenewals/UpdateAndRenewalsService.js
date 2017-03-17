@@ -42,7 +42,7 @@
     this.GetProfileUpdateDataByID = function (data) {
         var deferObject;
         deferObject = deferObject || $q.defer();
-        var promise = $http.post(rootDir + '/Credentialing/ProfileUpdates/GetDataById', data);
+        var promise = $http.post(rootDir + '/Credentialing/ProfileUpdates/GetDataById', data, { ignoreLoadingBar: true });
         promise.then(function (results) {
             deferObject.resolve(results);
         },
@@ -56,7 +56,7 @@
         var deferObject;
         var url = StatusType == 'Active' ? '/Credentialing/RequestForApproval/GetCredRequestDataByID?ID=' : '/Credentialing/RequestForApproval/GetCredRequestHistoryDataByID?ID=';
         deferObject = deferObject || $q.defer();
-        var promise = $http.get(rootDir + url + ID);
+        var promise = $http.get(rootDir + url + ID, { ignoreLoadingBar: true });
         promise.then(function (results) {
             deferObject.resolve(results);
         },
@@ -99,7 +99,7 @@
 
         var promise = $http({
             method: 'POST',
-            url: rootDir + data.Url + data.ProfileId,
+            url: rootDir + data.Url + data.ProfileID,
             data: data.NewData,
             headers: { 'Content-Type': 'application/json; charset=utf-8' }
         });
@@ -114,21 +114,40 @@
     }
 
     this.MultipleAsyncServices = function (data) {
-        var deferred = $q.defer();
-        var urlCalls = [];
+        var deferredArray = $q.defer();
+        var Pormises = [];
+        function DeferredObjectMapper(data) {
+            var deferred = $q.defer();
+            $http.post(rootDir + data.Url + data.ProfileID,data.NewData).then(function (response) {
+                deferred.resolve({ ID: data.ProfileUpdatesTrackerId ,Status:true})
+            }, function (error) {
+                deferred.resolve({ ID: null, Status: false });
+            })
+            return deferred.promise;
+        }
         angular.forEach(data, function (d) {
-            urlCalls.push($http.post(rootDir + d.url + data.ProfileId, d.NewData));
+            Pormises.push(DeferredObjectMapper(d));
         });
-        $q.all(urlCalls).then(function (results) {
-            deferObject.resolve(results);
+        $q.all(Pormises).then(function (results) {
+            deferredArray.resolve(results);
         },
         function (errors) {
-            deferred.reject(errors);
-        },
-        function (updates) {
-            deferred.update(updates);
+            deferredArray.reject(errors);
         });
-        return deferred.promise;
+        return deferredArray.promise;
+    }
+
+    this.SetMultipleApproval = function (data) {
+        var deferObject;
+        deferObject = deferObject || $q.defer();
+        var promise = $http.post(rootDir + '/Credentialing/RequestForApproval/SetMultipleApproval', data);
+        promise.then(function (results) {
+            deferObject.resolve(results);
+        },
+        function (error) {
+            deferObject.reject(error);
+        });
+        return deferObject.promise;
     }
 
 }]);

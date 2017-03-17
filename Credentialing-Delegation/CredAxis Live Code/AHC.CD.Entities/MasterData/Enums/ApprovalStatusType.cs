@@ -12,5 +12,6 @@ namespace AHC.CD.Entities.MasterData.Enums
         Rejected,
         Pending,
         OnHold,
+        Dropped
     }
 }

@@ -1,4 +1,4 @@
-﻿var CCMDashboard = angular.module("CCMDashboard", ['toaster', 'smart-table', 'ui.rCalendar', 'nvd3', 'ngSignaturePad', 'ngRoute', 'mgcrea.ngStrap']);
+﻿var CCMDashboard = angular.module("CCMDashboard", ['toaster', 'smart-table', 'ui.rCalendar','ngSignaturePad', 'ngRoute', 'mgcrea.ngStrap', 'chieffancypants.loadingBar']);
 
 CCMDashboard.run(["$rootScope", "$timeout", "$window", "$route", function ($rootScope, $timeout, $window, $route) {
     $route.reload();
@@ -6,10 +6,11 @@ CCMDashboard.run(["$rootScope", "$timeout", "$window", "$route", function ($root
     $rootScope.filtered = [];
     $rootScope.TempCCMAppointments = [];
     $rootScope.filteredCCMAppointmentsByDate = [];
-    $rootScope.TempObjectForStatus = { CredebtailingApprovalRequest: false, AppointmentDashboard: true, QuickApprovalAction: false, SingleDetailedApprovalAction: false };
+    $rootScope.TempObjectForStatus = { CredentailingApprovalRequest: false, AppointmentDashboard: true, QuickApprovalAction: false, SingleDetailedApprovalAction: false };
     $rootScope.VisibilityControl = '';
+    $rootScope.tableCaption = "Appointments";
 }]);
-CCMDashboard.config(["$routeProvider", function ($routeProvider) {
+CCMDashboard.config(["$routeProvider", "cfpLoadingBarProvider", "$httpProvider", function ($routeProvider, cfpLoadingBarProvider, $httpProvider) {
     $routeProvider
     .when("/CCM_ACTION", {
         templateUrl: "/Credentialing/CCMPortal/SPA_CCMAction",
@@ -27,4 +28,6 @@ CCMDashboard.config(["$routeProvider", function ($routeProvider) {
         templateUrl: "/Credentialing/CCMPortal/SPA_CCMAction",
         controller: "SPAIndexController"
     });
+    cfpLoadingBarProvider.includeSpinner = true;
+    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);

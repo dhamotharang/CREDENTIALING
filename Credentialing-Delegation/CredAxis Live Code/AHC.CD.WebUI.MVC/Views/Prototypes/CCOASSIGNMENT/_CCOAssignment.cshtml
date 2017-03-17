@@ -1,4 +1,4 @@
-﻿<link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+﻿
 
 <div ng-cloak>
     <div class="container-fluid">        
@@ -6,8 +6,8 @@
             <div class="col-lg-12">
                 <div class="panel panel-default content-panel">
                     <div class="panel-heading">
-                        <span class="panel-title pull-right btn-link" onclick="SearchProviderPanelToggle();"><i class="btn btn-sm btn-default fa fa-th-list"></i></span>
-                        Search Profile
+                        <span class="panel-title pull-right btn-link" onclick="SearchProviderPanelToggle();" tooltip data-toggle="tooltip" data-placement="top" title="Expand/Collapse"><i class="btn btn-sm btn-default fa fa-th-list margin_top_7px"></i></span>
+                        <h3 class="panel-title">Search Provider  </h3>
                     </div>
                     <div id="SearchProviderPanel" class="panel-body">
                         <form id="providerSearch" name="providerData">
@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="col-lg-3 form-group">
                                     <label class="control-label small">Provider Relationship</label>
-                                    <select class="form-control input-sm" ng-disabled="((searchProvider.FirstName) || (searchProvider.LastName) || (searchProvider.NPINumber) || (searchProvider.IPAGroupName) || (searchProvider.ProviderLevel) || (searchProvider.ProviderType))" ng-model=" searchProvider.ProviderRelationship">
+                                    <select class="form-control input-sm" ng-disabled="((searchProvider.FirstName) || (searchProvider.LastName) || (searchProvider.NPINumber) || (searchProvider.IPAGroupName) || (searchProvider.ProviderLevel) || (searchProvider.ProviderType))" ng-model="searchProvider.ProviderRelationship">
                                         <option disabled value="">Select</option>
                                         @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.ProviderRelationshipOption)))
                                         {
@@ -92,15 +92,21 @@
                     </div>                 
                 </div>
             </div>
-            @*<div class="progress col-lg-12" ng-show="progressbar" ng-cloak>
+            <div class="progress col-lg-12" ng-show="progressbar" ng-cloak>
                 <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                     Searching...Please wait...
                 </div>
-            </div>*@
-        </div>               
+            </div>
+        </div> 
+        <div ng-cloak ng-show="activeMessageDiv=='noProviderDetails'" class="col-lg-12 form-group">
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span>{{messageDesc}}</span>
+            </div>
+        </div>              
         <div class="clearfix"></div>
         <br />
-        @Html.Partial("~/Views/Prototypes/_SearchTLProfileResult.cshtml")
+        @Html.Partial("~/Views/Prototypes/CCOAssignment/_SearchTLProfileResult.cshtml")
         <!-- /.container-fluid -->
     </div>
 </div>

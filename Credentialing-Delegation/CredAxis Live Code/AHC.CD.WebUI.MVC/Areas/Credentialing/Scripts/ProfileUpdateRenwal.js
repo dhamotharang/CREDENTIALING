@@ -913,7 +913,7 @@ initCredApp.controller('listController', ['$scope', '$http', '$timeout', 'messag
             data.NewData = JSON.parse(data.NewData);
             data.NewData.ProviderTitles = JSON.parse(data.NewConvertedData).ProviderTitles;
             data.NewData = JSON.stringify(data.NewData);
-        } else if (data.NewData.indexOf('"SpecialtyDetailID":' > -1)) {
+        } else if (data.NewData.indexOf('"SpecialtyDetailID":') > -1) {
             data.NewData = angular.copy(data.NewConvertedData);
         } else if (data.NewData.indexOf('"ContactDetailID"') > -1) {
             data.NewData = angular.copy(data.NewConvertedData);

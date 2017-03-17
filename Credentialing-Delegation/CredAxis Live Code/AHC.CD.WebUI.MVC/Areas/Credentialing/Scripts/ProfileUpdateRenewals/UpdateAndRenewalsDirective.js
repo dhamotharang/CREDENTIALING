@@ -6,7 +6,7 @@
         scope: {
             ngModel: '=',
             gridData: '&',
-            biscuitValue:'='
+            biscuitValue: '='
         },
         link: function (scope, el, attrs) {
             scope.biscuitId = attrs.biscuitId;
@@ -97,4 +97,118 @@ UpdateAndRenewalsApp.directive('saving', function () {
 
         }
     }
+});
+
+UpdateAndRenewalsApp.directive('tooltipApp', function ($compile, $sce) {
+    return {
+        restrict: 'A',
+        scope: {
+            content: '=tooltipContent'
+        },
+        link: function (scope, element, attrs) {
+            scope.displayTooltip = false;
+            scope.updateTootipPosition = function (top, left) {
+                tooltip.css({
+                    top: top + 'px',
+                    left: left + 'px',
+                });
+            };
+            scope.getSafeContent = function (content) {
+                return $sce.trustAsHtml(content);
+            };
+            var tooltip = angular.element(
+                '<div ng-show="displayTooltip" style="position:absolute;z-index:500;border:1px solid;height:100px;width:100px">\
+        	    <span>{{content | json}}</span>\
+                </div>'
+            );
+            angular.element(document.querySelector('body')).append(tooltip);
+            element.on('mouseenter', function (event) {
+                scope.displayTooltip = true;
+                scope.$digest();
+            });
+            element.on('mousemove', function (event) {
+                scope.updateTootipPosition(event.clientY + 15, event.clientX + 15);
+            });
+            element.on('mouseleave', function () {
+                scope.displayTooltip = false;
+                scope.$digest();
+            });
+            $compile(tooltip)(scope);
+        }
+    };
+
+});
+
+UpdateAndRenewalsApp.directive('draggable', ['$document', function ($document) {
+    return {
+        restrict: 'A',
+        link: function (scope, elm, attrs) {
+            var startX, startY, initialMouseX, initialMouseY;
+            elm.css({ position: 'absolute' });
+
+            elm.bind('mousedown', function ($event) {
+                startX = elm.prop('offsetLeft');
+                startY = elm.prop('offsetTop');
+                initialMouseX = $event.clientX;
+                initialMouseY = $event.clientY;
+                $document.bind('mousemove', mousemove);
+                $document.bind('mouseup', mouseup);
+                return false;
+            });
+
+            function mousemove($event) {
+                var dx = $event.clientX - initialMouseX;
+                var dy = $event.clientY - initialMouseY;
+                elm.css({
+                    top: startY + dy + 'px',
+                    left: startX + dx + 'px'
+                });
+                return false;
+            }
+
+            function mouseup() {
+                $document.unbind('mousemove', mousemove);
+                $document.unbind('mouseup', mouseup);
+            }
+        }
+    };
+}]);
+
+UpdateAndRenewalsApp.directive('resizer', function ($document) {
+    return function($scope, $element, $attrs) {
+        $element.on('mousedown', function(event) {
+            event.preventDefault();
+            $document.on('mousemove', mousemove);
+            $document.on('mouseup', mouseup);
+        });
+        function mousemove(event) {
+            if ($attrs.resizer == 'vertical') {
+                // Handle vertical resizer
+                var x = event.pageX;
+                if ($attrs.resizerMax && x > $attrs.resizerMax) {
+                    x = parseInt($attrs.resizerMax);
+                }
+                if ($attrs.resizerMax && x < $attrs.resizerMin) {
+                    x = parseInt($attrs.resizerMin);
+                }
+                $element.css({
+                    left: x + 'px'
+                });
+                document.getElementById($attrs.resizerLeft.substring(1)).style.width = x + 'px'
+                document.getElementById($attrs.resizerRight.substring(1)).style.left = (x + parseInt($attrs.resizerWidth)) + 'px'
+            } else {
+                // Handle horizontal resizer
+                var y = window.innerHeight - event.pageY;
+                $element.css({
+                    bottom: y + 'px'
+                });
+                document.getElementById($attrs.resizerTop.substring(1)).style.bottom = y + 'px'
+                document.getElementById($attrs.resizerBottom.substring(1)).style.height = (y + parseInt($attrs.resizerHeight)) + 'px'
+            }
+        }
+        function mouseup() {
+            $document.unbind('mousemove', mousemove);
+            $document.unbind('mouseup', mouseup);
+        }
+    };
 });

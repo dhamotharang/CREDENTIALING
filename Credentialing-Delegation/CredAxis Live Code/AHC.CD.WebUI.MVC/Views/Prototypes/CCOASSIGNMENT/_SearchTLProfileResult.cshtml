@@ -1,0 +1,362 @@
+﻿
+<div ng-cloak ng-if="data.length!=0" class="panel panel-default content-panel">
+    <div class="panel-heading">
+        <span class="panel-title pull-right btn-link pull-right" onclick="SearchTLPanelToggle();" tooltip data-toggle="tooltip" data-placement="top" title="Expand/Collapse"><i class="btn btn-sm btn-default fa fa-th-list margin_top_7px"></i></span>
+
+        @*<span class="pull-right">
+                <button style="margin-left: -69%; margin-top: -5%; background-image: linear-gradient(to bottom, #48b8d9 0, #265a88 100%);" ng-click="AssignToCCO()" ng-disabled="selectedProviders.length<1" data-toggle="tooltip" data-placement="top" ng-attr-title="{{selectedProviders.length<1?'Please select provider before assignment':'Click to assignment of providers'}}" class="btn btn-primary btn-sm">
+                    Assignment Providers
+                </button>
+            </span>*@
+        @*<span class="pull-right" style="margin-right: -130px; margin-top: -2px;">
+                <span class="badge bg-info" ng-show="ifFilter()">{{getIndexFirst()}} - {{getIndexLast()}} of {{data.length}}</span>
+            </span>*@
+        <h3 class="panel-title">Search Results  </h3>
+    </div>
+    <div class="panel-body" id="searchTLResultID">
+        <div class="col-lg-12" ng-show="selectedProviders.length<1">
+            <div class="providerSelectText pull-right">*Please select the provider to assign</div>
+
+        </div>
+        @*smart grid*@
+        <table class="table table-bordered table-condensed customtbodyStyle" st-pipe="pa.callServer" st-table="pa.displayed" st-safe-src="ProviderData">
+            <thead>
+                <tr style="color:black">
+                    <th st-ratio="8" st-sort="NPINumber" class="contractgrid">NPI Number</th>
+                    <th st-ratio="12" st-sort="FullTitles" class="contractgrid">Title</th>
+                    <th st-ratio="8" st-sort="FirstName" class="contractgrid">First Name</th>
+                    <th st-ratio="10" st-sort="LastName" class="contractgrid">Last Name</th>
+                    <th st-ratio="8" st-sort="FullRelations" class="contractgrid">Relationship</th>
+                    <th st-ratio="8" st-sort="Status" class="contractgrid">Status</th>
+                    <th st-ratio="12" st-sort="Assigned" class="contractgrid">Assigned</th>
+                    <th st-ratio="8" class="hidecontent" ng-show="selectedProviders.length<1" st-skip-natural="true">Action</th>
+                    <th st-ratio="8" class="hidecontent" ng-show="!(selectedProviders.length<1)" st-skip-natural="true">
+                        <button class="btn btn-xs btn-primary" ng-click="AssignToCCO()" ng-disabled="selectedProviders.length<1" style="background-image: linear-gradient(to bottom, #48b8d9 0, #265a88 100%);" data-toggle="tooltip" data-placement="top" ng-attr-title="{{selectedProviders.length<1?'Please select provider before assignment':'Click to assignment of providers'}}">
+                            Assign to CCO/TL
+                        </button>
+                      
+                    </th>
+                </tr>
+                <tr>
+                    @*<td class="hideData"><input st-search="id" type="text" placeholder="Filter Name" class="form-control input-sm"/></td>*@
+                    <td st-ratio="8" class="hideData"><input st-search="NPINumber" type="text" placeholder="Filter NPI Number" id="npiNumber" class="form-control input-sm" /></td>
+                    <td st-ratio="8" class="hideData"><input st-search="FullTitles" type="text" placeholder="Filter Title" id="FullTitles" class="form-control input-sm" /></td>
+                    <td st-ratio="8" class="hideData"><input st-search="FirstName" type="text" placeholder="Filter First Name" id="FirstName" class="form-control input-sm" /></td>
+                    <td st-ratio="5" class="hideData"><input st-search="LastName" type="text" placeholder="Filter Last Name" id="LastName" class="form-control input-sm" /></td>
+                    <td st-ratio="9" class="hideData"><input st-search="FullRelations" type="text" placeholder="Filter Relationship" id="FullRelations" class="form-control input-sm" /></td>
+                    <td st-ratio="10" class="hideData"><input st-search="Status" type="text" placeholder="Filter Status" id="Status" class="form-control input-sm" /></td>
+                    <td st-ratio="12" class="hideData"><input st-search="Assigned" type="text" placeholder="Filter Assigned" id="Assigned" class="form-control input-sm" /></td>
+                    <th class="hidecontent" style="width: 3%;" ng-show="selectedProviders.length<1" st-skip-natural="true"></th>
+                    <th st-ratio="8" class="hidecontent" ng-show="!(selectedProviders.length<1)" st-skip-natural="true">
+
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody ng-show="!isLoading">
+                <tr ng-repeat="user in pa.displayed track by $index" ng-click="selectProvider($event,user)" ng-style="user.SelectStatus ?{'background-color':'rgb(114, 58, 115)',color:'white','font-weight':'bold' } : {'background-color':'white',color:'black'}" style="cursor:pointer">
+                    @*<td class="col-lg-1">{{c.ProviderFirstName}}</td>*@
+                    <td st-ratio="8" class="wrap-words">{{user.NPINumber}}</td>
+                    <td st-ratio="8" class="wrap-words">{{user.FullTitles}}</td>
+                    <td st-ratio="5" class="wrap-words">{{user.FirstName}}</td>
+                    <td st-ratio="9" class="wrap-words">{{user.LastName || 'Not Available'}}</td>
+                    <td st-ratio="10" class="wrap-words"> {{user.FullRelations }}</td>
+                    <td st-ratio="10" class="wrap-words">  {{user.Status}} <span ng-if="user.StatusType==1"><i class="fa fa-check" style="color:green"></i></span><span ng-if="user.StatusType==2"><i class="fa fa-close" style="color:red"></i></span></td>
+                    <td st-ratio="10" class="wrap-words">
+                        TL : Martin Lauris </br>
+                        CCO : Jenni
+                    </td>
+                    <td st-ratio="8" class="wrap-words">
+                        <div ng-show="(selectedProviders.length<1)">
+                            <button ng-click="deactiveProfileInfo(user.ProfileID,$index)" ng-if="user.StatusType==1" class="btn btn-warning btn-xs skip">Deactivate</button>
+                            <button ng-click="reactiveProfileInfo(user.ProfileID,$index)" ng-if="user.StatusType==2" class="btn btn-success btn-xs skip">Reactivate</button>
+                        </div>
+                        <div ng-show="!(selectedProviders.length<1)">
+                            <span ng-show="user.SelectStatus">
+                                <i class="fa fa-check"></i>
+                            </span>
+                            <span ng-show="user.Status=='Inactive'">
+                                <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>  Provider is Inactive
+                            </span>
+
+                        </div>
+                    </td>
+
+                </tr>
+            </tbody>
+            <tbody ng-show="isLoading">
+                <tr>
+                    <td colspan="10" class="text-center">
+                        <div class="loading-indicator"></div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="11" colspan="11"></td>
+                </tr>
+            </tfoot>
+        </table>
+        @*end of smart grid*@
+
+
+
+        <div class="col-lg-12">
+
+
+
+
+            @*<table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                    <tr ng-repeat="user in $data track by $index" ng-click="selectProvider($event,user)" ng-style="user.SelectStatus ? { 'background-color':'rgba(220, 220, 220, 0.68)',color:'black','font-weight':'bold' } : {'background-color':'white',color:'black'}" style="cursor:pointer">
+                        <td class="col-lg-2 wrap-words text-center" data-title="'NPI #'" header-class="text-left" sortable="'NPINumber'" filter="{ 'NPINumber': 'text' }">
+                            {{user.NPINumber}}
+                        </td>
+                        <td class="col-lg-2 wrap-words text-center" data-title="'Title'" header-class="text-left" sortable="'FullTitles'" filter="{ 'FullTitles': 'text' }">
+                            {{user.FullTitles}}
+                        </td>
+                        <td class="col-lg-1 wrap-words text-center" data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }">
+                            {{user.FirstName}}
+                        </td>
+                        <td class="col-lg-2 wrap-words text-center" data-title="'Last Name'" header-class="text-left" sortable=" 'LastName'" filter="{ 'LastName': 'text' }">
+                            {{user.LastName}}
+                        </td>
+                        <td class="col-lg-1 wrap-words text-center" data-title="'Relationship'" header-class="text-left" sortable="'FullRelations'" filter="{ 'FullRelations': 'text' }">
+                            {{user.FullRelations}}
+                        </td>
+
+                        <td class="col-lg-1 wrap-words text-center" data-title="'Status'" header-class="text-left" sortable="'Status'" filter="{ 'Status': 'text' }">
+                            {{user.Status}} <span ng-if="user.StatusType==1"><i class="fa fa-check" style="color:green"></i></span><span ng-if="user.StatusType==2"><i class="fa fa-close" style="color:red"></i></span>
+                        </td>
+                        <td class="col-lg-2 wrap-words text-center" data-title="'Assigned'" header-class="text-left" sortable="'Assigned'" filter="{ 'Assigned': 'text' }">
+
+                            TL : Martin Lauris </br>
+                            CCO : Jenni
+
+                        </td>
+                        <td class="col-lg-1 text-center" data-title="'Action'" header-class="text-right">
+                            <button ng-click="deactiveProfileInfo(user.ProfileID,$index)" ng-if="user.StatusType==1" class="btn btn-warning btn-sm skip">Deactivate</button>
+                            <button ng-click="reactiveProfileInfo(user.ProfileID,$index)" ng-if="user.StatusType==2" class="btn btn-success btn-sm skip">Reactivate</button>
+                        </td>
+                        <td class="col-lg-1 wrap-words" style="width: 3%;" ng-if="user.SelectStatus">
+                            <span ng-show="user.SelectStatus"> <i class="fa fa-check"></i></span>
+                        </td>
+                    </tr>
+                </table>*@
+
+        </div>
+
+        <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="deactivateProfile">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                        </div>
+                        <div class="modal-body">
+                            Do you really want to deactivate profile?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="deactiveProfile(SelectedProfileID)">Deactivate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="profileReactiveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="reactivateProfile">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                        </div>
+                        <div class="modal-body">
+                            Do you really want to reactivate profile?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="reactiveProfile(SelectedProfileID)">Reactivate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+<div ng-cloak ng-if="ShowProfileDelegation" ng-hide="selectedProviders.length<1" class="panel panel-default content-panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">Profile Delegation</h3>
+    </div>
+    <div class="panel-body">
+        @*<div class="col-lg-12">
+                <button type="button" class="btn btn-primary btn1 btn-lg raised btn-primary2" style="margin-left:3%" ng-click="displayData('CCOAssignedData')">CCO Assignments</button><span ng-if="ccoAssign" class="pointing-caret-pv1"></span>
+                <button type="button" class="btn btn-primary btn1 btn-lg raised btn-primary2" style="margin-left:6%" ng-click="displayData('TLAssignedData')">TL Assignments</button><span ng-if="!ccoAssign" class="pointing-caret-pv2"></span>
+            </div>*@
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#ccoAssignemntArea" ng-click="displayData('CCOAssignedData')">CCO Assignments</a></li>
+            <li><a data-toggle="tab" href="#TLAssignemntArea" ng-click="displayData('TLAssignedData')">TL Assignments</a></li>
+
+        </ul>
+        <div class="tab-content">
+            @*<div style="border: 1px solid rgba(128, 128, 128, 0.66); margin-top: 4%; height: 235px; " ng-if="!ccoAssign">*@
+            <div id="ccoAssignemntArea" ng-show="ccoAssign" class="tab-pane fade in active">
+                <div class="col-lg-12" style="padding-top:2px">
+                    <div class="col-lg-3 pull-right">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-sm " placeholder="Search for CCO" name="search" ng-model="searchFor">
+                            <span class="input-group-btn ng-binding">
+                                <button class="btn btn-primary btn-sm" id="searchbtn" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="ProviderTable" ng-repeat="provider in filterdData =(CardsDisplayData | filter:searchFor) ">
+
+                    <div class="ProviderDetailsFrame" ng-click="showAssignmentConfirmation(provider.Name,'CCO')" id="tbodyID">
+                        <div class="col-lg-12 providerInfo" title="">
+
+                            <div class="col-lg-10">
+
+                                <span class="ProviderName"><b>Name:     {{provider.Name}} </b></span><br />
+                         @* <span class="ProviderAssigned"><b>Total Providers Assigned: </b>    {{provider.ProAssigned}}</span><br />*@
+                                <span class="ProviderTasksAssigned"><b>Total Tasks Assigned : </b>   {{provider.TaskAssigned}}</span><br />
+                                <span class="ProviderTasksAssigned">
+                                    <b>Total Tasks Pending :</b>  {{provider.Pending}}</span>
+                                    <div>
+                                        <div class="progress taskprogressbar">
+                                            <div class="progress-bar" ng-class="{'box-success':provider.Performance < 30,'box-warning':provider.Performance > 30 && provider.Performance < 70, 'box-danger':provider.Performance >70}" ng-style="{'width': provider.Performance+'%'}"></div>
+                                        </div>
+
+                                        <span class="ProviderPendingTasks">
+                                            <span class="pull-left">
+                                                <b>Percentage of Tasks Pending</b>
+                                            </span>
+                                            <span class="pull-right" style="color:#d9534f;">
+                                                {{provider.Performance}}%
+                                            </span>
+                                        </span><br />
+
+                                    </div>
+
+</div>
+                            <div class="col-lg-2 customCircle">
+                                <div class="col-lg-12" style="padding:0px">
+                                    <div class="text-center" style="margin-left: -11px; margin-top: 2px"> {{provider.ProAssigned}} </div>
+                                    <div class="insideText">Total Providers Assigned </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" ng-show="!filterdData.length"><h4>No Records Found</h4></div>
+                </div>
+            </div>
+            <div id="TLAssignemntArea" ng-show="!ccoAssign">
+                <div class="col-lg-12" style="padding-top:2px">
+                    <div class="col-lg-3 pull-right">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-sm " placeholder="Search for TL" name="search" ng-model="searchFor">
+                            <span class="input-group-btn ng-binding">
+                                <button class="btn btn-primary btn-sm" id="searchbtn" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="ProviderTable" ng-repeat="TL in CardsDisplayData | filter:searchFor ">
+
+                    <div class="ProviderDetailsFrame" ng-click="showAssignmentConfirmation(TL.Name,'TL')" id="tbodyID">
+                        <div class="col-lg-12 providerInfo" title="">
+
+                            <div class="col-lg-10">
+
+                                <span class="ProviderName"><b>Name:     {{TL.Name}} </b></span><br />
+                                <span class=""><b>Gender : </b>{{TL.Gender}}</span><br />
+                                <span class="font_size_12"><b><i class="fa fa-envelope-o" style="color:red"></i>  </b>{{TL.EMail}}</span><br />
+                                <span class="font_size_12"><b><i class="fa fa-phone" style="color: #0099cc"></i>  </b>{{TL.Phone}} </span><br />
+                                @*<span class="ProviderAssigned"><b>Total Providers Assigned: </b>    {{TL.ProAssigned}}</span><br />*@
+
+
+
+                            </div>
+                            <div class="col-lg-2 customCircle">
+                                <div class="col-lg-12" style="padding:0px">
+                                    <div class="text-center" style="margin-left: -11px; margin-top: 2px"> {{TL.ProAssigned}} </div>
+                                    <div class="insideText">Total Providers Assigned </div>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="inactiveWarningModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="removeTask">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel"><i class="fa fa-clock-o"></i> WARNING !!!</h4>
+                        </div>
+                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                            <div style="margin-top:2%;">
+                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                            </div>
+                        </div>
+                        <div class="modal-body" ng-show="!isRemoved">
+                            Do you want to <b>Assign Selected Providers to {{toWhomAssigned}} - {{ccoName}} ?</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="assignTask()" data-dismiss="modal">Assign</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="inactiveWarningModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="removeTask">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="location.reload()"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel"> <i class="fa fa-thumbs-up" aria-hidden="true"></i> SUCCESS </h4>
+                        </div>
+                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                            <div style="margin-top:2%;">
+                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                            </div> 
+                        </div>
+                        <div class="modal-body" ng-show="!isRemoved">
+                            Successfully assigned {{selectedProviders.length}} Providers  to <b>{{ccoName}}</b>
+                            <ol style="font-weight:bold">
+                                <li ng-repeat="provider in selectedProviders">
+                                    {{provider.FirstName + " "+ provider.LastName| uppercase}}
+                                </li>
+                            </ol>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

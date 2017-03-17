@@ -1,4 +1,39 @@
 ﻿var prototypeApp = angular.module('prototypeApp', ['ui.bootstrap', 'smart-table', 'mgcrea.ngStrap', 'ngTable']);
+prototypeApp.config(function ($datepickerProvider) {
+
+    angular.extend($datepickerProvider.defaults, {
+        startDate: 'today',
+        autoclose: true,
+        useNative: true
+    });
+})
+prototypeApp.directive('switch', function () {
+    return {
+        restrict: 'AE'
+    , replace: true
+    , transclude: true
+    , template: function (element, attrs) {
+        var html = '';
+        html += '<span';
+        html += ' class="switch' + (attrs.class ? ' ' + attrs.class : '') + '"';
+        html += attrs.ngModel ? ' ng-click="' + attrs.disabled + ' ? ' + attrs.ngModel + ' : ' + attrs.ngModel + '=!' + attrs.ngModel + (attrs.ngChange ? '; ' + attrs.ngChange + '()"' : '"') : '';
+        html += ' ng-class="{ checked:' + attrs.ngModel + ', disabled:' + attrs.disabled + ' }"';
+        html += '>';
+        html += '<small></small>';
+        html += '<input type="checkbox"';
+        html += attrs.id ? ' id="' + attrs.id + '"' : '';
+        html += attrs.name ? ' name="' + attrs.name + '"' : '';
+        html += attrs.ngModel ? ' ng-model="' + attrs.ngModel + '"' : '';
+        html += ' style="display:none" />';
+        html += '<span class="switch-text">'; /*adding new container for switch text*/
+        html += attrs.on ? '<span class="on">' + attrs.on + '</span>' : ''; /*switch text on value set by user in directive html markup*/
+        html += attrs.off ? '<span class="off">' + attrs.off + '</span>' : ' ';  /*switch text off value set by user in directive html markup*/
+        html += '</span>';
+        return html;
+    }
+    }
+});
+
 var SearchProviderPanelToggle = function () {
     $("#SearchProviderPanel").slideToggle();
 }
@@ -34,6 +69,7 @@ prototypeApp.factory('Resource', ['$q', '$rootScope', '$filter', '$timeout', fun
 
 
 }]);
+
 prototypeApp.directive('stRatio', function () {
     return {
         link: function (scope, element, attr) {
@@ -86,6 +122,7 @@ prototypeApp.directive('pageSelect', function () {
 prototypeApp.run(function ($rootScope) {
     $rootScope.PrototypeData = [];
     $rootScope.datepickerVal = "";
+    $rootScope.ProviderSummaryData = [];
     $rootScope.CCOData = [
   {
       "CCOName": "Anjali",
@@ -180,8 +217,36 @@ prototypeApp.run(function ($rootScope) {
 
 });
 
+//For Error messages
+prototypeApp.service('messageAlertEngine', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
 
-prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $q, $filter,ngTableParams, Resource) {
+    $rootScope.messageDesc = "";
+    $rootScope.activeMessageDiv = "";
+    $rootScope.messageType = "";
+
+    var animateMessageAlertOff = function () {
+        $rootScope.closeAlertMessage();
+    };
+
+
+    this.callAlertMessage = function (calledDiv, msg, msgType, dismissal) { //messageAlertEngine.callAlertMessage('updateHospitalPrivilege' + IndexValue, "Data Updated Successfully !!!!", "success", true);                            
+        $rootScope.activeMessageDiv = calledDiv;
+        $rootScope.messageDesc = msg;
+        $rootScope.messageType = msgType;
+        if (dismissal) {
+            $timeout(animateMessageAlertOff, 5000);
+        }
+    }
+
+    $rootScope.closeAlertMessage = function () {
+        $rootScope.messageDesc = "";
+        $rootScope.activeMessageDiv = "";
+        $rootScope.messageType = "";
+    }
+}])
+
+
+prototypeApp.controller('PrototypesCtrl', ["$scope", "$rootScope", "$http", "$q", "$filter", "ngTableParams", "Resource", "messageAlertEngine", function ($scope, $rootScope, $http, $q, $filter, ngTableParams, Resource, messageAlertEngine) {
     var ctrl = this;
     this.displayed = [];
     $scope.showProCredData = false;
@@ -192,7 +257,9 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
     $scope.ccoAssign = true;
     $scope.error_message = "";
     $scope.groupBySelected = "none";
-
+    $scope.selectedProviders = [];
+    $scope.TLlist = [];
+    $scope.ccoList = [];
 
     this.callServer = function callServer(tableState) {
         ctrl.isLoading = true;
@@ -210,12 +277,86 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
         });
     };
 
+    $scope.selectProvider = function (event, provider) {
+        if (provider.Status.indexOf("Inactive") > -1) {
+            provider.SelectStatus = false
+        }
+        if (event.target.className.indexOf('skip') > -1 || provider.Status.indexOf("Inactive") > -1) {
+            return;
+        }
+        if (provider.SelectStatus == true) {
+            provider.SelectStatus = false;
+            $scope.selectedProviders.splice($scope.selectedProviders.indexOf(provider), 1);
+        }
+        else {
+            provider.SelectStatus = true;
+            $scope.selectedProviders.push(provider)
+        };
+        //provider.SelectStatus = provider.SelectStatus == true ? false : true;
+        //$scope.selectedProviders.push(provider);
+        console.log($scope.selectedProviders);
+    }
+
+    $scope.providerProfileStatus = false;
+    //To get provider data from controller
+    var GetProviderSummary = function () {
+        var deferObject;
+        deferObject = deferObject || $q.defer();
+        var promise = $http.get(rootDir + '/Prototypes/GetProvidersSummary?profileStatus=' + $scope.providerProfileStatus + '&count=8');
+        promise.then(function (answer) {
+            deferObject.resolve(answer);
+        },
+        function (reason) {
+            deferObject.reject(reason);
+        });
+        return deferObject.promise;
+    }
+
+    //To get CCO data from controller
+    var GetCCOSummary = function () {
+        var deferObject;
+        deferObject = deferObject || $q.defer();
+        var promise = $http.get(rootDir + '/Prototypes/GetCCOSummary?count=15');
+        promise.then(function (answer) {
+            deferObject.resolve(answer);
+        },
+        function (reason) {
+            deferObject.reject(reason);
+        });
+        return deferObject.promise;
+    }
+    
     $scope.RefreshData = function (name) {
         if (name == 'CCO') {
-            $rootScope.PrototypeData = angular.copy($rootScope.CCOData);
+            GetCCOSummary().then(function (results) {
+                $rootScope.PrototypeData = results.data;
+                var tableState = {
+                    sort: {},
+                    search: {},
+                    pagination: {
+                        start: 0
+        }
+                };
+                ctrl.callServer(tableState);
+            },
+     function (errors) { })
+
         }
         else if (name = 'PRO') {
-            $rootScope.PrototypeData = angular.copy($rootScope.ProviderData);
+           
+            GetProviderSummary().then(function (results) {
+                $rootScope.PrototypeData = results.data;
+                var tableState = {
+                    sort: {},
+                    search: {},
+                    pagination: {
+                        start: 0
+                    }
+                };
+                ctrl.callServer(tableState);
+            },
+                function (errors) { })
+
         }
         var tableState = {
             sort: {},
@@ -227,21 +368,120 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
         ctrl.callServer(tableState);
     }
 
-    $scope.showCred = function (role) {        
+    $scope.ShowCompletedStatus = function () {
+        //for (var i = 0; i < $rootScope.PrototypeData.length;i++)
+        //{
+        //    $rootScope.PrototypeData[i].ProfileStatus = 100;
+        //}
+        GetProviderSummary().then(function (results) {
+            $rootScope.PrototypeData = results.data;
+            var tableState = {
+                sort: {},
+                search: {},
+                pagination: {
+                    start: 0
+                }
+            };
+            ctrl.callServer(tableState);
+        },
+                 function (errors) { })
+        
+    }
+
+    $scope.showCred = function (role) {
         $scope.showProCredData = role == 'Pro' ? true : false;
         $scope.showCCOCredData = role == 'CCO' ? true : false;
     }
+    $scope.ShowProfileCompletionModal = function () {
+        $('#profileStatusModal').modal('show');
+    }
+
 
     $scope.displayData = function (assignedPerson) {
         if (assignedPerson == 'CCOAssignedData') {
             $scope.ccoAssign = true;
-            $scope.ProviderList1 = angular.copy(ProviderList);
+
+            $scope.CardsDisplayData = angular.copy($scope.ccoList);
         }
         else {
             $scope.ccoAssign = false;
-            $scope.ProviderList1 = angular.copy(TLList);
+            if ($scope.TLlist.length < 1)
+                tlList();
+            $scope.CardsDisplayData = angular.copy($scope.TLlist);
         }
     }
+
+
+    // for deactivate pop-up
+    $scope.deactiveProfileInfo = function (profileId, index) {
+        tempindex = index;
+        $scope.SelectedProfileID = profileId;
+        $('#profileModal').modal();
+    };
+
+    // for deactivte the profile
+    $scope.deactiveProfile = function (profileID) {
+        $('#temp' + tempindex).attr('disabled', true);
+        $http.post(rootDir + '/Profile/MasterProfile/DeactivateProfile?profileID=' + profileID).
+                success(function (data, status, headers, config) {
+                    try {
+                        //----------- success message -----------
+                        if (data) {
+                            for (var i in $scope.data) {
+                                if ($scope.data[i].ProfileID == profileID) {
+                                    $scope.data[i].Status = "Inactive";
+                                    $scope.data[i].StatusType = 2;
+                                    $scope.data[i].SelectStatus = false;
+                                    break;
+                                }
+                            }
+                            $scope.init_table($scope.data, 1);
+                        }
+                    } catch (e) {
+
+                    }
+                }).
+                error(function (data, status, headers, config) {
+                    //----------- error message -----------
+                });
+        $('#profileModal').modal('hide');
+    };
+
+    // for reactivate pop-up
+    $scope.reactiveProfileInfo = function (profileId, index) {
+        tempindex = index;
+        $('#temp' + tempindex).attr('disabled', true);
+        $scope.SelectedProfileID = profileId;
+        $('#profileReactiveModal').modal();
+    };
+
+
+    // for reactivte the profile
+    $scope.reactiveProfile = function (profileID) {
+        $http.post(rootDir + '/Profile/MasterProfile/ReactivateProfile?profileID=' + profileID).
+                success(function (data, status, headers, config) {
+                    try {
+                        //----------- success message -----------
+                        if (data) {
+                            for (var i in $scope.data) {
+                                if ($scope.data[i].ProfileID == profileID) {
+                                    $scope.data[i].Status = "Active";
+                                    $scope.data[i].StatusType = 1;
+                                    break;
+                                }
+                            }
+                            $scope.init_table($scope.data, 1);
+        }
+                    } catch (e) {
+
+
+    }
+                }).
+                error(function (data, status, headers, config) {
+                    //----------- error message -----------
+                });
+        $('#profileReactiveModal').modal('hide');
+    };
 
     $scope.credDetailsData = [
         {
@@ -289,6 +529,29 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
       "Pending": "180",
       "AvgTime": "6"
   }
+    ]
+
+    $scope.ProfileCompletionStatus = [
+        { "SectionId": "#home", "SectionName": "Demographics", "PercentageOfCompletion": "40" },
+        { "SectionId": "#identification#StateLicense", "SectionName": "Identification & Licenses", "PercentageOfCompletion": "15" },
+        { "SectionId": "#education", "SectionName": "Education History", "PercentageOfCompletion": "60" },
+        { "SectionId": "#specialty", "SectionName": "Specialty/Board", "PercentageOfCompletion": "100" },
+
+        { "SectionId": "#practice", "SectionName": "Practice Location", "PercentageOfCompletion": "100" },
+        { "SectionId": "#hospital", "SectionName": "Hospital Privilege", "PercentageOfCompletion": "40" },
+        { "SectionId": "#liability", "SectionName": "Professional Liability", "PercentageOfCompletion": "77" },
+        { "SectionId": "#workHistory", "SectionName": "Work History", "PercentageOfCompletion": "87" },
+
+        { "SectionId": "#professionalreference", "SectionName": "Professional Reference", "PercentageOfCompletion": "10" },
+        { "SectionId": "#Professional", "SectionName": "Professional Affiliation", "PercentageOfCompletion": "10" },
+        { "SectionId": "#disclosure", "SectionName": "Disclosure Questions", "PercentageOfCompletion": "50" },
+        { "SectionId": "#ContractInfo", "SectionName": "Employment Information", "PercentageOfCompletion": "100" },
+
+        { "SectionId": "#DocumentRepository", "SectionName": "Document Repository", "PercentageOfCompletion": "50" },
+        { "SectionId": "#ProfileDashboard", "SectionName": "Profile Dashboard", "PercentageOfCompletion": "70" },
+        { "SectionId": "#CustomField", "SectionName": "Additional Field", "PercentageOfCompletion": "40" },
+        { "SectionId": "#DocumentationCheckList", "SectionName": "Document Checklist", "PercentageOfCompletion": "65" },
+
     ]
 
     $http.get(rootDir + '/Profile/MasterData/GetAllProviderLevels').
@@ -340,7 +603,7 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
         $scope.data = [];
         $scope.error_message = "";
         $scope.progressbar = true;
-
+        $scope.selectedProviders = [];
         $http({
             method: "POST",
             url: rootDir + "/SearchProfile/SearchProfileJson",
@@ -357,6 +620,8 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
                     $scope.init_table(resultData.searchResults, condition);
                     $scope.searchProvider = "";
                     $scope.progressbar = false;
+                    //removing selected providers
+
                 }
                 else {
                     $scope.progressbar = false;
@@ -494,51 +759,76 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
         $scope.data = "";
     }
 
-    var ProviderList = [
-      { ProviderID: 1, Photo: '/Content/Images/Providers/provider3.jpg', Name: 'Dr. Tony Martin', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 2, Photo: '/Content/Images/Providers/provider2.jpg', Name: 'Dr. Barbara Joy', NPI: 1111111111, Specialty: ' Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 3, Photo: '/Content/Images/Providers/provider2.jpg', Name: 'Dr. Daina Jeccob', NPI: 2222222222, Specialty: ' Dentist', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 4, Photo: '/Content/Images/Providers/Pariksith_Singh.jpg', Name: 'Dr. Parikshit Singh', NPI: 3333333333, Specialty: ' Dentist, Neuro Surgon', Location: 'Alaska', Group: 'Access2', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 5, Photo: '/Content/Images/Providers/provider1.jpg', Name: 'Dr. Sanjay Singh', NPI: 4444444444, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      //{ ProviderID: 6, Photo: '~/Content/Images/Providers/provider2.jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 6, Photo: '/Content/Images/Providers/provider2.jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      { ProviderID: 7, Photo: '/Content/Images/Providers/Pariksith_Singh.jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access', ProAssigned: '13', TaskAssigned: '670', Pending: '270' },
-      //{ ProviderID: 9, Photo: '~/Content/Images/Providers/Pariksith_Singh.jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' }
-      //{ ProviderID: 10, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-      //{ ProviderID: 11, Photo: '/Resources/Images/images (2).jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-      //{ ProviderID: 12, Photo: '/Resources/Images/images (1).jpg', Name: 'Dr. Sanjay Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-      //{ ProviderID: 13, Photo: '/Resources/Images/images (2).jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-      //{ ProviderID: 14, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-      //{ ProviderID: 15, Photo: '/Resources/Images/images (4).jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-      //{ ProviderID: 16, Photo: '/Resources/Images/images (1).jpg', Name: 'Dr. Sanjay Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' }
-    ]
 
-    var TLList = [
-        { ProviderID: 10, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-        { ProviderID: 11, Photo: '/Resources/Images/images (2).jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-        { ProviderID: 12, Photo: '/Resources/Images/images (1).jpg', Name: 'Dr. Sanjay Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-        { ProviderID: 13, Photo: '/Resources/Images/images (2).jpg', Name: 'Dr. Barbara Joy', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-        { ProviderID: 14, Photo: '/Resources/Images/images (3).jpg', Name: 'Dr. Daina Jeccob', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-        { ProviderID: 15, Photo: '/Resources/Images/images (4).jpg', Name: 'Dr. Parikshit Singh', NPI: 1223344556, Specialty: ' Dentist, Neuro Surgon', Location: 'Spring Hill, Florida', Group: 'Access' },
-    ]
-    $scope.ProviderList1 = angular.copy(ProviderList);
+    var ccoList = function () {
+        $http({
+            method: 'GET',
+            url: '/Prototypes/GetCCOData'
+        }).then(function successCallback(response) {
+            for (var i = 0; i < response.data.length; i++) {
+                var cal = (response.data[i].Pending / (response.data[i].TaskAssigned < 1 ? 1 : response.data[i].TaskAssigned) * 100);
+                response.data[i].Performance = Math.round(cal * 100) / 100;
+            }
+            $scope.ccoList = angular.copy(response.data);
+            $scope.CardsDisplayData = angular.copy(response.data);
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+    }
 
-    //To toggle the Credentialing Details and Provider Details panel
-    $scope.CCOSummaryPanelToggle = function (divId) {
+    var tlList = function () {
+        $http({
+            method: 'GET',
+            url: '/Prototypes/GetTLData'
+        }).then(function successCallback(response) {
+            $scope.TLlist = angular.copy(response.data);
+            $scope.CardsDisplayData = angular.copy(response.data);
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+    }
+
+    //To toggle Provider Details and Credentialing Details panel by passing the ID for the Panels
+    $scope.PanelToggle = function (divIdProviderList, divIdCredDetails, panelName) {
         $('div').tooltip.title = "show";
-        $("#" + divId).slideToggle();
+        
+        //If ProviderWorkedOn is clicked, open Provider Details Panel
+        if (panelName == 'Provider') {
+            $("#" + divIdCredDetails).hide();
+            $("#" + divIdProviderList).slideToggle();
+        }
+
+        //If Pending Credentialing is clicked, open Credentialing Details
+        else if (panelName == 'Credentialing') {
+            $("#" + divIdProviderList).hide();
+            $("#" + divIdCredDetails).slideToggle();            
+        }
+       
         $scope.initiate = false;
 
     };
 
+    //To toggle the panel for Credentialing Incomplete details in Provider Summary
+    $scope.CredentialingIncompletePanelToggle = function (divId) {
+        $('div').tooltip.title = "show";
+        $("#" + divId).slideToggle();
+    };
+
+
     $scope.AssignToCCO = function () {
         $scope.ShowProfileDelegation = true;
+        if ($scope.ccoList.length < 1)
+            ccoList();
+
         SearchTLPanelToggle();
     }
 
-    $scope.showAssignmentConfirmation = function (Proname) {
+    $scope.showAssignmentConfirmation = function (Proname, whomtoassigned) {
         $('#inactiveWarningModal1').modal();
         $scope.ccoName = Proname;
+        $scope.toWhomAssigned = whomtoassigned;
     }
 
     $scope.ProviderDetails = [
@@ -547,11 +837,11 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
             NPI: 123445667,
             Specialty: "Family",
             Plan: "Aetna",
-            Status:"Accepted",
+            Status: "Accepted",
             CCM: "Dr. Manjushree",
             CredentialingIntiatedDate: "09-24-2016",
             AppointmentDate: "09-24-2016",
-            RecommendedLevel:"Level 1"
+            RecommendedLevel: "Level 1"
         },
         {
             Name: "Dr. Matte",
@@ -597,9 +887,18 @@ prototypeApp.controller('PrototypesCtrl', function ($scope, $rootScope, $http, $
     }
 
     $scope.assignTask = function () {
+
+        //var message = "Successfully assigned " + $scope.selectedProviders.length + "Providers  to <b>" + $scope.ccoName + "</b><ol><li>adsfads</li><li>adsfads</li></ol>";
+        //    //<li ng-repeat="provider in selectedProviders">
+        //    //                      {{provider.FirstName + " "+ provider.LastName}}
+        //    //                    </li>
+        //    //                </ol>
+        //toaster.pop('Success', "Success", message);
         $('#inactiveWarningModal2').modal();
     }
-});
+
+}]);
+
 
 $(document).ready(function () {
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
@@ -617,3 +916,4 @@ $(document).click(function (event) {
 function showLocationList(ele) {
     $(ele).parent().find(".ProviderTypeSelectAutoList").first().show();
 }
+

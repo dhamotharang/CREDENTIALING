@@ -49,11 +49,21 @@ namespace AHC.CD.Data.ADO.Profile
 
         public async Task<dynamic> GetAllCredentialRequestsRepo()
         {
-            dynamic CredentialRequestsData = null;
-            string Query = AdoQueries.CREDREQUEST;
+            dynamic CredentialRequestsData = new ExpandoObject();
+            IDbConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EFEntityContext"].ConnectionString);
+            connection.Open();
+            string AllQuery = AdoQueries.UPDATECOUNT + AdoQueries.RENEWALCOUNT + AdoQueries.REQUESTCOUNT + AdoQueries.HISTORYCOUNT + AdoQueries.CREDREQUEST;
             try
             {
-                CredentialRequestsData = await dp.ExecuteQueryAsync<dynamic>(Query);
+                using (var MultipleResult = await connection.QueryMultipleAsync(AllQuery))
+                {
+                    CredentialRequestsData.UPDATECOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.RENEWALCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.REQUESTCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.HISTORYCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.CREDENTIALINGREQUEST = MultipleResult.Read<dynamic>().ToList();
+                }
+
             }
             catch (Exception ex)
             {
@@ -64,11 +74,21 @@ namespace AHC.CD.Data.ADO.Profile
 
         public async Task<dynamic> GetAllHistoryRepo()
         {
-            dynamic HistoryData = null;
-            string Query = AdoQueries.UPDATERENEWALHISTORY;
+            dynamic HistoryData = new ExpandoObject();
+            IDbConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EFEntityContext"].ConnectionString);
+            connection.Open();
+            string AllQuery = AdoQueries.UPDATECOUNT + AdoQueries.RENEWALCOUNT + AdoQueries.REQUESTCOUNT + AdoQueries.HISTORYCOUNT + AdoQueries.UPDATERENEWALHISTORY;
             try
             {
-                HistoryData = await dp.ExecuteQueryAsync<dynamic>(Query);
+                using (var MultipleResult = await connection.QueryMultipleAsync(AllQuery))
+                {
+                    HistoryData.UPDATECOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.RENEWALCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.REQUESTCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.HISTORYCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.PROFILEUPDATEHISTORY = MultipleResult.Read<dynamic>().ToList();
+                }
+
             }
             catch (Exception ex)
             {
@@ -109,6 +129,87 @@ namespace AHC.CD.Data.ADO.Profile
                 throw ex;
             }
             return CredRequestHistoryDataByIDData;
+        }
+
+        public async Task<dynamic> GetAllUpdatesAndRenewalsForProviderRepo(int ID)
+        {
+            dynamic UpdatesAndRenewalsData = new ExpandoObject();
+            IDbConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EFEntityContext"].ConnectionString);
+            connection.Open();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ID", ID);
+            string AllQuery = AdoQueries.PROVIDERUPDATECOUNT + AdoQueries.PROVIDERRENEWALCOUNT + AdoQueries.PROVIDERREQUESTCOUNT + AdoQueries.PROVIDERHISTORYCOUNT + AdoQueries.PROVIDERPROFILEUPDATERENEWAL;
+            try
+            {
+                using (var MultipleResult = await connection.QueryMultipleAsync(AllQuery, parameters))
+                {
+                    UpdatesAndRenewalsData.UPDATECOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    UpdatesAndRenewalsData.RENEWALCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    UpdatesAndRenewalsData.REQUESTCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    UpdatesAndRenewalsData.HISTORYCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    UpdatesAndRenewalsData.PROFILEUPDATERENEWAL = MultipleResult.Read<dynamic>().ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return UpdatesAndRenewalsData;
+        }
+
+        public async Task<dynamic> GetAllCredentialRequestsForProviderRepo(int ID)
+        {
+            dynamic CredentialRequestsData = new ExpandoObject();
+            IDbConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EFEntityContext"].ConnectionString);
+            connection.Open();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ID", ID);
+            string AllQuery = AdoQueries.PROVIDERUPDATECOUNT + AdoQueries.PROVIDERRENEWALCOUNT + AdoQueries.PROVIDERREQUESTCOUNT + AdoQueries.PROVIDERHISTORYCOUNT + AdoQueries.PROVIDERCREDREQUEST;
+            try
+            {
+                using (var MultipleResult = await connection.QueryMultipleAsync(AllQuery, parameters))
+                {
+                    CredentialRequestsData.UPDATECOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.RENEWALCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.REQUESTCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.HISTORYCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    CredentialRequestsData.CREDENTIALINGREQUEST = MultipleResult.Read<dynamic>().ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return CredentialRequestsData;
+        }
+
+        public async Task<dynamic> GetAllHistoryForProviderRepo(int ID)
+        {
+            dynamic HistoryData = new ExpandoObject();
+            IDbConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EFEntityContext"].ConnectionString);
+            connection.Open();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@ID", ID);
+            string AllQuery = AdoQueries.PROVIDERUPDATECOUNT + AdoQueries.PROVIDERRENEWALCOUNT + AdoQueries.PROVIDERREQUESTCOUNT + AdoQueries.PROVIDERHISTORYCOUNT + AdoQueries.PROVIDERUPDATERENEWALHISTORY;
+            try
+            {
+                using (var MultipleResult = await connection.QueryMultipleAsync(AllQuery, parameters))
+                {
+                    HistoryData.UPDATECOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.RENEWALCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.REQUESTCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.HISTORYCOUNT = MultipleResult.Read<int>().FirstOrDefault();
+                    HistoryData.PROFILEUPDATEHISTORY = MultipleResult.Read<dynamic>().ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryData;
         }
     }
 }

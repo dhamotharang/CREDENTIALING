@@ -1,30 +1,38 @@
-﻿<div class="col-lg-4">
+﻿@*<div class="col-lg-4 zero-padding-left-right">
     <div class="btn-group btn-group-md pull-left" ng-if="!TempObjectForStatus.QuickApprovalAction">
-        <button class="btn" style="background-color: #464957; border-color: #337AB7; color:white" data-toggle="tooltip" data-placement="top" ng-click="SwitchViews();" title="Return To Appointment DashBoard"><span><i class="fa fa-arrow-left bigger-120"></i></span></button>
+
     </div>
 </div>
-<div class="col-lg-4 tripijodal">
-    <i class="fa" ng-class="{'fa-users': tableCaption == 'Appointments','fa-check': tableCaption == 'Approved','fa-ban': tableCaption == 'Rejected','fa-exclamation-circle': tableCaption == 'Pending'}"></i> {{tableCaption}}
+<div class="col-lg-4 tripijodal zero-padding-left-right">
 </div>
-<div class="col-lg-4">
+<div class="col-lg-4 zero-padding-left-right">
     <div class="btn-group btn-group-md pull-right">
         <button class="btn" style="background-color: #464957; border-color: #337AB7; color:white" data-toggle="tooltip" data-placement="top" ng-click="GridView=!GridView" title="Statistics"><span><i class="fa fa-bar-chart bigger-120"></i></span></button>
     </div>
     <div class="btn-group btn-group-md pull-right" id="ExportPanel">
-        <a class="btn btn-white" data-toggle="tooltip" data-placement="top" title="Search"><span><i class="fa fa-search bigger-120"></i></span></a>
-        <a class="btn btn-white" style="margin-left: 2px;color:orange" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#CCMGrid')"><span><i class="fa fa-file-code-o bigger-120"></i></span></a>
-        <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#CCMGrid')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></a>
-        <a class="btn btn-white" style="margin-left: 2px; color: red; " data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#CCMGrid')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></a>
-        <a class="btn btn-white" style="margin-left: 2px; color: grey; " data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></a>
     </div>
 </div>
 <div class="clearfix">
-
-</div>
-<div class="col-lg-12" ng-show="GridView">
-    <div class="divborder">
-        <table id="CCMGrid" class="table table-hover" st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="CCMAppointments">
-            <thead style="background-color: #464957; border-color: #337AB7; color:white">
+</div>*@
+<div class="col-lg-12 zero-padding-left-right form-style" @*ng-show="GridView"*@>
+    <fieldset>        
+        <legend>
+            <i class="fa" ng-class="{'fa-users': tableCaption == 'Appointments','fa-check': tableCaption == 'Approved','fa-ban': tableCaption == 'Rejected','fa-exclamation-circle': tableCaption == 'Pending'}"></i> {{tableCaption}}
+        </legend>
+        <div class="btn-group pull-right legend2 ng-scope">        
+            @*<span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#CCMGrid')"><span><i class="fa fa-file-code-o bigger-120"></i></span></button></span>*@
+            <span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#CCMGrid')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></button></span>
+            @*<span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#CCMGrid')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></button></span>*@
+            <span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></button></span>
+            <span><button class="btn  btn-xs btn-warning" data-toggle="tooltip" data-placement="top" ng-click="SwitchViews();" title="Return To Appointment DashBoard"><span><i class="fa fa-arrow-left"></i></span></button></span>
+         </div>
+        @*<div class="col-lg-4 zero-padding-left-right pull-right">
+            <input class="form-control input-sm ng-valid ng-touched ng-dirty ng-valid-parse" name="Global Search" autocomplete="off" placeholder="Search" ng-model="sdfds">
+        </div>*@
+        <div class="clearfix">
+        </div>
+        <table id="CCMGrid" class="table  table-bordered" st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="CCMAppointments">
+            <thead style="color:black">
                 <tr style="cursor:pointer">
                     <th st-sort="ProviderName" class="col-lg-2">Provider name</th>
                     <th st-sort="Specialty" class="col-lg-2">Specialty</th>
@@ -34,27 +42,38 @@
                     <th st-sort="RecommendedLevel" class="col-lg-1">Level</th>
                     <th st-sort="Status" class="col-lg-1">Status</th>
                     <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="TempObjectForStatus.QuickApprovalAction"><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#ActionModal">Proceed</button></th>
-                    <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="!TempObjectForStatus.QuickApprovalAction">Details</th>
+                    <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="!TempObjectForStatus.QuickApprovalAction">Action</th>
+                </tr>
+                <tr>
+                    <td class="hideData"><input st-search="ProviderName" type="text" placeholder="Filter ProviderName" id="ProviderName" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="Specialty" type="text" placeholder="Filter Specialty" id="Specialty" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="PlanName" type="text" placeholder="Filter Plan" id="PlanName" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="CredInitiationDate" type="text" placeholder="Filter CredInitiationDate" id="CredInitiationDate" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="AppointmentDate" type="text" placeholder="Filter AppointmentDate" id="AppointmentDate" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="RecommendedLevel" type="text" placeholder="Filter RecommendedLevel" id="RecommendedLevel" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="Status" type="text" placeholder="Filter Status" id="Status" class="form-control input-sm" /></td>
+                    <td class="hidecontent"></td>
                 </tr>
             </thead>
             <tbody ng-show="!pc.isLoading" ng-repeat="appointment in pc.displayed track by $index">
-                <tr id="firstrow" style="cursor:pointer" ng-style="appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction ? { 'background-color':'rgb(114, 58, 115)',color:'white','font-weight':'bold' } : {'background-color':'white',color:'black'}">
-                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.ProviderName || 'Not Available'}}</td>
-                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.Specialty || 'Not Available'}}</td>
-                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.PlanName || 'Not Available'}}</td>
-                    <td class="col-lg-2 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.CredInitiationDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
-                    <td class="col-lg-1 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.AppointmentDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
-                    <td class="col-lg-1 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.RecommendedLevel || 'Not Available'}}</td>
-                    <td class="col-lg-1 wrap-words" ng-click="CheckStatus(appointment)">{{appointment.Status || 'Not Available'}}</td>
-                    <td class="col-lg-1 wrap-words" style="width: 3%;" ng-if="TempObjectForStatus.QuickApprovalAction">
+                <tr id="firstrow" style="cursor:pointer" @*ng-style="appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction ? { 'background-color':'rgb(114, 58, 115)',color:'white','font-weight':'bold' } : {'background-color':'white',color:'black'}"*@
+                    ng-class="{'PendingRequest':appointment.Status=='Pending' && appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction,'NewRequest': appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction}">
+                    <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.ProviderName || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.Specialty || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.PlanName || 'Not Available'}}</td>
+                    <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.CredInitiationDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" select-row object="appointment">{{appointment.AppointmentDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" select-row object="appointment">{{appointment.RecommendedLevel || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" select-row object="appointment">{{appointment.Status || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" select-row object="appointment" style="width: 3%;" ng-if="TempObjectForStatus.QuickApprovalAction">
                         <span ng-show="appointment.SelectStatus"> <i class="fa fa-check"></i></span>
                     </td>
                     <td class="col-lg-1 wrap-words" style="width: 3%;" ng-if="!TempObjectForStatus.QuickApprovalAction">
-                        <button get-siblings class="btn btn-default btn-xs ViewDetail" ng-click="OpenAppointmentDetailsControl($index+'_AppointMentView');"> <i class="fa fa-eye"></i></button>
-                        <button get-siblings class="btn btn-danger btn-xs hidden CloseDetail" ng-click="CloseAppointmentDetailsControl($index+'_AppointMentView',this);"> <i class="fa fa-times"></i></button>
+                        <button get-siblings class="btn btn-default btn-xs ViewDetail" key="$index+'_AppointMentView'"> <i class="fa fa-eye"></i></button>
+                        <button get-siblings class="btn btn-danger btn-xs hidden CloseDetail"><i class="fa fa-times"></i></button>
                     </td>
                 </tr>
-                <tr ng-if="VisibilityControl==($index+'_AppointMentView')" ng-controller="SPAIndexController as spa" style="background-color: #464957;">
+                <tr ng-if="VisibilityControl==($index+'_AppointMentView')" ng-controller="SPAIndexController as spa" style="border-top-color: rgba(13, 1, 25, 0.4); border-top-style: solid; border-top-width: 3px; border-bottom-color: rgba(13, 1, 25, 0.4); border-bottom-style: solid; border-bottom-width: 3px; border-radius: 3px;">
                     <td colspan="8" style="padding-left:0px;padding-right:0px">
                         <div ng-include="'/Credentialing/CCMPortal/SPAIndexPage'" style="background-color: white;">
                         </div>
@@ -74,34 +93,34 @@
                 </tr>
             </tfoot>
         </table>
-    </div>
+    </fieldset>
 </div>
-<div class="col-lg-12" ng-show="!GridView">
-    <div class="panel" style="border: 3px solid rgba(13, 1, 25, 0.4); border-radius: 3px; background-color: #FFF;">
-        <div class="panel-heading" style="background-color: #464957; border-color: #337AB7;color:white">
-            <h3 class="panel-title">
-                Statistics
-                <span class="pull-right"><img src="~/Content/Images/svg-loaders/spinning-circles.svg" alt="" height="15"></span>
-            </h3>
-        </div>
-        <div class="panel-body">
-            <nvd3 options="options" data="data"></nvd3>
-        </div>
-    </div>
-</div>
-<div class="col-lg-12" ng-show="!GridView">
-    <div class="panel" style="border: 3px solid rgba(13, 1, 25, 0.4); border-radius: 3px; background-color: #FFF;">
-        <div class="panel-heading" style="background-color: #464957; border-color: #337AB7;color:white">
-            <h3 class="panel-title">
-                Statistics
-                <span class="pull-right"><img src="~/Content/Images/svg-loaders/ball-triangle.svg" alt="" height="15"></span>
-            </h3>
-        </div>
-        <div class="panel-body">
-            <nvd3 options="options1" data="data1"></nvd3>
+@*<div class="col-lg-12" ng-show="!GridView">
+        <div class="panel" style="border: 3px solid rgba(13, 1, 25, 0.4); border-radius: 3px; background-color: #FFF;">
+            <div class="panel-heading" style="background-color: #464957; border-color: #337AB7;color:white">
+                <h3 class="panel-title">
+                    Statistics
+                    <span class="pull-right"><img src="~/Content/Images/svg-loaders/spinning-circles.svg" alt="" height="15"></span>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <nvd3 options="options" data="data"></nvd3>
+            </div>
         </div>
     </div>
-</div>
+    <div class="col-lg-12" ng-show="!GridView">
+        <div class="panel" style="border: 3px solid rgba(13, 1, 25, 0.4); border-radius: 3px; background-color: #FFF;">
+            <div class="panel-heading" style="background-color: #464957; border-color: #337AB7;color:white">
+                <h3 class="panel-title">
+                    Statistics
+                    <span class="pull-right"><img src="~/Content/Images/svg-loaders/ball-triangle.svg" alt="" height="15"></span>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <nvd3 options="options1" data="data1"></nvd3>
+            </div>
+        </div>
+    </div>*@
 <!-- Modal -->
 <div id="ActionModal" class="modal fade" role="dialog">
     <div class="modal-dialog">

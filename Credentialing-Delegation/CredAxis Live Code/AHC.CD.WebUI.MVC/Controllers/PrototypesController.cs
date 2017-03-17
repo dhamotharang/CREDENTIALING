@@ -1,9 +1,8 @@
 ﻿using AHC.CD.WebUI.MVC.Helper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
 
 namespace AHC.CD.WebUI.MVC.Controllers
 {
@@ -23,9 +22,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
         {
             return View();
         }
+
         public ActionResult CCOAssignment()
         {
-            return View();
+            return View("~/Views/Prototypes/CCOAssignment/CCOAssignment.cshtml");
         }
         public ActionResult CCMDashboard()
         {
@@ -45,6 +45,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
         /// </summary>
         /// <returns>cshtml viewpage</returns>
         public ActionResult ProviderDirectory()
+        {
+            return View();
+        }
+
+        public ActionResult ManagementDashboard()
         {
             return View();
         }
@@ -71,15 +76,78 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+
+        public JsonResult GetCCOData()
+        {
+            var data = PrototypeHelper.GetCCOList();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        
+        }
+        public JsonResult GetTLData()
+        {
+               var data = PrototypeHelper.GetTLData();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        
+        }
+      
+
         /// <summary>
-        /// Get Contact Json Data
+        /// Get Specialities Json Data
         /// </summary>
-        /// <returns>Json, Contact Object List</returns>
+        /// <returns>Json, Speciality Object List</returns>
         public JsonResult GetSpecialties()
         {
-            string[] specialties1 = { "FAMILY MEDICINE GERIATRIC MEDICINE", "BOARD CERTIFIED IN NEUROLOGY & PSYCHIATRY", "INTERNAL MEDICINE", "INTERNAL MEDICINE", "INTERNAL MEDICINE", "BOARD CERTIFIED IN INTERNAL MEDICINE", "FAMILY MEDICINE", "FELLOW OF THE AMERICAN COLLEGE OF SURGEONS", "PHYSICAL MEDICINE & REHABILITATION", "BOARD CERTIFIED IN ALLERGY, ASTHMA & IMMUNOLOGY", "SERVED AS CHIEF OF STAFF AT BROOKSVILLE REGIONAL HOSPITAL", "INTERNAL MEDICINE", "INTERNAL MEDICINE", "INTERNAL MEDICINE", "PRIMARY CARE", "SPORTS MEDICINE PHYSICIAN", "FAMILY MEDICINE GERIATRIC MEDICINE", "BOARD CERTIFIED BY THE AMERICAN BOARD OF PSYCHIATRY & NEUROLOGY", "INTERNAL MEDICINE", "BOARD CERTIFIED – FAMILY MEDICINE", "BOARD CERTIFIED – FAMILY MEDICINE", "GENERAL PRACTITIONER", "INTERNAL MEDICINE", "Board Certified in Internal Medicine & Geriatric Medicine", "INTERNAL MEDICINE", "ORTHOPEDICS - SPORTS MEDICINE PHYSICIAN", "Internal Medicine", "BOARD CERTIFIED IN FAMILY MEDICINE", "GENERAL PRACTICE", "INTERNAL MEDICINE", "Radiologist", "Family Medicine Geriatric Medicine", "Board Certified in Family Medicine", "Family Medicine", "BOARD CERTIFIED IN ANESTHESIOLOGY", "HOSPITALIST", "Family Medicine", "Board Certified in Family Medicine", "Internal Medicine", "FAMILY MEDICINE", "BOARD CERTIFIED IN PULMONARY MEDICINE", "INTERNAL MEDICINE", "Family Medicine Geriatric Medicine", "INTERNAL MEDICINE", "INTERNAL MEDICINE", "BOARD CERTIFIED IN INTERNAL MEDICINE", "BOARD CERTIFIED HOSPITALIST", "SPORTS MEDICINE", "BOARD CERTIFIED IN FAMILY PRACTICE", "MEMBER OF THE ROYAL COLLEGE OF PHYSICIANS, UK", "PODIATRIC PHYSICIAN AND SURGEON", "Internal Medicine", "INTERNAL MEDICINE and Infectious Disease", "BOARD CERTIFIED – FAMILY MEDICINE", "PHYSICAL THERAPIST", "HOSPITALIST", "Board Certified in Internal Medicine", "ORTHOPEDICS - SURGEON", "FAMILY MEDICINE", "BOARD CERTIFIED IN INTERNAL MEDICINE AND GASTROENTEROLOGY", "FELLOW OF THE AMERICAN COLLEGE OF RHEUMATOLOGY", "FAMILY MEDICINE", "SPECIALTY IN OTOLARYNGOLOGY", "BOARD CERTIFIED IN INTERNAL MEDICINE", "BOARD CERTIFIED IN CARDIOVASCULAR DISEASE", "INTERNAL MEDICINE", "ORTHOPEDICS - SURGEON", "CLINICAL DIETITIAN/NUTRITION SPECIALIST", "GENERAL AND VASCULAR SURGEON", "HOSPITALIST", "FAMILY MEDICINE", "BOARD CERTIFIED IN GENERAL SURGERY", "Internal Medicine", "PODIATRIC MEDICINE", "GENERAL MEDICINE", "BOARD CERTIFIED IN GENERAL SURGERY", "FAMILY MEDICINE", "CARDIOVASCULAR DISEASE", "BOARD CERTIFIED IN INTERNAL MEDICINE", "SPECIALTY IN INTERVENTIONAL CARDIOLOGY", "FAMILY MEDICINE", "Family Medicine", "INTERNAL MEDICINE", "INTERNAL MEDICINE", "SPECIALTY IN INFECTIOUS DISEASES", "PULMONARY/CRITICAL CARE PHYSICIAN", "PRIMARY CARE", "Internal Medicine", "Internal Medicine", "FAMILY MEDICINE", "INTERNAL MEDICINE & INFECTIOUS DISEASE", "Internal Medicine", "HOSPITALIST", "LICENSED PEDORTHIST & ORTHOTIC FITTER", "FAMILY MEDICINE", "FAMILY PRACTICE (PRIMARILY SEES ADULTS)", "BOARD CERTIFIED IN ORTHOPEDICS", "INTERNAL MEDICINE", "Family Medicine", "BOARD CERTIFIED IN FAMILY MEDICINE", "INTERNAL MEDICINE", "INTERNAL MEDICINE", "HOSPITALIST & INTERNAL MEDICINE", "HOSPITALIST & INTERNAL MEDICINE", "BOARD CERTIFIED IN PSYCHIATRY & NEUROLOGY", "CHIROPRACTIC MEDICINE", "RHEUMATOLOGIST" };
-            var speciality = specialties1.ToList().Distinct();
-            return Json(speciality, JsonRequestBehavior.AllowGet);
+            return Json(PrototypeHelper.GetSpecialties(), JsonRequestBehavior.AllowGet);
+        }
+        
+        /// <summary>
+        /// Get Expiry License Data Json Data
+        /// </summary>
+        /// <returns>Json, Expiry License Data Object List</returns>
+        public JsonResult GetLicenseData()
+        {
+            return Json(PrototypeHelper.GetLicenseData(), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Get CCO Summary Status Data
+        /// </summary>
+        /// <param name="profileStatus"></param>
+        /// <param name="count"></param>
+        /// <returns>JSON, CCO Object</returns>
+        public JsonResult GetCCOSummary(int count = 15)
+        {
+            var data = PrototypeHelper.GetCCOSummary(count);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Get CCO Rank For Management Dashboard
+        /// </summary>
+        /// <param name="count">Required Number Of CCO Counts</param>
+        /// <returns>List, CCO Rank Object List</returns>
+        public JsonResult GetCCORankData(int count = 5)
+        {
+            return Json(PrototypeHelper.GetCCORanks(count), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Get Profile Completion Data Counts For Management Dashboard
+        /// </summary>
+        /// <returns>List, Object</returns>
+        public JsonResult GetProfileCompletionData()
+        {
+            return Json(PrototypeHelper.GetProfileCompletionDataCount(), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Get CCO Report For Management Dashboard
+        /// </summary>
+        /// <param name="CCOCount">Required Number Of CCO Counts</param>
+        /// <returns>List, CCO Report List</returns>
+        public JsonResult GetCCOReportsData(int count = 5)
+        {
+            return Json(PrototypeHelper.GetCCOReports(count), JsonRequestBehavior.AllowGet);
         }
     }
 }

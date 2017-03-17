@@ -11,6 +11,9 @@ namespace AHC.CD.Data.ADO.Profile
         Task<dynamic> GetAllUpdatesAndRenewalsRepo();
         Task<dynamic> GetAllCredentialRequestsRepo();
         Task<dynamic> GetAllHistoryRepo();
+        Task<dynamic> GetAllUpdatesAndRenewalsForProviderRepo(int ID);
+        Task<dynamic> GetAllCredentialRequestsForProviderRepo(int ID);
+        Task<dynamic> GetAllHistoryForProviderRepo(int ID);
         Task<dynamic> GetCredRequestDataByIDRepo(int ID);
         Task<dynamic> GetCredRequestHistoryDataByIDRepo(int ID);
     }

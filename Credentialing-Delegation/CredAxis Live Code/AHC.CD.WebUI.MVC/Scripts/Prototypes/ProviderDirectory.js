@@ -29,37 +29,13 @@
             });
             $(this).removeClass('notActive').addClass('active');
         })
-
-        var options = [];
-
-        $('.customize_column a').on('click', function (event) {
-
-            var $target = $(event.currentTarget),
-                val = $target.attr('data-value'),
-                $inp = $target.find('input'),
-                idx;
-
-            if ((idx = options.indexOf(val)) > -1) {
-                options.splice(idx, 1);
-                setTimeout(function () { $inp.prop('checked', false) }, 0);
-            } else {
-                options.push(val);
-                setTimeout(function () { $inp.prop('checked', true) }, 0);
-            }
-
-            $(event.target).blur();
-
-            console.log(options);
-            return false;
-        });
-
     });
 
 
 
     // Provider Directory Module
     var PDApp = angular.module("PDApp", ["ngTable"]);
-
+    
     // Provider Directory Controller
     PDApp.controller("PDController", PDController);
 
@@ -134,13 +110,117 @@
 
         $scope.GetAll();
         //$scope.GetSpecialtiesData();
+
+        // current not in use, pending to apply
+        $scope.SpecificFilter = [
+            {
+                field: "HospitalList",
+                title: "Hospital List",
+            },
+            {
+                field: "HospitalList",
+                title: "Hospital List",
+            },
+            {
+                field: "HospitalList",
+                title: "Hospital List",
+            },
+            {
+                field: "HospitalList",
+                title: "Hospital List",
+            },
+            {
+                field: "HospitalList",
+                title: "Hospital List",
+            },
+            {
+                field: "HospitalList",
+                title: "Hospital List",
+            },
+            ];
+
+        $scope.Columns = [
+            {
+                field: "ProviderID",
+                title: "S. No.",
+                //filter: {
+                //    name: "text" // template alias name
+                //},
+                show: true
+            },
+            {
+                field: "Salutation",
+                title: "Salutation",
+                filter: {
+                    //Salutation: "salutation" // template alias name
+                    name: "text"
+                },
+                sortable: "Salutation",
+                show: true
+            },
+            {
+                field: "Name",
+                title: "Provider Name",
+                filter: {
+                    name: "text" // template alias name
+                },
+                sortable: "Name",
+                show: true
+            },
+            {
+                field: "NPI",
+                title: "NPI Number",
+                filter: {
+                    name: "text" // template alias name
+                },
+                sortable: "NPI",
+                show: true
+            },
+            {
+                field: "Specialty",
+                title: "Specialty",
+                filter: {
+                    name: "text" // template alias name
+                },
+                sortable: "Specialty",
+                show: true
+            },
+            {
+                field: "PrimaryPracticeLocation",
+                title: "Primary Practice Location",
+                filter: {
+                    name: "text" // template alias name
+                },
+                sortable: "PrimaryPracticeLocation",
+                show: true
+            },
+            {
+                field: "Groups",
+                title: "IPA/Group",
+                filter: {
+                    name: "text" // template alias name
+                },
+                sortable: "Groups",
+                show: true
+            },
+            {
+                field: "Plan",
+                title: "Plan",
+                filter: {
+                    name: "text" // template alias name
+                },
+                sortable: "Plan",
+                show: true
+            },
+            {
+                field: "LOB",
+                title: "LOB",
+                filter: {
+                    name: "text" // template alias name
+                },
+                sortable: "LOB",
+                show: true
+            }
+        ];
     }
-
-    //angular.module("PDApp").run(configureDefaults);
-    //configureDefaults.$inject = ["ngTableDefaults"];
-
-    //function configureDefaults(ngTableDefaults) {
-    //    ngTableDefaults.params.count = 10;
-    //    ngTableDefaults.settings.counts = [];
-    //}
 })();

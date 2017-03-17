@@ -40,12 +40,18 @@ CCMDashboard.factory('CCMDashboardFactory', ['$q', '$rootScope', '$filter', '$ti
                 break;
         }
     }
+    function ClearSelectRowStatus() {        
+        angular.forEach($filter('filter')($rootScope.CCMAppointments, { SelectStatus: true }), function (object, index) {
+            $rootScope.CCMAppointments[$rootScope.CCMAppointments.indexOf(object)].SelectStatus = false;
+        });
+        return $rootScope.CCMAppointments;
+    }
     return {
         getPage: getPage,
         getFilteredAppointmentdataByPlan: getFilteredAppointmentdataByPlan,
         resetTableState: resetTableState,
         getFilteredAppointmentdataByAppointmentDate: getFilteredAppointmentdataByAppointmentDate,
-        exportToTable: exportToTable
-
+        exportToTable: exportToTable,
+        ClearSelectRowStatus: ClearSelectRowStatus
     }
 }]);

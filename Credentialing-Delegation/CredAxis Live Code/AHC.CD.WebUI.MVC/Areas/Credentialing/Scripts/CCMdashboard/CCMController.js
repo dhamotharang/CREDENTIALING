@@ -1,16 +1,13 @@
 ﻿CCMDashboard.controller("CCMDashboardController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "CCMDashboardService", "CCMDashboardFactory", function ($rootScope, $scope, toaster, $timeout, $filter, CCMDashboardService, CCMDashboardFactory) {
     toaster.pop('Success', "Success", 'Welcome');
     var AppointmentDate = new Date();
+    $rootScope.tableCaption = "Appointments";
     //================================== Temporary function Declaration Start ===============================================================================
     
     $scope.MasterData = function () {
         CCMDashboardService.GetCCMAppointments().then(function (result) {
             $rootScope.CCMAppointments = result.data;
             $rootScope.TempCCMAppointments = result.data;
-            //if ($rootScope.TempObjectForStatus.CredebtailingApprovalRequest) {
-            //    $scope.tableStateValue = CCMDashboardFactory.resetTableState($scope.tableStateValue);
-            //    $self.callServer($scope.tableStateValue);
-            //}
             $scope.loadEvents();
             AppointmentDate = $filter('date')(AppointmentDate, "yyyy-MM-dd");
             $rootScope.filteredCCMAppointmentsByDate = $filter('CCMDashboardFilterByAppointmentDate')(AppointmentDate);
@@ -18,8 +15,8 @@
             toaster.pop('error', "", 'Please try after sometime !!!');
         })
     }
-    $rootScope.GridData = function (AppointmentType) {
-        $rootScope.$broadcast('AppointmentsGrid', { type: AppointmentType });
+    $rootScope.GridData = function (AppointmentType,CurrentEvent) {
+        $rootScope.$broadcast('AppointmentsGrid', { type: AppointmentType, event: CurrentEvent });
     };
     //================================== Temporary function Declaration End ===============================================================================
     //===================================CalendarPlugIn Script=============================================================================================

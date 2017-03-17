@@ -25,6 +25,26 @@
             pdf.save('Test.pdf');
         }, margins);
     }
+    function DateTimeConveter(value) {
+        var returnValue = value;
+        try {
+            if (value.indexOf("/Date(") == 0) {
+                returnValue = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+                var shortDate = null;
+                var month = returnValue.getMonth() + 1;
+                var monthString = month > 9 ? month : '0' + month;
+                var day = returnValue.getDate();
+                var dayString = day > 9 ? day : '0' + day;
+                var year = returnValue.getFullYear();
+                shortDate = monthString + '/' + dayString + '/' + year;
+                returnValue = shortDate;
+            }
+            return returnValue;
+        } catch (e) {
+            return returnValue;
+        }
+        return returnValue;
+    }
     function getPageForUpdateAndHistory(start, number, params) {
         var deferred = $q.defer();
         $rootScope.filtered = params.search.predicateObject ? $filter('filter')($rootScope.TempProfileUpdates, params.search.predicateObject, params.sort.predicate, params.sort.reverse) : $rootScope.TempProfileUpdates;
@@ -548,7 +568,7 @@
             data.NewData = JSON.parse(data.NewData);
             data.NewData.ProviderTitles = JSON.parse(data.NewConvertedData).ProviderTitles;
             data.NewData = JSON.stringify(data.NewData);
-        } else if (data.NewData.indexOf('"SpecialtyDetailID":' > -1)) {
+        } else if (data.NewData.indexOf('"SpecialtyDetailID":') > -1) {
             data.NewData = angular.copy(data.NewConvertedData);
         } else if (data.NewData.indexOf('"ContactDetailID"') > -1) {
             data.NewData = angular.copy(data.NewConvertedData);

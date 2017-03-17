@@ -81,7 +81,6 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             {
                 string UserAuthId = await GetUserAuthId();
                 int ProfileID = Convert.ToInt32(GetCredentialingUserId(UserAuthId));
-
                 upadtedData = profileUpdateManager.GetUpdatesById(ProfileID);
 
             }
