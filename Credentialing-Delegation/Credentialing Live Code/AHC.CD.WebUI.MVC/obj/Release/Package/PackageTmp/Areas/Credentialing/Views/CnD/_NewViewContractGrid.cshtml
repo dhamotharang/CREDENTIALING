@@ -1,0 +1,188 @@
+﻿<style>
+    .rowColor {
+        background-color: rgba(100, 149, 237, 0.72);
+    }
+</style>
+
+<div class="col-lg-12 form-group">
+    <div class="col-lg-4">
+        <label class="control-label small">NPI:</label>
+        <div>
+            <i class="data-label" style="font-size:larger">{{tempNameObject.NPINumber}}</i>
+        </div>
+    </div>
+    <div class="col-lg-4" ng-show="activeStatus&&((isView||isEdit) && !AjaxLoading)">
+        <label class="control-label small">Provider:</label>
+        <div>
+            <i class="data-label" style="font-size:larger">{{tempNameObject.ProviderName}}</i>
+        </div>
+    </div>
+    <div class="col-lg-4" ng-show="inactiveStatus&&(!notEdit)">
+        <label class="control-label small">Provider:</label>
+        <div>
+            <i class="data-label" style="font-size:larger">{{tempProviderName.ProviderName}}</i>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <label class="control-label small">Plan:</label>
+        <div>
+            <i class="data-label" style="font-size:larger">{{TempPlanName || 'Not Available'}}</i>
+        </div>
+    </div>
+    @*<div class="col-lg-4">
+        <label class="control-label small">LOB:</label>
+        <div>
+            <i class="data-label">{{TempLOBName || 'Not Available'}}</i>
+        </div>
+    </div>*@
+</div>
+
+<div class="clearfix"></div>
+<div>
+    <form name="myForm" enctype="multipart/form-data" class="form-style">        
+
+        <div class="panel-body">
+            <table class="table table-bordered table-condensed customtbodyStyle table-striped">
+                <thead>
+                    <tr class="rowColor">
+                        <th>Business Entity</th>
+                        <th>LOB</th>
+                        <th>Initial Cred. Date*</th>
+                        <th>Provider ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="c in tempContractData track by $index">
+                    <tr>
+                        <td>{{c.BE}}</td>
+                        <td>{{c.LOBName}}</td>
+                        <td id="dataContainer{{$index}}">                           
+                            <span ng-hide="ShowVisibility =='QeditVisibility'+$index">
+                                <i class="data-label">{{c.InitiatedDate || 'Not Available' | date:'MM-dd-yyyy'}}</i>
+                            </span>
+                        </td>
+                        <td>
+                            <span ng-hide="ShowVisibility =='QeditVisibility'+$index">
+                                <i class="data-label">{{c.ProviderID || 'Not Available'}}</i>
+                            </span>
+                        </td>
+                        <td class="col-lg-2">                            
+                            <button type="submit" class="btn btn-sm btn-primary" ng-if="ShowVisibility == 'QeditVisibility'+$index;" ng-click="QuickSave(qTempObject,$index);" tooltip data-toggle="tooltip" data-placement="left" title="Confirm">Save</button>                            
+                            <button class="btn btn-xs btn-default" ng-hide="ShowVisibility == 'QeditVisibility'+$index;" ng-click="SetVisibility('view',$index);" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                            <button class="btn btn-xs btn-danger" ng-hide="ShowVisibility == 'QeditVisibility'+$index;" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initWarning(c,$index);" tooltip><i class="fa fa-minus-circle"></i></button>
+                        </td>
+                    </tr>                    
+                    <tr ng-if="ShowVisibility =='viewVisibility'+$index">
+                        <td colspan="7">
+                            <div class="col-lg-12 form-group">
+
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Panel Status:</label>
+                                    <div>
+                                        <i ng-if="c.PanelStatusType == 1" class="data-label">Open</i>
+                                        <i ng-if="c.PanelStatusType == 2" class="data-label">Close</i>
+                                        <i ng-if="c.PanelStatusType != 2 && c.PanelStatusType != 1" class="data-label">Not Available</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Initial Credentialing Date: *</label>
+                                    <div>
+                                        <i class="data-label">{{c.InitiatedDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Effective Date:</label>
+                                    <div>
+                                        <i class="data-label">{{c.EffectiveDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 form-group">
+
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Welcome Letter Date:</label>
+                                    <div>
+                                        <i class="data-label">{{c.WelcomeLetterDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Termination Date:</label>
+                                    <div>
+                                        <i class="data-label">{{c.TerminationDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Re-Credentialing Date:</label>
+                                    <div>
+                                        <i class="data-label">{{c.ReCredentialingDate || 'Not Available' | date: "MM-dd-yyyy"}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 form-group">
+
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Group ID:</label>
+                                    <div>
+                                        <i class="data-label">{{c.GroupID || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Provider ID:</label>
+                                    <div>
+                                        <i class="data-label">{{c.ProviderID || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Welcome Letter</label>
+                                    <div ng-show="c.Report.WelcomeLetterPath">
+                                        <i class="data-label"><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{c.Report.WelcomeLetterPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Welcome Letter"><i class="fa fa-file"></i></a></i>
+                                    </div>
+                                    <div ng-hide="c.Report.WelcomeLetterPath">
+                                        <i class="data-label">Not Available</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12">
+
+                                <div class="col-lg-4">
+                                    <label class="control-label small">Participating Status:</label>
+                                    <div>
+                                        <i class="data-label">{{c.ParticipatingStatus || 'Not Available'}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div><br />
+                            <div class="col-lg-12">
+                                <div class="col-lg-12">
+                                    <div ng-show="activeMessageDiv=='ReportSaveSuccess'+$index" class="alert alert-success" role="alert">
+                                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                        <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-12">
+                                    @*<button class="btn btn-sm btn-primary pull-right" ng-click="SetVisibility('edit',$index);">Edit</button>*@
+                                    <button type="button" class="btn btn-warning btn-sm pull-left" ng-click="ClearVisibility();">Cancel</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+       
+    </form>
+</div>
+<div class="col-lg-12">
+    <div class="col-lg-12">
+        <button type="button" class="btn btn-warning btn-sm pull-left" ng-click="cancelView();">Cancel</button>
+    </div>
+</div>
+

@@ -1,0 +1,121 @@
+﻿<div class="tab-pane fade in active panel-body">
+    <div ng-show="loadingInboxAjax" class="progress col-lg-12">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            Loading Inbox...Please wait...
+        </div>
+    </div>
+    @*<div ng-hide="loadingInboxAjax">*@
+        @*<div ng-class="{'false':'col-lg-5','true':'col-lg-12'}[list]" style="padding-left:10px; padding-right:0px;">
+                <div class="panel-default form-style">
+                    <br />
+                    <fieldset>
+                        <table ng-table="tableParamsInbox" show-filter="false" class="table table-condensed ng-table-resizable-columns ng-table-rowselected">
+                            <thead style="display:none;"></thead>
+                            <tbody ng-repeat="mail in recievedEmails = ($data | filter:tempObject.From) track by $index">
+                                <tr>
+                                    <td colspan="2" class="wrap-words text-left" style="border-top:none;">{{mail.From}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="wrap-words text-left col-lg-10" style="border-top:none;"><a href="" ng-click="mailDetails(mail)">{{mail.Subject}}</a></td>
+                                    <td class="wrap-words text-right col-lg-2" style="border-top:none;">{{mail.SendingDate | date:'MMM dd'}}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    <fieldset ng-if="!(recievedEmails.length > 0)">
+                            <table>
+                                <thead>No Messages in your Inbox...</thead>
+                            </table>
+                        </fieldset>
+                </div>
+            </div>*@
+        @*<div ng-show="!list">
+                <div class="panel-default form-style">
+                    <br />
+                    <fieldset>
+                        <div class="legend2 pull-right">
+                            <button class="btn btn-xs btn-default" ng-click="closeList()" tooltip data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-times"></i></button>
+                        </div>
+                        <br />
+                        <div class="col-lg-2 text-right">
+                            <div><p class="muted" style="margin-bottom:15px;">From:</p></div>
+                            <div><p class="muted" style="margin-bottom:15px;">To:</p></div>
+                            <div><p class="muted" style="margin-bottom:15px;">Date:</p></div>
+                            <div><p class="muted" style="margin-bottom:15px;">Subject:</p></div>
+
+                        </div>
+                        <div class="text-left">
+                            <div><p><label>{{Details.From}}</label></p></div>
+                            <div><p><label ng-repeat="recipient in Details.EmailRecipients track by $index" ng-if="recipient.RecipientType == 'To'">{{recipient.Recipient}} </label></p></div>
+                            <div><p><label>{{Details.LastModifiedDate | date:'medium'}}</label></p></div>
+                            <div><p><label>{{Details.Subject}}</label></p></div>
+
+                            <div style="padding-left:25px;" ng-bind-html="renderHtml(Details.Body)" class="bodyForMail">
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>*@
+    @*</div>*@
+
+    <div ng-hide="loadingInboxAjax">
+        <div ng-class="{'false':'col-lg-5','true':'col-lg-12'}[list]" style="padding-left:10px; padding-right:0px;">
+            <div class="panel-default form-style">
+                <br />
+                <fieldset ng-if="recievedEmails.length > 0">
+                    <table ng-table="tableParamsInbox" show-filter="false" class="table table-condensed ng-table-resizable-columns ng-table-rowselected">
+                        <thead style="display:none;"></thead>
+                        <tbody ng-repeat="mail in recievedEmails = ($data | filter:globalSearchBoxData) track by $index">
+                            <tr>
+                                <td colspan="2" class="wrap-words text-left" style="border-top:none;">{{mail.From}}</td>
+                            </tr>
+                            <tr>
+                                <td class="wrap-words text-left col-lg-10" style="border-top:none;"><a href="" ng-click="viewDetails(mail)">{{mail.Subject}}</a></td>
+                                <td class="wrap-words text-right col-lg-2" style="border-top:none;">{{mail.SendingDate | date:'MMM dd'}}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset ng-if="!(recievedEmails.length > 0)">
+                    <table>
+                        <thead>No Messages in your Inbox...</thead>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+        <div ng-show="!list">
+            <div class="panel-default form-style">
+                <br />
+                <fieldset>
+                    <div class="legend2 pull-right">
+                        <button class="btn btn-xs btn-default" ng-click="closeList()" tooltip data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-times"></i></button>
+                    </div>
+                    <br />
+                    <div class="col-lg-2 text-right">
+                        <div><p class="muted" style="margin-bottom:15px;">From:</p></div>
+                        <div><p class="muted" style="margin-bottom:15px;">To:</p></div>
+                        <div><p class="muted" style="margin-bottom:15px;">Date:</p></div>
+                        <div><p class="muted" style="margin-bottom:15px;">Subject:</p></div>
+                        <div><p class="muted" style="margin-bottom:15px;">CC:</p></div>
+                        @* <div><p class="muted" style="margin-bottom:15px;">BCC:</p></div>*@
+                    </div>
+                    <div class="text-left">
+                        <div><p><label>{{Details.From}}</label></p></div>
+                        <div><p><label ng-repeat="recipient in Details.EmailRecipients track by $index" ng-if="recipient.RecipientType == 'To'">{{recipient.Recipient}} </label></p></div>
+                        <div><p><label>{{Details.LastModifiedDate | date:'medium'}}</label></p></div>
+                        <div><p><label>{{Details.Subject}}</label></p></div>
+                        <div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'CC'">{{recipient.Recipient || 'Not Available'}} </label></p></div>
+                        @*    <div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'BCC'">{{recipient.Recipient}} </label></p></div>*@
+                        <div style="padding-left:25px;" ng-bind-html="renderHtml(Details.Body)" class="bodyForMail">
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,106 @@
+﻿<ul class="pager small">
+    @*<li class="previous"><a href="/Credentialing/CnD/Index/#/application_repo"><<</a></li>*@
+    <li class="next"><a href="/Credentialing/CnD/Index/#/documents">>></a></li>
+    <li class="next"><a href="/Credentialing/CnD/Index/#/documents">Skip</a></li>
+</ul>
+
+<div class="col-lg-12 zero-padding-left-right-div form-style">
+    <button class="pull-right btn btn-xs btn-default" ng-show="templateSelected" ng-click="templateSelected=false;">Select Template</button>
+    <div class="panel panel-default" ng-hide="templateSelected">
+        <div class="panel-heading">Select the templates to generate forms</div>
+        <div class="panel-body">
+            @*<div class="col-lg-3"><label><input type="checkbox" /> CAQH</label></div>
+            <div class="col-lg-3"><label><input type="checkbox" /> Profile Access</label></div>
+            <div class="col-lg-3"><label><input type="checkbox" /> Profile Access 2</label></div>
+            <div class="col-lg-3"><label><input type="checkbox" /> Template 2</label></div>*@
+            
+            <div class="col-lg-3" ng-repeat="checkbx in formTypeCheckbox"><label><input type="checkbox" ng-model="checkbx.IsChecked" /> {{checkbx.FormName}}</label></div>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-xs btn-primary" ng-click="generateForm();addRepo=true;templateSelected=true;">Generate</button>
+        </div>
+    </div>
+    @*<div class="col-lg-12">
+        <div class="col-lg-6 form-inline">
+            <select class="form-control input-sm">
+                <option>Select Template</option>
+                <option>CAQH</option>
+            </select>
+            <button class="btn btn-sm btn-default" ng-click="generatePDF=true;addRepo=false;">Generate</button>
+            <button class="btn btn-sm btn-default" ng-click="generatePDF=true;addRepo=false;">Re-Generate</button>
+        </div>
+        <div class="col-lg-6 text-right" ng-show="generatePDF">
+            <button class="btn btn-sm btn-primary" ng-click="addRepo=true;generatePDF=false;">Add to Repository</button>
+            <button class="btn btn-sm btn-primary">Print</button>
+            <button class="btn btn-sm btn-primary">Download</button>
+            <button class="btn btn-warning btn-sm" ng-click="addRepo=true;generatePDF=false;">Cancel</button>
+        </div>
+    </div>*@
+    <div class="col-lg-12" ng-show="addRepo">
+        
+        <div class="clearfix"></div>
+        <br />
+        <table class="table table-bordered table-striped table-hover">
+            <!-- ngInclude: templates.header -->
+            <thead>
+                <tr>
+                    <th class="col-lg-1">Order</th>
+                    <th class="col-lg-1">Sort</th>
+                    <th class="col-lg-8">Application Form Name</th>
+                    <th class="col-lg-2">Action</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th ></th>
+                    <th><input type="text" class="form-control input-sm"></th>
+                    <th><button class="btn btn-xs btn-info"><i class="fa fa-refresh"></i> Regenerate All</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ngRepeat: c in LoadData -->
+                <tr ng-repeat="row in selectedFormType">
+                    <td>{{$index+1}}</td>
+                    <td><button class="btn btn-xs btn-info"><i class="fa fa-sort-down"></i></button></td>
+                    <td>{{row.FormName}}</td>
+                    <td>
+                        <button ng-hide="row.FileGenerationStatus" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-refresh spinning"></span>Loading...</button>
+                        <button ng-show="row.FileGenerationStatus" class="btn btn-xs btn-primary" ng-click="showPDF(row.Pdfpath)"><i class="fa fa-eye"></i></button>
+                        <button ng-show="row.FileGenerationStatus" class="btn btn-xs btn-info"><i class="fa fa-refresh"></i></button>
+                        <button ng-show="row.FileGenerationStatus" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i></button>
+                    </td>
+                </tr>
+                @*<tr>
+                    <td>2</td>
+                    <td><button class="btn btn-xs btn-info"><i class="fa fa-sort-up"></i></button> <button class="btn btn-xs btn-info"><i class="fa fa-sort-down"></i></button></td>
+                    <td>Profile Access</td>
+                    <td>
+                        <button class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
+                        <button class="btn btn-xs btn-info"><i class="fa fa-refresh"></i></button>
+                        <button class="btn btn-xs btn-danger"><i class="fa fa-remove"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><button class="btn btn-xs btn-info"><i class="fa fa-sort-up"></i></button></td>
+                    <td>Profile Access 2</td>
+                    <td>
+                        <button class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
+                        <button class="btn btn-xs btn-info"><i class="fa fa-refresh"></i></button>
+                        <button class="btn btn-xs btn-danger"><i class="fa fa-remove"></i></button>
+                    </td>
+                </tr>*@
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-12" ng-show="generatePDF">
+        <br />
+        <div class="clearfix"></div>
+        <br />
+        <iframe ng-src="{{pdfSrc}}" style="height:600px;width:100%;"></iframe>
+        <br />
+        <div class="col-lg-12 text-right">
+            <button class="btn btn-warning btn-sm" ng-click="addRepo=true;generatePDF=false;">Cancel</button>
+        </div>
+    </div>
+</div>
+

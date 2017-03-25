@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "ViewPlanContract";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead{
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Custom/Plan/viewPlanContract.js"></script>
+}
+<style>
+    .popover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 101000000;
+        min-width: 80%;
+    }
+</style>
+<div id="page-wrapper" ng-app="viewPlanContractApp" ng-controller="PlanContractController">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                            <li>
+                                <i class="fa fa-dashboard"></i><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                            </li>
+                            <li class="active">
+                                <i class="fa fa-search"></i> Plan Contract
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="panel panel-default content-panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Plan Contract</h3>
+                        </div>
+                        <div id="SearchProviderPanel" class="panel-body">
+                            <form id="providerSearch" name="providerData">
+
+                                <div class="clearfix"></div>
+                                <div class="row">
+                                    <div class="col-lg-12 form-style">
+                                        <fieldset>
+                                            <legend>Plan Name-{{selectedPlan}}</legend>
+                                            @*<div id="grid1" ui-grid="{ data: tableData }" class="grid"></div>*@
+
+                                            <input type="checkbox" ng-model="IsDelegated" ng-disabled="true" /><label class="control-label">&nbsp;Is Delegated</label>
+
+                                            <table class="table-bordered table table-condensed">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th ng-repeat="be in BE_LOB[0].BE">
+                                                        {{be.BEName}}
+                                                        @*<input type="checkbox" ng-click="checkRow($index,be.IsChecked)" ng-model="be.IsCheked" />*@
+                                                    </th>
+                                                </tr>
+                                                <tr ng-repeat="lob in BE_LOB">
+                                                    <td>
+                                                        <label>
+                                                            <a ng-click="loadTemplate()" data-toggle="popover"
+                                                               data-content="{{popover.content}}" data-html="true">
+                                                                {{lob.LOBName}}
+                                                            </a>
+                                                        </label>
+                                                    </td>
+                                                    <td ng-repeat="ber in lob.BE"><input type="checkbox" ng-model="ber.IsChecked" ng-disabled="true" @*ng-click="uncheck($parent.$index)"*@ /></td>
+                                                </tr>
+                                            </table>
+
+                                            <div class="clearfix"></div>
+                                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Plan" class="btn btn-sm btn-warning">Cancel</a>
+                                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/Plan/EditPlanContract?planID=1" class="btn btn-sm btn-success pull-right">Edit</a>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

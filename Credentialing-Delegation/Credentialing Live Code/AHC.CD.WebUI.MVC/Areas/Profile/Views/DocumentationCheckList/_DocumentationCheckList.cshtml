@@ -1,0 +1,385 @@
+﻿@{
+    ViewBag.Title = "Documentation CheckList";
+}
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/Lib/FoolProofValidation/mvcfoolproof.unobtrusive.min.js"></script>*@
+@model AHC.CD.WebUI.MVC.Models.EmailService.EmailServiceViewModel
+
+<style>
+    .ui-autocomplete {
+        max-height: 110px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        font-family: 'Comic Sans MS';
+        position: fixed;
+        z-index: 1100;
+    }
+
+    .lblcss {
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+        .lblcss > button {
+            padding-left: 10px;
+            color: #b94a48;
+        }
+</style>
+
+@*<div class="panel-group" ng-controller="DocumentationchecklistController">
+        <div class="row">
+            <div class="panel-body">
+                <div class="form-style">
+                    <fieldset>
+                        <legend>
+                            Document CheckList
+                        </legend>
+                        <table class=" table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2' style="text-align:center">Section</th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>Required Documents</th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat-start="t in sections">
+                                    <td rowspan="{{t.length}}" align="center" style="vertical-align:middle"><h4><b>{{t.name}}</b></h4></td>
+                                </tr>
+                                <tr ng-repeat-end ng-repeat="(key,value) in t.docs track by $index">
+                                    <td>{{key}}</td>
+                                    <td ng-if="value==true"><i class="fa fa-check fa-fw" style="color:green"></i></td>
+                                    <td ng-if="value==false"><i class="fa fa-exclamation-circle fa-fw" style="color:red"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+
+            </div>
+        </div>
+    </div>*@
+
+@*Sharath*@
+
+@*<style>
+        /*.checkbox-custom {
+            opacity: 0;
+            position: absolute;
+        }*/
+
+        .checkbox-custom, .checkbox-custom-label {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-custom-label {
+            position: relative;
+        }
+
+        .checkbox-custom + .checkbox-custom-label:before {
+            content: '';
+            background: #fff;
+            border: 2px solid #ddd;
+            display: inline-block;
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+            padding: 2px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .checkbox-custom:checked + .checkbox-custom-label:before {
+            content: "\f00c";
+            font-family: 'FontAwesome';
+            background: green;
+            color: #fff;
+        }
+        .checkbox-custom:focus + .checkbox-custom-label {
+            outline: 1px solid #ddd;
+        }
+    </style>*@
+
+<div class="panel-group" ng-controller="DocumentationchecklistController">
+    <div class="row">
+        <div class="panel-body">
+            <div class="form-style" id="magicTemplate">
+                <fieldset>
+                    <legend>
+                        Document CheckList
+                    </legend>
+                    <div id="editor"></div>
+                    <div class="btn-group pull-right legend2" ng-show="PrintValue">
+                        
+                                <button ng-disabled="criteriaEdit" class="btn btn-xs btn-primary" ng-click="EditCriteria()"><i data-container="body" data-toggle="popover" popover="" data-placement="left" data-content=" Edit Criteria" data-trigger="hover" class="fa fa-edit"></i></button>
+                           
+                        <button ng-disabled="criteriaEdit" class="dropdown-toggle btn btn-xs btn-primary" style="margin-left:5px;border-radius:2px;" popover="" data-toggle="dropdown" aria-hidden="true"><span data-container="body" data-toggle="popover" popover="" data-placement="top" data-trigger="hover" ng-click="printDCData('Documentation Checklist')" data-content=" Export to PDF" data-original-title="" title="" class="fa fa-file-pdf-o"></span></button>
+                        <button ng-disabled="criteriaEdit" ng-click="GenerateEmailPopUp()" style="margin-left:5px;border-radius:2px;" class=" btn btn-xs btn-primary" data-toggle="modal" aria-hidden="true" data-target="#composeMail"><span data-container="body" data-toggle="popover" popover="" data-placement="right" data-trigger="hover" data-content=" Send Mail" data-original-title="" title="" class="fa fa-envelope"></span></button>
+                        <div ng-show="LoadForDCPdf" class="pull-right"><img src="/Content/Images/ajax-loader.gif" width="20" height="20"></div>
+                    </div>
+                    <div ng-show="activeMessageDiv=='successMsgDiv'" class="col-lg-12">
+                        <div class="alert alert-success" role="alert">
+                            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                            <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+                        </div>
+                    </div>
+                    <div ng-show="activeMessageDiv=='errorMsgDiv'" class="col-lg-12">
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            <span>{{messageDesc}}</span>
+                        </div>
+                    </div>
+                    <form class="form-group" id="Documentation">
+                        <span ng-if="criteriaEdit" style="font-weight: bold; padding-right: 10px" class="pull-right">N/A</span>
+                        <div ng-repeat="t in sections track by $index">
+                            <h4>{{t.name}}</h4>
+                           
+                            <div class="col-lg-12" ng-repeat="j in t.docs track by $index">
+                                <div class="col-lg-1 pull-left" style="width:1.33%" ng-if="!criteriaEdit"><input type="checkbox" ng-model="j.value" /> </div>
+                                
+                                <div class="col-lg-10 pull-left">{{j.title}}  <i ng-if="j.remarks=='N/A'" style="font-weight:bold">({{j.remarks}})</i></div>
+                                <div class="col-lg-1 pull-right" style="width:1.33%" ng-if="criteriaEdit">
+                                    <input style="cursor:pointer" type="checkbox" ng-model="j.na"  />
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <br />
+                        <div style="margin-top:30px">
+                            <button ng-if="criteriaEdit" ng-click="saveProfileDocumentCriteria()" style="margin-left:5px;" class="btn btn-sm btn-primary pull-right">Save</button>
+                            <button ng-if="criteriaEdit" ng-click="cancelInitialisation()" class="btn btn-sm btn-default pull-left">Cancel</button>
+
+                        </div>
+
+
+                    </form>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+    <div id="documentchecklisthidden" ng-show="loadData">
+        <h4>Documents Not Available</h4>
+        <ul ng-repeat="t in sections1">
+            <li>{{t.sectionName}}</li>
+            <ul ng-repeat="j in t.nadocs track by $index">
+                <li>{{j.title}}</li>
+            </ul>
+        </ul>
+        <br/>
+        <br/>
+        <h4 ng-if="sections2.length > 0">Documents Available</h4>
+        <ul ng-repeat="t in sections2">
+            <li>{{t.sectionName}}</li>
+            <ul ng-repeat="j in t.adocs track by $index">
+                <li>{{j.title}}</li>
+            </ul>
+        </ul>
+    </div>
+    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true" my-modal>
+        <div class="modal-dialog" style="width:90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" data-toggle="tooltip" data-placement="right" data-original-title="Close">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Warning!!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="col-md-12 form-group">
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="EditCancle(tempObject);" data-dismiss="modal">Cancel</button>
+                            <button id="saveButton" type="submit" ng-click="AddOrSaveEmail('newEmailForm')" class="btn btn-primary btn-sm pull-right">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="composeMail" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true" my-modal>
+        <div class="modal-dialog" style="width:90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="EditCancle(tempObject);" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" data-toggle="tooltip" data-placement="right" data-original-title="Close">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Compose Mail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form id="newEmailForm">
+                            <div class="col-lg-12 zero-padding-left-right-div ng-scope">
+                                @Html.HiddenFor(model => model.StatusType, new { ng_value = "1" })
+                                <div class="col-md-3 form-group">
+                                    <label class="control-label small">Use Existing Template</label>
+                                    <div class="radio">
+                                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                        {
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(model => model.SaveAsTemplateYesNoOption, (int)value, new { data_ng_model = "tempObject.SaveAsTemplateYesNoOption", data_ng_click = "changeYesNoOption(" + (int)value + ")" }) @value.ToString()
+                                            </label>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 form-group pull-right" ng-if="tempObject.SaveAsTemplateYesNoOption == 1">
+                                    <label class="control-label small">Select Template</label>
+                                    <input class="form-control input-sm" ng-model="tempObject.Title" data-searchdropdown="searchdropdown" ng-focus="searchCumDropDown('templatelist')" placeholder="select Template" />
+                                    <input type="hidden" data-ng-model="tempObject.EmailTemplateID" id="EmailTemplateID" name="EmailTemplateID" value="{{tempObject.EmailTemplateID}}" />
+                                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" style="margin-top: 55px;" id="templatelist">
+                                        <table class="table table-striped table-bordered table-hover table-condensed">
+                                            <tbody>
+                                                <tr ng-repeat="type in ftemplates = (templates | filter:tempObject.Title) track by $index" ng-click="hideDiv(); tempObject.Subject = type.Subject; tempObject.Body = type.Body;showContent();" class="pointer">
+                                                    <td>{{type.Title}}</td>
+                                                </tr>
+                                                <tr ng-if="templates.length == 0">
+                                                    <td>No data..... </td>
+                                                </tr>
+                                                <tr ng-if="templates.length > 0 && ftemplates.length == 0">
+                                                    <td>Template not found..... </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="col-lg-12 form-group">
+                                        <label class="control-label small">To *</label>
+                                        <div class="ui-widget">
+                                            <input name="To" class="form-control col-lg-10" id="tags" ng-model="emailsfill" ng-change="emailsAutoFill()" />
+                                            <p ng-if="errmsgforTo" style="color:red">Invalid Email...</p>
+                                            <p ng-if="errmsg" style="color:red">Enter atleast one Email Id...</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 form-group">
+                                        <label class="control-label small">Cc</label>
+                                        <div class="ui-widget">
+                                            <input name="CC" class="form-control col-lg-10" id="tagsCC" ng-model="ccfill" ng-change="emailsAutoFill()" />
+                                            <p ng-if="errmsgforCC" style="color:red">Invalid Email...</p>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-6 form-group">
+                                        <label class="control-label small">Bcc</label>
+                                        <div class="ui-widget">
+                                            <input name="BCC" class="form-control col-lg-10" id="tagsBCC" ng-model="bccfill" ng-change="emailsAutoFill()" />
+                                            <p ng-if="errmsgforBCC" style="color:red">Invalid Email...</p>
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label small">Subject *</label>
+                                        <div>
+                                            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm", data_ng_model = "tempObject.Subject" })
+                                            @Html.ValidationMessageFor(model => model.Subject, "Please provide details for 'Subject' field", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <input name="EmailAttachments[{{$index}}].AttachmentServerPath" hidden ng-repeat="Files in fileList track by $index" value="{{Files.File[0].relativePath}}" />
+                                    <input name="EmailAttachments[{{$index}}].AttachmentRelativePath" hidden ng-repeat="Files in fileList track by $index" value="{{Files.File[0].path}}" />
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-lg-12 zero-padding-left-right-div">
+                                            <label class="control-label small">Add Attachment&nbsp;&nbsp;</label>
+                                            @*<a ng-click="ExportPDF();" style="cursor:pointer"><i class="fa fa-file-archive-o fa-2x"></i></a>*@
+                                            <input type='file' id='file' name='file' multiple onchange="angular.element(this).scope().setFile(this)" style=" width:0; height:0;" />
+                                            <input type="button" class="btn btn-xs btn-default" id="btn-upload" ng-click="addingDocument()" tooltip data-toggle="tooltip" data-placement="top" title="Add Document" value="Attach File..." />
+                                            &nbsp;&nbsp;&nbsp;
+                                            <span class="badge">Total Attachments Size should be less than 15 MB!</span>
+                                        </div>
+                                        <br />
+                                        <div class="col-lg-12" style="padding-top: 5px; " ng-if="fileList.length>0">
+                                            <div class="col-lg-8" ng-repeat="file in fileList track by $index">
+                                                <div class="col-lg-5 label lblcss" style="box-sizing: border-box; overflow: hidden; float: left;">
+                                                    <a class="col-lg-10 wraptext" style="text-align: -webkit-auto" target=" _blank" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{file.File[0].path}}">
+                                                        <span class=""><span class="wrap-words">{{file.File[0].file.name}}</span></span>
+                                                    </a>
+                                                    &nbsp; &nbsp; &nbsp;
+                                                    <i class=" fa fa-close pointer pull-right" style="color:black" tooltip data-toggle="tooltip" data-placement="top" title="Remove" ng-click="removeFile($index,file)"></i>
+                                                    <br />
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <img src="~/Content/Images/facebook.gif" width="15px" height="10px" ng-if="!file.File[0].UploadDone" />
+                                                </div>
+                                                </div>
+                                            </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    <div class="col-md-12 form-group">
+                                        <label class="control-label small">Body*</label>
+                                        <wysiwyg textarea-id="wysiwygBody" textarea-class="form-control" textarea-height="400px" textarea-style="width:100%;resize: none;overflow-y: scroll;" textarea-name="wysiwygBody" textarea-required data-ng-model="tempObject.Body" enable-bootstrap-title="true"></wysiwyg>
+
+                                        @Html.HiddenFor(model => model.Body, new { @class = "form-control input-sm", ng_value = "tempObject.Body" })
+                                        @Html.ValidationMessageFor(model => model.Body, "Please provide details for 'Body' field", new { @class = "text-danger" })
+
+
+                                    </div>
+                                    <div class="col-md-3 form-group" style="width:20%">
+                                        <label class="control-label small">Schedule Recurrence *</label>
+                                        <div class="radio">
+                                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
+                                            {
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.IsRecurrenceEnabledYesNoOption, (int)value, new { data_ng_model = "tempObject.IsRecurrenceEnabledYesNoOption", data_ng_click = "" }) @value.ToString()
+                                                </label>
+                                            }
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.IsRecurrenceEnabledYesNoOption, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-5 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1">
+                                        <label class="control-label small">Recurrence Type *</label>
+                                        <div class="radio">
+                                            @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.RecurrenceIntervalType)))
+                                            {
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.RecurrenceIntervalTypeCategory, (int)value, new { data_ng_model = "tempObject.RecurrenceIntervalTypeCategory", data_ng_click = "tempObject.IntervalFactor=null" }) @value.ToString()
+                                                </label>
+                                            }
+                                            <br />
+                                            @Html.ValidationMessageFor(model => model.RecurrenceIntervalTypeCategory, "", new { @class = "text-danger" })
+                                            <br />
+                                            <br />
+                                            <span ng-if="tempObject.RecurrenceIntervalTypeCategory != 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.IntervalFactor, new { @type = "number", @class = "form-control input-sm col-lg-3", data_ng_model = "tempObject.IntervalFactor", data_ng_init = 1, @placeholder = "Enter Interval" })</span>
+                                            @Html.ValidationMessageFor(model => model.IntervalFactor, "", new { @class = "text-danger" })
+                                            <span ng-if="tempObject.RecurrenceIntervalTypeCategory == 6 && tempObject.RecurrenceIntervalTypeCategory != 4">@Html.TextBoxFor(model => model.DateForCustomRecurrence, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm  col-lg-3", data_ng_model = "tempObject.DateForCustomRecurrence", placeholder = "mm/dd/yyyy" })</span>
+                                            @Html.ValidationMessageFor(model => model.DateForCustomRecurrence, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="col-md-4 form-group" ng-if="tempObject.IsRecurrenceEnabledYesNoOption==1 && tempObject.RecurrenceIntervalTypeCategory != '6'" style="width:38%">
+                                        <div class="col-lg-6 form-group">
+                                            <label class="control-label small" style="margin-bottom:20px;">From</label>
+                                            @Html.TextBoxFor(model => model.FromDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.FromDate", placeholder = "mm/dd/yyyy" })
+                                            @Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-lg-6 form-group">
+                                            <label class="control-label small" style="margin-bottom:20px;">To</label>
+                                            @Html.TextBoxFor(model => model.ToDate, new { data_val_date = "Please enter date in mm/dd/yyyy format.", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", @class = "form-control input-sm", data_ng_model = "tempObject.ToDate", placeholder = "mm/dd/yyyy" })
+                                            @Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 form-group">
+                                        <button type="button" class="btn btn-warning btn-sm" ng-click="EditCancle(tempObject);" data-dismiss="modal">Cancel</button>
+                                        <button id="saveButton" type="submit" ng-click="AddOrSaveEmail('newEmailForm')" class="btn btn-primary btn-sm pull-right">Send</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div ng-show="activeMessageDiv=='warningdiv'" class="alert alert-info" role="alert">
+                                        <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                        <strong>Please wait...</strong> {{messageDesc}}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Sharath*@

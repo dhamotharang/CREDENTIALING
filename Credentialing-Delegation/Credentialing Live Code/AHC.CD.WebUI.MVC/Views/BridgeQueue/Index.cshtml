@@ -1,0 +1,84 @@
+﻿@model AHC.CD.WebUI.MVC.Models.BridgeQueue.BridgeQueueModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.Owin;
+
+@section AddToHead{
+    <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
+    <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="~/Scripts/Custom/BridgeQueue/BridgeQueueJS.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <link href="~/Content/BridgeQueueCSS.css" rel="stylesheet" />
+    }
+
+
+<div id="page-wrapper" ng-app="bridgeQueueApp">
+    <div class="container-fluid" ng-controller="BridgeQueueCtrl as bc" ng-init="progressbar = false;LoadData()">
+        <div class="row">
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div id="bridgeQueuediv">
+        <div class="panel panel-body form-style">
+            <fieldset>
+                <legend>
+                    Bridge Queue
+                </legend>
+
+                <div class="col-lg-12" ng-cloak>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active"><a id="tabs1" data-toggle="tab" ng-click="tabName('Open','RequestOpen')" href="#tab1">Requests</a></li>
+                        <li><a id="tabs3" data-toggle="tab" ng-click="tabName('Approved','Approved')" href="#tab1">Approved</a></li>
+                        <li><a id="tabs5" ng-show="ShowTempProfile" data-toggle="tab" @*ng-click="showtabdata();tabName('AllTasks')"*@ href="#tab_ShowProfile"> {{TempProfile.Name}}</a></li>
+                    </ul>
+                    <div class="container" ng-if="ColStatus.filters">
+                        <div class="row">
+                            <div class="ParentSwitch col-lg-6">
+                                <div class="switch">
+                                    <input id="switch-y" name="tripple" ng-click="tabName('OPEN','RequestOpen')" type="radio" value="um" class="switch-input total-all-pv" checked />
+                                    <label for="switch-y" class="switch-label switch-label-y">OPEN &nbsp;<span class="label label-info"></span></label>
+                                    <input id="switch-i" name="tripple" ng-click="tabName('ASSIGNED','RequestAssigned')" type="radio" value="c" class="switch-input total-claims-pv" />
+                                    <label for="switch-i" class="switch-label switch-label-i">ASSIGNED &nbsp;<span class="label label-success"></span></label>
+                                    <input id="switch-n" name="tripple" ng-click="tabName('PENDING','RequestPending')" type="radio" value="o" class="switch-input total-um-pv" />
+                                    <label for="switch-n" class="switch-label switch-label-n">PENDING &nbsp;<span class="label label-danger"></span></label>
+                                    <span class="switch-selector"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="tab-content">
+                        <div ng-show="!ShowTempProfile" id="tab1" class="tab-pane fade in active">@Html.Partial("~/Views/BridgeQueue/_QueueTabs.cshtml")</div>
+                        <div id="tab_ShowProfile" ng-show="ShowTempProfile">
+                            @Html.Partial("~/Views/BridgeQueue/_TemporaryProfile.cshtml");
+                        </div>
+                    </div>
+                    
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+</div>

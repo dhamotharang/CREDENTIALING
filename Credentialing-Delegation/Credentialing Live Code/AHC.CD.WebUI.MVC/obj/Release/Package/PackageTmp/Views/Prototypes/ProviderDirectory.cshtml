@@ -1,0 +1,372 @@
+﻿
+@{
+    ViewBag.Title = "Provider Directory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead{
+    <style>
+    .zero-padding-left-right {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .margin_top_6px {
+        margin-top: 6px;
+    }
+
+    button.biscuit {
+        min-height: 75px;
+        min-width: 10px;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        text-transform: none;
+        border-radius: 2px;
+        font-weight: 600;
+        margin-bottom: 20px !important;
+        white-space: normal;
+        cursor: pointer;
+        outline: 0;
+        padding: 0;
+        transition: all .3s linear;
+    }
+
+    button.biscuit {
+        position: relative;
+        display: inline-block;
+    }
+
+
+        button.biscuit.biscit_outerColor_blue {
+            color: #0288d1;
+            background-color: #fff;
+            border: 1px solid #0288d1;
+            box-shadow: inset 0 0 0 #01579b, 0 5px 0 0 #01579b, 0 5px 5px #999;
+        }
+
+            button.biscuit.biscit_outerColor_blue:hover {
+                background-color: #0288d1;
+                color: #fff;
+                transition: all .3s linear;
+            }
+
+            button.biscuit.biscit_outerColor_blue.active {
+                color: #fff;
+                background-color: #0288d1;
+                box-shadow: 0 5px #01579b;
+                transform: translateY(4px);
+            }
+
+        button.biscuit.biscit_outerColor_green {
+            color: #43a047;
+            background-color: #fff;
+            border: 1px solid #43a047;
+            box-shadow: inset 0 0 0 #1b5e20, 0 5px 0 0 #1b5e20, 0 5px 5px #999;
+        }
+
+            button.biscuit.biscit_outerColor_green:hover {
+                background-color: #43a047;
+                color: #fff;
+                transition: all .3s linear;
+            }
+
+            button.biscuit.biscit_outerColor_green.active {
+                color: #fff;
+                background-color: #43a047;
+                box-shadow: 0 5px #1b5e20;
+                transform: translateY(4px);
+            }
+
+
+        button.biscuit.biscit_outerColor_time {
+            color: #18758f;
+            background-color: #fff;
+            border: 1px solid #18758f;
+            box-shadow: inset 0 0 0 #044557, 0 5px 0 0 #044557, 0 5px 5px #999;
+        }
+
+            button.biscuit.biscit_outerColor_time:hover {
+                background-color: #18758f;
+                color: #fff;
+                transition: all .3s linear;
+            }
+
+            button.biscuit.biscit_outerColor_time.active {
+                color: #fff;
+                background-color: #18758f;
+                box-shadow: 0 5px #044557;
+                transform: translateY(4px);
+            }
+
+        button.biscuit.biscit_outerColor_Sea {
+            color: #009973;
+            background-color: #fff;
+            border: 1px solid #009973;
+            box-shadow: inset 0 0 0 #00664d, 0 5px 0 0 #00664d, 0 5px 5px #999;
+        }
+
+            button.biscuit.biscit_outerColor_Sea:hover {
+                background-color: #009973;
+                color: #fff;
+                transition: all .3s linear;
+            }
+
+            button.biscuit.biscit_outerColor_Sea.active {
+                color: #fff;
+                background-color: #009973;
+                box-shadow: 0 5px #00664d;
+                transform: translateY(4px);
+            }
+
+        button.biscuit .biscuit_heading.auth, button.biscuit .biscuit_heading.pt {
+            font-size: 20px;
+        }
+
+        button.biscuit .biscuit_heading {
+            font-size: 8px;
+            font-weight: 600;
+        }
+
+            button.biscuit .biscuit_heading.auth {
+                position: relative;
+                margin-top: 8px;
+                font-weight: 300;
+                margin-left: 38px;
+            }
+
+        button.biscuit .biscuit_body {
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        button.biscuit .iconspace {
+            margin-top: -24px;
+            margin-left: 8px;
+        }
+
+        button.biscuit .datasize {
+            margin-left: 142px;
+            margin-top: -28px;
+            font-size: 24px;
+        }
+
+    .padding_5 {
+        font-size: 12px;
+    }
+
+    .padding_5, .padding_5px {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    .single_dual.notActive {
+        color: #3276b1;
+        background-color: #fff;
+        background-image: linear-gradient(to bottom, #fff 0, #fff 100%);
+    }
+
+    .provider_active.notActive {
+        color: #3276b1;
+        background-color: #fff;
+        background-image: linear-gradient(to bottom, #fff 0, #fff 100%);
+    }
+</style>
+
+    <link rel="stylesheet" href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
+
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="~/Scripts/Prototypes/ProviderDirectory.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            $("#sidemenu").addClass("menu-in");
+            $("#page-wrapper").addClass("menuup");
+            $(".ProviderTypeSelectAutoList").hide();
+        });
+    </script>
+}
+
+
+
+<div id="page-wrapper" ng-app="PDApp" ng-controller="PDController" style="margin-top: 60px;">
+    <div class="col-lg-12 zero-padding-left-right margin_top_6px">
+        <div class="col-sm-3 col-xs-6 zero-padding-left-right">
+            <button ng-click="GetAll();" class="biscuit biscit_outerColor_blue">
+                <div class="biscuit_heading auth">
+                    <b>All Providers</b>
+                </div>
+                <div class="biscuit_body">
+                    <div class="col-xs-5 padding_5">
+                        <div class="pull-left iconspace">
+                            <i class="fa fa-4x fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-5 datasize">
+                        <b>212</b>
+                    </div>
+                    <div class="col-xs-2 padding_5"></div>
+                </div>
+            </button>
+        </div>
+        <div class="col-sm-3 col-xs-6 zero-padding-left-right">
+            <button ng-click="GetMidLevels();" class="biscuit biscit_outerColor_green">
+                <div class="biscuit_heading auth">
+                    <b>Mid Levels</b>
+                </div>
+                <div class="biscuit_body">
+                    <div class="col-xs-5 padding_5">
+                        <div class="pull-left iconspace">
+                            <i class="fa fa-4x fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-5 datasize">
+                        <b>70</b>
+                    </div>
+                    <div class="col-xs-2 padding_5"></div>
+                </div>
+            </button>
+        </div>
+        <div class="col-sm-3 col-xs-6 zero-padding-left-right">
+            <button ng-click="GetPCPs();" class="biscuit biscit_outerColor_time">
+                <div class="biscuit_heading auth">
+                    <b>PCPs</b>
+                </div>
+                <div class="biscuit_body">
+                    <div class="col-xs-5 padding_5">
+                        <div class="pull-left iconspace">
+                            <i class="fa fa-4x fa-user-md"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-5 datasize">
+                        <b>60</b>
+                    </div>
+                    <div class="col-xs-2 padding_5"></div>
+                </div>
+            </button>
+        </div>
+        <div class="col-sm-3 col-xs-6 zero-padding-left-right">
+            <button ng-click="GetSpecialities(2);" class="biscuit biscit_outerColor_Sea">
+                <div class="biscuit_heading auth">
+                    <b>Specialists</b>
+                </div>
+                <div class="biscuit_body">
+                    <div class="col-xs-5 padding_5">
+                        <div class="pull-left iconspace">
+                            <i class="fa fa-4x fa-user-md"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-5 datasize">
+                        <b>45</b>
+                    </div>
+                    <div class="col-xs-2 padding_5"></div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="col-lg-12 zero-padding-left-right">
+        <div class="col-sm-7 zero-padding-left-right">
+            <table class="table table-condensed table-striped">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hospitals List <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="pointer">Hospitals List</a></li>
+                                        <li><a class="pointer">LOB</a></li>
+                                        <li><a class="pointer">ProviderType</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a class="pointer">Provider Relationship</a></li>
+                                        <li><a class="pointer">Country</a></li>
+                                        <li><a class="pointer">Speciality</a></li>
+                                        <li><a class="pointer">Practice Location</a></li>
+                                    </ul>
+                                </div><!-- /btn-group -->
+                                <input type="text" class="form-control input-sm" aria-label="search_dropdown">
+                            </div><!-- /input-group -->
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Customize Search Result <span class="caret"></span></button>
+                                    <ul class="dropdown-menu customize_column list-group" style="border:0px;margin-top: 0px;webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);box-shadow: 0 6px 12px rgba(0,0,0,0.175);-webkit-background-clip: padding-box;padding-top: 0px;padding-bottom: 0px;">
+                                        <li ng-repeat="col in Columns" class="list-group-item" style="padding: 0px; cursor:pointer" ng-class="{'disabled':col.show==false}">
+                                            <div class="checkbox" style="padding:0px;margin:0px;">
+                                                <label style="padding:10px 30px;width: 100%;">
+                                                    <input type="checkbox" ng-model="col.show"> {{col.title}}
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div><!-- /input-group -->
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm">
+                                <input ng-model="term" type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button ng-click="tableParams.filter({ $: term })" class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div><!-- /input-group -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-5 zero-padding-left-right">
+            <table class="table table-condensed table-striped">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <span for="fun" class="col-sm-5 control-label text-right">Specialty: </span>
+                                <div class="col-sm-7 zero-padding-left-right">
+                                    <div class="input-group">
+                                        <div class="btn-group">
+                                            <a ng-click="GetSpecialities(1);" class="single_dual btn btn-xs btn-success active" data-toggle="fun" data-title="Y">Single</a>
+                                            <a ng-click="GetSpecialities(2);" class="single_dual btn btn-xs btn-primary notActive" data-toggle="fun" data-title="X">Dual</a>
+                                        </div>
+                                        <input type="hidden" name="fun" id="fun">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <span for="fun" class="col-sm-5 control-label text-right">Status: </span>
+                                <div class="col-sm-7 zero-padding-left-right">
+                                    <div class="input-group">
+                                        <div class="btn-group">
+                                            <a ng-click="GetActiveInActive(1);" class="provider_active btn btn-xs btn-primary active" data-toggle="fun" data-title="Y">Active</a>
+                                            <a ng-click="GetActiveInActive(2);" class="provider_active btn btn-xs btn-danger notActive" data-toggle="fun" data-title="X">Inactive</a>
+                                        </div>
+                                        <input type="hidden" name="fun" id="fun">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span style="float:right;">
+                                <button class="btn btn-xs btn-default" tooltip="" data-toggle="tooltip" data-placement="top" data-original-title="Print"><i class="fa fa-print"></i></button>
+                                <button class="btn btn-xs btn-success" tooltip="" data-toggle="tooltip" data-placement="top" data-original-title="Export To Excel"><i class="fa fa-file-excel-o"></i></button>
+                                <button class="btn btn-xs btn-danger" tooltip="" data-toggle="tooltip" data-placement="top" data-original-title="Export To PDF"><i class="fa fa-file-pdf-o"></i></button>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <table id="ProviderDirectoryTable" ng-table-dynamic="tableParams with Columns" class="table table-condensed table-bordered table-striped" show-filter="true">
+            <tr ng-repeat="row in $data">
+                <td ng-repeat="col in $columns" data-key="{{col.field}}">{{row[col.field]}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

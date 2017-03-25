@@ -1,0 +1,178 @@
+﻿@model AHC.CD.WebUI.MVC.Models.EmailService.EmailGroupViewModel
+
+<style>
+    input[type="search"] {
+        -webkit-appearance: textfield;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+    }
+
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-decoration {
+            -webkit-appearance: none;
+        }
+
+    input::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .toolbar {
+        color: #fff;
+    }
+
+        .toolbar li {
+            float: left;
+        }
+
+            .toolbar li:first-child button {
+                border-radius: .5em 0 0 .5em;
+            }
+
+            .toolbar li:last-child button {
+                border-radius: 0 .5em .5em 0;
+            }
+
+        .toolbar a,
+        .toolbar input[type="search"],
+        .toolbar button {
+            background: lightslategray;
+            color: white;
+            display: block;
+            padding: .5em 1em;
+            position: relative;
+        }
+
+            .toolbar a:hover,
+            .toolbar input[type="search"]:hover,
+            .toolbar input[type="search"]:focus,
+            .toolbar button:hover {
+            }
+
+        .toolbar input[type="search"] {
+            height: 20px;
+            width: 177px;
+        }
+
+            .toolbar input[type="search"]::-webkit-input-placeholder {
+                color: #fff;
+            }
+
+            .toolbar input[type="search"]::-moz-placeholder {
+                color: #fff;
+                opacity: 1;
+            }
+
+            .toolbar input[type="search"]:-moz-placeholder {
+                color: #fff;
+                opacity: 1;
+            }
+
+            .toolbar input[type="search"]:-ms-input-placeholder {
+                color: #fff;
+            }
+
+    .btn-search {
+        color: orange;
+    }
+</style>
+<div ng-controller="GroupEmailController" id="AddGroupEmail" class="col-lg-12 zero-padding-left-right-div">
+    <div class="col-lg-5 pull-left">
+        <form id="GroupMailDiv">
+            <div>
+                @*@Html.HiddenFor(model => model.CreatedBy, new { data_ng_model = "CreatedBy" })
+                    @Html.HiddenFor(model => model.LastUpdatedBy, new { data_ng_model = "LastUpdatedBy" })*@
+                @*<input type="hidden" name="CreatedBy" ng-model="CreatedBy" value="{{CreatedBy}}" />
+                    <input type="hidden" name="LastUpdatedBy" ng-model="CreatedBy" value="{{CreatedBy}}" />*@
+                <label class="control-label small" style="margin-left:14px">Group Mail Name *</label>
+                <div class="col-lg-12 zero-padding-left-right-div">
+
+                    <div class="col-lg-10" style="width:86%">
+                        @*<input type="text" class="form-control input-sm" ng-model="groupMailID" />*@
+                        @Html.TextBoxFor(model => model.EmailGroupName, new { @class = "form-control input-sm", data_ng_model = "tempObject.EmailGroupName", data_val = "true" })
+                        <span style="color:red" ng-if="grpNameErrorMessage">Please provide Group Mail Name</span>
+                        @*<span style="color:red" ng-if="InvalidgrpNameErrorMessage">Please provide a Valid Mail Id.</span>*@
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <div class="clearfix"></div>
+            <div class="col-lg-6 form-group">
+                <label class="control-label small">Description *</label>
+                <textarea ng-change="EnableSearchpanel()" name="Description" ng-model="tempObject.Description" class="form-control" style="height: 80px; width: 293px"></textarea>
+                <span style="color:red" ng-if="descriptionErrorMessage">Please provide Description</span>
+                @*@Html.TextAreaFor(model => model.Description, new { @class = "form-control input-sm", data_ng_model = "Description", data_val = "true" })*@
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+            @*@Html.HiddenFor(model => model.Emailiddetails, new { data_ng_model = "Emailiddetials" })*@
+            @*<input type="hidden" name="Emailiddetails" ng-model="Emailiddetials" value="{{Emailiddetials}}" />*@
+
+            <div class="col-lg-11">
+                <label class="control-label large">Add Other Email</label>
+                <span class="input-group" style="width:94%">
+                    <input id="otherEmailId" class="form-control" ng-model="OtherEmail" />
+                    <span style="cursor: pointer; background-color: #337ab7;color:white;font-size:small" class="input-group-addon" ng-click="AddOtherEmail()">Add to Group</span>
+                </span>
+                <p ng-if="errMsgForotherEmail" style="color:red">Invalid Email...</p>
+            </div>
+            <br />
+            <br />
+            <div ng-hide="tempObject.EmailObj.length == 0" class="col-lg-10 form-control" style="height: 250px; overflow-y: scroll; overflow: auto; margin-top: 5%; width: 80%; margin-left: 3%">
+                @*<p>Selected Emails</p>*@
+                <table class="table table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Selected Emails</th>
+                        </tr>
+                        <tr>
+                            <th><input class="form-control input-sm" ng-model="AddedEmailId" placeholder="Filter Email" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in filteredtempdata = (tempObject.EmailObj | filter:AddedEmailId) track by $index">
+                            <td><p class="label label-info"><b>{{data.EmailIds}}</b></p></td>
+                            <td><i class="fa fa-close" style="color:red;cursor:pointer" ng-click="RemoveEmail(data)"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            @*<div ng-hide="tempdata.length == 0" class="col-lg-10 form-control" style="height: 320px; overflow-y: scroll; overflow: auto;">
+                    <table class="table table-striped table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Selected Emails</th>
+                            </tr>
+                            <tr>
+                                <th><input class="form-control input-sm" ng-model="AddedEmailId" placeholder="Filter Email" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in filteredtempdata = (tempdata | filter:AddedEmailId) track by $index">
+                                <td><p class="label label-info"><b>{{data.EmailIds}}</b></p></td>
+                                <td><i class="fa fa-close" style="color:red;cursor:pointer" ng-click="RemoveEmail(data)"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>*@
+        </form>
+    </div>
+
+    <div class="col-lg-7 pull-right">
+        @Html.Partial("~/Views/EmailService/_SearchProviderForGroupMail.cshtml")
+    </div>
+    <br /><br /><br />
+    <div class="col-lg-12" style="margin-bottom: 2%; margin-top: 2%">
+        <button class="btn btn-warning" ng-click="CancelAddView()">Cancel</button>
+        <button ng-if="!isView && !TableView && !isEdit" class="btn btn-primary pull-right" ng-click="saveGroup()">Save Group</button>
+        <button ng-if="isEdit" class="btn btn-primary pull-right" ng-click="UpdateGroup()">Update Group</button>
+    </div>
+</div>

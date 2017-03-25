@@ -1,0 +1,46 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.Demographic.ProfilePictureViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+
+<link href="~/Areas/Profile/Contents/Css/ProviderSummaryDashboard.css" rel="stylesheet" />
+<div class="form-style" ng-controller="profileDemographicsController">
+    <div id="PersonalDetail">
+        <fieldset class="wrap-words" style="padding-left: 7px;padding-right: 7px;padding-top: 8px;padding-bottom: 0px;">
+            <div ng-if="visibilityControl!='_PersonalDetailProfilePic' && visibilityControl!='EditPersonalDetails'" class="col-lg-1 zero-padding-left-right-div text-center profileIamge">
+                <img ng-if="Provider.ProfilePhotoPath" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{Provider.ProfilePhotoPath}}" alt="Profile Picture" style="width: 100%; height: 100px;" class="img-thumbnail" />
+                <img ng-if="!Provider.ProfilePhotoPath" src="~/Content/Images/no_image.png" alt="Profile Picture" style="width: 100%; height: 100px; " class="img-thumbnail" />
+            </div>
+            @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+            {
+                <div ng-if="visibilityControl!='EditPersonalDetails'" class="col-lg-11 zero-padding-left-right-div">
+                    @Html.Partial("~/Areas/Profile/Views/ProviderSummaryDashBoard/ProviderSummaryBasicInfo/_ProviderBasicInfo.cshtml")
+                </div>
+            }
+        </fieldset>
+    </div>
+</div>
+<div ng-controller="profileSummaryDashboardController">
+    @Html.Partial("~/Areas/Profile/Views/ProviderSummaryDashBoard/ProfileStatus_DataSummary/_ProfileStatusAndDataSummary.cshtml")
+    <div class="col-lg-5 zero-padding-left-right-div">
+        @Html.Partial("~/Areas/Profile/Views/ProviderSummaryDashBoard/UpcomingExpiries/_UpcomingExpiries.cshtml")
+    </div>
+    <div class="col-lg-7 zero-padding-left-right-div" style="padding-right: 5px;">
+        <div class="panel panel-default small">
+            <div class="panel-heading" style="padding:4px 15px;">
+                <div>CREDENTIALING DETAILS</div>
+            </div>
+            <div class="">
+                @Html.Partial("~/Areas/Profile/Views/ProviderSummaryDashBoard/CredentialingDetails/_CredentialingDetails.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 zero-padding-left-right-div" style="padding-right: 5px;">
+        <div class="panel panel-default small">
+            <div class="panel-heading" style="padding:4px 15px;">
+                <div>RECENT TASKS PERFORMED</div>
+            </div>
+            <div class="">
+                @Html.Partial("~/Areas/Profile/Views/ProviderSummaryDashBoard/RecentTasksPerformed/_RecentTastsPerformed.cshtml")
+            </div>
+        </div>
+    </div>
+</div>

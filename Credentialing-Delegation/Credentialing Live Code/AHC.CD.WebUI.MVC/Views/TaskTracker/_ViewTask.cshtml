@@ -1,0 +1,149 @@
+﻿@model AHC.CD.WebUI.MVC.Models.TaskTracker.TaskTrackerViewModel
+
+<style>
+    .notesTable tr:nth-child(even) {
+        background-color: rgba(100, 149, 237, 0.08);
+    }
+
+    .notesTable thead {
+        color: white;
+        background-color: rgba(100, 149, 237, 0.78);
+    }
+
+    .notesTable tr:hover {
+        background-color: rgba(100, 149, 237, 0.05);
+    }
+</style>
+
+<div>
+    <div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Provider</label>
+                <div>
+                    <i class="data-label wrap-words">{{taskView.ProviderName || 'Not Available'}}</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Sub Section</label>
+                <div>
+                    <i class="data-label wrap-words">{{taskView.SubSectionName || 'Not Available'}}</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Subject</label>
+                <div>
+                    <i class="data-label wrap-words">{{taskView.Subject || 'Not Available'}}</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Next Followup</label>
+                <div>
+                    <i class="data-label wrap-words">{{taskView.NextFollowUpDate  | date:'MM/dd/yyyy' || 'Not Available'}}</i>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Mode Of Followup</label>
+                <div>
+                    <span ng-repeat="followup in taskView.ModeOfFollowUp track by $index">
+                        <span class="label label-provider-type wrap-words">
+                            {{followup.Name || 'Not Available'}}
+                        </span>
+                        &nbsp;&nbsp;
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Assign To</label>
+                <div>
+                    <i class="data-label wrap-words">{{taskView.AssignedTo || 'Not Available'}}</i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-4 form-group">
+                <label class="control-label small">Hospital</label>
+                <div>
+                    <i class="data-label wrap-words">{{taskView.Hospital || 'Not Available'}}</i>
+                </div>
+            </div>
+            @*Sharath*@
+            @*<div class="col-lg-4 form-group">
+                <label class="control-label small">Insurance Company</label>
+                <div>
+                    <i class="data-label wrap-words">{{taskView.InsuranceCompanyName || 'Not Available'}}</i>
+                </div>
+            </div>*@
+
+            <div class="col-lg-4 form-group">
+            <label class="control-label small">Plan Name</label>
+            <div>
+                <i class="data-label wrap-words">{{taskView.PlanName || 'Not Available'}}</i>
+            </div>
+        </div>
+
+            @*Sharath*@
+            @*<div class="col-lg-4 form-group">
+                    <label class="control-label small">Insurance Company</label>
+                    <div>
+                        <span ng-repeat="company in taskView.InsuranceCompanyName track by $index">
+                            <span class="label label-provider-type wrap-words">
+                                {{company || 'Not Available'}}
+                            </span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </div>
+                </div>*@
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-lg-12 form-group">
+                <label class="control-label small">Notes:</label>
+                @*<div>
+                        <i class="data-label wrap-words">{{taskView.Notes || 'Not Available'}}</i>
+                    </div>*@
+                @*<div class="col-lg-12 wrap-words">
+                        <span ng-repeat="vt in viewTemp track by $index"><span ng-if="$index>0">,&nbsp;&nbsp;</span><i class="data-label wrap-words"><span class="label label-provider-type">{{vt || 'Not Available'}}</span></i></span>
+                    </div>*@
+                @*<div>
+                    <i class="data-label wrap-words">{{viewTempLatest[0].stamp || 'Not Available'}}</i>
+                </div>*@
+                
+                <div class="col-lg-12 zero-padding-left-right-div" id="Notes">
+                    <div class="col-lg-12" ng-show="viewTemp1.length!=0">
+                        <table class="table table-bordered table-condensed table-hover notesTable">
+                            <thead>
+                                <tr>
+                                    @*<th>Note Type</th>*@
+                                    <th>Date Time</th>
+                                    <th>User Name</th>
+                                    @*<th>Subject</th>*@
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="note in viewTemp1" class="pointer" @*title="Click to view note details"*@ @*ng-mouseover="initPop();*@ ">
+                                    @*<td>{{'History'}}</td>*@
+                                    <td>{{note.modifiedDate|| '-'}}</td>
+                                    <td>{{note.By||"-"}}</td>
+                                    @*<td>{{note.Subject||"-"}}</td>*@
+                                    @*<td>{{(note.stamp| limitTo : 15)||''}}&nbsp;<a class="btn btn-link btnPadding" title="Note" data-toggle="popover" data-trigger="hover" data-placement="top" data-html="true" data-content="{{(note.stamp| limitTo : 300)||'-'}}<b>{{note.stamp.length > 300 ? '.....' : ''}}</b>" ng-mouseover="initPop();"><b>...</b></a></td>*@
+                                    <td class="wrap-words">{{note.stamp}}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div">
+            <div class="col-md-12 form-group">
+                <button type="button" ng-if="detailView" class="btn btn-warning btn-sm" ng-click="cancelView()">Cancel</button>
+                @*<button type="button" ng-disabled="taskView.CompleteStatus=='Closed'" ng-if="detailView" class="btn btn-primary btn-sm pull-right" ng-click="showEditview(taskView)">Edit</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+

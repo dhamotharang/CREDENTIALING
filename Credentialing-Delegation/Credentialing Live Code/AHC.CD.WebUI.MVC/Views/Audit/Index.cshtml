@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    var AuditLogData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.AuditLog))
+</script>
+@section AddToHead{
+    <link href="~/Content/calendar.min.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+    <link href="~/Content/CCMDashboard/CCMDashboard.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.2.min.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/tableExportnigraj.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jquery.base64.js"></script>
+    <script src="~/Scripts/Lib/pdfGeneration/html2canvas.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/sprintf.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jspdf.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/base64.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    <script src="~/Scripts/calendar-tpls.min.js"></script>
+    <script src="~/Areas/Plans/Script/Custom/AngularTextToSpeach.js"></script>
+    <script src="~/Scripts/Audit/AuditApp.js"></script>
+    <script src="~/Scripts/Audit/AuditServices.js"></script>
+    <script src="~/Scripts/Audit/AuditFactories.js"></script>
+    <script src="~/Scripts/Audit/AuditDirectives.js"></script>
+    <script src="~/Scripts/Audit/AuditFiltters.js"></script>
+    <script src="~/Scripts/Audit/AuditController.js"></script>
+}
+
+<div id="page-wrapper" ng-app="AuditDashboard">
+    <toaster-container toaster-options="{'time-out': 2000,'position-class': 'toast-top-right','close-button':true}"></toaster-container>
+    <div class="container-fluid" ng-controller="AuditDashboardController as pc" ng-cloak>
+        <!-- Page Heading -->
+        <div class="row" ng-cloak>
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> Audit User Activities
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="Biscuits" class="col-lg-12 zero-padding-left-right margin_top_6px">
+
+                            <biscuit-tile action-type="LOGS" grid-data="GridData('LOGS')" biscuit-id="LOGS" biscuit-title="LOGS" biscuit-value="{{TotalLog}}" biscuit-color="blue" biscuit-symbol="LOGS"></biscuit-tile>
+                            <biscuit-tile action-type="Information" grid-data="GridData('Information')" biscuit-id="Information" biscuit-title="Information" biscuit-value="{{Information}}" biscuit-color="green" biscuit-symbol="Information"></biscuit-tile>
+                            <biscuit-tile action-type="Alert" grid-data="GridData('Alert')" biscuit-id="Alert" biscuit-title="Alert" biscuit-value="{{Alert}}" biscuit-color="time" biscuit-symbol="Alert"></biscuit-tile>
+                        </div>
+                        <div class="clearfix">
+
+                        </div>
+                        <div class="col-lg-4">
+                        </div>
+                        <div class="col-lg-4 tripijodal">
+                            <i class="fa" ng-class="{'fa-users': tableCaption == 'LOGS','fa-check': tableCaption == 'Information','fa-exclamation-circle': tableCaption == 'Alert'}"></i> {{tableCaption}}
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="btn-group btn-group-md pull-right">
+                                <a class="btn btn-white" data-toggle="tooltip" data-placement="top" title="Search"><span><i class="fa fa-search bigger-120"></i></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px;color:orange" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#AuditLogGrid')"><span><i class="fa fa-file-code-o bigger-120"></i></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#AuditLogGrid')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px; color: red; " data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#AuditLogGrid')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px; color: grey; " data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></a>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+
+                        </div>
+                        <div class="divborder">
+                            <table id="AuditLogGrid" class="table table-hover" st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="AuditData">
+                                <thead style="background-color: #464957; border-color: #337AB7; color:white">
+                                    <tr style="cursor:pointer">
+                                        <th st-sort="Controller" class="col-lg-2">Controller Name</th>
+                                        <th st-sort="Action" class="col-lg-2">Action Name</th>
+                                        <th st-sort="DateTime" class="col-lg-2">Date Time</th>
+                                        <th st-sort="User" class="col-lg-2">User Name</th>
+                                        <th st-sort="URL" class="col-lg-1">URL</th>
+                                        <th st-sort="Category" class="col-lg-1">Category</th>
+                                        <th st-sort="IP" class="col-lg-2">IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!pc.isLoading">
+                                    <tr ng-repeat="auditlog in pc.displayed track by $index" style="cursor:pointer">
+                                        <td class="col-lg-2 wrap-words">{{auditlog.Controller || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{auditlog.Action || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{auditlog.DateTime | date:"MM/dd/yyyy h:mma" || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{auditlog.User || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{auditlog.URL || 'Not Available'}}</td>
+                                        <td class="col-lg-1 wrap-words">{{auditlog.Category || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{auditlog.IP || 'Not Available'}}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="pc.isLoading">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="loading-indicator"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="8"></td>
+                                    </tr>
+
+                                </tfoot>
+                            </table>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

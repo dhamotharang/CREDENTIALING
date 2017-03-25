@@ -1,0 +1,43 @@
+﻿
+
+<form id="providerSearch" name="providerData">
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-lg-12 form-style">
+            <fieldset>
+                <legend>Assigned Business Entities</legend>
+                <div class="col-lg-12 zero-padding-right-right-div" style="overflow-x: scroll">
+                    <table ng-if="tempPlanContractObject.LOBBEMAPPING.length==0 && tempPlanContractObject.BELIST.length==0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                        <thead>
+                            <tr>
+                                <td>
+                                    No Contract details available for {{tempPlanContractObject.PlanName}} !!
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table ng-if="tempPlanContractObject.LOBBEMAPPING.length!=0 || tempPlanContractObject.BELIST.length!=0" class="table-bordered table table-condensed">
+                        <tr>
+                            <th>{{tempPlanContractObject.PlanName}}</th>
+                            <th ng-repeat="BE in tempPlanContractObject.BELIST track by $index">
+                                {{BE.Name}}
+                            </th>
+                        </tr>
+                        <tr ng-repeat="LOB in tempPlanContractObject.LOBBEMAPPING track by $index">
+                            <td>
+                                <label>
+                                    {{LOB.LOBName}}
+                                </label>
+                            </td>
+                            <td ng-repeat="LOBBEMAPPING in LOB.LOBBEMapping track by $index"><input type="checkbox" ng-model="LOBBEMAPPING" disabled /></td>
+                        </tr>
+                    </table>
+                </div>                
+                <div class="clearfix"></div>
+                <button type="button" ng-click="BackView()" class="btn btn-sm btn-warning">Back</button>
+            </fieldset>
+        </div>
+    </div>
+</form>
+
+

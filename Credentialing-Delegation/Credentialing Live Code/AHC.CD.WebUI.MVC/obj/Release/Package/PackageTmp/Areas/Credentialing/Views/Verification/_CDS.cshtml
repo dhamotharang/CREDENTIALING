@@ -1,0 +1,81 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.PSVInfo.ProfileVerificationDetailViewModel
+
+<div class="panel-body">
+    <a class="btn btn-xs btn-warning pull-right" style="margin-right:-15px;margin-top:-15px" ng-click="CDSHistoryDiv=true" toggle data-toggle="tooltip" data-placement="bottom" title="CDS History"><i class="fa fa-clock-o"></i></a>
+
+    <div ng-repeat="lisence in CDSs">
+        <form enctype="multipart/form-data" id="CDSForm{{$index}}" class="form-style">
+            <input type="hidden" name="ProfileVerificationParameterId" value="{{CDSParameterID}}">
+            <input type="hidden" name="VerificationData" value="{{lisence.LincensesInfo}}">
+            <div ng-if="lisence.ProfileVerificationDetail.ProfileVerificationDetailId">
+                <input type="hidden" name="ProfileVerificationDetailId" value="{{lisence.ProfileVerificationDetail.ProfileVerificationDetailId}}">
+            </div>
+            <div ng-if="lisence.ProfileVerificationDetail.VerificationResultId">
+                <input type="hidden" name="VerificationResultId" value="{{lisence.ProfileVerificationDetail.VerificationResultId}}">
+            </div>
+            <fieldset>
+                <legend>
+                    @*{{lisence.name}}*@
+                    <strong>CDS-{{$index+1}}</strong>
+                </legend>
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>CDS Number</th>
+                                <th>Issue Date</th>
+                                <th>Expiration Date</th>
+                                <th>Document</th>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <i class="control-label small wrap-words">{{lisence.LincensesInfo.CertNumber}}</i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <i class="control-label small wrap-words" ng-if="lisence.LincensesInfo.IssueDate" ng-bind="reformatDate(lisence.LincensesInfo.IssueDate)"></i>
+                                        @*<i ng-if="!lisence.LincensesInfo.IssueDate">Not Available</i>*@
+                                    </div>
+                                </td>
+                                 <td>
+                                    <div>
+                                        <i class="control-label small wrap-words" ng-if="lisence.LincensesInfo.ExpiryDate" ng-bind="reformatDate(lisence.LincensesInfo.ExpiryDate)"></i>
+                                        @*<i ng-if="!lisence.LincensesInfo.ExpiryDate">Not Available</i>*@
+                                    </div>
+                                </td>
+                               
+                                <td>
+                                    <div>
+                                        <a ng-if="lisence.LincensesInfo.CDSCCerificatePath" toggle data-toggle="tooltip" data-placement="bottom" title="Preview" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{lisence.LincensesInfo.CDSCCerificatePath}}" targe target="_blank"><i class="fa fa-file"></i></a>
+                                        @*<i ng-if="!lisence.LincensesInfo.CDSCCerificatePath">Not Available</i>*@
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-lg-12 zero-padding-left-right-div" ng-if="lisence.ViewDiv">
+                    @Html.Partial("~/Areas/Credentialing/Views/Verification/_ViewCDSVerificationResult.cshtml")
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div" ng-if="lisence.AddDiv">
+                    @Html.Partial("~/Areas/Credentialing/Views/Verification/_AddEditCDSVerificationResult.cshtml")
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div" ng-if="lisence.EditDiv">
+                    @Html.Partial("~/Areas/Credentialing/Views/Verification/_AddEditCDSVerificationResult.cshtml")
+                </div>
+                <div class="clearfix"></div><br />
+                <div ng-show="activeMessageDiv=='cdsPSV{{$index}}'" class="alert alert-success" role="alert">
+                    @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                    {{messageDesc}}
+                </div>
+                <div ng-show="activeMessageDiv=='cdsPSVError{{$index}}'" class="alert alert-danger" role="alert">
+                    @*<button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>*@
+                    {{messageDesc}}
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

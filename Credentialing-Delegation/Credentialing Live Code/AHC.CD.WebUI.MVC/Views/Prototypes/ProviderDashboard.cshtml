@@ -1,0 +1,213 @@
+﻿
+@{
+    ViewBag.Title = "Managemnet Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead{
+    <style>
+        .form-style fieldset {
+            border-radius: 0px;
+            -webkit-border-radius: 0px;
+            -moz-border-radius: 0px;
+            background: #FFFFFF;
+        }
+
+        .zero-padding-left-right {
+            padding-left: 3px;
+            padding-right: 3px;
+        }
+
+        .margin_top_6px {
+            margin-top: 6px;
+        }
+
+        .padding_5 {
+            font-size: 12px;
+        }
+
+        .padding_5, .padding_5px {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .form-style fieldset {
+            padding: 5px;
+        }
+
+            .form-style fieldset legend {
+                margin-left: 20px;
+            }
+
+        .legend2 {
+            margin-top: -30px;
+            margin-right: 20px;
+        }
+    </style>
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Prototypes/ProviderDashboard.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            $("#sidemenu").addClass("menu-in");
+            $("#page-wrapper").addClass("menuup");
+            $(".ProviderTypeSelectAutoList").hide();
+        });
+    </script>
+}
+
+<div id="page-wrapper" ng-app="PDApp" ng-controller="PDController" style="margin-top: 60px;">
+    <div class="col-lg-12 zero-padding-left-right margin_top_6px">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-check fa-fw"></i> PRPVIDER SUMMARY
+                <div class="pull-right">
+                    <button class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil-square-o"></i></button>
+                    <button class="btn btn-xs btn-info" tooltip data-toggle="tooltip" data-placement="top" title="Upload Update"><i class="fa fa-cloud-upload"></i></button>
+                    <button class="btn btn-xs btn-warning" tooltip data-toggle="tooltip" data-placement="top" title="Pendings"><i class="fa fa-clock-o"></i></button>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0px;padding-top: 10px;">
+                <div class="col-md-2 col-xs-3 zero-padding-left-right">
+                    <img src="~/Content/Images/a0.jpg" style="border: 1px solid #DDD;border-radius: 4px;" />
+                </div>
+                <div class="col-md-10 col-xs-9 zero-padding-left-right">
+                    <div ng-repeat="p in PDPersonalDetails track by $index" class="col-lg-12 zero-padding-left-right-div">
+                        <div ng-if="$index % 4 == 0" ng-init="$lowerLimit=$index; $upperLimit=$index+3;">
+                            <div ng-repeat="p in PDPersonalDetails track by $index" ng-if="$index >= $lowerLimit && $index <=$upperLimit" class="col-md-3 col-sm-4 col-xs-6 form-group">
+                                <label class="control-label small">{{p.Title}}</label>
+                                <div>
+                                    <i>{{PD[p.Key]}}</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div form-style" style="margin-top: 10px;">
+                    <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-left:0px;">
+                        <fieldset style="padding-bottom: 10px;border-left: 0px;">
+                            <legend>
+                                Profile Status
+                            </legend>
+                            <div class="col-xs-10 zero-padding-left-right-div">
+                                <div ng-repeat="p in PSLabels track by $index" class="col-xs-6 form-group">
+                                    <label class="control-label small">{{p.Title}} : </label> <i>{{PD.ProfileStatus[p.Key]}}</i>
+                                </div>
+                            </div>
+                            <div class="col-xs-2 zero-padding-left-right-div">
+                                <div class="img-circle" style="width: 70px; height: 70px; background: #50bbdb; text-align: center;color:#FFF">
+                                    <span style="margin-top: 20px;margin-left: -16px;position: absolute;font-size: 20px;font-weight: bolder;">80%</span>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-right:0px;">
+                        <fieldset style="padding-bottom: 10px;border-right: 0px;">
+                            <legend>
+                                Data/Document Status
+                            </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
+                            </div>
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <div ng-repeat="dds in DDSLabels | limitTo: 4 track by $index" class="col-xs-6 form-group">
+                                    <label class="control-label small">{{dds.Title}} :</label> N/A <a class="btn btn-xs btn-info"><i class="fa fa-upload"></i></a>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div form-style">
+                    <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-left:0px;">
+                        <fieldset style="padding-bottom: 10px;border-left: 0px;">
+                            <legend>
+                                Recent Tasks Performed
+                            </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
+                            </div>
+                            <div class="col-lg-12">
+                                <dl ng-repeat="pt in ProviderTasks track by $index" class="small">
+                                    <dt>{{pt.ActionDate}}: {{pt.Title}}</dt>
+                                    <dd><i>{{pt.Description}}</i></dd>
+                                </dl>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-right:0px;">
+                        <fieldset style="padding-bottom: 10px;border-right: 0px;">
+                            <legend>
+                                Credentialing Details
+                            </legend>
+                            <style>
+                                .credaxis-bottom-border {
+                                    border-bottom: 1px solid #DDD;
+                                }
+                            </style>
+                            <div ng-repeat="pc in ProviderCreds track by $index" class="col-lg-12 zero-padding-left-right-div" ng-class="{'credaxis-bottom-border': !$last && ProviderCreds.length > 1 }">
+                                <div class="col-lg-12 zero-padding-left-right-div">
+                                    <div class="col-xs-6 form-group">
+                                        <label class="control-label small">{{pc.LocationType}} Location: </label> <i>{{pc.Location}}</i>
+                                    </div>
+                                    <div class="col-xs-6 form-group">
+                                        <label class="control-label small">Specilaty : </label> <i>{{pc.Specilaty}}</i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 zero-padding-left-right-div">
+                                    <div class="col-md-6 small">
+                                        <label>Associated Plans:</label>
+                                        <div ng-repeat="p in pc.Plans track by $index" class="col-lg-12 zero-padding-left-right-div">
+                                            <div ng-if="$index % 2 == 0" ng-init="$lowerLimit=$index; $upperLimit=$index+1;">
+                                                <div ng-repeat="p in pc.Plans track by $index" ng-if="$index >= $lowerLimit && $index <=$upperLimit" class="col-xs-6 form-group">
+                                                    <span><i class="fa fa-caret-right"></i> {{p}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 small">
+                                        <label>Age Limit:</label> <i>{{pc.AgeLimit}}</i>
+                                        <br />
+                                        <br />
+                                        <a ng-click="ViewMore();" class="pointer">View More...</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="col-lg-12 zero-padding-left-right-div form-style">
+                    <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-left:0px;">
+                        <fieldset style="padding-bottom: 10px;border-left: 0px;margin-bottom: -1px;">
+                            <div class="legend2 pull-right">
+                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
+                            </div>
+                            <legend>
+                                Hospitals
+                            </legend>
+                            <ol type="1">
+                                <li ng-repeat="h in ProviderHospitals track by $index">{{h}}</li>
+                            </ol>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-right:0px;">
+                        <fieldset style="padding-bottom: 10px;border-right: 0px;margin-bottom: -1px;">
+                            <legend>
+                                Associated IPA/GROUP
+                            </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
+                            </div>
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <ol type="1">
+                                    <li ng-repeat="g in ProviderGroups track by $index">{{g}}</li>
+                                </ol>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

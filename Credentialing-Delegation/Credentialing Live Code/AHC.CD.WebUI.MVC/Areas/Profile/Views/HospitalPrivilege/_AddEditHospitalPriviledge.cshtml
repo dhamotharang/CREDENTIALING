@@ -1,0 +1,282 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.HospitalPrivilege.HospitalPrivilegeDetailViewModel
+@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+
+<form class="hospitalPrivilegeForm" id="checkthis" ng-init="parentIndex = $index">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger validSummary" })
+    <span ng-if="tempObject.HospitalPrivilegeDetailID">
+        @Html.HiddenFor(model => model.HospitalPrivilegeDetailID, new { ng_value = "tempObject.HospitalPrivilegeDetailID" })
+    </span>
+    @Html.HiddenFor(model => model.StatusType, new { ng_value = (int)@AHC.CD.Entities.MasterData.Enums.StatusType.Active, data_ng_model = "tempObject.StatusType" })
+
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.PreferenceType, new { @class = "control-label small" })
+            <div class="radio">
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.PreferenceType, "1", new { data_ng_model = "tempObject.PreferenceType", id = "YesPrimary_HP" }) Yes
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.PreferenceType, "2", new { data_ng_model = "tempObject.PreferenceType", id = "NoPrimary_HP" }) No 
+                </label>
+            </div>
+            @Html.ValidationMessageFor(model => model.PreferenceType, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.HospitalID, htmlAttributes: new { @class = "control-label small" })
+            <input id="Hospital_Name_HP" type="text" class="form-control input-sm" ng-focus="searchCumDropDown('ForHsp'+$index)" data-val="true" data-val-required="Please enter the Hospital Name *." name="Hospital.HospitalName" ng-model="tempObject.Hospital.HospitalName" ng-change="setErrorBitHospital(tempObject.Hospital.HospitalName);clearHospitalLevel();" />
+            <input type="hidden" name="HospitalID" value="{{tempObject.Hospital.HospitalID}}" />
+            <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForHsp{{$index}}">
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr ng-repeat="hospital in filterHospitalData = (hospitals | filter : tempObject.Hospital.HospitalName) track by $index" ng-click="addIntoHospitalDropDown(hospital,'ForHsp'+parentIndex);setErrorBitHospital(tempObject.Hospital.HospitalName)" class="pointer">
+                            <td id=" Select_Hospital_Name_HP">{{hospital.HospitalName}}</td>
+                        </tr>
+                        <tr ng-if="!filterHospitalData.length">
+                            <td>Hospital Name not found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="text-danger" ng-if="!isHospitalError">Please Enter hospital Name*.</span>
+            @Html.ValidationMessageFor(model => model.HospitalID, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.HospitalContactInfoID, htmlAttributes: new { @class = "control-label small" })
+            <input id="Hospital_Location_HP" type="text" class="form-control input-sm" ng-model="tempObject.HospitalContactInfo.LocationName" data-val="true" data-val-required="Please select the Hospital Location *." name="LocationName" ng-focus="searchCumDropDown('ForLocation'+$index);" ng-change="setErrorBitLocation(tempObject.HospitalContactInfo.LocationName);clearLocationLevel()" />
+            <input type="hidden" name="HospitalContactInfoID" value="{{tempObject.HospitalContactInfo.HospitalContactInfoID}}" />
+            <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForLocation{{$index}}">
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr ng-repeat="location in filterLocationData = (tempObject.Hospital.HospitalContactInfoes | filter:tempObject.HospitalContactInfo.LocationName) track by $index" ng-click="addIntoLocationDropDown(location,'ForLocation'+parentIndex);setErrorBitLocation(tempObject.HospitalContactInfo.LocationName)" class="pointer">
+                            <td id="Select_Hospital_Location_HP">{{location.LocationName}}</td>
+                        </tr>
+                        <tr ng-if="!filterLocationData.length">
+                            <td>Location Name not found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="text-danger" ng-if="!isLocationError">Please Enter Location Name *.</span>
+            @Html.ValidationMessageFor(model => model.HospitalContactInfoID, "", new { @class = "text-danger" })
+
+        </div>
+    </div>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            <label class="control-label small">Street/P. O. Box No:</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.Street}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">Suite/Building</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.UnitNumber}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">City</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.City}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">State</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.State}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            <label class="control-label small">Zip Code</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.ZipCode}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">Country</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.Country}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">County</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.County}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">Phone Number</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.Phone}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            <label class="control-label small">Fax</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.Fax}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">E-mail Address</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactInfo.Email}}</span>
+            </div>
+        </div>
+    </div>
+    <div class=" col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.HospitalContactPersonID, htmlAttributes: new { @class = "control-label small" })
+            <input id="HospitalContactPersonName_HP" type="text" class="form-control input-sm" data-ng-model="tempObject.HospitalContactPerson.ContactPersonName" name="HospitalContactPerson.ContactPersonName" ng-focus="searchCumDropDown('ForContact'+$index)" ng-change="searchCumDropDown('ForContact'+$index)" />
+            <input type="hidden" value="{{tempObject.HospitalContactPerson.HospitalContactPersonID}}" name="HospitalContactPersonID" />
+            <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ForContact{{$index}}">
+                <table class="table table-striped table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr ng-repeat="contactPerson in filterContactData = (tempObject.HospitalContactInfo.HospitalContactPersons | filter : tempObject.HospitalContactPerson.ContactPersonName) track by $index" ng-click="addIntoContactDropDown(contactPerson,'ForContact'+parentIndex)" class="pointer">
+                            <td id="Select_HospitalContactPersonName_HP">{{contactPerson.ContactPersonName}}</td>
+                        </tr>
+                        <tr ng-if="!filterContactData.length">
+                            <td>Contact Person Name not found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @Html.ValidationMessageFor(model => model.HospitalContactPersonID, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">Contact Person Phone Number</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactPerson.ContactPersonPhone}}</span>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label small">Contact Person Fax Number</label>
+            <div>
+                <span class="form-control input-sm">{{tempObject.HospitalContactPerson.ContactPersonFax}}</span>
+            </div>
+        </div>
+    </div>
+    <div class=" col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.DepartmentName, htmlAttributes: new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.DepartmentName, "-- select --", new { @class = "form-control input-sm", data_ng_model = "tempObject.DepartmentName" })
+            @Html.ValidationMessageFor(model => model.DepartmentName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.DepartmentChief, htmlAttributes: new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.DepartmentChief, "-- select --", new { @class = "form-control input-sm", data_ng_model = "tempObject.DepartmentChief" })
+            @Html.ValidationMessageFor(model => model.DepartmentChief, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.AffilicationStartDate, htmlAttributes: new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.AffilicationStartDate, new { @class = "form-control input-sm", data_ng_model = "tempObject.AffilicationStartDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format.", data_ng_change = "tempObject.AffiliationEndDate = autoFillExpiryDate(tempObject.HospitalPrivilegeDetailID, tempObject.AffilicationStartDate, tempObject.AffiliationEndDate)" })
+            @Html.ValidationMessageFor(model => model.AffilicationStartDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.AffiliationEndDate, htmlAttributes: new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.AffiliationEndDate, new { @class = "form-control input-sm", data_ng_model = "tempObject.AffiliationEndDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format." })
+            @Html.ValidationMessageFor(model => model.AffiliationEndDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.PrevilegesTemporaryYesNoOption, new { @class = "control-label small" })
+            <div class="radio">
+                <label>
+                    @Html.RadioButtonFor(model => model.PrevilegesTemporaryYesNoOption, "1", new { data_ng_model = "tempObject.PrevilegesTemporaryYesNoOption", id = "Yes_PrevilegesTemporary" }) Yes
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.PrevilegesTemporaryYesNoOption, "2", new { data_ng_model = "tempObject.PrevilegesTemporaryYesNoOption", id = "No_PrevilegesTemporary" }) No
+                </label>
+            </div>
+            @Html.ValidationMessageFor(model => model.PrevilegesTemporaryYesNoOption, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.FullUnrestrictedPrevilagesYesNoOption, new { @class = "control-label small" })
+            <div class="radio">
+                <label>
+                    @Html.RadioButtonFor(model => model.FullUnrestrictedPrevilagesYesNoOption, "1", new { data_ng_model = "tempObject.FullUnrestrictedPrevilagesYesNoOption", id = "Yes_FullUnrestrictedPrevilages" }) Yes
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(model => model.FullUnrestrictedPrevilagesYesNoOption, "2", new { data_ng_model = "tempObject.FullUnrestrictedPrevilagesYesNoOption", id = "No_FullUnrestrictedPrevilages" }) No
+                </label>
+            </div>
+            @Html.ValidationMessageFor(model => model.FullUnrestrictedPrevilagesYesNoOption, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.AdmittingPrivilegeID, htmlAttributes: new { @class = "control-label small" })
+            <select id="Admitting_privilege_status" name="AdmittingPrivilegeID" class="form-control input-sm" data-ng-model="tempObject.AdmittingPrivilege.AdmittingPrivilegeID">
+                <option selected disabled hidden value="">-- Select Admitting Privilege --</option>
+                <option ng-repeat="admittingPrivilege in admittingPrivileges track by $index" value="{{admittingPrivilege.AdmittingPrivilegeID}}">{{admittingPrivilege.Title}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.AdmittingPrivilegeID, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.AnnualAdmisionPercentage, htmlAttributes: new { @class = "control-label small" })
+            @Html.TextBoxFor(model => model.AnnualAdmisionPercentage, new { @class = "form-control input-sm", data_ng_model = "tempObject.AnnualAdmisionPercentage", maxlength = "6" })
+            @Html.ValidationMessageFor(model => model.AnnualAdmisionPercentage, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.SpecialtyID, htmlAttributes: new { @class = "control-label small" })
+            <select id="Specialty_ID" name="SpecialtyID" class="form-control input-sm" data-ng-model="tempObject.SpecialtyID">
+                <option selected disabled hidden value="">-- Select Specialty --</option>
+                <option ng-repeat="specialty in getSpecilityForThisUser() | unique: 'SpecialtyID' track by $index" value="{{specialty.SpecialtyID}}">{{specialty.Specialty.Name}}</option>
+            </select>
+            <label style="font-size:10px;" tooltip data-toggle="tooltip" data-placement="top" title="Please Add Data to the Specility/Board Tab">Specialty Not Listed?</label><br />
+            @Html.ValidationMessageFor(model => model.SpecialtyID, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-3">
+            @Html.LabelFor(model => model.StaffCategoryID, htmlAttributes: new { @class = "control-label small" })
+            <select id="StaffCategory_ID" name="StaffCategoryID" class="form-control input-sm" data-ng-model="tempObject.StaffCategory.StaffCategoryID">
+                <option selected disabled hidden value="">-- Select Staff Category --</option>
+                <option ng-repeat="staffCategory in staffCategories track by $index" value="{{staffCategory.StaffCategoryID}}">{{staffCategory.Title}}</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.StaffCategoryID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="col-md-12 zero-padding-left-right-div">
+        <div class="form-group" ng-class="{true:'col-md-11', false:'col-md-12'}[hospitalPrivilegeInformation.HospitalPrevilegeLetterPath.length>0]">
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> 
+                    <span class="fileinput-filename wraptext"></span></div>
+                <span class="input-group-addon btn btn-default btn-sm btn-file"><span class="fileinput-new small">Hospital Privilege Letter</span><span class="fileinput-exists">Change</span>@Html.TextBoxFor(model => model.HospitalPrevilegeLetterFile, new { name = "HospitalPrevilegeLetterFile", ng_data_model = "tempObject.HospitalPrevilegeLetterFile", type = "file", onchange = "angular.element(this).scope().setFiles(this)" })</span>
+                <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>
+            @Html.HiddenFor(model => model.HospitalPrevilegeLetterPath, new { ng_value = "tempObject.HospitalPrevilegeLetterPath" })
+            @Html.ValidationMessageFor(model => model.HospitalPrevilegeLetterFile, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-1 form-group">
+            <div>
+                @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
+{
+    <a ng-show="hospitalPrivilegeInformation.HospitalPrevilegeLetterPath!=null" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{hospitalPrivilegeInformation.HospitalPrevilegeLetterPath}}" tooltip data-toggle="tooltip" data-placement="top" title="Hospital Privilege Document" target="_blank"><i class="fa fa-file fa-2x"></i></a>
+}
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div ng-show="activeMessageDiv=='HospitalPrivilegeError'" class="col-lg-12">
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Error Lists :<br />
+            <span ng-repeat="err in HospitalPrivilegeError track by $index">{{err}}</span>
+        </div>
+    </div>
+    <br />
+    <div class="col-md-12">
+        <div class="col-md-12 form-group zero-padding-left-right-div">
+            <button id="Cancel_Hospital_Privilege" type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl(''); resetDates();ClearHospital();">Cancel</button>
+            <button id="Update_Hospital_Privilege" type="submit" class="btn btn-primary btn-sm pull-right" ng-click="saveHospitalPrivilegeDetail(tempObject, $index)">{{buttonLabel}}</button>
+        </div>
+    </div>
+</form>

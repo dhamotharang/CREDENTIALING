@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using System.Web.Script.Serialization;
 
 namespace AHC.CD.WebUI.MVC.Controllers
 {
@@ -54,6 +56,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
+        public ActionResult ProviderDashboard()
+        {
+            return View();
+        }
+
         /// <summary>
         /// Get Provider Json Data
         /// </summary>
@@ -75,22 +82,20 @@ namespace AHC.CD.WebUI.MVC.Controllers
             var data = PrototypeHelper.GetProvidersSummary(count, profileStatus);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-
+        
         public JsonResult GetCCOData()
         {
-            var data = PrototypeHelper.GetCCOList();
+            var data = PrototypeHelper.GetCCOList().Take(9);
             return Json(data, JsonRequestBehavior.AllowGet);
-        
+
         }
         public JsonResult GetTLData()
         {
-               var data = PrototypeHelper.GetTLData();
+            var data = PrototypeHelper.GetTLData();
             return Json(data, JsonRequestBehavior.AllowGet);
-        
-        }
-      
 
+        }
+        
         /// <summary>
         /// Get Specialities Json Data
         /// </summary>
@@ -99,7 +104,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         {
             return Json(PrototypeHelper.GetSpecialties(), JsonRequestBehavior.AllowGet);
         }
-        
+
         /// <summary>
         /// Get Expiry License Data Json Data
         /// </summary>
@@ -107,6 +112,19 @@ namespace AHC.CD.WebUI.MVC.Controllers
         public JsonResult GetLicenseData()
         {
             return Json(PrototypeHelper.GetLicenseData(), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Get Provider licenses Information list
+        /// </summary>
+        /// <param name="count">Number Of Provider Need</param>
+        /// <param name="minDaysLeft">Min days left</param>
+        /// <param name="maxDaysLeft">max days left</param>
+        /// <param name="licenseTypeCode">license type code</param>
+        /// <returns></returns>
+        public JsonResult GetProvidersLicenseInformation(int count, int minDaysLeft, int maxDaysLeft, string licenseTypeCode)
+        {
+            return Json(PrototypeHelper.GetProvidersLicenseInformation(count, minDaysLeft, maxDaysLeft, licenseTypeCode), JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -148,6 +166,59 @@ namespace AHC.CD.WebUI.MVC.Controllers
         public JsonResult GetCCOReportsData(int count = 5)
         {
             return Json(PrototypeHelper.GetCCOReports(count), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Provider Personal Details
+        /// </summary>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>object, Provider Personal Details</returns>
+        public JsonResult GetProviderPersonalDetails(int ProfileID = 10)
+        {
+            return Json(PrototypeHelper.GetProviderPersonalDetails(ProfileID), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Provider Recent Task Performed
+        /// </summary>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Task Performed for Provider</returns>
+        public JsonResult GetProviderTasks(int count = 10, int ProfileID = 10)
+        {
+            return Json(PrototypeHelper.GetProviderTasks(count, ProfileID), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Provider Credentialing Details
+        /// </summary>
+        /// <param name="count">Number Of Credentialing</param>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Provider Credentialing Details</returns>
+        public JsonResult GetCredentialingDetails(int count = 2, int ProfileID = 10)
+        {
+            return Json(PrototypeHelper.GetCredentialingDetails(count, ProfileID), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Provider Hospitals
+        /// </summary>
+        /// <param name="count">Number Of Hospitals</param>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Provider Hospitals</returns>
+        public JsonResult GetProviderHospitals(int count = 5, int ProfileID = 10)
+        {
+            return Json(PrototypeHelper.GetProviderHospitals(count, ProfileID), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Provider IPA/Groups
+        /// </summary>
+        /// <param name="count">Number Of IPA/Groups</param>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Provider Hospitals</returns>
+        public JsonResult GetProviderGroups(int count = 5, int ProfileID = 10)
+        {
+            return Json(PrototypeHelper.GetProviderGroups(count, ProfileID), JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1,0 +1,40 @@
+﻿
+<div ng-cloak ng-if="data.length!=0" class="panel panel-default content-panel">
+    <div class="panel-heading">
+        <span class="badge bg-info pull-right" ng-show="ifFilter()">{{getIndexFirst()}} - {{getIndexLast()}} of {{data.length}}</span>
+        <h3 class="panel-title">Search Results</h3>
+    </div>
+    <div class="panel-body">
+        <div class="clearfix"></div>
+        <div class="col-lg-12" style="overflow-x:auto;">
+            <table ng-table="tableParams1" show-filter="true" class="table table-hover ng-table-resizable-columns ng-table-rowselected">
+                <tr ng-repeat="user in $data track by $index">
+                    <td class="col-lg-2 wrap-words" data-title="'NPI Number'" header-class="text-left" sortable="'NPINumber'" filter="{ 'NPINumber': 'text' }">
+                        {{user.NPINumber}}
+                    </td>
+                    <td class="col-lg-2 wrap-words" data-title="'Title'" header-class="text-left" sortable="'Titles'" filter="{ 'Titles': 'text' }">
+                        <span ng-repeat="title in user.Titles track by $index"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{title}}</span>
+                    </td>
+                    <td class="col-lg-2 wrap-words" data-title="'First Name'" header-class="text-left" sortable="'FirstName'" filter="{ 'FirstName': 'text' }">
+                        {{user.FirstName}}
+                    </td>
+                    <td class="col-lg-2 wrap-words" data-title="'Last Name'" header-class="text-left" sortable="'LastName'" filter="{ 'LastName': 'text' }">
+                        {{user.LastName}}
+                    </td>
+                    <td class="col-lg-1 wrap-words" data-title="'Provider Relation'" header-class="text-left" sortable="'ProviderRelationships'" filter="{ 'ProviderRelationships': 'text' }">
+                        <span ng-repeat="relation in user.ProviderRelationships"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{relation}}</span>
+                    </td>
+                    <td class="col-lg-2 wrap-words" data-title="'IPA'" header-class="text-left" sortable="'IPAGroupNames'" filter="{ 'IPAGroupNames': 'text' }">
+                        <span ng-show="user.IPAGroupNames.length > 0" ng-repeat="group in user.IPAGroupNames track by $index"><i ng-if="$index>0">,</i><br ng-if="$index>0" />{{group}}</span>
+                        <span ng-show="user.IPAGroupNames.length == 0">Not Available</span>
+                    </td>
+                    <td class="col-lg-1" data-title="'Action'" header-class="text-right">
+                        <a class="btn btn-xs btn-warning" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{user.ProfileID}}" data-toggle="tooltip" data-placement="left" title="View Profile" class="btn btn-xs btn-warning pull-right"><i class="glyphicon glyphicon-forward"></i></a>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

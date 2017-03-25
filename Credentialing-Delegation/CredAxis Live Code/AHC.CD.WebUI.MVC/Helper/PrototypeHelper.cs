@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace AHC.CD.WebUI.MVC.Helper
 {
@@ -19,6 +21,11 @@ namespace AHC.CD.WebUI.MVC.Helper
         private static string[] licenseTypeNames = { "State License", "Federal DEA", "CDS Information", "Specialty/Board", "Hospital Privileges", "Professional Liability", "Worker Compensation", "Medicare Information", "Medicaid Information", "CAQH", "UpComing Recredentials" };
         private static string[] licensetypeCodes = { "StateLicense", "FederalDEA", "CDSInformation", "SpecialityBoard", "HospitalPrivilages", "ProfessionalLiability", "WorkerCompensation", "MedicareInformation", "MedicaidInformation", "CAQHExpiries", "UpComingRecredentials" };
         private static string[] ccoNames = { "Keishla", "Elizabeth Duffin", "lcrego", "Jfish", "Nedjie Pierre", "Nikeesha Khobani", "Lenora", "kurt Carriveau", "Jocelyn Mejia", "Ms. Keyla Nunez", "Lex Harris", "Ankit Garg", "Jennifer Nichol", "CATHERINE MEDEL", "Barbara Joy", "Angela Atehortua", "Anirudh Chakravartty", "Dana Chorvat", "Jeanine Martin", "Cristina Mule", "Kimberly Harris-Williams", "Rohit Ahooja", "Phil" };
+        private static string[] usStates = { "Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District Of Columbia", "Federated States Of Micronesia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Marshall Islands", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virgin Islands", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming" };
+        private static string[] specialtyBoards = { "Board of Certification in Anesthesiology", "Board of Certification in Dermatology", "Board of Certification in Diagnostic Radiology", "American Board of Disaster Medicine", "Board of Certification in Emergency Medicine", "American Board of Family Medicine Obstetrics", "Board of Certification in Family Practice", "Board of Certification in Geriatric Medicine", "American Board of Hospital Medicine", "Board of Certification in Internal Medicine", "Board of Certification in Obstetrics and Gynecology", "Board of Certification in Ophthalmology", "Board of Certification in Orthopedic Surgery", "Board of Certification in Psychiatry", "Board of Certification in Radiation Oncology", "Board of Certification in Surgery" };
+        private static string[] usaHospitals = { "Mayo Clinic, Rochester, Minn.", "Cleveland Clinic", "Massachusetts General Hospital, Boston", "Johns Hopkins Hospital, Baltimore", "UCLA Medical Center", "New York-Presbyterian University Hospital of Columbia and Cornell", "UCSF Medical Center, San Francisco", "Northwestern Memorial Hospital, Chicago", "Hospitals of the University of Pennsylvania-Penn Presbyterian, Philadelphia", "NYU Langone Medical Center", "Barnes-Jewish Hospital/Washington University, St. Louis", "UPMC Presbyterian Shadyside, Pittsburgh", "Brigham and Women's Hospital, Boston", "Stanford Health Care-Stanford Hospital, Stanford, Calif.", "Mount Sinai Hospital, New York", "Duke University Hospital, Durham, N.C.", "Cedars-Sinai Medical Center, Los Angeles", "University of Michigan Hospitals and Health Centers, Ann Arbor", "Houston Methodist Hospital", "University of Colorado Hospital, Aurora" };
+        private static string[] usaInsuranceCarriers = { "Unitedhealth Group", "Wellpoint Inc. Group", "Kaiser Foundation Group", "Humana Group", "Aetna Group", "HCSC Group", "Cigna Health Group", "Highmark Group", "Coventry Corp. Group", "HIP Insurance Group", "Independence Blue Cross Group", "Blue Cross Blue Shield of New Jersey Group", "Blue Cross Blue Shield of Michigan Group", "California Physicians' Service", "Blue Cross Blue Shield of Florida Group", "Health Net of California, Inc.", "Centene Corp. Group", "Carefirst Inc. Group", "Wellcare Group", "Blue Cross Blue Shield of Massachusetts Group", "UHC of California", "Lifetime Healthcare Group", "Cambia Health Solutions Inc.", "Metropolitan Group", "Molina Healthcare Inc. Group" };
+        private static string[] plans = { "Humana", "Wellcare", "Freedom", "Ultimate", "Atena", "Medicare", "BlueCross" };
         #endregion
 
         private static TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -179,7 +186,8 @@ namespace AHC.CD.WebUI.MVC.Helper
                 int index = r.Next(0, 107);
                 int ccoIndex = r.Next(0, 23);
                 string name = providerNames[index];
-                string CCOName = ccoNames[ccoIndex];
+                string CCOName = ccoNames[i];
+                string category = providerCategory[r.Next(0, 2)];
 
                 object provider = new
                 {
@@ -195,10 +203,10 @@ namespace AHC.CD.WebUI.MVC.Helper
                     DateOfBirth = new DateTime(r.Next(1960, 2000), r.Next(1, 11), r.Next(1, 28)),
                     Gender = genders[r.Next(0, 2)],
                     CCO = textInfo.ToTitleCase(CCOName.ToLower()),
-                    ProviderCategory = providerCategory[r.Next(0, 2)],
+                    ProviderCategory = category,
                     ProfileStatus = profileStatus == "true" ? 100 : (r.Next(0, 101)),
-                    CredentialingCompletedStatus = (r.Next(10, 20)),
-                    CredentialingIncompletedStatus = (r.Next(0, 5))
+                    CredentialingCompletedStatus = category == "New" ? 0 : (r.Next(10, 20)),
+                    CredentialingIncompletedStatus = (r.Next(1, 5))
                 };
 
                 providers.Add(provider);
@@ -248,7 +256,6 @@ namespace AHC.CD.WebUI.MVC.Helper
             string[] groups = { "Access", "Access2", "MIRRA", "ACO" };
             string[] LOBs = { "HMO", "ACO", "FFS", "Hospitalist" };
             string[] providerCategory = { "New", "Old" };
-            string[] plans = { "Humana", "Wellcare", "Freedom", "Ultimate", "Blue Shield Blue Cross" };
             string[] imageURLs = { "/Content/Images/Providers/provider3.jpg", "/Content/Images/Providers/provider2.jpg", "/Content/Images/Providers/Pariksith_Singh.jpg", "/Content/Images/Providers/provider1.jpg" };
             string[] credentialingPhase = { "Initiated", "Plan Enrollment", "Submit to plan", "PSV completed", "Package Generated" };
             string[] credStatus = { "Waiting for plan form", "Completed", "Waiting for plan announcement", "PSV failed", "Waiting for document from provider" };
@@ -259,8 +266,8 @@ namespace AHC.CD.WebUI.MVC.Helper
                 string name = providerNames[index];
                 object pendingCred = new
                 {
-                    Plan = plans[r.Next(0, 5)],
-                    StartDate = (new DateTime(r.Next(1999, 2017), r.Next(1, 11), r.Next(1, 28))).ToString("dd-MMM-yyyy"),
+                    Plan = plans[r.Next(0, 7)],
+                    StartDate = (new DateTime(r.Next(1999, 2017), r.Next(1, 11), r.Next(1, 28))).ToString("MM-dd-yyyy"),
                     InitiatedTo = textInfo.ToTitleCase(name.ToLower()),
                     PhaseOfCredentialing = credentialingPhase[r.Next(0, 5)],
                     CredentialingStatus = credStatus[r.Next(0, 5)],
@@ -294,18 +301,18 @@ namespace AHC.CD.WebUI.MVC.Helper
                 int index = r.Next(0, 107);
                 int ccoIndex = r.Next(0, 23);
                 string name = providerNames[index];
-                string nameOfCCO = ccoNames[ccoIndex];
+                string nameOfCCO = ccoNames[i];
 
                 var cco = new
                 {
                     //CCO Summary
                     CCOName = textInfo.ToTitleCase(nameOfCCO.ToLower()),
-                    ProviderWorkedOn = (r.Next(0, 20)),
-                    TasksPerformed = (r.Next(0, 100)),
-                    ApplicationsSubmitted = (r.Next(0, 100)),
-                    PendingCredentialing = (r.Next(0, 20)),
-                    CompletedCredentialing = (r.Next(0, 20)),
-                    ActivitiesPErformed = (r.Next(0, 200)),
+                    ProviderWorkedOn = (r.Next(1, 20)),
+                    TasksPerformed = (r.Next(1, 100)),
+                    ApplicationsSubmitted = (r.Next(1, 100)),
+                    PendingCredentialing = (r.Next(1, 20)),
+                    CompletedCredentialing = (r.Next(1, 20)),
+                    ActivitiesPErformed = (r.Next(1, 200)),
                     PendingCredentialingDetails = PendingCredentialList,
                     ProviderDetails = ProviderList
                 };
@@ -319,7 +326,7 @@ namespace AHC.CD.WebUI.MVC.Helper
 
         #endregion
 
-        #region Get Expiry Licese Details
+        #region Get Expiry License Details
 
         /// <summary>
         /// Get License Data
@@ -359,36 +366,49 @@ namespace AHC.CD.WebUI.MVC.Helper
 
         #endregion
 
-        #region Get Expiry Licese Details Of Provider
+        #region Get Expiry License Details Of Provider
 
-        // In Progress.........
-        public static List<object> GetProvidersLicenseInformation(int providerCount)
+        /// <summary>
+        /// Get Provider licenses Information list
+        /// </summary>
+        /// <param name="providerCount">Number Of Provider Need</param>
+        /// <param name="minDaysLeft">Min days left</param>
+        /// <param name="maxDaysLeft">max days left</param>
+        /// <param name="licenseTypeCode">license type code</param>
+        /// <returns></returns>
+        public static List<object> GetProvidersLicenseInformation(int providerCount, int minDaysLeft, int maxDaysLeft, string licenseTypeCode)
         {
             List<object> providers = new List<object>();
             string[] genders = { "F", "M" };
             string[] groups = { "Access", "Access2", "MIRRA", "ACO" };
             string[] LOBs = { "HMO", "ACO", "FFS", "Hospitalist" };
             string[] status = { "Active", "Inactive" };
+            string[] relationship = { "Employee", "Affiliate" };
 
             for (int i = 0; i < providerCount; i++)
             {
                 int index = r.Next(0, 107);
                 string name = providerNames[index];
+                int day = r.Next(minDaysLeft, maxDaysLeft);
 
                 object provider = new
                 {
                     ProviderID = i + 1,
-                    Salutation = "Dr.",
-                    Name = textInfo.ToTitleCase(name.ToLower()),
-                    Email = name.Replace(" ", String.Empty).ToLower() + "@ahcp.com",
-                    Specialty = textInfo.ToTitleCase(specialties[index].ToLower()),
                     NPI = r.Next(1000, 9999).ToString() + r.Next(1000, 9999).ToString() + r.Next(10, 99),
-                    PrimaryPracticeLocation = primaryPracticLocations[index],
-                    Groups = groups[r.Next(0, 4)],
+                    Relationship = relationship[r.Next(0, 2)],
+                    Name = textInfo.ToTitleCase(name.ToLower()),
+                    LicenseNumber = r.Next(100, 999).ToString() + r.Next(100, 999).ToString() + r.Next(10, 99),
+                    IssueState = usStates[r.Next(0, 59)],
+                    Status = status[r.Next(0, 2)],
+                    ExpiryDate = DateTime.Now.AddDays(day).ToString("MM/dd/yyyy"),
+                    NextAttestationDate = DateTime.Now.AddDays(r.Next(10, 50)).ToString("MM/dd/yyyy"),
+                    DaysLeft = day,
+                    SpecialtyBoardName = specialtyBoards[r.Next(0, 16)],
+                    HospitalName = usaHospitals[r.Next(0, 20)],
+                    InsuranceCarrier = usaInsuranceCarriers[r.Next(0, 25)],
                     Plan = "Humana",
-                    LOB = LOBs[r.Next(0, 4)] + ", " + LOBs[r.Next(0, 4)],
-                    DateOfBirth = new DateTime(r.Next(1960, 2000), r.Next(1, 11), r.Next(1, 28)),
-                    Gender = genders[r.Next(0, 2)]
+                    LOB = LOBs[r.Next(0, 4)],
+                    GroupID = groups[r.Next(0, 4)],
                 };
 
                 providers.Add(provider);
@@ -515,7 +535,187 @@ namespace AHC.CD.WebUI.MVC.Helper
         }
 
         #endregion
-        
+
+        #region Get Provider Person Details
+
+        /// <summary>
+        /// Provider Personal Details
+        /// </summary>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>object, Provider Personal Details</returns>
+        public static object GetProviderPersonalDetails(int ProfileID)
+        {
+            List<object> providers = new List<object>();
+
+            string[] trueFalse = { "YES", "NO" };
+            string[] LOBs = { "HMO", "ACO", "FFS", "Hospitalist" };
+            string[] status = { "Active", "Inactive", "Completed", "Incompleted", "Credentialing Initiation" };
+
+            int index = r.Next(0, 107);
+            string name = providerNames[index];
+
+            object provider = new
+            {
+                ProviderID = r.Next(1, 80),
+                NPI = r.Next(1000, 9999).ToString() + r.Next(1000, 9999).ToString() + r.Next(10, 99),
+                Name = textInfo.ToTitleCase(name.ToLower()),
+                ProviderType = "Medical director",
+                Specialty = textInfo.ToTitleCase(specialties[index].ToLower()),
+                LOB = LOBs[r.Next(0, 4)] + ", " + LOBs[r.Next(0, 4)],
+                BoardCertified = trueFalse[r.Next(0, 2)],
+                BoardName = specialtyBoards[r.Next(0, 16)],
+                PhoneNumber = "+1-" + r.Next(100, 999) + "-" + r.Next(100, 999) + " " + r.Next(1000, 9999),
+                ProfileStatus = new
+                {
+                    LastPSVDate = new DateTime(r.Next(2005, 2016), r.Next(1, 11), r.Next(1, 28)).ToString("MM/dd/yyyy"),
+                    Status = status[r.Next(0, 4)],
+                    ActiveContracts = r.Next(2, 50),
+                    InactiveContracts = r.Next(2, 50),
+                }
+            };
+
+            return provider;
+        }
+
+        #endregion
+
+        #region Get Task Status of Provider
+
+        /// <summary>
+        /// Provider Recent Task Performed
+        /// </summary>
+        /// <param name="taskCount">Number Of Task Counts</param>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Task Performed for Provider</returns>
+        public static List<object> GetProviderTasks(int taskCount, int ProfileID)
+        {
+            List<object> tasks = new List<object>();
+            string[] taskTitles = { "UPDATED DEA INFORMATION", "ADDED NEW CONTRACT WITH AETNA PLAN", "UPDATED CONTRACT GRID", "INITIATED RE-CREDENTIALING FOR WELCARE" };
+            string[] taskDescriptions = { "Recently on demand of the provider, updated the DEA number of the provider.", "The provider got a new contrat with AETNA on his location.", "After the confirmation with the plan, updated the contract gird.", "Initiated new credentialing for the plan WELCARE." };
+
+            for (int i = 0; i < taskCount; i++)
+            {
+                int index = r.Next(0, 4);
+
+                object task = new
+                {
+                    TaskID = r.Next(1, 80),
+                    ActionDate = new DateTime(r.Next(2005, 2016), r.Next(1, 11), r.Next(1, 28)).ToString("MM/dd/yyyy"),
+                    Title = textInfo.ToTitleCase(taskTitles[index].ToLower()),
+                    Description = textInfo.ToTitleCase(taskDescriptions[index].ToLower()),
+                };
+                tasks.Add(task);
+            }
+
+            return tasks;
+        }
+
+        #endregion
+
+        #region Get Credentialing Details of Provider
+
+        /// <summary>
+        /// Provider Credentialing Details
+        /// </summary>
+        /// <param name="count">Number Of Credentialing</param>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Provider Credentialing Details</returns>
+        public static List<object> GetCredentialingDetails(int count, int ProfileID)
+        {
+            List<object> creds = new List<object>();
+
+            for (int i = 0; i < count; i++)
+            {
+                string LocationType = "Secondary";
+                if (i == 0)
+                    LocationType = "Primary";
+
+                object cred = new
+                {
+                    CredentialID = r.Next(1, 80),
+                    LocationType = LocationType,
+                    Location = textInfo.ToTitleCase(primaryPracticLocations[r.Next(0, 107)].ToLower()),
+                    Specilaty = textInfo.ToTitleCase(specialties[r.Next(0, 107)].ToLower()),
+                    AgeLimit = r.Next(0, 20) + "-" + r.Next(30, 60) + " Years",
+                    OfficeHours = new List<object> {
+                        new {
+                            Day = new DateTime(r.Next(2005, 2016), r.Next(1, 11), r.Next(1, 28)).DayOfWeek.ToString(),
+                            Timing = "9:00AM - 3:00PM"
+                        },
+                        new {
+                            Day = new DateTime(r.Next(2005, 2016), r.Next(1, 11), r.Next(1, 28)).DayOfWeek.ToString(),
+                            Timing = "11:00AM - 5:00PM"
+                        }
+                    },
+                    Plans = new List<string> { plans[r.Next(0, 2)], plans[r.Next(2, 4)], plans[r.Next(5, 7)], plans[r.Next(3, 7)] },
+                };
+                creds.Add(cred);
+            }
+
+            return creds;
+        }
+
+        #endregion
+
+        #region Get Hospital List of Provider
+
+        /// <summary>
+        /// Provider Hospitals
+        /// </summary>
+        /// <param name="count">Number Of Hospitals</param>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Provider Hospitals</returns>
+        public static List<string> GetProviderHospitals(int count, int ProfileID)
+        {
+            List<string> hospitals = new List<string>();
+
+            for (int i = 0; i < count; i++)
+            {
+                hospitals.Add(usaHospitals[r.Next(0, 20)]);
+            }
+            return hospitals;
+        }
+
+        #endregion
+
+        #region Get IPA/Group of Provider
+
+        /// <summary>
+        /// Provider IPA/Groups
+        /// </summary>
+        /// <param name="count">Number Of IPA/Groups</param>
+        /// <param name="ProfileID">Profile ID Of Provider</param>
+        /// <returns>List Object, Provider Hospitals</returns>
+        public static List<string> GetProviderGroups(int count, int ProfileID)
+        {
+            List<string> groups = new List<string>();
+            string[] localGroups = { "Champion State of mind", "Access", "Primecare", "FIVE POINT MD CENTER", "ACCESS 2 HEALTHCARE", "MIRRA", "ACO" };
+
+            for (int i = 0; i < count; i++)
+            {
+                groups.Add(localGroups[r.Next(0, 7)]);
+            }
+            return groups;
+        }
+
+        #endregion
+
+        #region Helper Protected
+
+        private static string GetLOBs(int count)
+        {
+            string[] LOBs = { "HMO", "ACO", "FFS", "Hospitalist" };
+            string LOBsString = "";
+            for (int i = 0; i < count; i++)
+            {
+                //LOBsString += 
+            }
+
+            return LOBsString;
+        }
+
+        #endregion
+
         #endregion
     }
 }
