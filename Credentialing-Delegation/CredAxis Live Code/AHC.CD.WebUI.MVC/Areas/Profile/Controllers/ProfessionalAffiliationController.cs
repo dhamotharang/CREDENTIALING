@@ -20,6 +20,7 @@ using AHC.CD.WebUI.MVC.Models;
 using AHC.CD.Business.BusinessModels.ProfileUpdates;
 using Newtonsoft.Json;
 using System.Dynamic;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -115,6 +116,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateProfessionalAffiliation(int profileId, ProfessionalAffiliationDetailViewModel professionalAffiliation)
         {
             string status  = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             ProfessionalAffiliationInfo dataModelProfessionalAffiliation = null;
             bool isCCO = await GetUserRole();
             try
@@ -133,8 +136,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
 
                         await profileManager.UpdateProfessionalAffiliationAsync(profileId, dataModelProfessionalAffiliation);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Affiliation Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Affiliation Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PROFESSIONAL_AFFILIATION_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -149,15 +156,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/ProfessionalAffiliation/UpdateProfessionalAffiliation?profileId=";
 
+                        ProfessionalAffiliationInfo affiliationOldData = await profileUpdateManager.GetProfileDataByID(dataModelProfessionalAffiliation, professionalAffiliation.ProfessionalAffiliationInfoID);
                         dynamic uniqueRecord = new ExpandoObject();
-                        uniqueRecord.FieldName = "Organization Name";
-                        uniqueRecord.Value = professionalAffiliation.OrganizationName + 
-                            (professionalAffiliation.PositionOfficeHeld != null ? " - " + professionalAffiliation.PositionOfficeHeld : "") + 
-                            (professionalAffiliation.Member != null ? " - " + professionalAffiliation.Member : "");
+                        uniqueRecord.FieldName = "Professional Affiliation Detail";
+                        uniqueRecord.Value = affiliationOldData.OrganizationName +
+                            (affiliationOldData.PositionOfficeHeld != null ? " - " + affiliationOldData.PositionOfficeHeld : "") +
+                            (affiliationOldData.Member != null ? " - " + affiliationOldData.Member : "");
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(professionalAffiliation, dataModelProfessionalAffiliation, tracker);
+                        successMessage = SuccessMessage.PROFESSIONAL_AFFILIATION_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -184,7 +193,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, professionalAffiliation = dataModelProfessionalAffiliation }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, professionalAffiliation = dataModelProfessionalAffiliation }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

@@ -1,0 +1,446 @@
+﻿<link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+<style>
+    .pagination li a input {
+        padding: 0;
+        margin: -5px 0;
+    }
+
+/*For sorting of table*/
+    .st-sort-ascent:before {
+        content: '\25B2';
+    }
+
+    .st-sort-descent:before {
+        content: '\25BC';
+    }
+/*--------------------*/
+
+    .progress {
+        position: relative;
+        /*height: 23px;*/
+        height: 18px;
+        margin-bottom: 5px;
+    }
+
+        .progress > .progress-type {
+            position: absolute;
+            left: 0px;
+            font-weight: 700;
+            /*padding: 3px 30px 2px 10px;*/
+            padding: 0px 30px 0px 9px;
+            /*color: rgb(255, 255, 255);*/
+            color: black;
+            background-color: rgba(25, 25, 25, 0);
+        }
+
+        .progress > .progress-completed {
+            position: absolute;
+            right: 0px;
+            font-weight: 700;
+            /*padding: 3px 10px 2px;*/
+            padding: 0px 10px 2px;
+        }
+
+    .progress-bar {
+        /*background-image: linear-gradient(to bottom, rgba(231, 231, 231, 0.18) 0, #075df1 100%);
+        background-image: linear-gradient(to bottom, #e7e7e7 0, #2ea455 100%);*/
+        /*background-image: linear-gradient(to bottom, rgb(231, 231, 231) 0, #3070e0 100%);*/
+        background-image: linear-gradient(to bottom, rgb(231, 231, 231) 0, rgba(255,255,255,0.15) 100%);
+    }
+
+    .progress-bar-full {
+        /*background-image: linear-gradient(to bottom, #e7e7e7 0, #2ea455 100%);*/
+        background-image: linear-gradient(to bottom, rgb(231, 231, 231) 0, #26a04f 100%);
+    }
+
+    .progress-bar-less {
+        background-image: linear-gradient(to bottom, rgb(231, 231, 231) 0, #de0c06 100%);
+    }
+
+    .box {
+        min-height: 34px;
+        /*background-color: #6381db;*/
+        background-color: rgba(190, 201, 232, 0.68);
+        -webkit-box-shadow: 4px 5px 5px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 4px 5px 5px 0px rgba(0,0,0,0.75);
+        box-shadow: 4px 5px 5px 0px rgba(0,0,0,0.75);
+        width: 22%;
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 0;
+    }
+
+        .box:hover #hoverEdit {
+            -webkit-transition: all 0.2s, -webkit-transform 0.2s;
+            transition: all 0.5s, transform 0.5s;
+            /*width: 100%;*/
+            height: 100%;
+            opacity: 1;
+            width: 15%;
+            right: 0;
+        }
+
+    #hoverEdit {
+        position: absolute;
+        height: 100%;
+        right: -100%;
+        width: 100%;
+        background: rgb(167, 184, 230);
+        opacity: 0;
+    }
+
+
+/*--------------------for responsive loading-bar-type biscuits--------------*/
+    .progressbox {
+        background-color: rgba(153, 153, 153, 0.19);
+        -webkit-box-shadow: 4px 5px 5px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 4px 5px 5px 0px rgba(0,0,0,0.75);
+        box-shadow: 4px 5px 5px 0px rgba(0,0,0,0.75);
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 0;
+    }
+
+        .progressbox:hover #hoverProgressEdit {
+            -webkit-transition: all 0.2s, -webkit-transform 0.2s;
+            transition: all 0.5s, transform 0.5s;
+            height: 100%;
+            opacity: 1;
+            width: 15%;
+            right: 0;
+        }
+
+    #hoverProgressEdit {
+        position: absolute;
+        height: 100%;
+        right: -100%;
+        width: 100%;
+        background: rgb(167, 184, 230);
+        opacity: 0;
+    }
+
+    .modal-responsive{
+        width: 177%;margin-left: -37%;
+    }
+/*---------------------------------------------------------------------------------*/
+</style>
+
+<div class="row" ng-init="RefreshData('PRO')">
+    @*<h3 style=" color: #6b98e7; margin-left: 2%;">Provider Summary Status</h3>*@
+    <div id="Provider_Summmary" class="row panel panel-default tab-pane fade in active" ng-cloak>
+
+        <div class="panel-heading">
+            @*<button class="pull-right btn btn-xs" ng-click="ProviderSummaryPanelToggle('Provider_Summary_Panel');" ng-disabled="packageLoading" toggle data-toggle="tooltip" data-placement="top" title="Expand/Collapse"><i class="fa fa-th-list"></i></button>*@
+            <div>Provider Summary</div>
+        </div>
+        <br />
+
+        <div class="form-horizontal" style="padding-left: 14px;" id="Provider_Summary_Panel">
+            <div class="form-group">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-4 col-md-1 col-sm-2 col-xs-3">
+                        <switch name="yesNo" ng-model="yesNo" on="100%" off="Off" class="wide" disabled="false" ng-change="providerProfileStatus=!providerProfileStatus;ShowCompletedStatus()" data-toggle="tooltip" data-placement="top" title="Profile Status">
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <label class="small col-lg-2 col-sm-3 col-xs-2" style="float: left; padding-top: 5px; ">From:</label>
+                        <div class="col-lg-10 col-sm-9 col-xs-10">
+                            <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="FromDateProviderSummary" ng-change="checkDatesProviderSummary()" placeholder="mm/dd/yyyy">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <label class="small col-lg-1 col-sm-2 col-xs-2" style="float: left; padding-top: 5px; ">To:</label>
+                        <div class="col-lg-10 col-sm-9 col-xs-10">
+                            <input type="text" data-val-date="Please enter date in mm/dd/yyyy format." data-date-format="MM/dd/yyyy" data-bs-datepicker="bs-datepicker" class="form-control input-sm" data-ng-model="ToDateProviderSummary" ng-change="checkDatesProviderSummary()" placeholder="mm/dd/yyyy">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                        <div class="visible-xs col-xs-3 hidden-lg hidden-md hidden-sm"></div>
+                        <button id="searchBtn" type="button" class="btn btn-sm btn-info col-lg-5 col-md-5 col-sm-5 col-xs-4" style="margin-left: 24px;" ng-click="searchProviderSummary()" ng-disabled="!searchBtnProviderSummary"><i class=" fa fa-search"></i> Search</button>
+                        <button id="resetBtn" type="button" class="btn btn-sm btn-warning col-lg-5 col-md-5 col-sm-5 col-xs-4 pull-right" ng-click="clearSearchProviderSummary()"><i class=" fa fa-refresh"></i> Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
+                <div>
+                    <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="PrototypeData">
+                        <thead>
+                            <tr @*class="theadColor"*@>
+                                <th st-sort="ProName" st-ratio="10">
+                                    Provider Name
+                                </th>
+                                <th st-sort="NPI" st-ratio="8">
+                                    NPI Number
+                                </th>
+                                <th st-sort="ProStatus" st-ratio="11">
+                                    Profile Status
+                                </th>
+                                <th st-sort-default="false" st-sort="CredCompleted" st-ratio="10">
+                                    Completed Credentialing
+                                </th>
+                                <th st-sort="CredIncompleted" st-ratio="11">
+                                    Pending Credentialing
+                                </th>
+                                <th st-sort="ccoAssigned" st-ratio="10">
+                                    CCO Assigned
+                                </th>
+                                <th st-ratio="4">Action</th>
+                            </tr>
+                            <tr>
+                                <td st-ratio="10"><input st-search="Name" type="text" placeholder="Filter Provider Name" class="form-control input-sm"></td>
+                                <td st-ratio="8"><input st-search="NPI Number" type="text" placeholder="NPI" class="form-control input-sm" /></td>
+                                <td st-ratio="11"><input st-search="ProfileStatus" type="text" placeholder="Profile Status" class="form-control input-sm" /></td>
+                                <td st-ratio="10"><input st-search="CredentialingCompletedStatus" type="text" placeholder="Completed Credentialing" class="form-control input-sm" /></td>
+                                <td st-ratio="11"><input st-search="CredentialingIncompletedStatus" type="text" placeholder="Pending Credentialing" class="form-control input-sm" /></td>
+                                <td st-ratio="10"><input st-search="CCO" type="text" placeholder="CCO Assigned" class="form-control input-sm" /></td>
+                                <td st-ratio="4"></td>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="c in pc.displayed">
+                            <tr>
+                                @*<td>{{c.Name}}<i class="fa fa fa-star pull-right" ng-if="c.ProviderCategory=='New'" style="color:green" tooltip data-toggle="tooltip" data-placement="top" title="New Provider"></i></td>*@
+                                <td>{{c.Name}}<span class="pull-right" ng-if="c.ProviderCategory=='New'" style="color: green; font-size: x-small;cursor:default" tooltip data-toggle="tooltip" data-placement="top" title="New Provider">New</span></td>
+                                <td>{{c.NPI}}</td>
+                                <td ng-click="ShowProfileCompletionModal()" style="cursor:pointer"><i class="fa fa-check-square" ng-if="c.ProfileStatus=='100'" style="color:green"></i><i class="fa fa-long-arrow-down" ng-if="c.ProfileStatus!='100'" style="color:red" tooltip data-toggle="tooltip" data-placement="top" title="Incomplete Profile"></i>&nbsp;&nbsp;{{c.ProfileStatus}}%</td>
+                                <td>{{c.CredentialingCompletedStatus}}</td>
+                                <td ng-click="CredentialingIncompletePanelToggle('PendingCredentialsRow'+ $index )" style="color:red; cursor:pointer"><u>{{c.CredentialingIncompletedStatus}}</u></td>
+                                <td>{{c.CCO||'Not Available'}}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="View Profile"><i class="glyphicon glyphicon-forward"></i></a>
+                                </td>
+                            </tr>
+
+                            @* --To display the pending credentialing for a particular------ *@
+                            <tr>
+                                <td colspan="8" ng-attr-id="{{'PendingCredentialsRow' + $index}}" id="PendingCredentialsRow" hidden>
+                                    <div>
+                                        <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words'>
+
+                                            <thead>
+                                                <tr class="theadColor">
+                                                    <th>
+                                                        Plan Name
+                                                    </th>
+                                                    <th>
+                                                        Start Date
+                                                    </th>
+                                                    <th>
+                                                        Initiated By
+                                                    </th>
+                                                    <th>
+                                                        Phase Of Credentialing
+                                                    </th>
+                                                    <th>
+                                                        Credentialing Status
+                                                    </th>
+                                                    <th>
+                                                        No. of Days Pending From
+                                                    </th>
+                                                    <th>
+                                                        Avg. Time To Complete(Hrs)
+                                                    </th>
+                                                    <th>
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="data in credDetailsData">
+                                                    <td>{{data.PlanName}}</td>
+                                                    <td>{{data.Start}}</td>
+                                                    <td>{{data.Initiated}}</td>
+                                                    <td>{{data.CredPhase}}</td>
+                                                    <td>{{data.CredStat}}</td>
+                                                    <td>{{data.Pending}}</td>
+                                                    <td>{{data.AvgTime}}</td>
+                                                    <a href="#"</a>
+                                                    <td>
+                                                        <a class="btn btn-xs btn-info" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Credentialing/CnD/Application/2' tooltip data-toggle="tooltip" data-placement="top" title="View Application"><i class="fa fa-caret-right"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-if="pc.displayed.length == 0">
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <i>No Data Available</i>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="8"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@* Sample for Biscuit loading *@
+@*<div class="form-inline" id="">
+    <div ng-repeat="section in ProfileCompletionStatus" class="col-lg-12 form-group">
+        <div ng-if="$index % 4 == 0" ng-init="$lowerLimit=$index; $upperLimit=$index+3;">
+            <div ng-repeat="section in ProfileCompletionStatus" ng-if="$index >= $lowerLimit && $index <=$upperLimit" class="col-lg-3 col-md-3 col-xs-12 form-group pad-bottom-15 " ng-init="ParentIndex = $index">
+                <div class="col-lg-12 col-md-12 col-xs-12 progressbox"  >
+                    <div class="col-lg-10 col-md-10 col-xs-10"  style="margin-top:6px">
+                        <label>{{section.SectionName}}</label>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-xs-2" style="margin-top:6px">
+                        <label>
+                            {{section.PercentageOfCompletion}}%
+                        </label>
+                    </div>
+                    <div class="progress-bar" ng-style="{ 'width': section.PercentageOfCompletion+'%'}" ng-class="{'progress-bar-full': section.PercentageOfCompletion == 100, 'progress-bar-less': section.PercentageOfCompletion < 25}" style="width: 40%; /* height: 4px; */ position: absolute; z-index: -1; margin-left: -5%;"></div>
+                    <div id="hoverProgressEdit">
+                        <a style="color:black" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1{{section.SectionId}}'><i class="fa fa-edit" style="font-size: x-large;margin-top: 6px;margin-left: 23%;" toggle data-toggle="tooltip" data-placement="top" title="Edit"></i></a>
+                    </div>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
+@* Modal for Profile Status - 1 -----------------------------------*@
+@*<a data-toggle="modal" href="#profileStatusModal" class="btn btn-primary">Launch profile modal-1</a>
+        <div class="modal fade" id="profileStatusModal" role="dialog">
+            <div class="modal-dialog">
+
+                <div class="modal-content" style="width: 195%;margin-left: -46%;">
+                    <div class="modal-header" style="background: linear-gradient(to bottom, rgb(231, 231, 231) 0, #3070e0 100%);">
+
+                        <label class="modal-title"><i class="fa fa-flag" style="margin-right:5px"></i>Profile Status Summary</label>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div ng-repeat="section in ProfileCompletionStatus" class=" zero-padding-left-right box" style="height: 36px; float: left; margin-left: 15px; padding-right: 10px;">
+                                <div class="">
+                                    <div class="col-lg-10" style="margin-top:6px">
+                                        <label>{{section.SectionName}}</label>
+                                    </div>
+                                    <div class="col-lg-2" style="margin-top:6px">
+                                        <label>
+                                            {{section.PercentageOfCompletion}}%
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="progress-bar" ng-style="{ 'width': section.PercentageOfCompletion+'%','height':'4px' }" ng-class="{'progress-bar-full': section.PercentageOfCompletion == 100, 'progress-bar-less': section.PercentageOfCompletion < 40}" style="height:2px"></div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" id="rejectBtn" ng-click="">Cancel</button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+        </div>
+
+    </div>*@
+
+
+@* Modal for Profile Status - 2 --------------------------------------*@
+@*<a data-toggle="modal" href="#profileStatusModal" class="btn btn-primary">Launch profile modal-2</a>*@
+@*<div class="modal fade" id="profileStatusModal" role="dialog">
+    <div class="modal-dialog">
+
+        <div class="modal-content" style="width: 166%;margin-left: -34%;">
+            <div class="modal-header" style="background: #154c86">
+
+                <label class="modal-title" style="color:white"><i class="fa fa-flag" style="margin-right:5px"></i>Profile Status Summary</label>
+                <i class="fa fa-close pull-right" style="color:white; font-size:large; cursor:pointer" data-dismiss="modal" toggle data-toggle="tooltip" data-placement="top" title="Close"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div ng-attr-id="{{'ProfileSection' + $index}}" ng-repeat="section in ProfileCompletionStatus" class=" zero-padding-left-right box" style="height: 36px; float: left; margin-left: 15px; padding-right: 10px;">
+                        <div>
+                            <div class="col-lg-10" style="margin-top:6px">
+                                <label>{{section.SectionName}}</label>
+                            </div>
+
+                            <div class="col-lg-2" style="margin-top:6px">
+                                <label>
+                                    {{section.PercentageOfCompletion}}%
+                                </label>
+                            </div>
+                        </div>
+                        <div class="progress-bar" ng-style="{ 'width': section.PercentageOfCompletion+'%'}" ng-class="{'progress-bar-full': section.PercentageOfCompletion == 100, 'progress-bar-less': section.PercentageOfCompletion < 25}" style="width: 40%; /* height: 4px; */ position: absolute; z-index: -1;"></div>
+                        <div id="hoverEdit">
+                            <a style="color:black" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1{{section.SectionId}}'><i class="fa fa-edit" style="font-size: x-large;margin-top: 6px;margin-left: 23%;" toggle data-toggle="tooltip" data-placement="top" title="Edit"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>*@
+
+
+@* Modal for Profile Status - responsive--------------------------------------*@
+<div class="modal fade" id="profileStatusModal" role="dialog">
+    <div class="modal-dialog">
+
+        <div class="modal-content" @*style="width: 177%;margin-left: -37%;"*@ id="modalContent"> 
+            <div class="modal-header" style="background: #154c86">
+
+                <label class="modal-title" style="color:white"><i class="fa fa-flag" style="margin-right:5px"></i>Profile Status Summary</label>
+                <i class="fa fa-close pull-right" style="color:white; font-size:large; cursor:pointer" data-dismiss="modal" toggle data-toggle="tooltip" data-placement="top" title="Close"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-inline" id="">
+                        <div ng-repeat="section in ProfileCompletionStatus" class="col-lg-12 form-group">
+                            <div ng-if="$index % 4 == 0" ng-init="$lowerLimit=$index; $upperLimit=$index+3;">
+                                <div ng-repeat="section in ProfileCompletionStatus" ng-if="$index >= $lowerLimit && $index <=$upperLimit" class="col-lg-3 col-md-3 col-xs-12 form-group pad-bottom-15 " ng-init="ParentIndex = $index">
+                                    <div class="col-lg-12 col-md-12 col-xs-12 progressbox">
+                                        <div class="col-lg-10 col-md-10 col-xs-10" style="margin-top:6px">
+                                            <label>{{section.SectionName}}</label>
+                                        </div>
+
+                                        <div class="col-lg-2 col-md-2 col-xs-2" style="margin-top:6px">
+                                            <label>
+                                                {{section.PercentageOfCompletion}}%
+                                            </label>
+                                        </div>
+                                        <div class="progress-bar" ng-style="{ 'width': section.PercentageOfCompletion+'%'}" ng-class="{'progress-bar-full': section.PercentageOfCompletion == 100, 'progress-bar-less': section.PercentageOfCompletion < 25}" style="width: 40%; /* height: 4px; */ position: absolute; z-index: -1; margin-left: -5%;"></div>
+                                        <div id="hoverProgressEdit">
+                                            <a style="color:black" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1{{section.SectionId}}'><i class="fa fa-edit" style="font-size: x-large;margin-top: 6px;margin-left: 23%;" toggle data-toggle="tooltip" data-placement="top" title="Edit"></i></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@*@Html.Partial("~/Views/Prototypes/Reminders/_setReminder.cshtml")*@

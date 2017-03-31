@@ -1524,7 +1524,7 @@ namespace AHC.CD.Business.MasterData
         }
 
 
-        public async Task<Facility> GetMasterFacilityInformationByIDAsync(int facilityID)
+        public async Task<Facility> GetMasterFacilityInformationByIDAsync(int? facilityID)
         {
             try
             {
@@ -1540,11 +1540,11 @@ namespace AHC.CD.Business.MasterData
 
         }
 
-        public async Task<Hospital> GetHospitalByIDAsync(int haopitalID)
+        public async Task<Hospital> GetHospitalByIDAsync(int? hospitalID)
         {
             try
             {
-                var hospitalData = await repositoryManager.FindAsync<Hospital>(s => s.HospitalID == haopitalID && s.Status.Equals(StatusType.Active.ToString()));
+                var hospitalData = await repositoryManager.FindAsync<Hospital>(s => s.HospitalID == hospitalID && s.Status.Equals(StatusType.Active.ToString()));
 
                 return hospitalData;
             }
@@ -1555,7 +1555,7 @@ namespace AHC.CD.Business.MasterData
             }
         }
 
-        public async Task<InsuranceCarrier> GetInsuranceCarrierByIDAsync(int insuranceCarrierID)
+        public async Task<InsuranceCarrier> GetInsuranceCarrierByIDAsync(int? insuranceCarrierID)
         {
             try
             {
@@ -1571,7 +1571,7 @@ namespace AHC.CD.Business.MasterData
         }
 
 
-        public async Task<SpecialtyBoard> GetSpecialtyBoardByIDAsync(int boardID)
+        public async Task<SpecialtyBoard> GetSpecialtyBoardByIDAsync(int? boardID)
         {
             try
             {
@@ -1602,7 +1602,7 @@ namespace AHC.CD.Business.MasterData
             }
         }
 
-        public async Task<HospitalContactInfo> GetHospitalContactInfoByIDAsync(int contactID)
+        public async Task<HospitalContactInfo> GetHospitalContactInfoByIDAsync(int? contactID)
         {
             try
             {
@@ -2032,6 +2032,21 @@ namespace AHC.CD.Business.MasterData
                 return data;
             }
 
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<Entities.Credentialing.Plan> GetPlanByIDAsync(int planID)
+        {
+            try
+            {
+                var planData = await repositoryManager.FindAsync<Plan>(s => s.PlanID == planID);
+
+                return planData;
+            }
             catch (Exception)
             {
 

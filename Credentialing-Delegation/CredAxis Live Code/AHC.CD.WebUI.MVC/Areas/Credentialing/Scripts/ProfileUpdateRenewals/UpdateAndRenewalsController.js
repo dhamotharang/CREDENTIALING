@@ -1,6 +1,6 @@
 ﻿UpdateAndRenewalsApp.controller("UpdateAndRenewalsController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "$loadash", "UpdateAndRenewalsService", "UpdateAndRenewalsFactory", "tracking", function ($rootScope, $scope, toaster, $timeout, $filter, $loadash, UpdateAndRenewalsService, UpdateAndRenewalsFactory, tracking) {
 
-    //=================================== Variable Declaration Start ===================================
+     //=================================== Variable Declaration Start ===================================
 
     var $self = this;
     $scope.popoverIsVisible = false;
@@ -84,7 +84,7 @@
     $scope.CredRequestChange = function () {
         $scope.CredRequestSwitchButton = !$scope.CredRequestSwitchButton;
         if ($scope.CredRequestSwitchButton) {
-            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Active" });
+            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Pending" });
         }
         else {
             $rootScope.TempCredentialingRequests = $rootScope.CredentialingRequests.filter(function (CredentialingRequest) { return CredentialingRequest.CurrentStatus == "Approved" || CredentialingRequest.CurrentStatus == "Rejected" || CredentialingRequest.CurrentStatus == "Dropped" });
@@ -231,7 +231,7 @@
                 CredRequestCount: result.data.REQUESTCOUNT,
                 HistoryCount: result.data.HISTORYCOUNT
             };
-            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Active" });
+            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Pending" });
             $scope.MasterSettings = $filter("MasterSettingFiltter")("Requests");
             $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
             $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
@@ -243,7 +243,7 @@
         $scope.LoadingStatus = true;
         $scope.RejectStatus = false;
         $rootScope.TemporaryObject = angular.copy(Data);
-        $rootScope.TemporaryObject.UniqueData = JSON.parse($rootScope.TemporaryObject.UniqueData);
+        $rootScope.TemporaryObject.UniqueData = JSON.parse($rootScope.TemporaryObject.UniqueData);       
         var data = {
             trackerId: Data.ProfileUpdatesTrackerId,
             status: Data.ApprovalStatus,
@@ -286,7 +286,7 @@
             $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
             $scope.SavingStatus = false;
             UpdateAndRenewalsFactory.modalDismiss();
-            toaster.pop('Success', "Success", ApprovalType);
+            toaster.pop('Success', "Success", "Credentialing Request " + ApprovalType + " Successfully");
 
         }, function (error) {
             UpdateAndRenewalsFactory.modalDismiss();
@@ -295,6 +295,7 @@
     }
     $scope.SetRejectionDropAndOnHoldForProfileUpdatesAndRenewal = function (Data, ApprovalStatus) {
         $scope.SavingStatus = true;
+        var successMessage = "";
         var data = {
             tracker: {
                 TrackerId: Data.ProfileUpdatesTrackerId,
@@ -325,7 +326,7 @@
             $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
             $scope.SavingStatus = false;
             UpdateAndRenewalsFactory.modalDismiss();
-            toaster.pop('Success', "Success", ApprovalStatus);
+            toaster.pop('Success', "Success", Data.Modification + " Request " + ApprovalStatus + " Successfully");
         }, function (error) {
             $scope.SavingStatus = false;
             UpdateAndRenewalsFactory.modalDismiss();
@@ -353,7 +354,7 @@
                 $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
                 $scope.SavingStatus = false;
                 UpdateAndRenewalsFactory.modalDismiss();
-                toaster.pop('Success', "Success", 'Approved');
+                toaster.pop('Success', "Success", Data.Modification + " Request " + ApprovalStatus + " Successfully");
             }, function (error) {
                 $scope.SavingStatus = false;
                 UpdateAndRenewalsFactory.modalDismiss();
@@ -396,7 +397,7 @@
                     }
                     $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
                     $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
-                    toaster.pop('Success', "Success", ProfileUpdaetIDs.length+" Appprovd");
+                    toaster.pop('Success', "Success", ProfileUpdaetIDs.length + " " + $scope.SelectedData[0].Modification + " Request Approved Successfully");
                     if (ProfileUpdaetIDs.length != Mainresults.length) {
                         toaster.pop('error', "", (Mainresults.length - ProfileUpdaetIDs.length + ' Failed ' + 'Please try after sometime !!!'));
                     }
@@ -430,4 +431,26 @@
 
     //==================================== Crud Operations Start =========================================
 
+    //==================================== Real time Updates Start ==============================================
+
+    // Declare a proxy to reference the hub.
+    //var cnd = $.connection.cnDHub;
+
+    //$.connection.hub.start().done(function () {
+    //    //cnd.server.notifyPendingRequest();
+    //});
+
+    //cnd.client.NotifyPendingRequestData = function () {
+
+    //    if ($scope.MasterSettings.ActionType == "Updates") {
+    //        $scope.GetAllUpdatesAndRenewals($scope.MasterSettings.ActionType);
+    //    } else if ($scope.MasterSettings.ActionType == "Renewals") {
+    //        $scope.GetAllUpdatesAndRenewals($scope.MasterSettings.ActionType);
+    //    }
+    //    else if ($scope.MasterSettings.ActionType == "Requests") {
+    //        GetAllCredentialingRequests($scope.MasterSettings.ActionType);
+    //    }
+    //}
+
+    //==================================== Real time Updates end =============================================
 }]);

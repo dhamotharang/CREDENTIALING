@@ -146,6 +146,9 @@ profileApp.controller('professionalAppCtrl', ['$scope', '$rootScope', '$http', '
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.professionalAffiliation.TableState = true;
+                            }
                             data.professionalAffiliation.StartDate = ConvertDateFormat(data.professionalAffiliation.StartDate);
                             data.professionalAffiliation.EndDate = ConvertDateFormat(data.professionalAffiliation.EndDate);
 
@@ -158,7 +161,8 @@ profileApp.controller('professionalAppCtrl', ['$scope', '$rootScope', '$http', '
                                 $scope.ProfessionalAffiliations[index] = data.professionalAffiliation;
                                 $rootScope.operateViewAndAddControl(index + '_viewpa');
                                 $scope.ProfessionalAffiliationPendingRequest = true;
-                                messageAlertEngine.callAlertMessage("updatedProfessionalAffiliation" + index, "Professional Affiliation updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedProfessionalAffiliation" + index, "Professional Affiliation updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedProfessionalAffiliation" + index, data.successMessage, "success", true);
                             }
 
                             $scope.IsProfessionalAffiliationHasError = false;

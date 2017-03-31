@@ -1,0 +1,215 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Initiation.Models.ProfileViewModel
+
+<form id="PersonalInformationForm">
+    <div class="form-style">
+        <fieldset>
+            <legend>
+                Personal Information
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-2 form-group" ng-init="PersonalDetail.SalutationType = 0">
+                    @Html.LabelFor(model => model.PersonalDetail.SalutationType, new { @class = "control-label small" })
+                    @Html.EnumDropDownListFor(Model => Model.PersonalDetail.SalutationType, "-- select --", new { @class = "form-control input-sm", data_ng_model = "PersonalDetail.SalutationType", data_ng_change = "getSalutationTextValue()" })
+                    @Html.ValidationMessageFor(model => model.PersonalDetail.SalutationType, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.PersonalDetail.FirstName, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PersonalDetail.FirstName, new { @class = "form-control input-sm", placeholder = "first name", data_ng_model = "PersonalDetail.FirstName" })
+                    @Html.ValidationMessageFor(model => model.PersonalDetail.FirstName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.PersonalDetail.MiddleName, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PersonalDetail.MiddleName, new { @class = "form-control input-sm", placeholder = "middle name", data_ng_model = "PersonalDetail.MiddleName" })
+                    @Html.ValidationMessageFor(model => model.PersonalDetail.MiddleName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.PersonalDetail.LastName, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PersonalDetail.LastName, new { @class = "form-control input-sm", placeholder = "last name", data_ng_model = "PersonalDetail.LastName" })
+                    @Html.ValidationMessageFor(model => model.PersonalDetail.LastName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-1 form-group" style="padding-left:0px;">
+                    @Html.LabelFor(model => model.PersonalDetail.Suffix, new { @class = "control-label small" })
+                    @Html.TextBoxFor(model => model.PersonalDetail.Suffix, new { @class = "form-control input-sm", placeholder = "suffix", data_ng_model = "PersonalDetail.Suffix" })
+                    @Html.ValidationMessageFor(model => model.PersonalDetail.Suffix, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-2 form-group">
+                    @Html.LabelFor(model => model.PersonalDetail.GenderType, new { @class = "control-label small" })
+                    <div>
+                        @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.GenderType)))
+                        {
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(model => model.PersonalDetail.GenderType, (int)value, new { data_ng_model = "PersonalDetail.GenderType" }) @value.ToString()
+                            </label>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.PersonalDetail.GenderType, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.PersonalDetail.ProviderLevelID, htmlAttributes: new { @class = "control-label small" })
+                    <div>
+                        <select class="form-control input-sm" data-ng-model="PersonalDetail.ProviderLevelID" ng-change="getProviderLevelName(PersonalDetail.ProviderLevelID)" data-val="true" data-val-required="Provider Level Is Required." id="ProviderLevelID" name="PersonalDetail.ProviderLevelID">
+                            <option value="" ng-selected="!PersonalDetail.ProviderLevelID" style="display:none;">--Select--</option>
+                            <option ng-repeat="providerLevel in ProviderLevels" value="{{providerLevel.ProviderLevelID}}" ng-selected="providerLevel.ProviderLevelID==PersonalDetail.ProviderLevelID">{{providerLevel.Name}}</option>
+                        </select>
+                        @Html.ValidationMessageFor(model => model.PersonalDetail.ProviderLevelID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-lg-3 form-group">
+                    @Html.LabelFor(model => model.PersonalDetail.ProviderTitles, new { @class = "control-label small" })
+                    <div>
+                        <input class="form-control input-sm" ng-class="{'input-validation-error':PersonalDetail.ProviderTitles.length == 0 && isHasError}" ng-model="searchproviderType" ng-focus="showContryCodeDiv('DemographicsProviderTypesSearchResultDiv')" placeholder="select title" />
+
+                        <span ng-if="PersonalDetail.ProviderTitles.length == 0 && isHasError" class="text-danger field-validation-error">
+                            <span>Please select the Title.</span>
+                        </span>
+
+                        <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="DemographicsProviderTypesSearchResultDiv">
+                            <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                                <tbody>
+                                    <tr ng-repeat="providertype in filteredProviderTypeResults = (ProviderTypes | filter:searchproviderType)" ng-click="SelectProviderType(providertype)" class="pointer">
+                                        <td>{{providertype.Title}}</td>
+                                    </tr>
+                                    <tr ng-if="ProviderTypes.length == 0">
+                                        <td>No data..... </td>
+                                    </tr>
+                                    <tr ng-if="ProviderTypes.length > 0 && filteredProviderTypeResults.length == 0">
+                                        <td>Title not found..... </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.PersonalDetail.ProviderTitles, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div ng-if="PersonalDetail.ProviderTitles.length > 0" class="col-lg-4 form-group">
+                    <label class="control-label small">Selected Titles : </label>
+                    <div>
+                        <span ng-repeat="tpt in PersonalDetail.ProviderTitles track by $index">
+                            <span class="label label-provider-type">
+                                {{tpt.ProviderType.Title}}
+                                <i class="fa fa-close pointer" ng-click="RemoveProviderType(tpt)"></i>
+                                <input type="hidden" name="PersonalDetail.ProviderTitles[{{$index}}].ProviderTypeId" value="{{tpt.ProviderTypeId}}" />
+                                <input type="hidden" name="PersonalDetail.ProviderTitles[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+                            </span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                Contact Information
+            </legend>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.HomeAddresses[0].Street, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.HomeAddresses[0].Street, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddresses.Street", placeholder = "street address" } })
+                    @Html.ValidationMessageFor(model => model.HomeAddresses[0].Street, "", new { @class = "text-danger" })
+
+                    @Html.HiddenFor(model => model.HomeAddresses[0].IsPresentlyStayingYesNoOption, new { ng_value = "1" })
+                    @Html.HiddenFor(model => model.HomeAddresses[0].AddressPreferenceType, new { ng_value = "1" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.HomeAddresses[0].UnitNumber, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.HomeAddresses[0].UnitNumber, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddresses.UnitNumber", placeholder = "apartment/unit number" } })
+                    @Html.ValidationMessageFor(model => model.HomeAddresses[0].UnitNumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.HomeAddresses[0].City, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.HomeAddresses[0].City, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddresses.City", placeholder = "city name", data_ng_change = "addressHomeAutocomplete(HomeAddresses.City)", data_selectmethod = "selectedLocation", data_autocomplete = "addressautocomplete" } })
+                    @Html.ValidationMessageFor(model => model.HomeAddresses[0].City, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.HomeAddresses[0].State, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.HomeAddresses[0].State, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddresses.State", placeholder = "state" } })
+                    @Html.ValidationMessageFor(model => model.HomeAddresses[0].State, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.HomeAddresses[0].ZipCode, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.HomeAddresses[0].ZipCode, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddresses.ZipCode", placeholder = "zip code" } })
+                    @Html.ValidationMessageFor(model => model.HomeAddresses[0].ZipCode, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.HomeAddresses[0].Country, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.HomeAddresses[0].Country, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddresses.Country", placeholder = "country" } })
+                    @Html.ValidationMessageFor(model => model.HomeAddresses[0].Country, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.HomeAddresses[0].County, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.HomeAddresses[0].County, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "HomeAddresses.County", placeholder = "county" } })
+                    @Html.ValidationMessageFor(model => model.HomeAddresses[0].County, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    @Html.LabelFor(model => model.ContactDetail.EmailIDs[0].EmailAddress, htmlAttributes: new { @class = "control-label small" })
+                    @Html.EditorFor(model => model.ContactDetail.EmailIDs[0].EmailAddress, new { htmlAttributes = new { @class = "form-control input-sm", data_ng_model = "ContactDetail.EmailAddress", placeholder = "email id", data_ng_change = "IsEmailUnique(ContactDetail.EmailAddress)" } })
+                    @Html.ValidationMessageFor(model => model.ContactDetail.EmailIDs[0].EmailAddress, "", new { @class = "text-danger" })
+
+                    @Html.HiddenFor(model => model.ContactDetail.EmailIDs[0].PreferenceType, new { ng_value = "1" })
+                    @Html.HiddenFor(model => model.ContactDetail.EmailIDs[0].StatusType, new { ng_value = "1" })
+
+                    <span ng-if="EmailHasError" class="text-danger field-validation-error">
+                        <span>Email Address * Already Used!.</span>
+                    </span>
+                </div>
+                <div class="col-lg-4 form-group" ng-init="ContactDetail.CountryCode='+1'">
+                    @Html.LabelFor(model => model.ContactDetail.PhoneDetails[0].Number, htmlAttributes: new { @class = "control-label small" })
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default countryCodeClass" ng-click="showContryCodeDiv('MobileNumberContact')" tooltip data-toggle="tooltip" data-placement="top" title="Select Country Code"> {{ContactDetail.CountryCode}} <span class="caret"></span></button>
+                        </span>
+                        <div class="countryDailCodeContainer popover fade bottom in" role="tooltip" id="MobileNumberContact">
+                            <div class="arrow"></div>
+                            <h3 class="popover-title">Select Country Dial Code</h3>
+                            <div class="popover-content">
+                                <select name="ContactDetail.PhoneDetails[0].CountryCode" ng-model="ContactDetail.CountryCode" id="ContactDetail_PhoneDetails_0__CountryCode" data-val="true" data-val-profileremote="Phone Number Used!!" data-val-profileremote-isrequiredproperty="True" data-val-profileremote-parametername="Number" data-val-profileremote-url="/Validation/IsContactNumberDoesNotExistsAsync" data-val-required="Please select the Country Code.">
+                                    <option ng-repeat="code in CountryDailCodes" value="{{code.dial_code}}" ng-selected="code.dial_code == ContactDetail.CountryCode">{{code.name}}({{code.dial_code}})</option>
+                                </select>
+                            </div>
+                        </div>
+                        @Html.EditorFor(model => model.ContactDetail.PhoneDetails[0].Number, new { htmlAttributes = new { @class = "form-control", data_ng_model = "ContactDetail.MobileNumber", placeholder = "mobile number", tooltip = true, data_toggle = "tooltip", data_placement = "top", title = "For example if your number is (352)515-3633, then please enter it as 3525153633" } })
+                    </div>
+
+                    @Html.ValidationMessageFor(model => model.ContactDetail.PhoneDetails[0].Number, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.ContactDetail.PhoneDetails[0].CountryCode, "", new { @class = "text-danger" })
+
+                    @Html.HiddenFor(model => model.ContactDetail.PhoneDetails[0].PhoneTypeEnum, new { ng_value = "3" })
+                    @Html.HiddenFor(model => model.ContactDetail.PhoneDetails[0].PreferenceType, new { ng_value = "1" })
+                    @Html.HiddenFor(model => model.ContactDetail.PhoneDetails[0].StatusType, new { ng_value = "1" })
+
+                    <span ng-if="MobileHasError" class="text-danger field-validation-error">
+                        <span>Mobile Number * Already Used!.</span>
+                    </span>
+
+                    <div ng-if="ContactDetail.MobileNumber">
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[0].PreferredWrittenContactType, new { ng_value = "3" })
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[0].StatusType, new { ng_value = "1" })
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[0].PreferredIndex, new { ng_value = "1" })
+
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[1].PreferredWrittenContactType, new { ng_value = "4" })
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[1].StatusType, new { ng_value = "1" })
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[1].PreferredIndex, new { ng_value = "2" })
+                    </div>
+
+                    <div ng-if="!ContactDetail.MobileNumber">
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[0].PreferredWrittenContactType, new { ng_value = "4" })
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[0].StatusType, new { ng_value = "1" })
+                        @Html.HiddenFor(model => model.ContactDetail.PreferredContacts[0].PreferredIndex, new { ng_value = "1" })
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-lg-12">
+                <input id="next1" type="button" value="Continue" ng-click="ContractInfoForm('PersonalInformationForm')" class="btn btn-primary btn-sm pull-right" />
+                <input id="next1" type="button" value="Previous" ng-click="nextForm(0)" class="btn btn-warning btn-sm pull-left" />
+            </div>
+        </fieldset>
+    </div>
+</form>

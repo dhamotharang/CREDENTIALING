@@ -1,0 +1,65 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.Profile.Models.PracticeLocationInformation.PracticeProviderViewModel
+
+@*ng-if="visibilitySecondControl == 'SupervisingProviderEdit'"*@
+<div id="SupervisingProviderDiv">
+    <form id="SupervisingProvider{{$index}}">
+        <span ng-if="PracticeLocationDetail.PracticeLocationDetailID">
+            @Html.HiddenFor(model => model.PracticeLocationID, new { ng_value = "PracticeLocationDetail.PracticeLocationDetailID" })
+        </span>
+        <span ng-if="tempThirdObject.PracticeProviderID">
+            @Html.HiddenFor(model => model.PracticeProviderID, new { ng_value = "tempThirdObject.PracticeProviderID" })
+            @Html.HiddenFor(model => model.RelationType, new { ng_value = "tempThirdObject.RelationType" })
+        </span>
+        @Html.HiddenFor(model => model.PracticeType, new { Value = @AHC.CD.Entities.MasterData.Enums.PracticeType.Supervisor })
+        <div ng-if="!tempThirdObject.PracticeProviderID">
+            <div class="col-md-12 form-group zero-padding-left-right-div">
+                <div class="form-group col-md-6">
+                    <label class="control-label small">Use Existing Supervising Providers?</label>
+                    <div>
+                        <label  class="radio-inline"><input id="Yes_ Existing_SupervisingProvider" type="radio" name="RelationType" value="@AHC.CD.Entities.MasterData.Enums.RelationType.Internal" ng-model="tempThirdObject.RelationType" /> Yes </label>
+                        <label  class="radio-inline"><input id="No_ Existing_SupervisingProvider" type="radio" name="RelationType" value="@AHC.CD.Entities.MasterData.Enums.RelationType.External" ng-model="tempThirdObject.RelationType" /> No</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 pull-right">
+                    <label class="control-label small">Select Supervising Provider </label>
+                    <input id="Select_SupervisingProvider" type="text" ng-disabled="tempThirdObject.RelationType != '@AHC.CD.Entities.MasterData.Enums.RelationType.Internal'" class="form-control input-sm" name="tempSupervisingProvider" ng-model="practitioner" data-practitioners="supervisingProviders" data-onselect="setSupervisingProvider" data-msg="Supervising Provider" data-autocomplete="practitioner" practitionersearch />
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 zero-padding-left-right-div" ng-if="tempThirdObject.FirstName || tempThirdObject.LastName || tempThirdObject.NPINumber || tempThirdObject.RelationType == 'External'">
+            <div class="col-lg-3">
+                @Html.LabelFor(model => model.FirstName, new { @class = "cotrol-label small" })
+                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", data_ng_model = "tempThirdObject.FirstName" })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-3">
+                @Html.LabelFor(model => model.MiddleName, new { @class = "cotrol-label small" })
+                @Html.TextBoxFor(model => model.MiddleName, new { @class = "form-control input-sm", data_ng_model = "tempThirdObject.MiddleName" })
+                @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-3">
+                @Html.LabelFor(model => model.LastName, new { @class = "cotrol-label small" })
+                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-sm", data_ng_model = "tempThirdObject.LastName" })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-3">
+                @Html.LabelFor(model => model.NPINumber, new { @class = "cotrol-label small" })
+                @Html.TextBoxFor(model => model.NPINumber, new { @class = "form-control input-sm", data_ng_model = "tempThirdObject.NPINumber", id = "NpiNumber_SupervisingProvider" })
+                @Html.ValidationMessageFor(model => model.NPINumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div>
+            <input type="hidden" name="StatusType" value="1" />
+        </div>
+        <div class="clearfix"></div><br />
+        <div ng-show="activeMessageDiv=='supervisingProvidersErrorMsg'" class="alert alert-danger" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 form-group">
+            <button id="Cancel_SupercisingProvider" class="btn btn-warning btn-sm" ng-click="SupervisingProviderEdit=false; operateThirdCancelControl('SupervisingProviderDiv'); resetSupervisingProvider();">Cancel</button>
+            <button id="Update_SupervisingProvider" class="btn btn-success btn-sm pull-right" ng-disabled="!(tempThirdObject.FirstName || tempThirdObject.LastName || tempThirdObject.NPINumber)" ng-click="addSupervisingProvider(PracticeLocationDetail, $index)"><span ng-if="!tempThirdObject.PracticeProviderID">Add</span><span ng-if="tempThirdObject.PracticeProviderID">Update</span></button>
+        </div>
+    </form>
+</div>

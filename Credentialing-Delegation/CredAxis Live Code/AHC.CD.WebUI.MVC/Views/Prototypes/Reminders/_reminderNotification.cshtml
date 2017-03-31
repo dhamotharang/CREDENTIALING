@@ -1,0 +1,125 @@
+﻿
+
+
+<style>
+    .tableDataFont {
+        font-size: smaller;
+        margin-top: 4px;
+        color: #333;
+    }
+
+    .scroll {
+        height: 91px;
+        background: #ffffff;
+        overflow: scroll;
+        padding-top: 7px;
+        box-shadow: 0px 1px 5px rgba(164, 170, 171, 0.6);
+    }
+
+        .scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /*.scroll::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 5px;
+        }*/
+
+        .scroll::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        }
+
+    .RemainderBody {
+        position: fixed;
+        top: 7%;
+        /*right: 10px;*/
+        right: 10px;
+        float: right;
+        z-index: 999999;
+        min-width: 300px;
+        max-width: 442px;
+        margin-left: 100%;
+        transition: all 1.5s;
+    }
+
+        .RemainderBody.show {
+            display: block;
+            /*margin-left: 0%;*/
+            right: -80%;
+        }
+
+        /*create a cirlce*/
+    .circle {
+        /*width: 90px;
+        height: 84px;*/
+        width: 70px;
+        height: 66px;
+        border-radius: 250px;
+        color: #ddd;
+        text-align: center;
+        background: #c53430;
+        margin-left: -21px;
+        padding-top: 13px;
+    }
+
+
+</style>
+<link href="~/Content/Prototypes/blink.css" rel="stylesheet" />
+
+<div class="RemainderBody col-lg-4 col-xs-4 " style="background-color: #fff; box-shadow: 1px 7px 14px 5px rgba(0,0,0,0.75); ">
+    <div class="row">
+
+        <div class="col-lg-12 col-xs-12" id="reminderHeader" style="text-align: center; background-color: #337ab7; color: white;padding:5px">
+            <b class="pull-left" style="font-size:large">🔔</b>
+            <div class="col-lg-6 col-xs-6"> <b style="font-size: large;">03-15-2017</b> at 5:15PM </div>
+            <div class="col-lg-5 col-xs-5 pull-right">2-Reminder(S) </div>
+
+        </div>
+    </div>
+
+    <div class=" col-lg-2 col-xs-2" id="timeBlinker" style="text-align: center; margin-top: 22px; color: #333; font-family: 'Orbitron', sans-serif; font-weight: 700px; font-size: 15px; /*text-shadow: 0px 2px 25px rgba(144, 244, 253, .6);*/ ">
+        @*<div class="circle blink_me"><b>12h 36m</b><br /><b>left</b></div>*@
+    </div>
+    <div class="col-lg-10 col-xs-10 scroll" style="margin-top: 13px;">
+        <div class="row tableDataFont" id="TaskList" >
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 rem_pannel" style="color: #333">
+
+            <div class="rem_pannel_header" style="font-weight:600">Snooze For :</div>
+            <div class="rem_pannel_body">
+                <select class="form-control input-sm" id="snoozeInterval" ng-model="snoozeTime" style="height: 21px;font-weight:700; padding: initial; color: black; background-color: #ccc;">
+                    <option value="5000" selected>5 Minutes</option>
+                    <option value="10000">10 Minutes</option>
+                    <option value="30000">30 Minutes</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+
+        </div>
+        <div class="col-lg-12" style="margin: 5px;">
+            <button id="DismissBtn" class="CollapseReminder btn btn-danger btn-xs col-lg-6" style="margin-left:-3px">DISMISS</button>
+            <button class="CollapseReminder btn btn-primary btn-xs col-lg-6 pull-right" id="SNOOZE" onclick="Snoozereminder()">SNOOZE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.CollapseReminder').click(function () {
+        $(".RemainderBody").addClass('show');
+  
+    });
+
+    function Snoozereminder() {
+        setTimeout(function () {
+            $(".RemainderBody").removeClass('show');
+        }, document.getElementById("snoozeInterval").value);
+    }
+</script>
+
+

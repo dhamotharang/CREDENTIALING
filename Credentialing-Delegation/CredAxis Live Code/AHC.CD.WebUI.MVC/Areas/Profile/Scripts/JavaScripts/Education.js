@@ -595,6 +595,9 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                     try {
 
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.educationDetails.TableState = true;
+                            }
                             if ($scope.visibilityControl == 'addeducationDetailViewModel') {
                                 data.educationDetails.StartDate = ConvertDateFormat(data.educationDetails.StartDate);
                                 data.educationDetails.EndDate = ConvertDateFormat(data.educationDetails.EndDate);
@@ -609,7 +612,8 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                                 data.educationDetails.EndDate = ConvertDateFormat(data.educationDetails.EndDate);
                                 $scope.educationDetailViewModels[IndexValue] = data.educationDetails;
                                 $scope.operateViewAndAddControl(IndexValue + '_vieweducationDetailViewModel');
-                                messageAlertEngine.callAlertMessage('updatedUGDetails' + IndexValue, "Under Graduate/Professional School Details Updated Successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updatedUGDetails' + IndexValue, "Under Graduate/Professional School Details Updated Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedUGDetails' + IndexValue, data.successMessage, "success", true);
 
                             }
                             $scope.datePickerReset();
@@ -742,6 +746,9 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.educationDetails.TableState = true;
+                            }
                             if ($scope.visibilityControl == 'addgraduationDetailViewModel') {
                                 data.educationDetails.StartDate = ConvertDateFormat(data.educationDetails.StartDate);
                                 data.educationDetails.EndDate = ConvertDateFormat(data.educationDetails.EndDate);
@@ -755,7 +762,8 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                                 data.educationDetails.EndDate = ConvertDateFormat(data.educationDetails.EndDate);
                                 $scope.GraduationDetailViewModel[IndexValue] = data.educationDetails;
                                 $scope.operateViewAndAddControl(IndexValue + '_viewgraduationDetailViewModel');
-                                messageAlertEngine.callAlertMessage('updatedPGDetails' + IndexValue, "Graduate/Medical School Details Updated Successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updatedPGDetails' + IndexValue, "Graduate/Medical School Details Updated Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedPGDetails' + IndexValue, data.successMessage, "success", true);
                             }
                             $scope.datePickerReset();
                             myData = data;
@@ -891,6 +899,11 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                     try {
 
                         if (data.status == "true") {
+
+                            if (UserRole == "PRO") {
+                                data.ecfmgDetails.TableState = true;
+                            }
+
                             $scope.ErrorInUGDetails = false;
                             if ($scope.visibilityControl == 'editecfmgDetail') {
                                 if (typeof $scope.ecfmgDetail != "undefined" || $scope.ecfmgDetail != null) {
@@ -905,7 +918,8 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                                 data.ecfmgDetails.ECFMGIssueDate = ConvertDateFormat(data.ecfmgDetails.ECFMGIssueDate);
                                 $scope.ecfmgDetail = data.ecfmgDetails;
                                 $scope.operateViewAndAddControl('!editecfmgDetail');
-                                messageAlertEngine.callAlertMessage('updatedECFMGDetails', "ECFMG Detail Saved Successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updatedECFMGDetails', "ECFMG Detail Saved Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedECFMGDetails', data.successMessage, "success", true);
                             }
                             myData = data;
                             $scope.datePickerReset();
@@ -1152,6 +1166,10 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
 
                         if (data.status == "true") {
 
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.ResidencyInternshipViewModel.TableState = true;                                
+                            }
+
                             if (residencyInternshipViewModel.PreferenceType == "1") {
                                 $scope.setPrimary();
                             }
@@ -1182,8 +1200,8 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                                 $scope.ResidencyInternshipViewModel[IndexValue] = data.programDetails;
 
                                 $scope.operateViewAndAddControl(IndexValue + '_viewProgramDetail');
-                                messageAlertEngine.callAlertMessage('updatedProgramDetails' + IndexValue, "Residency/Internship/fellowship Details Updated Successfully !!!!", "success", true);
-
+                                //messageAlertEngine.callAlertMessage('updatedProgramDetails' + IndexValue, "Residency/Internship/fellowship Details Updated Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedProgramDetails' + IndexValue, data.successMessage, "success", true);
                             }
                             $scope.datePickerReset();
                             myData = data;
@@ -1604,6 +1622,10 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                     try {
 
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.CMEDetails.TableState = true;
+                            }
+
                             $scope.ErrorInCMEDetails = false;
                             if ($scope.visibilityControl == 'addcertificationCMEViewModel') {
                                 data.CMEDetails.StartDate = ConvertDateFormat(data.CMEDetails.StartDate);
@@ -1620,7 +1642,8 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                                 data.CMEDetails.ExpiryDate = ConvertDateFormat(data.CMEDetails.ExpiryDate);
                                 $scope.CertificationCMEViewModel[IndexValue] = data.CMEDetails;
                                 $scope.operateViewAndAddControl(IndexValue + '_viewcertificationCMEViewModel');
-                                messageAlertEngine.callAlertMessage('updatedCMEDetails' + IndexValue, "PostGraduate Training/CME Details Updated Successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updatedCMEDetails' + IndexValue, "PostGraduate Training/CME Details Updated Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedCMEDetails' + IndexValue, data.successMessage, "success", true);
                             }
                             $scope.datePickerReset();
                             myData = data;

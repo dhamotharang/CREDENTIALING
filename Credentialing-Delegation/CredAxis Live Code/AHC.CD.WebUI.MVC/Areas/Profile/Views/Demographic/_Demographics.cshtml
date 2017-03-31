@@ -15,7 +15,7 @@
             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
             {
                 <div class="legend2 pull-right">
-                    <button id="editPersonalInfo" ng-if="visibilityControl!='EditPersonalDetails'" class="btn btn-xs btn-primary" ng-click="PersonalDetailsToggle('EditPersonalDetails')" tooltip data-toggle="tooltip" data-placement="top" title="Edit Personal Details"><i class="fa fa-edit"></i></button>
+                    <button id="editPersonalInfo" ng-if="visibilityControl!='EditPersonalDetails'" class="btn btn-xs btn-primary" ng-click="PersonalDetailsToggle('EditPersonalDetails')" ng-hide="Provider.PersonalDetails.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit Personal Details"><i class="fa fa-edit"></i></button>
                     <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Do not use nicknames or initials, unless they are part of your legal names"><i class="fa fa-question"></i></button>
                     @*<button class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Edit Personal Details"><i class="fa fa-exclamation-circle"></i></button>*@
 
@@ -144,7 +144,7 @@
                             </tr>
                         </thead>
                         <tbody ng-repeat="oln in Provider.OtherLegalNames | orderBy:OtherLegalPredicate:!reverse track by $index">
-                            <tr>
+                            <tr >
                                 <td class="col-lg-2 wrap-words"><i class="data-label" ng-if="oln.OtherFirstName">{{oln.OtherFirstName}}</i><i class="data-label" ng-if="!oln.OtherFirstName">Not Available</i></td>
                                 <td class="col-lg-1 wrap-words"><i class="data-label" ng-if="oln.OtherMiddleName">{{oln.OtherMiddleName}}</i><i class="data-label" ng-if="!oln.OtherMiddleName">Not Available</i></td>
                                 <td class="col-lg-2 wrap-words"><i class="data-label" ng-if="oln.OtherLastName">{{oln.OtherLastName}}</i><i class="data-label" ng-if="!oln.OtherLastName">Not Available</i></td>
@@ -176,11 +176,11 @@
                                     }
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
                                     {
-                                        <button id="Demographics_OtherLegalName_View_EditButton" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditOtherLegalName',oln)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                        <button id="Demographics_OtherLegalName_View_EditButton" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditOtherLegalName',oln)" ng-hide="oln.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                                     }
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
                                     {
-                                        <button id="Demographics_OtherLegalName_View_CancelButton" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initOtherLegalNameWarning(oln);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                        <button id="Demographics_OtherLegalName_View_CancelButton" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initOtherLegalNameWarning(oln);" ng-hide="oln.TableState" tooltip><i class="fa fa-minus-circle"></i></button>
                                         <button id="addNewOtherLegalName" ng-if="$index == Provider.OtherLegalNames.length-1" ng-hide="visibilityControl=='_NewOtherLegalName'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewOtherLegalName')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
                                     }
                                     @*<button class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="View Update History" ng-click="showUpdateHistory=true;" tooltip><i class="fa fa-history"></i></button>*@
@@ -401,7 +401,8 @@
                                     </tr>
                                 </thead>
                                 <tbody ng-repeat="ha in (HomeAddresses | orderBy:AddressPredicate:reverse | orderEmpty:'AddressPreferenceType':'toBottom') track by $index">
-                                    <tr ng-class="{isprimary:ha.AddressPreferenceType==1}">
+                                    <tr ng-class="{isprimary:ha.AddressPreferenceType==1}">                                   
+
                                         <td class="col-lg-2 wrap-words">
                                             @if (ProfileActionValidator.IsMasked(ViewBag.Roles))
                                             {
@@ -469,11 +470,11 @@
                                             }
                                             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
                                             {
-                                                <button id="Demographics_ContactInfo_HomeAddress_Table_EditIcon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditHomeAddress',ha)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                                <button id="Demographics_ContactInfo_HomeAddress_Table_EditIcon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_EditHomeAddress',ha)" ng-hide="ha.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                                             }
                                             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, true))
                                             {
-                                                <button id="Demographics_ContactInfo_HomeAddress_Table_RemoveIcon" class="btn btn-xs btn-danger" ng-disabled="ha.AddressPreferenceType == '1'" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initHomeAddressWarning(ha);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                                <button id="Demographics_ContactInfo_HomeAddress_Table_RemoveIcon" class="btn btn-xs btn-danger" ng-disabled="ha.AddressPreferenceType == '1'" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initHomeAddressWarning(ha);" ng-hide="ha.TableState" tooltip><i class="fa fa-minus-circle"></i></button>
                                                 <button id="addNewHomeAddress" ng-if="$index == HomeAddresses.length-1" ng-hide="visibilityControl=='_NewHomeAddress'" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('_NewHomeAddress')" tooltip data-toggle="tooltip" data-placement="right" title="Add New"><i class="fa fa-plus"></i></button>
                                             }
                                         </td>
@@ -686,7 +687,7 @@
                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
                 {
                     <div class="legend2 pull-right">
-                        <button id="editContactDetails" ng-if="visibilityControl!='EditContactDetails'" ng-hide="!Provider.ContactDetails.ContactDetailID" class="btn btn-xs btn-primary" ng-click="ContactDetailsToggle('EditContactDetails')" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                        <button id="editContactDetails" ng-if="visibilityControl!='EditContactDetails'" ng-hide="!Provider.ContactDetails.ContactDetailID||Provider.ContactDetails.TableState" class="btn btn-xs btn-primary" ng-click="ContactDetailsToggle('EditContactDetails')" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                         <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Click on Add to add a contact details. Please click on a preferred method of contact to change it's priority."><i class="fa fa-question"></i></button>
                     </div>
                 }
@@ -724,7 +725,7 @@
             {
                 <div class="legend2 pull-right">
 
-                    <button id="editPersonalIdentification" ng-if="visibilityControl!='_EditPersonalIdentification'" ng-hide="!Provider.PersonalIdentification" class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditPersonalIdentification',Provider.PersonalIdentification)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button id="editPersonalIdentification" ng-if="visibilityControl!='_EditPersonalIdentification'" ng-hide="!Provider.PersonalIdentification || Provider.PersonalIdentification.TableState" class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditPersonalIdentification',Provider.PersonalIdentification)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                     <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Only enter a Foreign Identification Number If you don't have SSN. Don't enter National Identification Number (NPI) here"><i class="fa fa-question"></i></button>
                 </div>
             }
@@ -761,7 +762,7 @@
             {
                 <div ng-if="visibilityControl!='_EditBirthInformation'" ng-hide="!Provider.BirthInformation" class="legend2 pull-right">
 
-                    <button id="editBirthInformation" class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditBirthInformation',Provider.BirthInformation)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button id="editBirthInformation" class="btn btn-xs btn-primary" ng-click="operateEditControl('_EditBirthInformation',Provider.BirthInformation)" ng-hide="Provider.BirthInformation.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                 </div>
             }
             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
@@ -796,7 +797,7 @@
             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, true))
             {
                 <div class="legend2 pull-right">
-                    <button id="editCitizenshipInfo" ng-if="visibilityControl!='_EditVisaDetails'" ng-hide="!Provider.VisaDetails" ng-click="operateEditControl('_EditVisaDetails',Provider.VisaDetails)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button id="editCitizenshipInfo" ng-if="visibilityControl!='_EditVisaDetails'" ng-hide="!Provider.VisaDetails||Provider.VisaDetails.TableState" ng-click="operateEditControl('_EditVisaDetails',Provider.VisaDetails)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                     <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Only enter a Foreign Identification Number If you don't have SSN"><i class="fa fa-question"></i></button>
                 </div>
             }
@@ -832,7 +833,7 @@
             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
             {
                 <div ng-if="visibilityControl!='EditKnowLanguage'" ng-hide="!Provider.LanguageInfo" class="legend2 pull-right">
-                    <button id="editLanguagesKnown" class="btn btn-xs btn-primary" ng-click="LanguageKnownToggle('EditKnowLanguage')" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                    <button id="editLanguagesKnown" class="btn btn-xs btn-primary" ng-click="LanguageKnownToggle('EditKnowLanguage')" ng-hide="Provider.LanguageInfo.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                 </div>
             }
             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))

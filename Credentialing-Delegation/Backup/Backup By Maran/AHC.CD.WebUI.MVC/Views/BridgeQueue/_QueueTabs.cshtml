@@ -1,0 +1,108 @@
+﻿
+<table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="bc.callServer" st-table="bc.displayed" st-safe-src="BridgeQueueData">
+    <thead>
+        <tr class="theadColor">
+            <th ng-if="ColStatus.tabName!='Approved'" class="width_1" st-ratio="1"></th>
+            <th st-sort="NPINumber" st-ratio="9">
+                NPI
+            </th>
+            <th st-sort="LastName" st-ratio="8">
+                L Name
+            </th>
+            <th st-sort="FirstName" st-ratio="10">
+                F Name
+            </th>
+            <th st-sort-default="false" st-sort="NetworkParticipation" st-ratio="3">
+                NP
+            </th>
+            <th st-sort="ReqBy" st-ratio="8">
+                Req By
+            </th>
+            <th st-sort="Module" st-ratio="9">
+                Req From
+            </th>
+            <th ng-if="ColStatus.TimeLeft" st-sort="Timer" st-ratio="5">
+                Time
+            </th>
+            <th st-sort="PhoneNumber" st-ratio="10">
+                Phone
+            </th>
+            <th st-sort="ReqDate" st-ratio="8">
+                Req Date
+            </th>
+            <th ng-if="ColStatus.AppDate" st-sort="AppDate" st-ratio="8">
+                App Date
+            </th>
+            <th ng-if="ColStatus.RejDate" st-sort="RejDate" st-ratio="8">
+                Rej Date
+            </th>
+            <th st-sort="Address" st-ratio="12">
+                Address
+            </th>
+            <th st-sort="City" st-ratio="6">
+                City
+            </th>
+            <th st-sort="State" st-ratio="2">
+                St
+            </th>
+            <th ng-if="ColStatus.Assigned" st-sort="AssignedTo" st-ratio="7">
+                Assign To
+            </th>
+            <th st-ratio="4">Action</th>
+        </tr>
+        <tr>
+            <td ng-if="ColStatus.tabName!='Approved'" class="width_1" st-ratio="1"></td>
+            <td st-ratio="9"><input st-search="NPINumber" type="text" placeholder="Filter NPI" class="form-control input-sm"></td>
+            <td st-ratio="8"><input st-search="LastName" type="text" placeholder="Filter L Name" class="form-control input-sm" /></td>
+            <td st-ratio="10"><input st-search="FirstName" type="text" placeholder="Filter F Name" class="form-control input-sm" /></td>
+            <td st-ratio="3"><input st-search="NetworkParticipation" type="text" placeholder="Filter NP" class="form-control input-sm" /></td>
+            <td st-ratio="8"><input st-search="ReqBy" type="text" placeholder="Filter Req By" class="form-control input-sm" /></td>
+            <td st-ratio="9 "><input st-search="Module" type="text" placeholder="Filter Module" class="form-control input-sm" /></td>
+            <td ng-if="ColStatus.TimeLeft" st-ratio="5"><input st-search="Timer" type="text" placeholder="Filter Time Left" class="form-control input-sm" /></td>
+            <td st-ratio="10"><input st-search="PhoneNumber" type="text" placeholder="Filter Phone Number" class="form-control input-sm" /></td>
+            <td st-ratio="8"><input st-search="ReqDate" type="text" placeholder="Filter Req Date" class="form-control input-sm" /></td>
+            <td ng-if="ColStatus.AppDate" st-ratio="8"><input st-search="AppDate" type="text" placeholder="Filter App Date" class="form-control input-sm" /></td>
+            <td ng-if="ColStatus.RejDate" st-ratio="8"><input st-search="RejDate" type="text" placeholder="Filter Rej Date" class="form-control input-sm" /></td>
+            <td st-ratio="12"><input st-search="Address" type="text" placeholder="Filter Address" class="form-control input-sm" /></td>
+            <td st-ratio="6"><input st-search="City" type="text" placeholder="Filter City" class="form-control input-sm" /></td>
+            <td st-ratio="2"><input st-search="State" type="text" placeholder="Filter State" class="form-control input-sm" /></td>
+            <td ng-if="ColStatus.Assigned" st-ratio="7"><input st-search="AssignedTo" type="text" placeholder="Filter AssignedTo" class="form-control input-sm" /></td>
+
+            <td st-ratio="4"></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="c in bc.displayed">
+
+            <td ng-show="ColStatus.tabName!='Approved'" ng-if="c.TimeLeft<24" class="width_1 redtd_start" st-ratio="1"></td>
+            <td ng-show="ColStatus.tabName!='Approved'" ng-if="c.TimeLeft>= 24 && c.TimeLeft< 48" class="width_1 whitetd_start"></td>
+            <td ng-show="ColStatus.tabName!='Approved'" ng-if="c.TimeLeft>=48" class="width_1 greentd_start"></td>
+
+            <td>{{c.NPINumber}}</td>
+            <td>{{c.LastName}}</td>
+            <td>{{c.FirstName}}</td>
+            <td>{{c.NetworkParticipation}}</td>
+            <td>{{c.ReqBy}}</td>
+            <td>{{c.Module}}</td>
+            <td ng-if="ColStatus.TimeLeft">{{c.Timer||'Not Available'}}</td>
+            <td>{{c.PhoneNumber}}</td>
+            <td>{{c.ReqDate}}</td>
+            <td ng-if="ColStatus.AppDate">{{c.AppDate}}</td>
+            <td ng-if="ColStatus.RejDate">{{c.RejDate}}</td>
+            <td>{{c.Address}}</td>
+            <td>{{c.City}}</td>
+            <td>{{c.State}}</td>
+            <td ng-if="ColStatus.Assigned">{{c.AssignedTo}}</td>
+            <td>
+                <button class="btn btn-xs btn-default" ng-click="showDetailViewforTab2()" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot style="cursor:pointer">
+        <tr>
+            <td class=" text-center" st-pagination="" st-items-by-page="10" colspan="14"></td>
+        </tr>
+    </tfoot>
+</table>
+
+

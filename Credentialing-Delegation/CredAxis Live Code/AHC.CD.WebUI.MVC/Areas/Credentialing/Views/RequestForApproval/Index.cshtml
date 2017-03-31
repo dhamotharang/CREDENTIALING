@@ -132,23 +132,23 @@
                                         <th st-skip-natural="true" class="col-lg-1">Action</th>
                                     </tr>
                                     <tr ng-if="ProfileUpdateandRenewalFilter">
-                                        <td class="col-lg-1"><input st-search="NPINumber" type="text" placeholder="NPI" class="form-control input-sm" /></td>
-                                        <td class="col-lg-2"><input st-search="ProviderName" type="text" placeholder="Provider Name" class="form-control input-sm" /></td>
-                                        <td class="col-lg-2"><input st-search="Section" type="text" placeholder="Section" class="form-control input-sm" /></td>
-                                        <td class="col-lg-2"><input st-search="SubSection" type="text" placeholder="Sub Section" class="form-control input-sm" /></td>
-                                        <td class="col-lg-2"><input st-search="ModifiedDate" type="text" placeholder="Modified Date" class="form-control input-sm" /></td>
-                                        <td class="col-lg-2"><input st-search="ApprovalStatus" type="text" placeholder="Approval Status" class="form-control input-sm" /></td>
+                                        <td class="col-lg-1"><input st-search="NPINumber" type="text" placeholder="Filter NPI" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ProviderName" type="text" placeholder="Filter Provider Name" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="Section" type="text" placeholder="Filter Section" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="SubSection" type="text" placeholder="Filter Sub Section" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ModifiedDate" type="text" placeholder="Filter Modified Date" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ApprovalStatus" type="text" placeholder="Filter Approval Status" class="form-control input-sm" /></td>
                                         <td class="col-lg-1"></td>
                                     </tr>
                                 </thead>
                                 <tbody ng-show="!pc.isLoadingUpdateAndRenewals">
                                     <tr ng-repeat="profileUpdates in pc.displayedUpdateAndRenewals track by $index" style="cursor:pointer" ng-click="CheckStatus($event,profileUpdates)" ng-style="profileUpdates.IsSelected=='true' ? { 'background-color':'rgb(233, 236, 235)',color:'#32306b','font-weight':'bold' } : {'background-color':'white',color:'black'}">
-                                        <td class="col-lg-1 wrap-words">{{profileUpdates.NPINumber || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{profileUpdates.NPINumber || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.ProviderName || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.Section || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.SubSection || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.ModifiedDate || 'Not Available'}}</td>
-                                        <td class="col-lg-2 wrap-words"><span>{{profileUpdates.ApprovalStatus || 'Not Available'}}</span></td>
+                                        <td class="col-lg-1 wrap-words"><span>{{profileUpdates.ApprovalStatus || 'Not Available'}}</span></td>
                                         <td class="col-lg-1 wrap-words">
                                             <button class="btn btn-xs btn-default skip" ng-click="GetProfileUpdateDataByID(profileUpdates)" data-toggle="modal" data-target="#profileUpdateModal"><i class="fa fa-eye skip" tooltip data-toggle="tooltip" data-placement="left" title="View Profile Updates and Renew"></i></button>
                                         </td>
@@ -185,11 +185,11 @@
                                         <th st-sort="CurrentStatus" class="col-lg-2">Approval Status</th>
                                     </tr>
                                     <tr ng-if="CredentialingReqFilter">
-                                        <td class="col-lg-2"><input st-search="NPINumber" type="text" placeholder="NPI" class="form-control input-sm" /></td>
-                                        <td class="col-lg-3"><input st-search="ProviderName" type="text" placeholder="Provider Name" class="form-control input-sm" /></td>
-                                        <td class="col-lg-3"><input st-search="PlanName" type="text" placeholder="Plan Name" class="form-control input-sm" /></td>
-                                        <td class="col-lg-2"><input st-search="ModifiedDate" type="text" placeholder="Initiation Date" class="form-control input-sm" /></td>
-                                        <td class="col-lg-2"><input st-search="CurrentStatus" type="text" placeholder="Approval Status" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="NPINumber" type="text" placeholder="Filter NPI" class="form-control input-sm" /></td>
+                                        <td class="col-lg-3"><input st-search="ProviderName" type="text" placeholder="FilterProvider Name" class="form-control input-sm" /></td>
+                                        <td class="col-lg-3"><input st-search="PlanName" type="text" placeholder="Filter Plan Name" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ModifiedDate" type="text" placeholder="Filter Initiation Date" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="CurrentStatus" type="text" placeholder="Filter Approval Status" class="form-control input-sm" /></td>
                                     </tr>
                                 </thead>
                                 <tbody ng-show="!pc.isLoadingCredentialingRequest">
@@ -240,7 +240,7 @@
                                                     <div class="form-group">
                                                         <label class="col-lg-4">Provider Name:</label>
                                                         <div class="col-lg-8">
-                                                            <i>{{TemporaryObject.ProviderName || 'Not Available'}}</i>
+                                                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{TemporaryObject.ProfileID}}"><i>{{TemporaryObject.ProviderName || 'Not Available'}}</i></a>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -269,11 +269,12 @@
                                                     </div>
                                                     <div class="form-group" ng-if="TemporaryObject.CurrentStatus=='Rejected'">
                                                         <label class="col-lg-4">Reason For Rejection:</label>
-                                                        <div class="col-lg-8">
+                                                        <div class="col-lg-8 wrap-words">
                                                             <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
                                                         </div>
                                                     </div>
                                                     <div class="form-group" ng-if="RejectStatus">
+                                                        <label class="col-lg-4">Reason to Send Back:</label>
                                                         <label class="col-lg-12"><textarea ng-model="TemporaryObject.RejectionReason" class="form-control" placeholder="Reason to send back"></textarea></label>
 
                                                     </div>
@@ -322,7 +323,7 @@
                                                     <div class="form-group">
                                                         <label class="col-lg-4">Provider Name:</label>
                                                         <div class="col-lg-8">
-                                                            <i>{{TemporaryObject.ProviderName || 'Not Available'}}</i>
+                                                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{TemporaryObject.ProfileID}}"><i>{{TemporaryObject.ProviderName || 'Not Available'}}</i></a>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -346,13 +347,13 @@
                                                     </div>
                                                     <div class="form-group" ng-if="TemporaryObject.ApprovalStatus=='Rejected'">
                                                         <label class="col-lg-4">Reason For Rejection:</label>
-                                                        <div class="col-lg-8">
+                                                        <div class="col-lg-8 wrap-words">
                                                             <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
                                                         </div>
                                                     </div>
                                                     <div class="form-group" ng-if="TemporaryObject.ApprovalStatus=='OnHold'">
                                                         <label class="col-lg-4">Reason For OnHold:</label>
-                                                        <div class="col-lg-8">
+                                                        <div class="col-lg-8 wrap-words">
                                                             <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
                                                         </div>
                                                     </div>
@@ -427,6 +428,7 @@
                                                         </table>
                                                     </div>
                                                     <div class="form-group" ng-if="RejectStatus">
+                                                        <label class="col-lg-4">Reason to Send Back:</label>
                                                         <label class="col-lg-12"><textarea ng-model="TemporaryObject.RejectionReason" class="form-control" placeholder="Reason to send back"></textarea></label>
                                                     </div>
                                                 </div>

@@ -1,5 +1,4 @@
 ﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
-
 <div class="panel-default" id="StateLicense">
     <div class="form-style">
         <div id="StateLicenseInfo">
@@ -48,7 +47,7 @@
                             </tr>
                         </thead>
                         <tbody ng-repeat="StateLicenseInformation in StateLicenses track by $index">
-                            <tr>
+                            <tr ng-class="{'TableColor':StateLicenseInformation.TableState}">
                                 <td class="wrap-words">{{StateLicenseInformation.LicenseNumber}}</td>
                                 <td ng-show="StateLicenseInformation.ProviderType.Title" class="wrap-words">{{StateLicenseInformation.ProviderType.Title}}</td>
                                 <td ng-hide="StateLicenseInformation.ProviderType.Title" class="wrap-words"><i class="data-label">Not Available</i></td>
@@ -60,26 +59,26 @@
                                 <td ng-hide="StateLicenseInformation.StateLicenseStatus.Title" class="wrap-words"><i class="data-label">Not Available</i></td>
                                 <td class="wrap-words hideData">
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
-{
-    <a id="StateLicence_Table_SupportingDoc" ng-if="StateLicenseInformation.StateLicenseDocumentPath" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{StateLicenseInformation.StateLicenseDocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="State License Certificate"><i class="fa fa-file" title=""></i></a>
-}
+                                    {
+                                        <a id="StateLicence_Table_SupportingDoc" ng-if="StateLicenseInformation.StateLicenseDocumentPath" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{StateLicenseInformation.StateLicenseDocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="State License Certificate"><i class="fa fa-file" title=""></i></a>
+                                    }
                                     <i ng-if="!StateLicenseInformation.StateLicenseDocumentPath">Not Available</i>
                                 </td>
                                 <td class="wrap-words hideData">
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-{
-    <button id="StateLicence_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewStateLicenseInformation')" ng-hide="viewStateLicense" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
-}
+                                    {
+                                        <button id="StateLicence_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewStateLicenseInformation')" ng-hide="viewStateLicense" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                    }
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
-{
-    <button id="statelicence_table_editicon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editStateLicenseInformation',StateLicenseInformation)" ng-hide="editShowStateLicense" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-}
-                                    <button id="StateLicence_Table_RenewIcon" class="btn btn-xs btn-default" ng-click="operateRenewControl($index+'_renewStateLicenseInformation',StateLicenseInformation); RenewDivSL(StateLicenseInformation);" ng-hide="renewStateLicense" tooltip data-toggle="tooltip" data-placement="top" title="Renew"><i class="fa fa-repeat"></i></button>
+                                    {
+                                        <button id="statelicence_table_editicon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editStateLicenseInformation',StateLicenseInformation)" ng-hide="editShowStateLicense || StateLicenseInformation.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                    }
+                                    <button id="StateLicence_Table_RenewIcon" class="btn btn-xs btn-default" ng-click="operateRenewControl($index+'_renewStateLicenseInformation',StateLicenseInformation); RenewDivSL(StateLicenseInformation);" ng-hide="renewStateLicense || StateLicenseInformation.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Renew"><i class="fa fa-repeat"></i></button>
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-{
-    <button id="StateLicence_Table_RemoveIcon" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initStateLicenseWarning(StateLicenseInformation);" tooltip><i class="fa fa-minus-circle"></i></button>
-    <button id="addNewStateLicense" ng-if="$index == StateLicenses.length-1" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addStateLicenseInformation')" ng-hide="viewStateLicense|| editShowStateLicense || newShowStateLicense || $index+1!=StateLicenses.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
-}
+                                    {
+                                        <button id="StateLicence_Table_RemoveIcon" class="btn btn-xs btn-danger" ng-hide="StateLicenseInformation.TableState" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initStateLicenseWarning(StateLicenseInformation);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                        <button id="addNewStateLicense" ng-if="$index == StateLicenses.length-1" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addStateLicenseInformation')" ng-hide="viewStateLicense|| editShowStateLicense || newShowStateLicense || $index+1!=StateLicenses.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                    }
                                 </td>
                             </tr>
                             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
@@ -115,7 +114,7 @@
                                             @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_RenewStateLicenseInformation.cshtml")
                                         </div>
                                     </fieldset>
-                                   
+
                                 </td>
                             </tr>
                         </tbody>
@@ -126,7 +125,7 @@
                         <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
                     </div>
                     <div ng-show="activeMessageDiv=='StateLicenseError1'" class="col-lg-12">
-                        <br/>
+                        <br />
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <span class="sr-only">Error:</span>
@@ -232,12 +231,12 @@
                                 <td ng-hide="StateLicenseInformationHistory.ExpiryDate" class="wrap-words"><i class="data-label">Not Available</i></td>
                                 <td ng-show="StateLicenseInformationHistory.StateLicenseStatus.Title" class="wrap-words">{{StateLicenseInformationHistory.StateLicenseStatus.Title}}</td>
                                 <td ng-hide="StateLicenseInformationHistory.StateLicenseStatus.Title" class="wrap-words"><i class="data-label">Not Available</i></td>
-                                
+
                                 <td class="wrap-words hideData">
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
-{
+                                    {
                                         <a ng-if="StateLicenseInformationHistory.StateLicenseDocumentPath" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{StateLicenseInformationHistory.StateLicenseDocumentPath}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="State License Certificate"><i class="fa fa-file" title=""></i></a>
-}
+                                    }
                                     <i ng-if="!StateLicenseInformationHistory.StateLicenseDocumentPath">Not Available</i>
                                 </td>
                                 <td>{{StateLicenseInformationHistory.HistoryStatus}}</td>
@@ -247,23 +246,23 @@
                                 <td ng-hide="StateLicenseInformationHistory.DeletedDate" class="wrap-words"><i class="data-label">Not Available</i></td>
                                 <td class="wrap-words hideData">
                                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-{
-    <button id="StateLicence_History_HistoryDetailsIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewStateLicenseInformationHistory')" ng-hide="viewStateLicense" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
-}
+                                    {
+                                        <button id="StateLicence_History_HistoryDetailsIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewStateLicenseInformationHistory')" ng-hide="viewStateLicense" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                    }
                                 </td>
                             </tr>
                             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-                        {
+                            {
                                 <tr ng-show="visibilityControl==($index+'_viewStateLicenseInformationHistory')" class="hideData">
                                     <td colspan="10" class="editTableDataStyle">
                                         @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_ViewStateLicenseHistory.cshtml")
                                     </td>
                                 </tr>
-                        }
+                            }
                         </tbody>
                     </table>
                 </div>
             </fieldset>
         </div>
-        </div>
+    </div>
 </div>

@@ -586,27 +586,6 @@
             approvedStatus: Data.ApprovalStatus
         };
     }
-    var DateTimeConveter = function (value) {
-        var returnValue = value;
-        try {
-            if (value.indexOf("/Date(") == 0) {
-                returnValue = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
-                var shortDate = null;
-                var month = returnValue.getMonth() + 1;
-                var monthString = month > 9 ? month : '0' + month;
-                var day = returnValue.getDate();
-                var dayString = day > 9 ? day : '0' + day;
-                var year = returnValue.getFullYear();
-                shortDate = monthString + '/' + dayString + '/' + year;
-                returnValue = shortDate;
-            }
-            return returnValue;
-        } catch (e) {
-            return returnValue;
-        }
-        return returnValue;
-    }
-
 
     return {
         getPageForUpdateAndHistory: getPageForUpdateAndHistory,

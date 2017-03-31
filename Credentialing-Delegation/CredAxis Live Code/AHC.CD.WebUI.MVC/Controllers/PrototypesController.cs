@@ -220,5 +220,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
         {
             return Json(PrototypeHelper.GetProviderGroups(count, ProfileID), JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        public ActionResult GetReminderNotification()
+        {
+            return PartialView("~/Views/Prototypes/Reminders/_reminderNotification.cshtml");
+        }
     }
 }

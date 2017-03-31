@@ -1,0 +1,122 @@
+﻿@model AHC.CD.WebUI.MVC.Areas.PlanPDF.Models.PlanFormViewModel
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+
+<div id="Plan" class="col-md-12 zero-padding-left-right-div">
+    @*<form id="PlanFormUpload" ng-submit="UploadPlanForm('PlanFormUpload')">
+        <fieldset>
+            <legend>Upload Plan Form</legend>
+           
+            <div class="form-group col-md-11">
+                <span ng-if="tempObject.CVInformationID">
+                    <input type="hidden" value="{{tempObject.CVInformationID}}" name="CVInformationID">
+                </span>
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file">
+                        <span class="fileinput-new">Select Document *</span><span class="fileinput-exists">Change</span>
+                        @Html.TextBoxFor(model => model.CVFile, new { type = "file", @class = "fileinputtag", onchange = "setFileNameWith(this); angular.element(this).scope().setFiles(this)" })
+                    </span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="removeFile('ContractInfo_CVFile')">Remove</a>
+                </div>
+            </div>
+            <div class="col-md-12 form-group">
+                <button type="button" class="btn btn-warning btn-sm" ng-click="operateCancelControl('');resetDates();">Cancel</button>
+                <button type="submit" ng-disabled="fileName!=null" class="btn btn-primary btn-sm pull-right" ng-click="">Upload CV</button>
+            </div>
+        </fieldset>
+    </form>*@
+    <form enctype="multipart/form-data" id="PlanFormUpload">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <label for="editAttachmentsTitle">Plan Name:</label>
+                </div>
+                <div class="col-lg-8">
+                    @*<input type="text" id="editAttachmentsTitle" class="form-control" ng-model="AttachmentsTitle" />*@
+                    @Html.TextBoxFor(model => model.PlanFormName, new { @class = "form-control input-sm", data_ng_model = "tempObject.PlanFormName", placeholder = "Plan Form Name" })
+                </div>
+            </div> <br />
+
+
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <label for="uploadAttachment">Upload Plan Form:</label>
+                </div>
+                <div class="fileinput fileinput-new input-group col-lg-8" data-provides="fileinput">
+                    <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                    <span class="input-group-addon btn btn-default btn-sm btn-file">
+                        <span class="fileinput-new">Select Document *</span><span class="fileinput-exists">Change</span>
+                        @Html.TextBoxFor(model => model.PlanFormFile, new { type = "file", @class = "fileinputtag", onchange = "setFileNameWith(this); angular.element(this).scope().setFiles(this)" })
+                    </span>
+                    <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput" ng-click="removeFile('PlanForms')">Remove</a>
+                </div>
+                @Html.ValidationMessageFor(model => model.PlanFormFile, "", new { @class = "text-danger" })
+            </div> 
+            @*<div class="form-group" ng-class="{'col-lg-5':tempObject.DLCertificatePath,'col-lg-6':!tempObject.DLCertificatePath}">
+                <label class="control-label small" for="SSN"></label>
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control jancyFileWrapTexts" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename wraptext"></span></div>
+                    <span class="input-group-addon btn btn-default btn-file">
+                        <span class="fileinput-new">Select Driver's License</span><span class="fileinput-exists">Change</span>
+                        @Html.TextBoxFor(model => model.PlanFormFile, new { type = "file", onchange = "setFileNameWith(this);" })
+                    </span>
+                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+                @Html.ValidationMessageFor(model => model.PlanFormFile, "", new { @class = "text-danger" })
+            </div>*@
+            @*<div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <label for="uploadAttachment">Upload a File</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <input type="file" id="uploadAttachment" class="form-control" />
+                    </div>
+                </div>
+            </div>*@
+            <br />
+
+            @*<div class="row">
+                <div class="col-lg-4">
+                    <label for="editAttachmentsDescription">Name the Uploaded File:</label>
+                </div>
+                <div class="col-lg-8">
+                    <input type="text" id="editAttachmentsDescription" class="form-control" ng-model="UploadedAttachment" required />
+                    @Html.TextBoxFor(model => model.PlanFormFile, new { type = "file", @class = "fileinputtag", onchange = "setFileNameWith(this); angular.element(this).scope().setFiles(this)" })
+                </div>
+            </div>*@
+
+            @*<div class="row" ng-show="errVar">
+                    <br />
+                    <div class="col-lg-8">
+                        <label class="text-danger">{{errMessage}}</label>
+                    </div>
+                </div>*@
+
+            <div class="clearfix"></div><br /><br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <button class="btn btn-warning pull-left" id="cancelPlanForm" ng-click="cancelPlanForm()"> Cancel </button>
+                </div>
+                <div class="col-lg-6">
+                    <button class="btn btn-primary pull-right" id="savePlanForm" ng-click="savePlanForm('PlanFormUpload')"> Save </button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+        @*<div ng-show="activeMessageDiv=='uploadedCVInformation'" class="alert alert-success" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+            </div>
+            <div ng-show="activeMessageDiv=='removeCVUpload'">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Error Lists :<br />
+                    <span ng-repeat="err in errorCVUpload track by $index">{{err}}</span>
+                </div>
+            </div>*@
+</div>

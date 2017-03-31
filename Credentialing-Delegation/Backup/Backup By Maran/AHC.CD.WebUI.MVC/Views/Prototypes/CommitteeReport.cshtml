@@ -1,0 +1,271 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead{
+   <link href="~/Content/SharedCss/app.css" rel="stylesheet" />
+<link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+<script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+<script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+<script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
+@*<script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>*@
+
+<script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+<script src="~/Scripts/Custom/PrototypesJS.js"></script>
+<script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+}
+
+<style>
+    .select-page {
+        width: 50px;
+        text-align: center;
+    }
+
+    .theadColor {
+        color: white;
+        background-color: rgba(66, 123, 225, 0.78);
+    }
+</style>
+<style>
+    .biscuits_3D > .panel > .panel-body {
+        color: whitesmoke;
+        position: relative;
+        text-decoration: none;
+        width: 105%;
+        display: block;
+        padding: 4px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        /*-webkit-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        -moz-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
+        box-shadow: 0px 9px 0px rgb(195, 195, 195), 0px 9px 25px rgba(0,0,0,.7);*/
+        text-align: center;
+        -webkit-transition: all .1s ease;
+        -moz-transition: all .1s ease;
+        -ms-transition: all .1s ease;
+        -o-transition: all .1s ease;
+        transition: all .1s ease;
+    }
+
+    /*a:active {
+            -webkit-box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
+            -moz-box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
+            box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
+            position: relative;
+            top: 6px;
+        }*/
+    .biscuits > .panel > .panel-body {
+        width: 105%;
+        text-align: center;
+        color: white;
+        background-color: grey;
+        border-radius: 8px;
+    }
+</style>
+<style>
+    .violet {
+        background-color: violet;
+    }
+
+    .lightviolet {
+        background-color: #fce9fc !important;
+    }
+
+    .bluecolor {
+        background-color: #e6e6ff !important;
+    }
+
+    .yellow {
+        background-color: #B8860B !important;
+    }
+
+    .lightyellow {
+        background-color: #cccc00 !important;
+    }
+
+    .purple {
+        background-color: purple !important;
+    }
+
+    .orange {
+        background-color: orange !important;
+    }
+
+    .lightorange {
+        background-color: #ffe3b3 !important;
+    }
+
+    .blue {
+        background-color: blue !important;
+    }
+
+    .lightpurple {
+        background-color: #ffccff !important;
+    }
+</style>
+
+<div id="page-wrapper" ng-app="prototypeApp" ng-cloak>
+    <div ng-controller="PrototypesCtrl as pc">
+        <div class="zero-padding-left-right-div form-style" style="padding-left: 0px;">
+            <fieldset>
+                <legend>Committee Summary</legend>
+                <div class="col-lg-3">
+                    <label>Select Plan: </label>
+                    <select class="input-sm">
+                        <option>All</option>
+                        <option>Aetna</option>
+                        <option>Humana</option>
+                        <option>Ultimate</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 10px;">
+                    <div ng-init="RefreshProfileData()">
+                        <table class='paginated table table-striped table-bordered customtbodyStyle medium wrap-words' st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="PrototypeData">
+                            <thead>
+                                <tr class="theadColor">
+                                    <th st-sort="Name" st-ratio="10">
+                                        Provider Name
+                                    </th>
+                                    <th st-sort="Specialty" st-ratio="8">
+                                        Specialty
+                                    </th>
+                                    <th st-sort="Plan" st-ratio="11">
+                                        Plan
+                                    </th>
+                                    <th st-sort-default="false" st-sort="CredentialintgInitiatedDate" st-ratio="10">
+                                        Credentialintg Initiated Date
+                                    </th>
+                                    <th st-sort="AppointmentDate" st-ratio="11">
+                                        Appointment Date
+                                    </th>
+                                    <th st-sort="RecommendedLevel" st-ratio="10">
+                                        Recommended Level
+                                    </th>
+                                    <th st-sort="Status" st-ratio="10">
+                                        Status
+                                    </th>
+                                    <th st-ratio="4">Action</th>
+                                </tr>
+                                <tr>
+                                    <td st-ratio="10"><input st-search="Name" type="text" placeholder="Filter Provider Name" class="form-control input-sm"></td>
+                                    <td st-ratio="8"><input st-search="Specialty" type="text" placeholder="Filter Specialty" class="form-control input-sm" /></td>
+                                    <td st-ratio="11"><input st-search="Plan" type="text" placeholder="Filter Plan" class="form-control input-sm" /></td>
+                                    <td st-ratio="10"><input st-search="CredentialintgInitiatedDate" type="text" placeholder="Filter Credentialintg Initiated Date" class="form-control input-sm" /></td>
+                                    <td st-ratio="11"><input st-search="AppointmentDate" type="text" placeholder="Filter Appointment Date" class="form-control input-sm" /></td>
+                                    <td st-ratio="10"><input st-search="RecommendedLevel" type="text" placeholder="Filter Recommended Level" class="form-control input-sm" /></td>
+                                    <td st-ratio="4"><input st-search="Status" type="text" placeholder="Filter Status" class="form-control input-sm" /></td>
+                                    <td st-ratio="4"></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="c in pc.displayed">
+                                    <td>{{c.Name}}</td>
+                                    <td>{{c.Specialty}}</td>
+                                    <td>{{c.Plan}}</td>
+                                    <td>{{c.CredentialingIntiatedDate}}</td>
+                                    <td>{{c.AppointmentDate}}</td>
+                                    <td>{{c.RecommendedLevel}}</td>
+                                    <td>{{c.Status}}</td>
+                                    <td>
+                                        @*<a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/1' tooltip data-toggle="tooltip" data-placement="top" title="Redirect"><i class="glyphicon glyphicon-forward"></i></a>*@
+                                        <a ng-click="ApproveRejectProvider()">
+                                            <i class="fa fa-check-square" style="color:green"></i>
+                                        </a>
+                                        <a ng-click="ApproveRejectProvider()">
+                                            <i class="fa fa-times-circle" style="color:red"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot style="cursor:pointer">
+                                <tr>
+                                    <td class=" text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                @*<div ng-show="IsProviderApprovedRejected" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style panel" style="border-top: 1px solid #eee; padding-top: 10px;background-color:#cfc3c3">
+                    <div class="col-lg-12 biscuits_3D">
+                        <div class="col-lg-4 panel" style="background-color: rgba(51, 122, 183, 0.85); color: black">
+                            <div class="row panel-body">
+                                Signature : <select class="input-sm" style="color:black">
+                                    <option>Digital Signature</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 panel" style="background-color:white;">
+                            <div class="row panel-body">
+                                <input class="form-group input-sm" type="text" style="height:50px;" />
+                            </div>
+                        </div>
+                        <div class="col-lg-5 panel" style="background-color: rgba(51, 122, 183, 0.85); color: black">
+                            <div class="row panel-body">
+                                <label>You sure want to Accept/Reject</label><br />
+                                <button class="btn btn-primary pull-left">Yes</button>
+                                <button class="btn btn-danger pull-right">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+                <div ng-show="IsProviderApprovedRejected" class="col-lg-4 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style panel pull-right" style="border-top: 1px solid #eee; padding-top: 10px;background-color:#cfc3c3">
+                    <div class="col-lg-12 biscuits_3D">
+                        <div class="col-lg-12">
+                            <div class="row panel-body">
+                                Signature : <select class="input-sm" style="color:black">
+                                    <option>Digital Signature</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 panel" style="background-color:white;">
+                            <div class="row panel-body">
+                                <input class="form-group input-sm" type="text" style="height:50px;width:100%" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12 panel" style="background-color: rgba(51, 122, 183, 0.85); color: black">
+                            <div class="row panel-body">
+                                <label>You sure want to Accept/Reject</label><br />
+                                <button class="btn btn-primary pull-left" ng-click="CancelApproveRejectProvider('Yes')">Yes</button>
+                                <button class="btn btn-danger pull-right" ng-click="CancelApproveRejectProvider('No')">No</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-warning pull-left" ng-click="CancelApproveRejectProvider()">Cancel</button>
+                </div>
+
+            </fieldset>
+        </div>
+       
+        <div class="modal fade" id="inactiveWarningModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="removeTask">
+                        <div class="modal-header" style="background-color: rgba(0, 128, 0, 0.53);">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Success</h4>
+                        </div>
+                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                            <div style="margin-top:2%;">
+                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                            </div>
+                        </div>
+                        <div class="modal-body" ng-show="!isRemoved">
+                            Successfully assigned                           
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

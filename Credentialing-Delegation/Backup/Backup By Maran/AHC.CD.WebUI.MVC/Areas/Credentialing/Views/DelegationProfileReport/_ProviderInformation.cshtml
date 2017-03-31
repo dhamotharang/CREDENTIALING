@@ -1,0 +1,112 @@
+﻿
+
+
+
+<strong>Provider Information</strong>
+
+
+<table class="table table-bordered small">
+    <tr>
+        <td colspan="1">
+            <label for="selectbasic">PCP or Specialist</label>
+        </td>
+
+        <td colspan="2">
+            <span ng-if="templateCode == 'A2HC'" ng-init="PrimarySpecility.PcpOrSpecialist = 'PCP'"></span>
+            <input type="text" id="Pcporspecialist" class="form-control input-md" ng-model="PrimarySpecility.PcpOrSpecialist" />
+        </td>
+
+        <td colspan="1">
+
+            <label for="textinput">Primary Specialty</label>
+        </td>
+
+        <td colspan="1">
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="PrimarySpecility.Specialty">
+
+        </td>
+
+
+
+
+        <td colspan="1">
+            <label for="textinput">Secondary Specialty</label>
+        </td>
+
+        <td colspan="1">
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="SecondarySpecility[0].Specialty">
+
+
+        </td>
+
+    </tr>
+
+    <tr>
+        <td>
+            <label for="radios">Board Certified</label> <br />
+
+        </td>
+
+        <td colspan="2">
+
+            <input type="text" id="boardcertified" class="form-control input-md" ng-model="PrimarySpecility.BoardCertified" />
+        </td>
+
+
+
+
+        <td>
+            <label for="textinput">Certified In</label>
+        </td>
+
+        <td colspan="1">
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="PrimarySpecility.BoardName">
+        </td>
+       
+        <td colspan="1">
+            <span ng-if="!PrimarySpecility.SpecialtyEffectiveDates" ng-init="PrimarySpecility.SpecialtyEffectiveDates = 'Indefinitely'"></span>
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="PrimarySpecility.SpecialtyEffectiveDates">
+
+        </td>
+        <td colspan="1">
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="SecondarySpecility[0].SpecialtyEffectiveDates">
+        </td>
+
+    </tr>
+    <tr ng-repeat="phy in delegationProfileObj.CoveringPhysicians track by $index">
+        <td ng-if="$index==0" rowspan="{{delegationProfileObj.CoveringPhysicians.length}}">
+            <label for="textinput">Covering Physicians</label>
+
+        </td>
+        <td colspan="3">
+
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="phy">
+        </td>
+        <td colspan="3">
+
+            @*<input id="textinput" name="textinput" type="text" class="form-control input-md">*@
+        </td>
+
+    </tr>
+
+    <tr ng-repeat="hospital in delegationProfileObj.ProviderHospitalAffiliations track by $index">
+
+        <td ng-if="$index==0" rowspan="{{delegationProfileObj.ProviderHospitalAffiliations.length}}">
+            <label for="textinput">Hospital Affiliations</label>
+
+        </td>
+
+        <td colspan="3">
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="hospital.HospitalName">
+
+        </td>
+        <td colspan="3">
+            <input id="textinput" name="textinput" type="text" class="form-control input-md" ng-model="hospital.EffectiveDates">
+
+        </td>
+
+    </tr>
+
+
+</table>
+

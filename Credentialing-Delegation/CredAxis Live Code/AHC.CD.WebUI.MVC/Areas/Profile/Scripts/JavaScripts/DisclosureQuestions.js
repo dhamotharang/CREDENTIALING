@@ -317,6 +317,9 @@ profileApp.controller('DisclosureController', ['$scope', '$rootScope', '$http', 
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.disclosureQuestion.TableState = true;
+                            }
                             $scope.disclosureQuestions = data.disclosureQuestion;
                             console.log('dq');
                             console.log($scope.disclosureQuestions);
@@ -328,7 +331,8 @@ profileApp.controller('DisclosureController', ['$scope', '$rootScope', '$http', 
                             } else {
                                 $scope.ProfileDisclosurePendingRequest = true;
                                 $rootScope.visibilityControl = "updatedDisclosureQuestions";
-                                messageAlertEngine.callAlertMessage('updatedDisclosureQuestions', "Disclosure Questions updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updatedDisclosureQuestions', "Disclosure Questions updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedDisclosureQuestions', data.successMessage, "success", true);
                             }
                         } else {
                             messageAlertEngine.callAlertMessage('errorDisclosureQuestions', "", "danger", true);

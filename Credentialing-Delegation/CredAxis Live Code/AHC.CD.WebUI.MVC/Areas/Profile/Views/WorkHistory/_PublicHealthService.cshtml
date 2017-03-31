@@ -2,8 +2,8 @@
 <div class="form-style">
     <fieldset>
         <legend>
-@if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
-{
+            @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+            {
                 <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="PublicHealthServicesPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
             }
             Public Health Service
@@ -41,24 +41,24 @@
                         </tr>
                     </thead>
                     <tbody ng-repeat="publicHealthService in publicHealthServices track by $index">
-                        <tr>
+                        <tr ng-class="{'TableColor':publicHealthService.TableState}">
                             <td>{{publicHealthService.LastLocation || 'Not Available'}}</td>
                             <td>{{publicHealthService.StartDate || 'Not Available' | date:'MM-dd-yyyy'}}</td>
                             <td>{{publicHealthService.EndDate || 'Not Available' | date:'MM-dd-yyyy'}}</td>
                             <td class="hideData">
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-{
-    <button id="PHS_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewPublicHealthService')" ng-hide="viewPublicHealthService" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
-}
+                                {
+                                    <button id="PHS_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewPublicHealthService')" ng-hide="viewPublicHealthService" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                }
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
-{
-    <button id="PHS_Table_EditIcon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editPublicHealthService',publicHealthService);changeButtonText()" ng-hide="editPublicHealthService" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-}
+                                {
+                                    <button id="PHS_Table_EditIcon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editPublicHealthService',publicHealthService);changeButtonText()" ng-hide="editPublicHealthService ||publicHealthService.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                }
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-{
-    <button id="PHS_Table_removeIcon" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initPublicHealthServiceWarning(publicHealthService);" tooltip><i class="fa fa-minus-circle"></i></button>
-    <button id="addNewPublicHealthService" ng-if="$index == publicHealthServices.length-1" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addPublicHealthService');changeButtonText();custHidefun();" ng-hide="viewPublicHealthService|| editShowPublicHealthService || newShowPublicHealthService || $index+1!=publicHealthServices.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
-}
+                                {
+                                    <button id="PHS_Table_removeIcon" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initPublicHealthServiceWarning(publicHealthService);" ng-hide="publicHealthService.TableState" tooltip><i class="fa fa-minus-circle"></i></button>
+                                    <button id="addNewPublicHealthService" ng-if="$index == publicHealthServices.length-1" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addPublicHealthService');changeButtonText();custHidefun();" ng-hide="viewPublicHealthService|| editShowPublicHealthService || newShowPublicHealthService || $index+1!=publicHealthServices.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                }
                             </td>
                         </tr>
                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
@@ -160,9 +160,9 @@
                             <td ng-if="!phsHistory.StartDate">Not Available</td>
                             <td ng-if="phsHistory.EndDate">{{phsHistory.EndDate | date:'MM-dd-yyyy'}}</td>
                             <td ng-if="!phsHistory.EndDate">Not Available</td>
-                           
-                           
-                            
+
+
+
                             <td>{{phsHistory.HistoryStatus}}</td>
                             <td ng-if="phsHistory.DeletedBy">{{phsHistory.DeletedBy }}</td>
                             <td ng-if="!phsHistory.DeletedBy">Not Available</td>

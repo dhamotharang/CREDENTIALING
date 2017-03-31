@@ -21,6 +21,7 @@ using System.IO;
 using System.Threading;
 using AHC.UtilityService;
 using Newtonsoft.Json;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -98,6 +99,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateDisclosureQuestionAsync(int profileId, ProfileDisclosureViewModel disclosureQuestion)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             ProfileDisclosure dataModelDisclosureQuestion = null;
             bool isCCO = await GetUserRole();
             try
@@ -122,8 +125,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                        
                         await profileManager.AddEditDisclosureQuestionAnswersAsync(profileId, dataModelDisclosureQuestion);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Disclosure Questions", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Disclosure Questions", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.DISCLOSURE_QUESTIONS_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && disclosureQuestion.ProfileDisclosureID != 0)
                     {
@@ -139,6 +146,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/DisclosureQuestion/UpdateDisclosureQuestionAsync?profileId=";
 
                         profileUpdateManager.AddProfileUpdateForProvider(disclosureQuestion, dataModelDisclosureQuestion, tracker);
+                        successMessage = SuccessMessage.DISCLOSURE_QUESTIONS_UPDATE_REQUEST_SUCCESS;
                     }
                     
                 }
@@ -164,7 +172,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.DISCLOSURE_QUESTIONS_CREATE_EXCEPTION;
             }
 
-            return Json(new { status = status, disclosureQuestion = dataModelDisclosureQuestion }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, disclosureQuestion = dataModelDisclosureQuestion }, JsonRequestBehavior.AllowGet);
         }
 
 

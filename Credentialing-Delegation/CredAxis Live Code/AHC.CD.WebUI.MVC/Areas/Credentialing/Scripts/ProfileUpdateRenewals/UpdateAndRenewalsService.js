@@ -42,7 +42,7 @@
     this.GetProfileUpdateDataByID = function (data) {
         var deferObject;
         deferObject = deferObject || $q.defer();
-        var promise = $http.post(rootDir + '/Credentialing/ProfileUpdates/GetDataById', data, { ignoreLoadingBar: true });
+        var promise = $http.post(rootDir + '/Credentialing/ProfileUpdates/GetDataById', data);
         promise.then(function (results) {
             deferObject.resolve(results);
         },
@@ -54,9 +54,9 @@
 
     this.GetCredRequestDataByID = function (ID, StatusType) {
         var deferObject;
-        var url = StatusType == 'Active' ? '/Credentialing/RequestForApproval/GetCredRequestDataByID?ID=' : '/Credentialing/RequestForApproval/GetCredRequestHistoryDataByID?ID=';
+        var url = StatusType == 'Pending' ? '/Credentialing/RequestForApproval/GetCredRequestDataByID?ID=' : '/Credentialing/RequestForApproval/GetCredRequestHistoryDataByID?ID=';
         deferObject = deferObject || $q.defer();
-        var promise = $http.get(rootDir + url + ID, { ignoreLoadingBar: true });
+        var promise = $http.get(rootDir + url + ID);
         promise.then(function (results) {
             deferObject.resolve(results);
         },

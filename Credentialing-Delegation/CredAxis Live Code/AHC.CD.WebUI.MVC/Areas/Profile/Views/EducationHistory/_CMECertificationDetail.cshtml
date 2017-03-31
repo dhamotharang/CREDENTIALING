@@ -5,9 +5,9 @@
         <fieldset>
             <legend>
                 @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
-{
+                {
                     <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="CMECertificationDetailPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
-            }
+                }
                 Post Graduate Training/CME Details
             </legend>
             <div class="legend2 pull-right">
@@ -25,9 +25,9 @@
                                     <td>
                                         No Data Available for Post Graduate Training/CME Details! Please click on
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-                                    {
+                                        {
                                             <button id="noDataAddNewCMEDetails" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addcertificationCMEViewModel')"><i class="fa fa-plus"></i></button>
-                                    }
+                                        }
                                         to add new Post Graduate Training/CME Information
                                     </td>
                                 </tr>
@@ -45,7 +45,7 @@
                                 </tr>
                             </thead>
                             <tbody ng-repeat="certificationCMEViewModel in CertificationCMEViewModel track by $index">
-                                <tr>
+                                <tr ng-class="{'TableColor':certificationCMEViewModel.TableState}">
                                     <td ng-if="certificationCMEViewModel.Certification" class="wrap-words">{{certificationCMEViewModel.Certification}}</td>
                                     <td ng-if="!certificationCMEViewModel.Certification" class="wrap-words"><i>Not Available</i></td>
                                     <td ng-if="certificationCMEViewModel.CreditHours" class="wrap-words">{{certificationCMEViewModel.CreditHours}}</td>
@@ -56,55 +56,55 @@
                                     <td ng-if="!certificationCMEViewModel.ExpiryDate" class="wrap-words"><i>Not Available</i></td>
                                     <td ng-if="certificationCMEViewModel.CertificatePath" class="wrap-words hideData">
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Preview, ViewBag.Roles, false))
-{
+                                        {
                                             <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{certificationCMEViewModel.CertificatePath}}" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Certificate"><i class="fa fa-file" title=""></i></a>
-}
+                                        }
                                     </td>
                                     <td ng-if="!certificationCMEViewModel.CertificatePath" class="wrap-words hideData"><i>Not Available</i></td>
                                     <td class="wrap-words hideData">
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-{
-    <button id="PGTCME_Table_View" data-toggle="tooltip" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewcertificationCMEViewModel')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
-}
+                                        {
+                                            <button id="PGTCME_Table_View" data-toggle="tooltip" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewcertificationCMEViewModel')" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                        }
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
-{
-    <button id="PGTCME_Table_EditIcon" tooltip data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editcertificationCMEViewModel',certificationCMEViewModel)"><i class="fa fa-edit"></i></button>
-}
+                                        {
+                                            <button id="PGTCME_Table_EditIcon" tooltip data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editcertificationCMEViewModel',certificationCMEViewModel)" ng-hide="certificationCMEViewModel.TableState"><i class="fa fa-edit"></i></button>
+                                        }
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-{
-    <button id="PGTCME_Table_RemoveIcon" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initCertificationDetailWarning(certificationCMEViewModel);" tooltip><i class="fa fa-minus-circle"></i></button>
-    <button id="addNewCMEDetails" ng-if="$index == CertificationCMEViewModel.length-1" tooltip data-toggle="tooltip" data-placement="top" title="Add New" ng-hide="$index+1!=CertificationCMEViewModel.length" ng-click="operateViewAndAddControl('addcertificationCMEViewModel')" class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button>
-}
+                                        {
+                                            <button id="PGTCME_Table_RemoveIcon" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initCertificationDetailWarning(certificationCMEViewModel);" ng-hide="certificationCMEViewModel.TableState" tooltip><i class="fa fa-minus-circle"></i></button>
+                                            <button id="addNewCMEDetails" ng-if="$index == CertificationCMEViewModel.length-1" tooltip data-toggle="tooltip" data-placement="top" title="Add New" ng-hide="$index+1!=CertificationCMEViewModel.length" ng-click="operateViewAndAddControl('addcertificationCMEViewModel')" class="btn btn-xs btn-success"><i class="fa fa-plus"></i></button>
+                                        }
                                     </td>
                                 </tr>
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
-                            {
+                                {
                                     <tr ng-show="visibilityControl==($index+'_editcertificationCMEViewModel')" class="hideData">
                                         <td colspan="6" id="certificateEditDiv{{$index}}" class=" editTableDataStyle">
                                             @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditCertificationCME.cshtml")
                                         </td>
                                     </tr>
-                            }
+                                }
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-                            {
+                                {
                                     <tr ng-show="visibilityControl==($index+'_viewcertificationCMEViewModel')" class="hideData">
                                         <td colspan="6" id="{{$index}}" class=" editTableDataStyle">
                                             @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewCertificationCME.cshtml")
                                         </td>
                                     </tr>
-                            }
+                                }
                             </tbody>
                         </table>
                     </div>
                     <div class="clearfix"></div>
                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-                {
+                    {
                         <div ng-show="visibilityControl=='addcertificationCMEViewModel'">
                             <div id="newCertificateFormDiv">
                                 @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditCertificationCME.cshtml")
                             </div>
                         </div>
-                }
+                    }
                     <div ng-show="activeMessageDiv=='addedNewCMEDetails'" class="alert alert-success" role="alert">
                         <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
                         <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}

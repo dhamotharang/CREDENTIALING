@@ -1,0 +1,49 @@
+﻿<fieldset>
+    <legend>
+        LOB Information
+    </legend>
+    <div class="col-lg-12">
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th class="col-md-2">LOB Name</th>
+                    <th class="col-md-3">Sub Plan Name</th>
+                    <th class="col-md-3">Contact Person Name</th>
+                    <th class="col-md-3">Address Detail</th>
+                    <th class="col-md-1">Action</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="plob in tempPlanObject.PlanLOBs track by $index">
+                <tr>
+                    <td class=" wrap-words">
+                        {{plob.LOB.LOBName || 'Not available'}}
+                    </td>
+                    <td class=" wrap-words"><span ng-repeat="sub in plob.SubPlans">{{sub.SubPlanName }}<span ng-if="$index!=plob.SubPlans.length-1">,</span>&nbsp;</span><span ng-if="plob.SubPlans.length==1 && plob.SubPlans[0].SubPlanName==null">{{'Not available'}}</span></td>
+                    <td class=" wrap-words"><span ng-repeat="con in plob.LOBContactDetails">{{con.ContactPersonName }}&nbsp;</span><span ng-if="plob.LOBContactDetails.length==1 && plob.LOBContactDetails[0].ContactPersonName==null">{{'Not available'}}</span></td>
+                    <td class=" wrap-words">
+                        <span>
+                            <span ng-repeat="addr in plob.LOBAddressDetails">
+                                {{addr.Street }}{{addr.Appartment }} {{addr.City }}
+                                {{addr.State }} {{addr.ZipCode }}  {{addr.Country }}
+                                {{addr.County }}
+                            </span>
+                            <span ng-if="plob.LOBAddressDetails.length == 1 && plob.LOBAddressDetails[0].Street==null && plob.LOBAddressDetails[0].Appartment==null && plob.LOBAddressDetails[0].City==null && plob.LOBAddressDetails[0].ZipCode==null && plob.LOBAddressDetails[0].State==null && plob.LOBAddressDetails[0].Country==null && plob.LOBAddressDetails[0].County==null">
+                                {{'Not available'}}
+                            </span>
+                    </td>
+                    <td>
+                        <button ng-click="ViewPLANLOBData(plob.PlanLOBID,$index)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+                <tr ng-show="plob.tableStatus" id="tableID{{$index}}">
+                    <td colspan="5" class="editTableDataStyle">
+                        @Html.Partial("_ViewLOBDetail")
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="ProceedView()">Proceed</button>
+        <input type="button" value="Back" ng-click="BackView()" class="btn btn-warning btn-sm pull-left">
+    </div>
+</fieldset>
+

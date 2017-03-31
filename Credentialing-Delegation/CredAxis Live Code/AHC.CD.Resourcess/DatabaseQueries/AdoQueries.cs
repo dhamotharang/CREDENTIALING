@@ -457,10 +457,10 @@ where  new.Name='Doctor'";
 
         #region Request For Approval
 
-        public static readonly string UPDATECOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
+        public static readonly string UPDATECOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
                                                             from [dbo].[ProfileUpdatesTrackers]) as result
                                                             where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') and result.[Modification]='Update';";
-        public static readonly string RENEWALCOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
+        public static readonly string RENEWALCOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
                                                             from [dbo].[ProfileUpdatesTrackers]) as result
                                                             where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') and result.[Modification]='Renewal';";
         public static readonly string REQUESTCOUNT = @"Select sum(p2) as RequestCount from (SELECT count(*) p2 FROM [dbo].[CredentialingRequestTrackers]
@@ -472,10 +472,10 @@ where  new.Name='Doctor'";
 
 
 
-        public static readonly string PROVIDERUPDATECOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
+        public static readonly string PROVIDERUPDATECOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
                                                             from [dbo].[ProfileUpdatesTrackers] where [ProfileId]=@ID) as result
                                                             where  result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') and result.[Modification]='Update';";
-        public static readonly string PROVIDERRENEWALCOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
+        public static readonly string PROVIDERRENEWALCOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
                                                             from [dbo].[ProfileUpdatesTrackers] where [ProfileId]=@ID) as result
                                                             where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') and result.[Modification]='Renewal';";
         public static readonly string PROVIDERREQUESTCOUNT = @"Select sum(p2) as RequestCount from (SELECT count(*) p2 FROM [dbo].[CredentialingRequestTrackers]
@@ -499,6 +499,7 @@ where  new.Name='Doctor'";
                                                             ,[SubSection]
                                                             ,[ApprovalStatus]
                                                             ,[Modification]
+                                                            ,[RejectionReason]
                                                             ,[oldData]
                                                             ,[NewData]
                                                             ,[NewConvertedData]
@@ -509,7 +510,8 @@ where  new.Name='Doctor'";
                                                              from 
                                                              (
                                                              select ROW_NUMBER() over ( partition by [Section],[SubSection],[RespectiveObjectId],p.profileid order by  p.profileid,t.[LastModifiedDate] desc) rownumber,
-                                                            p.[ProfileID],p.[ProfilePhotoPath], [ProfileUpdatesTrackerId],[Section], [SubSection],[RespectiveObjectId],[ApprovalStatus],[Modification],[oldData],[NewData],[NewConvertedData],[Url],[UniqueData],t.[LastModifiedDate], 
+                                                            p.[ProfileID],p.[ProfilePhotoPath], [ProfileUpdatesTrackerId],[Section], [SubSection],[RespectiveObjectId],[ApprovalStatus],[Modification],
+                                                            [RejectionReason],[oldData],[NewData],[NewConvertedData],[Url],[UniqueData],t.[LastModifiedDate], 
                                                             [NPINumber], [FirstName],[MiddleName], [LastName], [Salutation]
                                                             from [dbo].[ProfileUpdatesTrackers] as t inner join  
                                                             [dbo].[Profiles] as p on t.[ProfileId] = p.[ProfileId] inner join
@@ -529,6 +531,7 @@ where  new.Name='Doctor'";
                                                             ,[SubSection]
                                                             ,[ApprovalStatus]
                                                             ,[Modification]
+                                                            ,[RejectionReason]
                                                             ,[oldData]
                                                             ,[NewData]
                                                             ,[NewConvertedData]
@@ -539,7 +542,7 @@ where  new.Name='Doctor'";
                                                              from 
                                                              (
                                                              select ROW_NUMBER() over ( partition by [Section],[SubSection],[RespectiveObjectId],p.profileid order by  p.profileid,t.[LastModifiedDate] desc) rownumber,
-                                                            p.[ProfileID],p.[ProfilePhotoPath], [ProfileUpdatesTrackerId],[Section], [SubSection],[RespectiveObjectId],[ApprovalStatus],[Modification],[oldData],[NewData],[NewConvertedData],[Url],[UniqueData],t.[LastModifiedDate], 
+                                                            p.[ProfileID],p.[ProfilePhotoPath], [ProfileUpdatesTrackerId],[Section], [SubSection],[RespectiveObjectId],[ApprovalStatus],[Modification],[RejectionReason],[oldData],[NewData],[NewConvertedData],[Url],[UniqueData],t.[LastModifiedDate], 
                                                             [NPINumber], [FirstName],[MiddleName], [LastName], [Salutation]
                                                             from [dbo].[ProfileUpdatesTrackers] as t inner join  
                                                             [dbo].[Profiles] as p on t.[ProfileId] = p.[ProfileId] inner join
@@ -565,7 +568,7 @@ where  new.Name='Doctor'";
 		                                                ,[NPINumber]
 		                                                ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
 		                                                ,[PlanID]
-		                                                ,'Active' as [CurrentStatus]
+		                                                ,'Pending' as [CurrentStatus]
 		                                                ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
                                                       FROM [dbo].[CredentialingRequests]
 	                                                  Where [Status] != 'Inactive') as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID;";
@@ -585,7 +588,7 @@ where  new.Name='Doctor'";
 		                                                ,[NPINumber]
 		                                                ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
 		                                                ,[PlanID]
-		                                                ,'Active' as [CurrentStatus]
+		                                                ,'Pending' as [CurrentStatus]
 		                                                ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
                                                       FROM [dbo].[CredentialingRequests]
 	                                                  Where [Status] != 'Inactive' and [ProfileID]=@ID) as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID;";

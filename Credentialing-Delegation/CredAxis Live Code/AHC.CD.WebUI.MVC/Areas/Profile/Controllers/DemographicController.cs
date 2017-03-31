@@ -25,6 +25,7 @@ using AHC.CD.WebUI.MVC.Models;
 using AHC.CD.Resources.Document;
 using System.Dynamic;
 using Newtonsoft.Json;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -79,6 +80,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdatePersonalDetailsAsync(int profileId, PersonalDetailViewModel personalDetail)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             PersonalDetail dataModelPersonalDetail = null;
             bool isCCO = await GetUserRole();
             try
@@ -104,8 +107,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         // Change Notifications
 
                         await profileManager.UpdatePersonalDetailAsync(profileId, dataModelPersonalDetail);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Personal Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Personal Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PERSONAL_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && personalDetail.PersonalDetailID != 0)
                     {
@@ -127,6 +134,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         //tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(personalDetail, dataModelPersonalDetail, tracker);
+                        successMessage = SuccessMessage.PERSONAL_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -151,7 +159,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, personalDetail = dataModelPersonalDetail }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, personalDetail = dataModelPersonalDetail }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -241,7 +249,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status}, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -296,6 +304,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateOtherLegalNameAsync(int profileId, OtherLegalNameViewModel otherLegalName)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             OtherLegalName dataModelOtherLegalName = null;
             bool isCCO = await GetUserRole();
 
@@ -316,8 +326,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                        
                         await profileManager.UpdateOtherLegalNamesAsync(profileId, dataModelOtherLegalName, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Other Legal Names", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Other Legal Names", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.OTHER_LEGAL_NAME_UPDATE_SUCCESS;
+                        }
 
                     }
                     else
@@ -342,9 +356,11 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/Demographic/UpdateOtherLegalNameAsync?profileId=";
 
+                        OtherLegalName legalName = await profileUpdateManager.GetProfileDataByID(dataModelOtherLegalName, otherLegalName.OtherLegalNameID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Other Legal Name Detail";
-                        uniqueRecord.Value = otherLegalName.OtherFirstName + " " + otherLegalName.OtherMiddleName + " " + otherLegalName.OtherLastName;
+                        uniqueRecord.Value = legalName.OtherFirstName + " " + legalName.OtherMiddleName + " " + legalName.OtherLastName;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
@@ -352,6 +368,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         //tracker.Documents.Add(otherLegalNameDocumentTracker);
                         otherLegalName.File = null;
                         profileUpdateManager.AddProfileUpdateForProvider(otherLegalName, dataModelOtherLegalName, tracker);
+                        successMessage = SuccessMessage.OTHER_LEGAL_NAME_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -375,7 +392,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, otherLegalName = dataModelOtherLegalName }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, otherLegalName = dataModelOtherLegalName }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -390,7 +407,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 dataModelOtherLegalName = AutoMapper.Mapper.Map<OtherLegalNameViewModel, OtherLegalName>(otherLegalName);
                 var UserAuthID = await GetUserAuthId();
-                await profileManager.RemoveOtherLegalNameAsync(profileId, dataModelOtherLegalName,UserAuthID);
+                await profileManager.RemoveOtherLegalNameAsync(profileId, dataModelOtherLegalName, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Other Legal Name Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
 
@@ -468,6 +485,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateHomeAddressAsync(int profileId, HomeAddressViewModel homeAddress)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             HomeAddress dataModelHomeAddress = null;
             bool isCCO = await GetUserRole();
 
@@ -486,8 +505,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                       
                         await profileManager.UpdateHomeAddressAsync(profileId, dataModelHomeAddress);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Home Address", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Home Address", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.HOME_ADDRESS_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -502,13 +525,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/Demographic/UpdateHomeAddressAsync?profileId=";
 
+                        HomeAddress homeAddressOldData = await profileUpdateManager.GetProfileDataByID(dataModelHomeAddress, homeAddress.HomeAddressID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Home Address Detail";
-                        uniqueRecord.Value = homeAddress.Street + ", " + homeAddress.City + ", " + homeAddress.State + ", " + homeAddress.ZipCode + ", " + homeAddress.Country;
+                        uniqueRecord.Value = homeAddressOldData.Street + ", " + homeAddressOldData.City + ", " + homeAddressOldData.State + ", " + homeAddressOldData.ZipCode + ", " + homeAddressOldData.Country;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
                         
                         profileUpdateManager.AddProfileUpdateForProvider(homeAddress, dataModelHomeAddress, tracker);
+                        successMessage = SuccessMessage.HOME_ADDRESS_UPDATE_REQUEST_SUCCESS;
                     }
                     
                 }
@@ -533,7 +559,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, homeAddress = dataModelHomeAddress }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, homeAddress = dataModelHomeAddress }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -547,7 +573,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             try
             {
                 dataModelHomeAddress = AutoMapper.Mapper.Map<HomeAddressViewModel, HomeAddress>(homeAddress);
-                var UserAuthID =await GetUserAuthId();
+                var UserAuthID = await GetUserAuthId();
                 await profileManager.RemoveHomeAddressAsync(profileId, dataModelHomeAddress, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Home Address Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -583,6 +609,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateContactDetailsAsync(int profileId, ContactDetailViewModel contactDetail)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             ContactDetail dataModelContactDetail = null;
             bool isCCO = await GetUserRole();
 
@@ -608,8 +636,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                        
                         await profileManager.UpdateContactDetailAsync(profileId, dataModelContactDetail);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Contact Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Contact Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.CONTACT_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && contactDetail.ContactDetailID != 0)
                     {
@@ -625,6 +657,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/Demographic/UpdateContactDetailsAsync?profileId=";
 
                         profileUpdateManager.AddProfileUpdateForProvider(contactDetail, dataModelContactDetail, tracker);
+                        successMessage = SuccessMessage.CONTACT_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -648,7 +681,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, contactDetail = dataModelContactDetail }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, contactDetail = dataModelContactDetail }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -661,6 +694,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdatePersonalIdentificationAsync(int profileId, PersonalIdentificationViewModel personalIdentification)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             PersonalIdentification dataModelPersonalIdentification = null;
             bool isCCO = await GetUserRole();
             try
@@ -689,8 +724,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     else if (isCCO && personalIdentification.PersonalIdentificationID != 0)
                     {
                         await profileManager.UpdatePersonalIdentificationAsync(profileId, dataModelPersonalIdentification, dlDocument, ssnDocument);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Personal Identifications", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Personal Identifications", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PERSONAL_IDENTIFICATION_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && personalIdentification.PersonalIdentificationID != 0)
                     {
@@ -723,6 +762,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         personalIdentification.DLCertificateFile = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(personalIdentification, dataModelPersonalIdentification, tracker);
+                        successMessage = SuccessMessage.PERSONAL_IDENTIFICATION_UPDATE_REQUEST_SUCCESS;
                     }
                     
                 }
@@ -747,7 +787,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, personalIdentification = dataModelPersonalIdentification, personalIdentificationid=personalIdentification.PersonalIdentificationID }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, personalIdentification = dataModelPersonalIdentification, personalIdentificationid = personalIdentification.PersonalIdentificationID }, JsonRequestBehavior.AllowGet);
         }  
 
         #endregion
@@ -760,6 +800,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateBirthInformationAsync(int profileId, BirthInformationViewModel birthInformation)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             BirthInformation dataModelBirthInformation = null;
             bool isCCO = await GetUserRole();
             try
@@ -786,8 +828,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                        
                         await profileManager.UpdateBirthInformationAsync(profileId, dataModelBirthInformation, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Birth Information", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Birth Information", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.BIRTH_INFORMATION_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && birthInformation.BirthInformationID != 0)
                     {
@@ -813,6 +859,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         birthInformation.BirthCertificateFile = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(birthInformation, dataModelBirthInformation, tracker);
+                        successMessage = SuccessMessage.BIRTH_INFORMATION_UPDATE_REQUEST_SUCCESS;
                     }
                     
                 }
@@ -837,7 +884,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, birthInformation = dataModelBirthInformation }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, birthInformation = dataModelBirthInformation }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -850,6 +897,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateVisaDetailAsync(int profileId, VisaDetailViewModel visaDetail)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             VisaDetail dataModelVisaDetail = null;
             bool isCCO = await GetUserRole();
 
@@ -883,8 +932,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                       
                         await profileManager.UpdateVisaInformationAsync(profileId, dataModelVisaDetail, visaDocument, greenCarddocument, nationalIDdocument);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Visa Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Visa Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.VISA_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && visaDetail.VisaDetailID != 0)
                     {
@@ -927,6 +980,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/Demographic/UpdateVisaDetailAsync?profileId=";                        
 
                         profileUpdateManager.AddProfileUpdateForProvider(visaDetail, dataModelVisaDetail, tracker);
+                        successMessage = SuccessMessage.VISA_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
                     
                 }
@@ -951,7 +1005,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, visaDetail = dataModelVisaDetail }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, visaDetail = dataModelVisaDetail }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -964,6 +1018,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateLanguagesAsync(int profileId, LanguageInfoViewModel languageInfo)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             LanguageInfo dataModelLanguageInfo = null;
             bool isCCO = await GetUserRole();
 
@@ -989,8 +1045,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         
                         await profileManager.UpdateLanguageInformationAsync(profileId, dataModelLanguageInfo);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Languages", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Languages", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.LANGUAGES_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && languageInfo.LanguageInfoID != 0)
                     {
@@ -1006,6 +1066,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/Demographic/UpdateLanguagesAsync?profileId=";
 
                         profileUpdateManager.AddProfileUpdateForProvider(languageInfo, dataModelLanguageInfo, tracker);
+                        successMessage = SuccessMessage.LANGUAGES_DETAIL_UPDATE_SUCCESS;
                     }
                 }
                 else
@@ -1029,7 +1090,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, languageInfo = dataModelLanguageInfo }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, languageInfo = dataModelLanguageInfo }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion        

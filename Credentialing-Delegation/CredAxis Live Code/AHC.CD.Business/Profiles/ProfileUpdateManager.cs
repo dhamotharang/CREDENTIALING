@@ -2356,5 +2356,13 @@ namespace AHC.CD.Business.Profiles
             var requestCounts = trackerRepo.Get(p => p.ProfileId == profileId && p.ApprovalStatus == AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == AHC.CD.Entities.MasterData.Enums.ApprovalStatusType.OnHold.ToString()).Count();
             return requestCounts;
         }
+
+        public async Task<T> GetProfileDataByID<T>(T t, int ID) where T : class
+        {
+            var sectionWiseRepo = uow.GetGenericRepository<T>();
+            var profileData = await sectionWiseRepo.FindAsync(ID);
+
+            return profileData;
+        }
     }
 }

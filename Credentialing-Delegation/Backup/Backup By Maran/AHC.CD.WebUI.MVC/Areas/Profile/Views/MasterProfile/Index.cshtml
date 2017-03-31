@@ -1,0 +1,511 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(function () {
+        $("#sidemenu").addClass("menu-in");
+        $("#page-wrapper").addClass("menuup");
+        $("#menu-toggle").toggleClass("btn-menuup");
+    });
+
+    $(window).bind('beforeunload', function() {
+        return '';
+    });
+
+    profileId =@ViewBag.ProfileId;
+    var demographics = @Html.Raw(Json.Encode(ViewBag.Demographics));
+
+    var profileUpdates=@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ProfileUpdates));
+
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();
+        $('#tabhome').click(function(){
+            $('#tabDocumentationChecklist').css({'pointer-events':'auto'});
+            $('#tabContractGrid').css({ 'pointer-events': 'auto' });
+        });
+    });
+
+    var tooltip="Under Process";
+</script>
+@*<style>
+        .popover {
+            min-width:900px;
+            color:black;
+        }
+    </style>*@
+
+@section AddToHead{
+    @Styles.Render("~/Content/profileCss")
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @Scripts.Render("~/bundles/angular")
+
+
+
+    <link href="~/Content/SharedCss/jquery-ui.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-ui.js"></script>
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+
+
+    <script src="~/Scripts/Lib/Moment/moment.js"></script>
+    <script src="~/Scripts/Lib/dirPagination.js"></script>
+    <script src="~/Scripts/Lib/AHC_Lib/AutoCompleteLib.js"></script>
+    <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    <script src="~/Scripts/Custom/Profile/xeditable.min.js"></script>
+
+
+    @Scripts.Render("~/Content/profileValidationJs")
+
+    @Scripts.Render("~/Content/profileUtilJs")
+
+
+    <!-- please move all dependent partial java script in partial page-->
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+
+    <script src="~/Areas/Profile/Scripts/Util/CreateProfile.js"></script>
+    <script src="~/Areas/Profile/Scripts/Util/AddressAutoComplete.js"></script>
+    <script src="~/Areas/Profile/Scripts/Util/MasterDataService.js"></script>
+
+    <script src="~/Scripts/Lib/pdfGeneration/jspdf.min.js"></script>
+    <script src="~/Areas/Profile/Scripts/Util/Directives.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/timepickerpop.js"></script>
+
+    @Scripts.Render("~/Content/jsonUtilProfileJs")
+
+    <script src="~/Areas/Profile/Scripts/Util/Util.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/roundProgress.min.js"></script>
+
+
+
+    <!--Profile Js'-->
+    <script src="~/Areas/Profile/Scripts/JavaScripts/Demographics.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/IdentificationLicense.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/WorkHistory.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/hospital.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/Education.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/Specialty.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProfessionalAffiliation.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/PracticeLocation.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProfessionalReference.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProfessionalLiabilityInsurance.js"></script>
+    <script src="~/Areas/Profile/Scripts/OrganizationInfo/OrganisationInfo.min.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/DisclosureQuestions.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ContractInfo.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProfileDashboard.js"></script>
+    <script src="~/Areas/Profile/Scripts/CustomFields/CustomFieldController.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/DocumentationCheckList.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ProviderSummaryDassboard.js"></script>
+
+    <link href="~/Content/SharedCss/Colorpicker.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/bootstrap-colorpicker-module.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/roundProgress.min.js"></script>
+    <script src="~/Scripts/Lib/angular-wysiwyg.js"></script>
+
+
+    <script src="~/Areas/Profile/Scripts/JavaScripts/Tasks.js"></script>
+    <script src="~/Areas/Profile/Scripts/JavaScripts/ContractGrid.js"></script>
+
+    <script src="~/Areas/Credentialing/Scripts/CnD/PageSelectDirective1.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    @*<script src="~/Scripts/angular-animate.min.js"></script>
+        <script src="~/Scripts/Lib/Angular/toaster.js"></script>*@
+
+
+    <script src="~/Scripts/Lib/jsPdf/jspdf.min.js"></script>
+    <script src="~/Scripts/Lib/jspdf.plugin.addimage.js"></script>
+    <script src="~/Scripts/Lib/html2canvas.min.js"></script>
+    <script src="~/Scripts/Lib/jsPdf/jspdf.plugin.autotable.js"></script>
+
+    <script src="~/Scripts/Lib/ngiriraj/base64.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jquery.base64.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/tableExport.js"></script>
+
+
+}
+<input id="rootPath" type="hidden" value="@ViewBag.BaseUrl" />
+<input id="cdm" type="hidden" value="@ViewBag.cdm" />
+<input id="pm" type="hidden" value="@ViewBag.pm" />
+<input id="isPrimeCare" type="hidden" value="@ViewBag.isPrimeCare" />
+
+<div id="page-wrapper" ng-app="profileApp" class="@(ViewContext.RouteData.Values["controller"].Equals("MasterProfile") ? "menuup" : "")">
+    <div class="container-fluid wrap-words">
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12 zero-padding-left-right-div" ng-controller="breadcrumCtrl">
+                <ol class="breadcrumb">
+                    @if (AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionValidator.IsAuthorized(AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionType.Edit, ViewBag.Roles, false) && (ViewBag.Roles as List<string>).Contains("PRO"))
+                    {
+                    <li class="active">
+                        <a href="/">
+                            <i class="fa fa-dashboard"></i> Dashboard
+                        </a>
+                    </li>
+                    }
+                    @if (AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionValidator.IsAuthorized(AHC.CD.WebUI.MVC.Areas.Profile.Attributes.ProfileActionType.Edit, ViewBag.Roles, false) && (ViewBag.Roles as List<string>).Contains("CCO"))
+                    {
+                    <li class="active">
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/SearchProvider/SearchProvider">
+                            <i class="fa fa-search"></i> Search Provider
+                        </a>
+                    </li>
+                    }
+                    <li class="active">
+                        <i class="fa fa-list"></i>
+                        Profiles
+                    </li>
+                    <li class="active" ng-cloak>
+                        {{Provider.FirstName}} {{Provider.MiddleName}} {{Provider.LastName}}
+                    </li>
+                    <li class="text-capitalize active" ng-cloak>
+                        <span id="tabname">Demographics</span>
+                    </li>
+                    @if (System.Configuration.ConfigurationManager.AppSettings["PrintProfileAsPDF"] == "true")
+                    {
+                    <button ng-cloak class="btn btn-xs btn-default pull-right" data-toggle="tooltip" data-placement="bottom" title="Download as PDF" ng-click="PrintPDF();" ng-disabled="generatePDF"><i class="fa fa-file-pdf-o" ng-hide="generatePDF"></i><i ng-show="generatePDF">Generating PDF.. Please Wait.. <img src="~/Content/Images/ajax-loader.gif" style="width:15px" /></i></button>
+                    }
+                </ol>
+            </div>
+        </div>
+        <div class="row col-lg-12 zero-padding-left-right-div" ng-cloak>
+            @*<div class="col-lg-12 alert alert-danger" id="showErrorPDF" role="alert" style="display:none;">
+                    <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                    Sorry for the Inconvenience, PDF cannot be generated. Please try again later !!
+                </div>*@
+            <div ng-show="activeMessageDiv=='showErrorPDF'" class="alert alert-danger" role="alert">
+                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                <i class="fa fa-2x fa-arrow-up"></i> {{messageDesc}}
+            </div>
+        </div>
+        <!-- /.row -->
+        @*<div id="loadingData" class="loading-modal-wait">
+                <div class="col-lg-12">
+                    <div class="progress" style="margin-top: 15%;">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+                            <span class="sr-only">Loading ....</span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <span class="h3" id="Loading_Message">Initializing Profile ...</span><span class="h3"> Please wait....</span>
+                    </div>
+                </div>
+            </div>*@
+        <div id="loading" align="center" style="display:none">
+            @*<p style="margin-top: 25%;">
+                    Removing Data...Please Wait...
+                </p>*@
+        </div>
+
+        <!-- Add Provider content form div -->
+        <div class="row" id="profileForm">
+            <div class="col-lg-12 zero-padding-left-right-div" ng-cloak>
+                <div class="panel panel-default panel-body form-style" ng-init="tabDeactivate=false;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["TurnOffTab"] == "true")
+                    {
+                        <div class="legend2 pull-right">
+                            <button ng-click="tabDeactivate=true;loadAllData();" ng-show="!tabDeactivate" class="btn btn-xs btn-info" tooltip data-toggle="tooltip" data-placement="top" title="Turn Off Tabs"><i class="fa fa-list"></i></button>
+                            <button ng-click="tabDeactivate=false" ng-show="tabDeactivate" class="btn btn-xs btn-info" tooltip data-toggle="tooltip" data-placement="top" title="Turn On Tabs"><i class="fa fa-tags"></i></button>
+                        </div>
+                    }
+                    <div class="panel-body">
+                        <div role="tabpanel">
+                            <div ng-controller="tabController" ng-show="!tabDeactivate">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active" id="tabProviderDashboard" @*ng-click="getTabData('ProviderDashboard');"*@ ng-if="ccoprofile"><a id="ProviderDashboard_Link" href="#ProviderDashboard" aria-controls="ProviderDashboard" role="tab" data-toggle="tab">@*<img src="~/Content/Images/ajax-loader.gif" ng-show="!ProviderDashBoardTabLoaded" style="width:15px" />*@Profile Summary</a></li>
+                                    <li role="presentation" class="tab-label" id="tabhome"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!DemographicsLoaded" style="width:15px" /> Demographics</a></li>
+                                    <li role="presentation" class="tab-label" id="tabidentification" ng-click="getTabData('IdentificationLicenses');"><a href="#identification" aria-controls="identification" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!IdentificationLicensesLoaded" style="width:15px" /> Identification & Licenses</a></li>
+                                    <li role="presentation" class="tab-label" id="tabeducation" ng-click="getTabData('EducationHistory');"><a href="#education" aria-controls="education" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!EducationHistoryLoaded" style="width:15px" /> Education History</a></li>
+                                    <li role="presentation" class="tab-label" id="tabspecialty" ng-click="getTabData('Specialty');"><a href="#specialty" aria-controls="specialty" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!SpecialtyLoaded" style="width:15px" /> Specialty/Board</a></li>
+                                    <li role="presentation" class="tab-label" id="tabpractice" ng-click="getTabData('PracticeLocation');"><a id="PracticeLocation_Link" href="#practice" aria-controls="practice" role="tab" data-toggle="tab" ng-click="getPractitionerData();"><img src="~/Content/Images/ajax-loader.gif" ng-show="!PracticeLocationLoaded" style="width:15px" /> Practice Location</a></li>
+                                    <li role="presentation" class="tab-label" id="tabhospital" ng-click="getTabData('Specialty');getTabData('HospitalPrivilege');"><a id="Hospital_Privileges" href="#hospital" aria-controls="hospital" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!HospitalPrivilegeLoaded" style="width:15px" /> Hospital Privilege</a></li>
+                                    <li role="presentation" class="tab-label" id="tabliability" ng-click="getTabData('ProfessionalLiability');"><a id="Professional_Liability" href="#liability" aria-controls="liability" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!ProfessionalLiabilityLoaded" style="width:15px" /> Professional Liability</a></li>
+                                    <li role="presentation" class="tab-label" id="tabworkhistory" ng-click="getTabData('WorkHistory');"><a href="#workHistory" aria-controls="profile" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!WorkHistoryLoaded" style="width:15px" /> Work History</a></li>
+                                    <li role="presentation" class="tab-label" id="tabprofessionalreference" ng-click="getTabData('ProfessionalReference');"><a id="Professional_Reference" href="#professionalreference" aria-controls="professionalreference" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!ProfessionalReferenceLoaded" style="width:15px" /> Professional Reference</a></li>
+                                    <li role="presentation" class="tab-label" id="tabProfessional" ng-click="getTabData('ProfessionalAffiliation');"><a id="Professional_Affiliation" href="#Professional" aria-controls="Professional" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!ProfessionalAffiliationLoaded" style="width:15px" /> Professional Affiliation</a></li>
+                                    <li role="presentation" class="tab-label" id="tabdisclosure" ng-click="getTabData('DisclosureQuestion');"><a id="Disclosure_Questions" href="#disclosure" aria-controls="disclosure" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!DisclosureQuestionLoaded" style="width:15px" /> Disclosure Questions</a></li>
+                                    <li role="presentation" class="tab-label" id="tabContractInfo" ng-click="getTabData('ContractInformation');"><a id="Employment_Information" href="#ContractInfo" aria-controls="ContractInfo" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!ContractInformationLoaded" style="width:15px" /> Employment Information</a></li>
+                                    <li role="presentation" class="tab-label" id="tabDocumentRepository" ng-click="getTabData('DocumentRepository');"><a id="Document_Repository" href="#DocumentRepository" aria-controls="Plans" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!DocumentRepositoryLoaded" style="width:15px" />Document Repository</a></li>
+                                    <li role="presentation" class="tab-label" id="tabProfileDashboard" ng-click="getTabData('ProfileDashboard');"><a id="Profile_Dashboard" href="#ProfileDashboard" aria-controls="profiledashboard" role="tab" data-toggle="tab">@*<img src="~/Content/Images/ajax-loader.gif" ng-show="!ProfileDashboard" style="width:15px" />*@Profile Dashboard</a></li>
+                                    <li role="presentation" class="tab-label" id="tabCustomField" ng-click="getTabData('CustomField');" ng-if="ccoprofile"><a id="Additional_Field" href="#CustomField" aria-controls="CustomField" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!CustomFieldLoaded" style="width:15px" />Additional Field</a></li>
+                                    <li role="presentation" class="tab-label" id="tabDocumentationChecklist" ng-disabled='disabled' ng-click="getTabData('DocumentationCheckList');" ng-if="ccoprofile"><a href="#DocumentationCheckList" aria-controls="DocumentationCheckList" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!DocCheckListLoaded" style="width:15px" />Document CheckList</a></li>
+                                    <li role="presentation" class="tab-label" id="tabContractGrid" ng-click="getTabData('ContractGrid');"><a id="ContractGrid_Link" href="#ContractGrid" aria-controls="ContractGrid" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!ContractGridLoaded" style="width:15px" />Contract Grid</a></li>
+                                    <li role="presentation" class="tab-label" id="tabTasks" ng-click="getTabData('Tasks');" ng-if="ccoprofile"><a id="Task_Link" href="#Tasks" aria-controls="Tasks" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!tasksTabLoaded" style="width:15px" />Tasks</a></li>
+
+                                    @*<li role="presentation" class="tab-label" id="tabProfileSummary" ng-click="getTabData('ProfileSummary');"><a href="#ProfileSummary" aria-controls="profilesummary" role="tab" data-toggle="tab"><img src="~/Content/Images/ajax-loader.gif" ng-show="!ProfileDashboard" style="width:15px" />Profile Summary</a></li>
+                                        <li role="presentation"><a href="#service" aria-controls="service" role="tab" data-toggle="tab">Service Information</a></li>
+                                         <li role="presentation"><a href="#Plans" aria-controls="Plans" role="tab" data-toggle="tab">View All Plans</a></li>
+                                         <li role="presentation" data-toggle="tooltip" data-placement="right" title="Document Checklist"><a href="#document" aria-controls="document" role="tab" data-toggle="tab"><i class="fa fa-file-o"></i></a></li>
+                                         <li role="presentation" data-toggle="tooltip" data-placement="right" title="Timeline"><a href="#Timeline" aria-controls="Timeline" role="tab" data-toggle="tab"><i class="fa fa-history"></i></a></li>*@
+
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-12 zero-padding-left-right-div">
+                                <!-- Tab panes -->
+                                <div ng-class="{false :'tab-content', true:''}[tabDeactivate]">
+                                    <div role="tabpanel" class="tab-pane " @*active*@ id="home">
+                                        <div class="col-lg-12 text-center" ng-show="!DemographicsLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Demographics.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Demographics partial starts here-->
+                                        <div ng-show="DemographicsLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/Demographic/_Demographics.cshtml")
+                                            <!---Demographics partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="identification">
+                                        <div class="col-lg-12 text-center" ng-show="!IdentificationLicensesLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Identification & Licenses.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Licensing & Identification partial starts here-->
+                                        <div ng-show="IdentificationLicensesLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/IdentificationAndLicense/_IdentificationLicensing.cshtml")
+                                            <!---Licensing & Identification partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="education">
+                                        <div class="col-lg-12 text-center" ng-show="!EducationHistoryLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Education History.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Education History partial starts here-->
+                                        <div ng-show="EducationHistoryLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/EducationHistory/_Education.cshtml")
+                                            <!---Education History partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="specialty">
+                                        <div class="col-lg-12 text-center" ng-show="!SpecialtyLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Specialty.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Specialty partial starts here-->
+                                        <div ng-show="SpecialtyLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/BoardSpecialty/_Specialty.cshtml")
+                                            <!---Specialty partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="practice">
+                                        <div class="col-lg-12 text-center" ng-show="!PracticeLocationLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Practice Location.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Practice Location Information partial starts here-->
+                                        <div ng-show="PracticeLocationLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/PracticeLocation/_PracticeLocationInformation.cshtml")
+                                            <!---Practice Location Information partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="hospital">
+                                        <div class="col-lg-12 text-center" ng-show="!HospitalPrivilegeLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Hospital Privilege.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Hospital Privilege partial starts here-->
+                                        <div ng-show="HospitalPrivilegeLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/HospitalPrivilege/_HospitalPrivilegeInformation.cshtml")
+                                            <!---Hospital Privilege partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="liability">
+                                        <div class="col-lg-12 text-center" ng-show="!ProfessionalLiabilityLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Professional Liability.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Liability partial starts here-->
+                                        <div ng-show="ProfessionalLiabilityLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/Liability/_LiabilityInsurance.cshtml")
+                                            <!---Liability partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="workHistory">
+                                        <div class="col-lg-12 text-center" ng-show="!WorkHistoryLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Work History.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---work history partial starts here-->
+                                        <div ng-show="WorkHistoryLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/WorkHistory/_Workhistory.cshtml")
+                                            <!---work history partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="professionalreference">
+                                        <div class="col-lg-12 text-center" ng-show="!ProfessionalReferenceLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Professional Reference.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Professional Reference partial starts here-->
+                                        <div ng-show="ProfessionalReferenceLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/ProfessionalReference/_ProfessionalReference.cshtml")
+                                            <!---Professional Reference partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="Professional">
+                                        <div class="col-lg-12 text-center" ng-show="!ProfessionalAffiliationLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Professional Affiliation.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---_ProfessionalAffilation partial starts here-->
+                                        <div ng-show="ProfessionalAffiliationLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/ProfessionalAffiliation/_ProfessionalAffilation.cshtml")
+                                            <!---_ProfessionalAffilation partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="disclosure">
+                                        <div class="col-lg-12 text-center" ng-show="!DisclosureQuestionLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Disclosure Questions.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Disclosure Questions partial starts here-->
+                                        <div ng-show="DisclosureQuestionLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/DisclosureQuestion/_DisclosureQuestions.cshtml")
+                                            <!---Disclosure Questions partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="ContractInfo">
+                                        <div class="col-lg-12 text-center" ng-show="!ContractInformationLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Employment Information.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Contract Information partial starts here-->
+                                        <div ng-show="ContractInformationLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/ContractInformation/_ContractInformation.cshtml")
+                                            <!---Contract Information partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="DocumentRepository">
+                                        <div class="col-lg-12 text-center" ng-show="!DocumentRepositoryLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Document Repository Information.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <div ng-show="DocumentRepositoryLoaded" ng-cloak>
+                                            <!---Document Repository partial starts here-->
+                                            @Html.Partial("~/Areas/Profile/Views/DocumentRepository/_DocumentRepository.cshtml")
+                                            <!---Document Repository partial ends here-->
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="ProfileDashboard">
+                                        <div ng-cloak>
+                                            <!---Profile Dashboard partial starts here-->
+                                            @Html.Partial("~/Areas/Profile/Views/ProfileDashboard/_ProfileDashboard.cshtml")
+                                            <!---Profile Dashboard partial ends here-->
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="CustomField" ng-if="ccoprofile">
+
+                                        <div class="col-lg-12 text-center" ng-show="!CustomFieldLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Additional Field Information.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <div ng-show="CustomFieldLoaded" ng-cloak>
+                                            <!---Document Repository partial starts here-->
+                                            @Html.Partial("~/Areas/Profile/Views/CustomFieldGeneration/_CustomFieldPartial.cshtml")
+                                            <!---Document Repository partial ends here-->
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="DocumentationCheckList" ng-if="ccoprofile">
+
+                                        <div class="col-lg-12 text-center" ng-show="!DocCheckListLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Document CheckList Information.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <div ng-show="DocCheckListLoaded" ng-cloak>
+                                            <!---Document CheckList partial starts here-->
+                                            @Html.Partial("~/Areas/Profile/Views/DocumentationCheckList/_DocumentationCheckList.cshtml")
+                                            <!---Document CheckList partial ends here-->
+                                        </div>
+                                    </div>
+
+
+                                    <div role="tabpanel" class="tab-pane" id="ContractGrid">
+                                        <div class="col-lg-12 text-center" ng-show="!ContractGridLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Contract Grid Information.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <div ng-show="ContractGridLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/ContractGrid/_ContractGrid.cshtml")
+                                        </div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="Tasks">
+                                        <div class="col-lg-12 text-center" ng-show="!TasksLoaded" style="height:200px;">
+                                            <div style="margin-top:10%;">
+                                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading Tasks.. Please Wait..
+                                            </div>
+                                        </div>
+                                        <!---Tasks partial starts here-->
+                                        <div ng-show="TasksLoaded" ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/Tasks/_AllProviderTasks.cshtml")
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane active" id="ProviderDashboard">
+                                        @*<div class="col-lg-12 text-center" ng-show="!ProviderDashboardLoaded" style="height:200px;">
+                                                <div style="margin-top:10%;">
+                                                    <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Loading ProviderDashboard.. Please Wait..
+                                                </div>
+                                            </div>*@
+                                        <!---Tasks partial starts here-->
+                                        <div @*ng-show="ProviderDashboardLoaded"*@ ng-cloak>
+                                            @Html.Partial("~/Areas/Profile/Views/ProviderSummaryDashBoard/_ProviderSummaryDashboard.cshtml")
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    @*<div role="tabpanel" class="tab-pane" id="ProfileSummary">
+                                            <div ng-cloak>
+                                                <!---Profile Summary partial starts here-->
+                                                @Html.Partial("~/Areas/Profile/Views/ProfileSummary/_ProfileSummary.cshtml")
+                                                <!---Profile Summary partial ends here-->
+                                            </div>
+                                        </div>*@
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
+
+<div id="hiddenPrintDiv" style="display:none;">
+
+
+
+</div>

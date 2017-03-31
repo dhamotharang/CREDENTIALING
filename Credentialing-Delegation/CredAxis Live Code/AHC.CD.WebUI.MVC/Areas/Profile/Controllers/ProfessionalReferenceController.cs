@@ -22,6 +22,7 @@ using System.Dynamic;
 using Newtonsoft.Json;
 using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Business.MasterData;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -120,6 +121,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateProfessionalReference(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalReference.ProfessionalReferenceViewModel professionalReference)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             ProfessionalReferenceInfo dataModelProfessionalReference = null;
             bool isCCO = await GetUserRole();
             try
@@ -137,8 +140,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         
                         await profileManager.UpdateProfessionalReferenceAsync(profileId, dataModelProfessionalReference);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Reference Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Reference Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PROFESSIONAL_REFERENCE_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -153,15 +160,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/ProfessionalReference/UpdateProfessionalReference?profileId=";
 
-                        var providerType = professionalReference.ProviderTypeID != null ? await masterDataManager.GetProviderTypeByIDAsync(professionalReference.ProviderTypeID) : null;
+                        ProfessionalReferenceInfo referenceOldData = await profileUpdateManager.GetProfileDataByID(dataModelProfessionalReference, professionalReference.ProfessionalReferenceInfoID);
+                        var providerType = referenceOldData.ProviderTypeID != null ? await masterDataManager.GetProviderTypeByIDAsync(referenceOldData.ProviderTypeID) : null;
 
                         dynamic uniqueRecord = new ExpandoObject();
-                        uniqueRecord.FieldName = "Name";
-                        uniqueRecord.Value = (providerType != null ? providerType.Title + " - " : "") +  professionalReference.FirstName + " " + professionalReference.MiddleName + " " + professionalReference.LastName;
+                        uniqueRecord.FieldName = "Professional Reference Detail";
+                        uniqueRecord.Value = (providerType != null ? providerType.Title + " - " : "") + referenceOldData.FirstName + " " + referenceOldData.MiddleName + " " + referenceOldData.LastName;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(professionalReference, dataModelProfessionalReference, tracker);
+                        successMessage = SuccessMessage.PROFESSIONAL_REFERENCE_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
                     
                 }
@@ -188,7 +197,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, professionalReference = dataModelProfessionalReference }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, professionalReference = dataModelProfessionalReference }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

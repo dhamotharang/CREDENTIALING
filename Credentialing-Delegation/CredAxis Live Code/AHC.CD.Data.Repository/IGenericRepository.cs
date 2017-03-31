@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,6 +58,8 @@ namespace AHC.CD.Data.Repository
 
             Task<int> SaveAsync();
             int Save();
+
+            int GetPrimaryKeyValue<T>(T t);
 
             Task<int> CountAsync();
             int Count();

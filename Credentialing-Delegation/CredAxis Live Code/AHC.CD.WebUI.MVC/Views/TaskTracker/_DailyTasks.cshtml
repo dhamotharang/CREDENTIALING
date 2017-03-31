@@ -37,6 +37,7 @@
                 <table ng-show="trackerItems.length>0 && progressbar" class='table table-bordered customtbodyStyle medium wrap-words' st-pipe="mc.callServer" st-persist="mc.displayed" st-table="mc.displayed" st-safe-src="trackerItems">
                     <thead>
                         <tr>
+                            <th></th>
                             <th st-sort="ProviderName" st-ratio="12">
                                 Provider Name
                             </th>
@@ -79,6 +80,9 @@
                             <th st-ratio="12">Action</th>
                         </tr>
                         <tr>
+                            <td st-ratio="2">
+                                @*<input type="checkbox" checklist-model="tasks" checklist-value="mc.displayed">*@
+                            </td>
                             <td st-ratio="12"><input st-search="ProviderName" type="text" placeholder="Filter Provider Name" class="form-control input-sm"></td>
                             <td st-ratio="9"><input st-search="Subject" type="text" placeholder="Filter Subject" class="form-control input-sm" /></td>
                             <td st-ratio="9"><input st-search="SubSectionName" type="text" placeholder="Filter Sub Section Name" class="form-control input-sm" /></td>
@@ -99,7 +103,10 @@
                     <tbody>
                         @*{{mc.displayed.length}}
                             {{mc.displayed.ProviderName}}*@
-                        <tr ng-repeat="c in mc.displayed " ng-click="setSelectedRow(c)" ng-class="{'selected': c.selected, danger:(c.daysleft < 0) && c.CompleteStatus!='Closed'}">
+                        <tr ng-repeat="c in mc.displayed " ng-click="getCheckedTask(c,checkedTask)" ng-class="{'selected': c.selected, danger:(c.daysleft < 0) && c.CompleteStatus!='Closed'}">
+                            <td>
+                                <input type="checkbox" ng-checked="c.selected" ng-model="checkedTask" >
+                            </td>
                             <td>{{c.ProviderName}}</td>
                             <td>{{c.Subject}}</td>
                             <td>{{c.SubSectionName}}</td>
@@ -137,15 +144,15 @@
                                     if (!roles.Contains("ADM"))
                                     {
 
-                                <button class="btn btn-xs btn-primary" ng-click="showeditView(c,'editViewforTab')" ng-hide="c.CompleteStatus=='CLOSED'" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-if="tabStatus.editBtn"><i class="fa fa-edit"></i></button>
-                                <button class="btn btn-xs btn-danger" data-toggle="tooltip" ng-hide="c.CompleteStatus=='CLOSED'" data-placement="top" title="Close" ng-click="QuickRemove(c);" tooltip ng-if="tabStatus.removeBtn"><i class="fa fa-remove"></i></button>
+                                        <button class="btn btn-xs btn-primary" ng-click="showeditView(c,'editViewforTab')" ng-hide="c.CompleteStatus=='CLOSED'" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-if="tabStatus.editBtn"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-xs btn-danger" data-toggle="tooltip" ng-hide="c.CompleteStatus=='CLOSED'" data-placement="top" title="Close" ng-click="QuickRemove(c);" tooltip ng-if="tabStatus.removeBtn"><i class="fa fa-remove"></i></button>
                                     }
                                 }
                             }
-                                @*<button class="btn btn-xs btn-primary" ng-click="showeditView(c,'editViewforTab')" ng-hide="c.CompleteStatus=='Closed'" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-if="tabStatus.editBtn"><i class="fa fa-edit"></i></button>
-                <button class="btn btn-xs btn-danger" data-toggle="tooltip" ng-hide="c.CompleteStatus=='Closed'" data-placement="top" title="Close" ng-click="QuickRemove(c);" tooltip ng-if="tabStatus.removeBtn"><i class="fa fa-remove"></i></button>*@
-                                <button class="btn btn-xs btn-warning" ng-click="showHistory(c)" tooltip data-toggle="tooltip" data-placement="top" title="Task Update History" ng-if="tabStatus.historyBtn"><i class="fa fa-clock-o"></i></button>
-                                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                            @*<button class="btn btn-xs btn-primary" ng-click="showeditView(c,'editViewforTab')" ng-hide="c.CompleteStatus=='Closed'" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-if="tabStatus.editBtn"><i class="fa fa-edit"></i></button>
+            <button class="btn btn-xs btn-danger" data-toggle="tooltip" ng-hide="c.CompleteStatus=='Closed'" data-placement="top" title="Close" ng-click="QuickRemove(c);" tooltip ng-if="tabStatus.removeBtn"><i class="fa fa-remove"></i></button>*@
+                            <button class="btn btn-xs btn-warning" ng-click="showHistory(c)" tooltip data-toggle="tooltip" data-placement="top" title="Task Update History" ng-if="tabStatus.historyBtn"><i class="fa fa-clock-o"></i></button>
+                            @if (HttpContext.Current.User.Identity.IsAuthenticated)
                             {
                                 var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
                                 if (roles != null)
@@ -153,13 +160,13 @@
                                     if (!roles.Contains("ADM"))
                                     {
 
-                                    <button class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Re-Open" ng-click="Quickreopen(c);" tooltip ng-if="(tabStatus.tabName!='AllTasksForAdmin')" ng-show="(c.CompleteStatus=='CLOSED')"><i class="fa fa-repeat"></i></button>
+                                        <button class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Re-Open" ng-click="Quickreopen(c);" tooltip ng-if="(tabStatus.tabName!='AllTasksForAdmin')" ng-show="(c.CompleteStatus=='CLOSED')"><i class="fa fa-repeat"></i></button>
                                     }
                                 }
                             }
-                                    @*<button class="btn btn-xs btn-primary" data-toggle="tooltip" ng-hide="c.CompleteStatus=='Open'" data-placement="top" title="Re-Open" ng-click="Quickreopen(c);" tooltip ng-if="(tabStatus.tabName!='AllTasksForAdmin')" ng-show="(c.CompleteStatus=='Closed')"><i class="fa fa-repeat"></i></button>*@
-                                </td>
-                            </tr>
+                            @*<button class="btn btn-xs btn-primary" data-toggle="tooltip" ng-hide="c.CompleteStatus=='Open'" data-placement="top" title="Re-Open" ng-click="Quickreopen(c);" tooltip ng-if="(tabStatus.tabName!='AllTasksForAdmin')" ng-show="(c.CompleteStatus=='Closed')"><i class="fa fa-repeat"></i></button>*@
+                        </td>
+                    </tr>
 
                                     </tbody>
                                     <tfoot style="cursor:pointer">

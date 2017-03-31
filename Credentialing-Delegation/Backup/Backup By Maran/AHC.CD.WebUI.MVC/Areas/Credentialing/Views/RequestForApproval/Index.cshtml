@@ -1,0 +1,467 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section AddToHead{
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+    <link href="~/Content/nvd3/nv.d3.min.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/angular-ui-switch.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/loading-bar.css" rel="stylesheet" />
+    <link href="~/Content/CCMDashboard/CCMDashboard.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.2.min.js"></script>
+    <script src="~/Scripts/Utility/lodash.min.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/tableExportnigraj.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jquery.base64.js"></script>
+    <script src="~/Scripts/Lib/pdfGeneration/html2canvas.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/sprintf.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jspdf.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/jspdf.debug.js"></script>
+    <script src="~/Scripts/Lib/ngiriraj/base64.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    <script src="~/Scripts/Lib/Angular/d3.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/nv.d3.min.js"></script>
+    <script src="~/Scripts/Lib/angularjs-ncd-directive/angular-nvd3.min.js"></script>
+    <script src="~/Scripts/Lib/angular-ui-switch.js"></script>
+    <script src="~/Scripts/Lib/Angular/loading-bar.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/AngularServiceTracker.js"></script>
+    <script>
+        var IsProvider=@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.IsProvider));
+    </script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/UpdateAndRenewalsApp.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/UpdateAndRenewalsService.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/UpdateAndRenewalsMasterServices.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/UpdateAndRenewalsFactory.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/UpdateAndRenewalsDirective.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/UpdateAndRenewalsFiltter.js"></script>
+    <script src="~/Areas/Credentialing/Scripts/ProfileUpdateRenewals/UpdateAndRenewalsController.js"></script>
+}
+
+<div id="page-wrapper" ng-app="UpdateAndRenewalsApp">
+    <toaster-container toaster-options="{'time-out': 2000,'position-class': 'toast-top-right','close-button':true}"></toaster-container>
+    <div class="container-fluid" ng-controller="UpdateAndRenewalsController as pc" ng-init="GetAllUpdatesAndRenewals('Updates')" ng-cloak>
+        <!-- Page Heading -->
+        <div class="row" ng-cloak>
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-list-alt"></i> Profile Updates
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+
+
+                        @*<div draggable style="width: 200px; height: 200px; background: yellow; cursor:pointer;z-index:1000">
+
+                            </div>*@
+                        <div id="Biscuits" class="col-lg-12 zero-padding-left-right margin_top_6px">
+                            <biscuit-tile action-type="Updates" grid-data="GridData('Updates')" biscuit-id="Updates" biscuit-title="Updates" biscuit-value="BicuitValue.UpdateCount" biscuit-color="blue" biscuit-symbol="Updates"></biscuit-tile>
+                            <biscuit-tile action-type="Renewals" grid-data="GridData('Renewals')" biscuit-id="Renewals" biscuit-title="Renewals" biscuit-value="BicuitValue.RenewalCount" biscuit-color="green" biscuit-symbol="Renewals"></biscuit-tile>
+                            <biscuit-tile action-type="CredentialingRequest" grid-data="GridData('CredentialingRequest')" biscuit-id="CredentialingRequest" biscuit-title="Cred Request" biscuit-value="BicuitValue.CredRequestCount" biscuit-color="time" biscuit-symbol="CredentialingRequest"></biscuit-tile>
+                            <biscuit-tile action-type="ViewHistory" grid-data="GridData('ViewHistory')" biscuit-id="ViewHistory" biscuit-title="View History" biscuit-value="BicuitValue.HistoryCount" biscuit-color="sea" biscuit-symbol="ViewHistory"></biscuit-tile>
+
+                        </div>
+                        <div class="clearfix">
+                        </div>
+                        <div class="col-lg-4 zero-padding-left-right">
+                            @*<div class="input-group stylish-input-group" ng-if="MasterSettings.TableType==1">
+                                    <input type="text" class="form-control" ng-model="UpdateSearch" placeholder="Search">
+                                    <span class="input-group-addon">
+                                        <button type="submit">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                                <div class="input-group stylish-input-group" ng-if="MasterSettings.TableType==2">
+                                    <input type="text" class="form-control" placeholder="Search">
+                                    <span class="input-group-addon">
+                                        <button type="submit">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </div>*@
+                        </div>
+                        <div class="col-lg-4 tripijodal">
+                            <i class="fa" ng-class="{'fa-check':MasterSettings.ActionType=='Updates','fa-refresh':MasterSettings.ActionType=='Renewals','fa-user':MasterSettings.ActionType=='Requests','fa-history':MasterSettings.ActionType=='History'}"></i> {{MasterSettings.TableCaption}}
+                        </div>
+                        <div class="col-lg-4 zero-padding-left-right">
+                            <div ng-if="MasterSettings.ActionType=='History'" class="pull-left">
+                                <switch name="yesNo" ng-model="yesNo" on="Update" off="Renew" class="wide" disabled="false" ng-change="HistoryChange()"></switch>
+                            </div>
+                            <div ng-if="MasterSettings.ActionType=='Requests'" class="pull-left">
+                                <switch name="yesNo" ng-model="yesNo" on="Active" off="History" class="wide" disabled="false" ng-change="CredRequestChange()"></switch>
+                            </div>
+                            @*<div ng-if="(MasterSettings.ActionType=='Updates' || MasterSettings.ActionType=='Renewals') && pc.displayedUpdateAndRenewals.length>0 && !IsProvider" class="pull-left">
+                                    <switch name="yesNo" ng-model="yesNo" on="Off" off="On" class="wide" disabled="false" ng-change="SelectAll()" data-toggle="tooltip" data-placement="top" title="Select All">
+                                </div>*@
+                            <div class="btn-group btn-group-md pull-right" id="ExportPanel">
+                                <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Approve All" ng-click="SetApprovalForAll()" ng-if="SelectedData.length>0"><span><i ng-if="!ApproveAllStatus" class="fa bounceback fa-check bigger-120"></i><img ng-if="ApproveAllStatus" src="~/Content/Images/ajax-loader.gif" style="width:18px;" /></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px; color: blue; " data-toggle="tooltip" data-placement="top" title="Enable Search" ng-click="FilterForProfileUpdateandRequest()"><span><i class="fa fa-search bigger-120"></i></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px;color:orange" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#ProfileUpdates')"><span><i class="fa fa-file-code-o bigger-120"></i></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#ProfileUpdates')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></a>
+                                @*<a class="btn btn-white" style="margin-left: 2px; color: red; " data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#ProfileUpdates')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></a>
+                                    <a class="btn btn-white" style="margin-left: 2px; color: grey; " data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></a>*@
+                            </div>
+                        </div>
+                        <div class="clearfix">
+
+                        </div>
+                        <div ng-show="MasterSettings.TableType==1">
+                            <table id="ProfileUpdates" class="table table-hover divborder" st-pipe="pc.callServerUpdateAndHistory" st-table="pc.displayedUpdateAndRenewals" st-safe-src="ProfileUpdates">
+                                <thead>
+                                    <tr style="background-color: #464957; border-color: #337AB7; color:white;cursor:pointer">
+                                        <th st-sort="NPINumber" class="col-lg-1">NPI</th>
+                                        <th st-sort="ProviderName" class="col-lg-2">Provider Name</th>
+                                        <th st-sort="Section" class="col-lg-2">Section Name</th>
+                                        <th st-sort="SubSection" class="col-lg-2">Sub Section Name</th>
+                                        <th st-sort="ModifiedDate" class="col-lg-2">Modified Date</th>
+                                        <th st-sort="ApprovalStatus" class="col-lg-2">Approval Status</th>
+                                        <th st-skip-natural="true" class="col-lg-1">Action</th>
+                                    </tr>
+                                    <tr ng-if="ProfileUpdateandRenewalFilter">
+                                        <td class="col-lg-1"><input st-search="NPINumber" type="text" placeholder="NPI" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ProviderName" type="text" placeholder="Provider Name" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="Section" type="text" placeholder="Section" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="SubSection" type="text" placeholder="Sub Section" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ModifiedDate" type="text" placeholder="Modified Date" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ApprovalStatus" type="text" placeholder="Approval Status" class="form-control input-sm" /></td>
+                                        <td class="col-lg-1"></td>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!pc.isLoadingUpdateAndRenewals">
+                                    <tr ng-repeat="profileUpdates in pc.displayedUpdateAndRenewals track by $index" style="cursor:pointer" ng-click="CheckStatus($event,profileUpdates)" ng-style="profileUpdates.IsSelected=='true' ? { 'background-color':'rgb(233, 236, 235)',color:'#32306b','font-weight':'bold' } : {'background-color':'white',color:'black'}">
+                                        <td class="col-lg-1 wrap-words">{{profileUpdates.NPINumber || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{profileUpdates.ProviderName || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{profileUpdates.Section || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{profileUpdates.SubSection || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{profileUpdates.ModifiedDate || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words"><span>{{profileUpdates.ApprovalStatus || 'Not Available'}}</span></td>
+                                        <td class="col-lg-1 wrap-words">
+                                            <button class="btn btn-xs btn-default skip" ng-click="GetProfileUpdateDataByID(profileUpdates)" data-toggle="modal" data-target="#profileUpdateModal"><i class="fa fa-eye skip" tooltip data-toggle="tooltip" data-placement="left" title="View Profile Updates and Renew"></i></button>
+                                        </td>
+
+                                    </tr>
+                                    <tr ng-if="pc.displayedUpdateAndRenewals.length==0">
+                                        <td colspan="7" class="text-center">
+                                            <i>No Data Found</i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="pc.isLoadingUpdateAndRenewals">
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <div class="loading-indicator"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="7"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div ng-show="MasterSettings.TableType==2">
+                            <table id="CredRequests" class="table table-hover divborder" st-pipe="pc.callServerCredentialingRequest" st-table="pc.displayedCredentialingRequest" st-safe-src="CredentialingRequests">
+                                <thead>
+                                    <tr style="background-color: #464957; border-color: #337AB7; color:white;cursor:pointer">
+                                        <th st-sort="NPINumber" class="col-lg-2">NPI Number</th>
+                                        <th st-sort="ProviderName" class="col-lg-3">Provider Name</th>
+                                        <th st-sort="PlanName" class="col-lg-3">Plan Name</th>
+                                        <th st-sort="ModifiedDate" class="col-lg-2">Initiation Date</th>
+                                        <th st-sort="CurrentStatus" class="col-lg-2">Approval Status</th>
+                                    </tr>
+                                    <tr ng-if="CredentialingReqFilter">
+                                        <td class="col-lg-2"><input st-search="NPINumber" type="text" placeholder="NPI" class="form-control input-sm" /></td>
+                                        <td class="col-lg-3"><input st-search="ProviderName" type="text" placeholder="Provider Name" class="form-control input-sm" /></td>
+                                        <td class="col-lg-3"><input st-search="PlanName" type="text" placeholder="Plan Name" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="ModifiedDate" type="text" placeholder="Initiation Date" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="CurrentStatus" type="text" placeholder="Approval Status" class="form-control input-sm" /></td>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="!pc.isLoadingCredentialingRequest">
+                                    <tr ng-repeat="credRequest in pc.displayedCredentialingRequest track by $index" style="cursor:pointer" ng-click="GetCredRequestDataByID(credRequest.CredentialingRequestID,credRequest.CurrentStatus)" data-toggle="modal" data-target="#requestForApprovalModal">
+                                        <td class="col-lg-2 wrap-words">{{credRequest.NPINumber || 'Not Available'}}</td>
+                                        <td class="col-lg-3 wrap-words">{{credRequest.ProviderName || 'Not Available'}}</td>
+                                        <td class="col-lg-3 wrap-words">{{credRequest.PlanName || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{credRequest.ModifiedDate || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{credRequest.CurrentStatus || 'Not Available'}}</td>
+                                    </tr>
+                                    <tr ng-if="pc.displayedCredentialingRequest.length==0">
+                                        <td colspan="5" class="text-center">
+                                            <i>No Data Found</i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-show="pc.isLoadingCredentialingRequest">
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <div class="loading-indicator"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="5"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div id="requestForApprovalModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog modal-lg">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #464957;color:white;font-weight:bold">
+                                        <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+                                        <h4 class="modal-title">Credentialing Request Deatils</h4>
+                                    </div>
+                                    <div class="modal-body container-fluid">
+                                        <div class="col-lg-12 text-center" ng-if="LoadingStatus">
+                                            <img src="~/Content/Images/ajax-loader.gif" /> Loading Credentialing Request.. Please Wait..
+                                        </div>
+                                        <div class="col-lg-12 form-style" ng-if="!LoadingStatus">
+                                            <form id="StaffGeneralInfo" class="form-horizontal">
+                                                <div class="col-lg-offset-1 col-lg-8">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4">Provider Name:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.ProviderName || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4">NPI Number:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.NPINumber || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4">Intiated Date:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.ModifiedDate || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4">Plan Name:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.PlanName || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" ng-if="TemporaryObject.CurrentStatus!='Active'">
+                                                        <label class="col-lg-4">Approval Status:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.CurrentStatus || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" ng-if="TemporaryObject.CurrentStatus=='Rejected'">
+                                                        <label class="col-lg-4">Reason For Rejection:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" ng-if="RejectStatus">
+                                                        <label class="col-lg-12"><textarea ng-model="TemporaryObject.RejectionReason" class="form-control" placeholder="Reason to send back"></textarea></label>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-lg-2 zero-padding-left-right-div pull-right text-center profileIamge" ng-if="TemporaryObject.ProfilePhotoPath!='\\Documents\\ProfileImage\\' && TemporaryObject.ProfilePhotoPath!='' && TemporaryObject.ProfilePhotoPath!=null">
+                                                    <img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"] {{TemporaryObject.ProfilePhotoPath}}" alt="Profile Picture" style="width: 110px; height: 110px;" class="img-thumbnail grow">
+                                                </div>
+                                                <div class="col-lg-2 zero-padding-left-right-div pull-right text-center profileIamge" ng-if="TemporaryObject.ProfilePhotoPath=='\\Documents\\ProfileImage\\' || TemporaryObject.ProfilePhotoPath=='' || TemporaryObject.ProfilePhotoPath==null">
+                                                    <img ng-src="~/Content/Images/no_image.png" alt="Profile Picture" style="width: 110px; height: 110px;" class="img-thumbnail grow">
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" ng-if="!LoadingStatus && TemporaryObject.CurrentStatus=='Active' && !IsProvider">
+                                        <saving loading="SavingStatus"></saving>
+                                        <button type="button" class="btn btn-default" ng-disabled="SavingStatus" ng-click="RejectAction()" ng-if="!RejectStatus">Reject</button>
+                                        <button type="button" class="btn btn-primary" ng-disabled="SavingStatus" ng-click="SetDecesionForCredRequestByID(TemporaryObject.CredentialingRequestID,'Approved')" ng-if="!RejectStatus">Approve</button>
+                                        <button type="button" class="btn btn-default" ng-disabled="SavingStatus" ng-click="RejectAction()" ng-if="RejectStatus">Cancel</button>
+                                        <button type="button" class="btn btn-primary" ng-disabled="SavingStatus" ng-click="SetDecesionForCredRequestByID(TemporaryObject.CredentialingRequestID,'Rejected')" ng-if="RejectStatus">Send</button>
+                                    </div>
+                                    <div class="modal-footer" ng-if="!LoadingStatus && TemporaryObject.CurrentStatus=='Active' && IsProvider">
+                                        <saving loading="SavingStatus"></saving>
+                                        <button type="button" class="btn btn-warning" ng-disabled="SavingStatus" ng-click="SetDecesionForCredRequestByID(TemporaryObject.CredentialingRequestID,'Dropped')">Drop</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="profileUpdateModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog modal-lg">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #464957;color:white;font-weight:bold">
+                                        <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+                                        <h4 class="modal-title">Provider Deatils</h4>
+                                    </div>
+                                    <div class="modal-body container-fluid">
+                                        <div class="col-lg-12 text-center" ng-if="LoadingStatus">
+                                            <img src="~/Content/Images/ajax-loader.gif" /> Loading Profile Updates.. Please Wait..
+                                        </div>
+                                        <div class="col-lg-12 form-style" ng-if="!LoadingStatus">
+                                            <form id="StaffGeneralInfo" class="form-horizontal">
+                                                <div class="col-lg-8">
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4">Provider Name:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.ProviderName || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4">NPI Number:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.NPINumber || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-lg-4">Modified Date:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.ModifiedDate || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group" ng-if="TemporaryObject.ApprovalStatus!='Pending'">
+                                                        <label class="col-lg-4">Approval Status:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.ApprovalStatus || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" ng-if="TemporaryObject.ApprovalStatus=='Rejected'">
+                                                        <label class="col-lg-4">Reason For Rejection:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" ng-if="TemporaryObject.ApprovalStatus=='OnHold'">
+                                                        <label class="col-lg-4">Reason For OnHold:</label>
+                                                        <div class="col-lg-8">
+                                                            <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-lg-2 zero-padding-left-right-div pull-right text-center profileIamge" ng-if="TemporaryObject.ProfilePhotoPath!='\\Documents\\ProfileImage\\' && TemporaryObject.ProfilePhotoPath!='' && TemporaryObject.ProfilePhotoPath!=null">
+                                                    <img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"] {{TemporaryObject.ProfilePhotoPath}}" alt="Profile Picture" style="width: 110px; height: 110px;" class="img-thumbnail grow">
+                                                </div>
+                                                <div class="col-lg-2 zero-padding-left-right-div pull-right text-center profileIamge" ng-if="TemporaryObject.ProfilePhotoPath=='\\Documents\\ProfileImage\\' || TemporaryObject.ProfilePhotoPath=='' || TemporaryObject.ProfilePhotoPath==null">
+                                                    <img ng-src="~/Content/Images/no_image.png" alt="Profile Picture" style="width: 110px; height: 110px;" class="img-thumbnail grow">
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="col-lg-12">
+                                                    <div class="col-lg-4 form-group">
+                                                        <label class="control-label">Section</label>
+                                                        <div>
+                                                            <i>{{TemporaryObject.Section}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 form-group">
+                                                        <label class="control-label">Sub-Section</label>
+                                                        <div>
+                                                            <i>{{TemporaryObject.SubSection}}</i>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-lg-4 form-group" ng-if="TemporaryObject.UniqueData!=null">
+                                                        <label class="control-label">{{TemporaryObject.UniqueData.FieldName}}</label>
+                                                        <div>
+                                                            <i>{{TemporaryObject.UniqueData.Value}}</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="col-lg-12">
+                                                    <div ng-if="displayDataForProfileUpdate.length > 0">
+                                                        <table class="table table-hover divborder">
+                                                            <thead>
+                                                                <tr style="background-color: #464957; border-color: #337AB7; color:white;cursor:pointer">
+                                                                    <th class="col-lg-4">ITEM</th>
+                                                                    <th class="col-lg-4">OLD DATA</th>
+                                                                    <th class="col-lg-4">NEW DATA</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="profileupdates in displayDataForProfileUpdate track by $index">
+                                                                    <td class="col-lg-4 wrap-words">
+                                                                        <i ng-if="!(profileupdates.FieldName.indexOf('Path')>-1)">{{profileupdates.FieldName || 'Not Available'}}</i>
+                                                                        <i ng-if="profileupdates.FieldName.indexOf('Path')>-1">Supporting Document</i>
+                                                                    </td>
+                                                                    <td class="col-lg-4 wrap-words">
+                                                                        <i ng-if="!(profileupdates.FieldName.indexOf('Path')>-1)">{{profileupdates.OldValue || 'Not Available'}}</i>
+                                                                        <i ng-if="profileupdates.FieldName.indexOf('Path')>-1">
+                                                                            <i ng-if="!profileupdates.OldValue">Not Available</i>
+                                                                            <i ng-if="profileupdates.OldValue">
+                                                                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{profileupdates.OldValue}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="Old Document"><i class="fa fa-file"></i></a>
+                                                                            </i>
+                                                                        </i>
+                                                                    </td>
+                                                                    <td class="col-lg-4 wrap-words">
+                                                                        <i ng-if="!(profileupdates.FieldName.indexOf('Path')>-1)">{{profileupdates.NewValue || 'Not Available'}}</i>
+                                                                        <i ng-if="profileupdates.FieldName.indexOf('Path')>-1">
+                                                                            <i ng-if="!profileupdates.NewValue">Not Available</i>
+                                                                            <i ng-if="profileupdates.NewValue">
+                                                                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{profileupdates.NewValue}}" class="pointer" target="_blank" tooltip data-toggle="tooltip" data-placement="top" title="New Document"><i class="fa fa-file"></i></a>
+                                                                            </i>
+                                                                        </i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
+                                                    <div class="form-group" ng-if="RejectStatus">
+                                                        <label class="col-lg-12"><textarea ng-model="TemporaryObject.RejectionReason" class="form-control" placeholder="Reason to send back"></textarea></label>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" ng-if="!LoadingStatus && (TemporaryObject.ApprovalStatus=='Pending' || TemporaryObject.ApprovalStatus=='OnHold') && !IsProvider">
+                                        <div class="col-lg-12 form-style">
+                                            <div class="col-lg-12">
+                                                <saving loading="SavingStatus"></saving>
+                                                <button type="button" class="btn btn-danger" ng-disabled="SavingStatus" ng-click="RejectActionForUpdate('Rejected')" ng-if="!RejectStatus">Reject</button>
+                                                <button type="button" class="btn btn-warning" ng-disabled="SavingStatus" ng-click="RejectActionForUpdate('OnHold')" ng-if="!RejectStatus && TemporaryObject.ApprovalStatus!='OnHold'">OnHold</button>
+                                                <button type="button" class="btn btn-primary" ng-disabled="SavingStatus" ng-click="SetApprovalForProfileUpdatesAndRenewal(TemporaryObject,'Approved')" ng-if="!RejectStatus">Approve</button>
+                                                <button type="button" class="btn btn-default" ng-disabled="SavingStatus" ng-click="RejectAction()" ng-if="RejectStatus">Cancel</button>
+                                                <button type="button" class="btn btn-primary" ng-disabled="SavingStatus" ng-click="SetRejectionDropAndOnHoldForProfileUpdatesAndRenewal(TemporaryObject,RejectionType)" ng-if="RejectStatus">Send</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" ng-if="!LoadingStatus && MasterSettings.ActionType!='History' && IsProvider">
+                                        <div class="col-lg-12 form-style">
+                                            <div class="col-lg-12">
+                                                <saving loading="SavingStatus"></saving>
+                                                <button type="button" class="btn btn-warning" ng-disabled="SavingStatus" ng-click="SetRejectionDropAndOnHoldForProfileUpdatesAndRenewal(TemporaryObject,'Dropped')">Drop</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

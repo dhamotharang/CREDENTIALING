@@ -146,6 +146,11 @@ profileApp.controller('LiabilityCtrl', ['$scope', '$rootScope', '$http', 'master
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.professionalLiability.TableState = true;
+                            }
+
                             data.professionalLiability.OriginalEffectiveDate = ConvertDateFormat(data.professionalLiability.OriginalEffectiveDate);
                             data.professionalLiability.EffectiveDate = ConvertDateFormat(data.professionalLiability.EffectiveDate);
                             data.professionalLiability.ExpirationDate = ConvertDateFormat(data.professionalLiability.ExpirationDate);
@@ -167,14 +172,15 @@ profileApp.controller('LiabilityCtrl', ['$scope', '$rootScope', '$http', 'master
                                 $scope.ProfessionalLiabilityPendingRequest = true;
                                 $scope.ProfessionalLiabilityInfoes[index] = data.professionalLiability;
                                 $rootScope.operateViewAndAddControl(index + '_viewLi');
-                                messageAlertEngine.callAlertMessage("updatedProfessionalLiability" + index, "Professional Liability updated successfully !!!!", "success", true);
-
+                                //messageAlertEngine.callAlertMessage("updatedProfessionalLiability" + index, "Professional Liability updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedProfessionalLiability" + index, data.successMessage, "success", true);
                             }
                             else if ($scope.visibilityControl == (index + '_RenewLiability')) {
                                 $scope.ProfessionalLiabilityPendingRequest = true;
                                 $scope.ProfessionalLiabilityInfoes[index] = data.professionalLiability;
                                 $rootScope.operateViewAndAddControl(index + '_viewLi');
-                                messageAlertEngine.callAlertMessage("renewedProfessionalLiability" + index, "Professional Liability information renewed successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("renewedProfessionalLiability" + index, "Professional Liability information renewed successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("renewedProfessionalLiability" + index, data.successMessage, "success", true);
                             }
                             else {
                                 $scope.ProfessionalLiabilityInfoes.push(data.professionalLiability);

@@ -1,0 +1,45 @@
+﻿@using AHC.CD.WebUI.MVC.Areas.Profile.Attributes;
+<div id="ECFMGDetail" class="form-style">
+    <fieldset>
+        <legend>
+            @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+            {
+                <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ECFMGDetailPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+            }
+            ECFMG Detail
+        </legend>
+        <table ng-hide="ecfmgDetail != null || visibilityControl == 'editecfmgDetail'" class="table table-bordered table-condensed customtbodyStyle table-striped">
+            <thead>
+                <tr>
+                    <td>
+                        No Data Available for ECFMG Detail! Please click on
+                        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
+                        {
+                            <button id="noDataAddNewECFMGDetails" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('editecfmgDetail')" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
+                        }
+                        to add new ECFMG Information
+                    </td>
+                </tr>
+            </thead>
+        </table>
+        <div id="ecfmgEditDiv" ng-show=" visibilityControl=='editecfmgDetail'">
+            @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditECFMGDetails.cshtml")
+        </div>
+        @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
+        {
+            if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
+            {
+                <div class="legend2 pull-right" ng-show="visibilityControl!='editecfmgDetail' && ecfmgDetail != null">
+                    <button id="editECFMGDetails" class="btn btn-xs btn-primary" ng-click="operateEditControl('editecfmgDetail', ecfmgDetail)" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                </div>
+            }
+            <div ng-show="ecfmgDetail != null && visibilityControl!='editecfmgDetail'">
+                @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewGraduationECFMGDetails.cshtml")
+            </div>
+        }
+        <div ng-show="activeMessageDiv=='addedNewECFMGDetails'" class="alert alert-success" role="alert">
+            <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+            {{messageDesc}}
+        </div>
+    </fieldset>
+</div>

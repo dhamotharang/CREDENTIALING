@@ -3,8 +3,8 @@
 <div class="form-style">
     <fieldset>
         <legend>
-@if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
-{
+            @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+            {
                 <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="MilitaryServiceInformationsPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
             }
             Military Service Information
@@ -45,7 +45,7 @@
                         </tr>
                     </thead>
                     <tbody ng-repeat="militaryService in militaryServiceInformations">
-                        <tr>
+                        <tr ng-class="{'TableColor':militaryService.TableState}">
                             <td ng-show="militaryService.MilitaryBranch">{{militaryService.MilitaryBranch}}</td>
                             <td ng-show="!militaryService.MilitaryBranch"><i>Not Available</i></td>
                             <td ng-show="militaryService.MilitaryRank">{{militaryService.MilitaryRank}}</td>
@@ -58,19 +58,19 @@
                             <td ng-show="!militaryService.DischargeDate"><i>Not Available</i></td>
                             <td class="hideData">
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-{
-    <button id="MSI_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewMilitaryServiceInformation')" ng-hide="viewMilitaryServiceInformation" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
-}
+                                {
+                                    <button id="MSI_Table_ViewIcon" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewMilitaryServiceInformation')" ng-hide="viewMilitaryServiceInformation" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                                }
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
-{
-    <button id="MSI_Table_EditIcon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editMilitaryServiceInformation',militaryService);changeButtonText()" ng-hide="editMilitaryServiceInformation" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-}
+                                {
+                                    <button id="MSI_Table_EditIcon" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editMilitaryServiceInformation',militaryService);changeButtonText()" ng-hide="editMilitaryServiceInformation ||militaryService.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                }
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-{
-    <button id="MSI_Table_RemoveIcon" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initMilitaryServiceInformationWarning(militaryService);" tooltip><i class="fa fa-minus-circle"></i></button>
+                                {
+                                    <button id="MSI_Table_RemoveIcon" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initMilitaryServiceInformationWarning(militaryService);" ng-hide="militaryService.TableState" tooltip><i class="fa fa-minus-circle"></i></button>
 
-    <button id="addNewMilitaryService" ng-if="$index == militaryServiceInformations.length-1" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addMilitaryServiceInformation');changeButtonText()" ng-hide="viewMilitaryServiceInformation|| editShowMilitaryServiceInformation || newShowMilitaryServiceInformation || $index+1!=militaryServiceInformations.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
-}
+                                    <button id="addNewMilitaryService" ng-if="$index == militaryServiceInformations.length-1" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addMilitaryServiceInformation');changeButtonText()" ng-hide="viewMilitaryServiceInformation|| editShowMilitaryServiceInformation || newShowMilitaryServiceInformation || $index+1!=militaryServiceInformations.length" tooltip data-toggle="tooltip" data-placement="right" title="Add new"><i class="fa fa-plus"></i></button>
+                                }
                             </td>
                         </tr>
                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))

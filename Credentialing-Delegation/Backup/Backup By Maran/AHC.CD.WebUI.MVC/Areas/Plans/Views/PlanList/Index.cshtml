@@ -1,0 +1,226 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var PlanData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.PlanList))
+</script>
+@section AddToHead{
+    <link href="~/Areas/Plans/Content/PlanModuleCustomCSS.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <link href="~/Content/toaster.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Areas/Plans/Script/Custom/lodash.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/angular-animate.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    <script src="~/Areas/Plans/Script/Custom/LoadingInterceptor.js"></script>
+    <script src="~/Areas/Plans/Script/Custom/AngularTextToSpeach.js"></script>
+    <script src="~/Areas/Plans/Script/PlanApp.js"></script>
+    <script src="~/Areas/Plans/Script/Directive/PlanDirectives.js"></script>
+    <script src="~/Areas/Plans/Script/Factory/PlanFactory.js"></script>
+    <script src="~/Areas/Plans/Script/Filter/PlanFilter.js"></script>
+    <script src="~/Areas/Plans/Script/Services/PlanService.js"></script>
+    <script src="~/Areas/Plans/Script/Controller/PlanController.js"></script>
+    <script src="~/Scripts/Shared/Data/countryDialCodes.js"></script>
+    <script src="~/Scripts/Lib/FoolProofValidation/mvcfoolproof.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Custom/Validation/EndDate.js"></script>
+    <script src="~/Scripts/Custom/Validation/NumberGreaterThan.js"></script>
+    <script src="~/Scripts/Custom/Validation/PostedFileExtension.js"></script>
+    <script src="~/Scripts/Custom/Validation/PostedFileSize.js"></script>
+    <script src="~/Scripts/Custom/Validation/ProfileRemote.js"></script>
+    <script src="~/Scripts/Custom/Validation/RequiredIfMonthGreaterThan.js"></script>
+    <script src="~/Scripts/Custom/Validation/StartDate.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
+
+}
+
+
+<style>
+    #bendu {
+        /*background-color: rgb(112, 181, 200);*/
+        /*background: #c9dff0;*/
+        height: 35px;
+    }
+
+    .loadinggif {
+        background: url('/Content/Images/ajax-loader.gif') no-repeat right center;
+        background-size: 15px;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    .st-sort-ascent {
+        background-color: #acc8dd;
+    }
+
+    .st-sort-descent {
+        background-color: #67a2c5;
+    }
+
+
+    #bendu th {
+        cursor: pointer;
+        background: #c9dff0;
+    }
+
+    #bendu tr th {
+        font-weight: bold;
+        padding: 12px 30px;
+        padding-left: 42px;
+    }
+
+    #bendu tr th {
+        padding-right: 20px;
+        background-repeat: no-repeat;
+        background-position: 100% 100%;
+    }
+</style>
+
+
+<div id="page-wrapper" ng-app="PlanApp" ng-cloak>
+
+    <toaster-container toaster-options="{'time-out': 2000,'position-class': 'toast-top-right','close-button':true}"></toaster-container>
+
+    <div class="container-fluid" ng-controller="PlanController as pc" ng-init="LoadMasterDataForPlan()">
+
+        <div class="row">
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-cogs"></i>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/AdminConfig/Index"> Admin Config</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-list"></i> Plans
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <i class="fa fa-list"></i><b style="margin-left:3px;">{{CurrentPageMasterViewData.HeaderTitle}}</b>
+                    <button type="button" ng-show="CurrentPageMasterViewData.AddButtonStatus" ng-click="AddPlanDataInitiated()" class="btn btn-xs btn-primary pull-right" style="margin-left:3px;" tooltip data-toggle="tooltip" data-placement="top" title="Add a new Plan"><i class="fa fa-plus"></i>Add New</button>
+                    <button type="button" ng-if="CurrentPageMasterViewData.EditButtonStatus && ActiveStatus" ng-click="EditPlanDataInitiated(tempPlanObject.PlanID)" class="btn btn-xs btn-primary pull-right" style="margin-left:3px;" tooltip data-toggle="tooltip" data-placement="top" title="Edit Plan Information"><i class="fa fa-edit"></i>Edit</button>
+                    <button type="button" ng-show="CurrentPageMasterViewData.ViewHistoryButtonStatus" ng-click="ViewHistory()" class="btn btn-xs btn-warning pull-right" style="margin-left:3px;" tooltip data-toggle="tooltip" data-placement="top" title="View Plan History"><i class="fa fa-clock-o"></i>View History</button>
+                </div>
+                <div class="panel-body form-style">
+                    <div class=" zero-padding-left-right-div">
+                        <br />
+                        <fieldset ng-show="LoadingStatus && (CurrentPageMasterViewData.Type=='Master' || CurrentPageMasterViewData.Type=='History')" ng-cloak>
+                            <div class="legend2 pull-right" ng-show="!ActiveStatus">
+                                <button type="button" ng-click="ViewHistory()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="left" title="View Active Plans"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="clearfix">
+
+                            </div>
+                            <div class="zero-padding-left-right-div">
+                                <table class="table table-bordered table-condensed customtbodyStyle" st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="ActiveStatus?ActivePlanData:InactivePlanData" ng-cloak>
+                                    <thead>
+                                        <tr id="bendu">
+                                            <th st-skip-natural="true" class="PlanList col-lg-2">Plan Logo</th>
+                                            <th st-sort="PlanName" class="PlanList col-lg-2">Plan Name</th>
+                                            <th st-sort="PlanContactPersonName" class="PlanList col-lg-2">Contact Person Name</th>
+                                            <th st-sort="PlanEmailID" class="PlanList col-lg-2">Contact Person Email</th>
+                                            <th st-sort="PlanAddress" class="PlanList col-lg-2">Address Detail</th>
+                                            <th class="hidecontent col-lg-2" st-skip-natural="true">Action</th>
+
+                                        </tr>
+                                        <tr id="noCss">
+                                            @*<td class="hideData"><input st-search="id" type="text" placeholder="Filter Name" class="form-control input-sm"/></td>*@
+                                            <td class="hidecontent" class="hideData col-lg-2"></td>
+                                            <td class="hideData col-lg-2"><input st-search="PlanName" type="text" placeholder="Filter Plan" id="Plan Name" class="form-control input-sm" /></td>
+                                            <td class="hideData col-lg-2"><input st-search="PlanContactPersonName" type="text" placeholder="Filter Contact Person Name" id="ContactPersonName" class="form-control input-sm" /></td>
+                                            <td class="hideData col-lg-2"><input st-search="PlanEmailID" type="text" placeholder="Filter Contact Person Email" id="ContactPersonEmail" class="form-control input-sm" /></td>
+                                            <td class="hideData col-lg-2"><input st-search="PlanAddress" type="text" placeholder="Filter Address Detail" id="AddressDetail" class="form-control input-sm" /></td>
+                                            <td class="hidecontent" class="hideData col-lg-2"></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-show="!pc.isLoading">
+                                        <tr ng-repeat="plan in pc.displayed track by $index" id="firstrow">
+                                            <td class="col-lg-2" data-title="'Plan Logo'" ng-if="plan.PlanLogo =='' || plan.PlanLogo =='~/ApplicationDocuments/PlanLogo/'">
+                                                <img style="height: 40px; margin-left: 35%;" ng-src="~/Content/Images/no_image.png" class="grow img-circle" />
+                                            </td>
+                                            <td class="col-lg-2" data-title="'Plan Logo'" ng-if="plan.PlanLogo!='' && plan.PlanLogo !='~/ApplicationDocuments/PlanLogo/'">
+                                                <img style="height:40px; width:90%" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{plan.PlanLogo}}" class="grow img-circle" />
+                                            </td>
+                                            <td class="col-lg-2 wrap-words">{{plan.PlanName || 'Not Available'}}</td>
+                                            <td class="col-lg-2 wrap-words"><p ng-repeat="Name in plan.PlanContactPersonName track by $index"><span class="">{{Name}}</span><span ng-if="$index!=plan.PlanContactPersonName.length-1">,</span></p></td>
+                                            <td class="col-lg-2 wrap-words">{{plan.PlanEmailID || 'Not Available'}}</td>
+                                            <td class="col-lg-2 wrap-words">{{plan.PlanAddress || 'Not Available'}}</td>
+                                            <td class="col-lg-2 wrap-words">
+                                                <button class="btn btn-xs btn-default" ng-click="ViewPlanData(plan.PlanID)"><i class="fa fa-eye" tooltip data-toggle="tooltip" data-placement="left" title="View Plan Information"></i></button>
+                                                <button ng-show="ActiveStatus" class="btn btn-xs btn-primary" ng-click="EditPlanDataInitiated(plan.PlanID)"><i class="fa fa-edit" tooltip data-toggle="tooltip" data-placement="top" title="Edit Plan Information"></i></button>
+                                                <button ng-show="ActiveStatus" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#PlanModalForRemove" ng-click="RemovePlanDataInitiated(plan.PlanID,plan.PlanName)"><i class="fa fa-remove" tooltip data-toggle="tooltip" data-placement="right" title="Remove Plan Information"></i></button>
+                                                <button ng-show="!ActiveStatus" class="btn btn-xs btn-default" data-toggle="modal" data-target="#PlanModalForRactive" ng-click="ReactivePlanDataInitiated(plan.PlanID)"><i class="fa fa-refresh" tooltip data-toggle="tooltip" data-placement="top" title="Re-active the Plan Information"></i></button>
+                                                <a ng-show="ActiveStatus" class="btn btn-xs b tn-warning" ng-click="UpdatePlanContractData(plan.PlanID,plan.PlanName)"><i class=" fa fa-edit" tooltip data-toggle="tooltip" data-placement="right" title="Edit Plan Contract"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <tbody ng-show="pc.isLoading">
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <div class="loading-indicator"></div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="6"></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </fieldset>
+                        <fieldset ng-show="LoadingStatus && (CurrentPageMasterViewData.Type=='View')">
+                            <div class="legend2 pull-left">
+                                <label><b>{{tempPlanContractObject.PlanName}}</b></label>
+                            </div>
+                            <div class="legend2 pull-right">
+                                <button type="button" ng-click="CancelView()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="left" title="Back to Plan List"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="zero-padding-left-right-div">
+                                @Html.Partial("_NewViewPlan")
+                            </div>
+                        </fieldset>
+                        <fieldset ng-show="LoadingStatus && (CurrentPageMasterViewData.Type=='Add'|| CurrentPageMasterViewData.Type=='Edit')">
+                            <div ng-if="TempPlanName" class="legend2 pull-left">
+                                <label><b>{{TempPlanName}}</b></label>
+                            </div>
+                            <div class="legend2 pull-right">
+                                <button type="button" ng-click="CancelAdd()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="left" title="Back to Plan List"><i class="fa fa-remove"></i></button>
+                            </div>
+                            <div class="zero-padding-left-right-div">
+                                @Html.Partial("_AddNewPlan")
+                            </div>
+                        </fieldset>
+                        <fieldset ng-show="!LoadingStatus">
+                            <ajax-loading load-content="Plan Data" loading-src="/CustomHTML/LoadingAjax.html"></ajax-loading>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <plan-modal saving="savingStatus" modal-id="PlanModalForRemove" modal-title="Remove Plan" modal-message="Do you want to remove Plan informations ?" modal-src="/CustomHTML/PlanModal.html" remove="RemovePlanData()"></plan-modal>
+            <plan-modal saving="savingStatus" modal-id="PlanModalForRactive" modal-title="Re-activate Plan" modal-message="Do you want to re-activate Plan informations ?" modal-src="/CustomHTML/PlanModal.html" remove="ReactivePlanData()"></plan-modal>
+            <plan-modal ng-if="CurrentPageMasterViewData.Type=='Add'" saving="savingStatus" modal-id="PlanModalForAdd" modal-title="Save Plan" modal-message="Do you want to Save Plan informations ?" modal-src="/CustomHTML/PlanModal.html" remove="AddPlanData()"></plan-modal>
+            <plan-modal ng-if="CurrentPageMasterViewData.Type=='Edit'" saving="savingStatus" modal-id="PlanModalForAdd" modal-title="Update Plan" modal-message="Do you want to Update Plan informations ?" modal-src="/CustomHTML/PlanModal.html" remove="AddPlanData()"></plan-modal>
+
+            <plan-modal ng-if="CurrentPageMasterViewData.Type=='Add'" saving="savingStatus" modal-id="PlanModalForAddedContracts" modal-title="Save Plan Contract" modal-message="Do you want to Save Plan Contract informations ?" modal-src="/CustomHTML/PlanModal.html" remove="AddPlanContractData()"></plan-modal>
+            <plan-modal ng-if="CurrentPageMasterViewData.Type=='Edit'" saving="savingStatus" modal-id="PlanModalForAddedContracts" modal-title="Update Plan Contract" modal-message="Do you want to Update Plan Contract informations ?" modal-src="/CustomHTML/PlanModal.html" remove="AddPlanContractData()"></plan-modal>
+
+        </div>
+    </div>
+

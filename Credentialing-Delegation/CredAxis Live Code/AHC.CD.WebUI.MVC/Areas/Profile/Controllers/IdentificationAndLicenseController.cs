@@ -23,6 +23,7 @@ using AHC.CD.Business.BusinessModels.ProfileUpdates;
 using AHC.CD.Resources.Document;
 using System.Dynamic;
 using Newtonsoft.Json;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -119,6 +120,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateStateLicenseAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.StateLicenseViewModel stateLicense)
         {
             string status = "true";
+            string ActionType="Update";
+            string successMessage = "";
             StateLicenseInformation dataModelStateLicense = null;
             bool isCCO = await GetUserRole();
 
@@ -139,8 +142,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                       
                         await profileManager.UpdateStateLicenseAsync(profileId, dataModelStateLicense, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification And License - State License Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification And License - State License Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.STATE_LICENSE_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -162,17 +169,19 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/IdentificationAndLicense/UpdateStateLicenseAsync?profileId=";
                         //tracker.IncludeProperties = "StateLicenseInformation.ProviderType, StateLicenseInformation.StateLicenseStatus";
 
-                         
+                        StateLicenseInformation stateLicenseOldData = await profileUpdateManager.GetProfileDataByID(dataModelStateLicense, stateLicense.StateLicenseInformationID);
 
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "State License Detail";
-                        uniqueRecord.Value = stateLicense.LicenseNumber + (stateLicense.IssueState != null ? " - " + stateLicense.IssueState : "");
+                        uniqueRecord.Value = stateLicenseOldData.LicenseNumber + (stateLicenseOldData.IssueState != null ? " - " + stateLicenseOldData.IssueState : "");
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         stateLicense.StateLicenseDocumentFile = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(stateLicense, dataModelStateLicense, tracker);
+
+                        successMessage = SuccessMessage.STATE_LICENSE_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -198,7 +207,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
             }
 
-            return Json(new { status = status, stateLicense = dataModelStateLicense }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, stateLicense = dataModelStateLicense }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -206,6 +215,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             stateLicense.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             StateLicenseInformation dataModelStateLicense = null;
             bool isCCO = await GetUserRole();
 
@@ -232,8 +243,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                       
                         await profileManager.RenewStateLicenseAsync(profileId, dataModelStateLicense, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification And License - State License Details", "Renewed");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification And License - State License Details", "Renewed");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.STATE_LICENSE_DETAIL_RENEW_SUCCESS;
+                        }
 
                     }
                     else
@@ -257,9 +272,19 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
                         tracker.url = "/Profile/IdentificationAndLicense/RenewStateLicenseAsync?profileId=";
 
+                        StateLicenseInformation stateLicenseOldData = await profileUpdateManager.GetProfileDataByID(dataModelStateLicense, stateLicense.StateLicenseInformationID);
+
+                        dynamic uniqueRecord = new ExpandoObject();
+                        uniqueRecord.FieldName = "State License Detail";
+                        uniqueRecord.Value = stateLicenseOldData.LicenseNumber + (stateLicenseOldData.IssueState != null ? " - " + stateLicenseOldData.IssueState : "");
+
+                        tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
+
                         stateLicense.StateLicenseDocumentFile = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(stateLicense, dataModelStateLicense, tracker);
+
+                        successMessage = SuccessMessage.STATE_LICENSE_DETAIL_RENEW_REQUEST_SUCCESS;
                     }
 
                 }
@@ -285,7 +310,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.STATE_LICENSE_RENEW_EXCEPTION;
             }
 
-            return Json(new { status = status, stateLicense = dataModelStateLicense }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, stateLicense = dataModelStateLicense }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -482,6 +507,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateFederalDEALicenseAsync(int profileId, FederalDEAInformationViewModel federalDea)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             FederalDEAInformation dataModelFederalDEA = null;
             bool isCCO = await GetUserRole();
 
@@ -502,8 +529,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                        
                         await profileManager.UpdateFederalDEALicenseAsync(profileId, dataModelFederalDEA, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - DEA License Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - DEA License Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.FEDERAL_DEA_UPDATE_SUCCESS;
+
+                        }
 
                     }
                     else
@@ -526,15 +558,18 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/IdentificationAndLicense/UpdateFederalDEALicenseAsync?profileId=";
 
+                        FederalDEAInformation federalDEAOldData = await profileUpdateManager.GetProfileDataByID(dataModelFederalDEA, federalDea.FederalDEAInformationID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Federal DEA Detail";
-                        uniqueRecord.Value = federalDea.DEANumber + " - " + federalDea.StateOfReg;
+                        uniqueRecord.Value = federalDEAOldData.DEANumber + " - " + federalDEAOldData.StateOfReg;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         federalDea.DEALicenceCertFile = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(federalDea, dataModelFederalDEA, tracker);
+                        successMessage = SuccessMessage.FEDERAL_DEA_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -559,7 +594,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.FEDERAL_DEA_LICENSE_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, federalDea = dataModelFederalDEA }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, federalDea = dataModelFederalDEA }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -567,6 +602,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             federalDea.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             FederalDEAInformation dataModelFederalDEA = null;
             bool isCCO = await GetUserRole();
             try
@@ -588,8 +625,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         //DocumentDTO document = null;
                       
                         await profileManager.RenewFederalDEALicenseAsync(profileId, dataModelFederalDEA, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - DEA License Details", "Renewed");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - DEA License Details", "Renewed");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.FEDERAL_DEA_RENEW_SUCCESS;
+
+                        }
 
                     }
                     else
@@ -610,14 +652,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
                         tracker.url = "/Profile/IdentificationAndLicense/RenewFederalDEALicenseAsync?profileId=";
 
+                        FederalDEAInformation federalDEAOldData = await profileUpdateManager.GetProfileDataByID(dataModelFederalDEA, federalDea.FederalDEAInformationID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Federal DEA Detail";
-                        uniqueRecord.Value = federalDea.DEANumber + " - " + federalDea.StateOfReg;
+                        uniqueRecord.Value = federalDEAOldData.DEANumber + " - " + federalDEAOldData.StateOfReg;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         federalDea.DEALicenceCertFile = null;
                         profileUpdateManager.AddProfileUpdateForProvider(federalDea, dataModelFederalDEA, tracker);
+                        successMessage = SuccessMessage.FEDERAL_DEA_RENEW_REQUEST_SUCCESS;
                     }
 
                 }
@@ -643,7 +688,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //              status = ExceptionMessage.FEDERAL_DEA_LICENSE_RENEW_EXCEPTION;
             }
 
-            return Json(new { status = status, federalDea = dataModelFederalDEA }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, federalDea = dataModelFederalDEA }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -751,6 +796,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateCDSCLicenseAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.CDSCInformationViewModel CDSCInformation)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             CDSCInformation dataModelCDSCLicense = null;
             bool isCCO = await GetUserRole();
             try
@@ -770,8 +817,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                     
                         await profileManager.UpdateCDSCLicenseAsync(profileId, dataModelCDSCLicense, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - CDS Information Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - CDS Information Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.CDS_INFO_UPDATE_SUCCESS;
+
+                        }
                     }
                     else
                     {
@@ -792,15 +844,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/IdentificationAndLicense/UpdateCDSCLicenseAsync?profileId=";
 
+                        CDSCInformation cdsOldData = await profileUpdateManager.GetProfileDataByID(dataModelCDSCLicense, CDSCInformation.CDSCInformationID);
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "CDS Detail";
-                        uniqueRecord.Value = CDSCInformation.CertNumber + " - " + CDSCInformation.State;
+                        uniqueRecord.Value = cdsOldData.CertNumber + " - " + cdsOldData.State;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         CDSCInformation.CDSCCerificateFile = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(CDSCInformation, dataModelCDSCLicense, tracker);
+                        successMessage = SuccessMessage.CDS_INFO_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -826,7 +880,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.CDSC_LICENSE_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, CDSCInformation = dataModelCDSCLicense }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, CDSCInformation = dataModelCDSCLicense }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -834,6 +888,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             CDSCInformation.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string successMessage = "";
             CDSCInformation dataModelCDSCLicense = null;
             bool isCCO = await GetUserRole();
             try
@@ -855,8 +910,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                       
                         await profileManager.RenewCDSCLicenseAsync(profileId, dataModelCDSCLicense, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - CDS Information Details", "Renewed");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - CDS Information Details", "Renewed");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.CDS_INFO_RENEW_SUCCESS;
+
+                        }
                     }
                     else
                     {
@@ -876,14 +936,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
                         tracker.url = "/Profile/IdentificationAndLicense/RenewCDSCLicenseAsync?profileId=";
 
+                        CDSCInformation cdsOldData = await profileUpdateManager.GetProfileDataByID(dataModelCDSCLicense, CDSCInformation.CDSCInformationID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "CDS Detail";
-                        uniqueRecord.Value = CDSCInformation.CertNumber + " - " + CDSCInformation.State;
+                        uniqueRecord.Value = cdsOldData.CertNumber + " - " + cdsOldData.State;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         CDSCInformation.CDSCCerificateFile = null;
                         profileUpdateManager.AddProfileUpdateForProvider(CDSCInformation, dataModelCDSCLicense, tracker);
+                        successMessage = SuccessMessage.CDS_INFO_RENEW_REQUEST_SUCCESS;
                     }
 
                 }
@@ -909,7 +972,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.CDSC_LICENSE_RENEW_EXCEPTION;
             }
 
-            return Json(new { status = status, CDSCInformation = dataModelCDSCLicense }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, CDSCInformation = dataModelCDSCLicense }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1016,6 +1079,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateMedicareInformationAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.MedicareInformationViewModel MedicareInformation)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             MedicareInformation dataModelMedicareInformation = null;
             bool isCCO = await GetUserRole();
             try
@@ -1034,8 +1099,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                    
                         await profileManager.UpdateMedicareInformationAsync(profileId, dataModelMedicareInformation, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Medicare Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Medicare Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                            successMessage = SuccessMessage.MEDICARE_INFO_UPDATE_SUCCESS;
+
+                        }
                     }
                     else
                     {
@@ -1056,14 +1126,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/IdentificationAndLicense/UpdateMedicareInformationAsync?profileId=";
 
+                        MedicareInformation medicareOldData = await profileUpdateManager.GetProfileDataByID(dataModelMedicareInformation, MedicareInformation.MedicareInformationID);
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Medicare Detail";
-                        uniqueRecord.Value = MedicareInformation.LicenseNumber;
+                        uniqueRecord.Value = medicareOldData.LicenseNumber;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         MedicareInformation.CertificateFile = null;
                         profileUpdateManager.AddProfileUpdateForProvider(MedicareInformation, dataModelMedicareInformation, tracker);
+                        successMessage = SuccessMessage.MEDICARE_INFO_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -1089,7 +1161,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.MEDICARE_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, MedicareInformation = dataModelMedicareInformation }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, MedicareInformation = dataModelMedicareInformation }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1195,6 +1267,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateMedicaidInformationAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.MedicaidInformationViewModel MedicaidInformation)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             MedicaidInformation dataModelMedicaidInformation = null;
             bool isCCO = await GetUserRole();
             try
@@ -1214,8 +1288,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                       
                         await profileManager.UpdateMedicaidInformationAsync(profileId, dataModelMedicaidInformation, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Medicaid Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Medicaid Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                            successMessage = SuccessMessage.MEDICARE_INFO_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -1236,14 +1314,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/IdentificationAndLicense/UpdateMedicaidInformationAsync?profileId=";
 
+                        MedicaidInformation medicaidOldData = await profileUpdateManager.GetProfileDataByID(dataModelMedicaidInformation, MedicaidInformation.MedicaidInformationID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Medicaid Detail";
-                        uniqueRecord.Value = MedicaidInformation.LicenseNumber + " - " + MedicaidInformation.State;
+                        uniqueRecord.Value = medicaidOldData.LicenseNumber + " - " + medicaidOldData.State;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         MedicaidInformation.CertificateFile = null;
                         profileUpdateManager.AddProfileUpdateForProvider(MedicaidInformation, dataModelMedicaidInformation, tracker);
+                        successMessage = SuccessMessage.MEDICARE_INFO_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -1269,7 +1350,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.MEDICAID_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, MedicaidInformation = dataModelMedicaidInformation }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, MedicaidInformation = dataModelMedicaidInformation }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -1329,6 +1410,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateOtherIdentificationNumberAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.OtherIdentificationNumberViewModel OtherIdentificationNumber)
         {
             string status = "true";
+            string successMessage = "";
             OtherIdentificationNumber dataModelOtherIdentificationNumber = null;
             bool isCCO = await GetUserRole();
 
@@ -1355,8 +1437,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         dataModelOtherIdentificationNumber = AutoMapper.Mapper.Map<OtherIdentificationNumberViewModel, OtherIdentificationNumber>(OtherIdentificationNumber);
                        
                         await profileManager.UpdateOtherIdentificationNumberAsync(profileId, dataModelOtherIdentificationNumber);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Other Identification Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Other Identification Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.OTHER_IDENTIFICATION_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && OtherIdentificationNumber.OtherIdentificationNumberID != 0)
                     {
@@ -1373,6 +1459,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/IdentificationAndLicense/UpdateOtherIdentificationNumberAsync?profileId=";
 
                         profileUpdateManager.AddProfileUpdateForProvider(OtherIdentificationNumber, dataModelOtherIdentificationNumber, tracker);
+                        successMessage = SuccessMessage.OTHER_IDENTIFICATION_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -1398,7 +1485,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.OTHER_IDENTIFICATION_NUMBER_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, OtherIdentificationNumber = dataModelOtherIdentificationNumber }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, OtherIdentificationNumber = dataModelOtherIdentificationNumber }, JsonRequestBehavior.AllowGet);
         }
 
         #region Private Methods

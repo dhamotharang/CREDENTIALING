@@ -1,4 +1,4 @@
-﻿var UpdateAndRenewalsApp = angular.module("UpdateAndRenewalsApp", ['toaster', 'smart-table', 'nvd3', 'uiSwitch', 'chieffancypants.loadingBar', 'ServiceTracker']);
+﻿var UpdateAndRenewalsApp = angular.module("UpdateAndRenewalsApp", ['toaster', 'smart-table', 'nvd3', 'uiSwitch', 'ServiceTracker']);
 
 
 UpdateAndRenewalsApp.value("MasterSettings",
@@ -19,9 +19,9 @@ UpdateAndRenewalsApp.run(["$rootScope", function ($rootScope) {
     $rootScope.IsProvider = IsProvider;
 }])
 
-UpdateAndRenewalsApp.config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
+UpdateAndRenewalsApp.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
-    cfpLoadingBarProvider.includeSpinner = true;
+    //cfpLoadingBarProvider.includeSpinner = true;
     $httpProvider.interceptors.push('interceptHttp');
 }]);
 

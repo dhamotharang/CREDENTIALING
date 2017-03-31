@@ -3144,12 +3144,85 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     $scope.setSelectedRow = function (task) {
         task.selected ? task.selected = false : task.selected = true;
     }
+
     $scope.SetReminderModal = function()
     {
         $scope.showSetReminder = true;
     }
+
+    
+    //-----check box for Tasks--------------------
+    $scope.taskList = {
+        tasks: [],
+        remainingTime: '',
+        reminderDate: '',
+        reminderDateTime:'',
+        taskCount:0
+    };
+    
+    //Close the Set Reminder Calender
     $scope.CancelReminder = function () {
         $scope.showSetReminder = false;
+    }
+
+    //Set the Date time for task reminder
+    $scope.SetReminder = function () {
+        $scope.showSetReminder = false;
+
+        var ReminderDateTime = new Date($('#datetimepicker3').val());
+        var currentDateTime = new Date();
+        var difference = (ReminderDateTime - currentDateTime);
+        var diffDays = Math.floor(difference / (1000 * 3600 * 24));
+        var diffHours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        //var diffMin = Math.round((ReminderDateTime - currentDateTime) / 36e5 * 60);
+        var diffMin = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+
+        alert(diffDays + 'days ' + diffHours + 'hrs ' + diffMin + 'min');
+
+        //Remaining time for the task
+        $scope.taskList.remainingTime = (diffDays > 0 ? diffDays + 'd ' : '') + ((diffHours > 0 || diffDays==0) ? diffHours + 'h ' : '') + ((diffMin >0 && diffHours <= 24) ? diffMin + 'm' : '');
+
+        //formatting date for header
+        $scope.SetReminderDate = new Date($('#datetimepicker3').val().substr(0, $('#datetimepicker3').val().indexOf(' ')));
+        $scope.SetReminderDate = (($scope.SetReminderDate.getMonth() + 1) + '-' + $scope.SetReminderDate.getDate() + '-' + $scope.SetReminderDate.getFullYear());
+
+        $scope.taskList.reminderDate = $scope.SetReminderDate;
+        $scope.taskList.reminderDateTime = ReminderDateTime;
+        //storing data into local storage
+        localStorage.setItem("TaskReminders", JSON.stringify($scope.taskList));
+        $scope.taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
+        console.log(document.getElementsByClassName('RemainderBody'));
+    }
+
+   
+
+    $scope.checkedTask = false; // to set the status of checked tasks
+
+    //Method to add/remove the checked/unchecked tasks from the list
+    $scope.getCheckedTask = function (task, checkedStatus)
+    {
+        $scope.newTask = angular.copy(task);
+        task.selected ? task.selected = false : task.selected = true;
+        // If task is checked, add it to the List
+        if (task.selected == true) {
+            $scope.newTask.ProviderName = $scope.newTask.ProviderName.substr(0, $scope.newTask.ProviderName.indexOf('-'));
+            $scope.taskList.tasks.push($scope.newTask);
+            $scope.taskList.taskCount++;
+        }
+
+
+        // If task is unchecked, remove it from the List
+        if (task.selected == false)
+        {
+            $scope.taskList.taskCount--;
+            for (var i = 0; i < $scope.taskList.tasks.length; i++) {
+                if ($scope.taskList.tasks[i].TaskTrackerId == $scope.newTask.TaskTrackerId)
+                    $scope.taskList.tasks.splice($scope.taskList.tasks[i],1);
+            }
+            
+        }
+       
+
     }
 });
 
