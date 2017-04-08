@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,6 +58,11 @@ namespace AHC.CD.Data.Repository
 
             Task<int> SaveAsync();
             int Save();
+
+            int GetPrimaryKeyValue<T>(T t);
+            Dictionary<PropertyInfo, object> GetNavigationProperties(T t);
+            Object GetMasterDataObject(Type t, int? PrimaryKey);
+
 
             Task<int> CountAsync();
             int Count();

@@ -43,7 +43,37 @@
             margin-top: -30px;
             margin-right: 20px;
         }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1040;
+            background-color: #000;
+        }
+
+        body.fullscreen-mode {
+            overflow-y: hidden;
+        }
+
+        .credAxis.fullscreen {
+            z-index: 2030;
+            position: fixed;
+            top: 67px;
+            left: 34px;
+            right: 34px;
+            bottom: 25px;
+            overflow: auto;
+            margin-bottom: 0;
+        }
+        .credaxis-bottom-border 
+        {
+            border-bottom: 1px solid #DDD;
+        }
     </style>
+
     <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
     <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
     <script src="~/Scripts/Prototypes/ProviderDashboard.js"></script>
@@ -62,7 +92,7 @@
     <div class="col-lg-12 zero-padding-left-right margin_top_6px">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-check fa-fw"></i> PRPVIDER SUMMARY
+                <i class="fa fa-check fa-fw"></i> PROVIDER SUMMARY
                 <div class="pull-right">
                     <button class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil-square-o"></i></button>
                     <button class="btn btn-xs btn-info" tooltip data-toggle="tooltip" data-placement="top" title="Upload Update"><i class="fa fa-cloud-upload"></i></button>
@@ -104,15 +134,15 @@
                         </fieldset>
                     </div>
                     <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-right:0px;">
-                        <fieldset style="padding-bottom: 10px;border-right: 0px;">
+                        <fieldset class="credAxis" style="padding-bottom: 10px;border-right: 0px;">
                             <legend>
                                 Data/Document Status
                             </legend>
                             <div class="legend2 pull-right">
-                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
+                                <button ng-click="DDSUpdate();" class="btn btn-xs btn-primary fullscreen-link" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-expand"></i></button>
                             </div>
-                            <div class="col-lg-12 zero-padding-left-right-div">
-                                <div ng-repeat="dds in DDSLabels | limitTo: 4 track by $index" class="col-xs-6 form-group">
+                            <div class="col-lg-12 zero-padding-left-right-div" ng-init="DDSLimit=4;">
+                                <div ng-repeat="dds in DDSLabels | limitTo: DDSLimit track by $index" class="col-xs-6 form-group">
                                     <label class="control-label small">{{dds.Title}} :</label> N/A <a class="btn btn-xs btn-info"><i class="fa fa-upload"></i></a>
                                 </div>
                             </div>
@@ -121,35 +151,33 @@
                 </div>
                 <div class="col-lg-12 zero-padding-left-right-div form-style">
                     <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-left:0px;">
-                        <fieldset style="padding-bottom: 10px;border-left: 0px;">
+                        <fieldset class="credAxis" style="padding-bottom: 10px;border-left: 0px;">
                             <legend>
                                 Recent Tasks Performed
                             </legend>
                             <div class="legend2 pull-right">
-                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
+                                <button ng-click="RTPUpdate();" class="btn btn-xs btn-primary fullscreen-link" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-expand"></i></button>
                             </div>
                             <div class="col-lg-12">
                                 <dl ng-repeat="pt in ProviderTasks track by $index" class="small">
-                                    <dt>{{pt.ActionDate}}: {{pt.Title}}</dt>
+                                    <dt><i style="color: #3397d4;" class="fa fa-check-square-o"></i> {{pt.ActionDate}}: {{pt.Title}}</dt>
                                     <dd><i>{{pt.Description}}</i></dd>
                                 </dl>
                             </div>
                         </fieldset>
                     </div>
                     <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-right:0px;">
-                        <fieldset style="padding-bottom: 10px;border-right: 0px;">
+                        <fieldset class="credAxis" style="padding-bottom: 10px;border-right: 0px;">
                             <legend>
                                 Credentialing Details
                             </legend>
-                            <style>
-                                .credaxis-bottom-border {
-                                    border-bottom: 1px solid #DDD;
-                                }
-                            </style>
-                            <div ng-repeat="pc in ProviderCreds track by $index" class="col-lg-12 zero-padding-left-right-div" ng-class="{'credaxis-bottom-border': !$last && ProviderCreds.length > 1 }">
+                            <div ng-if="CDView" class="legend2 pull-right">
+                                <button ng-click="CDUpdate();" fullscreen class="btn btn-xs btn-primary fullscreen-link" tooltip data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-compress"></i></button>
+                            </div>
+                            <div ng-repeat="pc in ProviderCreds track by $index" class="col-lg-12 zero-padding-left-right-div" ng-class="{'credaxis-bottom-border': !$last && ProviderCreds.length > 1 }" style="padding-bottom: 15px; margin-top: 15px;">
                                 <div class="col-lg-12 zero-padding-left-right-div">
                                     <div class="col-xs-6 form-group">
-                                        <label class="control-label small">{{pc.LocationType}} Location: </label> <i>{{pc.Location}}</i>
+                                        <label class="control-label small"><i class="fa fa-map-marker"></i> {{pc.LocationType}} Location: </label> <i>{{pc.Location}}</i>
                                     </div>
                                     <div class="col-xs-6 form-group">
                                         <label class="control-label small">Specilaty : </label> <i>{{pc.Specilaty}}</i>
@@ -168,9 +196,17 @@
                                     </div>
                                     <div class="col-md-6 small">
                                         <label>Age Limit:</label> <i>{{pc.AgeLimit}}</i>
-                                        <br />
-                                        <br />
-                                        <a ng-click="ViewMore();" class="pointer">View More...</a>
+                                        <br ng-if="!CDView" />
+                                        <br ng-if="!CDView" />
+                                        <a ng-if="!CDView" ng-click="CDUpdate($index);" fullscreen class="pointer fullscreen-link">View More...</a>
+                                    </div>
+                                </div>
+                                <div ng-if="CDView" class="col-lg-12 zero-padding-left-right-div">
+                                    <div class="col-xs-12 small">
+                                        <label>Office Hours:</label>
+                                        <div ng-repeat="oh in pc.OfficeHours track by $index" class="col-md-11 col-md-offset-1 col-xs-10 col-xs-offset-2 zero-padding-left-right-div">
+                                            <span>{{oh.Day}}: {{oh.Timing}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -179,25 +215,25 @@
                 </div>
                 <div class="col-lg-12 zero-padding-left-right-div form-style">
                     <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-left:0px;">
-                        <fieldset style="padding-bottom: 10px;border-left: 0px;margin-bottom: -1px;">
-                            <div class="legend2 pull-right">
-                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
-                            </div>
+                        <fieldset class="credAxis" style="padding-bottom: 10px;border-left: 0px;margin-bottom: -1px;">
                             <legend>
                                 Hospitals
                             </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="PHUpdate();" class="btn btn-xs btn-primary fullscreen-link" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-expand"></i></button>
+                            </div>
                             <ol type="1">
                                 <li ng-repeat="h in ProviderHospitals track by $index">{{h}}</li>
                             </ol>
                         </fieldset>
                     </div>
                     <div class="col-md-6 col-xs-12 zero-padding-left-right" style="padding-right:0px;">
-                        <fieldset style="padding-bottom: 10px;border-right: 0px;margin-bottom: -1px;">
+                        <fieldset class="credAxis" style="padding-bottom: 10px;border-right: 0px;margin-bottom: -1px;">
                             <legend>
                                 Associated IPA/GROUP
                             </legend>
                             <div class="legend2 pull-right">
-                                <button ng-click="loadmore();" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-eye"></i></button>
+                                <button ng-click="PGUpdate();" class="btn btn-xs btn-primary fullscreen-link" tooltip data-toggle="tooltip" data-placement="top" title="View More"><i class="fa fa-expand"></i></button>
                             </div>
                             <div class="col-lg-12 zero-padding-left-right-div">
                                 <ol type="1">

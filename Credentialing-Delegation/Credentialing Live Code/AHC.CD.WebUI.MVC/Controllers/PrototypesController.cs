@@ -82,22 +82,20 @@ namespace AHC.CD.WebUI.MVC.Controllers
             var data = PrototypeHelper.GetProvidersSummary(count, profileStatus);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-
+        
         public JsonResult GetCCOData()
         {
             var data = PrototypeHelper.GetCCOList().Take(9);
             return Json(data, JsonRequestBehavior.AllowGet);
-        
+
         }
         public JsonResult GetTLData()
         {
-               var data = PrototypeHelper.GetTLData();
+            var data = PrototypeHelper.GetTLData();
             return Json(data, JsonRequestBehavior.AllowGet);
-        
-        }
-      
 
+        }
+        
         /// <summary>
         /// Get Specialities Json Data
         /// </summary>
@@ -106,7 +104,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         {
             return Json(PrototypeHelper.GetSpecialties(), JsonRequestBehavior.AllowGet);
         }
-        
+
         /// <summary>
         /// Get Expiry License Data Json Data
         /// </summary>
@@ -221,6 +219,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
         public JsonResult GetProviderGroups(int count = 5, int ProfileID = 10)
         {
             return Json(PrototypeHelper.GetProviderGroups(count, ProfileID), JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public ActionResult GetReminderNotification()
+        {
+            return PartialView("~/Views/Prototypes/Reminders/_reminderNotification.cshtml");
         }
     }
 }

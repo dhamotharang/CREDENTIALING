@@ -307,6 +307,36 @@ namespace AHC.CD.Data.EFRepository
 
         }
 
+        public virtual Dictionary<PropertyInfo, object> GetNavigationProperties(TObject tObjects)
+        {
+            var entityType = tObjects.GetType();
+            var elementType = ((IObjectContextAdapter)context).ObjectContext.CreateObjectSet<TObject>().EntitySet.ElementType;
+            List<PropertyInfo> NVProperties = elementType.NavigationProperties.Select(np => entityType.GetProperty(np.Name)).Where(x => x.GetType() != typeof(IEnumerable<>) && x.CustomAttributes.Count() > 0).ToList();
+            Dictionary<PropertyInfo, object> Temporary = new Dictionary<PropertyInfo, object>();
+            if (NVProperties.Count() > 0)
+            {
+                foreach (var item in NVProperties)
+                {
+                    Temporary.Add(item, tObjects.GetType().GetProperty(item.CustomAttributes.FirstOrDefault().ConstructorArguments.FirstOrDefault().Value.ToString()).GetValue(tObjects));
+                }
+
+            }
+            return Temporary;
+        }
+
+        public virtual Object GetMasterDataObject(Type tObjects, int? PrimaryKey)
+        {
+            if (PrimaryKey == null)
+            {
+                return null;
+            }
+            return context.Set(tObjects).Find(PrimaryKey);
+        }
+
+        public virtual async Task ContextReload()
+        {
+
+        }
 
     }
 }

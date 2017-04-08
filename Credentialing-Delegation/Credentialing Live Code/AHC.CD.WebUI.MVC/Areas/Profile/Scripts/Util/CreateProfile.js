@@ -9,6 +9,7 @@ profileApp.config(function ($datepickerProvider) {
     });
 })
 
+var UserRole = UserRole;
 profileApp.controller('tabController', ['$scope', '$rootScope', '$http', 'messageAlertEngine', function ($scope, $rootScope, $http, messageAlertEngine) {
     $rootScope.ccoprofile = false;
     $http.get(rootDir + '/Profile/CustomFieldGeneration/getRole').

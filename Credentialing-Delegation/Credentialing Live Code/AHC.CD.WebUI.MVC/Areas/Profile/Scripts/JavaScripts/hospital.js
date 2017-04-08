@@ -47,6 +47,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
             if ($scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails.length > 0) {
                 for (var i = 0; i < $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails.length ; i++) {
                     if (!$scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[i].SpecialtyID) { $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[i].SpecialtyID = ""; }
+                    $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[i].TableState = $scope.HospitalPrivilegeInformations.TableState;
                 }
             }
 
@@ -306,7 +307,8 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                             { }
                             $scope.operateCancelControl('');
                             
-                            messageAlertEngine.callAlertMessage("alertHospitalPrivilegeInformation", "Hospital Privilege Information Saved Successfully!!!!", "success", true);
+                            //messageAlertEngine.callAlertMessage("alertHospitalPrivilegeInformation", "Hospital Privilege Information Saved Successfully!!!!", "success", true);
+                            messageAlertEngine.callAlertMessage("alertHospitalPrivilegeInformation", data.successMessage, "success", true);
                             $scope.resetDates();
                         } else {
                             messageAlertEngine.callAlertMessage("alertHospitalPrivilegeInformation", data.status, "danger", true);
@@ -433,6 +435,11 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                             $scope.setPrimary();
                         }
                         if (data.status == "true") {
+
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                hospitalPrivilegeInformation.TableState = true;
+                            }
+
                             if ($scope.visibilityControl == 'addhospitalPrivilegeInformation') {
                                 for (var i = 0; i < $scope.admittingPrivileges.length; i++) {
 
@@ -483,7 +490,8 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                                 $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[IndexValue] = hospitalPrivilegeInformation;
 
                                 $scope.operateViewAndAddControl(IndexValue + '_viewhospitalPrivilegeInformation');
-                                messageAlertEngine.callAlertMessage('updateHospitalPrivilege' + IndexValue, "Hospital Privilege Information Updated Successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updateHospitalPrivilege' + IndexValue, "Hospital Privilege Information Updated Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updateHospitalPrivilege' + IndexValue, data.successMessage, "success", true);
                             }
                             else {
                                 $scope.HospitalPrivilegeInformationPendingRequest = true;
@@ -509,8 +517,8 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
 
                                 $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[IndexValue] = hospitalPrivilegeInformation;
                                 $scope.operateViewAndAddControl(IndexValue + '_viewhospitalPrivilegeInformation');
-                                messageAlertEngine.callAlertMessage('renewHospitalPrivilege' + IndexValue, "Hospital Privilege Information Renewed Successfully !!!!", "success", true);
-
+                                //messageAlertEngine.callAlertMessage('renewHospitalPrivilege' + IndexValue, "Hospital Privilege Information Renewed Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('renewHospitalPrivilege' + IndexValue, data.successMessage, "success", true);
                             }
 
                             myData = data;

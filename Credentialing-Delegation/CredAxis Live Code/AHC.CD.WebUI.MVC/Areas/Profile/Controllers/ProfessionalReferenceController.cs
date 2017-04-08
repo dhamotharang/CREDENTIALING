@@ -289,7 +289,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

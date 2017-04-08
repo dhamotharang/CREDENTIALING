@@ -1,38 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity;
 @using Microsoft.AspNet.Identity.Owin;
 
-@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
-@*<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
-<script src="~/signalr/hubs"></script>
-<script type="text/javascript">
-    $(function () {
-        // Create a proxy to signalr hub on web server. It reference the hub.
-        var notificationFromHub = $.connection.cnDHub;
-
-        // Connect to signalr hub
-        $.connection.hub.start().done(function () {
-            FetchRequestCounts();
-        });
-
-        // Notify to client with the recent updates
-        notificationFromHub.client.NotifyCount = function () {
-            FetchRequestCounts();
-        };
-    });
-
-    function FetchRequestCounts() {
-        $.ajax({
-            url: '/Credentialing/ProfileUpdates/GetRequestCounts',
-            contentType: 'application/html ; charset:utf-8',
-            type: 'GET',
-            dataType: 'html'
-        })
-            .success(function (result) {
-                document.getElementById("requestCounts").innerHTML = result;
-            })
-    }
-
-</script>*@
 
 @{
     var menus = new[]
@@ -47,7 +15,7 @@
                    //new { Link="Credentialing/Plan/PlanContract", Controller="PlanContract", LinkText="Plan Contract", Roles="ADM,CCO,CRA"  },
                    new { Link="Credentialing/cnd/contractinfo", Controller="CnD", LinkText="Contract Grid", Roles="CCO,CRA"  },
                    //new { Link="Credentialing/ProfileUpdates/Index", Controller="ProfileUpdates", LinkText="Requests for Approval", Roles="CCO,CRA"  },
-                   //new { Link="Credentialing/ProfileUpdates/Index", Controller="ProfileUpdates", LinkText="Pending Request", Roles="PRO"  },
+                   new { Link="Credentialing/RequestForApproval/Index", Controller="ProfileUpdates", LinkText="Pending Request", Roles="PRO"  },
                    new { Link="Profile/LocationTracker/Index", Controller="LocationTracker", LinkText="Location Tracker", Roles="CCO,ADM,CRA"  },
                   // new { Link="Credentialing/IdentificationLicense/Index", Controller="IdentificationLicense", LinkText="Indentification License", Roles="CCO,ADM"  },
                    //new { Link="EmailService/Index", Controller="EmailService", LinkText="Emails", Roles="CCO,ADM,CCM"  },
@@ -77,11 +45,11 @@
 
 
                             };
-                            
+
     var requeestForApprovalMenu = new[]
                 {
                    new { Link="Credentialing/RequestForApproval/Index", Controller="ProfileUpdates", LinkText="Requests for Approval", Roles="CCO,CRA"  },
-                   new { Link="Credentialing/RequestForApproval/Index", Controller="ProfileUpdates", LinkText="Pending Request", Roles="PRO"  },
+                   //new { Link="Credentialing/RequestForApproval/Index", Controller="ProfileUpdates", LinkText="Pending Request", Roles="PRO"  },
                 };
 
 
@@ -131,27 +99,30 @@
                                     select item;
                         foreach (var link in links)
                         {
-                            
+
                             <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
                                     <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText</a>
                                     </li>
 
                         }
 
+
                         var requestLinks = from item in requeestForApprovalMenu
-                                    where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                                    .Any(x => roles.Contains(x))
-                                    select item;
+                                where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                .Any(x => roles.Contains(x))
+                                select item;
                         foreach (var link in requestLinks)
                         {
-                            
+
                             <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
-                                    <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText <span id="requestCounts" class="label label-danger pull-right"></span></a>
+                                    <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText <span id="requestCounts" class="label label-danger pull-right newCountButtonsExpired" tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title=" Click here for new requests" style="color:white;font-weight:bolder;"></span></a>
+                                    
                                     </li>
 
-                        }                        
-                       
-                    
+                        }
+
+
+
                         if (System.Configuration.ConfigurationManager.AppSettings["SupportsDelegatedPlans"] == "true")
                         {
                             var credLinks = from item in credentialingDelegatedMenus

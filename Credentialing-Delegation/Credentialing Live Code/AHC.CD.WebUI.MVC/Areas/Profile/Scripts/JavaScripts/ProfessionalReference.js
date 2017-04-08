@@ -204,6 +204,10 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.professionalReference.TableState = true;
+                            }
+
                             data.professionalReference.Specialty = tempSpecialty;
                             data.professionalReference.ProviderType = providerType;
 
@@ -230,7 +234,8 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
                                 }
                                 $rootScope.operateViewAndAddControl(index + '_viewpr');
                                 $scope.ProfessionalReferencePendingRequest = true;
-                                messageAlertEngine.callAlertMessage("updatedProfessionalReference" + index, "Professional Reference updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedProfessionalReference" + index, "Professional Reference updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedProfessionalReference" + index, data.successMessage, "success", true);
                             }
 
                             $scope.IsProfessionalReferenceHasError = false;
@@ -427,9 +432,9 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
             $scope.dataLoaded = true;
         }
     });
-    $rootScope.$on("LoadRequireMasterDataDemographics", function () {
-        //============================= Data From Master Data Table Required For Visa Details ======================
 
+    $scope.Providers = [];
+    $rootScope.$on("LoadRequireMasterDataDemographics", function () {
 
         $(function () {
             try {
@@ -449,13 +454,13 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
     };
 
     $scope.ProviderData = "";
-    $scope.SelectProvider = function (ProfileId) {       
+    $scope.SelectProvider = function (ProfileId) {
 
         try {
             $http.get("/Profile/ProfessionalReference/GetProfileData?profileId=" + ProfileId)
        .then(function (response) {
            $scope.ProviderData = response.data;
-           
+
            $scope.tempObject.LastName = $scope.ProviderData.providers.PersonalDetail.LastName;
            $scope.tempObject.MiddleName = $scope.ProviderData.providers.PersonalDetail.MiddleName;
            $scope.tempObject.Street = $scope.ProviderData.providers.HomeAddresses[0].Street;
@@ -464,35 +469,38 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
            $scope.tempObject.State = $scope.ProviderData.providers.HomeAddresses[0].State;
            $scope.tempObject.Zipcode = $scope.ProviderData.providers.HomeAddresses[0].ZipCode;
            $scope.tempObject.Country = $scope.ProviderData.providers.HomeAddresses[0].Country;
+           $scope.tempObject.County = $scope.ProviderData.providers.HomeAddresses[0].County;
            $scope.tempObject.Email = $scope.ProviderData.providers.ContactDetail.EmailIDs[0].EmailAddress;
            $scope.tempObject.Telephone = $scope.ProviderData.providers.ContactDetail.PhoneDetails.Telephone;
-           $scope.tempObject.speciality = $scope.ProviderData.providers.SpecialtyDetails[0];           
-           $scope.tempObject.speciality.SpecialtyID = $scope.ProviderData.providers.SpecialtyDetails[0].SpecialtyID;
-           $scope.tempObject.speciality.Specialty.Name = $scope.masterSpecialties[0];
-           $scope.tempObject.speciality.Name = $scope.masterSpecialties[0];
+           if ($scope.ProviderData.providers.SpecialtyDetails.length != 0) {
+               $scope.tempObject.speciality = $scope.ProviderData.providers.SpecialtyDetails[0];
+               $scope.tempObject.speciality.SpecialtyID = $scope.ProviderData.providers.SpecialtyDetails[0].SpecialtyID;
+               $scope.tempObject.speciality.Specialty.Name = $scope.masterSpecialties[0];
+               $scope.tempObject.speciality.Name = $scope.masterSpecialties[0];
+           }
            for (var number in $scope.ProviderData.providers.ContactDetail.PhoneDetails) {
                if (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].Preference == "Primary")) {
                    if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Mobile") {
-                       $scope.tempObject.Telephone = $scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber;
+                       $scope.tempObject.Telephone = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
                    }
                }
                else if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Mobile") {
-                   $scope.tempObject.Telephone = $scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber;
+                   $scope.tempObject.Telephone = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
                    //break;
                }
 
                if (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].Preference == "Primary")) {
                    if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Fax") {
-                       $scope.tempObject.Fax = $scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber;
+                       $scope.tempObject.Fax = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
                    }
                }
                else if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Fax") {
-                   $scope.tempObject.Fax = $scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber;
+                   $scope.tempObject.Fax = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
                    //break;
                }
            }
            $scope.tempObject.FirstName = $scope.ProviderData.providers.PersonalDetail.FirstName;
-
+           $("#ProvidersSearchResultDiv").hide();
        });
         }
         catch (e) { };

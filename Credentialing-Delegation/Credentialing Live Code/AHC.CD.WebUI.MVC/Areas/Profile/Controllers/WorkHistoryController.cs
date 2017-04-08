@@ -22,6 +22,7 @@ using AHC.CD.Business.BusinessModels.ProfileUpdates;
 using AHC.CD.Resources.Document;
 using System.Dynamic;
 using Newtonsoft.Json;
+using AHC.CD.Resources.Rules;
 
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
@@ -74,6 +75,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> AddCVAsync(int profileId, CVInformationViewModel cvInformation)
         {
             string status = "true";
+            string successMessage = "";
             CVInformation dataModelCVInformation = new CVInformation();
             bool isCCO = await GetUserRole();
             try
@@ -98,10 +100,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                             ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History-CV Information", "Added");
                             await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
                         }
-                        if(isCCO && cvInformation.CVInformationID != 0)
+                        if(isCCO && cvInformation.CVInformationID != 0 && Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
+                           
                             ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History-CV Information", "Updated");
                             await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                            successMessage = SuccessMessage.CV_UPDATE_SUCCESS;
                         }
                     }
                     else
@@ -126,6 +130,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/WorkHistory/AddCVAsync?profileId=";
 
                         profileUpdateManager.AddProfileUpdateForProvider(cvInformation, dataModelCVInformation, tracker);
+                        successMessage = SuccessMessage.CV_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -149,7 +154,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 errorLogger.LogError(ex);
                 status = ExceptionMessage.CV_UPLOADED_EXCEPTION;
             }
-            return Json(new { status = status, dataModelCVInformation = dataModelCVInformation,CVInformationID=cvInformation.CVInformationID }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, dataModelCVInformation = dataModelCVInformation, CVInformationID = cvInformation.CVInformationID }, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -207,6 +212,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateProfessionalWorkExperienceAsync(int profileId, ProfessionalWorkExperienceViewModel professionalWorkExperience)
         {
             string status = "true";
+            string successMessage = "";
+            string ActionType = "Update";
             ProfessionalWorkExperience dataModelProfessionalWorkExperience = null;
             bool isCCO = await GetUserRole();
             try
@@ -226,8 +233,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         
                         await profileManager.UpdateProfessionalWorkExperienceAsync(profileId, dataModelProfessionalWorkExperience, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History- Professional Work Experience ", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History- Professional Work Experience ", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PROFESSIONAL_WORK_EXPERIENCE_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -250,14 +261,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/WorkHistory/UpdateProfessionalWorkExperienceAsync?profileId=";
 
+                        ProfessionalWorkExperience workExperienceOldData = await profileUpdateManager.GetProfileDataByID(dataModelProfessionalWorkExperience, professionalWorkExperience.ProfessionalWorkExperienceID);
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Professional Work Experience Detail";
-                        uniqueRecord.Value = professionalWorkExperience.EmployerName + 
-                            (professionalWorkExperience.JobTitle != null ? " - " + professionalWorkExperience.JobTitle : "");
+                        uniqueRecord.Value = workExperienceOldData.EmployerName +
+                            (workExperienceOldData.JobTitle != null ? " - " + workExperienceOldData.JobTitle : "");
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(professionalWorkExperience, dataModelProfessionalWorkExperience, tracker);
+                        successMessage = SuccessMessage.PROFESSIONAL_WORK_EXPERIENCE_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -282,7 +295,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFESSIONAL_WORK_EXPERIENCE_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, professionalWorkExperience = dataModelProfessionalWorkExperience }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, professionalWorkExperience = dataModelProfessionalWorkExperience }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -387,6 +400,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateMilitaryServiceInformationAsync(int profileId, MilitaryServiceInformationViewModel militaryServiceInformation)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             MilitaryServiceInformation dataModelMilitaryServiceInformation = null;
             bool isCCO = await GetUserRole();
             try
@@ -404,8 +419,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         
                         await profileManager.UpdateMilitaryServiceInformationAsync(profileId, dataModelMilitaryServiceInformation);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History- Military Service Information ", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History- Military Service Information ", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.MILITARY_SERVICE_INFO_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -420,15 +439,18 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/WorkHistory/UpdateMilitaryServiceInformationAsync?profileId=";
 
+                        MilitaryServiceInformation workExperienceOldData = await profileUpdateManager.GetProfileDataByID(dataModelMilitaryServiceInformation, militaryServiceInformation.MilitaryServiceInformationID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Military Service Detail";
-                        uniqueRecord.Value = militaryServiceInformation.MilitaryBranch 
-                            + (militaryServiceInformation.MilitaryRank != null ? " - " + militaryServiceInformation.MilitaryRank : null) + 
-                            (militaryServiceInformation.MilitaryDischarge != null ? " - " + militaryServiceInformation.MilitaryDischarge : null);
+                        uniqueRecord.Value = workExperienceOldData.MilitaryBranch
+                            + (workExperienceOldData.MilitaryRank != null ? " - " + workExperienceOldData.MilitaryRank : null) +
+                            (workExperienceOldData.MilitaryDischarge != null ? " - " + workExperienceOldData.MilitaryDischarge : null);
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(militaryServiceInformation, dataModelMilitaryServiceInformation, tracker);
+                        successMessage = SuccessMessage.MILITARY_SERVICE_INFO_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -453,7 +475,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.MILITARY_SERVICE_INFORMATION_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, militaryServiceInformation = dataModelMilitaryServiceInformation }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, militaryServiceInformation = dataModelMilitaryServiceInformation }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -557,6 +579,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdatePublicHealthServiceAsync(int profileId, PublicHealthServiceViewModel publicHealthService)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             PublicHealthService dataModelPublicHealthService = null;
             bool isCCO = await GetUserRole();
             try
@@ -574,8 +598,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         
                         await profileManager.UpdatePublicHealthServiceAsync(profileId, dataModelPublicHealthService);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History - Public Health Service Information ", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History - Public Health Service Information ", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PUBLIC_HEALTH_SERVICE_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -590,13 +618,15 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/WorkHistory/UpdatePublicHealthServiceAsync?profileId=";
 
+                        PublicHealthService healthServiceOldData = await profileUpdateManager.GetProfileDataByID(dataModelPublicHealthService, publicHealthService.PublicHealthServiceID);
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Last Location";
-                        uniqueRecord.Value = publicHealthService.LastLocation;
+                        uniqueRecord.Value = healthServiceOldData.LastLocation;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(publicHealthService, dataModelPublicHealthService, tracker);
+                        successMessage = SuccessMessage.PUBLIC_HEALTH_SERVICE_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -620,7 +650,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PUBLIC_HEALTH_SERVICE_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, publicHealthService = dataModelPublicHealthService }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, publicHealthService = dataModelPublicHealthService }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -724,6 +754,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateWorkGapAsync(int profileId, WorkGapViewModel workGap)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             WorkGap dataModelWorkGap = null;
             bool isCCO = await GetUserRole();
             try
@@ -741,8 +773,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         
                         await profileManager.UpdateWorkGapAsync(profileId, dataModelWorkGap);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History - Work Gap Information ", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Work History - Work Gap Information ", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.WORK_GAP_INFO_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -758,13 +794,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/WorkHistory/UpdateWorkGapAsync?profileId=";
 
+                        WorkGap workGapOldData = await profileUpdateManager.GetProfileDataByID(dataModelWorkGap, workGap.WorkGapID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "From - To";
-                        uniqueRecord.Value = workGap.StartDate.Date.ToString() + " - " + workGap.EndDate.Date.ToString();
+                        uniqueRecord.Value = workGapOldData.StartDate.ToShortDateString() + " - " + workGapOldData.EndDate.ToShortDateString();
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(workGap, dataModelWorkGap, tracker);
+                        successMessage = SuccessMessage.WORK_GAP_INFO_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -788,7 +827,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.WORK_GAP_CREATE_EXCEPTION;
             }
 
-            return Json(new { status = status, workGap = dataModelWorkGap }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, workGap = dataModelWorkGap }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -879,7 +918,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

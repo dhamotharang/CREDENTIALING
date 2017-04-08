@@ -18,6 +18,6 @@ namespace AHC.CD.Business.Notification
         bool NotifyChanges();
         bool NotifyChangesForCCM();
 
-
+        Task SaveRequestTrackerNotifcation(List<Tuple<int, UserDashboardNotification>> userNotifications);
     }
 }

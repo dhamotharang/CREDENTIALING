@@ -182,17 +182,17 @@ namespace AHC.CD.Business.MasterData
 
         Task<Specialty> GetSpecialtyByIDAsync(int? specialtyID);
 
-        Task<Facility> GetMasterFacilityInformationByIDAsync(int facilityID);
+        Task<Facility> GetMasterFacilityInformationByIDAsync(int? facilityID);
 
-        Task<Hospital> GetHospitalByIDAsync(int haopitalID);
+        Task<Hospital> GetHospitalByIDAsync(int? hospitalID);
 
-        Task<InsuranceCarrier> GetInsuranceCarrierByIDAsync(int insuranceCarrierID);
+        Task<InsuranceCarrier> GetInsuranceCarrierByIDAsync(int? insuranceCarrierID);
 
-        Task<SpecialtyBoard> GetSpecialtyBoardByIDAsync(int boardID);
+        Task<SpecialtyBoard> GetSpecialtyBoardByIDAsync(int? boardID);
 
         Task<ProviderType> GetProviderTypeByIDAsync(int? providerTypeID);
 
-        Task<HospitalContactInfo> GetHospitalContactInfoByIDAsync(int contactID);
+        Task<HospitalContactInfo> GetHospitalContactInfoByIDAsync(int? contactID);
 
         Task<InsuranceCarrierAddress> GetInsuranceCarrierAddressesByIDAsync(int? carrierAddressID);
 
@@ -244,6 +244,8 @@ namespace AHC.CD.Business.MasterData
         Task<Employee> GetBillingContactByIDAsync(int billingContactID);
 
         Task<Employee> GetCredentialingContactByIDAsync(int credentialingContactID);
+
+        Task<Entities.Credentialing.Plan> GetPlanByIDAsync(int planID);
 
     }
 }

@@ -33,6 +33,8 @@ namespace AHC.CD.Entities.Credentialing.CredentialingRequestTracker
 
         public string RejectionReason { get; set; }
 
+        public int DecisionMadeBy { get; set; }
+
         #region DelegatedType
 
         public string DelegatedType { get; private set; }

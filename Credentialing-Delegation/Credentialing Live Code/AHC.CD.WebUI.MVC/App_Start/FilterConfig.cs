@@ -11,8 +11,8 @@ namespace AHC.CD.WebUI.MVC
         {
             filters.Add(new AuthorizeAttribute());
             filters.Add(new HandleErrorAttribute());
-            filters.Add(new PasswordExpirationCheckAttribute());
-            filters.Add(new AuditLogAttribute());
+            //filters.Add(new PasswordExpirationCheckAttribute());
+            //filters.Add(new AuditLogAttribute());
         }
     }
 }

@@ -1037,5 +1037,29 @@ namespace AHC.CD.Business.Notification
             await cdUserRepo.SaveAsync();
 
         }
+
+
+        public async Task SaveRequestTrackerNotifcation(List<Tuple<int, UserDashboardNotification>> userNotifications)
+        {
+            try
+            {
+                foreach (var user in userNotifications)
+                {
+                    CDUser cdUser = cdUserRepo.Find(c => c.ProfileId == user.Item1, "DashboardNotifications");
+                    if (cdUser.DashboardNotifications == null)
+                    {
+                        cdUser.DashboardNotifications = new List<UserDashboardNotification>();
+                    }
+                    cdUser.DashboardNotifications.Add(user.Item2);
+                    cdUserRepo.Update(cdUser);
+                }
+
+                await cdUserRepo.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

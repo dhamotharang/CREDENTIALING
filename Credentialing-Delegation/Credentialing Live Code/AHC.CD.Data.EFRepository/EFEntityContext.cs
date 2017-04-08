@@ -35,7 +35,7 @@ namespace AHC.CD.Data.EFRepository
     /// Creates database tables for each DbSet property
     /// </summary>
     /// 
-  [DbConfigurationType(typeof(EFCacheConfiguration))] // For EF 2nd Level Cache
+  //[DbConfigurationType(typeof(EFCacheConfiguration))] // For EF 2nd Level Cache
     public class EFEntityContext : DbContext
     {
         //public EFEntityContext()
@@ -251,18 +251,18 @@ namespace AHC.CD.Data.EFRepository
      ///Entity Framework 2nd Level Cache - To Improve the DB Access Performance 
      ///</summary>
 
-  public class EFCacheConfiguration : DbConfiguration
-  {
-      internal static readonly EFCache.InMemoryCache Cache = new EFCache.InMemoryCache();
-      public EFCacheConfiguration()
-      {
-          var transactionHandler = new EFCache.CacheTransactionHandler(Cache);
+  //public class EFCacheConfiguration : DbConfiguration
+  //{
+  //    internal static readonly EFCache.InMemoryCache Cache = new EFCache.InMemoryCache();
+  //    public EFCacheConfiguration()
+  //    {
+  //        var transactionHandler = new EFCache.CacheTransactionHandler(Cache);
 
-          AddInterceptor(transactionHandler);
+  //        AddInterceptor(transactionHandler);
 
-          Loaded +=
-            (sender, args) => args.ReplaceService<System.Data.Entity.Core.Common.DbProviderServices>(
-              (s, _) => new EFCache.CachingProviderServices(s, transactionHandler));
-      }
-  }
+  //        Loaded +=
+  //          (sender, args) => args.ReplaceService<System.Data.Entity.Core.Common.DbProviderServices>(
+  //            (s, _) => new EFCache.CachingProviderServices(s, transactionHandler));
+  //    }
+  //}
 }

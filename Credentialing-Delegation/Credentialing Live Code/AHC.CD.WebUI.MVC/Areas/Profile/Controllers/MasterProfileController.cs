@@ -53,7 +53,18 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         protected ApplicationUserManager _authUserManager;
         private IApplicationManager applicationManager = null;
-
+        private ApplicationRoleManager _roleManager;
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
+        }
 
         protected ApplicationUserManager AuthUserManager
         {
@@ -76,6 +87,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             try
             {
                 var profileId = this.userManager.GetProfileId(User.Identity.GetUserId());
+                bool isProvider = await GetUserRole();
                 if (profileId == null)
                     return View("ProfileDoesNotExist");
 
@@ -83,7 +95,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                 ViewBag.ProfileId = profileId;
 
-                ViewBag.Demographics = JsonConvert.SerializeObject(await profileManager.GetDemographicsProfileDataAsync(Convert.ToInt32(profileId)), new JsonSerializerSettings
+                ViewBag.Demographics = JsonConvert.SerializeObject(await profileManager.GetDemographicsProfileDataAsync(Convert.ToInt32(profileId), isProvider), new JsonSerializerSettings
                 {
                     DateTimeZoneHandling = DateTimeZoneHandling.Local
                 });
@@ -310,7 +322,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetDemographicsProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetDemographicsProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetDemographicsProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -318,7 +331,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetIdentificationAndLicensesProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetIdentificationAndLicensesProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetIdentificationAndLicensesProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -326,7 +340,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetBoardSpecialtiesProfileDataAsync(int profileId)
         {
-            var temp = JsonConvert.SerializeObject(await profileManager.GetBoardSpecialtiesProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            var temp = JsonConvert.SerializeObject(await profileManager.GetBoardSpecialtiesProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -335,7 +350,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetHospitalPrivilegesProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetHospitalPrivilegesProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetHospitalPrivilegesProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -343,7 +359,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetProfessionalLiabilitiesProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetProfessionalLiabilitiesProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetProfessionalLiabilitiesProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -351,7 +368,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetProfessionalReferencesProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetProfessionalReferencesProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetProfessionalReferencesProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -359,7 +377,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetEducationHistoriesProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetEducationHistoriesProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetEducationHistoriesProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -367,7 +386,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetWorkHistoriesProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetWorkHistoriesProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetWorkHistoriesProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -375,7 +395,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetProfessionalAffiliationsProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetProfessionalAffiliationsProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetProfessionalAffiliationsProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -383,7 +404,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetPracticeLocationsProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetPracticeLocationsProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetPracticeLocationsProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -391,7 +413,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetDisclosureQuestionsProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetDisclosureQuestionsProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetDisclosureQuestionsProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -399,7 +422,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetContractInfoProfileDataAsync(int profileId)
         {
-            return JsonConvert.SerializeObject(await profileManager.GetContractInfoProfileDataAsync(profileId), new JsonSerializerSettings
+            bool isProvider = await GetUserRole();
+            return JsonConvert.SerializeObject(await profileManager.GetContractInfoProfileDataAsync(profileId, isProvider), new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Local
             });
@@ -466,5 +490,30 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
             return IsLocked;
         }
+
+        #region Private Methods
+
+        private async Task<string> GetUserAuthId()
+        {
+            var currentUser = HttpContext.User.Identity.Name;
+            var appUser = new ApplicationUser() { UserName = currentUser };
+            var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
+
+            return user.Id;
+        }
+
+        private async Task<bool> GetUserRole()
+        {
+            var currentUser = HttpContext.User.Identity.Name;
+            var appUser = new ApplicationUser() { UserName = currentUser };
+            var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
+            var Role = RoleManager.Roles.FirstOrDefault(r => r.Name == "PRO");
+
+            return user.Roles.Any(r => r.RoleId == Role.Id);
+        }
+
+        #endregion
+
+
     }
 }

@@ -23,18 +23,23 @@ using AHC.CD.Entities.MasterProfile.PracticeLocation;
 using AHC.CD.Entities.MasterProfile.ProfessionalAffiliation;
 using AHC.CD.Entities.MasterProfile.ProfessionalLiability;
 using AHC.CD.Entities.MasterProfile.ProfessionalReference;
+using AHC.CD.Entities.MasterProfile.ProfileUpdateRenewal;
 using AHC.CD.Entities.MasterProfile.WorkHistory;
 using AHC.CD.Exceptions.Profiles;
 using AHC.CD.Resources.Document;
 using AHC.CD.Resources.Messages;
 using AHC.CD.Resources.Rules;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 //using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
+
 
 namespace AHC.CD.Business
 {
@@ -161,18 +166,18 @@ namespace AHC.CD.Business
                     "SpecialtyDetails.SpecialtyBoardCertifiedDetail.SpecialtyBoard",
 
                     //hospital Privilege
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.Hospital", 
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactInfo", 
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactPerson", 
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.AdmittingPrivilege", 
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.Hospital",
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactInfo",
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactPerson",
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.AdmittingPrivilege",
                     "HospitalPrivilegeInformation.HospitalPrivilegeDetails.StaffCategory",
 
                     //Visa Detail
-                    "VisaDetail.VisaInfo.VisaStatus", 
+                    "VisaDetail.VisaInfo.VisaStatus",
                     "VisaDetail.VisaInfo.VisaType", 
 
                     //Professional Reference
-                    "ProfessionalReferenceInfos.ProviderType", 
+                    "ProfessionalReferenceInfos.ProviderType",
                     "ProfessionalReferenceInfos.Specialty",
 
                     //Professional Liability
@@ -221,7 +226,7 @@ namespace AHC.CD.Business
                     "PracticeLocationDetails.OfficeHour",
                     "PracticeLocationDetails.OfficeHour.PracticeDays",
                     "PracticeLocationDetails.OfficeHour.PracticeDays.DailyHours",
-                    
+
                     "PracticeLocationDetails.OpenPracticeStatus",
                     "PracticeLocationDetails.OpenPracticeStatus.PracticeQuestionAnswers",
 
@@ -2301,7 +2306,7 @@ namespace AHC.CD.Business
                 Profile profile = profileRepository.GetAll("PersonalDetail,HomeAddresses,ContactDetail,SpecialtyDetails,SpecialtyDetails.Specialty,ContactDetail.PhoneDetails,ContactDetail.EmailIDs").ToList().Find(p => p.ProfileID == profileId);
                 return profile;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }
@@ -3469,7 +3474,7 @@ namespace AHC.CD.Business
 
         #region Demographics
 
-        public async Task<object> GetDemographicsProfileDataAsync(int profileId)
+        public async Task<object> GetDemographicsProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3493,25 +3498,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                //if (profile.BirthInformation != null && profile.BirthInformation.DateOfBirth != null)
-                //{
-                //    DateTime birth = Convert.ToDateTime(profile.BirthInformation.DateOfBirth);
-                //    profile.BirthInformation.DateOfBirth = ConvertToDateString(birth);
-                //}
-
-                return new
-                {
-                    PersonalDetail = profile.PersonalDetail,
-                    OtherLegalNames = profile.OtherLegalNames.Where(o => (o.Status != StatusType.Inactive.ToString())),
-                    HomeAddresses = profile.HomeAddresses.Where(h => (h.Status != StatusType.Inactive.ToString())),
-                    ContactDetail = profile.ContactDetail,
-                    PersonalIdentification = profile.PersonalIdentification,
-                    BirthInformation = profile.BirthInformation,
-                    VisaDetail = profile.VisaDetail,
-                    LanguageInfo = profile.LanguageInfo,
-                    ProfilePhotoPath = profile.ProfilePhotoPath
-                };
+                dynamic demographics = new ExpandoObject();
+                demographics = DemographicsMapper(demographics, profile, isProvider);
+                return demographics;
             }
             catch (ApplicationException)
             {
@@ -3527,7 +3516,7 @@ namespace AHC.CD.Business
 
         #region Identification And Licenses
 
-        public async Task<object> GetIdentificationAndLicensesProfileDataAsync(int profileId)
+        public async Task<object> GetIdentificationAndLicensesProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3542,16 +3531,18 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    StateLicenses = profile.StateLicenses.Where(s => (s.Status != StatusType.Inactive.ToString())),
-                    FederalDEAInformations = profile.FederalDEAInformations.Where(f => (f.Status != StatusType.Inactive.ToString())),
-                    MedicareInformations = profile.MedicareInformations.Where(m => (m.Status != StatusType.Inactive.ToString())),
-                    MedicaidInformations = profile.MedicaidInformations.Where(m => (m.Status != StatusType.Inactive.ToString())),
-                    CDSCInformations = profile.CDSCInformations.Where(c => (c.Status != StatusType.Inactive.ToString())),
-                    OtherIdentificationNumber = profile.OtherIdentificationNumber,
-                };
+                dynamic identificatioLicense = new ExpandoObject();
+                identificatioLicense = IdentificationAndLicensesMapper(identificatioLicense, profile, isProvider);
+                return identificatioLicense;
+                //return new
+                //{
+                //    StateLicenses = profile.StateLicenses.Where(s => (s.Status != StatusType.Inactive.ToString())),
+                //    FederalDEAInformations = profile.FederalDEAInformations.Where(f => (f.Status != StatusType.Inactive.ToString())),
+                //    MedicareInformations = profile.MedicareInformations.Where(m => (m.Status != StatusType.Inactive.ToString())),
+                //    MedicaidInformations = profile.MedicaidInformations.Where(m => (m.Status != StatusType.Inactive.ToString())),
+                //    CDSCInformations = profile.CDSCInformations.Where(c => (c.Status != StatusType.Inactive.ToString())),
+                //    OtherIdentificationNumber = profile.OtherIdentificationNumber,
+                //};
             }
             catch (ApplicationException)
             {
@@ -3567,7 +3558,7 @@ namespace AHC.CD.Business
 
         #region Specialty/Board
 
-        public async Task<object> GetBoardSpecialtiesProfileDataAsync(int profileId)
+        public async Task<object> GetBoardSpecialtiesProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3582,12 +3573,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    SpecialtyDetails = profile.SpecialtyDetails.Where(s => (s.Status != StatusType.Inactive.ToString())),
-                    PracticeInterest = profile.PracticeInterest,
-                };
+                dynamic boardSpecialties = new ExpandoObject();
+                boardSpecialties = BoardSpecialtiesMapper(boardSpecialties, profile, isProvider);
+                return boardSpecialties;
             }
             catch (ApplicationException)
             {
@@ -3603,17 +3591,17 @@ namespace AHC.CD.Business
 
         #region Hospital Privileges
 
-        public async Task<object> GetHospitalPrivilegesProfileDataAsync(int profileId)
+        public async Task<object> GetHospitalPrivilegesProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
                 var includeProperties = new string[]
                 {                    
                     //hospital Privilege
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.Hospital", 
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactInfo", 
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactPerson", 
-                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.AdmittingPrivilege", 
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.Hospital",
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactInfo",
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.HospitalContactPerson",
+                    "HospitalPrivilegeInformation.HospitalPrivilegeDetails.AdmittingPrivilege",
                     "HospitalPrivilegeInformation.HospitalPrivilegeDetails.StaffCategory"
                 };
 
@@ -3621,11 +3609,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    HospitalPrivilegeInformation = profile.HospitalPrivilegeInformation,
-                };
+                dynamic hospitalPrivileges = new ExpandoObject();
+                hospitalPrivileges = HospitalPrivilegesMapper(hospitalPrivileges, profile, isProvider);
+                return hospitalPrivileges;
             }
             catch (ApplicationException)
             {
@@ -3641,7 +3627,7 @@ namespace AHC.CD.Business
 
         #region Professional Liability
 
-        public async Task<object> GetProfessionalLiabilitiesProfileDataAsync(int profileId)
+        public async Task<object> GetProfessionalLiabilitiesProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3656,11 +3642,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    ProfessionalLiabilityInfoes = profile.ProfessionalLiabilityInfoes.Where(l => (l.Status != StatusType.Inactive.ToString())),
-                };
+                dynamic professionalLiabilities = new ExpandoObject();
+                professionalLiabilities = ProfessionalLiabilityMapper(professionalLiabilities, profile, isProvider);
+                return professionalLiabilities;
             }
             catch (ApplicationException)
             {
@@ -3676,14 +3660,14 @@ namespace AHC.CD.Business
 
         #region Professional Reference
 
-        public async Task<object> GetProfessionalReferencesProfileDataAsync(int profileId)
+        public async Task<object> GetProfessionalReferencesProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
                 var includeProperties = new string[]
                 {
                     //Professional Reference
-                    "ProfessionalReferenceInfos.ProviderType", 
+                    "ProfessionalReferenceInfos.ProviderType",
                     "ProfessionalReferenceInfos.Specialty"
                 };
 
@@ -3691,11 +3675,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    ProfessionalReferenceInfos = profile.ProfessionalReferenceInfos.Where(r => (r.Status != StatusType.Inactive.ToString())),
-                };
+                dynamic professionalReferences = new ExpandoObject();
+                professionalReferences = ProfessionalReferenceMapper(professionalReferences, profile, isProvider);
+                return professionalReferences;
             }
             catch (ApplicationException)
             {
@@ -3711,7 +3693,7 @@ namespace AHC.CD.Business
 
         #region Education History
 
-        public async Task<object> GetEducationHistoriesProfileDataAsync(int profileId)
+        public async Task<object> GetEducationHistoriesProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3726,15 +3708,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    EducationDetails = profile.EducationDetails.Where(e => (e.Status != StatusType.Inactive.ToString())),
-                    TrainingDetails = profile.TrainingDetails,
-                    ProgramDetails = profile.ProgramDetails.Where(p => (p.Status != StatusType.Inactive.ToString())),
-                    CMECertifications = profile.CMECertifications.Where(c => (c.Status != StatusType.Inactive.ToString())),
-                    ECFMGDetail = profile.ECFMGDetail,
-                };
+                dynamic educationHistories = new ExpandoObject();
+                educationHistories = EducationHistoryMapper(educationHistories, profile, isProvider);
+                return educationHistories;
             }
             catch (ApplicationException)
             {
@@ -3750,7 +3726,7 @@ namespace AHC.CD.Business
 
         #region Work History
 
-        public async Task<object> GetWorkHistoriesProfileDataAsync(int profileId)
+        public async Task<object> GetWorkHistoriesProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3764,15 +3740,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    ProfessionalWorkExperiences = profile.ProfessionalWorkExperiences.Where(w => (w.Status != StatusType.Inactive.ToString())),
-                    MilitaryServiceInformations = profile.MilitaryServiceInformations.Where(m => (m.Status != StatusType.Inactive.ToString())),
-                    PublicHealthServices = profile.PublicHealthServices.Where(p => (p.Status != StatusType.Inactive.ToString())),
-                    WorkGaps = profile.WorkGaps.Where(w => (w.Status != StatusType.Inactive.ToString())),
-                    CVInformation = profile.CVInformation
-                };
+                dynamic workHistories = new ExpandoObject();
+                workHistories = WorkHistoryMapper(workHistories, profile, isProvider);
+                return workHistories;
             }
             catch (ApplicationException)
             {
@@ -3788,7 +3758,7 @@ namespace AHC.CD.Business
 
         #region Professional Affiliation
 
-        public async Task<object> GetProfessionalAffiliationsProfileDataAsync(int profileId)
+        public async Task<object> GetProfessionalAffiliationsProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3800,11 +3770,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    ProfessionalAffiliationInfos = profile.ProfessionalAffiliationInfos.Where(a => (a.Status != StatusType.Inactive.ToString())),
-                };
+                dynamic professionalAffiliationInfos = new ExpandoObject();
+                professionalAffiliationInfos = ProfessionalAffiliationInfoMapper(professionalAffiliationInfos, profile, isProvider);
+                return professionalAffiliationInfos;
             }
             catch (ApplicationException)
             {
@@ -3820,7 +3788,7 @@ namespace AHC.CD.Business
 
         #region Practice Locations
 
-        public async Task<object> GetPracticeLocationsProfileDataAsync(int profileId)
+        public async Task<object> GetPracticeLocationsProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3853,7 +3821,7 @@ namespace AHC.CD.Business
                     "PracticeLocationDetails.OfficeHour",
                     "PracticeLocationDetails.OfficeHour.PracticeDays",
                     "PracticeLocationDetails.OfficeHour.PracticeDays.DailyHours",
-                    
+
                     "PracticeLocationDetails.OpenPracticeStatus",
                     "PracticeLocationDetails.OpenPracticeStatus.PracticeQuestionAnswers",
 
@@ -3869,13 +3837,15 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    PracticeLocationDetails = profile.PracticeLocationDetails.Where(p => (p.Status != StatusType.Inactive.ToString())),
-                };
+                dynamic practiceLocations = new List<dynamic>();
+                practiceLocations = PracticeLocationMapper(practiceLocations, profile, isProvider);
+                return practiceLocations;
+                //return new
+                //{
+                //    PracticeLocationDetails = profile.PracticeLocationDetails.Where(p => (p.Status != StatusType.Inactive.ToString())),
+                //};
             }
-            catch (ApplicationException)
+            catch (ApplicationException)    
             {
                 throw;
             }
@@ -3889,7 +3859,7 @@ namespace AHC.CD.Business
 
         #region Disclosure Question
 
-        public async Task<object> GetDisclosureQuestionsProfileDataAsync(int profileId)
+        public async Task<object> GetDisclosureQuestionsProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3901,11 +3871,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    ProfileDisclosure = profile.ProfileDisclosure,
-                };
+                dynamic disclosureQuestions = new ExpandoObject();
+                disclosureQuestions = DisclosureQuestionMapper(disclosureQuestions, profile, isProvider);
+                return disclosureQuestions;
             }
             catch (ApplicationException)
             {
@@ -3921,7 +3889,7 @@ namespace AHC.CD.Business
 
         #region Contract Info
 
-        public async Task<object> GetContractInfoProfileDataAsync(int profileId)
+        public async Task<object> GetContractInfoProfileDataAsync(int profileId, bool isProvider = false)
         {
             try
             {
@@ -3937,11 +3905,9 @@ namespace AHC.CD.Business
 
                 if (profile == null)
                     throw new Exception("Invalid Profile");
-
-                return new
-                {
-                    ContractInfoes = profile.ContractInfoes.Where(c => !c.ContractStatus.Equals(ContractStatus.Inactive.ToString())),
-                };
+                dynamic contractInfos = new ExpandoObject();
+                contractInfos = ContractInfoMapper(contractInfos, profile, isProvider);
+                return contractInfos;
             }
             catch (ApplicationException)
             {
@@ -3971,39 +3937,39 @@ namespace AHC.CD.Business
                     "OtherLegalNames",
 
                     "CVInformation",
-                    
+
                     "VisaDetail",
 
                     "StateLicenses",
-                    
+
                     "FederalDEAInformations",
-                     
+
                     "MedicareInformations",
-                    
+
                     "MedicaidInformations",
-                    
+
                     "CDSCInformations",
-                    
+
                     "EducationDetails",
-                    
+
                     "ECFMGDetail",
-                    
+
                     "ProgramDetails",
-                    
+
                     "CMECertifications",
-                    
+
                     "SpecialtyDetails",
-                    
+
                     "HospitalPrivilegeInformation.HospitalPrivilegeDetails",
 
                     "ProfessionalLiabilityInfoes",
 
                     "ProfessionalWorkExperiences",
-                    
+
                     "ContractInfoes",
 
                     "OtherDocuments"
-                   
+
                 };
 
                 var profile = await profileRepository.FindAsync(p => p.ProfileID == profileId, includeProperties);
@@ -4660,6 +4626,261 @@ namespace AHC.CD.Business
         //    }
         //    return true;
         //}
+
+
+
+        #region Section Wise Data Mapper
+
+
+
+        private dynamic DemographicsMapper(dynamic demographics, Profile profile, bool isProvider)
+        {
+
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var demographicsData = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Demographic").ToList();
+            demographics.PersonalDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Personal Detail").ToList(), profile.PersonalDetail, isProvider);
+            demographics.OtherLegalNames = GetGenericListMappedData(demographicsData.Where(x => x.SubSection == "Other Legal Name").ToList(), profile.OtherLegalNames.Where(o => (o.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            demographics.HomeAddresses = GetGenericListMappedData(demographicsData.Where(x => x.SubSection == "Home Address").ToList(), profile.HomeAddresses.Where(h => (h.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            demographics.ContactDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Contact Detail").ToList(), profile.ContactDetail, isProvider);
+            demographics.PersonalIdentification = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Personal Identification").ToList(), profile.PersonalIdentification, isProvider);
+            demographics.BirthInformation = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Birth Information").ToList(), profile.BirthInformation, isProvider);
+            demographics.VisaDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Citizenship Information").ToList(), profile.VisaDetail, isProvider);
+            demographics.LanguageInfo = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Language Info").ToList(), profile.LanguageInfo, isProvider);
+            demographics.ProfilePhotoPath = profile.ProfilePhotoPath;
+            return demographics;
+        }
+
+        private dynamic IdentificationAndLicensesMapper(dynamic identificatioLicense, Profile profile, bool isProvider)
+        {
+
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var identificationAndLicenses = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Identification And License").ToList();
+            identificatioLicense.StateLicenses = GetGenericListMappedData(identificationAndLicenses.Where(x => x.SubSection == "State License").ToList(), profile.StateLicenses.Where(s => s.Status != StatusType.Inactive.ToString()).ToList(), isProvider);
+            identificatioLicense.FederalDEAInformations = GetGenericListMappedData(identificationAndLicenses.Where(x => x.SubSection == "Federal DEA").ToList(), profile.FederalDEAInformations.Where(s => s.Status != StatusType.Inactive.ToString()).ToList(), isProvider);
+            identificatioLicense.MedicareInformations = GetGenericListMappedData(identificationAndLicenses.Where(x => x.SubSection == "Medicare Information").ToList(), profile.MedicareInformations.Where(s => s.Status != StatusType.Inactive.ToString()).ToList(), isProvider);
+            identificatioLicense.MedicaidInformations = GetGenericListMappedData(identificationAndLicenses.Where(x => x.SubSection == "Medicaid Information").ToList(), profile.MedicaidInformations.Where(s => s.Status != StatusType.Inactive.ToString()).ToList(), isProvider);
+            identificatioLicense.CDSCInformations = GetGenericListMappedData(identificationAndLicenses.Where(x => x.SubSection == "CDS Information").ToList(), profile.CDSCInformations.Where(s => s.Status != StatusType.Inactive.ToString()).ToList(), isProvider);
+            identificatioLicense.OtherIdentificationNumber = GetGenericMappedData(identificationAndLicenses.Where(x => x.SubSection == "Other Identification Number").ToList(), profile.OtherIdentificationNumber, isProvider);
+            return identificatioLicense;
+        }
+
+        private dynamic BoardSpecialtiesMapper(dynamic boardSpecialty, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var boardSpecialties = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Specialty Details").ToList();
+            boardSpecialty.SpecialtyDetails = GetGenericListMappedData(boardSpecialties.Where(x => x.SubSection == "Specialty Details").ToList(), profile.SpecialtyDetails.Where(s => (s.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            boardSpecialty.PracticeInterest = GetGenericMappedData(boardSpecialties.Where(x => x.SubSection == "Practice Interest").ToList(), profile.PracticeInterest, isProvider);
+            return boardSpecialty;
+        }
+
+        private dynamic HospitalPrivilegesMapper(dynamic hospitalPrivilege, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var hospitalPrivileges = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Hospital Privilege").ToList();
+            hospitalPrivilege.HospitalPrivilegeInformation = GetGenericMappedData(hospitalPrivileges.Where(x => x.SubSection == "Hospital Privilege Information").ToList(), profile.HospitalPrivilegeInformation, isProvider);
+            return hospitalPrivilege;
+        }
+
+        private dynamic ProfessionalLiabilityMapper(dynamic professionalLiability, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var professionalLiabilities = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Professional Liability").ToList();
+            professionalLiability.ProfessionalLiabilityInfoes = GetGenericListMappedData(professionalLiabilities.Where(x => x.SubSection == "Professional Liability Info").ToList(), profile.ProfessionalLiabilityInfoes.Where(l => (l.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            return professionalLiability;
+        }
+
+        private dynamic ProfessionalReferenceMapper(dynamic professionalReference, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var professionalReferences = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Professional Reference").ToList();
+            professionalReference.ProfessionalReferenceInfos = GetGenericListMappedData(professionalReferences.Where(x => x.SubSection == "Professional Reference Info").ToList(), profile.ProfessionalReferenceInfos.Where(r => (r.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            return professionalReference;
+        }
+
+        private dynamic EducationHistoryMapper(dynamic educationHistory, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var educationHistories = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Education History").ToList();
+            educationHistory.EducationDetails = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "Under Graduate/Professional" || x.SubSection == "Graduate/Medical").ToList(), profile.EducationDetails.Where(e => (e.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            educationHistory.TrainingDetails = GetGenericMappedData(educationHistories.Where(x => x.SubSection == "Training Details").ToList(), profile.TrainingDetails, false);
+            educationHistory.ProgramDetails = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "Residency/Internship/Fellowship").ToList(), profile.ProgramDetails.Where(p => (p.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            educationHistory.CMECertifications = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "PostGraduate Training/CME").ToList(), profile.CMECertifications.Where(c => (c.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            educationHistory.ECFMGDetail = GetGenericMappedData(educationHistories.Where(x => x.SubSection == "ECFMG Details").ToList(), profile.ECFMGDetail, isProvider);
+            return educationHistory;
+        }
+
+        private dynamic WorkHistoryMapper(dynamic workHistory, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var workHistories = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Work History").ToList();
+            workHistory.ProfessionalWorkExperiences = GetGenericListMappedData(workHistories.Where(x => x.SubSection == "Professional Work Experience").ToList(), profile.ProfessionalWorkExperiences.Where(w => (w.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            workHistory.MilitaryServiceInformations = GetGenericListMappedData(workHistories.Where(x => x.SubSection == "Military Service Information").ToList(), profile.MilitaryServiceInformations.Where(m => (m.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            workHistory.PublicHealthServices = GetGenericListMappedData(workHistories.Where(x => x.SubSection == "Public Health Service").ToList(), profile.PublicHealthServices.Where(p => (p.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            workHistory.WorkGaps = GetGenericListMappedData(workHistories.Where(x => x.SubSection == "Work Gap").ToList(), profile.WorkGaps.Where(w => (w.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            workHistory.CVInformation = GetGenericMappedData(workHistories.Where(x => x.SubSection == "CV").ToList(), profile.CVInformation, isProvider);
+            return workHistory;
+        }
+
+        private dynamic ProfessionalAffiliationInfoMapper(dynamic professionalAffiliationInfo, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var professionalAffiliationInfos = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Professional Affiliation").ToList();
+            professionalAffiliationInfo.StateLicenses = GetGenericListMappedData(professionalAffiliationInfos.Where(x => x.SubSection == "Professional Affiliation Detail").ToList(), profile.ProfessionalAffiliationInfos.Where(a => (a.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            return professionalAffiliationInfo;
+        }
+
+        private dynamic DisclosureQuestionMapper(dynamic disclosureQuestion, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var disclosureQuestions = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Disclosure Question").ToList();
+            disclosureQuestion.ProfileDisclosure = GetGenericMappedData(disclosureQuestions.Where(x => x.SubSection == "Profile Disclosure").ToList(), profile.ProfileDisclosure, isProvider);
+            return disclosureQuestion;
+        }
+
+        private dynamic ContractInfoMapper(dynamic contractInfo, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var contractInfos = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Contract Information").ToList();
+            contractInfo.ContractInfoes = GetGenericListMappedData(contractInfos.Where(x => x.SubSection == "Contract Info").ToList(), profile.ContractInfoes.Where(c => !c.ContractStatus.Equals(ContractStatus.Inactive.ToString())).ToList(), isProvider);
+            return contractInfo;
+        }
+        private dynamic PracticeLocationMapper(dynamic practiceLocations, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var practiceLocationDetails = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Practice Location").ToList();
+           
+            var profilePracticeLocationDetails = profile.PracticeLocationDetails.Where(c => !c.Status.Equals(StatusType.Inactive.ToString())).ToList();
+
+            practiceLocations = GetGenericListMappedData(practiceLocationDetails.Where(x => x.SubSection == "Practice Location Detail").ToList(), profilePracticeLocationDetails, isProvider);
+
+
+            for (int i = 0; i < profilePracticeLocationDetails.Count; i++)
+            {
+                practiceLocations[i].BusinessOfficeManagerOrStaff = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Office Manager").ToList(), profilePracticeLocationDetails[i].BusinessOfficeManagerOrStaff, isProvider);
+                practiceLocations[i].BillingContactPerson = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Billing Contact").ToList(), profilePracticeLocationDetails[i].BillingContactPerson, isProvider);
+                practiceLocations[i].PaymentAndRemittance = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Payment and Remittance").ToList(), profilePracticeLocationDetails[i].PaymentAndRemittance, isProvider);
+                practiceLocations[i].PrimaryCredentialingContactPerson = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Credentialing Contact").ToList(), profilePracticeLocationDetails[i].PrimaryCredentialingContactPerson, isProvider);
+                practiceLocations[i].WorkersCompensationInformation = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "workers Compensation Information").ToList(), profilePracticeLocationDetails[i].WorkersCompensationInformation, isProvider);
+                practiceLocations[i].OfficeHour = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Office Hours").ToList(), profilePracticeLocationDetails[i].OfficeHour, isProvider);
+                practiceLocations[i].OpenPracticeStatus = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Open Practice Status").ToList(), profilePracticeLocationDetails[i].OpenPracticeStatus, isProvider);
+                practiceLocations[i].Facility = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Facility").ToList(), profilePracticeLocationDetails[i].Facility, isProvider);
+                practiceLocations[i].PracticeProviders = new List<ExpandoObject>();
+                string[] practiceTypes = Enum.GetNames(typeof(PracticeType));
+                foreach (var practiceType in practiceTypes)
+                {
+                    var practiceProvider = profilePracticeLocationDetails[i].PracticeProviders.Where(p => p.Practice == practiceType).ToList();
+                    if (practiceProvider.Count > 0)
+                    {
+                        practiceLocations[i].PracticeProviders.AddRange(GetGenericListMappedData(practiceLocationDetails.Where(x => x.SubSection == practiceType).ToList(), practiceProvider, isProvider));
+                    }
+                }
+
+            }
+
+            return new { PracticeLocationDetails = practiceLocations };
+        }
+
+        private dynamic GetGenericListMappedData<T>(List<ProfileUpdatesTracker> profileUpdatesTracker, List<T> GenericListObject, bool isProvider) where T : class
+        {
+            if (GenericListObject == null)
+            {
+                return null;
+            }
+            List<ExpandoObject> Temporary = new List<ExpandoObject>();
+            if (isProvider)
+            {
+                foreach (var t in GenericListObject)
+                {
+                    dynamic data = new ExpandoObject();
+                    T t1 = t;
+                    int PrimeryKeyValue = uow.GetGenericRepository<T>().GetPrimaryKeyValue<T>(t1);
+                    bool TableState = profileUpdatesTracker.Any(x => x.RespectiveObjectId == PrimeryKeyValue) ? true : false;
+                    if (TableState)
+                    {
+                        T tempObj = JsonConvert.DeserializeObject<T>(profileUpdatesTracker.FirstOrDefault(x => x.RespectiveObjectId == PrimeryKeyValue).NewData);
+                        t1 = AutoMapper.Mapper.Map<T, T>(tempObj, t1);
+                        var ListOfNavigationProperties = uow.GetGenericRepository<T>().GetNavigationProperties(t1);
+                        NavigationPropertyMapper(ref t1, ListOfNavigationProperties);
+                    }
+                    data = Merge<T>(t1, TableState);
+                    Temporary.Add(data);
+                };
+            }
+            else
+            {
+                foreach (var t in GenericListObject)
+                {
+                    dynamic data = new ExpandoObject();
+                    data = Merge<T>(t, false);
+                    Temporary.Add(data);
+                };
+            }
+
+            return Temporary;
+        }
+        private dynamic GetGenericMappedData<T>(List<ProfileUpdatesTracker> profileUpdatesTracker, T GenericObject, bool isProvider) where T : class
+        {
+            dynamic data = new ExpandoObject();
+            if (GenericObject == null)
+            {
+                return null;
+            }
+            if (isProvider)
+            {
+                int PrimaryKeyValue = uow.GetGenericRepository<T>().GetPrimaryKeyValue<T>(GenericObject);
+                bool TableState = profileUpdatesTracker.Any(x => x.RespectiveObjectId == PrimaryKeyValue) ? true : false;
+                if (TableState)
+                {
+                    T tempObj = JsonConvert.DeserializeObject<T>(profileUpdatesTracker.FirstOrDefault(x => x.RespectiveObjectId == PrimaryKeyValue).NewData);
+                    GenericObject = AutoMapper.Mapper.Map<T, T>(tempObj, GenericObject);
+                    var ListOfNavigationProperties = uow.GetGenericRepository<T>().GetNavigationProperties(GenericObject);
+                    NavigationPropertyMapper(ref GenericObject, ListOfNavigationProperties);
+                }
+                data = Merge<T>(GenericObject, TableState);
+            }
+            else
+            {
+                data = Merge<T>(GenericObject, false);
+            }
+            return data;
+        }
+
+        private void NavigationPropertyMapper<T>(ref T GenericObject, Dictionary<PropertyInfo, object> ListOfNavigationProperties) where T : class
+        {
+            foreach (var property in ListOfNavigationProperties)
+            {
+                PropertyInfo propertyInfo = GenericObject.GetType().GetProperty(property.Key.Name);
+                Object TargetObj = property.Key.GetValue(GenericObject, null);
+                var propertyValue = uow.GetGenericRepository<Object>().GetMasterDataObject(property.Key.PropertyType, (int?)property.Value);
+                //var castedValue = Convert.ChangeType(propertyValue, propertyInfo.PropertyType);
+                propertyInfo.SetValue(GenericObject, propertyValue, null);
+            };
+        }
+
+        private dynamic Merge<T>(T t, bool TableState) where T : class
+        {
+            IDictionary<string, object> result = new ExpandoObject();
+
+            foreach (var property in t.GetType().GetProperties())
+            {
+                if (property.CanRead)
+                    result[property.Name] = property.GetValue(t);
+            };
+
+            result["TableState"] = TableState;
+
+            return result;
+        }
+
+
+        #endregion
+
+
+
+
+
+
+
 
     }
 

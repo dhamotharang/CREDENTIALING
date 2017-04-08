@@ -961,6 +961,16 @@ prototypeApp.controller('PrototypesCtrl', ["$scope", "$rootScope", "$http", "$q"
         $('#inactiveWarningModal2').modal();
     }
 
+
+    //---------reminder module------
+    $scope.snoozeTime = "";
+    $scope.SetSnoozeTime = function (snoozeFor) {
+        setInterval(function () {
+            alert("Snooze");
+            $(".RemainderBody").addClass('show');
+        }, snoozeFor);
+    }
+
 }]);
 
 

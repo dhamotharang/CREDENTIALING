@@ -280,6 +280,11 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            
+                            //if (UserRole == "PRO" && specialty.SpecialtyID!=0) {
+                            //    data.specialty.TableState = true;
+                            //}
+
                             if (data.specialty.PreferenceType == 1) {
                                 $scope.setPrimary();
                                 for (var i = 0; i < $scope.Specialties.length; i++) {
@@ -292,7 +297,11 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             //--------- speciality object binding ------------
                             for (var i in $scope.masterSpecialties) {
                                 if ($scope.masterSpecialties[i].SpecialtyID == data.specialty.SpecialtyID) {
+                                    
                                     data.specialty.Specialty = angular.copy($scope.masterSpecialties[i]);
+                                    if (UserRole == "PRO" && specialty.SpecialtyID != 0) {
+                                        data.specialty.TableState = true;
+                                    }
                                     break
                                 }
                             }
@@ -313,13 +322,15 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             if ($scope.visibilityControl == (IndexValue + '_editboardSpecialty')) {
                                 $scope.SpecialtyDetailsPendingRequest = true;
                                 $rootScope.operateViewAndAddControl(IndexValue + '_viewboardSpecialty');
-                                messageAlertEngine.callAlertMessage('updatedBoardSpecialty' + IndexValue, "Specialty Details Updated Successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updatedBoardSpecialty' + IndexValue, "Specialty Details Updated Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedBoardSpecialty' + IndexValue, data.successMessage, "success", true);
                                 $scope.errorSpecialty = '';
                             }
                             else {
                                 $scope.SpecialtyDetailsPendingRequest = true;
                                 $rootScope.operateViewAndAddControl(IndexValue + '_viewboardSpecialty');
-                                messageAlertEngine.callAlertMessage('renewedBoardSpecialty' + IndexValue, "Specialty Details Renewed Successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('renewedBoardSpecialty' + IndexValue, "Specialty Details Renewed Successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('renewedBoardSpecialty' + IndexValue, data.successMessage, "success", true);
                             }
                             myData = data;
                         }
@@ -422,7 +433,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
     };
 
     //To save, add and update a Practice Interest.
-    $scope.savePracticeInterest = function (practiceInterest) {
+    $scope.savePracticeInterest = function (practiceInterest,PracticeInterestID) {
         loadingOn();
         var validationStatus;
         var url;
@@ -456,16 +467,22 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && PracticeInterestID != 0 && PracticeInterestID!=undefined) {
+                                data.practiceInterest.TableState = true;
+                            }
+
                             $scope.practiceInterest = data.practiceInterest;
                             $rootScope.visibilityControl = "";
                             $scope.ErrorInPracticeInterest = false;
                             if ($scope.typeOfSaveForPracticeInterest == "Add") {
                                 $rootScope.visibilityControl = "addedNewPracticeInterest";
                                 messageAlertEngine.callAlertMessage('addedNewPracticeInterest', "Practice Interest saved successfully !!!!", "success", true);
+                               
                             } else {
                                 $scope.PracticeInterestPendingRequest = true;
                                 $rootScope.visibilityControl = "updatedPracticeInterest";
-                                messageAlertEngine.callAlertMessage('updatedPracticeInterest', "Practice Interest updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage('updatedPracticeInterest', "Practice Interest updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage('updatedPracticeInterest', data.successMessage, "success", true);
                             }
                         } else {
                             messageAlertEngine.callAlertMessage('errorPracticeInterest', "", "danger", true);

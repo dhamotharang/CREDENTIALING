@@ -1,4 +1,5 @@
 ﻿UpdateAndRenewalsApp.service('UpdateAndRenewalsMasterService', ['$http', '$rootScope', function ($http, $rootScope) {
+
     $http.get(rootDir + '/Profile/MasterData/GetAllLicenseStatus').then(function (value) {
         $rootScope.LicenseStatus = value;
     });

@@ -264,31 +264,31 @@ namespace AHC.CD.Business
 
         #region Get Profiles as Section Wise
 
-        Task<object> GetDemographicsProfileDataAsync(int profileId);
+        Task<object> GetDemographicsProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetIdentificationAndLicensesProfileDataAsync(int profileId);
+        Task<object> GetIdentificationAndLicensesProfileDataAsync(int profileId, bool isProvider=false);
 
-        Task<object> GetBoardSpecialtiesProfileDataAsync(int profileId);
+        Task<object> GetBoardSpecialtiesProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetHospitalPrivilegesProfileDataAsync(int profileId);
+        Task<object> GetHospitalPrivilegesProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetProfessionalLiabilitiesProfileDataAsync(int profileId);
+        Task<object> GetProfessionalLiabilitiesProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetProfessionalReferencesProfileDataAsync(int profileId);
+        Task<object> GetProfessionalReferencesProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetEducationHistoriesProfileDataAsync(int profileId);
+        Task<object> GetEducationHistoriesProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetWorkHistoriesProfileDataAsync(int profileId);
+        Task<object> GetWorkHistoriesProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetProfessionalAffiliationsProfileDataAsync(int profileId);
+        Task<object> GetProfessionalAffiliationsProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetPracticeLocationsProfileDataAsync(int profileId);
+        Task<object> GetPracticeLocationsProfileDataAsync(int profileId, bool isProvider = false);
 
         bool SetPrimaryPracticeLocation(int ProfileID);
 
-        Task<object> GetDisclosureQuestionsProfileDataAsync(int profileId);
+        Task<object> GetDisclosureQuestionsProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<object> GetContractInfoProfileDataAsync(int profileId);
+        Task<object> GetContractInfoProfileDataAsync(int profileId, bool isProvider = false);
 
         Task<DocumentRepositoryViewModel> GetDocumentRepositoryDataAsync(int profileId, int CDUserId, bool isCCO);
 

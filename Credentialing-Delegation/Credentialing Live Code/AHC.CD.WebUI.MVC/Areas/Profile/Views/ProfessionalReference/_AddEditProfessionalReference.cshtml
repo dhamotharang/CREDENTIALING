@@ -12,9 +12,9 @@
             <div class="col-lg-3 form-group">
                 @Html.LabelFor(model => model.FirstName, new { @class = "control-label small" })                
                 <div>
-                    <input id="providerTypesearch11" class="form-control input-sm" ng-model="searchprovider" ng-focus="showProvidersList('ProvidersSearchResultDiv');" placeholder="FirstName" />
-
-                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ProvidersSearchResultDiv">
+                    @*<input class="form-control input-sm" ng-model="tempObject.FirstName" ng-focus="showProvidersList('ProvidersSearchResultDiv');" placeholder="FirstName" />*@
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-sm", data_ng_model = "tempObject.FirstName", placeholder = "First Name", data_ng_focus = "showProvidersList('ProvidersSearchResultDiv'+$index)" })
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ProvidersSearchResultDiv{{$index}}">
                         <table class="table table-striped table-bordered table-hover table-condensed">
                             <tbody>
                                 <tr ng-repeat="providertype in filteredProviderTypeResults = (Providers | filter:searchprovider)" ng-click="SelectProvider(providertype.ProfileId)" class="pointer">

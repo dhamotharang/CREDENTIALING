@@ -23,6 +23,7 @@ using AHC.CD.Resources.Document;
 using AHC.CD.Business.MasterData;
 using Newtonsoft.Json;
 using System.Dynamic;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -125,6 +126,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateProfessionalLiabilityAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalLiability.ProfessionalLiabilityInfoViewModel professionalLiability)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             ProfessionalLiabilityInfo dataModelProfessionalLiability = null;
             bool isCCO = await GetUserRole();
             try
@@ -144,8 +147,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         
                         await profileManager.UpdateProfessionalLiabilityAsync(profileId, dataModelProfessionalLiability, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Liability Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Liability Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PROFESSIONAL_LIABILITY_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -168,16 +175,18 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/ProfessionalLiability/UpdateProfessionalLiabilityAsync?profileId=";
 
-                        var insuranceCarrierDeatil = await masterDataManager.GetInsuranceCarrierByIDAsync(professionalLiability.InsuranceCarrierID);
-                        var insuranceCarrierAddress = professionalLiability.InsuranceCarrierAddressID != null ? await masterDataManager.GetInsuranceCarrierAddressesByIDAsync(professionalLiability.InsuranceCarrierAddressID) : null;
+                        ProfessionalLiabilityInfo liabilityOldData = await profileUpdateManager.GetProfileDataByID(dataModelProfessionalLiability, professionalLiability.ProfessionalLiabilityInfoID);
+                        var insuranceCarrierDeatil = await masterDataManager.GetInsuranceCarrierByIDAsync(liabilityOldData.InsuranceCarrierID);
+                        var insuranceCarrierAddress = liabilityOldData.InsuranceCarrierAddressID != null ? await masterDataManager.GetInsuranceCarrierAddressesByIDAsync(liabilityOldData.InsuranceCarrierAddressID) : null;
 
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Professional Liability Detail";
-                        uniqueRecord.Value = insuranceCarrierDeatil.Name + (insuranceCarrierAddress != null ? " - " + insuranceCarrierAddress.LocationName : " ") + professionalLiability.PolicyNumber;
+                        uniqueRecord.Value = insuranceCarrierDeatil.Name + (insuranceCarrierAddress != null ? " - " + insuranceCarrierAddress.LocationName : "") + " " + liabilityOldData.PolicyNumber;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(professionalLiability, dataModelProfessionalLiability, tracker);
+                        successMessage = SuccessMessage.PROFESSIONAL_LIABILITY_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -203,7 +212,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, professionalLiability = dataModelProfessionalLiability }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, professionalLiability = dataModelProfessionalLiability }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -211,6 +220,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             professionalLiability.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string successMessage = "";
             ProfessionalLiabilityInfo dataModelProfessionalLiability = null;
             bool isCCO = await GetUserRole();
             try
@@ -234,8 +244,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         
                         await profileManager.RenewProfessionalLiabilityAsync(profileId, dataModelProfessionalLiability, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Liability Details", "Renewed");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Liability Details", "Renewed");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PROFESSIONAL_LIABILITY_DETAIL_RENEW_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -266,6 +280,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(professionalLiability, dataModelProfessionalLiability, tracker);
+                        successMessage = SuccessMessage.PROFESSIONAL_LIABILITY_DETAIL_RENEW_REQUEST_SUCCESS;
                     }
 
                 }
@@ -290,7 +305,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, professionalLiability = dataModelProfessionalLiability }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, professionalLiability = dataModelProfessionalLiability }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -377,7 +392,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

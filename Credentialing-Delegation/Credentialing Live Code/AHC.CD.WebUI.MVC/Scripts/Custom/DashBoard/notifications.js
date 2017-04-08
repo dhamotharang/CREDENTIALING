@@ -1,39 +1,39 @@
 ﻿
-    $(document).ready(function () {
-        var cnd = $.connection.cnDHub;
+$(document).ready(function () {
+    var cnd = $.connection.cnDHub;
 
-        cnd.client.logoutCall = function (userSessionId) {
+    cnd.client.logoutCall = function (userSessionId) {
 
-        };
-        // Start the connection.
-        $.connection.hub.start().done(function () {
-            $('#logoutBtn').click(function () {
-                cnd.server.logout($('#userSessionId').val());
-                document.getElementById('logoutForm').submit();
-            });
+    };
+    // Start the connection.
+    $.connection.hub.start().done(function () {
+        $('#logoutBtn').click(function () {
+            cnd.server.logout($('#userSessionId').val());
+            document.getElementById('logoutForm').submit();
         });
-
-
-        $('#alertArea').hide();
-        $('#bell').click(function () {
-            if (opened == true) {
-                $('#alertArea').hide();
-            }
-            $('#alertArea').css("display", "");
-            $('#alertArea').toggle();
-        });
-        ViewAll();
-
-        $("#EndingNotificationArea").hide();
-        $("#ImportantNotificationArea").hide();
-        $(".dropdown-menu").click(function (e) {
-             
-            e.stopPropagation();
-        });
-
-       
-        Tasknotify();
     });
+
+
+    $('#alertArea').hide();
+    $('#bell').click(function () {
+        if (opened == true) {
+            $('#alertArea').hide();
+        }
+        $('#alertArea').css("display", "");
+        $('#alertArea').toggle();
+    });
+    ViewAll();
+
+    $("#EndingNotificationArea").hide();
+    $("#ImportantNotificationArea").hide();
+    $(".dropdown-menu").click(function (e) {
+
+        e.stopPropagation();
+    });
+
+
+    Tasknotify();
+});
 var opened = false;
 $(document).click(function (event) {
     if (!$(event.target).hasClass("ringMyBell") && !$(event.target).hasClass("checkMe")) {
@@ -59,9 +59,9 @@ function ViewAll() {
             else {
                 for (msg in myData) {
                     if (myData[msg].AcknowledgementStatus == "Unread") {
-                       
-                            $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser  + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
-                       
+
+                        $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+
 
                     } else {
 
@@ -111,8 +111,8 @@ var Notify = function () {
             cduserdata = data;
             myData = data.cdUser.DashboardNotifications;
             if (!localStorage.hasOwnProperty('expired_Task')) {
-            
-            //if (sessionStorage.getItem("DataStatus")=="false") {
+
+                //if (sessionStorage.getItem("DataStatus")=="false") {
                 $.ajax({
                     url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + cduserdata.cdUser.CDUserID,
                     //data: {
@@ -124,7 +124,7 @@ var Notify = function () {
                     dataType: 'json',
                     success: function (data) {
                         var expired = data.Result.ExpiredCount;
-                        var expiringToday = data.Result.ExpiringTodayCount;                        
+                        var expiringToday = data.Result.ExpiringTodayCount;
                         ExpiredTaskCount = data.Result.ExpiredCount;
                         ExpiringTaskCount = data.Result.ExpiringTodayCount;
                         localStorage.setItem("UserID", cduserdata.cdUser.CDUserID);
@@ -136,9 +136,9 @@ var Notify = function () {
                     },
                 })
             }
-            else{           
-            $("#expired_Task").append(localStorage.getItem("expired_Task"));
-            $("#expiring_Task").append(localStorage.getItem("expiring_Task"));            
+            else {
+                $("#expired_Task").append(localStorage.getItem("expired_Task"));
+                $("#expiring_Task").append(localStorage.getItem("expiring_Task"));
             }
             var cnt = 0;
             if (myData.length == 0) {
@@ -154,11 +154,11 @@ var Notify = function () {
                         if (data.cdUser.DashboardNotifications[msg].Action == 'Daily task') {
                             $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
                         }
-                        //else if (data.cdUser.DashboardNotifications[msg].Action == 'Task Expired')
-                        //{
-                        //    $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed  + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
+                            //else if (data.cdUser.DashboardNotifications[msg].Action == 'Task Expired')
+                            //{
+                            //    $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed  + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
 
-                        //}
+                            //}
                         else {
                             $("#alertArea").append('<li id="alertNotifications" style="background-color:#F1F1F1"><a href="/Profile/MasterProfile/ChangeNotificationStatus?dashboardNotificationID=' + myData[msg].UserDashboardNotificationID + '"><div><p>' + myData[msg].ActionPerformed + ' - ' + myData[msg].ActionPerformedByUser + '&nbsp;<i class="fa fa-clock-o"></i></p></div></a><hr style="padding:0; margin:0"/></li>');
                         }
@@ -186,7 +186,7 @@ var Notify = function () {
         type: 'GET'
     });
 }
-    
+
 //-----------------Function for saving the notification status-------------Dv--
 
 //window.onbeforeunload = function () {
@@ -291,7 +291,7 @@ var pinnedTask = function (data) {
     return pintask;
 
 };
-var parseDate  = function(input) {
+var parseDate = function (input) {
     var parts = input.match(/(\d+)/g);
     // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
     return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
@@ -317,7 +317,7 @@ var ConvertdateFormat = function (value) {
     var yyyy = today.getFullYear();
     if (dd < 10) { dd = '0' + dd }
     if (mm < 10) { mm = '0' + mm }
-    var today = yyyy + '-' +  mm + '-' + dd;
+    var today = yyyy + '-' + mm + '-' + dd;
     return today;
 };
 var Expired_Ending_Tasks = function (id) {
@@ -372,7 +372,7 @@ var getdifferentObjects = function (data) {
         if (data[i].notificationStatus.flag) {
             ImportantTask.push(data[i]);
         }
-        if (data[i].DayLeft  <=0) {
+        if (data[i].DayLeft <= 0) {
             TaskCount++;
             ExpiredTask.push(data[i]);
         }
@@ -495,4 +495,92 @@ var Tasknotify = function () {
     });
 
 };
+
+var TaskNotificationReminder = function () {
+    $.ajax({
+        url: rootDir + '/Prototypes/GetReminderNotification',
+        type: "GET",
+        dataType: "html",
+        success: function (response) {
+
+            var taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
+
+            var HTMLString = '';
+            if (taskStored != null) {
+
+                if (taskStored.taskCount != 0) {
+                    for (var i in taskStored.tasks) {
+                        if (i % 2 == 0) {
+                            HTMLString += '<div class="col-lg-5 col-xs-5" style="background-color:#e8e8e8"><b>' + taskStored.tasks[i].Subject + '</b></div>' +
+                            '<div class="col-lg-7 col-xs-7" style="background-color:#e8e8e8"> Dr. ' + taskStored.tasks[i].ProviderName + '</div>'
+
+                        }
+                        else {
+                            HTMLString += '<div class="col-lg-5 col-xs-5"><b>' + taskStored.tasks[i].Subject + '</b></div>' +
+                           '<div class="col-lg-7 col-xs-7"> Dr. ' + taskStored.tasks[i].ProviderName + '</div>'
+                        }
+                    }
+
+                    // var timeBlinkString = '<div class="circle blink_me"><b>' + taskStored.remainingTime + '</b><br /><b></b></div>';
+
+                    var reminderHead = '<b class="pull-left" style="font-size:large">🔔</b>' +
+                    '<div class="col-lg-6 col-xs-6"> <b style="font-size: large;">' + taskStored.reminderDate + '</b> at 5:15PM </div>' +
+                    '<div class="col-lg-5 col-xs-5 pull-right"><span class="badge" style="background-color: #ccddff;color:black">' + taskStored.taskCount + '-Task(s)</span> Reminder </div>';
+
+
+
+
+                    $('body').append(response);
+                    $('#TaskList').html(HTMLString);
+                    //$('#timeBlinker').html(timeBlinkString);
+                    $('#reminderHeader').html(reminderHead);
+
+
+
+                    // Update the count down every 1 second
+                    var x = setInterval(function () {
+
+                        // Get todays date and time
+                        var now = new Date().getTime();
+
+                        // Find the distance between now an the count down date
+                        var distance = new Date(taskStored.reminderDateTime) - now;
+
+                        // Time calculations for days, hours, minutes and seconds
+                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        // Display the result and append to html"
+                        var timeBlinkString = '<div class="circle "><b class="blink_me">' + (days > 0 ? days + 'd ' : '') + (hours > 0 ? hours + 'h ' : '') + minutes + 'm  ' + seconds + 's' + '</b><br /><b></b></div>';
+                        $('#timeBlinker').html(timeBlinkString);
+
+                        // If the count down is finished,
+                        if (distance < 0) {
+                            clearInterval(x);
+                            
+                        }
+                    }, 1000);
+
+                }
+            }
+        },
+        error: function (error) {
+            //alert("Sorry, there was a problem!");
+        }
+    });
+}
+
+$(document).ready(function () {
+
+    //$(document).click(function () {
+    //    $(".RemainderBody").addClass('show');
+
+    //});
+    var StaticVariable = new Date();
+    TaskNotificationReminder();
+
+})
+
 

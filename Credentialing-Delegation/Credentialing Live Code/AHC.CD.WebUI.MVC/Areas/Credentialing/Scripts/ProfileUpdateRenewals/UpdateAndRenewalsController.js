@@ -1,6 +1,6 @@
 ﻿UpdateAndRenewalsApp.controller("UpdateAndRenewalsController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "$loadash", "UpdateAndRenewalsService", "UpdateAndRenewalsFactory", "tracking", function ($rootScope, $scope, toaster, $timeout, $filter, $loadash, UpdateAndRenewalsService, UpdateAndRenewalsFactory, tracking) {
 
-    //=================================== Variable Declaration Start ===================================
+     //=================================== Variable Declaration Start ===================================
 
     var $self = this;
     $scope.popoverIsVisible = false;
@@ -13,6 +13,7 @@
     $scope.ProfileUpdateandRenewalFilter = false;
     $scope.CredentialingReqFilter = false;
     $scope.ApproveAllStatus = false;
+    $scope.ApproveAllStatusForCredRequest = false;
     $scope.RejectionType = '';
     $scope.tableStateValueUpdateAndHistory = {};
     $scope.tableStateValueCredentialingRequest = {};
@@ -21,6 +22,7 @@
     $self.displayedUpdateAndRenewals = [];
     $self.displayedCredentialingRequest = [];
     $scope.SelectedData = [];
+    $scope.SelectedDataForCredRequest = [];
     $scope.MasterSettings = $filter("MasterSettingFiltter")("Updates");
     $scope.Traffic = tracking;
 
@@ -84,7 +86,7 @@
     $scope.CredRequestChange = function () {
         $scope.CredRequestSwitchButton = !$scope.CredRequestSwitchButton;
         if ($scope.CredRequestSwitchButton) {
-            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Active" });
+            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Pending" });
         }
         else {
             $rootScope.TempCredentialingRequests = $rootScope.CredentialingRequests.filter(function (CredentialingRequest) { return CredentialingRequest.CurrentStatus == "Approved" || CredentialingRequest.CurrentStatus == "Rejected" || CredentialingRequest.CurrentStatus == "Dropped" });
@@ -108,6 +110,25 @@
             } else {
                 $scope.SelectedData.splice($scope.SelectedData.indexOf($rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)]), 1)
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)].IsSelected = "false";
+            }
+        }
+    }
+    $scope.CheckStatusForCredRequest = function ($event, credRequest) {
+        if (IsProvider) {
+            return;
+        }
+        if ($event.target.className.indexOf('skip') > -1) {
+            return;
+        }
+        if (credRequest.CurrentStatus == 'Pending') {
+            if (credRequest.IsSelected == "false") {
+
+                $rootScope.TempCredentialingRequests[$rootScope.TempCredentialingRequests.indexOf(credRequest)].IsSelected = "true";
+                $scope.SelectedDataForCredRequest.push($rootScope.TempCredentialingRequests[$rootScope.TempCredentialingRequests.indexOf(credRequest)]);
+
+            } else {
+                $scope.SelectedDataForCredRequest.splice($scope.SelectedDataForCredRequest.indexOf($rootScope.TempCredentialingRequests[$rootScope.TempCredentialingRequests.indexOf(credRequest)]), 1)
+                $rootScope.TempCredentialingRequests[$rootScope.TempCredentialingRequests.indexOf(credRequest)].IsSelected = "false";
             }
         }
     }
@@ -139,7 +160,7 @@
                 $scope.GetAllCredentialingRequests();
                 break;
             case "ViewHistory":
-                $scope.GetAllUpdatesAndRenewalsHistory();
+                $scope.GetUpdateHistory();
                 break;
         }
         $scope.tableStateValue = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValue);
@@ -219,8 +240,93 @@
             toaster.pop('error', "", 'Please try after sometime !!!');
         })
     }
+
+    $scope.GetUpdateHistory = function () {
+        $scope.HistorySwitchButton = true;
+        $scope.ProfileUpdateandRenewalFilter = false;
+        $rootScope.ProfileUpdates = [];
+        $rootScope.TempProfileUpdates = [];
+        UpdateAndRenewalsService.GetAllUpdateHistory().then(function (result) {
+            $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
+            $rootScope.ProfileUpdates = result.data.HISTORYDATA;
+            $scope.BicuitValue = {
+                UpdateCount: result.data.UPDATECOUNT,
+                RenewalCount: result.data.RENEWALCOUNT,
+                CredRequestCount: result.data.REQUESTCOUNT,
+                HistoryCount: result.data.HISTORYCOUNT
+            };
+            $scope.HistoryCount = {
+                UpdateHistoryCount: result.data.HistoryIndividualCount.UPDATEHISTORYCOUNT,
+                RenewalHistoryCount: result.data.HistoryIndividualCount.RENEWALHISTORYCOUNT,
+                CredRequestHistoryCount: result.data.HistoryIndividualCount.CredREQUESTHISTORYCOUNT,
+            }
+            $rootScope.TempProfileUpdates = result.data.HISTORYDATA;
+            $scope.MasterSettings = $filter("MasterSettingFiltter")("UpdatesHistory");
+            $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
+        },
+        function (Error) {
+            toaster.pop('error', "", 'Please try after sometime !!!');
+        });
+    }
+
+    $scope.GetRenewalHistory = function () {
+        $rootScope.ProfileUpdates = [];
+        $rootScope.TempProfileUpdates = [];
+        UpdateAndRenewalsService.GetAllRenewalHistory().then(function (result) {
+            $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
+            $rootScope.ProfileUpdates = result.data.HISTORYDATA;
+            $scope.BicuitValue = {
+                UpdateCount: result.data.UPDATECOUNT,
+                RenewalCount: result.data.RENEWALCOUNT,
+                CredRequestCount: result.data.REQUESTCOUNT,
+                HistoryCount: result.data.HISTORYCOUNT
+            };
+            $scope.HistoryCount = {
+                UpdateHistoryCount: result.data.HistoryIndividualCount.UPDATEHISTORYCOUNT,
+                RenewalHistoryCount: result.data.HistoryIndividualCount.RENEWALHISTORYCOUNT,
+                CredRequestHistoryCount: result.data.HistoryIndividualCount.CredREQUESTHISTORYCOUNT,
+            }
+            $rootScope.TempProfileUpdates = result.data.HISTORYDATA;
+            $scope.MasterSettings = $filter("MasterSettingFiltter")("RenewalsHistory");
+            $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
+        },
+        function (Error) {
+            toaster.pop('error', "", 'Please try after sometime !!!');
+        });
+    }
+
+    $scope.GetCredRequestHistory = function () {
+        $scope.CredentialingReqFilter = false;
+        $rootScope.CredentialingRequests = [];
+        $rootScope.TempCredentialingRequests = [];
+        UpdateAndRenewalsService.GetAllCredRequestHistory().then(function (result) {
+            $rootScope.CredentialingRequests = result.data.HISTORYDATA;
+            $scope.BicuitValue = {
+                UpdateCount: result.data.UPDATECOUNT,
+                RenewalCount: result.data.RENEWALCOUNT,
+                CredRequestCount: result.data.REQUESTCOUNT,
+                HistoryCount: result.data.HISTORYCOUNT
+            };
+            $scope.HistoryCount = {
+                UpdateHistoryCount: result.data.HistoryIndividualCount.UPDATEHISTORYCOUNT,
+                RenewalHistoryCount: result.data.HistoryIndividualCount.RENEWALHISTORYCOUNT,
+                CredRequestHistoryCount: result.data.HistoryIndividualCount.CredREQUESTHISTORYCOUNT,
+            }
+            $rootScope.TempCredentialingRequests = result.data.HISTORYDATA;
+            $scope.MasterSettings = $filter("MasterSettingFiltter")("RequestsHistory");
+            $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
+            $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
+        },
+        function (Error) {
+            toaster.pop('error', "", 'Please try after sometime !!!');
+        });
+    }
+
+
+
     $scope.GetAllCredentialingRequests = function () {
         //$scope.CredRequestSwitchButton = true;
+        $scope.SelectedDataForCredRequest = [];
         $scope.CredentialingReqFilter = false;
         UpdateAndRenewalsService.GetAllCredentialingRequests().then(function (result) {
             $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
@@ -231,7 +337,7 @@
                 CredRequestCount: result.data.REQUESTCOUNT,
                 HistoryCount: result.data.HISTORYCOUNT
             };
-            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Active" });
+            $rootScope.TempCredentialingRequests = $filter('filter')($rootScope.CredentialingRequests, { CurrentStatus: "Pending" });
             $scope.MasterSettings = $filter("MasterSettingFiltter")("Requests");
             $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
             $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
@@ -242,8 +348,11 @@
     $scope.GetProfileUpdateDataByID = function (Data) {
         $scope.LoadingStatus = true;
         $scope.RejectStatus = false;
+        $scope.CancelButtonStatus = false;
         $rootScope.TemporaryObject = angular.copy(Data);
-        $rootScope.TemporaryObject.UniqueData = JSON.parse($rootScope.TemporaryObject.UniqueData);
+        $rootScope.TemporaryObject.Reason = "";
+        $rootScope.TemporaryObject.Reason = $rootScope.TemporaryObject.RejectionReason;
+        $rootScope.TemporaryObject.UniqueData = JSON.parse($rootScope.TemporaryObject.UniqueData);       
         var data = {
             trackerId: Data.ProfileUpdatesTrackerId,
             status: Data.ApprovalStatus,
@@ -257,6 +366,8 @@
             $scope.LoadingStatus = false;
             toaster.pop('error', "", 'Please try after sometime !!!');
         })
+        //if(Data.ApprovalStatus=="Approved" || Data.ApprovalStatus=="Rejected")
+        //    $scope.CancelButtonStatus = true;
     }
     $scope.GetCredRequestDataByID = function (CredRequestID, StatusType) {
         $scope.LoadingStatus = true;
@@ -286,7 +397,7 @@
             $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
             $scope.SavingStatus = false;
             UpdateAndRenewalsFactory.modalDismiss();
-            toaster.pop('Success', "Success", ApprovalType);
+            toaster.pop('Success', "Success", "Credentialing Request " + ApprovalType + " Successfully");
 
         }, function (error) {
             UpdateAndRenewalsFactory.modalDismiss();
@@ -295,6 +406,7 @@
     }
     $scope.SetRejectionDropAndOnHoldForProfileUpdatesAndRenewal = function (Data, ApprovalStatus) {
         $scope.SavingStatus = true;
+        var successMessage = "";
         var data = {
             tracker: {
                 TrackerId: Data.ProfileUpdatesTrackerId,
@@ -325,7 +437,7 @@
             $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
             $scope.SavingStatus = false;
             UpdateAndRenewalsFactory.modalDismiss();
-            toaster.pop('Success', "Success", ApprovalStatus);
+            toaster.pop('Success', "Success", Data.Modification + " Request " + ApprovalStatus + " Successfully");
         }, function (error) {
             $scope.SavingStatus = false;
             UpdateAndRenewalsFactory.modalDismiss();
@@ -353,7 +465,7 @@
                 $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
                 $scope.SavingStatus = false;
                 UpdateAndRenewalsFactory.modalDismiss();
-                toaster.pop('Success', "Success", 'Approved');
+                toaster.pop('Success', "Success", Data.Modification + " Request " + ApprovalStatus + " Successfully");
             }, function (error) {
                 $scope.SavingStatus = false;
                 UpdateAndRenewalsFactory.modalDismiss();
@@ -396,7 +508,7 @@
                     }
                     $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
                     $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
-                    toaster.pop('Success', "Success", ProfileUpdaetIDs.length+" Appprovd");
+                    toaster.pop('Success', "Success", ProfileUpdaetIDs.length + " " + $scope.SelectedData[0].Modification + " Request Approved Successfully");
                     if (ProfileUpdaetIDs.length != Mainresults.length) {
                         toaster.pop('error', "", (Mainresults.length - ProfileUpdaetIDs.length + ' Failed ' + 'Please try after sometime !!!'));
                     }
@@ -427,7 +539,40 @@
             toaster.pop('error', "", 'Please try after sometime !!!');
         })
     }
+    $scope.SetApprovalForAllCredentialing = function () {
+        if ($scope.ApproveAllStatusForCredRequest) {
+            return;
+        }
+        $scope.ApproveAllStatusForCredRequest = true;
+        var data = {
+            CredentialingRequestIDs: $loadash.map($scope.SelectedDataForCredRequest, 'CredentialingRequestID').join(",")
+        };
+        UpdateAndRenewalsService.SetMultipleApprovalForCredRequest(data).then(function (Response) {
+            var CredRequestIDs = $loadash.map($loadash.filter(Response.data, { CredRequestStatus: 'true' }), 'CredRequestID');
+            $scope.BicuitValue.CredRequestCount -= CredRequestIDs.length;
+            $scope.BicuitValue.HistoryCount += CredRequestIDs.length;
+            for (i in CredRequestIDs) {
+                $rootScope.CredentialingRequests[$rootScope.CredentialingRequests.indexOf($filter('filter')($rootScope.CredentialingRequests, { CredentialingRequestID: CredRequestIDs[i] })[0])].CurrentStatus = "Approved";
+                $rootScope.TempCredentialingRequests[$rootScope.TempCredentialingRequests.indexOf($filter('filter')($rootScope.TempCredentialingRequests, { CredentialingRequestID: CredRequestIDs[i] })[0])].CurrentStatus = "Approved";
+                $rootScope.TempCredentialingRequests.splice($rootScope.TempCredentialingRequests.indexOf($filter('filter')($rootScope.TempCredentialingRequests, { CredentialingRequestID: CredRequestIDs[i] })[0]), 1);
+                $scope.SelectedDataForCredRequest.splice($scope.SelectedDataForCredRequest.indexOf($filter('filter')($scope.SelectedDataForCredRequest, { CredentialingRequestID: CredRequestIDs[i] })[0]),1);
+            }
+            for (i in $rootScope.TempCredentialingRequests) {
+                $rootScope.TempCredentialingRequests[i].IsSelected = "false";
+            }
+            $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
+            $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
+            $scope.ApproveAllStatusForCredRequest = false;
+
+        }, function (Error) {
+            $scope.SelectedDataForCredRequest = [];
+            $scope.ApproveAllStatusForCredRequest = false;
+        });
+
+    }
+
 
     //==================================== Crud Operations Start =========================================
+
 
 }]);

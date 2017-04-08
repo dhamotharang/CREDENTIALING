@@ -5,9 +5,9 @@
         <fieldset>
             <legend>
                 @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
-{
+                {
                     <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="ProgramDetailPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
-            }
+                }
                 Residency/Internship/Fellowship Details
             </legend>
             <div class="legend2 pull-right">
@@ -25,9 +25,9 @@
                                     <td>
                                         No Data Available for Program Details! Please click on
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-                                    {
+                                        {
                                             <button id="noDataAddNewInternshipDetails" class="btn btn-xs btn-success" ng-click="operateViewAndAddControl('addProgramDetail')"><i class="fa fa-plus"></i></button>
-                                    }
+                                        }
                                         to add new Program Detail
                                     </td>
                                 </tr>
@@ -59,42 +59,42 @@
                                     <td class="col-lg-2 wrap-words hideData" ng-if="!residencyInternshipViewModel.DocumentPath"><i>Not Available</i></td>
                                     <td class="col-lg-2 wrap-words hideData">
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-{
-    <button id="RIFD_Table_ViewIcon" data-toggle="tooltip" data-placement="top" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewProgramDetail'); SetAddView('View')" tooltip><i class="fa fa-eye"></i></button>
-}
+                                        {
+                                            <button id="RIFD_Table_ViewIcon" data-toggle="tooltip" data-placement="top" title="View" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewProgramDetail'); SetAddView('View')" tooltip><i class="fa fa-eye"></i></button>
+                                        }
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
-{
-    <button id="RIFD_Table_EditIcon" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editProgramDetail',residencyInternshipViewModel); SetAddView('Add')" tooltip><i class="fa fa-edit"></i></button>
-}
+                                        {
+                                            <button id="RIFD_Table_EditIcon" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-xs btn-primary" ng-click="operateEditControl($index+'_editProgramDetail',residencyInternshipViewModel); SetAddView('Add')" ng-hide="residencyInternshipViewModel.TableState" tooltip><i class="fa fa-edit"></i></button>
+                                        }
                                         @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-{
-    <button id="RIFD_Table_RemoveIcon" class="btn btn-xs btn-danger" ng-disabled="residencyInternshipViewModel.PreferenceType == '1'" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initProgramDetailWarning(residencyInternshipViewModel);" tooltip><i class="fa fa-minus-circle"></i></button>
-    <button id="addNewInternshipDetails" ng-if="$index == ResidencyInternshipViewModel.length-1" data-toggle="tooltip" data-placement="top" title="Add New" ng-hide="$index+1!=ResidencyInternshipViewModel.length" ng-click="operateViewAndAddControl('addProgramDetail')" class="btn btn-xs btn-success" tooltip><i class="fa fa-plus"></i></button>
-}
+                                        {
+                                            <button id="RIFD_Table_RemoveIcon" class="btn btn-xs btn-danger" ng-disabled="residencyInternshipViewModel.PreferenceType == '1'" data-toggle="tooltip" data-placement="top" title="Remove" ng-click="initProgramDetailWarning(residencyInternshipViewModel);" ng-hide="residencyInternshipViewModel.TableState" tooltip><i class="fa fa-minus-circle"></i></button>
+                                            <button id="addNewInternshipDetails" ng-if="$index == ResidencyInternshipViewModel.length-1" data-toggle="tooltip" data-placement="top" title="Add New" ng-hide="$index+1!=ResidencyInternshipViewModel.length" ng-click="operateViewAndAddControl('addProgramDetail')" class="btn btn-xs btn-success" tooltip><i class="fa fa-plus"></i></button>
+                                        }
                                     </td>
                                 </tr>
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
-                            {
+                                {
                                     <tr ng-show="visibilityControl==($index+'_editProgramDetail')" class="hideData">
                                         <td colspan="6" id="programDetailDiv{{$index}}" class="editTableDataStyle">
                                             @Html.Partial("~/Areas/Profile/Views/EducationHistory/_AddEditProgramDetail.cshtml")
                                         </td>
                                     </tr>
-                            }
+                                }
                                 @if (ProfileActionValidator.IsAuthorized(ProfileActionType.View, ViewBag.Roles, false))
-                            {
+                                {
                                     <tr ng-show="visibilityControl==($index+'_viewProgramDetail')" class="hideData">
                                         <td colspan="6" id="{{$index}}" class="editTableDataStyle">
                                             @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewProgramDetail.cshtml")
                                         </td>
                                     </tr>
-                            }
+                                }
                             </tbody>
                         </table>
                     </div>
                     <div class="clearfix"></div>
                     @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Add, ViewBag.Roles, false))
-                {
+                    {
                         <div ng-show="visibilityControl=='addProgramDetail'">
                             <div id="newProgramDetailDiv">
                                 <fieldset>
@@ -105,7 +105,7 @@
                                 </fieldset>
                             </div>
                         </div>
-                }
+                    }
                 </div>
                 <div class="clearfix"></div><br ng-show="activeMessageDiv" />
                 <div ng-show="activeMessageDiv=='addedNewProgramDetails'" class="alert alert-success" role="alert">
@@ -127,89 +127,89 @@
             </div>
         </fieldset>
     </div>
-        <div class="panel-default" ng-if="showProgramDetailTable">
-            <div id="ResidencyInternshipHistory" class="form-style">
-                <fieldset>
-                    <legend>
-                        Residency/Internship History
-                    </legend>
-                    <div class="legend2 pull-right">
-                        @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="programDetailHistoryArray.length <= 0" ng-click="downloadTableData('Profile_EducationHistory_Residency/InternshipHistory', 'Residency/Internship History')"><i class="fa fa-download"></i></button>*@
-                        <button type="button" id="RIFD_History_PrintButton"  class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="programDetailHistoryArray.length <= 0" ng-click="printData('Profile_EducationHistory_Residency/InternshipHistory','Residency/Internship History')"><i class="fa fa-print"></i></button>
-                        <button type="button" id="RIFD_History_CloseButton" ng-click="cancelProgramDetailHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
-                    </div>
-                    <table ng-hide="programDetailHistoryArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
-                        <thead>
-                            <tr>
-                                <td>
-                                    No History Available for Residency/Internship Details!
-                                </td>
-                            </tr>
-                        </thead>
-                    </table>
-                    <table ng-hide="programDetailHistoryArray.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle" id="Profile_EducationHistory_Residency/InternshipHistory">
-                        <thead>
-                            <tr>
-                                <th>Program Type</th>
-                                <th>Specialty</th>
-                                <th>School Name</th>
-                                <th>Affiliate University</th>
-                                <th>Status</th>
-                                <th>Deleted By</th>
-                                <th>Deleted On</th>
-                                <th class="hideData">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody ng-repeat="riHistory in programDetailHistoryArray">
-                            <tr>
-                                <td>{{riHistory.ProgramType}}</td>
-                                <td>{{riHistory.Specialty.Name || 'Not Available'}}</td>
-                                <td>{{riHistory.SchoolInformation.SchoolName}}</td>
-                                <td ng-if="riHistory.HospitalName">{{riHistory.HospitalName || 'Not Available'}}</td>
-                                <td ng-if="!riHistory.HospitalName"><i>Not Available</i></td>
-                                <td>{{riHistory.HistoryStatus}}</td>
-                                <td ng-if="!riHistory.DeletedBy"><i>Not Available</i></td>
-                                <td ng-if="riHistory.DeletedBy">{{riHistory.DeletedBy }}</td>
-                                <td ng-if="!riHistory.DeletedDate"><i>Not Available</i></td>
-                                <td ng-if="riHistory.DeletedDate">{{riHistory.DeletedDate }}</td>
-                                <td class="hideData">
-                                    <button id="View_History_New_PD" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewprogHistory')" ng-hide="showViewProfessionalAffiliation" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
-                                    </td>
-                            </tr>
-                            <tr ng-show="visibilityControl==($index+'_viewprogHistory')" class="hideData">
-                                <td colspan="8" class="editTableDataStyle">
-                                    @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewProgramDetailHistory.cshtml")
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </fieldset>
-            </div>
-        </div>
-        <div class="modal fade" id="programDetailWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="removeProgramDetail">
-                        <div class="modal-header">
-                            <button id="RIFD_Remove_Close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
-                        </div>
-                        <div class="col-lg-12 text-center" ng-show="isRemoved">
-                            <div style="margin-top:2%;">
-                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
-                            </div>
-                        </div>
-                        <div class="modal-body" ng-show="!isRemoved">
-                            Do you really want to remove <b>{{tempProgramDetail.SchoolInformation.SchoolName}}</b> from your Residency/Internship/Fellowship Details list ?
-                            <input type="hidden" name="ProgramDetailID" value="{{tempProgramDetail.ProgramDetailID}}" />
-                            <input type="hidden" name="StatusType" value="2" />
-                        </div>
-                        <div class="modal-footer">
-                            <button id="RIFD_Remove_CancelButton" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button id="RIFD_Remove_RemoveButton" type="button" class="btn btn-primary" ng-click="removeProgramDetail(ResidencyInternshipViewModel)">Remove</button>
-                        </div>
-                    </form>
+    <div class="panel-default" ng-if="showProgramDetailTable">
+        <div id="ResidencyInternshipHistory" class="form-style">
+            <fieldset>
+                <legend>
+                    Residency/Internship History
+                </legend>
+                <div class="legend2 pull-right">
+                    @*<button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Download" data-original-title="" title="" ng-hide="programDetailHistoryArray.length <= 0" ng-click="downloadTableData('Profile_EducationHistory_Residency/InternshipHistory', 'Residency/Internship History')"><i class="fa fa-download"></i></button>*@
+                    <button type="button" id="RIFD_History_PrintButton" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-hide="programDetailHistoryArray.length <= 0" ng-click="printData('Profile_EducationHistory_Residency/InternshipHistory','Residency/Internship History')"><i class="fa fa-print"></i></button>
+                    <button type="button" id="RIFD_History_CloseButton" ng-click="cancelProgramDetailHistory()" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="View History"><i class="fa fa-times text-danger"></i></button>
                 </div>
+                <table ng-hide="programDetailHistoryArray.length > 0" class="table table-bordered table-condensed customtbodyStyle table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                No History Available for Residency/Internship Details!
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table ng-hide="programDetailHistoryArray.length <= 0" class="table table-bordered table-condensed table-striped customtbodyStyle" id="Profile_EducationHistory_Residency/InternshipHistory">
+                    <thead>
+                        <tr>
+                            <th>Program Type</th>
+                            <th>Specialty</th>
+                            <th>School Name</th>
+                            <th>Affiliate University</th>
+                            <th>Status</th>
+                            <th>Deleted By</th>
+                            <th>Deleted On</th>
+                            <th class="hideData">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="riHistory in programDetailHistoryArray">
+                        <tr>
+                            <td>{{riHistory.ProgramType}}</td>
+                            <td>{{riHistory.Specialty.Name || 'Not Available'}}</td>
+                            <td>{{riHistory.SchoolInformation.SchoolName}}</td>
+                            <td ng-if="riHistory.HospitalName">{{riHistory.HospitalName || 'Not Available'}}</td>
+                            <td ng-if="!riHistory.HospitalName"><i>Not Available</i></td>
+                            <td>{{riHistory.HistoryStatus}}</td>
+                            <td ng-if="!riHistory.DeletedBy"><i>Not Available</i></td>
+                            <td ng-if="riHistory.DeletedBy">{{riHistory.DeletedBy }}</td>
+                            <td ng-if="!riHistory.DeletedDate"><i>Not Available</i></td>
+                            <td ng-if="riHistory.DeletedDate">{{riHistory.DeletedDate }}</td>
+                            <td class="hideData">
+                                <button id="View_History_New_PD" class="btn btn-xs btn-default" ng-click="operateViewAndAddControl($index+'_viewprogHistory')" ng-hide="showViewProfessionalAffiliation" tooltip data-toggle="tooltip" data-placement="left" title="View"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="visibilityControl==($index+'_viewprogHistory')" class="hideData">
+                            <td colspan="8" class="editTableDataStyle">
+                                @Html.Partial("~/Areas/Profile/Views/EducationHistory/_ViewProgramDetailHistory.cshtml")
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+    <div class="modal fade" id="programDetailWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="removeProgramDetail">
+                    <div class="modal-header">
+                        <button id="RIFD_Remove_Close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                    </div>
+                    <div class="col-lg-12 text-center" ng-show="isRemoved">
+                        <div style="margin-top:2%;">
+                            <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                        </div>
+                    </div>
+                    <div class="modal-body" ng-show="!isRemoved">
+                        Do you really want to remove <b>{{tempProgramDetail.SchoolInformation.SchoolName}}</b> from your Residency/Internship/Fellowship Details list ?
+                        <input type="hidden" name="ProgramDetailID" value="{{tempProgramDetail.ProgramDetailID}}" />
+                        <input type="hidden" name="StatusType" value="2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button id="RIFD_Remove_CancelButton" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button id="RIFD_Remove_RemoveButton" type="button" class="btn btn-primary" ng-click="removeProgramDetail(ResidencyInternshipViewModel)">Remove</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>

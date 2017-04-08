@@ -17,9 +17,17 @@ namespace AHC.CD.Business.Profiles
         Task<dynamic> GetCredRequestDataByIDAsync(int ID);
         Task<dynamic> GetCredRequestHistoryDataByIDAsync(int ID);
         Task<bool> SetDecesionForCredRequestByIDAsync(int ID, string ApprovalType, string Reason, string UserID);
+        Task<dynamic> SetApprovalForCredRequestByIDsAsync(string CredRequestsIDS, string UserID);
         Task<int?> GetProfileID(string AuthID);
         Task<bool> SetApprovalByIDs(List<int> trackerIDs, string userAuthID);
         Task AddCredRequestTrackerNotification(List<int> credIDs, string approvalType, string userName);
         Task AddUpdatesRequestTrackerNotification(List<int> trackerIDs, string approvalType, string userName);
+        Task<dynamic> GetAllCredRequestHistoryAsync();
+        Task<dynamic> GetAllCredRequestHistoryByIDAsync(int ID);
+        Task<dynamic> GetAllUpdateRequestHistoryAsync();
+        Task<dynamic> GetAllUpdateRequestHistoryByIDAsync(int ID);
+        Task<dynamic> GetAllRenewalRequestHistoryAsync();
+        Task<dynamic> GetAllRenewalRequestHistoryByIDAsync(int ID);
+
     }
 }

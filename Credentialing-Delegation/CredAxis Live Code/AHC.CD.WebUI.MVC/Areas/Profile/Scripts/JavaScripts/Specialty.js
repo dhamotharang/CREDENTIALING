@@ -281,9 +281,9 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                     try {
                         if (data.status == "true") {
                             
-                            if (UserRole == "PRO" && specialty.SpecialtyID!=0) {
-                                data.specialty.TableState = true;
-                            }
+                            //if (UserRole == "PRO" && specialty.SpecialtyID!=0) {
+                            //    data.specialty.TableState = true;
+                            //}
 
                             if (data.specialty.PreferenceType == 1) {
                                 $scope.setPrimary();
@@ -300,7 +300,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                                     
                                     data.specialty.Specialty = angular.copy($scope.masterSpecialties[i]);
                                     if (UserRole == "PRO" && specialty.SpecialtyID != 0) {
-                                        data.specialty.Specialty.TableState = true;
+                                        data.specialty.TableState = true;
                                     }
                                     break
                                 }

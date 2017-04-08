@@ -35,9 +35,11 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 //using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
+
 
 namespace AHC.CD.Business
 {
@@ -3843,7 +3845,7 @@ namespace AHC.CD.Business
                 //    PracticeLocationDetails = profile.PracticeLocationDetails.Where(p => (p.Status != StatusType.Inactive.ToString())),
                 //};
             }
-            catch (ApplicationException)
+            catch (ApplicationException)    
             {
                 throw;
             }
@@ -4665,7 +4667,7 @@ namespace AHC.CD.Business
         private dynamic BoardSpecialtiesMapper(dynamic boardSpecialty, Profile profile, bool isProvider)
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
-            var boardSpecialties = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Board Specialty").ToList();
+            var boardSpecialties = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Specialty Details").ToList();
             boardSpecialty.SpecialtyDetails = GetGenericListMappedData(boardSpecialties.Where(x => x.SubSection == "Specialty Details").ToList(), profile.SpecialtyDetails.Where(s => (s.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             boardSpecialty.PracticeInterest = GetGenericMappedData(boardSpecialties.Where(x => x.SubSection == "Practice Interest").ToList(), profile.PracticeInterest, isProvider);
             return boardSpecialty;
@@ -4746,12 +4748,13 @@ namespace AHC.CD.Business
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var practiceLocationDetails = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Practice Location").ToList();
+           
+            var profilePracticeLocationDetails = profile.PracticeLocationDetails.Where(c => !c.Status.Equals(StatusType.Inactive.ToString())).ToList();
 
-            practiceLocations = GetGenericListMappedData(practiceLocationDetails.Where(x => x.SubSection == "Practice Location Detail").ToList(), profile.PracticeLocationDetails.Where(c => !c.Status.Equals(StatusType.Inactive.ToString())).ToList(), isProvider);
+            practiceLocations = GetGenericListMappedData(practiceLocationDetails.Where(x => x.SubSection == "Practice Location Detail").ToList(), profilePracticeLocationDetails, isProvider);
 
-            var profilePracticeLocationDetails = profile.PracticeLocationDetails.ToList();
 
-            for (int i = 0; i < profile.PracticeLocationDetails.Count; i++)
+            for (int i = 0; i < profilePracticeLocationDetails.Count; i++)
             {
                 practiceLocations[i].BusinessOfficeManagerOrStaff = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Office Manager").ToList(), profilePracticeLocationDetails[i].BusinessOfficeManagerOrStaff, isProvider);
                 practiceLocations[i].BillingContactPerson = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Billing Contact").ToList(), profilePracticeLocationDetails[i].BillingContactPerson, isProvider);
@@ -4792,6 +4795,13 @@ namespace AHC.CD.Business
                     T t1 = t;
                     int PrimeryKeyValue = uow.GetGenericRepository<T>().GetPrimaryKeyValue<T>(t1);
                     bool TableState = profileUpdatesTracker.Any(x => x.RespectiveObjectId == PrimeryKeyValue) ? true : false;
+                    if (TableState)
+                    {
+                        T tempObj = JsonConvert.DeserializeObject<T>(profileUpdatesTracker.FirstOrDefault(x => x.RespectiveObjectId == PrimeryKeyValue).NewData);
+                        t1 = AutoMapper.Mapper.Map<T, T>(tempObj, t1);
+                        var ListOfNavigationProperties = uow.GetGenericRepository<T>().GetNavigationProperties(t1);
+                        NavigationPropertyMapper(ref t1, ListOfNavigationProperties);
+                    }
                     data = Merge<T>(t1, TableState);
                     Temporary.Add(data);
                 };
@@ -4817,8 +4827,15 @@ namespace AHC.CD.Business
             }
             if (isProvider)
             {
-                int PrimeryKeyValue = uow.GetGenericRepository<T>().GetPrimaryKeyValue<T>(GenericObject);
-                bool TableState = profileUpdatesTracker.Any(x => x.RespectiveObjectId == PrimeryKeyValue) ? true : false;
+                int PrimaryKeyValue = uow.GetGenericRepository<T>().GetPrimaryKeyValue<T>(GenericObject);
+                bool TableState = profileUpdatesTracker.Any(x => x.RespectiveObjectId == PrimaryKeyValue) ? true : false;
+                if (TableState)
+                {
+                    T tempObj = JsonConvert.DeserializeObject<T>(profileUpdatesTracker.FirstOrDefault(x => x.RespectiveObjectId == PrimaryKeyValue).NewData);
+                    GenericObject = AutoMapper.Mapper.Map<T, T>(tempObj, GenericObject);
+                    var ListOfNavigationProperties = uow.GetGenericRepository<T>().GetNavigationProperties(GenericObject);
+                    NavigationPropertyMapper(ref GenericObject, ListOfNavigationProperties);
+                }
                 data = Merge<T>(GenericObject, TableState);
             }
             else
@@ -4828,6 +4845,17 @@ namespace AHC.CD.Business
             return data;
         }
 
+        private void NavigationPropertyMapper<T>(ref T GenericObject, Dictionary<PropertyInfo, object> ListOfNavigationProperties) where T : class
+        {
+            foreach (var property in ListOfNavigationProperties)
+            {
+                PropertyInfo propertyInfo = GenericObject.GetType().GetProperty(property.Key.Name);
+                Object TargetObj = property.Key.GetValue(GenericObject, null);
+                var propertyValue = uow.GetGenericRepository<Object>().GetMasterDataObject(property.Key.PropertyType, (int?)property.Value);
+                //var castedValue = Convert.ChangeType(propertyValue, propertyInfo.PropertyType);
+                propertyInfo.SetValue(GenericObject, propertyValue, null);
+            };
+        }
 
         private dynamic Merge<T>(T t, bool TableState) where T : class
         {

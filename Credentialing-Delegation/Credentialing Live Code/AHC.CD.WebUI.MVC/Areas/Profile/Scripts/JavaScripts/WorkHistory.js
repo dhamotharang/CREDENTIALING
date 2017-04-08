@@ -217,7 +217,8 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
 
                             //$('#_editCV').modal('hide');
                             $rootScope.operateCancelControl('');
-                            messageAlertEngine.callAlertMessage("uploadedCVInformation", "CV Uploaded Successfully !!!!", "success", true);
+                            //messageAlertEngine.callAlertMessage("uploadedCVInformation", "CV Uploaded Successfully !!!!", "success", true);
+                            messageAlertEngine.callAlertMessage("uploadedCVInformation", data.successMessage, "success", true);
 
                             if (data.CVInformationID != 0) {
                                 $scope.ProfessionalWorkExperiencesPendingRequest = true;
@@ -270,6 +271,10 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                     try {
                         if (data.status == "true") {
 
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.professionalWorkExperience.TableState = true;
+                            }
+
                             data.professionalWorkExperience.StartDate = ConvertDateFormat(data.professionalWorkExperience.StartDate);
                             data.professionalWorkExperience.EndDate = ConvertDateFormat(data.professionalWorkExperience.EndDate);
 
@@ -294,7 +299,8 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                                 $scope.ProfessionalWorkExperiencesPendingRequest = true;
                                 $scope.professionalWorkExperiences[index] = data.professionalWorkExperience;
                                 $rootScope.visibilityControl = "updatedProfessionalWorkExperience";
-                                messageAlertEngine.callAlertMessage("addedNewProfessionalWorkExperience", "Professional Work experience Information updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("addedNewProfessionalWorkExperience", "Professional Work experience Information updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("addedNewProfessionalWorkExperience", data.successMessage, "success", true);
 
                             }
                             $scope.order($scope.predicate, $scope.reverse, $scope.selectedSection);
@@ -428,6 +434,10 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.publicHealthService.TableState = true;
+                            }
+
                             data.publicHealthService.StartDate = ConvertDateFormat(data.publicHealthService.StartDate);
                             data.publicHealthService.EndDate = ConvertDateFormat(data.publicHealthService.EndDate);
                             if ($scope.visibilityControl != (index + '_editPublicHealthService')) {
@@ -439,7 +449,8 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                                 $scope.PublicHealthServicesPendingRequest = true;
                                 $scope.publicHealthServices[index] = data.publicHealthService;
                                 $rootScope.visibilityControl = "updatedPublicHealthService"
-                                messageAlertEngine.callAlertMessage("addedNewPublicHealthService", "Public Health Service Information updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("addedNewPublicHealthService", "Public Health Service Information updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("addedNewPublicHealthService", data.successMessage, "success", true);
                             }
                             $scope.IsPublicHealthServiceHasError = false;
                             FormReset(form);
@@ -783,6 +794,10 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.workGap.TableState = true;
+                            }
+
                             data.workGap.StartDate = ConvertDateFormat(data.workGap.StartDate);
                             data.workGap.EndDate = ConvertDateFormat(data.workGap.EndDate);
                             if ($scope.visibilityControl != (index + '_editWorkGap')) {
@@ -794,7 +809,8 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                                 $scope.WorkGapsPendingRequest = true;
                                 $scope.workGaps[index] = data.workGap;
                                 $rootScope.visibilityControl = "updatedWorkGap";
-                                messageAlertEngine.callAlertMessage("addedNewWorkGap", "Work Gap Information updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("addedNewWorkGap", "Work Gap Information updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("addedNewWorkGap", data.successMessage, "success", true);
                             }
                             $scope.IsWorkGapHasError = false;
                             FormReset(form);
@@ -936,6 +952,10 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.militaryServiceInformation.TableState = true;
+                            }
+
                             if (!data.militaryServiceInformation.MilitaryDischarge) { data.militaryServiceInformation.MilitaryDischarge = ""; }
                             if (!data.militaryServiceInformation.MilitaryPresentDuty) { data.militaryServiceInformation.MilitaryPresentDuty = ""; }
                             if (!data.militaryServiceInformation.MilitaryRank) { data.militaryServiceInformation.MilitaryRank = ""; }
@@ -952,7 +972,8 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                                 $scope.militaryServiceInformations[index] = data.militaryServiceInformation;
                                 $rootScope.operateCancelControl('');
                                 $rootScope.visibilityControl = "updatedMilitaryServiceInformation";
-                                messageAlertEngine.callAlertMessage("addedNewMilitaryServiceInformation", "Military Service Information updated successfully !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("addedNewMilitaryServiceInformation", "Military Service Information updated successfully !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("addedNewMilitaryServiceInformation", data.successMessage, "success", true);
                             }
                             $scope.IsMilitaryServiceInfoHasError = false;
                             FormReset(form);

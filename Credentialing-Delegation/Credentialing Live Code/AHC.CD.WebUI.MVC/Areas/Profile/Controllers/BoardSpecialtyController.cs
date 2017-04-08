@@ -24,6 +24,7 @@ using System.Dynamic;
 using Newtonsoft.Json;
 using AHC.CD.Business.MasterData;
 using AHC.CD.Entities.MasterData.Tables;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -90,7 +91,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         document = CreateDocument(specialty.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile);
                     }
-                   
+
                     await profileManager.AddSpecialtyDetailAsync(profileId, dataModelSpecialty, document);
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -125,7 +126,9 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         [ProfileAuthorize(ProfileActionType.Edit, false)]
         public async Task<ActionResult> UpdateSpecialityDetailAsync(int profileId, SpecialtyDetailViewModel SpecialtyDetail)
         {
+            var request = Request;
             string status = "true";
+            string successMessage = "";
             SpecialtyDetail dataModelSpecialty = null;
             SpecialtyDetail specialtyDetail = null;
             bool isCCO = await GetUserRole();
@@ -148,8 +151,14 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     if (isCCO)
                     {
                         specialtyDetail = await profileManager.UpdateSpecialtyDetailAsync(profileId, dataModelSpecialty, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.SPECIALTY_DETAIL_UPDATE_SUCCESS;
+                        }
+
                     }
                     else
                     {
@@ -170,25 +179,27 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                             SpecialtyDetail.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile = null;
                         }
                         tracker.ProfileId = profileId;
-                        tracker.Section = "Board Specialty";
+                        tracker.Section = "Specialty Details";
                         tracker.SubSection = "Specialty Details";
                         tracker.userAuthId = userId;
                         tracker.objId = SpecialtyDetail.SpecialtyDetailID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/BoardSpecialty/UpdateSpecialityDetailAsync?profileId=";
 
-                        var specialtyDeatil = await masterDataManager.GetSpecialtyByIDAsync(SpecialtyDetail.SpecialtyID);
-                        var specialtyBoardDeatil = SpecialtyDetail.BoardCertifiedYesNoOption != Entities.MasterData.Enums.YesNoOption.YES ? await masterDataManager.GetSpecialtyBoardByIDAsync(SpecialtyDetail.SpecialtyBoardCertifiedDetail.SpecialtyBoardID) : null;
-                       
+                        SpecialtyDetail specialtyOldData = await profileUpdateManager.GetProfileDataByID(dataModelSpecialty, SpecialtyDetail.SpecialtyDetailID);
+                        var specialtyDeatil = await masterDataManager.GetSpecialtyByIDAsync(specialtyOldData.SpecialtyID);
+                        var specialtyBoardDeatil = specialtyOldData.BoardCertifiedYesNoOption == Entities.MasterData.Enums.YesNoOption.YES ? await masterDataManager.GetSpecialtyBoardByIDAsync(specialtyOldData.SpecialtyBoardCertifiedDetail.SpecialtyBoardID) : null;
+
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Specialty Detail";
-                        uniqueRecord.Value = specialtyDeatil.Name + (specialtyBoardDeatil != null ? " - " + specialtyBoardDeatil.Name + "  " + SpecialtyDetail.SpecialtyBoardCertifiedDetail.CertificateNumber : "");
+                        uniqueRecord.Value = specialtyDeatil.Name + (specialtyBoardDeatil != null ? " - " + specialtyBoardDeatil.Name + "  " + specialtyOldData.SpecialtyBoardCertifiedDetail.CertificateNumber : "");
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(SpecialtyDetail, dataModelSpecialty, tracker);
 
                         specialtyDetail = dataModelSpecialty;
+                        successMessage = SuccessMessage.SPECIALTY_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -213,7 +224,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.SPECIALITY_BOARD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, specialty = specialtyDetail }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, specialty = specialtyDetail }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -222,6 +233,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             specialtyDetail.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string successMessage = "";
             SpecialtyDetail dataModelSpecialty = null;
             bool isCCO = await GetUserRole();
             try
@@ -247,11 +259,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         //{
                         //    document = CreateDocument(specialty.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile);
                         //}
-                        
+
 
                         await profileManager.RenewSpecialtyDetailAsync(profileId, dataModelSpecialty, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details", "Renewed");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details", "Renewed");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.STATE_LICENSE_DETAIL_RENEW_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -268,14 +285,25 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                             specialtyDetail.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile = null;
                         }
                         tracker.ProfileId = profileId;
-                        tracker.Section = "Board Specialty";
+                        tracker.Section = "Specialty Details";
                         tracker.SubSection = "Specialty Details";
                         tracker.userAuthId = userId;
                         tracker.objId = specialtyDetail.SpecialtyDetailID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
                         tracker.url = "/Profile/BoardSpecialty/RenewSpecialityDetailAsync?profileId=";
 
+                        SpecialtyDetail specialtyOldData = await profileUpdateManager.GetProfileDataByID(dataModelSpecialty, specialtyDetail.SpecialtyDetailID);
+                        var specialtyDeatil = await masterDataManager.GetSpecialtyByIDAsync(specialtyOldData.SpecialtyID);
+                        var specialtyBoardDeatil = specialtyOldData.BoardCertifiedYesNoOption == Entities.MasterData.Enums.YesNoOption.YES ? await masterDataManager.GetSpecialtyBoardByIDAsync(specialtyOldData.SpecialtyBoardCertifiedDetail.SpecialtyBoardID) : null;
+
+                        dynamic uniqueRecord = new ExpandoObject();
+                        uniqueRecord.FieldName = "Specialty Detail";
+                        uniqueRecord.Value = specialtyDeatil.Name + (specialtyBoardDeatil != null ? " - " + specialtyBoardDeatil.Name + "  " + specialtyOldData.SpecialtyBoardCertifiedDetail.CertificateNumber : "");
+
+                        tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
+
                         profileUpdateManager.AddProfileUpdateForProvider(specialtyDetail, dataModelSpecialty, tracker);
+                        successMessage = SuccessMessage.STATE_LICENSE_DETAIL_RENEW_REQUEST_SUCCESS;
                     }
 
                 }
@@ -300,7 +328,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.SPECIALITY_BOARD_RENEW_EXCEPTION;
             }
 
-            return Json(new { status = status, specialty = dataModelSpecialty }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, specialty = dataModelSpecialty }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -314,7 +342,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             try
             {
                 dataModelSpecialtyDetail = AutoMapper.Mapper.Map<SpecialtyDetailViewModel, SpecialtyDetail>(specialty);
-               
+
                 await profileManager.RemoveSpecialityDetailAsync(profileId, dataModelSpecialtyDetail);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Specialty Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -351,6 +379,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdatePracticeInterestAsync(int profileId, PracticeInterestViewModel practiceInterest)
         {
             string status = "true";
+            string successMessage = "";
             PracticeInterest dataModelPracticeInterest = null;
             bool isCCO = await GetUserRole();
             try
@@ -367,7 +396,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     if (practiceInterest.PracticeInterestID == 0)
                     {
 
-                       
+
                         await profileManager.UpdatePracticeInterestAsync(profileId, dataModelPracticeInterest);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details - Practice Interest", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -375,11 +404,14 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else if (isCCO && practiceInterest.PracticeInterestID != 0)
                     {
-                      
-                        await profileManager.UpdatePracticeInterestAsync(profileId, dataModelPracticeInterest);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details - Practice Interest", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
 
+                        await profileManager.UpdatePracticeInterestAsync(profileId, dataModelPracticeInterest);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details - Practice Interest", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.SPECIALTY_DETAIL_PRACTICE_INTEREST_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && practiceInterest.PracticeInterestID != 0)
                     {
@@ -395,6 +427,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/BoardSpecialty/UpdatePracticeInterestAsync?profileId=";
 
                         profileUpdateManager.AddProfileUpdateForProvider(practiceInterest, dataModelPracticeInterest, tracker);
+                        successMessage = SuccessMessage.SPECIALTY_DETAIL_PRACTICE_INETREST_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -418,7 +451,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PRACTICE_INTERSET_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, practiceInterest = dataModelPracticeInterest }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, practiceInterest = dataModelPracticeInterest }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -455,7 +488,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

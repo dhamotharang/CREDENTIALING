@@ -3285,7 +3285,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<string> GetAllPlans()
         {
             var data = await masterDataManager.GetAllPlanAsync();
@@ -3803,7 +3803,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             try
             {
                 masterDataManager.InactivateVerificationLink(verificationLinkID);
-                
+
                 var urlToRemove = Url.Action("GetAllVerificationLinks", "MasterDataNew");
                 var urlToRemove1 = Url.Action("GetAllVerificationLinks", "MasterData", new { Area = "Profile" });
                 HttpResponse.RemoveOutputCacheItem(urlToRemove1);
@@ -3919,6 +3919,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
             try
             {
                 await masterDataManager.InactivateNotesTemplte(NotesTemplateID);
+                var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
+                var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
+                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
                 status = "true";
                 return Json(new { status = status }, JsonRequestBehavior.AllowGet);
             }
@@ -3954,7 +3958,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                 NotesTemplate.NotesTemplateID = masterDataAddEdit.AddNotestemplate(Template);
 
-
+                var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
+                var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
+                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
             }
             catch (Exception)
             {
@@ -4036,6 +4043,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     // OrganizationAccountId Has to be replaced with account information 
                     await masterDataManager.AddFacilityAsync(OrganizationAccountId.DefaultOrganizationAccountID, dataModelFacilityInformation);
+                    var urlToRemove = Url.Action("GetAllMasterFacilityInformation", "MasterDataNew");
+                    var urlToRemove1 = Url.Action("GetAllFacilities", "MasterData", new { Area = "Profile" });
+
+                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
                 }
                 else
                 {
@@ -4074,7 +4086,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     // OrganizationAccountId Has to be replaced with account information 
                     await masterDataManager.UpdateFacilityAsync(OrganizationAccountId.DefaultOrganizationAccountID, dataModelFacilityInformation);
+                    var urlToRemove = Url.Action("GetAllMasterFacilityInformation", "MasterDataNew");
+                    var urlToRemove1 = Url.Action("GetAllFacilities", "MasterData", new { Area = "Profile" });
 
+                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
                 }
                 else
                 {

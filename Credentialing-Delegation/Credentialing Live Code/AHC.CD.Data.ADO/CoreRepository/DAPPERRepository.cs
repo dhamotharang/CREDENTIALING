@@ -273,6 +273,51 @@ namespace AHC.CD.Data.ADO.CoreRepository
 
             }
         }
+
+        public List<T> ExecuteStoredProcedure<T>(string spName, DynamicParameters DP)
+        {
+            using (IDbConnection connection = OpenConnection())
+            {
+                try
+                {
+                    var result = connection.Query<T>(spName, DP, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
+                }
+                catch (ArgumentException ex)
+                {
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public List<T> ExecuteQueryWithoutParams<T>(Dapper.DynamicParameters DP, string Query)
+        {
+            using (IDbConnection connection = OpenConnection())
+            {
+                try
+                {
+                    var result = connection.Query<T>(Query, DP);
+                    return result.ToList();
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    throw ex;
+                }
+
+
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+        }
+
         public List<T> ExecuteQueryForASPNETUsers<T>(Dapper.DynamicParameters DP, string Query)
         {
             using (IDbConnection connection = OpenConnectionForASPNETUsers())
@@ -296,8 +341,7 @@ namespace AHC.CD.Data.ADO.CoreRepository
 
             }
         }
-
-
+        
         
         public List<T> ExecuteQueryForASPNETUsers<T>(string Query)
         {

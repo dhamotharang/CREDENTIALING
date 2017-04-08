@@ -668,6 +668,7 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                     //}
                     var tData=angular.copy($scope.PracticeLocationDetails[i].Facility.FacilityDetail.PracticeOfficeHour);
                     $scope.PracticeLocationDetails[i].OfficeHour = tData;
+                    $scope.PracticeLocationDetails[i].OfficeHour.PracticeOfficeHourID = 0;
                     $scope.PracticeLocationDetails[i].OfficeHour.PracticeDays = [];
                     $scope.PracticeLocationDetails[i].OfficeHour.PracticeDays = $scope.OriginalPracticeDays;
                 }

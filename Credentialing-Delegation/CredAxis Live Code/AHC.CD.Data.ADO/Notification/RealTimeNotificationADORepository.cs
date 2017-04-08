@@ -83,18 +83,18 @@ namespace AHC.CD.Data.ADO.Notification
                 using (SqlConnection connection = new SqlConnection(ConnString))
                 {
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.CommandType = type;
-                        connection.Open();
-                        var sqlDependency = new SqlDependency(command);
+                    SqlCommand command = new SqlCommand(query, connection);
 
-                        sqlDependency.OnChange += new OnChangeEventHandler(method);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            dataTable.Load(reader);
-                        }
-                    }
+                    command.CommandType = type;
+                    connection.Open();
+                    var sqlDependency = new SqlDependency(command);
+
+                    sqlDependency.OnChange += new OnChangeEventHandler(method);
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    dataTable.Load(reader);
+                    reader.Close();
+                    connection.Close();
                 }
                 return dataTable;
             }

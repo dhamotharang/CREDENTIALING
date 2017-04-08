@@ -1,5 +1,6 @@
 ﻿using AHC.CD.Data.Repository;
 using AHC.CD.Data.Repository.Profiles;
+using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Exceptions.Credentialing;
 using AHC.CD.Resources.Messages;
 using System;
@@ -56,5 +57,22 @@ namespace AHC.CD.Business.Profiles
                 throw new CredentialingRequestException(ExceptionMessage.CREDENTIALING_REQUEST_EXCEPTION, ex);
             }
         }
+
+
+        public Task<Entities.MasterProfile.CredentialingRequest.CredentialingRequest> GetCredentialingRequestByID(int credRequestID)
+        {
+            try
+            {
+                return credentialingRequestRepository.FindAsync(c => c.CredentialingRequestID == credRequestID && c.Status == StatusType.Active.ToString());;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+        }
+
+
+        
     }
 }

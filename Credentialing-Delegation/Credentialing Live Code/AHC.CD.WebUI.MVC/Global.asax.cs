@@ -38,14 +38,16 @@ namespace AHC.CD.WebUI.MVC
 
             ChangeNotificationService.Instance.StartService();
             LicenseExpiryNotificationService.Instance.StartService();
-            //SqlDependency.Start(ConnString);
-            //RegisterNotification();
+            SqlDependency.Start(ConnString);
+            //RealTimeNotificationConfig.Instance.RegisterNotification();
 
         }
-        //protected void Application_End()
-        //{
-        //    SqlDependency.Stop(ConnString);
-        //}
+
+        protected void Application_End()
+        {
+            SqlDependency.Stop(ConnString);
+        }
+
         protected void Application_BeginRequest()
         {
             Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
@@ -53,51 +55,5 @@ namespace AHC.CD.WebUI.MVC
             Response.Cache.SetNoStore();
            
         }
-
-//        private void RegisterNotification()
-//        {
-
-//            string connectionString = ConfigurationManager.ConnectionStrings["EFEntityContext"].ConnectionString;
-
-//            string commandText = @"SELECT  dbo.[UserDashboardNotifications].[UserDashboardNotificationID]
-//                                          ,dbo.[UserDashboardNotifications].[Action]
-//                                          ,dbo.[UserDashboardNotifications].[ActionPerformedByUser]
-//                                          ,dbo.[UserDashboardNotifications].[ActionPerformed]
-//                                          ,dbo.[UserDashboardNotifications].[Description]
-//                                          ,dbo.[UserDashboardNotifications].[RedirectURL]
-//                                          ,dbo.[UserDashboardNotifications].[AcknowledgementStatus]
-//                                          ,dbo.[UserDashboardNotifications].[Status]
-//                                          ,dbo.[UserDashboardNotifications].[LastModifiedDate]
-//                                          ,dbo.[UserDashboardNotifications].[CDUser_CDUserID]
-//                                      FROM [dbo].[UserDashboardNotifications]";
-
-//            SqlDependency.Start(connectionString);
-//            using (SqlConnection connection = new SqlConnection(connectionString))
-//            {
-
-//                using (SqlCommand command = new SqlCommand(commandText, connection))
-//                {
-//                    connection.Open();
-//                    var sqlDependency = new SqlDependency(command);
-
-
-//                    sqlDependency.OnChange += new OnChangeEventHandler(sqlDependency_OnChange);
-//                    using (SqlDataReader reader = command.ExecuteReader())
-//                    {
-//                    }
-//                }
-//            }
-//        }
-//        private void sqlDependency_OnChange(object sender, SqlNotificationEventArgs e)
-//        {
-
-//            if (e.Type == SqlNotificationType.Change)
-//            {
-//                CnDHub Notify = new CnDHub();
-//                Notify.NotificationMessage();
-//            }
-//            RegisterNotification();
-//        }
-
     }
 }

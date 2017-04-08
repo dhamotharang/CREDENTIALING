@@ -23,6 +23,7 @@ using AHC.CD.Resources.Document;
 using AHC.CD.Business.MasterData;
 using System.Dynamic;
 using Newtonsoft.Json;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -120,6 +121,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateHospitalPrivilegeAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.HospitalPrivilege.HospitalPrivilegeDetailViewModel hospitalPrivilege)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             bool isCCO = await GetUserRole();
             HospitalPrivilegeDetail dataModelHospitalPrivilegeDetail = null;
             try
@@ -138,8 +141,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                        
                         await profileManager.UpdateHospitalPrivilegeDetailAsync(profileId, dataModelHospitalPrivilegeDetail, hospitalDocument);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.HOSPITAL_PRIVELEGE_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -162,9 +169,10 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/HospitalPrivilege/UpdateHospitalPrivilegeAsync?profileId=";
 
-                        var hospitalContact = await masterDataManager.GetHospitalContactInfoByIDAsync(hospitalPrivilege.HospitalContactInfoID);
-                        var hospitalDeatil = await masterDataManager.GetHospitalByIDAsync(hospitalPrivilege.HospitalID);
-                        var specialtyDetail = hospitalPrivilege.SpecialtyID != null ? await masterDataManager.GetSpecialtyByIDAsync(hospitalPrivilege.SpecialtyID) : null;
+                        HospitalPrivilegeDetail hospitalOldData = await profileUpdateManager.GetProfileDataByID(dataModelHospitalPrivilegeDetail, hospitalPrivilege.HospitalPrivilegeDetailID);
+                        var hospitalContact = await masterDataManager.GetHospitalContactInfoByIDAsync(hospitalOldData.HospitalContactInfoID);
+                        var hospitalDeatil = await masterDataManager.GetHospitalByIDAsync(hospitalOldData.HospitalID);
+                        var specialtyDetail = hospitalOldData.SpecialtyID != null ? await masterDataManager.GetSpecialtyByIDAsync(hospitalOldData.SpecialtyID) : null;
 
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Hospital Privilege Detail";
@@ -173,6 +181,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(hospitalPrivilege, dataModelHospitalPrivilegeDetail, tracker);
+                        successMessage = SuccessMessage.HOSPITAL_PRIVELEGE_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -196,7 +205,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 errorLogger.LogError(ex);
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
-            return Json(new { status = status, hospitalPrivilegeDetail = dataModelHospitalPrivilegeDetail }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, hospitalPrivilegeDetail = dataModelHospitalPrivilegeDetail }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -204,6 +213,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             hospitalPrivilege.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string successMessage = "";
             HospitalPrivilegeDetail dataModelHospitalPrivilegeDetail = null;
             bool isCCO = await GetUserRole();
             try
@@ -226,8 +236,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                        
                         //DocumentDTO document = null;
                         await profileManager.RenewHospitalPrivilegeDetailAsync(profileId, dataModelHospitalPrivilegeDetail, hospitalDocument);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Renewed");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Renewed");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.STATE_LICENSE_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -248,9 +262,10 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
                         tracker.url = "/Profile/HospitalPrivilege/RenewHospitalPrivilegeAsync?profileId=";
 
-                        var hospitalContact = await masterDataManager.GetHospitalContactInfoByIDAsync(hospitalPrivilege.HospitalContactInfoID);
-                        var hospitalDeatil = await masterDataManager.GetHospitalByIDAsync(hospitalPrivilege.HospitalID);
-                        var specialtyDetail = hospitalPrivilege.SpecialtyID != null ? await masterDataManager.GetSpecialtyByIDAsync(hospitalPrivilege.SpecialtyID) : null;
+                        HospitalPrivilegeDetail hospitalOldData = await profileUpdateManager.GetProfileDataByID(dataModelHospitalPrivilegeDetail, hospitalPrivilege.HospitalPrivilegeDetailID);
+                        var hospitalContact = await masterDataManager.GetHospitalContactInfoByIDAsync(hospitalOldData.HospitalContactInfoID);
+                        var hospitalDeatil = await masterDataManager.GetHospitalByIDAsync(hospitalOldData.HospitalID);
+                        var specialtyDetail = hospitalOldData.SpecialtyID != null ? await masterDataManager.GetSpecialtyByIDAsync(hospitalOldData.SpecialtyID) : null;
 
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Hospital Privilege Detail";
@@ -259,6 +274,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(hospitalPrivilege, dataModelHospitalPrivilegeDetail, tracker);
+                        successMessage = SuccessMessage.STATE_LICENSE_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
                 //}
                 //else
@@ -282,7 +298,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, hospitalPrivilege = dataModelHospitalPrivilegeDetail }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, hospitalPrivilege = dataModelHospitalPrivilegeDetail }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -292,6 +308,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateHospitalPrivilegeInfoAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.HospitalPrivilege.HospitalPrivilegeInformationViewModel hospitalPrivilegeInfo)
         {
             string status = "true";
+            string successMessage = "";
             bool isCCO = await GetUserRole();
             HospitalPrivilegeInformation dataModelHospitalPrivilegeInformation = null;
             try
@@ -313,8 +330,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     else if (isCCO && hospitalPrivilegeInfo.HospitalPrivilegeInformationID != 0)
                     {
                         await profileManager.UpdateHospitalPrivilegeInformationAsync(profileId, dataModelHospitalPrivilegeInformation);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.HOSPITAL_PRIVELEGE_INFO_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && hospitalPrivilegeInfo.HospitalPrivilegeInformationID != 0)
                     {
@@ -330,6 +351,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.url = "/Profile/HospitalPrivilege/UpdateHospitalPrivilegeInfoAsync?profileId=";                        
 
                         profileUpdateManager.AddProfileUpdateForProvider(hospitalPrivilegeInfo, dataModelHospitalPrivilegeInformation, tracker);
+                        successMessage = SuccessMessage.HOSPITAL_PRIVELEGE_INFO_UPDATE_REQUEST_SUCCESS;
                     }
 
 
@@ -361,7 +383,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
 
             }
-            return Json(new { status = status, hospitalPrivilegeInformation = dataModelHospitalPrivilegeInformation }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, hospitalPrivilegeInformation = dataModelHospitalPrivilegeInformation }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -450,7 +472,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

@@ -193,7 +193,7 @@ namespace AHC.CD.Data.EFRepository
 
                 
                 // Read the CSV file
-                StreamReader reader = new StreamReader(@"E:\Santosh_WorkingCode\CredAxis Live Code\AHC.CD.WebUI.MVC\App_Data\MasterData\HospitalContactInfoMaster.csv");
+                StreamReader reader = new StreamReader(@"D:\Credaxis 3rd April\AHC.CD.WebUI.MVC\App_Data\MasterData\HospitalContactInfoMaster.csv");
                 while (!reader.EndOfStream)
                 {
                     string hospitalData = reader.ReadLine();

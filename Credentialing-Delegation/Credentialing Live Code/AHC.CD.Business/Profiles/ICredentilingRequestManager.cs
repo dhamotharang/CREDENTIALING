@@ -10,6 +10,8 @@ namespace AHC.CD.Business.Profiles
     public interface ICredentilingRequestManager
     {
         void InitiateCredentialingRequestAsync(CredentialingRequest credentialingRequest);
-        void CredentialingRequestInactiveAsync(CredentialingRequest credentialingRequest);  
+        void CredentialingRequestInactiveAsync(CredentialingRequest credentialingRequest);
+        Task<CredentialingRequest> GetCredentialingRequestByID(int credRequestID);
+        
     }
 }

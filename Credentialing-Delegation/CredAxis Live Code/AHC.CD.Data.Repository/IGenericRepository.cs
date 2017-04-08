@@ -60,6 +60,9 @@ namespace AHC.CD.Data.Repository
             int Save();
 
             int GetPrimaryKeyValue<T>(T t);
+            Dictionary<PropertyInfo, object> GetNavigationProperties(T t);
+            Object GetMasterDataObject(Type t, int? PrimaryKey);
+
 
             Task<int> CountAsync();
             int Count();

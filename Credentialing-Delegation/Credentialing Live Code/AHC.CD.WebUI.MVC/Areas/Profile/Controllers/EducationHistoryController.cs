@@ -25,6 +25,7 @@ using PGChat;
 using System.Dynamic;
 using Newtonsoft.Json;
 using AHC.CD.Business.MasterData;
+using AHC.CD.Resources.Rules;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
@@ -132,6 +133,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateEducationDetailAsync(int profileId, EducationDetailViewModel educationDetails)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             EducationDetail education = null;
             bool isCCO = await GetUserRole();
             var educationType = "Education History Details";
@@ -154,13 +157,18 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         if (educationDetails.EducationQualificationType == EducationQualificationType.UnderGraduate)
                         {
                             educationType = "Education History - Under Graduate/Professional Schools Details";
+                            successMessage = SuccessMessage.UNDER_GRADUATE_DETAIL_UPDATE_SUCCESS;
                         }
                         else if (educationDetails.EducationQualificationType == EducationQualificationType.Graduate)
                         {
                             educationType = "Education History - Graduate/Medical School Details";
+                            successMessage = SuccessMessage.GRADUATE_DETAIL_UPDATE_SUCCESS;
                         }
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, educationType, "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, educationType, "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                        }
                     }
                     else
                     {
@@ -176,6 +184,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ProfileId = profileId;
                         tracker.Section = "Education History";
 
+                        EducationDetail educationOldData = await profileUpdateManager.GetProfileDataByID(education, educationDetails.EducationDetailID);
+
                         dynamic uniqueRecord = new ExpandoObject();
                         
                         
@@ -183,17 +193,19 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         {
                             tracker.SubSection = "Under Graduate/Professional";
                             uniqueRecord.FieldName = "Under Graduate Detail";
+                            successMessage = SuccessMessage.UNDER_GRADUATE_DETAIL_UPDATE_REQUEST_SUCCESS;
                         }
                         else if (educationDetails.EducationQualificationType == AHC.CD.Entities.MasterData.Enums.EducationQualificationType.Graduate)
                         {
                             tracker.SubSection = "Graduate/Medical";
                             uniqueRecord.FieldName = "Graduate Detail";
+                            successMessage = SuccessMessage.GRADUATE_DETAIL_UPDATE_REQUEST_SUCCESS;
                         }
 
-                        uniqueRecord.Value = (educationDetails.QualificationDegree != null ? educationDetails.QualificationDegree + " - " : "") + 
-                            educationDetails.SchoolInformation.SchoolName + 
-                            (educationDetails.SchoolInformation.Location != null ? " - " + 
-                            educationDetails.SchoolInformation.Location : "");
+                        uniqueRecord.Value = (educationOldData.QualificationDegree != null ? educationOldData.QualificationDegree + " - " : "") +
+                            educationOldData.SchoolInformation.SchoolName +
+                            (educationOldData.SchoolInformation.Location != null ? " - " +
+                            educationOldData.SchoolInformation.Location : "");
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
@@ -234,7 +246,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.EDUCATION_DETAIL_CREATE_EXCEPTION;
             }
 
-            return Json(new { status = status, educationDetails = education }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, educationDetails = education }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -304,6 +316,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateECFMGDetailAsync(int profileId, ECFMGDetailViewModel ecfmgDetails)
         {
             string status = "true";
+            string successMessage = "";
             ECFMGDetail ecfmg = null;
             bool isCCO = await GetUserRole();
 
@@ -330,8 +343,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                       
                         await profileManager.UpdateECFMGDetailAsync(profileId, ecfmg, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - ECFMG", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - ECFMG", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.ECFMG_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else if (!isCCO && ecfmgDetails.ECFMGDetailID != 0)
                     {
@@ -354,6 +371,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         ecfmgDetails.ECFMGCertificateDocumentFile = null;
                         profileUpdateManager.AddProfileUpdateForProvider(ecfmgDetails, ecfmg, tracker);
+                        successMessage = SuccessMessage.ECFMG_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -378,7 +396,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.ECFMG_CERTIFICATION_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, ecfmgDetails = ecfmg }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, successMessage = successMessage, ecfmgDetails = ecfmg }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -600,6 +618,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateCMECertificationAsync(int profileId, CMECertificationViewModel CMEDetails)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             CMECertification CME = null;
             bool isCCO = await GetUserRole();
             try
@@ -618,8 +638,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                       
                         await profileManager.UpdateCMECertificationAsync(profileId, CME, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - Post Graduate Training - CME Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - Post Graduate Training - CME Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.CME_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -640,15 +664,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/EducationHistory/UpdateCMECertificationAsync?profileId=";
 
+                        CMECertification cmeOldData = await profileUpdateManager.GetProfileDataByID(CME, CMEDetails.CMECertificationID);
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Post Graduation Training/CME Detail";
-                        uniqueRecord.Value = (CMEDetails.QualificationDegree != null ? CMEDetails.QualificationDegree + " - " : "") + CMEDetails.Certification;
+                        uniqueRecord.Value = (cmeOldData.QualificationDegree != null ? cmeOldData.QualificationDegree + " - " : "") + cmeOldData.Certification;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         CMEDetails.CertificateDocumentFile = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(CMEDetails, CME, tracker);
+                        successMessage = SuccessMessage.CME_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -673,7 +699,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.CME_CERTIFICATION_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, CMEDetails = CME }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, CMEDetails = CME }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -775,6 +801,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateProgramDetailAsync(int profileId, ProgramDetailViewModel programDetails)
         {
             string status = "true";
+            string ActionType = "Update";
+            string successMessage = "";
             ProgramDetail program = null;
             bool isCCO = await GetUserRole();
             try
@@ -793,8 +821,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                       
                         await profileManager.UpdateProgramDetailAsync(profileId, program, document);
-                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - Residency/Internship/Fellowship Details", "Updated");
-                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - Residency/Internship/Fellowship Details", "Updated");
+                            await notificationManager.SaveNotificationDetailAsync(notification);
+                            successMessage = SuccessMessage.PROGRAM_DETAIL_UPDATE_SUCCESS;
+                        }
                     }
                     else
                     {
@@ -815,19 +847,21 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
                         tracker.url = "/Profile/EducationHistory/UpdateProgramDetailAsync?profileId=";
 
-                        var specialtyDetail = programDetails.SpecialtyID != null ? await masterDataManager.GetSpecialtyByIDAsync(programDetails.SpecialtyID) : null;
+                        ProgramDetail programOldData = await profileUpdateManager.GetProfileDataByID(program, programDetails.ProgramDetailID);
+                        var specialtyDetail = programOldData.SpecialtyID != null ? await masterDataManager.GetSpecialtyByIDAsync(programOldData.SpecialtyID) : null;
 
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Program Detail";
-                        uniqueRecord.Value = programDetails.ResidencyInternshipProgramType.ToString() +
-                            (specialtyDetail != null ? " - " + specialtyDetail.Name : "") + " - " + programDetails.SchoolInformation.SchoolName +
-                            (programDetails.SchoolInformation.Location != null ? " - " + programDetails.SchoolInformation.Location : "");
+                        uniqueRecord.Value = programOldData.ResidencyInternshipProgramType.ToString() +
+                            (specialtyDetail != null ? " - " + specialtyDetail.Name : "") + " - " + programOldData.SchoolInformation.SchoolName +
+                            (programOldData.SchoolInformation.Location != null ? " - " + programOldData.SchoolInformation.Location : "");
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         programDetails.ProgramDocumentPath = null;
 
                         profileUpdateManager.AddProfileUpdateForProvider(programDetails, program, tracker);
+                        successMessage = SuccessMessage.PROGRAM_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
                 }
                 else
@@ -847,7 +881,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROGRAM_DETAIL_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, programDetails = program }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, programDetails = program }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -938,7 +972,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

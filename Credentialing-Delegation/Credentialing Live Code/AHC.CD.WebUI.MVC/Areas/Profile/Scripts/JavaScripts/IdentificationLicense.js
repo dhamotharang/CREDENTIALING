@@ -19,7 +19,6 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
 
     $scope.setFiles = function (file) {
         $(file).parent().parent().find(".jancyFileWrapTexts").find("span").width($(file).parent().parent().width() < 243 ? $(file).parent().parent().width() : 243);
-
     }
 
     $scope.ShowRenewDivStateLicense = false;
@@ -250,8 +249,8 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                 obj.HistoryStatus = 'Deleted';
                                 obj.DeletedBy = data.UserName;
                                 obj.DeletedDate = moment(new Date).format('MM/DD/YYYY, h:mm:ss a');
-                                if(obj.State != 'state')
-                                $scope.MedicaidInformationsHistory.push(obj);
+                                if (obj.State != 'state')
+                                    $scope.MedicaidInformationsHistory.push(obj);
                             }
                             $scope.isRemoved = false;
                             $('#medicaidWarningModal').modal('hide');
@@ -442,6 +441,8 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update")
+                                data.stateLicense.TableState = true;
                             data.stateLicense.ProviderType = providerTypeobj;
                             data.stateLicense.StateLicenseStatus = LicenseStatusobj;
                             data.stateLicense.IssueDate = ConvertDateFormat(data.stateLicense.IssueDate);
@@ -468,7 +469,8 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                     if (!$scope.StateLicenses[i].IssueState) { $scope.StateLicenses[i].IssueState = ""; }
                                 }
                                 $rootScope.operateViewAndAddControl(index + '_viewStateLicenseInformation');
-                                messageAlertEngine.callAlertMessage("updatedStateLicense" + index, "State License Information Updated Successfully!!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedStateLicense" + index, "State License Information Updated Successfully!!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedStateLicense" + index, data.successMessage, "success", true);
                             }
                             else {
                                 $scope.StateLicensePendingRequest = true;
@@ -479,7 +481,8 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                     if (!$scope.StateLicenses[i].IssueState) { $scope.StateLicenses[i].IssueState = ""; }
                                 }
                                 $rootScope.operateViewAndAddControl(index + '_viewStateLicenseInformation');
-                                messageAlertEngine.callAlertMessage("renewedStateLicense" + index, "State License Information Renewed Successfully!!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("renewedStateLicense" + index, "State License Information Renewed Successfully!!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("renewedStateLicense" + index, data.successMessage, "success", true);
 
                             }
 
@@ -582,47 +585,47 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
 
     $scope.showStateLicenseHistory = function (loadingId) {
         $scope.StateLicensesHistory = [];
-          
-            $("#" + loadingId).css('display', 'block');
-            var url = rootDir + "/Profile/ProfileHistory/GetAllStateLicensesHistory?profileId=" + profileId;
-            $http.get(url).success(function (data) {
-                try {
-                    $scope.StateLicensesHistory = data;
-                    $scope.dataFetched = true;
-                    for (var i = 0; i < $scope.StateLicensesHistory.length; i++) {
-                        if ($scope.StateLicensesHistory[i].HistoryStatus == '' || !$scope.StateLicensesHistory[i].HistoryStatus) {
-                            $scope.StateLicensesHistory[i].HistoryStatus = 'Renewed';
-                        }
+
+        $("#" + loadingId).css('display', 'block');
+        var url = rootDir + "/Profile/ProfileHistory/GetAllStateLicensesHistory?profileId=" + profileId;
+        $http.get(url).success(function (data) {
+            try {
+                $scope.StateLicensesHistory = data;
+                $scope.dataFetched = true;
+                for (var i = 0; i < $scope.StateLicensesHistory.length; i++) {
+                    if ($scope.StateLicensesHistory[i].HistoryStatus == '' || !$scope.StateLicensesHistory[i].HistoryStatus) {
+                        $scope.StateLicensesHistory[i].HistoryStatus = 'Renewed';
                     }
-                    $rootScope.GetAllUserData();
-                    
-                    for (var j = 0; j < $scope.StateLicensesHistory.length; j++) {
-                        for (var i = 0; i < $rootScope.userslist.length; i++) {
-                            if ($scope.StateLicensesHistory[j].DeletedById != null) {
-                                if ($rootScope.userslist[i].CDUserID == $scope.StateLicensesHistory[j].DeletedById) {
-                                    if ($rootScope.userslist[i].FullName != null) {
-                                        $scope.StateLicensesHistory[j].DeletedBy = $rootScope.userslist[i].FullName;
-                                        break;
-                                    }
-                                    else {
-                                        $scope.StateLicensesHistory[j].DeletedBy = $rootScope.userslist[i].UserName;
-                                        break;
-                                    }
+                }
+                $rootScope.GetAllUserData();
+
+                for (var j = 0; j < $scope.StateLicensesHistory.length; j++) {
+                    for (var i = 0; i < $rootScope.userslist.length; i++) {
+                        if ($scope.StateLicensesHistory[j].DeletedById != null) {
+                            if ($rootScope.userslist[i].CDUserID == $scope.StateLicensesHistory[j].DeletedById) {
+                                if ($rootScope.userslist[i].FullName != null) {
+                                    $scope.StateLicensesHistory[j].DeletedBy = $rootScope.userslist[i].FullName;
+                                    break;
+                                }
+                                else {
+                                    $scope.StateLicensesHistory[j].DeletedBy = $rootScope.userslist[i].UserName;
+                                    break;
                                 }
                             }
                         }
-                        if ($scope.StateLicensesHistory[j].DeletedDate != null) {
-                            var date = moment.utc($scope.StateLicensesHistory[j].DeletedDate).toDate();
-                            $scope.StateLicensesHistory[j].DeletedDate = moment(date).format('MM/DD/YYYY, h:mm:ss a');
-                        }
                     }
-                    $scope.showStateLicenseHistoryTable = true;
-                    $("#" + loadingId).css('display', 'none');
-                } catch (e) {
-
+                    if ($scope.StateLicensesHistory[j].DeletedDate != null) {
+                        var date = moment.utc($scope.StateLicensesHistory[j].DeletedDate).toDate();
+                        $scope.StateLicensesHistory[j].DeletedDate = moment(date).format('MM/DD/YYYY, h:mm:ss a');
+                    }
                 }
-            });
-        
+                $scope.showStateLicenseHistoryTable = true;
+                $("#" + loadingId).css('display', 'none');
+            } catch (e) {
+
+            }
+        });
+
     }
 
     $scope.cancelStateLicenseHistory = function () {
@@ -665,7 +668,7 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
     });
 
     $scope.$watch('tempObject.StateOfReg', function (newV, oldV) {
-        if (newV == oldV) return; 
+        if (newV == oldV) return;
         if (newV == "") {
             $scope.Deastateerrormsg = true;
         }
@@ -737,6 +740,9 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.federalDea.TableState = true;
+                            }
                             data.federalDea.IssueDate = ConvertDateFormat(data.federalDea.IssueDate);
                             data.federalDea.ExpiryDate = ConvertDateFormat(data.federalDea.ExpiryDate);
                             myData = data;
@@ -749,13 +755,15 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                 $scope.FederalDEAPendingRequest = true;
                                 $scope.FederalDEA[index] = data.federalDea;
                                 $rootScope.operateViewAndAddControl(index + '_viewDEAInformation');
-                                messageAlertEngine.callAlertMessage("updatedDEA" + index, "DEA Information Updated Successfully!!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedDEA" + index, "DEA Information Updated Successfully!!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedDEA" + index, data.successMessage, "success", true);
                             }
                             else {
                                 $scope.FederalDEAPendingRequest = true;
                                 $scope.FederalDEA[index] = data.federalDea;
                                 $rootScope.operateViewAndAddControl(index + '_viewDEAInformation');
-                                messageAlertEngine.callAlertMessage("renewedDEA" + index, "DEA Information Renewed Successfully!!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("renewedDEA" + index, "DEA Information Renewed Successfully!!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("renewedDEA" + index, data.successMessage, "success", true);
                             }
                             FormReset($formDataDEA);
                             $scope.resetDates();
@@ -933,6 +941,10 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.CDSCInformation.TableState = true;
+                            }
+
                             data.CDSCInformation.IssueDate = ConvertDateFormat(data.CDSCInformation.IssueDate);
                             data.CDSCInformation.ExpiryDate = ConvertDateFormat(data.CDSCInformation.ExpiryDate);
 
@@ -945,13 +957,15 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                 $scope.CDSInformationPendingRequest = true;
                                 $scope.CDSCInformations[index] = data.CDSCInformation;
                                 $rootScope.operateViewAndAddControl(index + '_viewCDSCInformation');
-                                messageAlertEngine.callAlertMessage("updatedCDS" + index, "CDS Information Updated Successfully!!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedCDS" + index, "CDS Information Updated Successfully!!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedCDS" + index, data.successMessage, "success", true);
                             }
                             else {
                                 $scope.CDSInformationPendingRequest = true;
                                 $scope.CDSCInformations[index] = data.CDSCInformation;
                                 $rootScope.operateViewAndAddControl(index + '_viewCDSCInformation');
-                                messageAlertEngine.callAlertMessage("renewedCDS" + index, "CDS Information Renewed Successfully!!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("renewedCDS" + index, "CDS Information Renewed Successfully!!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("renewedCDS" + index, data.successMessage, "success", true);
                             }
                             myData = data;
                             FormReset($formDataCDSC);
@@ -1110,7 +1124,7 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
         else {
             $scope.showCDSCInformationHistoryTable = true;
         }
-        
+
     }
     //$scope.ConvertDateForTE = function (date) {
     //    var followupdateforupdatetask = "";
@@ -1188,6 +1202,9 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.MedicareInformation.TableState = true;
+                            }
                             data.MedicareInformation.IssueDate = ConvertDateFormat(data.MedicareInformation.IssueDate);
                             data.MedicareInformation.ExpirationDate = ConvertDateFormat(data.MedicareInformation.ExpirationDate);
                             // data.MedicareInformation.ExpiryDate = ConvertDateFormat(data.MedicareInformation.ExpiryDate);
@@ -1201,7 +1218,8 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                 $scope.MedicareInformationPendingRequest = true;
                                 $scope.MedicareInformations[index] = data.MedicareInformation;
                                 $rootScope.operateViewAndAddControl(index + '_viewMedicareInformation');
-                                messageAlertEngine.callAlertMessage("updatedMedicare" + index, "Medicare Information Updated Successfully!!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedMedicare" + index, "Medicare Information Updated Successfully!!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedMedicare" + index, data.successMessage, "success", true);
                             }
 
                             FormReset($formDataMedicare);
@@ -1264,7 +1282,7 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                     }
                                 }
                             }
-                           
+
                         }
                         if ($scope.MedicareInformationsHistory[j].DeletedDate != null) {
                             var date = moment.utc($scope.MedicareInformationsHistory[j].DeletedDate).toDate();
@@ -1391,6 +1409,10 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                 success: function (data) {
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.MedicaidInformation.TableState = true;
+                            }
+
                             data.MedicaidInformation.IssueDate = ConvertDateFormat(data.MedicaidInformation.IssueDate);
                             data.MedicaidInformation.ExpirationDate = ConvertDateFormat(data.MedicaidInformation.ExpirationDate);
                             // data.MedicaidInformation.ExpiryDate = ConvertDateFormat(data.MedicaidInformation.ExpiryDate);
@@ -1418,7 +1440,8 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                     $rootScope.operateViewAndAddControl(index + '_viewMedicaidInformation');
                                 }
 
-                                messageAlertEngine.callAlertMessage("updatedMedicaid" + index, "Medicaid Information Updated Successfully. !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedMedicaid" + index, "Medicaid Information Updated Successfully. !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedMedicaid" + index, data.successMessage, "success", true);
                             }
 
                             FormReset($formDataMedicaid);
@@ -1483,7 +1506,7 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                                 }
                             }
                         }
-                       
+
                     }
                     if ($scope.MedicaidInformationsHistory[j].DeletedDate != null) {
                         var date = moment.utc($scope.MedicaidInformationsHistory[j].DeletedDate).toDate();
@@ -1554,6 +1577,10 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
                     try {
                         if (data.status == "true") {
 
+                            if (UserRole == "PRO") {
+                                otherIdentificationNumber.TableState = true;
+                            }
+
                             otherIdentificationNumber.OtherIdentificationNumberID = data.OtherIdentificationNumber.OtherIdentificationNumberID;
                             $scope.OtherIdentificationNumbers = angular.copy(otherIdentificationNumber);
                             //  $scope.OtherIdentificationNumbers = data.OtherIdentificationNumber;
@@ -1562,10 +1589,12 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
 
                             if ($scope.typeOfSave == "Add") {
                                 messageAlertEngine.callAlertMessage("addedID", "Other Identification information saved successfully. !!!!", "success", true);
+                                
                             }
                             else {
                                 $scope.OtherIdentificationNumbersPendingRequest = true;
-                                messageAlertEngine.callAlertMessage("updatedID", "Other Identification information updated successfully. !!!!", "success", true);
+                                //messageAlertEngine.callAlertMessage("updatedID", "Other Identification information updated successfully. !!!!", "success", true);
+                                messageAlertEngine.callAlertMessage("updatedID", data.successMessage, "success", true);
                             }
                             $rootScope.visibilityControl = '';
 
@@ -1593,16 +1622,15 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
 
 
     $scope.AutoFillNextAttestationDate = function (objstart) {
-        if (objstart != null && objstart != "")
-        {
+        if (objstart != null && objstart != "") {
             $scope.tempObject.NextAttestationDate = new Date(new Date(objstart).setDate(new Date(objstart).getDate() + 120));
         }
         else {
             $scope.hasError = true;
             $scope.tempObject.NextAttestationDate = "";
-        //    //$scope.tempObject.NextAttestationDate = new Date(new Date(objstart).setMonth(new Date(objstart).getMonth() + 24));
-        //    //$scope.tempObject.NextAttestationDate = new Date(new Date(objstart).setDate(new Date(objstart).getDate() + 120));
-        //    //return $scope.tempObject.NextAttestationDate;
+            //    //$scope.tempObject.NextAttestationDate = new Date(new Date(objstart).setMonth(new Date(objstart).getMonth() + 24));
+            //    //$scope.tempObject.NextAttestationDate = new Date(new Date(objstart).setDate(new Date(objstart).getDate() + 120));
+            //    //return $scope.tempObject.NextAttestationDate;
         }
     }
 
@@ -1641,8 +1669,8 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
 
     //})
 
-   
-    
+
+
     $scope.ConvertDateBy5Years = function (date) {
         if (date != '' || date != 'null') {
             var dt = new Date(date);
@@ -1662,7 +1690,7 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
         try {
             $scope.ErrormessageforCDSstate = false;
             $scope.Errormessage = '';
-            $scope.tempObject.IssueDate = new Date();            
+            $scope.tempObject.IssueDate = new Date();
             $scope.tempObject.ExpiryDate = new Date();
             $scope.tempObject.CurrentIssueDate = new Date();
         }

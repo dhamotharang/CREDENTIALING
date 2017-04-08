@@ -1,4 +1,6 @@
-﻿using AHC.CD.Data.ADO.Profile;
+﻿using AHC.CD.Business.MasterData;
+using AHC.CD.Business.Notification;
+using AHC.CD.Data.ADO.Profile;
 using AHC.CD.Data.Repository;
 using AHC.CD.Entities;
 using AHC.CD.Entities.Credentialing.CredentialingRequestTracker;
@@ -7,9 +9,12 @@ using AHC.CD.Entities.Credentialing.LoadingInformation;
 using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Entities.MasterProfile.CredentialingRequest;
 using AHC.CD.Entities.MasterProfile.ProfileUpdateRenewal;
+using AHC.CD.Entities.Notification;
 using AutoMapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,10 +25,15 @@ namespace AHC.CD.Business.Profiles
     {
         private readonly IRequestForApprovalRepo iRequestForApprovalRepo = null;
         private readonly IUnitOfWork uow = null;
-        public RequestForApprovalManager(IRequestForApprovalRepo iRequestForApprovalRepo, IUnitOfWork uow)
+        private IMasterDataManager masterDataManager = null;
+        private IChangeNotificationManager changeNotificationManager = null;
+
+        public RequestForApprovalManager(IRequestForApprovalRepo iRequestForApprovalRepo, IUnitOfWork uow, IMasterDataManager masterDataManager, IChangeNotificationManager changeNotificationManager)
         {
             this.iRequestForApprovalRepo = iRequestForApprovalRepo;
             this.uow = uow;
+            this.masterDataManager = masterDataManager;
+            this.changeNotificationManager = changeNotificationManager;
         }
 
         public async Task<dynamic> GetAllUpdatesAndRenewalsAsync()
@@ -101,6 +111,7 @@ namespace AHC.CD.Business.Profiles
             bool Status = false;
             try
             {
+                int AuthUserID = await GetCDUserID(UserID);
                 var CredRequestRepo = uow.GetGenericRepository<CredentialingRequest>();
                 var CredRequestTrackerRepo = uow.GetGenericRepository<CredentialingRequestTracker>();
                 var CredRequestData = await CredRequestRepo.FindAsync(x => x.CredentialingRequestID == ID);
@@ -109,6 +120,7 @@ namespace AHC.CD.Business.Profiles
                 credentialingRequestTrackerData = AutoMapper.Mapper.Map<CredentialingRequest, CredentialingRequestTracker>(CredRequestData);
                 credentialingRequestTrackerData.ApprovalStatusType = ApprovalType == "Approved" ? ApprovalStatusType.Approved : ApprovalType=="Rejected"?ApprovalStatusType.Rejected:ApprovalStatusType.Dropped;
                 credentialingRequestTrackerData.RejectionReason = Reason;
+                credentialingRequestTrackerData.DecisionMadeBy = AuthUserID;
                 if (ApprovalType == "Approved")
                 {
                     Status = await CredentialingInitiation(CredRequestData,UserID);
@@ -124,6 +136,21 @@ namespace AHC.CD.Business.Profiles
                 throw ex;
             }
             return Status;
+        }
+
+        public async Task<dynamic> SetApprovalForCredRequestByIDsAsync(string CredRequestsIDS, string UserID)
+        {
+            dynamic CredRequestApprovalStatus = new ExpandoObject();
+            try
+            {
+                int AuthUserID=await GetCDUserID(UserID);
+                CredRequestApprovalStatus = await iRequestForApprovalRepo.ApproveAllCredentialingRequestBYIDS(CredRequestsIDS, AuthUserID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return CredRequestApprovalStatus;
         }
 
         public async Task<dynamic> GetAllUpdatesAndRenewalsForProviderAsync(int ID)
@@ -204,6 +231,150 @@ namespace AHC.CD.Business.Profiles
             return status;
         }
 
+        public async Task AddCredRequestTrackerNotification(List<int> credIDs, string approvalType, string userName)
+        {
+            try
+            {
+                UserDashboardNotification notification = null;
+                List<Tuple<int, UserDashboardNotification>> userNotifications = new List<Tuple<int, UserDashboardNotification>>();
+
+                var CredRequestRepo = uow.GetGenericRepository<CredentialingRequest>();
+
+                foreach (var credID in credIDs)
+                {
+                    var CredRequestData = await CredRequestRepo.FindAsync(x => x.CredentialingRequestID == credID);
+
+                    notification = ConstructNotificationObject(CredRequestData, approvalType, userName);
+
+                    var plan = await masterDataManager.GetPlanByIDAsync(CredRequestData.PlanID);
+
+                    notification.ActionPerformed = "Credentialing Request for " + plan.PlanName + " - " + approvalType;
+
+                    userNotifications.Add(new Tuple<int, UserDashboardNotification>(CredRequestData.ProfileID, notification));
+
+                }
+
+                await changeNotificationManager.SaveRequestTrackerNotifcation(userNotifications);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task AddUpdatesRequestTrackerNotification(List<int> trackerIDs, string approvalType, string userName)
+        {
+            try
+            {
+                UserDashboardNotification notification = null;
+                List<Tuple<int, UserDashboardNotification>> userNotifications = new List<Tuple<int, UserDashboardNotification>>();
+
+                var trackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+
+                foreach (var trackerID in trackerIDs)
+                {
+                    var tracker = await trackerRepo.FindAsync(t => t.ProfileUpdatesTrackerId == trackerID);
+
+                    notification = ConstructUpdatesTrackerNotificationObject(tracker, approvalType, userName);
+
+                    userNotifications.Add(new Tuple<int, UserDashboardNotification>(tracker.ProfileId, notification));
+                
+                }
+
+                await changeNotificationManager.SaveRequestTrackerNotifcation(userNotifications);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<dynamic> GetAllCredRequestHistoryAsync()
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllCredRequestHistory();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllCredRequestHistoryByIDAsync(int ID)
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllCredRequestHistoryByID(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllUpdateRequestHistoryAsync()
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllUpdateRequestHistory();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllUpdateRequestHistoryByIDAsync(int ID)
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllUpdateRequestHistoryByID(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }       
+
+        public async Task<dynamic> GetAllRenewalRequestHistoryAsync()
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllRenewalRequestHistory();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllRenewalRequestHistoryByIDAsync(int ID)
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllRenewalRequestHistoryByID(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+
+
         #region Private Methods
 
         private async Task<int> GetCDUserID(string userAuthID)
@@ -251,8 +422,48 @@ namespace AHC.CD.Business.Profiles
             {
                 throw ex;
             }
-        } 
+        }
+
+        private UserDashboardNotification ConstructNotificationObject(CredentialingRequest credRequest, string approvalType, string userName)
+        {
+            
+
+            UserDashboardNotification notification = new UserDashboardNotification();
+            notification.AcknowledgementStatusType = AcknowledgementStatusType.Unread;
+            //notification.Action = "Credentialing Request for " + plan.PlanName + " - "+ approvalType; 
+            notification.Action = "Credentialing Request";
+            notification.ActionPerformedByUser = userName;
+            notification.RedirectURL = "/Credentialing/RequestForApproval/Index";
+            notification.StatusType = StatusType.Active;
+
+            return notification;
+        }
+
+        private UserDashboardNotification ConstructUpdatesTrackerNotificationObject(ProfileUpdatesTracker updatesRequest, string approvalType, string userName)
+        {
+            //dynamic uniqueData =  updatesRequest.UniqueData != null ? JsonConvert.DeserializeObject(updatesRequest.UniqueData) : "";
+
+            UserDashboardNotification notification = new UserDashboardNotification();
+            notification.AcknowledgementStatusType = AcknowledgementStatusType.Unread;
+            notification.Action = "Credentialing Request";
+            //notification.ActionPerformed = updatesRequest.Section + " - " + updatesRequest.SubSection + (uniqueData != null ? " - " + uniqueData.FieldName : "") + " - " + approvalType;
+            notification.ActionPerformed = updatesRequest.Section + " - " + updatesRequest.SubSection + " - " + updatesRequest.Modification + " request - " + approvalType;
+            notification.ActionPerformedByUser = userName;
+            notification.RedirectURL = "/Profil/MasterProfile/Index";
+            notification.StatusType = StatusType.Active;
+
+            return notification;
+        }
 
         #endregion
+
+
+
+
+
+
+
+
+        
     }
 }

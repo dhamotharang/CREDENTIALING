@@ -82,7 +82,7 @@
     function exportToTable(type, tableId) {
         switch (type) {
             case "Excel":
-                angular.element(tableId).tableExport({ type: 'excel', escape: 'false', ignoreColumn: '[7]' })
+                angular.element(tableId).tableExport({ type: 'excel', escape: 'false', ignoreColumn: '[6]' })
                 break;
             case "CSV":
                 angular.element(tableId).tableExport({ type: 'csv', escape: 'false', ignoreColumn: '[7]' })

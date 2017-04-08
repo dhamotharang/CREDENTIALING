@@ -3177,8 +3177,6 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         //var diffMin = Math.round((ReminderDateTime - currentDateTime) / 36e5 * 60);
         var diffMin = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
 
-        alert(diffDays + 'days ' + diffHours + 'hrs ' + diffMin + 'min');
-
         //Remaining time for the task
         $scope.taskList.remainingTime = (diffDays > 0 ? diffDays + 'd ' : '') + ((diffHours > 0 || diffDays==0) ? diffHours + 'h ' : '') + ((diffMin >0 && diffHours <= 24) ? diffMin + 'm' : '');
 

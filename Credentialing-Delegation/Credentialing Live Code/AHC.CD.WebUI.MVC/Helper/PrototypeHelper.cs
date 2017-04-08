@@ -205,7 +205,7 @@ namespace AHC.CD.WebUI.MVC.Helper
                     CCO = textInfo.ToTitleCase(CCOName.ToLower()),
                     ProviderCategory = category,
                     ProfileStatus = profileStatus == "true" ? 100 : (r.Next(0, 101)),
-                    CredentialingCompletedStatus = category == "New"? 0 : (r.Next(10, 20)),
+                    CredentialingCompletedStatus = category == "New" ? 0 : (r.Next(10, 20)),
                     CredentialingIncompletedStatus = (r.Next(1, 5))
                 };
 

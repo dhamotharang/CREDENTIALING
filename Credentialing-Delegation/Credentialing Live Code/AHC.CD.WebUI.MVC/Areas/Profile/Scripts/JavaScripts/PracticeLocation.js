@@ -668,6 +668,7 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                     //}
                     var tData=angular.copy($scope.PracticeLocationDetails[i].Facility.FacilityDetail.PracticeOfficeHour);
                     $scope.PracticeLocationDetails[i].OfficeHour = tData;
+                    $scope.PracticeLocationDetails[i].OfficeHour.PracticeOfficeHourID = 0;
                     $scope.PracticeLocationDetails[i].OfficeHour.PracticeDays = [];
                     $scope.PracticeLocationDetails[i].OfficeHour.PracticeDays = $scope.OriginalPracticeDays;
                 }
@@ -930,14 +931,18 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
+                        if (PracticeLocationDetail.BusinessOfficeManagerOrStaff != null)
+                        if (UserRole == "PRO" && PracticeLocationDetail.BusinessOfficeManagerOrStaff.EmployeeID!=0) {
+                            data.officemanager.TableState = true;
+                        }
 
                         PracticeLocationDetail.BusinessOfficeManagerOrStaff = data.officemanager;
                         //$scope.PracticeLocationDetails.push(data.practiceLocationDetail);
                         //$scope.managers.push(data.officemanager);
                         $rootScope.operateSecondCancelControl('');
                         $scope.PracticeLocationPendingRequest = true;
-                        messageAlertEngine.callAlertMessage("businessManagerSuccessMsg", "Office manager/Business Office Staff Contact Information Updated successfully.", "success", true);
-
+                        //messageAlertEngine.callAlertMessage("businessManagerSuccessMsg", "Office manager/Business Office Staff Contact Information Updated successfully.", "success", true);
+                        messageAlertEngine.callAlertMessage("businessManagerSuccessMsg", data.successMessage, "success", true);
                     }
                     else {
                         messageAlertEngine.callAlertMessage("alertOfficeManager", data.status, "danger", true);
@@ -978,12 +983,18 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
+                        if (PracticeLocationDetail.BillingContactPerson!=null)
+                        if (UserRole == "PRO" && PracticeLocationDetail.BillingContactPerson.EmployeeID!=0) {
+                            data.billingcontact.TableState = true;
+                        }
+
                         PracticeLocationDetail.BillingContactPerson = data.billingcontact;
                         //$scope.PracticeLocationDetails.push(data.practiceLocationDetail);
                         //$scope.billings.push(data.billingcontact);
                         $rootScope.operateSecondCancelControl('');
                         $scope.PracticeLocationPendingRequest = true;
-                        messageAlertEngine.callAlertMessage("billingContactSuccessMsg", "Billing Contact Information Updated successfully.", "success", true);
+                        //messageAlertEngine.callAlertMessage("billingContactSuccessMsg", "Billing Contact Information Updated successfully.", "success", true);
+                        messageAlertEngine.callAlertMessage("billingContactSuccessMsg", data.successMessage, "success", true);
                     }
                     else {
                         messageAlertEngine.callAlertMessage("alertBillingContact", data.status, "danger", true);
@@ -1099,6 +1110,13 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
+
+                        if (PracticeLocationDetail.PaymentAndRemittance!=null)
+                        if (UserRole == "PRO" && PracticeLocationDetail.PaymentAndRemittance.PracticePaymentAndRemittanceID!=0) {
+                            data.paymentandremittance.TableState = true;
+                        }
+
+
                         if (PracticeLocationDetail.PaymentAndRemittance!=null) {
                             $scope.PracticeLocationPendingRequest = true;
                         }
@@ -1106,8 +1124,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
 
                         $rootScope.operateSecondCancelControl('');
                         
-                        messageAlertEngine.callAlertMessage("paymentSuccessMsg", "Payment and Remittance Information Updated successfully.", "success", true);
-
+                        //messageAlertEngine.callAlertMessage("paymentSuccessMsg", "Payment and Remittance Information Updated successfully.", "success", true);
+                        messageAlertEngine.callAlertMessage("paymentSuccessMsg", data.successMessage, "success", true);
                     }
                     else {
                         messageAlertEngine.callAlertMessage("alertPayment", data.status, "danger", true);
@@ -1214,7 +1232,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
 
                             count1 = 0;
                             $scope.operateCancelControl('');
-                            messageAlertEngine.callAlertMessage("updatedFacility", "Facility Information updated successfully !!!!", "success", true);
+                            //messageAlertEngine.callAlertMessage("updatedFacility", "Facility Information updated successfully !!!!", "success", true);
+                            messageAlertEngine.callAlertMessage("updatedFacility", data.successMessage, "success", true);
                         }
                         else {
                             count1 = 0;
@@ -1538,10 +1557,14 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 success: function (data) {
                     if (data.status == "true") {
 
+                        if (UserRole == "PRO" && PracticeLocationDetail.OfficeHour.PracticeOfficeHourID != 0) {
+                            data.providerPracticeOfficeHours.TableState = true;
+                        }
                         $scope.PracticeLocationDetails[index].OfficeHour = data.providerPracticeOfficeHours;
                         $rootScope.operateSecondCancelControl('');
 
-                        messageAlertEngine.callAlertMessage("providerPracticeOfficeHoursSuccessMsg", "Office Hour Updated successfully.", "success", true);
+                        //messageAlertEngine.callAlertMessage("providerPracticeOfficeHoursSuccessMsg", "Office Hour Updated successfully.", "success", true);
+                        messageAlertEngine.callAlertMessage("providerPracticeOfficeHoursSuccessMsg", data.successMessage, "success", true);
                     } else {
                         messageAlertEngine.callAlertMessage("providerPracticeOfficeHoursErrorMsg", data.status, "danger", true);
                     }
@@ -1665,7 +1688,7 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
     $scope.RenewHide = function () {
         $scope.IsRenew = false;
     };
-    $scope.updateWorkersCompensationInformation = function (PracticeLocationDetail, index) {
+    $scope.updateWorkersCompensationInformation = function (PracticeLocationDetail, index,WorkersCompensationInformationID) {
 
         // the implementation has to be changed to angularjs http.post to incorporate the one to many relationship which cant be captured in form data
 
@@ -1700,6 +1723,11 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 success: function (data) {
 
                     if (data.status == "true") {
+                        if (PracticeLocationDetail.WorkersCompensationInformation!=null)
+                        if (UserRole == "PRO" && WorkersCompensationInformationID !=0) {
+                            data.workersCompensationInformation.TableState = true;
+                        }
+
                         data.workersCompensationInformation.IssueDate = ConvertDateFormat(data.workersCompensationInformation.IssueDate);
                         data.workersCompensationInformation.ExpirationDate = ConvertDateFormat(data.workersCompensationInformation.ExpirationDate);
                         if (PracticeLocationDetail.WorkersCompensationInformation != null) {
@@ -1708,7 +1736,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                         PracticeLocationDetail.WorkersCompensationInformation = data.workersCompensationInformation;
                         $rootScope.operateSecondCancelControl('');
                         
-                        messageAlertEngine.callAlertMessage("workersCompensationInformationSuccessMsg", "Worker's Compensation Information Updated successfully.", "success", true);
+                        //messageAlertEngine.callAlertMessage("workersCompensationInformationSuccessMsg", "Worker's Compensation Information Updated successfully.", "success", true);
+                        messageAlertEngine.callAlertMessage("workersCompensationInformationSuccessMsg", data.successMessage, "success", true);
                     } else {
                         messageAlertEngine.callAlertMessage("workersCompensationInformationErrorMsg", data.status, "danger", true);
                     } $scope.IsRenew == false
@@ -1750,10 +1779,16 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
+                        if (PracticeLocationDetail.OpenPracticeStatus!=null)
+                        if (UserRole == "PRO" && PracticeLocationDetail.OpenPracticeStatus.OpenPracticeStatusID!=0) {
+                            data.openPracticeStatus.TableState = true;
+                        }
+
                         PracticeLocationDetail.OpenPracticeStatus = data.openPracticeStatus;
                         $scope.PracticeLocationPendingRequest = true;
                         $rootScope.operateSecondCancelControl('');
-                        messageAlertEngine.callAlertMessage("openPracticeStatusSuccessMsg", "Open Practice Status Updated successfully.", "success", true);
+                        //messageAlertEngine.callAlertMessage("openPracticeStatusSuccessMsg", "Open Practice Status Updated successfully.", "success", true);
+                        messageAlertEngine.callAlertMessage("openPracticeStatusSuccessMsg", data.successMessage, "success", true);
                     } else {
                         messageAlertEngine.callAlertMessage("openPracticeStatusErrorMsg", data.status, "danger", true);
                     }
@@ -1824,6 +1859,7 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
+
                         for (var i in $scope.facilities) {
                             if ($scope.facilities[i].FacilityID == data.practiceLocationDetail.FacilityId) {
                                 $scope.PracticeLocationDetails[index].Facility.FacilityName = $scope.facilities[i].FacilityName;
@@ -1877,14 +1913,17 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                                 }
                             }
                         }
+                        if (UserRole == "PRO" && data.ActionType == "Update") {
+                            $scope.PracticeLocationDetails[index].TableState = true;
+                        }
 
                         // updating the visibility control
 
                         $scope.GeneralInformationEdit = false;
                         $scope.PracticeLocationPendingRequest = true;
 
-                        messageAlertEngine.callAlertMessage("UpdatePracticeLocation", "Practice Location Information updated successfully !!!!", "success", true);
-                      
+                        //messageAlertEngine.callAlertMessage("UpdatePracticeLocation", "Practice Location Information updated successfully !!!!", "success", true);
+                        messageAlertEngine.callAlertMessage("UpdatePracticeLocation", data.successMessage, "success", true);
                         //if ($scope.PracticeLocationDetails[index].IsPrimary=='Yes')
                         //    {
                         //        $rootScope.$broadcast('PracticeLocation');
@@ -2290,7 +2329,9 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
 
 
                     if (data.status == "true") {
-
+                        if (UserRole == "PRO" && data.ActionType == "Update") {
+                            data.credentialingContact.TableState = true;
+                        }
 
                         if ($scope.visibilityControl == 'addCc') {
 
@@ -2304,8 +2345,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                             $scope.PracticeLocationPendingRequest = true;
                             $scope.PracticeLocationDetails[index].PrimaryCredentialingContactPerson = data.credentialingContact;
                             $rootScope.operateCancelControl('');
-                            messageAlertEngine.callAlertMessage("updatedCredentialingContactInformation", "Primary Credentialing Contact updated successfully !!!!", "success", true);
-
+                            //messageAlertEngine.callAlertMessage("updatedCredentialingContactInformation", "Primary Credentialing Contact updated successfully !!!!", "success", true);
+                            messageAlertEngine.callAlertMessage("updatedCredentialingContactInformation", data.successMessage, "success", true);
                         }
 
                         FormReset(formData);
@@ -2473,7 +2514,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                         if ($scope.tempThirdObject.PracticeProviderID) {
                             PracticeLocationDetail.MidlevelPractioners[index] = data.practiceProvider;
                             $rootScope.operateThirdViewAndAddControl(index + '_ViewMidLevelPractitioner');
-                            messageAlertEngine.callAlertMessage("midlevelPractionersEditSuccessMsg", "Supervising Practitioner Updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("midlevelPractionersEditSuccessMsg", "Supervising Practitioner Updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("midlevelPractionersEditSuccessMsg", data.successMessage, "success", true);
                         } else {
                             if (PracticeLocationDetail.MidlevelPractioners == null)
                                 PracticeLocationDetail.MidlevelPractioners = [];
@@ -2613,7 +2655,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                         if ($scope.tempThirdObject.PracticeProviderID) {
                             PracticeLocationDetail.SupervisingProviders[index] = data.practiceProvider;
                             $rootScope.operateThirdViewAndAddControl(index + '_ViewSupervisingPractitioner');
-                            messageAlertEngine.callAlertMessage("supervisingProvidersEditSuccessMsg", "Supervising Provider Updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("supervisingProvidersEditSuccessMsg", "Supervising Provider Updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("supervisingProvidersEditSuccessMsg", data.successMessage, "success", true);
                         } else {
                             if (PracticeLocationDetail.SupervisingProviders == null)
                                 PracticeLocationDetail.SupervisingProviders = [];
@@ -2954,6 +2997,13 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
+                        if (PracticeLocationDetail.PracticeColleagues != null)
+                            if (UserRole == "PRO" && PracticeLocationDetail.PracticeColleagues[index].PracticeProviderID!=0) {
+                                data.practiceProvider.TableState = true;
+                            }
+
+                         
+
                         if ($scope.tempSecondObject.PracticeProviderID) {
                             tempPracticeProviderSpecialties = [];
                             for (var i = 0; i < $scope.PracticeSpecialties.length; i++) {
@@ -2980,7 +3030,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                             PracticeLocationDetail.PracticeColleagues[index] = data.practiceProvider;
                             $rootScope.operateSecondViewAndAddControl(index + '_viewPartner');
                             $scope.PracticeLocationPendingRequest = true;
-                            messageAlertEngine.callAlertMessage("updatedPartnerDetails" + index, "Covering Colleagues information Updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("updatedPartnerDetails" + index, "Covering Colleagues information Updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("updatedPartnerDetails" + index, data.successMessage, "success", true);
                         } else {
                             if (PracticeLocationDetail.PracticeColleagues == null)
                                 PracticeLocationDetail.PracticeColleagues = [];
@@ -3156,6 +3207,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 method: 'GET',
                 url: rootDir + '/Profile/MasterProfile/GetPracticeLocationsProfileDataAsync?profileId=' + profileId
             }).success(function (data, status, headers, config) {
+                console.log("practice location");
+                console.log(data);
                 try {
                     for (key in data) {
                         $rootScope.$emit(key, data[key]);

@@ -39,6 +39,47 @@
         return deferObject.promise;
     }
 
+
+    this.GetAllUpdateHistory = function () {
+        var deferObject;
+        deferObject = deferObject || $q.defer();
+        var promise = $http.get(rootDir + '/Credentialing/RequestForApproval/GetAllUpdateHistory');
+        promise.then(function (results) {
+            deferObject.resolve(results);
+        },
+        function (error) {
+            deferObject.reject(error);
+        });
+        return deferObject.promise;
+    }
+
+    this.GetAllRenewalHistory = function () {
+        var deferObject;
+        deferObject = deferObject || $q.defer();
+        var promise = $http.get(rootDir + '/Credentialing/RequestForApproval/GetAllRenewalHistory');
+        promise.then(function (results) {
+            deferObject.resolve(results);
+        },
+        function (error) {
+            deferObject.reject(error);
+        });
+        return deferObject.promise;
+    }
+
+    this.GetAllCredRequestHistory = function () {
+        var deferObject;
+        deferObject = deferObject || $q.defer();
+        var promise = $http.get(rootDir + '/Credentialing/RequestForApproval/GetAllCredRequestHistory');
+        promise.then(function (results) {
+            deferObject.resolve(results);
+        },
+        function (error) {
+            deferObject.reject(error);
+        });
+        return deferObject.promise;
+    }
+
+
     this.GetProfileUpdateDataByID = function (data) {
         var deferObject;
         deferObject = deferObject || $q.defer();
@@ -141,6 +182,19 @@
         var deferObject;
         deferObject = deferObject || $q.defer();
         var promise = $http.post(rootDir + '/Credentialing/RequestForApproval/SetMultipleApproval', data);
+        promise.then(function (results) {
+            deferObject.resolve(results);
+        },
+        function (error) {
+            deferObject.reject(error);
+        });
+        return deferObject.promise;
+    }
+
+    this.SetMultipleApprovalForCredRequest = function (data) {
+        var deferObject;
+        deferObject = deferObject || $q.defer();
+        var promise = $http.post(rootDir + '/Credentialing/RequestForApproval/SetMultipleApprovalForCredRequest', data);
         promise.then(function (results) {
             deferObject.resolve(results);
         },

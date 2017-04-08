@@ -20,6 +20,7 @@ using AHC.CD.WebUI.MVC.Areas.Credentialing.Models.CredentialingRequestTracker;
 using AHC.CD.Exceptions;
 using AHC.CD.Resources.Messages;
 using AHC.CD.ErrorLogging;
+using PGChat;
 
 namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 {
@@ -28,12 +29,14 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         private IProfileUpdateManager profileUpdateManager = null;
         private IErrorLogger errorLogger = null;
         IUnitOfWork uow = null;
+        private IRequestForApprovalManager requestForApprovalManager = null;
 
-        public ProfileUpdatesController(IUnitOfWork uow, IProfileUpdateManager profileUpdateManager, IErrorLogger errorLogger)
+        public ProfileUpdatesController(IUnitOfWork uow, IProfileUpdateManager profileUpdateManager, IErrorLogger errorLogger, IRequestForApprovalManager requestForApprovalManager)
         {
             this.profileUpdateManager = profileUpdateManager;
             this.errorLogger = errorLogger;
             this.uow = uow;
+            this.requestForApprovalManager = requestForApprovalManager;
         }
 
         protected ApplicationUserManager _authUserManager;
@@ -94,6 +97,28 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             //return Json(upadtedData, JsonRequestBehavior.AllowGet);
             return JsonConvert.SerializeObject(upadtedData);
         }
+
+        [HttpGet]
+        public async Task<int> GetRequestCounts()
+        {
+            bool isPRO = await GetUserRole();
+            var requestCount = 0;
+
+            if (isPRO)
+            {
+                string UserAuthId = await GetUserAuthId();
+                int ProfileID = Convert.ToInt32(GetCredentialingUserId(UserAuthId));
+
+                requestCount = profileUpdateManager.GetAllProviderApprovalCounts(ProfileID);
+            }
+            else
+            {
+                requestCount = profileUpdateManager.GetAllRequestCounts();
+            }
+
+            return requestCount;
+        }
+        
 
         [HttpGet]
         public async Task<string> GetAllUpdatesHistory()
@@ -196,13 +221,6 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             List<ProfileUpdatesTracker> profileUpdates = new List<ProfileUpdatesTracker>();
             profileUpdates = profileUpdateManager.GetUpdatesByTrackerId(tracker.TrackerId, approvedStatus, modification);
 
-            //List<ProfileUpdatesTracker> onHoldProfileUpdates = new List<ProfileUpdatesTracker>();
-            //onHoldProfileUpdates = profileUpdateManager.GetUpdatesByTrackerId(tracker.TrackerId, "OnHold", modification);
-
-            //foreach (var item in onHoldProfileUpdates)
-            //{
-            //    profileUpdates.Add(item);
-            //}
 
             List<ApprovalSubmission> trackers = new List<ApprovalSubmission>();
             foreach (var item in profileUpdates)
@@ -216,6 +234,9 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 
             profileUpdateManager.SetApproval(trackers, user.Id);
 
+            List<int> trackerIDs = new List<int>();
+            trackerIDs.Add(tracker.TrackerId);
+            await requestForApprovalManager.AddUpdatesRequestTrackerNotification(trackerIDs, tracker.ApprovalStatus, HttpContext.User.Identity.Name);
 
             return Json(status, JsonRequestBehavior.AllowGet);
         }

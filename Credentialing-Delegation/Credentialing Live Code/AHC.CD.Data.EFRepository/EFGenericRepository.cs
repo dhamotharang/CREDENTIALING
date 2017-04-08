@@ -4,11 +4,16 @@ using AHC.CD.Resources.Messages;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Design.PluralizationServices;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,10 +29,10 @@ namespace AHC.CD.Data.EFRepository
     {
         private DbContext context = null;
         private DbSet<TObject> dbSet = null;
-
+        PluralizationService pluralizationService = PluralizationService.CreateService(new System.Globalization.CultureInfo("en-us"));
         public EFGenericRepository()
         {
-            if(this.context == null)
+            if (this.context == null)
                 this.context = new EFEntityContext();
 
             this.dbSet = this.context.Set<TObject>();
@@ -161,7 +166,7 @@ namespace AHC.CD.Data.EFRepository
             { query = query.Include(includeProperty); }
             //var sql = ((System.Data.Entity.Core.Objects.ObjectQuery)query).ToTraceString();
             //context.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
-        return await query.FirstOrDefaultAsync(predicate);
+            return await query.FirstOrDefaultAsync(predicate);
         }
 
         public virtual TObject Find(Expression<Func<TObject, bool>> predicate, params string[] includeProperties)
@@ -196,7 +201,7 @@ namespace AHC.CD.Data.EFRepository
                 context.Entry(entry).State = EntityState.Modified;
             }
             catch (Exception)
-            {                
+            {
                 throw;
             }
             //Save();
@@ -220,7 +225,7 @@ namespace AHC.CD.Data.EFRepository
                 Delete(entityToDelete);
             }
             catch (Exception)
-            {                
+            {
                 throw;
             }
         }
@@ -279,8 +284,8 @@ namespace AHC.CD.Data.EFRepository
                 {
                     errors.Add(item.Message.Replace("Cannot insert duplicate key row in object 'dbo.", ""));
                 }
-                
-                if(errors.Count > 1)
+
+                if (errors.Count > 1)
                     errors.RemoveAt(errors.Count - 1);
 
                 throw new DatabaseValidationException(String.Join(", ", errors), ExceptionMessage.DATABASE_VALIDATION_EXCEPTION, ex);
@@ -291,5 +296,47 @@ namespace AHC.CD.Data.EFRepository
                 throw;
             }
         }
+
+        public virtual int GetPrimaryKeyValue<TObject>(TObject tObjects)
+        {
+            string entityName;
+            Type type = ObjectContext.GetObjectType(tObjects.GetType());
+            entityName = type.BaseType.Equals(typeof(Object)) ? type.Name : type.BaseType.Name;
+            entityName = pluralizationService.Pluralize(entityName);
+            return (int)((IObjectContextAdapter)context).ObjectContext.CreateEntityKey(entityName, tObjects).EntityKeyValues.Select(kv => kv.Value).FirstOrDefault();
+
+        }
+
+        public virtual Dictionary<PropertyInfo, object> GetNavigationProperties(TObject tObjects)
+        {
+            var entityType = tObjects.GetType();
+            var elementType = ((IObjectContextAdapter)context).ObjectContext.CreateObjectSet<TObject>().EntitySet.ElementType;
+            List<PropertyInfo> NVProperties = elementType.NavigationProperties.Select(np => entityType.GetProperty(np.Name)).Where(x => x.GetType() != typeof(IEnumerable<>) && x.CustomAttributes.Count() > 0).ToList();
+            Dictionary<PropertyInfo, object> Temporary = new Dictionary<PropertyInfo, object>();
+            if (NVProperties.Count() > 0)
+            {
+                foreach (var item in NVProperties)
+                {
+                    Temporary.Add(item, tObjects.GetType().GetProperty(item.CustomAttributes.FirstOrDefault().ConstructorArguments.FirstOrDefault().Value.ToString()).GetValue(tObjects));
+                }
+
+            }
+            return Temporary;
+        }
+
+        public virtual Object GetMasterDataObject(Type tObjects, int? PrimaryKey)
+        {
+            if (PrimaryKey == null)
+            {
+                return null;
+            }
+            return context.Set(tObjects).Find(PrimaryKey);
+        }
+
+        public virtual async Task ContextReload()
+        {
+
+        }
+
     }
 }

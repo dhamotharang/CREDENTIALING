@@ -14,6 +14,7 @@ using AutoMapper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -110,6 +111,7 @@ namespace AHC.CD.Business.Profiles
             bool Status = false;
             try
             {
+                int AuthUserID = await GetCDUserID(UserID);
                 var CredRequestRepo = uow.GetGenericRepository<CredentialingRequest>();
                 var CredRequestTrackerRepo = uow.GetGenericRepository<CredentialingRequestTracker>();
                 var CredRequestData = await CredRequestRepo.FindAsync(x => x.CredentialingRequestID == ID);
@@ -118,6 +120,7 @@ namespace AHC.CD.Business.Profiles
                 credentialingRequestTrackerData = AutoMapper.Mapper.Map<CredentialingRequest, CredentialingRequestTracker>(CredRequestData);
                 credentialingRequestTrackerData.ApprovalStatusType = ApprovalType == "Approved" ? ApprovalStatusType.Approved : ApprovalType=="Rejected"?ApprovalStatusType.Rejected:ApprovalStatusType.Dropped;
                 credentialingRequestTrackerData.RejectionReason = Reason;
+                credentialingRequestTrackerData.DecisionMadeBy = AuthUserID;
                 if (ApprovalType == "Approved")
                 {
                     Status = await CredentialingInitiation(CredRequestData,UserID);
@@ -133,6 +136,21 @@ namespace AHC.CD.Business.Profiles
                 throw ex;
             }
             return Status;
+        }
+
+        public async Task<dynamic> SetApprovalForCredRequestByIDsAsync(string CredRequestsIDS, string UserID)
+        {
+            dynamic CredRequestApprovalStatus = new ExpandoObject();
+            try
+            {
+                int AuthUserID=await GetCDUserID(UserID);
+                CredRequestApprovalStatus = await iRequestForApprovalRepo.ApproveAllCredentialingRequestBYIDS(CredRequestsIDS, AuthUserID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return CredRequestApprovalStatus;
         }
 
         public async Task<dynamic> GetAllUpdatesAndRenewalsForProviderAsync(int ID)
@@ -271,6 +289,92 @@ namespace AHC.CD.Business.Profiles
             }
         }
 
+        public async Task<dynamic> GetAllCredRequestHistoryAsync()
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllCredRequestHistory();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllCredRequestHistoryByIDAsync(int ID)
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllCredRequestHistoryByID(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllUpdateRequestHistoryAsync()
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllUpdateRequestHistory();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllUpdateRequestHistoryByIDAsync(int ID)
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllUpdateRequestHistoryByID(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }       
+
+        public async Task<dynamic> GetAllRenewalRequestHistoryAsync()
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllRenewalRequestHistory();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+        public async Task<dynamic> GetAllRenewalRequestHistoryByIDAsync(int ID)
+        {
+            dynamic HistoryDTO = null;
+            try
+            {
+                HistoryDTO = await iRequestForApprovalRepo.GetAllRenewalRequestHistoryByID(ID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return HistoryDTO;
+        }
+
+
+
         #region Private Methods
 
         private async Task<int> GetCDUserID(string userAuthID)
@@ -352,6 +456,9 @@ namespace AHC.CD.Business.Profiles
         }
 
         #endregion
+
+
+
 
 
 

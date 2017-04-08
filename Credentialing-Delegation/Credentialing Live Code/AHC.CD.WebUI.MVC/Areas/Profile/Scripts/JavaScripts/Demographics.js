@@ -572,6 +572,10 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.personalDetail.TableState = true;
+                            }
+
                             $scope.PersonalDetailsPendingRequest = true;
                             if (data.personalDetail.ProviderTitles.length > 0) {
                                 for (var i in data.personalDetail.ProviderTitles) {
@@ -589,7 +593,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             }
                             FormReset($("#" + Form_Id));
                             $rootScope.visibilityControl = "";
-                            messageAlertEngine.callAlertMessage("alertPersonalDetailsSuccess", "Personal Details updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("alertPersonalDetailsSuccess", "Personal Details updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("alertPersonalDetailsSuccess", data.successMessage, "success", true);
                         } else {
                             messageAlertEngine.callAlertMessage("alertPersonalDetailsError", data.status.split(","), "danger", true);
                         }
@@ -670,6 +675,11 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                     try {
 
                         if (data.status == "true") {
+
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.otherLegalName.TableState = true;
+                            }
+
                             $scope.OtherLegalNamesPendingRequest = true;
                             data.otherLegalName.EndDate = ConvertDateFormat(data.otherLegalName.EndDate);
                             data.otherLegalName.StartDate = ConvertDateFormat(data.otherLegalName.StartDate);
@@ -684,7 +694,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             myData = data;
                             FormReset($form);
                             $scope.OtherLegalNamesPendingRequest = true;
-                            messageAlertEngine.callAlertMessage("alertOtherLegalNameSuccess" + index, "Other Legal Name updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("alertOtherLegalNameSuccess" + index, "Other Legal Name updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("alertOtherLegalNameSuccess" + index, data.successMessage, "success", true);
                         } else {
                             messageAlertEngine.callAlertMessage("alertOtherLegalNameError" + index, data.status.split(","), "danger", true);
                         }
@@ -878,6 +889,10 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
                     try {
                         if (data.status == "true") {
+
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.homeAddress.TableState = true;
+                            }
                             $scope.HomeAddressesPendingRequest = true;
                             data.homeAddress.LivingEndDate = ConvertDateFormat(data.homeAddress.LivingEndDate);
                             data.homeAddress.LivingFromDate = ConvertDateFormat(data.homeAddress.LivingFromDate);
@@ -896,10 +911,12 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             }
                             if (data.homeAddress.AddressPreferenceType == 1) {
                                 $rootScope.visibilityControl = 0 + "_ViewHomeAddress";
-                                messageAlertEngine.callAlertMessage("alertHomeAddressSuccess" + 0, "Home Address updated successfully.", "success", true);
+                                //messageAlertEngine.callAlertMessage("alertHomeAddressSuccess" + 0, "Home Address updated successfully.", "success", true);
+                                messageAlertEngine.callAlertMessage("alertHomeAddressSuccess" + 0, data.successMessage, "success", true);
                             } else {
                                 $rootScope.visibilityControl = index + "_ViewHomeAddress";
-                                messageAlertEngine.callAlertMessage("alertHomeAddressSuccess" + index, "Home Address updated successfully.", "success", true);
+                                //messageAlertEngine.callAlertMessage("alertHomeAddressSuccess" + index, "Home Address updated successfully.", "success", true);
+                                messageAlertEngine.callAlertMessage("alertHomeAddressSuccess" + index, data.successMessage, "success", true);
                             }
                             FormReset($form);
 
@@ -1390,6 +1407,11 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
                     try {
                         if (data.status == "true") {
+
+                            if (UserRole == "PRO" && data.ActionType == "Update") {
+                                data.contactDetail.TableState = true;
+                            }
+
                             $scope.ContactDetailPendingRequest = true;
                             if (data.contactDetail) {
                                 for (var i in data.contactDetail.PreferredContacts) {
@@ -1404,7 +1426,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             $scope.ContactDetailsEmptyError = false;
                             FormReset($("#" + Form_Id));
                             $rootScope.visibilityControl = "";
-                            messageAlertEngine.callAlertMessage("alertContactDetailsSuccess", "Contact Details updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("alertContactDetailsSuccess", "Contact Details updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("alertContactDetailsSuccess", data.successMessage, "success", true);
                         } else {
                             messageAlertEngine.callAlertMessage("alertContactDetailsError", data.status.split(","), "danger", true);
                         }
@@ -1443,7 +1466,7 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
     })
 
     //========================== Personal Identification Save Method ======================
-    $scope.DemographicsPersonalIdentificationSave = function (Form_Id) {
+    $scope.DemographicsPersonalIdentificationSave = function (Form_Id, PersonalIdentificationID) {
         var validCount = 0;
         var url;
         var $formData;
@@ -1485,6 +1508,11 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
                     try {
                         if (data.status == "true") {
+
+                            if (UserRole == "PRO" && PersonalIdentificationID!=0 && PersonalIdentificationID!=undefined) {
+                                data.personalIdentification.TableState = true;
+                            }
+
                             $rootScope.dlinfoerror = false;
                             $rootScope.dlinfoerror1 = false;
 
@@ -1496,7 +1524,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             myData = data;
                             if (data.personalIdentificationid != 0) {
                                 $scope.PersonalIdentificationPendingRequest = true;
-                                messageAlertEngine.callAlertMessage("alertPersonalIdentificationSuccess", "Personal Identification updated successfully.", "success", true);
+                                //messageAlertEngine.callAlertMessage("alertPersonalIdentificationSuccess", "Personal Identification updated successfully.", "success", true);
+                                messageAlertEngine.callAlertMessage("alertPersonalIdentificationSuccess", data.successMessage, "success", true);
                             }
                             if (data.personalIdentificationid == 0) {
                                 $scope.PersonalIdentificationPendingRequest = false;
@@ -1555,7 +1584,7 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
             return DOB;
     };
 
-    $scope.saveBirthInformation = function (Form_Id) {
+    $scope.saveBirthInformation = function (Form_Id, BirthInformationID) {
         ResetFormForValidation($("#" + Form_Id));
         var myData = {};
         if ($("#" + Form_Id).valid()) {
@@ -1571,6 +1600,11 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && BirthInformationID != 0 && BirthInformationID!=undefined) {
+                                data.birthInformation.TableState = true;
+                            }
+
+
                             if ($scope.Provider.BirthInformation != null) {
                                 $scope.BirthInformationPendingRequest = true;
                             }
@@ -1584,7 +1618,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             myData = data;
 
                             FormReset($("#" + Form_Id));
-                            messageAlertEngine.callAlertMessage("alertBirthInformationSuccess", "Birth Information saved successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("alertBirthInformationSuccess", "Birth Information saved successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("alertBirthInformationSuccess", data.successMessage, "success", true);
                         } else {
                             messageAlertEngine.callAlertMessage("alertBirthInformationError", data.status.split(","), "danger", true);
                         }
@@ -1601,7 +1636,7 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
     };
     //--------------------------- Save Visa Details Function ------------------------------------
-    $scope.saveEthnicityVisaDetails = function (Form_Id) {
+    $scope.saveEthnicityVisaDetails = function (Form_Id,VisaDetailID) {
         ResetFormForValidation($("#" + Form_Id));
         var myData = {};
         if ($("#" + Form_Id).valid()) {
@@ -1614,6 +1649,10 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && VisaDetailID != 0 && VisaDetailID!=undefined) {
+                                data.visaDetail.TableState = true;
+                            }
+
                             if ($scope.Provider.VisaDetails != null) {
                                 $scope.VisaDetailPendingRequest = true;
                             }
@@ -1645,7 +1684,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             $rootScope.tempObject = {};
                             $rootScope.visibilityControl = "";
                             myData = data;
-                            messageAlertEngine.callAlertMessage("alertVisaDetailsSuccess", "Visa Details updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("alertVisaDetailsSuccess", "Visa Details updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("alertVisaDetailsSuccess", data.successMessage, "success", true);
                             FormReset($("#" + Form_Id));
                         } else {
                             messageAlertEngine.callAlertMessage("alertVisaDetailsError", data.status.split(","), "danger", true);
@@ -1776,7 +1816,7 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
     };
 
     //------------------------------------------------------------------------------------------
-    $scope.saveLanguages = function (Form_Id) {
+    $scope.saveLanguages = function (Form_Id,LanguageInfoID) {
         ResetFormForValidation($("#" + Form_Id));
         if ($("#" + Form_Id).valid()) {
             $.ajax({
@@ -1791,6 +1831,10 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
                     try {
                         if (data.status == "true") {
+                            if (UserRole == "PRO" && LanguageInfoID!=0 &&LanguageInfoID!=undefined) {
+                                data.languageInfo.TableState = true;
+                            }
+
                             if ($scope.Provider.LanguageInfo != null) {
                                 $scope.LanguageInfoPendingRequest = true;
                             }
@@ -1798,7 +1842,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                             $scope.TempLanguageForEdit = [];
                             FormReset($("#" + Form_Id));
                             $rootScope.visibilityControl = "";
-                            messageAlertEngine.callAlertMessage("alertLanguageKnownSuccess", "Languages Known updated successfully.", "success", true);
+                            //messageAlertEngine.callAlertMessage("alertLanguageKnownSuccess", "Languages Known updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("alertLanguageKnownSuccess", data.successMessage, "success", true);
                         } else {
                             messageAlertEngine.callAlertMessage("alertLanguageKnownError", data.status.split(","), "danger", true);
                         }

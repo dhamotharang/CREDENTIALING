@@ -16,5 +16,12 @@ namespace AHC.CD.Data.ADO.Profile
         Task<dynamic> GetAllHistoryForProviderRepo(int ID);
         Task<dynamic> GetCredRequestDataByIDRepo(int ID);
         Task<dynamic> GetCredRequestHistoryDataByIDRepo(int ID);
+        Task<dynamic> ApproveAllCredentialingRequestBYIDS(string CredentialingRequestIDs, int UserID);
+        Task<dynamic> GetAllCredRequestHistory();
+        Task<dynamic> GetAllCredRequestHistoryByID(int ID);
+        Task<dynamic> GetAllUpdateRequestHistory();
+        Task<dynamic> GetAllUpdateRequestHistoryByID(int ID);
+        Task<dynamic> GetAllRenewalRequestHistory();
+        Task<dynamic> GetAllRenewalRequestHistoryByID(int ID);
     }
 }

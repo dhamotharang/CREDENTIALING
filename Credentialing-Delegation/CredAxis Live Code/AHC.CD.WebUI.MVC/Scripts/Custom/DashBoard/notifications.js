@@ -567,7 +567,7 @@ var TaskNotificationReminder = function () {
             }
         },
         error: function (error) {
-            alert("Sorry, there was a problem!");
+            //alert("Sorry, there was a problem!");
         }
     });
 }

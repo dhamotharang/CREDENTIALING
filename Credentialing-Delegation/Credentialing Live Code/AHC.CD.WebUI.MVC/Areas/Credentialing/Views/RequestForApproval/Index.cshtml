@@ -61,12 +61,6 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-
-
-
-                        @*<div draggable style="width: 200px; height: 200px; background: yellow; cursor:pointer;z-index:1000">
-
-                            </div>*@
                         <div id="Biscuits" class="col-lg-12 zero-padding-left-right margin_top_6px">
                             <biscuit-tile action-type="Updates" grid-data="GridData('Updates')" biscuit-id="Updates" biscuit-title="Updates" biscuit-value="BicuitValue.UpdateCount" biscuit-color="blue" biscuit-symbol="Updates"></biscuit-tile>
                             <biscuit-tile action-type="Renewals" grid-data="GridData('Renewals')" biscuit-id="Renewals" biscuit-title="Renewals" biscuit-value="BicuitValue.RenewalCount" biscuit-color="green" biscuit-symbol="Renewals"></biscuit-tile>
@@ -75,45 +69,43 @@
 
                         </div>
                         <div class="clearfix">
+
                         </div>
-                        <div class="col-lg-4 zero-padding-left-right">
-                            @*<div class="input-group stylish-input-group" ng-if="MasterSettings.TableType==1">
-                                    <input type="text" class="form-control" ng-model="UpdateSearch" placeholder="Search">
-                                    <span class="input-group-addon">
-                                        <button type="submit">
-                                            <span class="glyphicon glyphicon-search"></span>
-                                        </button>
-                                    </span>
+                        <div class="col-lg-4 zero-padding-left-right" style="font-size:12px">
+                            <div ng-if="MasterSettings.ActionType=='UpdatesHistory' || MasterSettings.ActionType=='RenewalsHistory' || MasterSettings.ActionType=='RequestsHistory'">
+                                <div class="col-lg-4 zero-padding-left-right">
+                                    <input id="radio-1" class="radio-custom" name="radio-group" ng-click="GetUpdateHistory()" type="radio" checked>
+                                    <label for="radio-1" class="radio-custom-label">
+                                        Updates
+                                        <span class="label counts" style="background-color: #0288d1">{{HistoryCount.UpdateHistoryCount}}</span>
+                                    </label>
                                 </div>
-                                <div class="input-group stylish-input-group" ng-if="MasterSettings.TableType==2">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                    <span class="input-group-addon">
-                                        <button type="submit">
-                                            <span class="glyphicon glyphicon-search"></span>
-                                        </button>
-                                    </span>
-                                </div>*@
+                                <div class="col-lg-4 zero-padding-left-right">
+                                    <input id="radio-2" class="radio-custom" name="radio-group" ng-click="GetRenewalHistory()" type="radio">
+                                    <label for="radio-2" class="radio-custom-label">
+                                        Renewals
+                                        <span class="label counts" style="background-color: #43a047">{{HistoryCount.RenewalHistoryCount}}</span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-4 zero-padding-left-right" >
+                                    <input id="radio-3" class="radio-custom" name="radio-group" ng-click="GetCredRequestHistory()" type="radio">
+                                    <label for="radio-3" class="radio-custom-label">
+                                        Cred
+                                        <span class="label counts" style="background-color: #18758f">{{HistoryCount.CredRequestHistoryCount}}</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-4 tripijodal">
                             <i class="fa" ng-class="{'fa-check':MasterSettings.ActionType=='Updates','fa-refresh':MasterSettings.ActionType=='Renewals','fa-user':MasterSettings.ActionType=='Requests','fa-history':MasterSettings.ActionType=='History'}"></i> {{MasterSettings.TableCaption}}
                         </div>
                         <div class="col-lg-4 zero-padding-left-right">
-                            <div ng-if="MasterSettings.ActionType=='History'" class="pull-left">
-                                <switch name="yesNo" ng-model="yesNo" on="Update" off="Renew" class="wide" disabled="false" ng-change="HistoryChange()"></switch>
-                            </div>
-                            <div ng-if="MasterSettings.ActionType=='Requests'" class="pull-left">
-                                <switch name="yesNo" ng-model="yesNo" on="Active" off="History" class="wide" disabled="false" ng-change="CredRequestChange()"></switch>
-                            </div>
-                            @*<div ng-if="(MasterSettings.ActionType=='Updates' || MasterSettings.ActionType=='Renewals') && pc.displayedUpdateAndRenewals.length>0 && !IsProvider" class="pull-left">
-                                    <switch name="yesNo" ng-model="yesNo" on="Off" off="On" class="wide" disabled="false" ng-change="SelectAll()" data-toggle="tooltip" data-placement="top" title="Select All">
-                                </div>*@
                             <div class="btn-group btn-group-md pull-right" id="ExportPanel">
                                 <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Approve All" ng-click="SetApprovalForAll()" ng-if="SelectedData.length>0"><span><i ng-if="!ApproveAllStatus" class="fa bounceback fa-check bigger-120"></i><img ng-if="ApproveAllStatus" src="~/Content/Images/ajax-loader.gif" style="width:18px;" /></span></a>
+                                <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Approve All" ng-click="SetApprovalForAllCredentialing()" ng-if="SelectedDataForCredRequest.length>0"><span><i ng-if="!ApproveAllStatusForCredRequest" class="fa bounceback fa-check bigger-120"></i><img ng-if="ApproveAllStatusForCredRequest" src="~/Content/Images/ajax-loader.gif" style="width:18px;" /></span></a>
                                 <a class="btn btn-white" style="margin-left: 2px; color: blue; " data-toggle="tooltip" data-placement="top" title="Enable Search" ng-click="FilterForProfileUpdateandRequest()"><span><i class="fa fa-search bigger-120"></i></span></a>
                                 <a class="btn btn-white" style="margin-left: 2px;color:orange" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#ProfileUpdates')"><span><i class="fa fa-file-code-o bigger-120"></i></span></a>
                                 <a class="btn btn-white" style="margin-left: 2px; color: green; " data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#ProfileUpdates')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></a>
-                                @*<a class="btn btn-white" style="margin-left: 2px; color: red; " data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#ProfileUpdates')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></a>
-                                    <a class="btn btn-white" style="margin-left: 2px; color: grey; " data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></a>*@
                             </div>
                         </div>
                         <div class="clearfix">
@@ -143,12 +135,12 @@
                                 </thead>
                                 <tbody ng-show="!pc.isLoadingUpdateAndRenewals">
                                     <tr ng-repeat="profileUpdates in pc.displayedUpdateAndRenewals track by $index" style="cursor:pointer" ng-click="CheckStatus($event,profileUpdates)" ng-style="profileUpdates.IsSelected=='true' ? { 'background-color':'rgb(233, 236, 235)',color:'#32306b','font-weight':'bold' } : {'background-color':'white',color:'black'}">
-                                        <td class="col-lg-1 wrap-words">{{profileUpdates.NPINumber || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{profileUpdates.NPINumber || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.ProviderName || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.Section || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.SubSection || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{profileUpdates.ModifiedDate || 'Not Available'}}</td>
-                                        <td class="col-lg-2 wrap-words"><span>{{profileUpdates.ApprovalStatus || 'Not Available'}}</span></td>
+                                        <td class="col-lg-1 wrap-words"><span>{{profileUpdates.ApprovalStatus || 'Not Available'}}</span></td>
                                         <td class="col-lg-1 wrap-words">
                                             <button class="btn btn-xs btn-default skip" ng-click="GetProfileUpdateDataByID(profileUpdates)" data-toggle="modal" data-target="#profileUpdateModal"><i class="fa fa-eye skip" tooltip data-toggle="tooltip" data-placement="left" title="View Profile Updates and Renew"></i></button>
                                         </td>
@@ -180,42 +172,47 @@
                                     <tr style="background-color: #464957; border-color: #337AB7; color:white;cursor:pointer">
                                         <th st-sort="NPINumber" class="col-lg-2">NPI Number</th>
                                         <th st-sort="ProviderName" class="col-lg-3">Provider Name</th>
-                                        <th st-sort="PlanName" class="col-lg-3">Plan Name</th>
+                                        <th st-sort="PlanName" class="col-lg-2">Plan Name</th>
                                         <th st-sort="ModifiedDate" class="col-lg-2">Initiation Date</th>
                                         <th st-sort="CurrentStatus" class="col-lg-2">Approval Status</th>
+                                        <th st-skip-natural="true" class="col-lg-1">Action</th>
                                     </tr>
                                     <tr ng-if="CredentialingReqFilter">
                                         <td class="col-lg-2"><input st-search="NPINumber" type="text" placeholder="NPI" class="form-control input-sm" /></td>
                                         <td class="col-lg-3"><input st-search="ProviderName" type="text" placeholder="Provider Name" class="form-control input-sm" /></td>
-                                        <td class="col-lg-3"><input st-search="PlanName" type="text" placeholder="Plan Name" class="form-control input-sm" /></td>
+                                        <td class="col-lg-2"><input st-search="PlanName" type="text" placeholder="Plan Name" class="form-control input-sm" /></td>
                                         <td class="col-lg-2"><input st-search="ModifiedDate" type="text" placeholder="Initiation Date" class="form-control input-sm" /></td>
                                         <td class="col-lg-2"><input st-search="CurrentStatus" type="text" placeholder="Approval Status" class="form-control input-sm" /></td>
+                                        <td class="col-lg-1"></td>
                                     </tr>
                                 </thead>
                                 <tbody ng-show="!pc.isLoadingCredentialingRequest">
-                                    <tr ng-repeat="credRequest in pc.displayedCredentialingRequest track by $index" style="cursor:pointer" ng-click="GetCredRequestDataByID(credRequest.CredentialingRequestID,credRequest.CurrentStatus)" data-toggle="modal" data-target="#requestForApprovalModal">
+                                    <tr ng-repeat="credRequest in pc.displayedCredentialingRequest track by $index" style="cursor:pointer" ng-click="CheckStatusForCredRequest($event,credRequest)" ng-style="credRequest.IsSelected=='true' ? { 'background-color':'rgb(233, 236, 235)',color:'#32306b','font-weight':'bold' } : {'background-color':'white',color:'black'}">
                                         <td class="col-lg-2 wrap-words">{{credRequest.NPINumber || 'Not Available'}}</td>
                                         <td class="col-lg-3 wrap-words">{{credRequest.ProviderName || 'Not Available'}}</td>
-                                        <td class="col-lg-3 wrap-words">{{credRequest.PlanName || 'Not Available'}}</td>
+                                        <td class="col-lg-2 wrap-words">{{credRequest.PlanName || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{credRequest.ModifiedDate || 'Not Available'}}</td>
                                         <td class="col-lg-2 wrap-words">{{credRequest.CurrentStatus || 'Not Available'}}</td>
+                                        <td class="col-lg-1 wrap-words">
+                                            <button class="btn btn-xs btn-default skip" ng-click="GetCredRequestDataByID(credRequest.CredentialingRequestID,credRequest.CurrentStatus)" data-toggle="modal" data-target="#requestForApprovalModal"><i class="fa fa-eye skip" tooltip data-toggle="tooltip" data-placement="left" title="View Cred Request"></i></button>
+                                        </td>
                                     </tr>
                                     <tr ng-if="pc.displayedCredentialingRequest.length==0">
-                                        <td colspan="5" class="text-center">
-                                            <i>No Data Found</i>
+                                        <td colspan="6" class="text-center">
+                                            <i>No Data Found==={{pc.displayedCredentialingRequest}}===</i>
                                         </td>
                                     </tr>
                                 </tbody>
                                 <tbody ng-show="pc.isLoadingCredentialingRequest">
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="6" class="text-center">
                                             <div class="loading-indicator"></div>
                                         </td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="5"></td>
+                                        <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="6"></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -240,7 +237,7 @@
                                                     <div class="form-group">
                                                         <label class="col-lg-4">Provider Name:</label>
                                                         <div class="col-lg-8">
-                                                            <i>{{TemporaryObject.ProviderName || 'Not Available'}}</i>
+                                                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{TemporaryObject.ProfileID}}"><i>{{TemporaryObject.ProviderName || 'Not Available'}}</i></a>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -269,13 +266,20 @@
                                                     </div>
                                                     <div class="form-group" ng-if="TemporaryObject.CurrentStatus=='Rejected'">
                                                         <label class="col-lg-4">Reason For Rejection:</label>
-                                                        <div class="col-lg-8">
+                                                        <div class="col-lg-8 wrap-words">
                                                             <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
                                                         </div>
                                                     </div>
                                                     <div class="form-group" ng-if="RejectStatus">
+                                                        <label class="col-lg-4">Reason to Send Back:</label>
                                                         <label class="col-lg-12"><textarea ng-model="TemporaryObject.RejectionReason" class="form-control" placeholder="Reason to send back"></textarea></label>
 
+                                                    </div>
+                                                    <div class="form-group" ng-if="TemporaryObject.CurrentStatus=='Approved' || TemporaryObject.CurrentStatus=='Rejected'">
+                                                        <label class="col-lg-4">Decision Made By:</label>
+                                                        <div class="col-lg-8 wrap-words">
+                                                            <i>{{TemporaryObject.DecisionMadeBy || 'Not Available'}}</i>
+                                                        </div>
                                                     </div>
 
                                                 </div>
@@ -322,7 +326,7 @@
                                                     <div class="form-group">
                                                         <label class="col-lg-4">Provider Name:</label>
                                                         <div class="col-lg-8">
-                                                            <i>{{TemporaryObject.ProviderName || 'Not Available'}}</i>
+                                                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{TemporaryObject.ProfileID}}"><i>{{TemporaryObject.ProviderName || 'Not Available'}}</i></a>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -346,14 +350,20 @@
                                                     </div>
                                                     <div class="form-group" ng-if="TemporaryObject.ApprovalStatus=='Rejected'">
                                                         <label class="col-lg-4">Reason For Rejection:</label>
-                                                        <div class="col-lg-8">
+                                                        <div class="col-lg-8 wrap-words">
                                                             <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
                                                         </div>
                                                     </div>
                                                     <div class="form-group" ng-if="TemporaryObject.ApprovalStatus=='OnHold'">
                                                         <label class="col-lg-4">Reason For OnHold:</label>
-                                                        <div class="col-lg-8">
+                                                        <div class="col-lg-8 wrap-words">
                                                             <i>{{TemporaryObject.RejectionReason || 'Not Available'}}</i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" ng-if="TemporaryObject.ApprovalStatus!='Pending'">
+                                                        <label class="col-lg-4">Decision Made By:</label>
+                                                        <div class="col-lg-8 wrap-words">
+                                                            <i>{{TemporaryObject.DecisionMadeBy || 'Not Available'}}</i>
                                                         </div>
                                                     </div>
 
@@ -427,6 +437,7 @@
                                                         </table>
                                                     </div>
                                                     <div class="form-group" ng-if="RejectStatus">
+                                                        <label class="col-lg-4">Reason to Send Back:</label>
                                                         <label class="col-lg-12"><textarea ng-model="TemporaryObject.RejectionReason" class="form-control" placeholder="Reason to send back"></textarea></label>
                                                     </div>
                                                 </div>

@@ -6,6 +6,7 @@ using Owin;
 using System;
 using AHC.CD.WebUI.MVC.Models;
 using System.Configuration;
+using Microsoft.AspNet.SignalR;
 //using AHC.CD.WebUI.MVC;
 
 namespace AHC.CD.WebUI.MVC
@@ -21,6 +22,7 @@ namespace AHC.CD.WebUI.MVC
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
+            app.MapSignalR();
 
             // Configure the Session Timeout
 
@@ -34,14 +36,14 @@ namespace AHC.CD.WebUI.MVC
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
                 LogoutPath = new PathString("/Account/LogOff"),
-                
+
 
                 //Provider = new CookieAuthenticationProvider
                 //{
-                //    // Enables the application to validate the security stamp when the user logs in.
-                //    // This is a security feature which is used when you change a password or add an external login to your account.  
+                //    // enables the application to validate the security stamp when the user logs in.
+                //    // this is a security feature which is used when you change a password or add an external login to your account.  
                 //    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-                //        validateInterval: TimeSpan.FromMinutes(1),
+                //        validateInterval: TimeSpan.FromSeconds(0),
                 //        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 //},
                 ExpireTimeSpan = TimeSpan.FromMinutes(minutes),
@@ -75,5 +77,6 @@ namespace AHC.CD.WebUI.MVC
             //    clientId: "",
             //    clientSecret: "");
         }
+       
     }
 }
