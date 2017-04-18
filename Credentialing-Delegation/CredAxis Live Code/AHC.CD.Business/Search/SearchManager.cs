@@ -11,6 +11,7 @@ using AHC.CD.Entities.MasterProfile;
 using AHC.CD.Entities.MasterProfile.Contract;
 using AHC.CD.Entities.MasterProfile.Demographics;
 using AHC.CD.Entities.MasterProfile.IdentificationAndLicenses;
+using AHC.CD.Entities.UserInfo;
 using AHC.CD.Exceptions.Profiles;
 using AHC.CD.Resources.Messages;
 using System;
@@ -41,14 +42,16 @@ namespace AHC.CD.Business.Search
                 string IncludeProperties = "CDRoles.CDRole,Profile,Profile.PersonalDetail.ProviderLevel,Profile.ContractInfoes.ContractGroupInfoes.PracticingGroup";
                 var CDUsersResultData = await uow.GetGenericRepository<CDUser>().GetAllAsync(IncludeProperties);
                 var OtherUserResultData = await uow.GetGenericRepository<OtherUser>().GetAllAsync();
-                CDUsersResultData.ToList().ForEach(x => 
-                { 
+
+                CDUsersResultData.ToList().ForEach(x =>
+                {
                     var constructedData = ConstructUserSearchResultForGroupMail(x);
                     if (constructedData != null)
-                    Users.Add(constructedData); 
+                        Users.Add(constructedData);
                 });
-                OtherUserResultData.ToList().ForEach(x => { 
-                    Users.Add(new SearchUserforGroupMailDTO { CDuserId = x.CDUserID, EmailIds = x.EmailId, FirstName = x.FirstName, LastName = x.LastName, UserType="OtherUser", FullName = x.FullName }); 
+                OtherUserResultData.ToList().ForEach(x =>
+                {
+                    Users.Add(new SearchUserforGroupMailDTO { CDuserId = x.CDUserID, EmailIds = x.EmailId, FirstName = x.FirstName, LastName = x.LastName, UserType = "OtherUser", FullName = x.FullName });
                 });
                 return Users;
             }
@@ -129,7 +132,7 @@ namespace AHC.CD.Business.Search
         private SearchUserforGroupMailDTO ConstructUserSearchResultForGroupMail(CDUser Cduser)
         {
             SearchUserforGroupMailDTO user = null;
-            if (Cduser.Profile == null && Cduser.Status != StatusType.Inactive.ToString() && Cduser.AuthenicateUserId != null) 
+            if (Cduser.Profile == null && Cduser.Status != StatusType.Inactive.ToString() && Cduser.AuthenicateUserId != null)
             {
                 user = new SearchUserforGroupMailDTO();
                 user.CDuserId = Cduser.CDUserID;
@@ -138,7 +141,7 @@ namespace AHC.CD.Business.Search
                 user.Roles = Cduser.CDRoles.ToList().Select(x => x.CDRole.Name).ToList();
                 user.UserType = "User";
             }
-            else if(Cduser.Profile != null && Cduser.Profile.Status != StatusType.Inactive.ToString())
+            else if (Cduser.Profile != null && Cduser.Profile.Status != StatusType.Inactive.ToString())
             {
                 user = new SearchUserforGroupMailDTO();
                 user.CDuserId = Cduser.CDUserID;
@@ -146,7 +149,7 @@ namespace AHC.CD.Business.Search
                 user.FirstName = Cduser.Profile.PersonalDetail.FirstName;
                 user.LastName = Cduser.Profile.PersonalDetail.LastName;
                 user.FullName = user.FirstName + " " + (Cduser.Profile.PersonalDetail.MiddleName != null ? Cduser.Profile.PersonalDetail.MiddleName : "") + " " + user.LastName;
-                user.Roles = Cduser.CDRoles.ToList().Select(x=>x.CDRole.Name).ToList();
+                user.Roles = Cduser.CDRoles.ToList().Select(x => x.CDRole.Name).ToList();
                 user.ProviderLevel = Cduser.Profile.PersonalDetail.ProviderLevel == null ? null : Cduser.Profile.PersonalDetail.ProviderLevel.Name;
                 user.ProviderRelationship = Cduser.Profile.ContractInfoes.Any(x => x.ContractStatus != ContractStatus.Inactive.ToString()) == false ? null : Cduser.Profile.ContractInfoes.Where(x => x.ContractStatus != ContractStatus.Inactive.ToString()).FirstOrDefault().ProviderRelationship;
                 //user.ProviderRelationship = Cduser.Profile.ContractInfoes != null ? GetProfileRelationships(Cduser.Profile) : null;
@@ -168,7 +171,7 @@ namespace AHC.CD.Business.Search
             //        user.UserType = "OtherUser";
             //    }
             //}
-           
+
             return user;
         }
 
@@ -1311,6 +1314,6 @@ namespace AHC.CD.Business.Search
             {
                 throw;
             }
-        }
+        }       
     }
 }

@@ -16,6 +16,6 @@ namespace AHC.CD.Business.TaskTracker
         Task<IEnumerable<object>> GetAllProviders();
         Task<IEnumerable<object>> GetAllInsuranceCompanies();
         Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByUserId(string userAuthId);
-        Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByProfileId(int profileid);
+        Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByProfileId(int profileid);        
     }
 }

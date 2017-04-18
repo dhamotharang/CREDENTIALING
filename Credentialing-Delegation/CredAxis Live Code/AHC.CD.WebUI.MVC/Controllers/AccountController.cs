@@ -72,7 +72,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             List<UsersList> userlist = new List<UsersList>();
             try
             {
-                foreach (var user in UserManager.Users)
+                var users = UserManager.Users;
+                foreach (var user in users)
                 {
                     UsersList u = new UsersList();
                     var result = UserManager.GetRoles(user.Id);

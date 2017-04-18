@@ -6,9 +6,15 @@
     
     $scope.MasterData = function () {
         CCMDashboardService.GetCCMAppointments().then(function (result) {
+           $scope.BisuctCounts = CCMDashboardFactory.LoadCounts(result.data);
+            for (var i in result.data) {
+                result.data[i].AppointmentDate = CCMDashboardFactory.ConvertDate(result.data[i].AppointmentDate);
+                result.data[i].CredInitiationDate = CCMDashboardFactory.ConvertDate(result.data[i].CredInitiationDate);
+            }
             $rootScope.CCMAppointments = result.data;
-            $rootScope.TempCCMAppointments = result.data;
             $scope.loadEvents();
+            $rootScope.TempCCMAppointments = result.data;
+           
             AppointmentDate = $filter('date')(AppointmentDate, "yyyy-MM-dd");
             $rootScope.filteredCCMAppointmentsByDate = $filter('CCMDashboardFilterByAppointmentDate')(AppointmentDate);
         }, function (error) {
@@ -19,6 +25,7 @@
         $scope.GridType = AppointmentType;
         $rootScope.$broadcast('AppointmentsGrid', { type: AppointmentType, RowObject: RowObject });
     };
+    
     //================================== Temporary function Declaration End ===============================================================================
     //===================================CalendarPlugIn Script=============================================================================================
     'use strict';

@@ -1,5 +1,6 @@
 ﻿using AHC.CD.Business.DocumentWriter;
 using AHC.CD.Entities.Credentialing.AppointmentInformation;
+using AHC.CD.Entities.Credentialing.CCMPortal;
 using AHC.CD.Entities.Credentialing.Loading;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,6 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
         Task<IEnumerable<CredentialingInfo>> GetAllFilteredCredentialInfoList();
         Task<CredentialingInfo> GetCredentialinfoByID(int id);
         Task<string> GenerateWelcomeLetter(int profileid, string welcomeletterinitialdate, string servicecommencingdate);
-
+        Task<List<CCMAppiontment>> GetCCMAppointmentsInfo(string ApprovalStatus);
     }
 }

@@ -6,7 +6,8 @@
         transclude: true,
         scope: {
             ngModel: '=',
-            gridData: '&'
+            gridData: '&',
+            biscuitValue: '='
         },
         link: function (scope, element, attrs, ngModel) {
             scope.biscuitId = attrs.biscuitId;

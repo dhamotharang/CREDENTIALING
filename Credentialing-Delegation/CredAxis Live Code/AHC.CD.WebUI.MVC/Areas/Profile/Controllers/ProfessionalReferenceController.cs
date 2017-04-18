@@ -24,6 +24,7 @@ using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Business.MasterData;
 using AHC.CD.Resources.Rules;
 
+
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
     public class ProfessionalReferenceController : Controller
@@ -33,6 +34,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         private IChangeNotificationManager notificationManager;
         private IProfileUpdateManager profileUpdateManager = null;
         private IMasterDataManager masterDataManager = null;
+        
 
         public ProfessionalReferenceController(IProfileManager profileManager, IErrorLogger errorLogger, IChangeNotificationManager notificationManager, IProfileUpdateManager profileUpdateManager, IMasterDataManager masterDataManager)
         {
@@ -40,7 +42,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             this.errorLogger = errorLogger;
             this.notificationManager = notificationManager;
             this.profileUpdateManager = profileUpdateManager;
-            this.masterDataManager = masterDataManager;
+            this.masterDataManager = masterDataManager;            
         }
 
         protected ApplicationUserManager _authUserManager;
@@ -256,13 +258,19 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 AHC.CD.Entities.MasterProfile.Profile providers = profileManager.GetProviderInformation(profileId);
                 providers.ContactDetail.EmailIDs = providers.ContactDetail.EmailIDs.Where(p => p.PreferenceType == PreferenceType.Primary).ToList();
                 providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary).ToList();
+                if(providers.SpecialtyDetails.Count==0)
+                {
+                    providers.SpecialtyDetails.ToList()[0] = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary).ToList().FirstOrDefault();
+                }
+                if (providers.EducationDetails.Count!=0)
+                providers.EducationDetails.ToList()[0] = providers.EducationDetails.Where(p => p.GraduationType == "Graduate").Last();
                 return Json(new { providers }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
                 throw;
             }
-        }
+        }     
 
 
         private async Task<string> GetUserAuthId()

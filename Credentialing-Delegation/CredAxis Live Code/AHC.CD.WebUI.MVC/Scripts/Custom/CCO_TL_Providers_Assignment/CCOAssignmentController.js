@@ -4,6 +4,7 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
     var pa = this;
     this.displayed = [];
     $scope.selectedProviders = [];
+    $scope.selectedProvidersProfileIDs = [];
     $scope.TLlist = [];
     $scope.ccoList = [];
     $scope.progressbar = false;
@@ -13,8 +14,8 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
     $scope.ccoAssign = true;
     $scope.data = [];
 
-   
- 
+
+
 
 
     this.callServer = function callServer(tableState) {
@@ -43,10 +44,12 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
         if (provider.SelectStatus == true) {
             provider.SelectStatus = false;
             $scope.selectedProviders.splice($scope.selectedProviders.indexOf(provider), 1);
+            $scope.selectedProvidersProfileIDs.splice($scope.selectedProvidersProfileIDs.indexOf(provider.ProfileID), 1);
         }
         else {
             provider.SelectStatus = true;
-            $scope.selectedProviders.push(provider)
+            $scope.selectedProviders.push(provider);
+            $scope.selectedProvidersProfileIDs.push(provider.ProfileID);
         };
         //provider.SelectStatus = provider.SelectStatus == true ? false : true;
         //$scope.selectedProviders.push(provider);
@@ -56,12 +59,14 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
     // for cards data display
     $scope.displayData = function (assignedPerson) {
         if (assignedPerson == 'CCOAssignedData') {
+            $scope.CCorTL = "CCO";
             $scope.ccoAssign = true;
 
             $scope.CardsDisplayData = angular.copy($scope.ccoList);
         }
         else {
             $scope.ccoAssign = false;
+            $scope.CCorTL = "TL";
             if ($scope.TLlist.length < 1)
                 tlList();
             $scope.CardsDisplayData = angular.copy($scope.TLlist);
@@ -84,15 +89,16 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                     try {
                         //----------- success message -----------
                         if (data) {
-                            for (var i in $scope.data) {
-                                if ($scope.data[i].ProfileID == profileID) {
-                                    $scope.data[i].Status = "Inactive";
-                                    $scope.data[i].StatusType = 2;
-                                    $scope.data[i].SelectStatus = false;
+                            for (var i in pa.displayed) {
+                                if (pa.displayed[i].ProfileID == profileID) {
+                                    pa.displayed[i].Status = "Inactive";
+                                    pa.displayed[i].StatusType = 2;
+                                    pa.displayed[i].SelectStatus = false;
                                     break;
+
                                 }
                             }
-                            $scope.init_table($scope.data, 1);
+                            //$scope.init_table($scope.data, 1);
                         }
                     } catch (e) {
 
@@ -102,7 +108,13 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                     //----------- error message -----------
                 });
         $('#profileModal').modal('hide');
+        $('#DeactivatedUserDIVID').modal();
+
+
     };
+
+
+
 
     // for reactivate pop-up
     $scope.reactiveProfileInfo = function (profileId, index) {
@@ -120,14 +132,16 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                     try {
                         //----------- success message -----------
                         if (data) {
-                            for (var i in $scope.data) {
-                                if ($scope.data[i].ProfileID == profileID) {
-                                    $scope.data[i].Status = "Active";
-                                    $scope.data[i].StatusType = 1;
+                            for (var i in pa.displayed) {
+                                if (pa.displayed[i].ProfileID == profileID) {
+
+                                    pa.displayed[i].Status = "Active";
+                                    pa.displayed[i].StatusType = 1;
+
                                     break;
                                 }
                             }
-                            $scope.init_table($scope.data, 1);
+                            //$scope.init_table($scope.data, 1);
                         }
                     } catch (e) {
 
@@ -138,6 +152,7 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                     //----------- error message -----------
                 });
         $('#profileReactiveModal').modal('hide');
+        $('#ReactivatedUserDIVID').modal();
     };
     //--Master data area---
     $http.get(rootDir + '/Profile/MasterData/GetAllProviderLevels').
@@ -194,7 +209,7 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
         $scope.selectedProviders = [];
         $http({
             method: "POST",
-            url: rootDir + "/SearchProfile/SearchProfileJson",
+            url: rootDir + "/AssignToCCOorTL/SearchProfile",
             data: {
                 NPINumber: $scope.searchProvider.NPINumber, FirstName: $scope.searchProvider.FirstName,
                 LastName: $scope.searchProvider.LastName, ProviderRelationship: $scope.searchProvider.ProviderRelationship, IPAGroupName: $scope.searchProvider.IPAGroupName,
@@ -202,13 +217,20 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
             }
         }).success(function (resultData) {
             try {
-                if (resultData.searchResults.length != 0) {
+                if (resultData.result.length != 0) {
                     SearchProviderPanelToggle();
-                    $rootScope.ProviderData = resultData.searchResults;
+                    $rootScope.ProviderData = angular.copy(resultData.result);
                     $scope.searchProvider = "";
                     $scope.progressbar = false;
-                    $scope.init_table(resultData.searchResults, condition);
-                   
+                    $scope.init_table(resultData.result, condition);
+                    var State = {
+                        sort: {},
+                        search: {},
+                        pagination: {
+                            start: 0
+                        }
+                    };
+                    callServer(State);
                     //removing selected providers
 
                 }
@@ -349,13 +371,15 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
         $scope.data = "";
     }
 
-
+    $scope.CCorTL = "";
 
     var ccoList = function () {
+        $scope.CCorTL = "CCO";
         $http({
             method: 'GET',
-            url: '/Prototypes/GetCCOData'
+            url: '/AssignToCCOorTL/GetAllCCOData'
         }).then(function successCallback(response) {
+            $scope.CCOprogressbar = false;
             for (var i = 0; i < response.data.length; i++) {
                 var cal = (response.data[i].Pending / (response.data[i].TaskAssigned < 1 ? 1 : response.data[i].TaskAssigned) * 100);
                 response.data[i].Performance = Math.round(cal * 100) / 100;
@@ -369,10 +393,13 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
     }
 
     var tlList = function () {
+        $scope.TLprogressbar = true;
+        $scope.CCorTL = "TL";
         $http({
             method: 'GET',
-            url: '/Prototypes/GetTLData'
+            url: '/AssignToCCOorTL/GetAllTLData'
         }).then(function successCallback(response) {
+            $scope.TLprogressbar = false;
             $scope.TLlist = angular.copy(response.data);
             $scope.CardsDisplayData = angular.copy(response.data);
         }, function errorCallback(response) {
@@ -385,22 +412,121 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
     $scope.AssignToCCO = function () {
         $scope.ShowProfileDelegation = true;
         if ($scope.ccoList.length < 1)
-            ccoList();
+            $scope.CCOprogressbar = true;
+        ccoList();
 
         SearchTLPanelToggle();
     }
 
+    var CCOOrTLProfileUserID;
+    $scope.TotalProvidersSelected = 0;
+    $scope.CountofAssignedProviders = 0;
+    $scope.CountofNonAssignedProviders = 0;
+
     // when user choose the cco/tl
-    $scope.showAssignmentConfirmation = function (Proname, whomtoassigned) {
-        $('#inactiveWarningModal1').modal();
-        $scope.ccoName = Proname;
-        $scope.toWhomAssigned = whomtoassigned;
+    $scope.showAssignmentConfirmation = function (Proname, ProfileUserID, whomtoassigned) {
+        var validationStatus = "true";
+        var SelectedProviders = $scope.selectedProvidersProfileIDs;
+        ProfileIDs = JSON.stringify(SelectedProviders)
+        if (validationStatus) {
+            $.ajax({
+                url: rootDir + '/AssignToCCOorTL/GetCountOfAlreadyAssignedProviders',
+                type: "POST",
+                dataType: 'json',
+                data: { "ProfileIDs": $scope.selectedProvidersProfileIDs, "CCorTL": $scope.CCorTL },
+
+                success: function (data, status, headers, config) {
+                    try {
+
+                        if (!$scope.$$phase) {
+                            $scope.$apply(function () {
+                                $scope.TotalProvidersSelected = $scope.selectedProvidersProfileIDs.length;
+                                $scope.CountofAssignedProviders = data;
+                                $scope.CountofNonAssignedProviders = $scope.selectedProvidersProfileIDs.length - $scope.CountofAssignedProviders;
+                                CCOOrTLProfileUserID = ProfileUserID;
+                                $scope.ccoName = Proname;
+                                $scope.toWhomAssigned = whomtoassigned;
+                                $('#inactiveWarningModal1').modal();
+                            });
+
+                        }
+
+
+                    } catch (e) {
+
+                    }
+                }
+            })
+        }
     }
 
     $scope.assignTask = function () {
-        $('#inactiveWarningModal2').modal();
-    }
+        var profileUserId = CCOOrTLProfileUserID;
+        var validationStatus = "true";
+        var url = "";
+        if (validationStatus) {
+            if ($scope.CCorTL == "CCO") {
+                url = rootDir + '/AssignToCCOorTL/AssignProviderstoCCO'
+            }
+            else if ($scope.CCorTL == "TL") {
+                url = rootDir + '/AssignToCCOorTL/AssignProviderstoTL'
+            }
 
+            $scope.selectedProviders1 = [];
+            if (Ignorestatus == false) {
+                for (var pro in $scope.selectedProviders) {
+                    if ($scope.CCorTL == "CCO")
+                        if ($scope.selectedProviders[pro].CCO == "") {
+                            $scope.selectedProviders1.push($scope.selectedProviders[pro]);
+                        }
+                    if ($scope.CCorTL == "TL") {
+                        if ($scope.selectedProviders[pro].TL == "") {
+                            $scope.selectedProviders1.push($scope.selectedProviders[pro]);
+                        }
+                    }
+                }
+
+            }
+            else {
+                $scope.selectedProviders1 = $scope.selectedProviders;
+            }
+            $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: { "ProfileIDs": $scope.selectedProvidersProfileIDs, "profileUserId": profileUserId, "Status": Ignorestatus },
+                //data: { "selectedProviders": $scope.selectedProviders, "profileUserId": profileUserId },
+
+                success: function (data, status, headers, config) {
+                    try {
+                        if (data.status == "true") {
+                            $scope.selectedProvidersProfileIDs = [];
+
+
+                            //$scope.ShowProfileDelegation = false;
+                            //$('#ccoAssignemntArea').remove();
+                            //$('#TLAssignemntArea').remove();
+                            //$('#SearchResultsDiv').hide();
+                            messageAlertEngine.callAlertMessage("TL", "New User Assigned Successfully !!!!", "success", true);
+                        }
+                        else {
+                            messageAlertEngine.callAlertMessage("TLError", data.status, "danger", true);
+                        }
+
+
+                        $scope.CCorTL = "";
+                        Ignorestatus = true;
+                        $('#inactiveWarningModal2').modal();
+
+                    } catch (e) {
+
+                    }
+                }
+
+            });
+        }
+
+    }
 
 }]);
 
@@ -409,6 +535,25 @@ var SearchProviderPanelToggle = function () {
 }
 var SearchTLPanelToggle = function () {
     $("#searchTLResultID").slideToggle();
+}
+
+var ProfileDelegationPanelToggle = function () {
+    $("#CCOTLPanel").slideToggle();
+}
+
+var closeConfirmationModal = function () {
+    $('#removeTask').modal('hide');
+    SearchProviderPanelToggle();
+}
+
+
+var closeDeactivateConfirmationModal = function () {
+    $('#DeactivatedUserDIVID').modal('hide');
+}
+
+
+var closeReactivateConfirmationModal = function () {
+    $('#ReactivatedUserDIVID').modal('hide');
 }
 
 $(document).ready(function () {
@@ -426,4 +571,36 @@ $(document).click(function (event) {
 
 function showLocationList(ele) {
     $(ele).parent().find(".ProviderTypeSelectAutoList").first().show();
+}
+var Ignorestatus = true;
+var CheckBoxFunction = function () {
+
+    if ($('#checkbox').is(':checked')) {
+        //$('#appTimes').find('input').attr('disabled', true);
+        Ignorestatus = false;
+    } else {
+        //$('#appTimes').find('input').removeAttr('disabled');
+        Ignorestatus = true;
+    }
+
+
+    //$scope.selectedProviders1 = [];
+    if (Ignorestatus == false) {
+        for (var pro in $scope.selectedProviders) {
+            if ($scope.CCorTL == "CCO")
+                if ($scope.selectedProviders[pro].CCO == "") {
+                    $scope.selectedProviders1.push($scope.selectedProviders[pro]);
+                }
+            if ($scope.CCorTL == "TL") {
+                if ($scope.selectedProviders[pro].TL == "") {
+                    $scope.selectedProviders1.push($scope.selectedProviders[pro]);
+                }
+            }
+        }
+
+    }
+    else {
+        $scope.selectedProviders1 = $scope.selectedProviders;
+    }
+
 }

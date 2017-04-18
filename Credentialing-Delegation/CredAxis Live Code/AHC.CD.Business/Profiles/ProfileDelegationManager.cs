@@ -23,7 +23,7 @@ namespace AHC.CD.Business.Profiles
         {
             this.uof = uof;
             this.repositoryManager = repositoryManager;
-            this.profileRepository = uof.GetProfileRepository(); ;            
+            this.profileRepository = uof.GetProfileRepository(); ;
         }
 
         public IEnumerable<ProfileUser> GetAllTeamLeadsAsync()
@@ -162,10 +162,9 @@ namespace AHC.CD.Business.Profiles
                     var cdUser = CDUserRepo.Find(u => u.AuthenicateUserId == userId);
 
                     var profileUserRepo = uof.GetGenericRepository<ProfileUser>();
-                    var teamLead = profileUserRepo.Find(l => l.ProfileUserID == profileUserId && l.Status == AHC.CD.Entities.MasterData.Enums.StatusType.Active.ToString());
+                    var teamLead = profileUserRepo.Find(l => l.ProfileUserID == profileUserId && l.Status == AHC.CD.Entities.MasterData.Enums.StatusType.Active.ToString(), "ProvidersUser");
 
                     ProviderUser provider = new ProviderUser() { ProfileId = profileId, AssignedByCDUserId = cdUser.CDUserID, AssignedDate = DateTime.Now, LastModifiedDate = DateTime.Now, StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active };
-
                     teamLead.ProvidersUser.Add(provider);
 
                     profileUserRepo.Update(teamLead);
@@ -175,7 +174,7 @@ namespace AHC.CD.Business.Profiles
                 {
                     throw new ProfileDelegationManagerException(ExceptionMessage.USER_ASSIGNED_EXCEPTION);
                 }
-                
+
             }
             catch (ApplicationException)
             {
@@ -185,7 +184,7 @@ namespace AHC.CD.Business.Profiles
             {
                 throw ex;
             }
-            
-        }
+
+        }                   
     }
 }

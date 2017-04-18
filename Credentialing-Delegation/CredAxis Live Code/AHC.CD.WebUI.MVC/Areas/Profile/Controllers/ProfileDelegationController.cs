@@ -11,19 +11,26 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 using AHC.CD.WebUI.MVC.Models;
 using Newtonsoft.Json;
+using AHC.CD.Entities.UserInfo;
+using AHC.CD.Business.Users;
+using System.Dynamic;
+using AHC.CD.Business.TaskTracker;
 
 namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 {
     public class ProfileDelegationController : Controller
     {
-        private IProfileDelegationManager delegationManager=null;
+        private IProfileDelegationManager delegationManager = null;
         private IErrorLogger ErrorLogger { get; set; }
+        private IUserManager _userManager = null;
+        private ITaskTrackerManager _taskTrackerManager = null;
 
-        public ProfileDelegationController(IProfileDelegationManager delegationManager,IErrorLogger errorLogger)
+        public ProfileDelegationController(IProfileDelegationManager delegationManager, IErrorLogger errorLogger, IUserManager userManager, ITaskTrackerManager taskTrackerManager = null)
         {
             this.delegationManager = delegationManager;
             this.ErrorLogger = errorLogger;
-            
+            this._userManager = userManager;
+            this._taskTrackerManager = taskTrackerManager;
         }
 
         protected ApplicationUserManager _authUserManager;
@@ -58,7 +65,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> AssignProfile(int profileId, int profileUserId)
         {
             string status = "true";
-           
+
 
             try
             {
@@ -69,7 +76,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                 await delegationManager.AssignProfile(profileId, profileUserId, userId);
 
-                
+
             }
             catch (DatabaseValidationException ex)
             {
@@ -87,7 +94,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.TL_ASSIGN_EXCEPTION;
             }
 
-            return Json(new { status = status}, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -122,6 +129,26 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             }
 
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }               
+
+        /// <summary>
+        /// Author : Manideep Innamuri
+        /// Description : Method to Get the count of Number of Already Assigned Providers and NO of Non Assigned Providers
+        /// </summary>
+        /// <param name="selectedProvidersProfileIDs"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public List<int> GetCountofAssignedProvidersAndNonAssignedProviders(List<int> selectedProvidersProfileIDs,int RoleCode)
+        {
+            try
+            {
+
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            return null;
         }
     }
 }

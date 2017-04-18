@@ -26,7 +26,7 @@ namespace AHC.CD.Business.Users
         ProfileDocumentManager profileDocumentManager = null;
         IProfileRepository profileRepository = null;
         IEmailSender mailService = null;
-        
+
         public UserManager(IUnitOfWork uow, IDocumentsManager documentManager, IEmailSender mailService, IUserDetails iUserDetails)
         {
             this.mailService = mailService;
@@ -186,7 +186,7 @@ namespace AHC.CD.Business.Users
 
         }
 
-        private async Task<int> CreateUserWithRoleAsync(string authenticateUserId, string role,string EmailId)
+        private async Task<int> CreateUserWithRoleAsync(string authenticateUserId, string role, string EmailId)
         {
             //Create a CD user and associate profile 
             CDUser cdUser = new CDUser() { AuthenicateUserId = authenticateUserId, StatusType = StatusType.Active, EmailId = EmailId };
@@ -477,9 +477,6 @@ namespace AHC.CD.Business.Users
             {
                 throw ex;
             }
-        }
-
-
-        
+        }       
     }
 }

@@ -51,5 +51,9 @@ namespace AHC.CD.Entities.UserInfo
 
         [Column(TypeName = "datetime2")]
         public DateTime LastModifiedDate { get; set; }
+
+        public int? ProfileUser_ProfileUserID { get; set; } 
+        [ForeignKey("ProfileUser_ProfileUserID")]
+        public virtual ProfileUser ProfileUser { get; set; }
     }
 }

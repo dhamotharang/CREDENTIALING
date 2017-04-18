@@ -3,7 +3,7 @@
     this.GetCCMAppointments = function () {
         var deferObject;
         deferObject = deferObject || $q.defer();
-        var promise = $http.get(rootDir + '/Test.txt');
+        var promise = $http.get(rootDir + '/Credentialing/CCMPortal/GetAllAppointmentsList');
         promise.then(function (results) {
             deferObject.resolve(results);
         },
@@ -12,4 +12,5 @@
         });
         return deferObject.promise;
     }
+
 }]);

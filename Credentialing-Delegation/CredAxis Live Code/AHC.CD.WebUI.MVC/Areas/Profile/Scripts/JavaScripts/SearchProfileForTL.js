@@ -255,7 +255,7 @@ providerapp.controller('ProviderCtrl', function ($scope, $http, $location, $filt
 
         $http({
             method: "POST",
-            url: rootDir + "/SearchProfile/SearchProfileJson",
+            url: rootDir + "/SearchProfile/SearchProfile",
             data: {
                 NPINumber: $scope.searchProvider.NPINumber, FirstName: $scope.searchProvider.FirstName,
                 LastName: $scope.searchProvider.LastName, ProviderRelationship: $scope.searchProvider.ProviderRelationship, IPAGroupName: $scope.searchProvider.IPAGroupName,

@@ -163,6 +163,34 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             }
         }
 
+        /// <summary>
+        /// This Method will return spa data
+        /// </summary>
+        /// <param name="CredInfoId">need to pass unique credInfo Id</param>
+        /// <returns></returns>
+        public async Task<ActionResult> GetSPAData(int CredInfoId)
+        {
+            try
+            {
+                object obj = new {
+                LoginUsers = await GetAllUsers(),
+                CDUsers = await GetAllCDUsers(),
+                signaturepath = appointmentManager.GetCCMSignature(await GetUserAuthId()),
+                CredentialingInfoID = CredInfoId,
+                CredentialingInfo = await appointmentManager.GetCredentialinfoByID(CredInfoId)
+                };
+
+                //CredentialingAppointmentDetailViewModel credentialingAppointmentDetailViewModel=
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+
         public async Task<ActionResult> GetAllCredentialingFilterList()
         {
             var data = await appointmentManager.GetAllFilteredCredentialInfoList();

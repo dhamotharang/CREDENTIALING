@@ -308,5 +308,7 @@ namespace AHC.CD.Business
         int GetUserId(string userAuthId);
         Task<bool> SaveUpdateHistory(string OldRecord,int CDUserID,string SectionName,int SectionTableID,int ProfileIDOfRecord);
         Task<List<UpdateHistory>> GetUpdateHistoryOfARecord(string SectionName, int SectionTableID, int ProfileID);
+
+        
     }
 }

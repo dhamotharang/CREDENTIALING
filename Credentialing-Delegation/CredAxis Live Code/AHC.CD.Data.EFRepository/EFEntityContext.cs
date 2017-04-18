@@ -50,7 +50,7 @@ namespace AHC.CD.Data.EFRepository
         //}
 
         public EFEntityContext()
-        {
+        {            
             var adapter = (IObjectContextAdapter)this;
             var objectContext = adapter.ObjectContext;
             objectContext.CommandTimeout = 1 * 60; // value in seconds

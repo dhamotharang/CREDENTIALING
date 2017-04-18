@@ -472,11 +472,14 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
            $scope.tempObject.County = $scope.ProviderData.providers.HomeAddresses[0].County;
            $scope.tempObject.Email = $scope.ProviderData.providers.ContactDetail.EmailIDs[0].EmailAddress;
            $scope.tempObject.Telephone = $scope.ProviderData.providers.ContactDetail.PhoneDetails.Telephone;
+           $scope.tempObject.ProviderTypeID = $scope.ProviderData.providers.PersonalDetail.ProviderTitles[$scope.ProviderData.providers.PersonalDetail.ProviderTitles.length -1].ProviderType.ProviderTypeID;
+
            if ($scope.ProviderData.providers.SpecialtyDetails.length != 0) {
                $scope.tempObject.speciality = $scope.ProviderData.providers.SpecialtyDetails[0];
+               $scope.tempObject.SpecialtyID = $scope.ProviderData.providers.SpecialtyDetails[0].SpecialtyID;
                $scope.tempObject.speciality.SpecialtyID = $scope.ProviderData.providers.SpecialtyDetails[0].SpecialtyID;
-               $scope.tempObject.speciality.Specialty.Name = $scope.masterSpecialties[0];
-               $scope.tempObject.speciality.Name = $scope.masterSpecialties[0];
+               //$scope.tempObject.speciality.Specialty.Name = $scope.masterSpecialties[0].Name;
+               //$scope.tempObject.speciality.Name = $scope.masterSpecialties[0].Name;
            }
            for (var number in $scope.ProviderData.providers.ContactDetail.PhoneDetails) {
                if (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].Preference == "Primary")) {
@@ -499,6 +502,8 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
                    //break;
                }
            }
+
+           $scope.tempObject.Degree = $scope.ProviderData.providers.EducationDetails[0].QualificationDegree;
            $scope.tempObject.FirstName = $scope.ProviderData.providers.PersonalDetail.FirstName;
            $("#ProvidersSearchResultDiv").hide();
        });

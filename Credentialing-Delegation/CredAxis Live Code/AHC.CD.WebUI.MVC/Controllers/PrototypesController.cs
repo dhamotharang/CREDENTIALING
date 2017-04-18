@@ -5,11 +5,24 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Web.Script.Serialization;
+using AHC.CD.Entities;
+using AHC.CD.Business.Users;
+using Newtonsoft.Json;
+using System;
+using AHC.CD.Entities.UserInfo;
 
 namespace AHC.CD.WebUI.MVC.Controllers
 {
     public class PrototypesController : Controller
     {
+
+        private IUserManager _userManager = null;
+
+
+        public PrototypesController(IUserManager userManager)
+        {
+            this._userManager = userManager;
+        }
         //
         // GET: /Prototypes/
         public ActionResult Index()
@@ -27,7 +40,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
         public ActionResult CCOAssignment()
         {
-            return View("~/Views/Prototypes/CCOAssignment/CCOAssignment.cshtml");
+            return View("~/Views/AdminConfig/CCOAssignment/CCOAssignment.cshtml");
         }
         public ActionResult CCMDashboard()
         {
@@ -82,7 +95,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             var data = PrototypeHelper.GetProvidersSummary(count, profileStatus);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-        
+
         public JsonResult GetCCOData()
         {
             var data = PrototypeHelper.GetCCOList().Take(9);
@@ -94,8 +107,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             var data = PrototypeHelper.GetTLData();
             return Json(data, JsonRequestBehavior.AllowGet);
 
-        }
-        
+        }       
+
         /// <summary>
         /// Get Specialities Json Data
         /// </summary>
