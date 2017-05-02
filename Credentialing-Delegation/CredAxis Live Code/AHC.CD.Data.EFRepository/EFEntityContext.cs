@@ -236,6 +236,8 @@ namespace AHC.CD.Data.EFRepository
 
         public DbSet<AHC.CD.Entities.TaskTracker.TaskTracker> TaskTrackers { get; set; }
 
+        //public DbSet<AHC.CD.Entities.TaskTracker.TaskReminder> TaskReminders { get; set; }
+
         #endregion
 
         #region Plan Form

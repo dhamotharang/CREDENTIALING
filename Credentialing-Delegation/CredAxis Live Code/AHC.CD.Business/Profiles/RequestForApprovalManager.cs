@@ -445,11 +445,11 @@ namespace AHC.CD.Business.Profiles
 
             UserDashboardNotification notification = new UserDashboardNotification();
             notification.AcknowledgementStatusType = AcknowledgementStatusType.Unread;
-            notification.Action = "Credentialing Request";
+            notification.Action = "Profile Management";
             //notification.ActionPerformed = updatesRequest.Section + " - " + updatesRequest.SubSection + (uniqueData != null ? " - " + uniqueData.FieldName : "") + " - " + approvalType;
-            notification.ActionPerformed = updatesRequest.Section + " - " + updatesRequest.SubSection + " - " + updatesRequest.Modification + " request - " + approvalType;
+            notification.ActionPerformed = updatesRequest.Section + " - " + updatesRequest.SubSection + " - " + updatesRequest.Modification + " Request - " + approvalType;
             notification.ActionPerformedByUser = userName;
-            notification.RedirectURL = "/Profil/MasterProfile/Index";
+            notification.RedirectURL = "/Profile/MasterProfile/Index";
             notification.StatusType = StatusType.Active;
 
             return notification;

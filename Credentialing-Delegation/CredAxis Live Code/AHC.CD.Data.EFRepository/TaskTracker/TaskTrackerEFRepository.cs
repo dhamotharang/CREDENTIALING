@@ -12,11 +12,13 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
     {
         IGenericRepository<AHC.CD.Entities.TaskTracker.TaskTracker> taskRepo = null;
         IGenericRepository<AHC.CD.Entities.MasterProfile.Profile> profileRepo = null;
-        
+        IGenericRepository<AHC.CD.Entities.TaskTracker.TaskReminder> reminderRepo = null;
+
         public TaskTrackerEFRepository()
         {
             this.taskRepo = new EFGenericRepository<AHC.CD.Entities.TaskTracker.TaskTracker>();
             this.profileRepo = new EFGenericRepository<AHC.CD.Entities.MasterProfile.Profile>();
+            this.reminderRepo = new EFGenericRepository<AHC.CD.Entities.TaskTracker.TaskReminder>(); 
         }
 
         public AHC.CD.Entities.TaskTracker.TaskTracker AddTask(Entities.TaskTracker.TaskTracker taskTracker)
@@ -181,6 +183,25 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+
+        public async Task<bool> SetReminder(List<Entities.TaskTracker.TaskReminder> reminders)
+        {
+            try
+            {
+                foreach (var reminder in reminders)
+                {
+                    reminderRepo.Create(reminder);
+                }                
+                await reminderRepo.SaveAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

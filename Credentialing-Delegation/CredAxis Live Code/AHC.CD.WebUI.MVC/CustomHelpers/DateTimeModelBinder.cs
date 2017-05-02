@@ -16,6 +16,7 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
             var value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
             var convertedValue = ConvertToDateString(value.AttemptedValue.ToString());
             var date = DateTime.ParseExact(convertedValue, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            //var date = DateTime.ParseExact(convertedValue, "MM/dd/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
 
             return date;
         }
@@ -25,6 +26,7 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
             if (date != null)
             {
                 string format = "MM/dd/yyyy";
+                //string format = "MM/dd/yyyy h:mm:ss tt";
                 Regex r = new Regex(@"\d{2}/\d{2}/\d{4}");
 
                 var isValid = r.IsMatch(date);
@@ -37,6 +39,7 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
                 {
                     System.Globalization.DateTimeFormatInfo dti = new System.Globalization.DateTimeFormatInfo();
                     DateTime convertedDate = Convert.ToDateTime(date).Date;
+                    //DateTime convertedDate = Convert.ToDateTime(date);
 
                     return convertedDate.ToString(format, dti);
                 }
@@ -57,8 +60,8 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
             if (value != null && !String.IsNullOrWhiteSpace(value.AttemptedValue.ToString()))
             {
                 var convertedValue = ConvertToDateString(value.AttemptedValue.ToString());
-
                 var date = DateTime.ParseExact(convertedValue, "M/d/yyyy", CultureInfo.InvariantCulture).Date;
+                //var date = DateTime.ParseExact(convertedValue, "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
                 return date;
             }
             return null;
@@ -69,6 +72,7 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
             if (date != null)
             {
                 string format = "MM/dd/yyyy";
+                //string format = "MM/dd/yyyy h:mm:ss tt";
                 Regex r = new Regex(@"^\d{1,2}[/-]\d{1,2}[/-]\d{4}.*");
                 Regex r1 = new Regex(@"^\d{4}[/-]\d{1,2}[/-]\d{1,2}.*");
                 var isValid = r.IsMatch(date);
@@ -78,6 +82,7 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
                     DateTime convertedDate;
                     System.Globalization.DateTimeFormatInfo dti = new System.Globalization.DateTimeFormatInfo();
                     convertedDate = Convert.ToDateTime(date).Date;
+                    //convertedDate = Convert.ToDateTime(date);
 
                     return convertedDate.ToString(format, dti);
                 }
@@ -87,4 +92,5 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
 
         }
     }
+  
 }

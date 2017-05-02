@@ -1,10 +1,12 @@
 ﻿using AHC.CD.Business.BusinessModels.WelcomeLetter;
 using AHC.CD.Business.DocumentWriter;
 using AHC.CD.Business.Profiles;
+using AHC.CD.Data.ADO.Credentialing.CCMPortal;
 using AHC.CD.Data.Repository;
 using AHC.CD.Data.Repository.Profiles;
 using AHC.CD.Entities;
 using AHC.CD.Entities.Credentialing.AppointmentInformation;
+using AHC.CD.Entities.Credentialing.CCMPortal;
 using AHC.CD.Entities.Credentialing.Loading;
 using AHC.CD.Entities.Credentialing.LoadingInformation;
 using AHC.CD.Entities.MasterProfile;
@@ -26,14 +28,17 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
         IDocumentsManager documentManager = null;
         ProfileDocumentManager profileDocumentManager = null;
         private IGenericRepository<CredentialingAppointmentResult> CCMRepo;
+        IAppointmentRepository ccmAppointmentRepo = null;
 
-        public AppointmentManager(IUnitOfWork uow, IDocumentsManager documentManager)
+
+        public AppointmentManager(IUnitOfWork uow, IDocumentsManager documentManager, IAppointmentRepository ccmAppointmentRepo)
         {
             this.uow = uow;
             this.profileRepository = uow.GetProfileRepository();
             this.documentManager = documentManager;
             this.profileDocumentManager = new ProfileDocumentManager(profileRepository, documentManager);
             CCMRepo = uow.GetGenericRepository<CredentialingAppointmentResult>();
+            this.ccmAppointmentRepo = ccmAppointmentRepo;
         }
 
         /// <summary>
@@ -619,5 +624,12 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
             }
             return status;
         }
+
+        public async Task<List<CCMAppiontment>> GetCCMAppointmentsInfo(string ApprovalStatus) {
+
+            return await ccmAppointmentRepo.GetCCMAppointmentsInfo(ApprovalStatus);
+        }
+
+      
     }
 }

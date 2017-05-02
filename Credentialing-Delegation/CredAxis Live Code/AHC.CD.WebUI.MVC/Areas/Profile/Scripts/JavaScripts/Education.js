@@ -900,7 +900,7 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
 
                         if (data.status == "true") {
 
-                            if (UserRole == "PRO") {
+                            if (UserRole == "PRO" && data.ActionType=="Update") {
                                 data.ecfmgDetails.TableState = true;
                             }
 
@@ -1167,7 +1167,7 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                         if (data.status == "true") {
 
                             if (UserRole == "PRO" && data.ActionType == "Update") {
-                                data.ResidencyInternshipViewModel.TableState = true;                                
+                                data.programDetails.TableState = true;
                             }
 
                             if (residencyInternshipViewModel.PreferenceType == "1") {

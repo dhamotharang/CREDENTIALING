@@ -163,7 +163,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Hospital Privilege";
-                        tracker.SubSection = "Hospital Privilege Information";
+                        tracker.SubSection = "Hospital Privilege Detail";
                         tracker.userAuthId = userId;
                         tracker.objId = hospitalPrivilege.HospitalPrivilegeDetailID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -175,7 +175,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         var specialtyDetail = hospitalOldData.SpecialtyID != null ? await masterDataManager.GetSpecialtyByIDAsync(hospitalOldData.SpecialtyID) : null;
 
                         dynamic uniqueRecord = new ExpandoObject();
-                        uniqueRecord.FieldName = "Hospital Privilege Detail";
+                        uniqueRecord.FieldName = "Hospital Privilege Details";
                         uniqueRecord.Value = hospitalDeatil.HospitalName + " - " + hospitalContact.LocationName + (specialtyDetail != null ?  " - " + specialtyDetail.Name : "");
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
@@ -213,6 +213,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             hospitalPrivilege.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string ActionType = "Update";
             string successMessage = "";
             HospitalPrivilegeDetail dataModelHospitalPrivilegeDetail = null;
             bool isCCO = await GetUserRole();
@@ -240,7 +241,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         {
                             ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Renewed");
                             await notificationManager.SaveNotificationDetailAsync(notification);
-                            successMessage = SuccessMessage.STATE_LICENSE_DETAIL_UPDATE_SUCCESS;
+                            successMessage = SuccessMessage.HOSPITAL_PRIVELEGE_DETAIL_UPDATE_SUCCESS;
                         }
                     }
                     else
@@ -256,7 +257,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         hospitalPrivilege.HospitalPrevilegeLetterFile = null;
                         tracker.ProfileId = profileId;
                         tracker.Section = "Hospital Privilege";
-                        tracker.SubSection = "Hospital Privilege Information";
+                        tracker.SubSection = "Hospital Privilege Detail";
                         tracker.userAuthId = userId;
                         tracker.objId = hospitalPrivilege.HospitalPrivilegeDetailID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
@@ -274,7 +275,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(hospitalPrivilege, dataModelHospitalPrivilegeDetail, tracker);
-                        successMessage = SuccessMessage.STATE_LICENSE_DETAIL_UPDATE_REQUEST_SUCCESS;
+                        successMessage = SuccessMessage.HOSPITAL_PRIVELEGE_DETAIL_RENEW_REQUEST_SUCCESS;
                     }
                 //}
                 //else
@@ -298,7 +299,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, successMessage = successMessage, hospitalPrivilege = dataModelHospitalPrivilegeDetail }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status,ActionType = ActionType ,successMessage = successMessage, hospitalPrivilege = dataModelHospitalPrivilegeDetail }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -326,6 +327,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         await profileManager.UpdateHospitalPrivilegeInformationAsync(profileId, dataModelHospitalPrivilegeInformation);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Hospital Privilege Details", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        successMessage = SuccessMessage.HOSPITAL_PRIVELEGE_INFO_UPDATE_SUCCESS;
                     }
                     else if (isCCO && hospitalPrivilegeInfo.HospitalPrivilegeInformationID != 0)
                     {
@@ -344,7 +346,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Hospital Privilege";
-                        tracker.SubSection = "Hospital Information";
+                        tracker.SubSection = "Hospital Privilege Information";
                         tracker.userAuthId = userId;
                         tracker.objId = hospitalPrivilegeInfo.HospitalPrivilegeInformationID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -472,7 +474,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

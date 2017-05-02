@@ -7,7 +7,7 @@
     <div class="form-style">
         <fieldset>
             <legend>
-                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA"))
+                @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA") && !ViewBag.Roles.Contains("TL"))
                 {
                     <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="DocumentRepositoryPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
                 }
@@ -27,7 +27,7 @@
                                     <li  ng-click="ViewLicense(l)" class="list-group-item pointer" ng-class="{'active':SelectedLicense.LicenseID==l.LicenseID}">{{l.LicenseName}}</li>
 
                                 </ul>*@
-                            <table ng-if="SelectedLicenseType.LicenseTypeID == lt.LicenseTypeID && !IsHistoryView" class="table table-striped" style="border:none">
+                            <table ng-if="SelectedLicenseType.LicenseTypeID == lt.LicenseTypeID && !IsHistoryView" class="table" style="border:none">
                                 <thead>
                                     <tr>
                                         <th>Title</th>
@@ -37,23 +37,23 @@
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <tbody ng-repeat="l in lt.Licenses">
 
-                                    <tr ng-repeat="l in lt.Licenses">
+                                    <tr ng-class="{'TableColor':l.TableState}">
 
                                         <td class="col-lg-4"><a ng-click="ViewLicense(l)" class="pointer">{{l.LicenseName}}</a></td>
                                         <td class="col-lg-4">{{l.Description}}</td>
                                         <td>{{l.ModifiedDate | date:sort}}</td>
-                                        <td ng-if="SelectedLicenseType.LicenseTypeID == 20">
+                                        <td ng-if="SelectedLicenseType.LicenseTypeID == 20 && !l.TableState">
                                             <span id="Edit_OtherDocument_DR" class="badge pointer" ng-click="EditDocument(lt, l)" style="background-color: #337ab7;" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></span>
                                             <span id="Remove_OtherDocument_DR" class="badge pointer" ng-click="RemoveDocument(lt, l)" style="background-color: #a94442;" tooltip data-toggle="tooltip" data-placement="left" title="Remove"><i class="fa fa-minus"></i></span>
                                         </td>
                                         @*<td ng-if="SelectedLicenseType.LicenseTypeID == 5">
 
-                                                <span class="badge pointer" ng-click="EditDocument(lt, l)" style="background-color: #337ab7;" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></span>
-                                                <span class="badge pointer" ng-click="RemoveDocument(lt, l)" style="background-color: #a94442;" tooltip data-toggle="tooltip" data-placement="left" title="Remove"><i class="fa fa-minus"></i></span>
+                    <span class="badge pointer" ng-click="EditDocument(lt, l)" style="background-color: #337ab7;" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></span>
+                    <span class="badge pointer" ng-click="RemoveDocument(lt, l)" style="background-color: #a94442;" tooltip data-toggle="tooltip" data-placement="left" title="Remove"><i class="fa fa-minus"></i></span>
 
-                                            </td>*@
+                </td>*@
                                     </tr>
 
                                 </tbody>

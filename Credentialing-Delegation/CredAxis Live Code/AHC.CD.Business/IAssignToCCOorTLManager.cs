@@ -94,6 +94,6 @@ namespace AHC.CD.Business
         /// <param name="ProfileIDs"></param>
         /// <returns></returns>
         int GetCountOfAlreadyAssignedProviders(List<int?> ProfileIDs, string CCorTL);
-        
+
     }
 }

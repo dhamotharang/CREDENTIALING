@@ -1,6 +1,8 @@
-﻿using System;
+﻿using AHC.CD.Business.Credentialing.AppointmentInfo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,6 +10,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 {
     public class CCMPortalController : Controller
     {
+        private IAppointmentManager appointmentManager = null;
+
+        public CCMPortalController(IAppointmentManager appointmentManager)
+        {
+            this.appointmentManager = appointmentManager;
+        }
         //
         // GET: /Credentialing/CCMPortal/
         public ActionResult Index()
@@ -32,5 +40,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             return PartialView("~/Areas/Credentialing/Views/CCMPortal/_SPA_Document.cshtml");
         }
 
-	}
+        public async Task<ActionResult> GetAllAppointmentsList(string ApprovalStatus = null)
+        {
+            var data = await appointmentManager.GetCCMAppointmentsInfo(ApprovalStatus);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+    }
 }

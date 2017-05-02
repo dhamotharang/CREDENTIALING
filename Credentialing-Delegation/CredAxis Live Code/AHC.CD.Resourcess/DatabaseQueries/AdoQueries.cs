@@ -546,7 +546,7 @@ where  new.Name='Doctor'";
                                                             [dbo].[PersonalDetails] as pd on  p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID inner join
                                                             [dbo].[OtherIdentificationNumbers] as od on p.OtherIdentificationNumber_OtherIdentificationNumberID = od.OtherIdentificationNumberID
                                                             ) as result
-                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') order by ModifiedDate Desc;";
+                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') order by ProfileUpdatesTrackerId Desc;";
 
 
 
@@ -577,7 +577,7 @@ where  new.Name='Doctor'";
                                                             [dbo].[PersonalDetails] as pd on  p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID inner join
                                                             [dbo].[OtherIdentificationNumbers] as od on p.OtherIdentificationNumber_OtherIdentificationNumberID = od.OtherIdentificationNumberID
                                                             where t.[ProfileId]=@ID) as result
-                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') order by ModifiedDate desc;";
+                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') order by ProfileUpdatesTrackerId desc;";
 
 
 
@@ -589,7 +589,7 @@ where  new.Name='Doctor'";
 		                                                ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
                                                         ,'false' as [IsSelected]
                                                       FROM [dbo].[CredentialingRequests]
-	                                                  Where [Status] != 'Inactive') as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID order by ModifiedDate desc;";
+	                                                  Where [Status] != 'Inactive') as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID order by CredentialingRequestID desc;";
 
         public static readonly string PROVIDERCREDREQUEST = @"Select [CredentialingRequestID],[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],[ModifiedDate],[IsSelected] from (SELECT [CredentialingRequestID]
 		                                                ,[NPINumber]
@@ -638,7 +638,7 @@ where  new.Name='Doctor'";
                                                           inner join [dbo].[Profiles] as p2
                                                           on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                           on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
-                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID order by ModifiedDate Desc;";
+                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID order by ProfileUpdatesTrackerId Desc;";
 
         
 

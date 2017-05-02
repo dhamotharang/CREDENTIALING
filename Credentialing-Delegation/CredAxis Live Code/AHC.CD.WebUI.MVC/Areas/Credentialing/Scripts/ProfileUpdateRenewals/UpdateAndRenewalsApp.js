@@ -19,6 +19,13 @@ UpdateAndRenewalsApp.run(["$rootScope", function ($rootScope) {
     $rootScope.filtered = [];
     $rootScope.TemporaryObject = {};
     $rootScope.IsProvider = IsProvider;
+    //$rootScope.TableHighlight = {};
+
+    //if (IsProvider)
+    //    $rootScope.TableHighlight = { "background-color": "white", "color": "black" }
+    //else
+    //    $rootScope.TableHighlight = { "background-color": "white", "color": "black", "cursor": "pointer" }
+
 }])
 
 UpdateAndRenewalsApp.config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {

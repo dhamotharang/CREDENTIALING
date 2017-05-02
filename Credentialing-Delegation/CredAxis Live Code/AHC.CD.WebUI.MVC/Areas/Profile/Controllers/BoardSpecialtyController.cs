@@ -179,7 +179,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                             SpecialtyDetail.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile = null;
                         }
                         tracker.ProfileId = profileId;
-                        tracker.Section = "Specialty Details";
+                        tracker.Section = "Specialty/Board";
                         tracker.SubSection = "Specialty Details";
                         tracker.userAuthId = userId;
                         tracker.objId = SpecialtyDetail.SpecialtyDetailID;
@@ -267,7 +267,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         {
                             ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Speciality Details", "Renewed");
                             await notificationManager.SaveNotificationDetailAsync(notification);
-                            successMessage = SuccessMessage.STATE_LICENSE_DETAIL_RENEW_SUCCESS;
+                            successMessage = SuccessMessage.SPECIALTY_DETAIL_RENEW_SUCCESS;
                         }
                     }
                     else
@@ -285,7 +285,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                             specialtyDetail.SpecialtyBoardCertifiedDetail.BoardCertificateDocumentFile = null;
                         }
                         tracker.ProfileId = profileId;
-                        tracker.Section = "Specialty Details";
+                        tracker.Section = "Specialty/Board";
                         tracker.SubSection = "Specialty Details";
                         tracker.userAuthId = userId;
                         tracker.objId = specialtyDetail.SpecialtyDetailID;
@@ -303,7 +303,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
                         profileUpdateManager.AddProfileUpdateForProvider(specialtyDetail, dataModelSpecialty, tracker);
-                        successMessage = SuccessMessage.STATE_LICENSE_DETAIL_RENEW_REQUEST_SUCCESS;
+                        successMessage = SuccessMessage.SPECIALTY_DETAIL_RENEW_REQUEST_SUCCESS;
                     }
 
                 }
@@ -419,7 +419,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         ProfileUpdateTrackerBusinessModel tracker = new ProfileUpdateTrackerBusinessModel();
 
                         tracker.ProfileId = profileId;
-                        tracker.Section = "Board Specialty";
+                        tracker.Section = "Specialty/Board";
                         tracker.SubSection = "Practice Interest";
                         tracker.userAuthId = userId;
                         tracker.objId = practiceInterest.PracticeInterestID;

@@ -2,37 +2,61 @@
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="SalutationType">Name</label>
         <div>
-            <span>Kellie Duffy</span>
+            @*<span>Kellie Duffy</span>*@
+            <span>{{tempObject.credInfo.Profile.PersonalDetail.Salutation}}&nbsp;&nbsp;{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.FirstName}}&nbsp;&nbsp;{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.MiddleName}}&nbsp;&nbsp;{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.LastName}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="FirstName">Type of practice</label>
         <div>
-            <span>Solo Practice</span>
+            @*<span>Solo Practice</span>*@
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.ProviderType ||'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="MiddleName">County</label>
         <div>
-            <span>Hernando</span>
+            @*<span>Hernando</span>*@
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.County || 'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="LastName">Specialty</label>
         <div>
-            <span>Family Practitioner</span>
+            @*<span>Family Practitioner</span>*@
+
+            <span ng-repeat="tpt in tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.CredentialingSpecialityLists track by $index">
+                <span>
+                    {{tpt.Name}}
+                    <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].CredentialingSpecialityListID" value="{{tpt.CredentialingSpecialityListID}}" />
+                    <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].SpecialtyID" value="{{tpt.SpecialtyID}}" />
+                    <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].Name" value="{{tpt.Name}}" />
+                    <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+                </span>
+                &nbsp;&nbsp;
+
+            </span>
+            <span ng-repeat="tpt in tempObject1.CredentialingSpecialityLists track by $index" ng-if="tpt.StatusType==2" ng-hide="true">
+                <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].CredentialingSpecialityListID" value="{{tpt.CredentialingSpecialityListID}}" />
+                <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].SpecialtyID" value="{{tpt.SpecialtyID}}" />
+                <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].Name" value="{{tpt.Name}}" />
+                <input type="hidden" name="CredentialingSpecialityLists[{{$index}}].StatusType" value="{{tpt.StatusType}}" />
+            </span>
+
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small">Board Certification</label>
         <div>
-            <span>Yes</span>
+            @*<span>Yes</span>*@
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.BoardCertified|| 'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="SalutationType">Hospital Privileges</label>
         <div>
-            <span>St. Oak Hill Hospital</span>
+            @*<span>St. Oak Hill Hospital</span>*@
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.HospitalPrivileges||'Not Available'}}</span>
         </div>
     </div>
 </div>
@@ -40,37 +64,42 @@
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="FirstName">Covering Physicians</label>
         <div>
-            <span></span>
+            <span ng-repeat="tpt in tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.CredentialingCoveringPhysicians track by $index">
+                <span>
+                    {{tpt.Name}}
+                </span>
+                &nbsp;&nbsp;
+            </span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="MiddleName">Gaps in Practice</label>
         <div>
-            <span>No</span>
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.GapsInPractice||'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="LastName">Clean License</label>
         <div>
-            <span></span>
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.CleanLicense||'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small">NPDB Issues</label>
         <div>
-            <span>No</span>
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.NPDBIssue||'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="SalutationType">Malpractice issues</label>
         <div>
-            <span>No</span>
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.MalpracticeIssue||'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small" for="FirstName">Years In practice</label>
         <div>
-            <span>10 Years</span>
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.YearsInPractice||'Not Available'}}</span>
         </div>
     </div>
 </div>
@@ -78,27 +107,41 @@
     <div class="col-lg-4 form-group">
         <label class="control-label small" for="LastName">Site Visit Required. If yes, were there any issues</label>
         <div>
-            <span>Yes</span>
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.SiteVisitRequired||'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-4 form-group">
         <label class="control-label small" for="MiddleName">Welcome Letter Mailed Date</label>
         <div>
-            <span>02/03/2015</span>
+            <span>{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.WelcomeLetterMailedDate||'Not Available'}}</span>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small">Welcome Letter</label>
         <div>
-            <span><a data-toggle="tooltip" data-placement="right" title="" href="" target="_blank" data-original-title="Document"><i class="fa fa-2x fa-file"></i></a></span>
+            @*<span><a data-toggle="tooltip" data-placement="right" title="" href="" target="_blank" data-original-title="Document"><i class="fa fa-2x fa-file"></i></a></span>*@
+            <div class="col-lg-1 col-md-1 col-sm-1 pull-left" ng-if="tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.WelcomeLetterPath">
+                <a toggle data-toggle="tooltip" data-placement="bottom" title="Welcome Letter" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.WelcomeLetterPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a><i style="font-weight:100"></i>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 pull-left" ng-if="!tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.WelcomeLetterPath">
+                <span>Not Available</span>
+            </div>
         </div>
     </div>
     <div class="col-lg-2 form-group">
         <label class="control-label small">Attached document</label>
         <div>
-            <span><a data-toggle="tooltip" data-placement="right" title="" href="" target="_blank" data-original-title="Document"><i class="fa fa-2x fa-file"></i></a></span>
+            @*<span><a data-toggle="tooltip" data-placement="right" title="" href="" target="_blank" data-original-title="Document"><i class="fa fa-2x fa-file"></i></a></span>*@
+            @*<span><a data-toggle="tooltip" data-placement="right" title="" href="" target="_blank" data-original-title="Document"><i class="fa fa-2x fa-file"></i></a></span>*@
+            <div class="col-lg-1 col-md-1 col-sm-1 pull-left" ng-if="tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.FileUploadPath">
+                <a toggle data-toggle="tooltip" data-placement="bottom" title="Attached Document" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.FileUploadPath}}" target="_blank"><i class="fa fa-2x fa-file"></i></a><i style="font-weight:100"></i>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 pull-left" ng-if="!tempObject.credInfo.CredentialingLogs[0].CredentialingAppointmentDetail.FileUploadPath">
+                <span>Not Available</span>
+            </div>
         </div>
     </div>
+</div>
 </div>
 <div ng-if="appointment.Status=='Pending'||appointment.Status=='New'">
     <div class="col-lg-12 zero-padding-left-right-div" style="background-color: white; padding-top: 8px;">
@@ -199,7 +242,7 @@
             </div>
             <div class="panel-footer">
                 <div class="clearfix">
-                    <button get-siblings  class="ApprovalSubmission btn btn-primary btn-sm pull-right" ng-click="ConfirmAppointmentApproval()">Yes</button>
+                    <button get-siblings class="ApprovalSubmission btn btn-primary btn-sm pull-right" ng-click="ConfirmAppointmentApproval()">Yes</button>
                     <button type="button" class="btn btn-default btn-sm pull-right" style="margin-right: 6px;" ng-click="ConfirmAppointmentApproval()">No</button>
                     <div class="pull-right" style="margin: 3px;">
                         <saving></saving>

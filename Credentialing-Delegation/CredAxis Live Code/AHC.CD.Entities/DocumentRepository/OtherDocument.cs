@@ -84,5 +84,8 @@ namespace AHC.CD.Entities.DocumentRepository
 
         public ICollection<OtherDocumentHistory> OtherDocumentHistory { get; set; }
 
+        [NotMapped]
+        public bool TableState { get; set; }
+
     }
 }

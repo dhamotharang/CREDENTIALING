@@ -1,4 +1,4 @@
-﻿CCMDashboard.controller("CCMDashboardController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "CCMDashboardService", "CCMDashboardFactory", function ($rootScope, $scope, toaster, $timeout, $filter, CCMDashboardService, CCMDashboardFactory) {
+﻿CCMDashboard.controller("CCMDashboardController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "CCMDashboardService", "CCMDashboardFactory", "$http", function ($rootScope, $scope, toaster, $timeout, $filter, CCMDashboardService, CCMDashboardFactory, $http) {
     toaster.pop('Success', "Success", 'Welcome');
     var AppointmentDate = new Date();
     $scope.GridType = "";
@@ -6,9 +6,15 @@
     
     $scope.MasterData = function () {
         CCMDashboardService.GetCCMAppointments().then(function (result) {
+           $scope.BisuctCounts = CCMDashboardFactory.LoadCounts(result.data);
+            for (var i in result.data) {
+                result.data[i].AppointmentDate = CCMDashboardFactory.ConvertDate(result.data[i].AppointmentDate);
+                result.data[i].CredInitiationDate = CCMDashboardFactory.ConvertDate(result.data[i].CredInitiationDate);
+            }
             $rootScope.CCMAppointments = result.data;
-            $rootScope.TempCCMAppointments = result.data;
             $scope.loadEvents();
+            $rootScope.TempCCMAppointments = result.data;
+           
             AppointmentDate = $filter('date')(AppointmentDate, "yyyy-MM-dd");
             $rootScope.filteredCCMAppointmentsByDate = $filter('CCMDashboardFilterByAppointmentDate')(AppointmentDate);
         }, function (error) {
@@ -19,6 +25,7 @@
         $scope.GridType = AppointmentType;
         $rootScope.$broadcast('AppointmentsGrid', { type: AppointmentType, RowObject: RowObject });
     };
+    
     //================================== Temporary function Declaration End ===============================================================================
     //===================================CalendarPlugIn Script=============================================================================================
     'use strict';
@@ -73,4 +80,22 @@
         return events;
     }
     //==================================================Script END=========================================================================================
+
+
+    $scope.tempObject = {};
+    $scope.GetCredentialingDetails = function (ProviderCredentialingInfoID)
+    {
+
+        $scope.tempObject = {};
+        $http({
+            method: 'GET',
+            url: '/Credentialing/CCM/CCMSPAPage?id=' + ProviderCredentialingInfoID
+        }).then(function successCallback(response) {                        
+            $scope.ccoList = angular.copy(response.data);
+            $scope.tempObject = $scope.ccoList;            
+        }, function errorCallback(response) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+    }
 }]);

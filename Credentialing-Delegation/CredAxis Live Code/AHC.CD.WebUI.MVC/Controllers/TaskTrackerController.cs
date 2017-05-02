@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using AHC.CD.Business.Users;
 using AHC.CD.Entities;
 using System.Threading.Tasks;
+using AHC.CD.Entities.TaskTracker;
 
 namespace AHC.CD.WebUI.MVC.Controllers
 {
@@ -274,6 +275,20 @@ namespace AHC.CD.WebUI.MVC.Controllers
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public async Task<string> SetReminder(List<TaskReminder> reminders)
+        {
+            try
+            {
+                var status = await taskTrackerManager.SetReminder(reminders, GetUserAuthId());
+
+                return status.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

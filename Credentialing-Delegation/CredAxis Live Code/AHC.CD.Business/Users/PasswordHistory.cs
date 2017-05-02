@@ -19,7 +19,7 @@ namespace AHC.CD.Business.Users
             var temp = iUserDetails.UsersPasswordLastUpdated(GUID);
             if (temp.CreatedDate!=null)
             {
-                return (DateTime.Today - temp.CreatedDate.Date).Days;
+                return (DateTime.Now - temp.CreatedDate).Days;
             }
             return null;
         }

@@ -626,6 +626,26 @@ namespace AHC.CD.Business.Notification
                     "StateLicenses.ProviderType",
                     "StateLicenses.StateLicenseStatus",
 
+                    //Federal DEA
+                    "FederalDEAInformations",
+
+                    //Medicare
+                    "MedicareInformations",
+
+                    //MedicaidInformations
+                    "MedicaidInformations",
+
+                    "OtherIdentificationNumber",
+
+                    //cdsc Information
+                    "CDSCInformations",
+
+                    //Hospital Previliges
+                    "HospitalPrivilegeInformation",
+
+                    //Practice Locations
+                    "PracticeLocationDetails",
+
                     //ContractInfo
                     "ContractInfoes",
 

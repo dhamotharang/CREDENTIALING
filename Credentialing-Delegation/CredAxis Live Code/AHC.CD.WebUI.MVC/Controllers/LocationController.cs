@@ -30,21 +30,22 @@ namespace AHC.CD.WebUI.MVC.Controllers
             locations = await masterDataManager.GetLocationsByCityAsync(city);
             return Json(locations, JsonRequestBehavior.AllowGet);
         }
-         [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetStates()
         {
             var states = await masterDataManager.GetAllStatesAsync();
             return Json(states, JsonRequestBehavior.AllowGet);
         }
-         [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
-        public async Task<string> GetCountry() {
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        public async Task<string> GetCountry()
+        {
 
             var countries = await masterDataManager.GetAllCountriesAsync();
             return JsonConvert.SerializeObject(countries);
         }
 
         IEnumerable<LocationDetail> locations = null;
-         [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "city")]
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "city")]
         public async Task<JsonResult> GetCities(string city)
         {
             // Jugad Technology Implemented
@@ -78,7 +79,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         //    {
         //        Country countryObject = new Country();
         //        countryObject.Code = country.Key.ToString();
-                
+
         //        var value = JsonConvert.DeserializeObject<Dictionary<string, object>>(country.Value.ToString());
 
         //        countryObject.Name = value["name"].ToString();
@@ -98,7 +99,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
         //            var cities = JsonConvert.DeserializeObject<Dictionary<string, object>>(value1["cities"].ToString());
         //            var citiesList = new List<City>();
-                    
+
         //            foreach (var city in cities)
         //            {
         //                City cityObject = new City();
@@ -119,7 +120,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         //    }
 
         //    new AHC.CD.Data.EFRepository.LocationInitializer().Seed(countryList);
-            
+
         //    return "Done";
         //}
     }

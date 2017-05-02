@@ -23,7 +23,8 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
         var pagination = tableState.pagination;
         console.log(pagination.number);
         var start = pagination.start || 0;
-        var number = pagination.number || 10;
+        //var number = pagination.number || 10;
+        var number = 10;
         $scope.t = tableState;
         Resource.getPage(start, number, tableState).then(function (result) {
             pa.displayed = result.data;
@@ -57,25 +58,26 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
     }
 
     // for cards data display
-    $scope.displayData = function (assignedPerson) {
-        if (assignedPerson == 'CCOAssignedData') {
-            $scope.CCorTL = "CCO";
+    $scope.displayData = function (assignedPerson, role) {
+        if (assignedPerson == 'CCOAssignedData' && role == "CCO") {
+            $scope.CCOorTL = "CCO";
             $scope.ccoAssign = true;
-
-            $scope.CardsDisplayData = angular.copy($scope.ccoList);
+            ccoList();
+            $scope.CCOCardsDisplayData = angular.copy($scope.ccoList);
         }
-        else {
+        else if (role == "TL") {
             $scope.ccoAssign = false;
-            $scope.CCorTL = "TL";
-            if ($scope.TLlist.length < 1)
-                tlList();
-            $scope.CardsDisplayData = angular.copy($scope.TLlist);
+            $scope.CCOorTL = "TL";
+            //if ($scope.TLlist.length < 1)
+            tlList();
+            $scope.TLCardsDisplayData = angular.copy($scope.TLlist);
         }
     }
 
-
+    $scope.Name = "";
     // for deactivate pop-up
-    $scope.deactiveProfileInfo = function (profileId, index) {
+    $scope.deactiveProfileInfo = function (profileId, FirstName, LastName, index) {
+        $scope.Name = FirstName + " " + LastName;
         tempindex = index;
         $scope.SelectedProfileID = profileId;
         $('#profileModal').modal();
@@ -117,7 +119,9 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
 
 
     // for reactivate pop-up
-    $scope.reactiveProfileInfo = function (profileId, index) {
+    $scope.reactiveProfileInfo = function (profileId, FirstName, LastName, index) {
+        $scope.Name = FirstName + " " + LastName;
+
         tempindex = index;
         $('#temp' + tempindex).attr('disabled', true);
         $scope.SelectedProfileID = profileId;
@@ -207,6 +211,7 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
         $scope.error_message = "";
         $scope.progressbar = true;
         $scope.selectedProviders = [];
+        $scope.selectedProvidersProfileIDs = [];
         $http({
             method: "POST",
             url: rootDir + "/AssignToCCOorTL/SearchProfile",
@@ -239,6 +244,8 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                     messageAlertEngine.callAlertMessage('noProviderDetails', "No Record Available for the Given Option", "danger", true);
                     $scope.data = "";
                 }
+
+
             } catch (e) {
 
             }
@@ -371,10 +378,11 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
         $scope.data = "";
     }
 
-    $scope.CCorTL = "";
+    $scope.CCOorTL = "";
 
     var ccoList = function () {
-        $scope.CCorTL = "CCO";
+        //$scope.CCOprogressbar = true;
+        $scope.CCOorTL = "CCO";
         $http({
             method: 'GET',
             url: '/AssignToCCOorTL/GetAllCCOData'
@@ -385,7 +393,7 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                 response.data[i].Performance = Math.round(cal * 100) / 100;
             }
             $scope.ccoList = angular.copy(response.data);
-            $scope.CardsDisplayData = angular.copy(response.data);
+            $scope.CCOCardsDisplayData = angular.copy(response.data);
         }, function errorCallback(response) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
@@ -394,14 +402,14 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
 
     var tlList = function () {
         $scope.TLprogressbar = true;
-        $scope.CCorTL = "TL";
+        $scope.CCOorTL = "TL";
         $http({
             method: 'GET',
             url: '/AssignToCCOorTL/GetAllTLData'
         }).then(function successCallback(response) {
             $scope.TLprogressbar = false;
             $scope.TLlist = angular.copy(response.data);
-            $scope.CardsDisplayData = angular.copy(response.data);
+            $scope.TLCardsDisplayData = angular.copy(response.data);
         }, function errorCallback(response) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
@@ -410,11 +418,14 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
 
     //method to will call on click of cco
     $scope.AssignToCCO = function () {
-        $scope.ShowProfileDelegation = true;
-        if ($scope.ccoList.length < 1)
+        if ($scope.CCOorTL != "TL") {
+            $scope.ShowProfileDelegation = true;
+            //if ($scope.ccoList.length < 1)
             $scope.CCOprogressbar = true;
-        ccoList();
-
+            ccoList();
+        }
+        else
+            $scope.displayData("TLAssignedData");
         SearchTLPanelToggle();
     }
 
@@ -423,8 +434,10 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
     $scope.CountofAssignedProviders = 0;
     $scope.CountofNonAssignedProviders = 0;
 
+    $scope.NameofCCOorTLAssigned = "";
     // when user choose the cco/tl
     $scope.showAssignmentConfirmation = function (Proname, ProfileUserID, whomtoassigned) {
+        $scope.NameofCCOorTLAssigned = Proname;
         var validationStatus = "true";
         var SelectedProviders = $scope.selectedProvidersProfileIDs;
         ProfileIDs = JSON.stringify(SelectedProviders)
@@ -433,7 +446,7 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                 url: rootDir + '/AssignToCCOorTL/GetCountOfAlreadyAssignedProviders',
                 type: "POST",
                 dataType: 'json',
-                data: { "ProfileIDs": $scope.selectedProvidersProfileIDs, "CCorTL": $scope.CCorTL },
+                data: { "ProfileIDs": $scope.selectedProvidersProfileIDs, "CCorTL": $scope.CCOorTL },
 
                 success: function (data, status, headers, config) {
                     try {
@@ -460,26 +473,28 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
         }
     }
 
+
+    $scope.NamesofAlreadyAssignedProviders = [];
     $scope.assignTask = function () {
         var profileUserId = CCOOrTLProfileUserID;
         var validationStatus = "true";
         var url = "";
         if (validationStatus) {
-            if ($scope.CCorTL == "CCO") {
+            if ($scope.CCOorTL == "CCO") {
                 url = rootDir + '/AssignToCCOorTL/AssignProviderstoCCO'
             }
-            else if ($scope.CCorTL == "TL") {
+            else if ($scope.CCOorTL == "TL") {
                 url = rootDir + '/AssignToCCOorTL/AssignProviderstoTL'
             }
 
             $scope.selectedProviders1 = [];
             if (Ignorestatus == false) {
                 for (var pro in $scope.selectedProviders) {
-                    if ($scope.CCorTL == "CCO")
+                    if ($scope.CCOorTL == "CCO")
                         if ($scope.selectedProviders[pro].CCO == "") {
                             $scope.selectedProviders1.push($scope.selectedProviders[pro]);
                         }
-                    if ($scope.CCorTL == "TL") {
+                    if ($scope.CCOorTL == "TL") {
                         if ($scope.selectedProviders[pro].TL == "") {
                             $scope.selectedProviders1.push($scope.selectedProviders[pro]);
                         }
@@ -498,9 +513,34 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                 //data: { "selectedProviders": $scope.selectedProviders, "profileUserId": profileUserId },
 
                 success: function (data, status, headers, config) {
+                    //$scope.ShowProfileDelegation = false;
+                    if ($scope.CCOorTL == "CCO") {
+                        ccoList();
+                        for (var i = 0; i < $rootScope.ProviderData.length; i++) {
+                            for (var j = 0; j < $scope.selectedProviders.length; j++) {
+                                if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID) {
+                                    $rootScope.ProviderData[i].CCO = $scope.NameofCCOorTLAssigned;
+                                }
+                            }
+
+                        }
+                    }
+                    else if ($scope.CCOorTL == "TL") {
+                        tlList();
+                        for (var i = 0; i < $rootScope.ProviderData.length; i++) {
+                            for (var j = 0; j < $scope.selectedProviders.length; j++) {
+                                if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID) {
+                                    $rootScope.ProviderData[i].TL = $scope.NameofCCOorTLAssigned;
+                                }
+                            }
+
+                        }
+                    }
+                    
+
                     try {
                         if (data.status == "true") {
-                            $scope.selectedProvidersProfileIDs = [];
+                            //$scope.selectedProvidersProfileIDs = [];
 
 
                             //$scope.ShowProfileDelegation = false;
@@ -514,9 +554,10 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                         }
 
 
-                        $scope.CCorTL = "";
+                        //$scope.CCOorTL = "";
                         Ignorestatus = true;
                         $('#inactiveWarningModal2').modal();
+
 
                     } catch (e) {
 
@@ -587,11 +628,11 @@ var CheckBoxFunction = function () {
     //$scope.selectedProviders1 = [];
     if (Ignorestatus == false) {
         for (var pro in $scope.selectedProviders) {
-            if ($scope.CCorTL == "CCO")
+            if ($scope.CCOorTL == "CCO")
                 if ($scope.selectedProviders[pro].CCO == "") {
                     $scope.selectedProviders1.push($scope.selectedProviders[pro]);
                 }
-            if ($scope.CCorTL == "TL") {
+            if ($scope.CCOorTL == "TL") {
                 if ($scope.selectedProviders[pro].TL == "") {
                     $scope.selectedProviders1.push($scope.selectedProviders[pro]);
                 }

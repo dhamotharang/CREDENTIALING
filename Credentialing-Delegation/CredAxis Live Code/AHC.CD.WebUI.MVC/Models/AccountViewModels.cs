@@ -32,7 +32,7 @@ namespace AHC.CD.WebUI.MVC.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password *")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Compare("NewPassword", ErrorMessage = "The New password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 

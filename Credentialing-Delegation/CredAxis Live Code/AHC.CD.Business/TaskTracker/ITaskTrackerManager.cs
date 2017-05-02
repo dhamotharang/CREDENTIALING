@@ -1,4 +1,5 @@
 ﻿using AHC.CD.Business.BusinessModels.TaskTracker;
+using AHC.CD.Entities.TaskTracker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace AHC.CD.Business.TaskTracker
         Task<IEnumerable<object>> GetAllProviders();
         Task<IEnumerable<object>> GetAllInsuranceCompanies();
         Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByUserId(string userAuthId);
-        Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByProfileId(int profileid);        
+        Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByProfileId(int profileid);
+        Task<bool> SetReminder(List<TaskReminder> reminders, string userAuthID);
     }
 }

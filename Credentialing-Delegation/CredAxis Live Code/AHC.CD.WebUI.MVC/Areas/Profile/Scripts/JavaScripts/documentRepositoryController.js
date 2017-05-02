@@ -902,7 +902,7 @@ profileApp.controller('DocumentRepositoryController', ['$scope', '$rootScope', '
 
                 if (Docs[i].DocumentPath != null) {
 
-                    $scope.LicenseTypes[19].Licenses.push({ LicenseID: Docs[i].OtherDocumentID, LicenseName: Docs[i].Title, LicenseDocPath: Docs[i].DocumentPath, ModifiedDate: Docs[i].LastModifiedDate, Private: Docs[i].IsPrivate, Description: "Other Document" });
+                    $scope.LicenseTypes[19].Licenses.push({ LicenseID: Docs[i].OtherDocumentID, LicenseName: Docs[i].Title, LicenseDocPath: Docs[i].DocumentPath, ModifiedDate: Docs[i].LastModifiedDate, Private: Docs[i].IsPrivate, Description: "Other Document", TableState: Docs[i].TableState });
 
                 }
 
@@ -1268,7 +1268,7 @@ profileApp.controller('DocumentRepositoryController', ['$scope', '$rootScope', '
 
             //    if ($scope.LicenseTypes[i].LicenseTypeID == 20) {
 
-            $scope.LicenseTypes[19].Licenses.push({ LicenseID: obj.OtherDocumentID, LicenseName: obj.Title, LicenseDocPath: obj.DocumentPath, ModifiedDate: $scope.ConvertDateFormat(obj.LastModifiedDate), Private: obj.IsPrivate, Description: "Other Document" });
+            $scope.LicenseTypes[19].Licenses.push({ LicenseID: obj.OtherDocumentID, LicenseName: obj.Title, LicenseDocPath: obj.DocumentPath, ModifiedDate: $scope.ConvertDateFormat(obj.LastModifiedDate), Private: obj.IsPrivate, Description: "Other Document", TableState: false });
 
             count++;
 
@@ -1300,7 +1300,12 @@ profileApp.controller('DocumentRepositoryController', ['$scope', '$rootScope', '
                                 //$rootScope.visibilityControl = "";
                                 //$rootScope.visibilityControl = index + "_ViewOtherDocument";
                                 $scope.IsAddNewDocument = false;
-                                $scope.SuccessMessage = "Document Updated Successfully !!!!!!!!!!!";
+                                if (data.ActionType == "Update") {
+                                    $scope.SuccessMessage = "Document Update Request sent Successfully !!!!!!!!!!!";
+                                }
+                                else {
+                                    $scope.SuccessMessage = "Document Updated Successfully !!!!!!!!!!!";
+                                }
                                 $scope.IsMessage = true;
 
                                 $timeout(function () {
@@ -1344,6 +1349,10 @@ profileApp.controller('DocumentRepositoryController', ['$scope', '$rootScope', '
                     $scope.LicenseTypes[19].Licenses[j].ModifiedDate = $scope.ConvertDateFormat(obj.LastModifiedDate);
 
                     $scope.LicenseTypes[19].Licenses[j].Private = obj.IsPrivate;
+
+                    $scope.LicenseTypes[19].Licenses[j].Private = obj.IsPrivate;
+
+                    $scope.LicenseTypes[19].Licenses[j].TableState = true;
 
                 }
 

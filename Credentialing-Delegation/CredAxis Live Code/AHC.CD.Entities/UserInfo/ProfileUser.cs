@@ -17,7 +17,7 @@ namespace AHC.CD.Entities.UserInfo
         }
 
         public int ProfileUserID { get; set; }
-        
+
         public int? CDUserID { get; set; }
 
         public string Name { get; set; }
@@ -25,7 +25,7 @@ namespace AHC.CD.Entities.UserInfo
         public string Email { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
-        
+
         public string RoleCode { get; set; }
 
         #region Phone Number
@@ -87,11 +87,14 @@ namespace AHC.CD.Entities.UserInfo
             }
             set
             {
-                this.Gender = value.ToString();
+                if (value == 0)
+                    this.Gender = "Not Available";
+                else
+                    this.Gender = value.ToString();
             }
         }
 
-        #endregion        
+        #endregion
 
         #region Status
 
@@ -113,8 +116,8 @@ namespace AHC.CD.Entities.UserInfo
             }
         }
 
-        #endregion     
-   
+        #endregion
+
         public virtual ICollection<ProviderUser> ProvidersUser { get; set; }
 
         [Column(TypeName = "datetime2")]

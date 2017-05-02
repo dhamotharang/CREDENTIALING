@@ -111,8 +111,12 @@ namespace AHC.CD.Business.Credentialing.CnD
                 {
                     "Profile",
                     "Profile.PersonalDetail",
+                    "Profile.SpecialtyDetails",
+                    "Profile.SpecialtyDetails.Specialty",
                     "Plan",
-                    "CredentialingLogs.CredentialingActivityLogs.Activities",
+                    "CredentialingLogs.CredentialingActivityLogs.Activities",     
+                    "CredentialingLogs.CredentialingAppointmentDetail",
+                    "CredentialingLogs.CredentialingAppointmentDetail.CredentialingSpecialityLists",
                     "CredentialingLogs.CredentialingActivityLogs.ActivityBy",
                     //"CredentialingLogs.CredentialingActivityLogs.ActivityBy.Profile",
                     //"CredentialingLogs.CredentialingActivityLogs.ActivityBy.Profile.PersonalDetail"

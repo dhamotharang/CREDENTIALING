@@ -94,7 +94,7 @@ namespace AHC.CD.Business
         {
             try
             {
-                var users = await profileUserRepo.GetAllAsync();
+                var users = await profileUserRepo.GetAllAsync();                
                 return users.ToList().Where(p => p.RoleCode == "TL" && p.Status == "Active");
             }
             catch (Exception ex)
@@ -188,14 +188,14 @@ namespace AHC.CD.Business
                 }
                 profileUserRepo.Update(CCO);
                 await profileUserRepo.SaveAsync();
-                AssignTasksofaProvidertoAssignedCCO(CDUserID, IdsofProvidersNotAssigned);
+                //AssignTasksofaProvidertoAssignedCCO(CDUserID, IdsofProvidersNotAssigned);
 
                 if (Status == "true")
                 {
-                    UpdateCCOorTLForAlreadyAssignedProviders(IdsofProvidersAlreadyAssigned, profileUserId, cdUser, "CCO", CDUserID);
+                    UpdateCCOorTLForAlreadyAssignedProviders(IdsofProvidersAlreadyAssigned, profileUserId, cdUser, "CCO");
                 }
 
-                
+
 
             }
             catch (ApplicationException)
@@ -266,8 +266,10 @@ namespace AHC.CD.Business
         /// <param name="profileUserId"></param>
         /// <param name="cdUser"></param>
         /// <returns></returns>
-        public void UpdateCCOorTLForAlreadyAssignedProviders(List<int?> IdsofProvidersAlreadyAssigned, int profileUserId, CDUser cdUser, string Role, int? CDUserID = 0)
+        public void UpdateCCOorTLForAlreadyAssignedProviders(List<int?> IdsofProvidersAlreadyAssigned, int profileUserId, CDUser cdUser, string Role)
         {
+
+            //, int? CDUserID = 0
             try
             {
                 var providerUserRepo = uow.GetGenericRepository<ProviderUser>();
@@ -283,8 +285,8 @@ namespace AHC.CD.Business
 
                 }
                 providerUserRepo.SaveAsync();
-                if(CDUserID!=0)
-                    AssignTasksofaProvidertoAssignedCCO(CDUserID, IdsofProvidersAlreadyAssigned);
+                //if (CDUserID != 0)
+                //    AssignTasksofaProvidertoAssignedCCO(CDUserID, IdsofProvidersAlreadyAssigned);
             }
             catch (Exception ex)
             {
@@ -308,7 +310,7 @@ namespace AHC.CD.Business
                 foreach (var id in ProfileIDs)
                 {
                     var provider = ProviderUserRepo.Any(p => (p.ProfileId == id) && (p.ProfileUser.RoleCode == CCorTL));
-                    if (provider ==true)
+                    if (provider == true)
                         count++;
                 }
             }
@@ -320,19 +322,19 @@ namespace AHC.CD.Business
         }
 
 
-        public void AssignTasksofaProvidertoAssignedCCO(int? CDUserID, List<int?> ProfileIDs)
-        {            
-            var TaskTrackerRepo = uow.GetGenericRepository<AHC.CD.Entities.TaskTracker.TaskTracker>();
-            foreach(var id in ProfileIDs)
-            {
-                var Task = TaskTrackerRepo.GetAll().Where(t => (t.ProfileID == id) && ((t.StatusType == TaskTrackerStatusType.OPEN)||(t.StatusType == TaskTrackerStatusType.REOPEN)));
-                foreach(var t in Task)
-                {
-                    t.AssignedToId = CDUserID;
-                    TaskTrackerRepo.Update(t);
-                }
-                TaskTrackerRepo.Save();
-            }
-        }
+        //public void AssignTasksofaProvidertoAssignedCCO(int? CDUserID, List<int?> ProfileIDs)
+        //{
+        //    var TaskTrackerRepo = uow.GetGenericRepository<AHC.CD.Entities.TaskTracker.TaskTracker>();
+        //    foreach (var id in ProfileIDs)
+        //    {
+        //        var Task = TaskTrackerRepo.GetAll().Where(t => (t.ProfileID == id) && ((t.StatusType == TaskTrackerStatusType.OPEN) || (t.StatusType == TaskTrackerStatusType.REOPEN)));
+        //        foreach (var t in Task)
+        //        {
+        //            t.AssignedToId = CDUserID;
+        //            TaskTrackerRepo.Update(t);
+        //        }
+        //        TaskTrackerRepo.Save();
+        //    }
+        //}
     }
 }

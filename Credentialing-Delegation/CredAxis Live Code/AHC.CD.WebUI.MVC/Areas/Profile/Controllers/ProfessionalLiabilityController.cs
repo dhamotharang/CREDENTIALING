@@ -169,7 +169,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Professional Liability";
-                        tracker.SubSection = "Professional Liability Info";
+                        tracker.SubSection = "Professional Liability Information";
                         tracker.userAuthId = userId;
                         tracker.objId = professionalLiability.ProfessionalLiabilityInfoID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -218,6 +218,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         [HttpPost]
         public async Task<ActionResult> RenewProfessionalLiabilityAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.ProfessionalLiability.ProfessionalLiabilityInfoViewModel professionalLiability)
         {
+            string ActionType = "Update";
             professionalLiability.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
             string successMessage = "";
@@ -305,7 +306,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, successMessage = successMessage, professionalLiability = dataModelProfessionalLiability }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status,ActionType = ActionType ,successMessage = successMessage, professionalLiability = dataModelProfessionalLiability }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -392,7 +393,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

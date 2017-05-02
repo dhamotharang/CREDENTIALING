@@ -6,7 +6,7 @@
     //================================= Variable Declaration End====================================================================================
     //================================== Temporary function Declaration Start ===============================================================================
     this.callServer = function callServer(tableState) {
-        if (tableState===undefined) {
+        if (tableState === undefined) {
             return;
         }
         $self.isLoading = true;
@@ -58,7 +58,13 @@
                 $rootScope.tableCaption = "Rejected";
                 break;
             case "Pending":
-                $rootScope.TempCCMAppointments = $filter('filter')($rootScope.CCMAppointments, { Status: "Pending" });
+                $rootScope.TempCCMAppointments = [];
+                //$rootScope.TempCCMAppointments = $filter('filter')($rootScope.CCMAppointments, { Status: "OnHold" }) || $filter('filter')($rootScope.CCMAppointments, { Status: "New" });
+                for (var i in $rootScope.CCMAppointments) {
+                    if (($rootScope.CCMAppointments[i].Status == "New") || ($rootScope.CCMAppointments[i].Status == "OnHold")) {
+                        $rootScope.TempCCMAppointments.push($rootScope.CCMAppointments[i]);
+                    }
+                }
                 $rootScope.tableCaption = "Pending";
                 break;
         }

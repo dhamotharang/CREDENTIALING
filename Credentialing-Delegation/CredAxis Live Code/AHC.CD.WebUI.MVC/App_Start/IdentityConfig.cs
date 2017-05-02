@@ -29,7 +29,7 @@ namespace AHC.CD.WebUI.MVC
 
         public override async Task<IdentityResult> ResetPasswordAsync(string UserID, string UsedToken, string NewPassword)
         {
-            
+
             var Result = await base.ResetPasswordAsync(UserID, UsedToken, NewPassword);
 
             if (Result.Succeeded)
@@ -76,9 +76,9 @@ namespace AHC.CD.WebUI.MVC
             appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = userpassword });
             return UpdateAsync(appuser);
         }
-        private async Task AddToPasswordHistoryAsync(string PasswordHash,string NewPassword, ApplicationUser appuser ,string Type)
+        private async Task AddToPasswordHistoryAsync(string PasswordHash, string NewPassword, ApplicationUser appuser, string Type)
         {
-            if (Type=="Change")
+            if (Type == "Change")
             {
                 appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash });
                 await UpdateAsync(appuser);
@@ -88,7 +88,7 @@ namespace AHC.CD.WebUI.MVC
                 appuser.UserUsedPassword.FirstOrDefault(a => PasswordHasher.VerifyHashedPassword(a.HashPassword, NewPassword) == PasswordVerificationResult.Success).CreatedDate = DateTimeOffset.Now;
                 await UpdateAsync(appuser);
             }
-            
+
         }
 
         private async Task<bool> IsPreviousPassword(string UserID, string CurrentPassword, string NewPassword)
@@ -104,7 +104,7 @@ namespace AHC.CD.WebUI.MVC
         {
             var User = await FindByIdAsync(UserID);
             var tempDate = User.UserUsedPassword.OrderByDescending(up => up.CreatedDate).FirstOrDefault();
-            int _minimumPasswordAge=int.Parse(ConfigurationManager.AppSettings["MinimumPasswordAge"]);
+            int _minimumPasswordAge = int.Parse(ConfigurationManager.AppSettings["MinimumPasswordAge"]);
             if (tempDate != null)
             {
                 if ((DateTime.Today - tempDate.CreatedDate.Date).Days < _minimumPasswordAge)
@@ -118,7 +118,7 @@ namespace AHC.CD.WebUI.MVC
 
 
         public ApplicationUser FindByNameSync(ApplicationUser user)
-        {   
+        {
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             return userManager.FindByName(user.UserName);
         }

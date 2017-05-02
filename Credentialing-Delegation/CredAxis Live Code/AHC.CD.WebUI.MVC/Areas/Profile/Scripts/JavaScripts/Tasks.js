@@ -326,6 +326,11 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                     defer.resolve(data);
                     for (var i in $scope.Tasks) {
                         $scope.Tasks[i].daysleft = $filter("TimeDiff")($scope.Tasks[i].NextFollowUpDate);
+                        //// Bug fix code: Sort the notes by recent on top in task tracker. 
+                        $scope.Tasks[i].TaskTrackerHistories = $scope.Tasks[i].TaskTrackerHistories.sort(function (a, b) {
+                            var dateA = new Date(a.LastModifiedDate), dateB = new Date(b.LastModifiedDate)
+                            return dateA - dateB //sort by date ascending
+                        });
                     }
                     $scope.tabStatus = $filter('ResetTabStatus')('ProviderTask');
                     $scope.LoadData();
@@ -551,7 +556,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $('#addButton').hide();
         $scope.visible = 'edit';
         $scope.errormessage = false;
-        if (task.PlanID != null && task.PlanID!="" && task.PlanID!=undefined) {
+        if (task.PlanID != null && task.PlanID != "" && task.PlanID != undefined) {
             if (task.PlanName == null) {
                 for (var plan in $scope.PlanNames) {
                     if (task.PlanID == $scope.PlanNames[plan].PlanID) {

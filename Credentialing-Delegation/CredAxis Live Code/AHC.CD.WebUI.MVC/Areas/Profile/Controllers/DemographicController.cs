@@ -121,7 +121,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Demographic";
-                        tracker.SubSection = "Personal Detail";
+                        tracker.SubSection = "Personal Details";
                         tracker.userAuthId = userId;
                         tracker.objId = personalDetail.PersonalDetailID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -650,7 +650,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Demographic";
-                        tracker.SubSection = "Contact Detail";
+                        tracker.SubSection = "Contact Details";
                         tracker.userAuthId = userId;
                         tracker.objId = Convert.ToInt32(contactDetail.ContactDetailID);
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -823,6 +823,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         await profileManager.UpdateBirthInformationAsync(profileId, dataModelBirthInformation, document);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Birth Information", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        successMessage = SuccessMessage.BIRTH_INFORMATION_ADD_SUCCESS;
                     }
                     else if (isCCO && birthInformation.BirthInformationID != 0)
                     {
@@ -927,6 +928,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         await profileManager.UpdateVisaInformationAsync(profileId, dataModelVisaDetail, visaDocument, greenCarddocument, nationalIDdocument);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Visa Details", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        successMessage = SuccessMessage.VISA_DETAIL_ADD_SUCCESS;
                     }
                     else if (isCCO && visaDetail.VisaDetailID != 0)
                     {
@@ -1040,6 +1042,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         await profileManager.UpdateLanguageInformationAsync(profileId, dataModelLanguageInfo);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Demographics - Languages", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        successMessage = SuccessMessage.LANGUAGES_DETAIL_ADD_SUCCESS;
                     }
                     else if (isCCO && languageInfo.LanguageInfoID != 0)
                     {
@@ -1059,7 +1062,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Demographic";
-                        tracker.SubSection = "Language Info";
+                        tracker.SubSection = "Language Information";
                         tracker.userAuthId = userId;
                         tracker.objId = languageInfo.LanguageInfoID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -1126,7 +1129,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA"||r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA"||r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

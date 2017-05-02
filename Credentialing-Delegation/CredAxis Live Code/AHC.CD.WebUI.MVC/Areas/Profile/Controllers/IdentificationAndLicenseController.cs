@@ -888,6 +888,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             CDSCInformation.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             string status = "true";
+            string ActionType = "Update";
             string successMessage = "";
             CDSCInformation dataModelCDSCLicense = null;
             bool isCCO = await GetUserRole();
@@ -972,7 +973,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 //                status = ExceptionMessage.CDSC_LICENSE_RENEW_EXCEPTION;
             }
 
-            return Json(new { status = status, successMessage = successMessage, CDSCInformation = dataModelCDSCLicense }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, CDSCInformation = dataModelCDSCLicense }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1324,7 +1325,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         MedicaidInformation.CertificateFile = null;
                         profileUpdateManager.AddProfileUpdateForProvider(MedicaidInformation, dataModelMedicaidInformation, tracker);
-                        successMessage = SuccessMessage.MEDICARE_INFO_UPDATE_REQUEST_SUCCESS;
+                        successMessage = SuccessMessage.MEDICAID_INFO_UPDATE_REQUEST_SUCCESS;
                     }
 
                 }
@@ -1520,7 +1521,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

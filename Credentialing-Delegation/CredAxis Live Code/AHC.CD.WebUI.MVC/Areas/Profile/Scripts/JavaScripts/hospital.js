@@ -639,8 +639,10 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                 url: rootDir + '/Profile/MasterProfile/GetHospitalPrivilegesProfileDataAsync?profileId=' + profileId
             }).success(function (data, status, headers, config) {
                 try {
+                    //data.HospitalPrivilegeInformation.HospitalPrivilegeDetails = data.HospitalPrivilegeDetail;
                     for (key in data) {
                         $rootScope.$emit(key, data[key]);
+                        $scope.HospitalPrivilegeInformations = data.HospitalPrivilegeInformation;
                         //call respective controller to load data (PSP)
                     }
 

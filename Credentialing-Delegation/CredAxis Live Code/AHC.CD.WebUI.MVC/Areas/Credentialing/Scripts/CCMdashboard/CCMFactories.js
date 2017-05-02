@@ -52,12 +52,44 @@ CCMDashboard.factory('CCMDashboardFactory', ['$q', '$rootScope', '$filter', '$ti
         });
         return $rootScope.CCMAppointments;
     }
+    function ConvertDate(value) {
+        var shortDate = null;
+        if (value) {
+            var regex = /-?\d+/;
+            var matches = regex.exec(value);
+            var dt = new Date(parseInt(matches[0]));
+            var month = dt.getMonth() + 1;
+            var monthString = month > 9 ? month : '0' + month;
+            //var monthName = monthNames[month];
+            var day = dt.getDate();
+            var dayString = day > 9 ? day : '0' + day;
+            var year = dt.getFullYear();
+            shortDate = year+'-'+ monthString + '-' + dayString ;
+            //shortDate = dayString + 'th ' + monthName + ',' + year;
+        }
+        return shortDate;
+    };
+    function GetCount(obj,AppointmentStatus) {
+        return obj.filter(function (x) { return (x.Status == AppointmentStatus || AppointmentStatus == 'All') }).length;
+    }
+    function loadCounts(obj) {
+        var Counts={};
+        Counts.All = GetCount(obj,'All');
+        Counts.Approved = GetCount(obj, 'Approved');
+        Counts.Pending = GetCount(obj, 'OnHold');
+        Counts.Pending += GetCount(obj, 'New');
+        Counts.Rejected = GetCount(obj, 'Rejected');
+        return Counts;
+    }
+
     return {
         getPage: getPage,
         getFilteredAppointmentdataByPlan: getFilteredAppointmentdataByPlan,
         resetTableState: resetTableState,
         getFilteredAppointmentdataByAppointmentDate: getFilteredAppointmentdataByAppointmentDate,
         exportToTable: exportToTable,
-        ClearSelectRowStatus: ClearSelectRowStatus
+        ClearSelectRowStatus: ClearSelectRowStatus,
+        ConvertDate: ConvertDate,
+        LoadCounts: loadCounts
     }
 }]);

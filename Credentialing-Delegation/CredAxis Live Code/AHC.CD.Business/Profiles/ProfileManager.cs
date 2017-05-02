@@ -2303,7 +2303,7 @@ namespace AHC.CD.Business
             try
             {
                 var profileRepository = uow.GetGenericRepository<Profile>();
-                Profile profile = profileRepository.GetAll("PersonalDetail,HomeAddresses,ContactDetail,SpecialtyDetails,SpecialtyDetails.Specialty,ContactDetail.PhoneDetails,ContactDetail.EmailIDs").ToList().Find(p => p.ProfileID == profileId);
+                Profile profile = profileRepository.GetAll("PersonalDetail,PersonalDetail.ProviderTitles,PersonalDetail.ProviderTitles.ProviderType,HomeAddresses,ContactDetail,SpecialtyDetails,SpecialtyDetails.Specialty,ContactDetail.PhoneDetails,ContactDetail.EmailIDs").ToList().Find(p => p.ProfileID == profileId);
                 return profile;
             }
             catch (Exception e)
@@ -3845,7 +3845,7 @@ namespace AHC.CD.Business
                 //    PracticeLocationDetails = profile.PracticeLocationDetails.Where(p => (p.Status != StatusType.Inactive.ToString())),
                 //};
             }
-            catch (ApplicationException)    
+            catch (ApplicationException)
             {
                 throw;
             }
@@ -3923,7 +3923,7 @@ namespace AHC.CD.Business
 
         #region Document Repository
 
-        public async Task<DocumentRepositoryViewModel> GetDocumentRepositoryDataAsync(int profileId, int CDUserId, bool isCCO)
+        public async Task<DocumentRepositoryViewModel> GetDocumentRepositoryDataAsync(int profileId, int CDUserId, bool isCCO, bool isProvider = false)
         {
             try
             {
@@ -4008,7 +4008,13 @@ namespace AHC.CD.Business
 
                 //};
 
+                dynamic otherDocuments = new ExpandoObject();
+                otherDocuments = DocumentRepositoryMapper(otherDocuments, profile, isProvider);
 
+                var obj1 = JsonConvert.SerializeObject(otherDocuments.Documents);
+                List<OtherDocument> providerDocuments = JsonConvert.DeserializeObject<List<OtherDocument>>(obj1);
+                //List<OtherDocument> providerDocuments = otherDocuments.All().Cast<OtherDocument>().ToList();
+               
 
                 return new DocumentRepositoryViewModel
                 {
@@ -4031,7 +4037,8 @@ namespace AHC.CD.Business
                     ProfessionalLiabilityInfoes = profile.ProfessionalLiabilityInfoes.Where(l => (l.Status != StatusType.Inactive.ToString())).ToList(),
                     ProfessionalWorkExperiences = profile.ProfessionalWorkExperiences.Where(w => (w.Status != StatusType.Inactive.ToString())).ToList(),
                     ContractInfoes = profile.ContractInfoes.Where(c => !c.ContractStatus.Equals(ContractStatus.Inactive.ToString())).ToList(),
-                    OtherDocuments = profile.OtherDocuments.Where(p => (p.Status != StatusType.Inactive.ToString())).Where(p => (p.IsPrivate == true && p.ModifiedBy == CDUserId.ToString()) || (p.IsPrivate == false)).ToList(),
+                    //OtherDocuments = profile.OtherDocuments.Where(p => (p.Status != StatusType.Inactive.ToString())).Where(p => (p.IsPrivate == true && p.ModifiedBy == CDUserId.ToString()) || (p.IsPrivate == false)).ToList(),
+                    OtherDocuments = providerDocuments,
                     ProfileVerificationInfo = ProfileVerificatnInfo,
                     credentialLog = credInfo == null ? null : credInfo.CredentialingLogs
                 };
@@ -4638,10 +4645,10 @@ namespace AHC.CD.Business
 
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var demographicsData = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Demographic").ToList();
-            demographics.PersonalDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Personal Detail").ToList(), profile.PersonalDetail, isProvider);
+            demographics.PersonalDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Personal Details").ToList(), profile.PersonalDetail, isProvider);
             demographics.OtherLegalNames = GetGenericListMappedData(demographicsData.Where(x => x.SubSection == "Other Legal Name").ToList(), profile.OtherLegalNames.Where(o => (o.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             demographics.HomeAddresses = GetGenericListMappedData(demographicsData.Where(x => x.SubSection == "Home Address").ToList(), profile.HomeAddresses.Where(h => (h.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
-            demographics.ContactDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Contact Detail").ToList(), profile.ContactDetail, isProvider);
+            demographics.ContactDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Contact Details").ToList(), profile.ContactDetail, isProvider);
             demographics.PersonalIdentification = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Personal Identification").ToList(), profile.PersonalIdentification, isProvider);
             demographics.BirthInformation = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Birth Information").ToList(), profile.BirthInformation, isProvider);
             demographics.VisaDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Citizenship Information").ToList(), profile.VisaDetail, isProvider);
@@ -4667,7 +4674,7 @@ namespace AHC.CD.Business
         private dynamic BoardSpecialtiesMapper(dynamic boardSpecialty, Profile profile, bool isProvider)
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
-            var boardSpecialties = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Specialty Details").ToList();
+            var boardSpecialties = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Specialty/Board").ToList();
             boardSpecialty.SpecialtyDetails = GetGenericListMappedData(boardSpecialties.Where(x => x.SubSection == "Specialty Details").ToList(), profile.SpecialtyDetails.Where(s => (s.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             boardSpecialty.PracticeInterest = GetGenericMappedData(boardSpecialties.Where(x => x.SubSection == "Practice Interest").ToList(), profile.PracticeInterest, isProvider);
             return boardSpecialty;
@@ -4676,8 +4683,9 @@ namespace AHC.CD.Business
         private dynamic HospitalPrivilegesMapper(dynamic hospitalPrivilege, Profile profile, bool isProvider)
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
-            var hospitalPrivileges = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Hospital Privilege").ToList();
+            var hospitalPrivileges = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Hospital Privilege").ToList();            
             hospitalPrivilege.HospitalPrivilegeInformation = GetGenericMappedData(hospitalPrivileges.Where(x => x.SubSection == "Hospital Privilege Information").ToList(), profile.HospitalPrivilegeInformation, isProvider);
+            hospitalPrivilege.HospitalPrivilegeInformation.HospitalPrivilegeDetails = GetGenericListMappedData(hospitalPrivileges.Where(x => x.SubSection == "Hospital Privilege Detail").ToList(), profile.HospitalPrivilegeInformation.HospitalPrivilegeDetails.ToList(), isProvider);
             return hospitalPrivilege;
         }
 
@@ -4693,7 +4701,7 @@ namespace AHC.CD.Business
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var professionalReferences = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Professional Reference").ToList();
-            professionalReference.ProfessionalReferenceInfos = GetGenericListMappedData(professionalReferences.Where(x => x.SubSection == "Professional Reference Info").ToList(), profile.ProfessionalReferenceInfos.Where(r => (r.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            professionalReference.ProfessionalReferenceInfos = GetGenericListMappedData(professionalReferences.Where(x => x.SubSection == "Professional Reference Information").ToList(), profile.ProfessionalReferenceInfos.Where(r => (r.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             return professionalReference;
         }
 
@@ -4701,10 +4709,10 @@ namespace AHC.CD.Business
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var educationHistories = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Education History").ToList();
-            educationHistory.EducationDetails = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "Under Graduate/Professional" || x.SubSection == "Graduate/Medical").ToList(), profile.EducationDetails.Where(e => (e.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            educationHistory.EducationDetails = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "Under Graduate/Professional Details" || x.SubSection == "Graduate/Medical Details").ToList(), profile.EducationDetails.Where(e => (e.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             educationHistory.TrainingDetails = GetGenericMappedData(educationHistories.Where(x => x.SubSection == "Training Details").ToList(), profile.TrainingDetails, false);
-            educationHistory.ProgramDetails = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "Residency/Internship/Fellowship").ToList(), profile.ProgramDetails.Where(p => (p.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
-            educationHistory.CMECertifications = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "PostGraduate Training/CME").ToList(), profile.CMECertifications.Where(c => (c.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            educationHistory.ProgramDetails = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "Residency/Internship/Fellowship Details").ToList(), profile.ProgramDetails.Where(p => (p.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            educationHistory.CMECertifications = GetGenericListMappedData(educationHistories.Where(x => x.SubSection == "PostGraduate Training/CME Details").ToList(), profile.CMECertifications.Where(c => (c.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             educationHistory.ECFMGDetail = GetGenericMappedData(educationHistories.Where(x => x.SubSection == "ECFMG Details").ToList(), profile.ECFMGDetail, isProvider);
             return educationHistory;
         }
@@ -4737,6 +4745,14 @@ namespace AHC.CD.Business
             return disclosureQuestion;
         }
 
+        private dynamic DocumentRepositoryMapper(dynamic otherDocuments, Profile profile, bool isProvider)
+        {
+            var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+            var documnets = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Document Repository").ToList();
+            otherDocuments.Documents = GetGenericListMappedData(documnets.Where(x => x.SubSection == "Other Document").ToList(), profile.OtherDocuments.ToList(), isProvider);
+            return otherDocuments;
+        }
+
         private dynamic ContractInfoMapper(dynamic contractInfo, Profile profile, bool isProvider)
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
@@ -4751,7 +4767,7 @@ namespace AHC.CD.Business
            
             var profilePracticeLocationDetails = profile.PracticeLocationDetails.Where(c => !c.Status.Equals(StatusType.Inactive.ToString())).ToList();
 
-            practiceLocations = GetGenericListMappedData(practiceLocationDetails.Where(x => x.SubSection == "Practice Location Detail").ToList(), profilePracticeLocationDetails, isProvider);
+            practiceLocations = GetGenericListMappedData(practiceLocationDetails.Where(x => x.SubSection == "Other Information").ToList(), profilePracticeLocationDetails, isProvider);
 
 
             for (int i = 0; i < profilePracticeLocationDetails.Count; i++)
@@ -4760,7 +4776,7 @@ namespace AHC.CD.Business
                 practiceLocations[i].BillingContactPerson = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Billing Contact").ToList(), profilePracticeLocationDetails[i].BillingContactPerson, isProvider);
                 practiceLocations[i].PaymentAndRemittance = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Payment and Remittance").ToList(), profilePracticeLocationDetails[i].PaymentAndRemittance, isProvider);
                 practiceLocations[i].PrimaryCredentialingContactPerson = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Credentialing Contact").ToList(), profilePracticeLocationDetails[i].PrimaryCredentialingContactPerson, isProvider);
-                practiceLocations[i].WorkersCompensationInformation = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "workers Compensation Information").ToList(), profilePracticeLocationDetails[i].WorkersCompensationInformation, isProvider);
+                practiceLocations[i].WorkersCompensationInformation = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Workers Compensation Information").ToList(), profilePracticeLocationDetails[i].WorkersCompensationInformation, isProvider);
                 practiceLocations[i].OfficeHour = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Office Hours").ToList(), profilePracticeLocationDetails[i].OfficeHour, isProvider);
                 practiceLocations[i].OpenPracticeStatus = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Open Practice Status").ToList(), profilePracticeLocationDetails[i].OpenPracticeStatus, isProvider);
                 practiceLocations[i].Facility = GetGenericMappedData(practiceLocationDetails.Where(x => x.SubSection == "Facility").ToList(), profilePracticeLocationDetails[i].Facility, isProvider);

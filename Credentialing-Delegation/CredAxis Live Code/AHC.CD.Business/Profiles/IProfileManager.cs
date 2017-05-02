@@ -290,7 +290,7 @@ namespace AHC.CD.Business
 
         Task<object> GetContractInfoProfileDataAsync(int profileId, bool isProvider = false);
 
-        Task<DocumentRepositoryViewModel> GetDocumentRepositoryDataAsync(int profileId, int CDUserId, bool isCCO);
+        Task<DocumentRepositoryViewModel> GetDocumentRepositoryDataAsync(int profileId, int CDUserId, bool isCCO, bool isProvider = false);
 
         #endregion
 

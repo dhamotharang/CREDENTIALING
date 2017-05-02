@@ -67,6 +67,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             try
             {
                 bool isPRO = await GetUserRole();
+                ViewBag.providerorCCO = isPRO;
                 if (isPRO)
                 {
                     string UserAuthId = await GetUserAuthId();
@@ -124,7 +125,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                 {
                     string UserAuthId = await GetUserAuthId();
                     int ProfileID = Convert.ToInt32(await iRequestForApprovalManager.GetProfileID(UserAuthId));
-                    HistoryDTO = await iRequestForApprovalManager.GetAllHistoryForProviderAsync(ProfileID);
+                    HistoryDTO = await iRequestForApprovalManager.GetAllHistoryForProviderAsync(ProfileID);                    
                 }
                 else
                 {

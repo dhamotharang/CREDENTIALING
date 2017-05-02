@@ -239,7 +239,7 @@ namespace AHC.CD.Entities.Credentialing.AppointmentInformation
         public string RemarksForMalpracticeIssue { get; set; }
 
         #endregion
-
+        
         public string YearsInPractice { get; set; }
 
         #region Site Visit Required

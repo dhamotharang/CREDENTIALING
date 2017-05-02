@@ -9,6 +9,7 @@ using AHC.CD.Entities.MasterData.Account;
 using AHC.CD.Entities.MasterData.Account.Accessibility;
 using AHC.CD.Entities.MasterData.Account.Branch;
 using AHC.CD.Entities.MasterData.Account.Service;
+using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Entities.MasterData.Tables;
 using AHC.CD.Entities.MasterProfile;
 using AHC.CD.Entities.MasterProfile.Demographics;
@@ -296,14 +297,15 @@ namespace AHC.CD.Business.Profiles
             {
                 case "Federal DEA": return filteredFinalDataList = ConstructChangesForFederalDEA(updatedData.oldData, updatedData.NewConvertedData);
                 case "Profile Disclosure": return filteredFinalDataList = ConstructChangesForDisclosure(updatedData.oldData, updatedData.NewConvertedData);
-                case "Personal Detail": return filteredFinalDataList = ConstructChangesForPersonalDetail(updatedData.oldData, updatedData.NewConvertedData);
+                case "Personal Details": return filteredFinalDataList = ConstructChangesForPersonalDetail(updatedData.oldData, updatedData.NewConvertedData);
                 case "Language Info": return filteredFinalDataList = ConstructChangesForLanguages(updatedData.oldData, updatedData.NewConvertedData);
-                case "Contact Detail": return filteredFinalDataList = ConstructChangesForContact(updatedData.oldData, updatedData.NewConvertedData);
+                case "Contact Details": return filteredFinalDataList = ConstructChangesForContact(updatedData.oldData, updatedData.NewConvertedData);
                 case "Facility": return filteredFinalDataList = ConstructChangesForPracticeLocation(updatedData.oldData, updatedData.NewConvertedData);
                 case "Office Hours": return filteredFinalDataList = ConstructChangesForOfficeHours(updatedData.oldData, updatedData.NewConvertedData);
                 case "Open Practice Status": return filteredFinalDataList = ConstructChangesForPracitceStatus(updatedData.oldData, updatedData.NewConvertedData);
                 case "CoveringColleague": return filteredFinalDataList = ConstructChangesForCoveringCollegues(updatedData.oldData, updatedData.NewConvertedData);
                 case "Payment and Remittance": return filteredFinalDataList = ConstructChangesForPaymentAndRemittance(updatedData.oldData, updatedData.NewConvertedData);
+                case "Medicaid Information": return filteredFinalDataList = ConstructChangesForMedicaidInformation(updatedData.oldData, updatedData.NewConvertedData);
                 default: break;
             }
 
@@ -2251,6 +2253,100 @@ namespace AHC.CD.Business.Profiles
             return updatedList;
         }
 
+        private List<ProfileUpdatedData> ConstructChangesForMedicaidInformation(dynamic oldMedicaidData, dynamic newMedicaidData)
+        {
+            List<ProfileUpdatedData> updatedList = new List<ProfileUpdatedData>();
+
+            MedicaidInformation oldData = new JavaScriptSerializer().Deserialize<MedicaidInformation>(oldMedicaidData);
+            MedicaidInformation newData = new JavaScriptSerializer().Deserialize<MedicaidInformation>(newMedicaidData);
+
+            if (oldData.LicenseNumber != newData.LicenseNumber)
+            {
+                ProfileUpdatedData medicaid = new ProfileUpdatedData();
+                medicaid.FieldName = "MedicaidNumber";
+                medicaid.OldValue = oldData.LicenseNumber;
+                medicaid.NewValue = newData.LicenseNumber;
+                updatedList.Add(medicaid);
+            }
+            if (oldData.State != newData.State)
+            {
+                ProfileUpdatedData medicaid = new ProfileUpdatedData();
+                medicaid.FieldName = "IssueState";
+                medicaid.OldValue = oldData.State;
+                medicaid.NewValue = newData.State;
+                updatedList.Add(medicaid);
+            }
+            if (oldData.IssueDate != newData.IssueDate)
+            {
+                ProfileUpdatedData medicaid = new ProfileUpdatedData();
+                medicaid.FieldName = "IssueDate";
+                if (oldData.IssueDate != null)
+                {
+                    DateTime oldDate = oldData.IssueDate.Value.ToLocalTime();
+                    medicaid.OldValue = ConvertToDateString(oldDate);
+                }
+                if (newData.IssueDate != null)
+                {
+                    DateTime newDate = newData.IssueDate.Value.ToLocalTime();
+                    medicaid.NewValue = ConvertToDateString(newDate);
+                }
+                
+                updatedList.Add(medicaid);
+            }
+
+            if (oldData.ExpirationDate != newData.ExpirationDate)
+            {
+                ProfileUpdatedData medicaid = new ProfileUpdatedData();
+                medicaid.FieldName = "ExpirationDate";
+                if (oldData.ExpirationDate != null)
+                {
+                    DateTime oldDate = oldData.ExpirationDate.Value.ToLocalTime();
+                    medicaid.OldValue = ConvertToDateString(oldDate);
+                }
+                if (newData.ExpirationDate != null)
+                {
+                    DateTime newDate = newData.ExpirationDate.Value.ToLocalTime();
+                    medicaid.NewValue = ConvertToDateString(newDate);
+                }
+
+                updatedList.Add(medicaid);
+            }
+            if (oldData.CertificatePath != newData.CertificatePath)
+            {
+                ProfileUpdatedData medicaid = new ProfileUpdatedData();
+                medicaid.FieldName = "CertificatePath";
+                medicaid.OldValue = oldData.CertificatePath;
+                medicaid.NewValue = newData.CertificatePath;
+                updatedList.Add(medicaid);
+            }
+            if (oldData.Status != newData.Status)
+            {
+                ProfileUpdatedData medicaid = new ProfileUpdatedData();
+                medicaid.FieldName = "Medicaid ID declined by Provider";
+                if (oldData.Status == "Active")
+                {
+                    medicaid.OldValue = "No";
+                }
+                if (oldData.Status == "Declined")
+                {
+                    medicaid.OldValue = "Yes";
+                }
+                if (newData.Status == "Active")
+                {
+                    medicaid.NewValue = "No";
+                }
+                if (newData.Status == "Declined")
+                {
+                    medicaid.NewValue = "Yes";
+                }
+
+                updatedList.Add(medicaid);               
+            }
+            
+
+            return updatedList;
+        }
+
         public string SaveDocumentTemporarily(DocumentDTO document, string documentSubPath, string documentTitle, int profileId)
         {
             string documentTemporaryPath = AddTemporaryDocument(documentSubPath, documentTitle, null, document, profileId);
@@ -2364,5 +2460,37 @@ namespace AHC.CD.Business.Profiles
 
             return profileData;
         }
+
+        public async Task<string> GetUserName(int trackerID)
+        {
+            var email = "";
+
+            var trackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
+
+            var updatedData = await trackerRepo.FindAsync(p => p.ProfileUpdatesTrackerId == trackerID);
+
+            if (updatedData.LastModifiedBy > 0)
+                email = await GetUserEmail(updatedData.LastModifiedBy);
+            else
+                email = "Not Available";
+
+
+            return email;
+        }
+
+        #region Private Methods
+
+        private async Task<string> GetUserEmail(int csUserID)
+        {
+            var userRepo = uow.GetGenericRepository<CDUser>();
+
+            var user = await userRepo.FindAsync(csUserID);
+            if (user != null)
+                return user.EmailId;
+            else
+                return null;
+        }
+
+        #endregion
     }
 }

@@ -1075,6 +1075,7 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
         }
         var newString = "";
         var wasUpper = false;
+        if(input!=null)
         for (var i = 0; i < input.length; i++) {
             if (!wasUpper && input[i] == input.toUpperCase()[i]) {
                 newString = newString + " ";

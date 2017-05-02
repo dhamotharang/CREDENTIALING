@@ -191,13 +191,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         
                         if (educationDetails.EducationQualificationType == AHC.CD.Entities.MasterData.Enums.EducationQualificationType.UnderGraduate)
                         {
-                            tracker.SubSection = "Under Graduate/Professional";
+                            tracker.SubSection = "Under Graduate/Professional Details";
                             uniqueRecord.FieldName = "Under Graduate Detail";
                             successMessage = SuccessMessage.UNDER_GRADUATE_DETAIL_UPDATE_REQUEST_SUCCESS;
                         }
                         else if (educationDetails.EducationQualificationType == AHC.CD.Entities.MasterData.Enums.EducationQualificationType.Graduate)
                         {
-                            tracker.SubSection = "Graduate/Medical";
+                            tracker.SubSection = "Graduate/Medical Details";
                             uniqueRecord.FieldName = "Graduate Detail";
                             successMessage = SuccessMessage.GRADUATE_DETAIL_UPDATE_REQUEST_SUCCESS;
                         }
@@ -317,6 +317,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             string status = "true";
             string successMessage = "";
+            string ActionType = "";
             ECFMGDetail ecfmg = null;
             bool isCCO = await GetUserRole();
 
@@ -333,15 +334,14 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     //await profileManager.UpdateECFMGDetailAsync(profileId, ecfmg, document);
 
                     if (ecfmgDetails.ECFMGDetailID == 0)
-                    {
-                     
+                    {                     
                         await profileManager.UpdateECFMGDetailAsync(profileId, ecfmg, document);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - ECFMG", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
                     }
                     else if (isCCO && ecfmgDetails.ECFMGDetailID != 0)
                     {
-                      
+                        
                         await profileManager.UpdateECFMGDetailAsync(profileId, ecfmg, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -352,6 +352,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else if (!isCCO && ecfmgDetails.ECFMGDetailID != 0)
                     {
+                        ActionType = "Update";
                         string userId = await GetUserAuthId();
                         ProfileUpdateTrackerBusinessModel tracker = new ProfileUpdateTrackerBusinessModel();
 
@@ -396,7 +397,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.ECFMG_CERTIFICATION_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, successMessage = successMessage, ecfmgDetails = ecfmg }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType=ActionType,successMessage = successMessage, ecfmgDetails = ecfmg }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -585,7 +586,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     CME = AutoMapper.Mapper.Map<CMECertificationViewModel, CMECertification>(CMEDetails);
                     DocumentDTO document = CreateDocument(CMEDetails.CertificateDocumentFile);
                     await profileManager.AddCMECertificationAsync(profileId, CME, document);
-                    ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - Post Graduate Training - CME Details", "Added");
+                    ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Education History - Post Graduate Training/CME Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
                 }
                 else
@@ -658,7 +659,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         }
                         tracker.ProfileId = profileId;
                         tracker.Section = "Education History";
-                        tracker.SubSection = "PostGraduate Training/CME";
+                        tracker.SubSection = "PostGraduate Training/CME Details";
                         tracker.userAuthId = userId;
                         tracker.objId = CMEDetails.CMECertificationID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -841,7 +842,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         }
                         tracker.ProfileId = profileId;
                         tracker.Section = "Education History";
-                        tracker.SubSection = "Residency/Internship/Fellowship";
+                        tracker.SubSection = "Residency/Internship/Fellowship Details";
                         tracker.userAuthId = userId;
                         tracker.objId = programDetails.ProgramDetailID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -972,7 +973,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

@@ -1315,14 +1315,14 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
         //$scope.declinedDate = $filter('date')(new Date(1980, 00, 01), 'dd/MM/yyyy');
         $scope.declinedDate = new Date();
         var states = 'state';
-        var myState;
-        //var myDate = null;
+        var statusType = 3;
+        var recordStatusType = null;
         try {
             $scope.MedicaidInformations = val;
             for (var i = 0; i < $scope.MedicaidInformations.length ; i++) {
                 //myDate = $filter('date')(new Date($scope.MedicaidInformations[i].IssueDate), 'dd/MM/yyyy');
-                myState = $scope.MedicaidInformations[i].State;
-                if (myState == states) {
+                recordStatusType = $scope.MedicaidInformations[i].StatusType;
+                if (recordStatusType == statusType) {
                     $scope.MedicaidInformations[i].isDeclined = true;
                 } else {
                     $scope.MedicaidInformations[i].isDeclined = false;
@@ -1348,21 +1348,24 @@ profileApp.controller('identificationLicenseController', ['$scope', '$rootScope'
 
         if ($scope.tempObject.isDeclined == true) {
 
-            $scope.tempObject.LicenseNumber = $rootScope.lastName;
-            $scope.tempObject.IssueDate = new Date();
-            $scope.tempObject.State = 'state';
+            //$scope.tempObject.LicenseNumber = $rootScope.lastName;
+            //$scope.tempObject.IssueDate = new Date();
+            //$scope.tempObject.State = 'state';
+            $scope.tempObject.StatusType = 3;
         }
         else if ($scope.tempObject.isDeclined == false) {
-
-            $scope.tempObject.LicenseNumber = '';
-            $scope.tempObject.IssueDate = '';
-            $scope.tempObject.State = '';
-            $scope.tempObject.CertificatePath = '';
+            $scope.tempObject.StatusType = 1;
+            //$scope.tempObject.LicenseNumber = '';
+            //$scope.tempObject.IssueDate = '';
+            //$scope.tempObject.State = '';
+            //$scope.tempObject.CertificatePath = '';
         }
 
         //$scope.States = ["Florida", "Texas", "California", "Alaska"];
 
     }
+
+    $scope.tempObject.StatusType = 1;
 
     $scope.saveMedicaidInformation = function (MedicaidInformation, index) {
         //if ($scope.tempObject.isDeclined) {

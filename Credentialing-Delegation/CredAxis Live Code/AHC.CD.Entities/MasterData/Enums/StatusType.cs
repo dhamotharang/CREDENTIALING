@@ -9,6 +9,7 @@ namespace AHC.CD.Entities.MasterData.Enums
     public enum StatusType
     {
         Active = 1,
-        Inactive        
+        Inactive,
+        Declined
     }
 }

@@ -2997,8 +2997,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
-                        if (PracticeLocationDetail.PracticeColleagues != null)
-                            if (UserRole == "PRO" && PracticeLocationDetail.PracticeColleagues[index].PracticeProviderID!=0) {
+                        
+                            if (UserRole == "PRO" && data.ActionType=="Update") {
                                 data.practiceProvider.TableState = true;
                             }
 

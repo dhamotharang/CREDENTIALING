@@ -3168,31 +3168,41 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     //Set the Date time for task reminder
     $scope.SetReminder = function () {
         $scope.showSetReminder = false;
+        $scope.TaskReminder = [];
+        console.log($scope.taskList.tasks);
 
         var ReminderDateTime = new Date($('#datetimepicker3').val());
-        var currentDateTime = new Date();
-        var difference = (ReminderDateTime - currentDateTime);
-        var diffDays = Math.floor(difference / (1000 * 3600 * 24));
-        var diffHours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        //var diffMin = Math.round((ReminderDateTime - currentDateTime) / 36e5 * 60);
-        var diffMin = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        for (var i = 0; i < $scope.taskList.tasks.length; i++) {
+            $scope.TaskReminder.push({ ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime });
+            $scope.taskList.reminderDateTime = ReminderDateTime;
+            //$scope.TaskReminder = { ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime };
+        }
 
-        //Remaining time for the task
-        $scope.taskList.remainingTime = (diffDays > 0 ? diffDays + 'd ' : '') + ((diffHours > 0 || diffDays==0) ? diffHours + 'h ' : '') + ((diffMin >0 && diffHours <= 24) ? diffMin + 'm' : '');
-
-        //formatting date for header
-        $scope.SetReminderDate = new Date($('#datetimepicker3').val().substr(0, $('#datetimepicker3').val().indexOf(' ')));
-        $scope.SetReminderDate = (($scope.SetReminderDate.getMonth() + 1) + '-' + $scope.SetReminderDate.getDate() + '-' + $scope.SetReminderDate.getFullYear());
-
-        $scope.taskList.reminderDate = $scope.SetReminderDate;
+        $http.post(rootDir + '/TaskTracker/SetReminder', $scope.TaskReminder).success(function (data) {
+            if ($rootScope.tabNames == "AllTask")
+                $scope.clerCheckBoxForAllTasks();
+            else if ($rootScope.tabNames == "DailyTask")
+                $scope.clerCheckBoxForDailyTasks();
+        }).error(function (data) { });
         $scope.taskList.reminderDateTime = ReminderDateTime;
-        //storing data into local storage
         localStorage.setItem("TaskReminders", JSON.stringify($scope.taskList));
         $scope.taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
-        console.log(document.getElementsByClassName('RemainderBody'));
+        
     }
 
-   
+    $scope.clerCheckBoxForAllTasks = function () {
+
+        for (var i = 0; i < $scope.RemainingTasks.length; i++) {
+            $scope.RemainingTasks[i].selected = false;
+        }
+    }
+
+    $scope.clerCheckBoxForDailyTasks = function () {
+
+        for (var i = 0; i < $scope.TasksAssigned.length; i++) {
+            $scope.TasksAssigned[i].selected = false;
+        }
+    }
 
     $scope.checkedTask = false; // to set the status of checked tasks
 

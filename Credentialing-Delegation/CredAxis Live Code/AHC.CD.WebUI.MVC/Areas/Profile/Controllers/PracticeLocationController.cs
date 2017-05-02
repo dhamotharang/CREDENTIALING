@@ -34,7 +34,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
     {
         private IPracticeLocationManager practiceLocationManager = null;
         private IErrorLogger errorLogger = null;
-        IOrganizationManager organizationManager=null;
+        IOrganizationManager organizationManager = null;
         private IChangeNotificationManager notificationManager;
         private IProfileUpdateManager profileUpdateManager = null;
         private IProfileManager ProfileManager = null;
@@ -96,7 +96,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     // OrganizationAccountId Has to be replaced with account information 
                     dataModelPracticeLocationDetailInformation.OrganizationId = OrganizationAccountId.DefaultOrganizationAccountID;
 
-                   
+
                     await practiceLocationManager.AddPracticeLocationAsync(profileId, dataModelPracticeLocationDetailInformation);
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -151,9 +151,9 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     if (isCCO)
                     {
                         bool Status = true;
-                        if(practiceLocationDetailViewModel.PrimaryYesNoOption==AHC.CD.Entities.MasterData.Enums.YesNoOption.YES)
+                        if (practiceLocationDetailViewModel.PrimaryYesNoOption == AHC.CD.Entities.MasterData.Enums.YesNoOption.YES)
                         {
-                            Status=ProfileManager.SetPrimaryPracticeLocation(profileId);
+                            Status = ProfileManager.SetPrimaryPracticeLocation(profileId);
                         }
                         if (Status)
                         {
@@ -175,7 +175,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Practice Location";
-                        tracker.SubSection = "Practice Location Detail";
+                        //tracker.SubSection = "Practice Location Detail";
+                        tracker.SubSection = "Other Information";
                         tracker.userAuthId = userId;
                         tracker.objId = practiceLocationDetailViewModel.PracticeLocationDetailID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -215,7 +216,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PRACTICE_LOCATION_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status,ActionType=ActionType ,successMessage = successMessage, practiceLocationDetail = dataModelPracticeLocationDetailInformation }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, practiceLocationDetail = dataModelPracticeLocationDetailInformation }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -239,9 +240,9 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             try
             {
                 dataModelPracticeLocationDetail = AutoMapper.Mapper.Map<PracticeLocationDetailViewModel, PracticeLocationDetail>(practiceLocationDetailViewModel);
-                var UserAuthID =UserDetail.Id;
-                
-                await practiceLocationManager.RemovePracticeLocationAsync(profileId, dataModelPracticeLocationDetail,UserAuthID);
+                var UserAuthID = UserDetail.Id;
+
+                await practiceLocationManager.RemovePracticeLocationAsync(profileId, dataModelPracticeLocationDetail, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Location Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
             }
@@ -399,6 +400,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateOpenPracticeStatusAsync(int profileId, OpenPracticeStatusViewModel openPracticeStatus)
         {
             string status = "true";
+            string ActionType = "";
             string successMessage = "";
             OpenPracticeStatus dataModelOpenPracticeStatus = null;
             bool isCCO = await GetUserRole();
@@ -416,6 +418,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         await practiceLocationManager.UpdateOpenPracticeStatusAsync(openPracticeStatus.PracticeLocationDetailID, dataModelOpenPracticeStatus);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Open Practice Status", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        successMessage = SuccessMessage.OPEN_PRACTICE_STATUS_DETAIL_ADD_SUCCESS;
                     }
                     else if (isCCO && openPracticeStatus.OpenPracticeStatusID != 0)
                     {
@@ -429,6 +432,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else if (!isCCO && openPracticeStatus.OpenPracticeStatusID != 0)
                     {
+                        ActionType = "Update";
                         string userId = await GetUserAuthId();
                         ProfileUpdateTrackerBusinessModel tracker = new ProfileUpdateTrackerBusinessModel();
 
@@ -472,7 +476,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 errorLogger.LogError(ex);
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
-            return Json(new { status = status, successMessage = successMessage, openPracticeStatus = dataModelOpenPracticeStatus }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, openPracticeStatus = dataModelOpenPracticeStatus }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -484,7 +488,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         [ProfileAuthorize(ProfileActionType.Add, false)]
         public async Task<ActionResult> AddPracticeProviderAsync(PracticeProviderViewModel practiceProvider)
         {
-            string status = "true";
+            string status = "true";            
             PracticeProvider dataModelPracticeProvider = null;
             try
             {
@@ -530,7 +534,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 if (ModelState.IsValid)
                 {
                     foreach (var practiceProvider in practiceProviders)
-	                {
+                    {
                         PracticeProvider dataModelPracticeProvider = null;
                         dataModelPracticeProvider = AutoMapper.Mapper.Map<PracticeProviderViewModel, PracticeProvider>(practiceProvider);
                         await practiceLocationManager.AddPracticeProviderAsync(practiceProvider.PracticeLocationID, dataModelPracticeProvider);
@@ -570,6 +574,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         {
             string status = "true";
             string successMessage = "";
+            string ActionType = "";
             PracticeProvider dataModelPracticeProvider = null;
             bool isCCO = await GetUserRole();
             try
@@ -598,6 +603,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else
                     {
+                        ActionType = "Update";
                         string userId = await GetUserAuthId();
                         ProfileUpdateTrackerBusinessModel tracker = new ProfileUpdateTrackerBusinessModel();
 
@@ -619,16 +625,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         profileUpdateManager.AddProfileUpdateForProvider(practiceProvider, dataModelPracticeProvider, tracker);
 
-                        if(practiceProvider.PracticeType == PracticeType.Supervisor)
+                        if (practiceProvider.PracticeType == PracticeType.Supervisor)
                             successMessage = SuccessMessage.PRACTICE_PROVIDER_SUPERVISOR_UPDATE_REQUEST_SUCCESS;
-                        else if(practiceProvider.PracticeType == PracticeType.Midlevel)
+                        else if (practiceProvider.PracticeType == PracticeType.Midlevel)
                             successMessage = SuccessMessage.PRACTICE_PROVIDER_MIDLEVEL_UPDATE_REQUEST_SUCCESS;
                         else
                             successMessage = SuccessMessage.PRACTICE_PROVIDER_COVERING_COLLEAGUE_UPDATE_REQUEST_SUCCESS;
 
                     }
-                    
-                    
+
+
                 }
                 else
                 {
@@ -650,7 +656,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 errorLogger.LogError(ex);
                 status = ExceptionMessage.PracticeProvider_UPDATE_EXCEPTION;
             }
-            return Json(new { status = status, successMessage = successMessage, practiceProvider = dataModelPracticeProvider }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status,ActionType=ActionType ,successMessage = successMessage, practiceProvider = dataModelPracticeProvider }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -704,60 +710,61 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 //if (ModelState.IsValid)
                 //{
-                    dataModelBusinessOfficeManager = AutoMapper.Mapper.Map<FacilityEmployeeViewModel, Employee>(officemanager);
-                    
-                    //ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Office Managers", "Added");
+                dataModelBusinessOfficeManager = AutoMapper.Mapper.Map<FacilityEmployeeViewModel, Employee>(officemanager);
 
-                    //await notificationManager.SaveNotificationDetailAsync(notification);
+                //ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Office Managers", "Added");
 
-                    //await practiceLocationManager.UpdatePracticeBusinessManagerAsync(officemanager.PracticeLocationDetailID, dataModelBusinessOfficeManager);
+                //await notificationManager.SaveNotificationDetailAsync(notification);
 
-                    if (officemanager.EmployeeID == 0)
+                //await practiceLocationManager.UpdatePracticeBusinessManagerAsync(officemanager.PracticeLocationDetailID, dataModelBusinessOfficeManager);
+
+                if (officemanager.EmployeeID == 0)
+                {
+                    await practiceLocationManager.UpdatePracticeBusinessManagerAsync(officemanager.PracticeLocationDetailID, dataModelBusinessOfficeManager);
+                    ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Office Managers", "Added");
+
+                    await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                    successMessage = SuccessMessage.OFFICE_MANAGER_DETAIL_ADD_SUCCESS;
+                }
+                else if (isCCO && officemanager.EmployeeID != 0)
+                {
+                    await practiceLocationManager.UpdatePracticeBusinessManagerAsync(officemanager.PracticeLocationDetailID, dataModelBusinessOfficeManager);
+                    if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                       await practiceLocationManager.UpdatePracticeBusinessManagerAsync(officemanager.PracticeLocationDetailID, dataModelBusinessOfficeManager);
-                       ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Office Managers", "Added");
+                        ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Office Managers", "Updated");
 
-                       await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        await notificationManager.SaveNotificationDetailAsync(notification);
+                        successMessage = SuccessMessage.OFFICE_MANAGER_DETAIL_UPDATE_SUCCESS;
                     }
-                    else if (isCCO && officemanager.EmployeeID != 0)
-                    {
-                        await practiceLocationManager.UpdatePracticeBusinessManagerAsync(officemanager.PracticeLocationDetailID, dataModelBusinessOfficeManager);
-                        if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Office Managers", "Updated");
+                }
+                else if (!isCCO && officemanager.EmployeeID != 0)
+                {
+                    string userId = await GetUserAuthId();
+                    ProfileUpdateTrackerBusinessModel tracker = new ProfileUpdateTrackerBusinessModel();
 
-                            await notificationManager.SaveNotificationDetailAsync(notification);
-                            successMessage = SuccessMessage.OFFICE_MANAGER_DETAIL_UPDATE_SUCCESS;
-                        }
-                    }
-                    else if (!isCCO && officemanager.EmployeeID != 0)
-                    {
-                        string userId = await GetUserAuthId();
-                        ProfileUpdateTrackerBusinessModel tracker = new ProfileUpdateTrackerBusinessModel();
+                    tracker.ProfileId = profileId;
+                    tracker.Section = "Practice Location";
+                    tracker.SubSection = "Office Manager";
+                    tracker.userAuthId = userId;
+                    tracker.objId = officemanager.EmployeeID;
+                    tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
+                    tracker.url = "/Profile/PracticeLocation/AddOfficeManagerAsync?profileId=";
 
-                        tracker.ProfileId = profileId;
-                        tracker.Section = "Practice Location";
-                        tracker.SubSection = "Office Manager";
-                        tracker.userAuthId = userId;
-                        tracker.objId = officemanager.EmployeeID;
-                        tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
-                        tracker.url = "/Profile/PracticeLocation/AddOfficeManagerAsync?profileId=";
+                    var facilityDeatil = await practiceLocationManager.GetPracticeLocationFacilityByID(officemanager.PracticeLocationDetailID);
 
-                        var facilityDeatil = await practiceLocationManager.GetPracticeLocationFacilityByID(officemanager.PracticeLocationDetailID);
+                    dynamic uniqueRecord = new ExpandoObject();
+                    uniqueRecord.FieldName = "Practice Location Detail";
+                    uniqueRecord.Value = facilityDeatil.FacilityName + ", " + facilityDeatil.Street + ", " + facilityDeatil.City + ", " + facilityDeatil.State + ", " + facilityDeatil.Country;
 
-                        dynamic uniqueRecord = new ExpandoObject();
-                        uniqueRecord.FieldName = "Practice Location Detail";
-                        uniqueRecord.Value = facilityDeatil.FacilityName + ", " + facilityDeatil.Street + ", " + facilityDeatil.City + ", " + facilityDeatil.State + ", " + facilityDeatil.Country;
+                    tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 
-                        tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
-
-                        profileUpdateManager.AddProfileUpdateForProvider(officemanager, dataModelBusinessOfficeManager, tracker);
-                        successMessage = SuccessMessage.OFFICE_MANAGER_DETAIL_UPDATE_REQUEST_SUCCESS;
-                    }
+                    profileUpdateManager.AddProfileUpdateForProvider(officemanager, dataModelBusinessOfficeManager, tracker);
+                    successMessage = SuccessMessage.OFFICE_MANAGER_DETAIL_UPDATE_REQUEST_SUCCESS;
+                }
                 //}
                 //else
                 //{
-                    //status = String.Join(", ", ModelState.Keys.SelectMany(key => this.ModelState[key].Errors.Select(x => key + ": " + x.ErrorMessage)));
+                //status = String.Join(", ", ModelState.Keys.SelectMany(key => this.ModelState[key].Errors.Select(x => key + ": " + x.ErrorMessage)));
                 //}
             }
             catch (DatabaseValidationException ex)
@@ -811,7 +818,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else if (isCCO && billingcontact.EmployeeID != 0)
                     {
-                        
+
                         await practiceLocationManager.UpdatePracticeBillingContactAsync(billingcontact.PracticeLocationDetailID, dataModelBillingContact);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -844,7 +851,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         profileUpdateManager.AddProfileUpdateForProvider(billingcontact, dataModelBillingContact, tracker);
                         successMessage = SuccessMessage.BILLING_CONTACT_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
-                    
+
                 }
                 else
                 {
@@ -898,7 +905,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (paymentandremittance.PracticePaymentAndRemittanceID == 0)
                     {
-                        
+
                         await practiceLocationManager.UpdatePaymentAndRemittanceAsync(paymentandremittance.PracticeLocationDetailID, dataModelPracticePaymentAndRemittance);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Payment and Remittance Details", "Added");
 
@@ -906,7 +913,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else if (isCCO && paymentandremittance.PracticePaymentAndRemittanceID != 0)
                     {
-                       
+
                         await practiceLocationManager.UpdatePaymentAndRemittanceAsync(paymentandremittance.PracticeLocationDetailID, dataModelPracticePaymentAndRemittance);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -981,7 +988,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 if (ModelState.IsValid)
                 {
                     dataModelCredentialingContact = AutoMapper.Mapper.Map<FacilityEmployeeViewModel, Employee>(credentialingContact);
-                    
+
                     await practiceLocationManager.AddCredentialingContactAsync(credentialingContact.PracticeLocationDetailID, dataModelCredentialingContact);
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Credentialing Contact Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -1077,7 +1084,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 errorLogger.LogError(ex);
                 status = ExceptionMessage.CREDENTIALING_CONTACT_UPDATE_EXCEPTION;
             }
-            return Json(new { status = status,ActionType=ActionType ,successMessage = successMessage, credentialingContact = dataModelCredentialingContact }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ActionType = ActionType, successMessage = successMessage, credentialingContact = dataModelCredentialingContact }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -1107,14 +1114,15 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (workersCompensationInformation.WorkersCompensationInformationID == 0)
                     {
-                       
+
                         await practiceLocationManager.UpdateWorkersCompensationInformationAsync(workersCompensationInformation.PracticeLocationDetailID, dataModelWorkersCompensationInformation);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Workers Compensation Details", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
+                        successMessage = SuccessMessage.WORKER_CPMPENSATION_DETAIL_ADD_SUCCESS;
                     }
                     else if (isCCO && workersCompensationInformation.WorkersCompensationInformationID != 0)
                     {
-                        
+
                         await practiceLocationManager.UpdateWorkersCompensationInformationAsync(workersCompensationInformation.PracticeLocationDetailID, dataModelWorkersCompensationInformation);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -1130,7 +1138,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Practice Location";
-                        tracker.SubSection = "workers Compensation Information";
+                        tracker.SubSection = "Workers Compensation Information";
                         tracker.userAuthId = userId;
                         tracker.objId = workersCompensationInformation.WorkersCompensationInformationID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -1209,7 +1217,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Practice Location";
-                        tracker.SubSection = "workers Compensation Information";
+                        tracker.SubSection = "Workers Compensation Information";
                         tracker.userAuthId = userId;
                         tracker.objId = workersCompensationInformation.WorkersCompensationInformationID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
@@ -1249,7 +1257,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             }
 
             return Json(new { status = status, successMessage = successMessage, workersCompensationInformation = dataWorkersCompensationInfo }, JsonRequestBehavior.AllowGet);
-        }       
+        }
 
         #endregion
 
@@ -1274,14 +1282,14 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (providerPracticeOfficeHour.PracticeOfficeHourID == 0)
                     {
-                        
+
                         await practiceLocationManager.UpdateProviderOfficeHourAsync(providerPracticeOfficeHour.PracticeLocationDetailID, dataModelProviderPracticeOfficeHour);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Practice Locations - Office Hours", "Added");
                         await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
                     }
                     else if (isCCO && providerPracticeOfficeHour.PracticeOfficeHourID != 0)
                     {
-                        
+
                         await practiceLocationManager.UpdateProviderOfficeHourAsync(providerPracticeOfficeHour.PracticeLocationDetailID, dataModelProviderPracticeOfficeHour);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -1358,7 +1366,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA" || r.Name == "TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

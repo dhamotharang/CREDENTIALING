@@ -156,7 +156,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         tracker.ProfileId = profileId;
                         tracker.Section = "Professional Reference";
-                        tracker.SubSection = "Professional Reference Info";
+                        tracker.SubSection = "Professional Reference Information";
                         tracker.userAuthId = userId;
                         tracker.objId = professionalReference.ProfessionalReferenceInfoID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Update.ToString();
@@ -257,13 +257,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 AHC.CD.Entities.MasterProfile.Profile providers = profileManager.GetProviderInformation(profileId);
                 providers.ContactDetail.EmailIDs = providers.ContactDetail.EmailIDs.Where(p => p.PreferenceType == PreferenceType.Primary).ToList();
+                if ((providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary).ToList().Count)!=0)
                 providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary).ToList();
-                if(providers.SpecialtyDetails.Count==0)
-                {
-                    providers.SpecialtyDetails.ToList()[0] = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary).ToList().FirstOrDefault();
-                }
+                else
+                    providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary).ToList();
+                //if(providers.SpecialtyDetails.Count==0)
+                //{
+                //    providers.SpecialtyDetails.ToList().Add(providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary).ToList().FirstOrDefault());
+                //}
                 if (providers.EducationDetails.Count!=0)
-                providers.EducationDetails.ToList()[0] = providers.EducationDetails.Where(p => p.GraduationType == "Graduate").Last();
+                    providers.EducationDetails.ToList()[0] = providers.EducationDetails.Where(p => p.GraduationType == "Graduate").FirstOrDefault(); ;
                 return Json(new { providers }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
@@ -297,7 +300,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

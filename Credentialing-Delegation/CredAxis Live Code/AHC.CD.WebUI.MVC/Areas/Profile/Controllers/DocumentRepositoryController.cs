@@ -67,10 +67,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
         public async Task<string> GetDocumentRepositoryProfileDataAsync(int profileId)
         {
+            
             string UserAuthId = await GetUserAuthId();
             int CDUserId = profileManager.GetCredentialingUserId(UserAuthId);
             bool isCCO = await GetUserRole();
-            return JsonConvert.SerializeObject(await profileManager.GetDocumentRepositoryDataAsync(profileId, CDUserId, isCCO));
+            bool IsProvider = await CheckIsProvider();
+
+            return JsonConvert.SerializeObject(await profileManager.GetDocumentRepositoryDataAsync(profileId, CDUserId, isCCO, IsProvider));
 
         }
 
@@ -218,6 +221,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateOtherDocumentAsync(int profileId, OtherDocumentViewModel otherDocument)
         {
             string status = "true";
+            string ActionType = "";
             OtherDocument dataModelOtherDocument = null;
             bool isCCO = await GetUserRole();
 
@@ -250,6 +254,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else
                     {
+                        ActionType = "Update";
                         if (dataModelOtherDocument.IsPrivate == false)
                         {
                             if (document == null)
@@ -304,7 +309,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 status = ExceptionMessage.PROFILE_ADD_UPDATE_EXCEPTION;
             }
 
-            return Json(new { status = status, otherDocument = dataModelOtherDocument }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status,ActionType=ActionType ,otherDocument = dataModelOtherDocument }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -375,6 +380,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
             var Role = RoleManager.Roles.FirstOrDefault(r => r.Name == "CCO");
+
+            return user.Roles.Any(r => r.RoleId == Role.Id);
+        }
+
+        private async Task<bool> CheckIsProvider()
+        {
+            var currentUser = HttpContext.User.Identity.Name;
+            var appUser = new ApplicationUser() { UserName = currentUser };
+            var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
+            var Role = RoleManager.Roles.FirstOrDefault(r => r.Name == "PRO" || r.Name == "TL");
 
             return user.Roles.Any(r => r.RoleId == Role.Id);
         }

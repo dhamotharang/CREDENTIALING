@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AHC.CD.Entities.TaskTracker;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,6 @@ namespace AHC.CD.Data.Repository.TaskTracker
         Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksWithUserId(string userAuthId);
         Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByUserId(string userAuthId);
         Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByProfileId(int profileid);
+        Task<bool> SetReminder(List<TaskReminder> reminders);
     }
 }

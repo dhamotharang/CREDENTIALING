@@ -511,20 +511,22 @@ var TaskNotificationReminder = function () {
                 if (taskStored.taskCount != 0) {
                     for (var i in taskStored.tasks) {
                         if (i % 2 == 0) {
-                            HTMLString += '<div class="col-lg-5 col-xs-5" style="background-color:#e8e8e8"><b>' + taskStored.tasks[i].Subject + '</b></div>' +
-                            '<div class="col-lg-7 col-xs-7" style="background-color:#e8e8e8"> Dr. ' + taskStored.tasks[i].ProviderName + '</div>'
+                            HTMLString += '<div class="col-lg-3 col-xs-3" style="background-color:#e8e8e8"><b>' + taskStored.tasks[i].Subject + '</b></div>' +
+                            '<div class="col-lg-4 col-xs-4" style="background-color:#e8e8e8"> Dr. ' + taskStored.tasks[i].ProviderName + '</div>' +
+                            '<div class="col-lg-5 col-xs-5" style="background-color:#e8e8e8">04-26-2017 10:00 AM </div>'
 
                         }
                         else {
-                            HTMLString += '<div class="col-lg-5 col-xs-5"><b>' + taskStored.tasks[i].Subject + '</b></div>' +
-                           '<div class="col-lg-7 col-xs-7"> Dr. ' + taskStored.tasks[i].ProviderName + '</div>'
+                            HTMLString += '<div class="col-lg-3 col-xs-3"><b>' + taskStored.tasks[i].Subject + '</b></div>' +
+                           '<div class="col-lg-4 col-xs-4"> Dr. ' + taskStored.tasks[i].ProviderName + '</div>' +
+                           '<div class="col-lg-5 col-xs-5"> 10 hours overdue </div>'
                         }
                     }
 
                     // var timeBlinkString = '<div class="circle blink_me"><b>' + taskStored.remainingTime + '</b><br /><b></b></div>';
 
                     var reminderHead = '<b class="pull-left" style="font-size:large">🔔</b>' +
-                    '<div class="col-lg-6 col-xs-6"> <b style="font-size: large;">' + taskStored.reminderDate + '</b> at 5:15PM </div>' +
+                    '<div class="col-lg-6 col-xs-6"> <b style="font-size: large;">04-26-2017 </b> at 5:15PM </div>' +
                     '<div class="col-lg-5 col-xs-5 pull-right"><span class="badge" style="background-color: #ccddff;color:black">' + taskStored.taskCount + '-Task(s)</span> Reminder </div>';
 
 

@@ -36,7 +36,6 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         private IDocumentsManager documentmanager = null;
         private IUserManager userManager = null;
         protected ApplicationUserManager AuthUserManager
-
         {
             get
             {
@@ -60,7 +59,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             }
         }
 
-        public CCMController(IUserManager userManager,ProviderDocumentManager documentmanager, IAppointmentManager appointmentManager, IChangeNotificationManager notificationManager, IApplicationManager applicationManager, IProfileManager profileManager)
+        public CCMController(IUserManager userManager, ProviderDocumentManager documentmanager, IAppointmentManager appointmentManager, IChangeNotificationManager notificationManager, IApplicationManager applicationManager, IProfileManager profileManager)
         {
             this.appointmentManager = appointmentManager;
             this.applicationManager = applicationManager;
@@ -80,7 +79,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 
         //
         // GET: /Credentialing/SPA/
-        [Authorize(Roles="CCM,ADM")]
+        [Authorize(Roles = "CCM,ADM")]
         public async Task<ActionResult> SPA(int id)
         {
             AHC.CD.Entities.MasterProfile.Profile profileData = null;
@@ -153,7 +152,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                 ViewBag.signaturepath = appointmentManager.GetCCMSignature(userid);
                 ViewBag.CredentialingInfoID = id;
                 ViewBag.CredentialingInfo = JsonConvert.SerializeObject(await appointmentManager.GetCredentialinfoByID(id));
-                
+
                 //CredentialingAppointmentDetailViewModel credentialingAppointmentDetailViewModel=
                 return View("SPA");
             }
@@ -162,6 +161,35 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                 throw;
             }
         }
+
+        /// <summary>
+        /// This Method will return spa data
+        /// </summary>
+        /// <param name="CredInfoId">need to pass unique credInfo Id</param>
+        /// <returns></returns>
+        public async Task<ActionResult> GetSPAData(int CredInfoId)
+        {
+            try
+            {
+                object obj = new
+                {
+                    LoginUsers = await GetAllUsers(),
+                    CDUsers = await GetAllCDUsers(),
+                    signaturepath = appointmentManager.GetCCMSignature(await GetUserAuthId()),
+                    CredentialingInfoID = CredInfoId,
+                    CredentialingInfo = await appointmentManager.GetCredentialinfoByID(CredInfoId)
+                };
+
+                //CredentialingAppointmentDetailViewModel credentialingAppointmentDetailViewModel=
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
 
         public async Task<ActionResult> GetAllCredentialingFilterList()
         {
@@ -192,31 +220,31 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     {
                         memoryStream.Position = 0;
                         bmpReturn = (Bitmap)Bitmap.FromStream(memoryStream);
-                        
+
                         bmpReturn.Save(path, ImageFormat.Png);
                         memoryStream.Close();
                     }
 
-                    
-                        ChangeNotificationDetail notification = null;
-                        if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Approved)
-                        {
-                            notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Approved");
-                        }
-                        else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected)
-                        {
-                            notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Rejected");
-                        }
 
-                        await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);
-                        credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath = filename;
-                        //credentialingAppointmentDetailViewModel.FileUploadPath = null;
+                    ChangeNotificationDetail notification = null;
+                    if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Approved)
+                    {
+                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Approved");
+                    }
+                    else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected)
+                    {
+                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Rejected");
+                    }
 
-                        credentialingAppointmentDetail = AutoMapper.Mapper.Map<CredentialingAppointmentDetailViewModel, CredentialingAppointmentDetail>(credentialingAppointmentDetailViewModel);
-                        // Change Notifications
-                        await appointmentManager.SaveResultForScheduledAppointmentwithdigitalsignature(credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID, credentialingAppointmentDetail.CredentialingAppointmentResult, await GetUserAuthId());
-                        status = "true";
-                    
+                    await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);
+                    credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath = filename;
+                    //credentialingAppointmentDetailViewModel.FileUploadPath = null;
+
+                    credentialingAppointmentDetail = AutoMapper.Mapper.Map<CredentialingAppointmentDetailViewModel, CredentialingAppointmentDetail>(credentialingAppointmentDetailViewModel);
+                    // Change Notifications
+                    await appointmentManager.SaveResultForScheduledAppointmentwithdigitalsignature(credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID, credentialingAppointmentDetail.CredentialingAppointmentResult, await GetUserAuthId());
+                    status = "true";
+
                 }
                 else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath != null && credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath.Contains("\\ApplicationDocuments\\"))
                 {
@@ -279,6 +307,31 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             string userid = await GetUserAuthId();
             string signaturepath = appointmentManager.GetCCMSignature(userid);
             return signaturepath;
+        }
+
+
+        public async Task<string> CCMSPAPage(int id)
+        {
+            try
+            {
+                //ViewBag.LoginUsers = await GetAllUsers();
+                //ViewBag.CDUsers = await GetAllCDUsers();
+                //string userid = await GetUserAuthId();
+                //ViewBag.signaturepath = appointmentManager.GetCCMSignature(userid);
+                //ViewBag.CredentialingInfoID = id;
+                //ViewBag.CredentialingInfo = JsonConvert.SerializeObject(await appointmentManager.GetCredentialinfoByID(id));
+                var CredentialingInfo = await applicationManager.GetCredentialingInfoById(id);
+                ViewBag.CredentialingInfo = CredentialingInfo;
+                return JsonConvert.SerializeObject(CredentialingInfo, Formatting.None,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         #region Private Methods

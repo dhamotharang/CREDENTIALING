@@ -493,8 +493,8 @@ namespace AHC.CD.Business.MasterData
         {
             try
             {
-                return await repositoryManager.GetAsync<Hospital>(s => s.Status.Equals(StatusType.Active.ToString()), "HospitalContactInfoes, HospitalContactInfoes.HospitalContactPersons");
-                var data = await repositoryManager.GetAsync<Hospital>(s => s.Status.Equals(StatusType.Active.ToString()));
+                var data =  await repositoryManager.GetAsync<Hospital>(s => s.Status.Equals(StatusType.Active.ToString()), "HospitalContactInfoes, HospitalContactInfoes.HospitalContactPersons");
+                //var data = await repositoryManager.GetAsync<Hospital>(s => s.Status.Equals(StatusType.Active.ToString()));
                 var sortData = data.ToList();
                 sortData.Sort(delegate (Hospital obj1, Hospital obj2) { return obj1.HospitalName.CompareTo(obj2.HospitalName); });
                 Parallel.ForEach(sortData, (s) =>

@@ -21,6 +21,7 @@ using AHC.CD.Exceptions;
 using AHC.CD.Resources.Messages;
 using AHC.CD.ErrorLogging;
 using PGChat;
+using System.Dynamic;
 
 namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 {
@@ -143,7 +144,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetDataById(int trackerId, string status, string modificationType)
+        public async Task<ActionResult> GetDataById(int trackerId, string status, string modificationType)
         {
             List<ProfileUpdatesTracker> profileUpdates = new List<ProfileUpdatesTracker>();
             List<ProfileUpdatedData> uniqueUdatedData = new List<ProfileUpdatedData>();
@@ -204,10 +205,12 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                 }
             }
 
+            
+            dynamic changedData = new ExpandoObject();
+            changedData.RequestData = uniqueUdatedData;
+            changedData.UserName = await profileUpdateManager.GetUserName(trackerId);;
 
-
-
-            return Json(uniqueUdatedData, JsonRequestBehavior.AllowGet);
+            return Json(changedData, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -236,7 +239,9 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 
             List<int> trackerIDs = new List<int>();
             trackerIDs.Add(tracker.TrackerId);
-            await requestForApprovalManager.AddUpdatesRequestTrackerNotification(trackerIDs, tracker.ApprovalStatus, HttpContext.User.Identity.Name);
+
+            if (tracker.ApprovalStatus != "Dropped")
+                await requestForApprovalManager.AddUpdatesRequestTrackerNotification(trackerIDs, tracker.ApprovalStatus, HttpContext.User.Identity.Name);
 
             return Json(status, JsonRequestBehavior.AllowGet);
         }

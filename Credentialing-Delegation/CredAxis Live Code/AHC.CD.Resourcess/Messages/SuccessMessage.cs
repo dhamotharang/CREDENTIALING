@@ -13,7 +13,7 @@ namespace AHC.CD.Resources.Messages
         #region Specialty
 
         public static string SPECIALTY_DETAIL_UPDATE_SUCCESS = "Specialty Details Updated Successfully !!!!";
-        public static string SPECIALTY_DETAIL_RENEW_SUCCESS = "pecialty Details Renewed Successfully !!!!";
+        public static string SPECIALTY_DETAIL_RENEW_SUCCESS = "Specialty Details Renewed Successfully !!!!";
         public static string SPECIALTY_DETAIL_PRACTICE_INTEREST_UPDATE_SUCCESS = "Practice Interest Updated Successfully !!!!";        
 
         #endregion
@@ -25,9 +25,12 @@ namespace AHC.CD.Resources.Messages
         public static string HOME_ADDRESS_UPDATE_SUCCESS = "Home Address Updated Successfully !!!!";
         public static string CONTACT_DETAIL_UPDATE_SUCCESS = "Contact Details Updated Successfully !!!!";
         public static string PERSONAL_IDENTIFICATION_UPDATE_SUCCESS = "Personal Identification Updated Successfully !!!!";
-        public static string BIRTH_INFORMATION_UPDATE_SUCCESS = "Birth Information Saved Successfully !!!!";
-        public static string VISA_DETAIL_UPDATE_SUCCESS = "Visa Details Updated Successfully !!!!";
+        public static string BIRTH_INFORMATION_UPDATE_SUCCESS = "Birth Information Updated Successfully !!!!";
+        public static string BIRTH_INFORMATION_ADD_SUCCESS = "Birth Information Saved Successfully !!!!";
+        public static string VISA_DETAIL_UPDATE_SUCCESS = "Citizenship Information Updated Successfully !!!!";
+        public static string VISA_DETAIL_ADD_SUCCESS = "Citizenship Information Added Successfully !!!!";
         public static string LANGUAGES_DETAIL_UPDATE_SUCCESS = "Languages Known Updated Successfully !!!!";
+        public static string LANGUAGES_DETAIL_ADD_SUCCESS = "Languages Known Saved Successfully !!!!";
 
         #endregion
 
@@ -74,14 +77,17 @@ namespace AHC.CD.Resources.Messages
         public static string PRACTICE_LOCATION_DETAIL_UPDATE_SUCCESS = "Practice Location Information Updated Successfully !!!!";
         public static string PRACTICE_LOCATION_FACILITY_UPDATE_SUCCESS = "Facility Information Updated Successfully !!!!";
         public static string OPEN_PRACTICE_STATUS_DETAIL_UPDATE_SUCCESS = "Open Practice Status Updated successfully !!!!";
+        public static string OPEN_PRACTICE_STATUS_DETAIL_ADD_SUCCESS = "Open Practice Status Added successfully !!!!";
         public static string PRACTICE_PROVIDER_SUPERVISOR_UPDATE_SUCCESS = "Supervising Practitioner Updated Successfully !!!!";
         public static string PRACTICE_PROVIDER_MIDLEVEL_UPDATE_SUCCESS = "Midlevel Provider Updated Successfully !!!";
         public static string PRACTICE_PROVIDER_COVERING_COLLEAGUE_UPDATE_SUCCESS = "Covering Colleagues Information Updated Successfully !!!!";
         public static string OFFICE_MANAGER_DETAIL_UPDATE_SUCCESS = "Office manager/Business Office Staff Contact Information Updated Successfully !!!!";
+        public static string OFFICE_MANAGER_DETAIL_ADD_SUCCESS = "Office manager/Business Office Staff Contact Information Updated Successfully !!!!";
         public static string BILLING_CONTACT_DETAIL_UPDATE_SUCCESS = "Billing Contact Information Updated Successfully !!!!";
         public static string PAYMENT_AND_REMITTANCE_DETAIL_UPDATE_SUCCESS = "Payment and Remittance Information Updated Successfully !!!!";
         public static string CREDENTIALING_CONTACT_DETAIL_UPDATE_SUCCESS = "Primary Credentialing Contact Updated Successfully !!!!";
         public static string OFFICE_HOURS_DETAIL_UPDATE_SUCCESS = "Office Hour Updated successfully !!!!";
+        public static string WORKER_CPMPENSATION_DETAIL_ADD_SUCCESS = "Worker's Compensation Information Added Successfully !!!!";
         public static string WORKER_CPMPENSATION_DETAIL_UPDATE_SUCCESS = "Worker's Compensation Information Updated Successfully !!!!";
         public static string WORKER_COMPENSATION_DETAIL_RENEW_SUCCESS = "Worker's Compensation Information Renewed Successfully !!!!";
 
@@ -136,7 +142,7 @@ namespace AHC.CD.Resources.Messages
         public static string CONTACT_DETAIL_UPDATE_REQUEST_SUCCESS = "Contact Details Update Request Sent Successfully !!!!";
         public static string PERSONAL_IDENTIFICATION_UPDATE_REQUEST_SUCCESS = "Personal Identification Update Request Sent Successfully !!!!";
         public static string BIRTH_INFORMATION_UPDATE_REQUEST_SUCCESS = "Birth Information Update Request Sent Successfully !!!!";
-        public static string VISA_DETAIL_UPDATE_REQUEST_SUCCESS = "Visa Details Update Request Sent Successfully !!!!";
+        public static string VISA_DETAIL_UPDATE_REQUEST_SUCCESS = "Citizenship Information Update Request Sent Successfully !!!!";
         public static string LANGUAGES_DETAIL_UPDATE_REQUEST_SUCCESS = "Languages Known Update Request Successfully !!!!";
 
         #endregion
@@ -221,7 +227,7 @@ namespace AHC.CD.Resources.Messages
         public static string CV_UPDATE_REQUEST_SUCCESS = "CV Upload Request Sent Successfully !!!!";
         public static string PROFESSIONAL_WORK_EXPERIENCE_DETAIL_UPDATE_REQUEST_SUCCESS = "Professional Work Experience Information Update Request Sent Successfully !!!!";
         public static string MILITARY_SERVICE_INFO_UPDATE_REQUEST_SUCCESS = "Military Service Information Update Request Sent Successfully !!!!";
-        public static string PUBLIC_HEALTH_SERVICE_UPDATE_REQUEST_SUCCESS = "Public Health Service Information Updated Request Sent Successfully !!!!";
+        public static string PUBLIC_HEALTH_SERVICE_UPDATE_REQUEST_SUCCESS = "Public Health Service Information Update Request Sent Successfully !!!!";
         public static string WORK_GAP_INFO_UPDATE_REQUEST_SUCCESS = "Work Gap Information Update Request Sent Successfully !!!!";
 
         #endregion

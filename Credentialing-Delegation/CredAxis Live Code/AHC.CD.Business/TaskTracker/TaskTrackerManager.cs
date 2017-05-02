@@ -3,6 +3,7 @@ using AHC.CD.Data.Repository;
 using AHC.CD.Data.Repository.TaskTracker;
 using AHC.CD.Entities;
 using AHC.CD.Entities.Credentialing;
+using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Entities.MasterData.Tables;
 using AHC.CD.Entities.Notification;
 using AHC.CD.Entities.TaskTracker;
@@ -389,7 +390,27 @@ namespace AHC.CD.Business.TaskTracker
             {
                 throw;
             }
-        }        
+        }
+
+
+        public async Task<bool> SetReminder(List<TaskReminder> reminders, string userAuthID)
+        {
+            try
+            {
+                var userID = GetUserId(userAuthID); 
+                foreach (var reminder in reminders)
+                {
+                    reminder.ScheduledByID = userID;
+                    reminder.StatusType = StatusType.Active;
+                }
+
+                return await taskRepo.SetReminder(reminders);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         #region Private Methods
 
@@ -461,5 +482,8 @@ namespace AHC.CD.Business.TaskTracker
 
         #endregion
 
+
+
+        
     }
 }

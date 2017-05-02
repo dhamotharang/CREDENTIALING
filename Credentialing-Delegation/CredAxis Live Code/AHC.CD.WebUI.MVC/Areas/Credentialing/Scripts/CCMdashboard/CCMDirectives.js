@@ -6,7 +6,8 @@
         transclude: true,
         scope: {
             ngModel: '=',
-            gridData: '&'
+            gridData: '&',
+            biscuitValue: '='
         },
         link: function (scope, element, attrs, ngModel) {
             scope.biscuitId = attrs.biscuitId;
@@ -32,14 +33,16 @@
         }
     }
 }]);
-CCMDashboard.directive('getSiblings', ["$http", "$compile", "$rootScope", function ($http, $compile, $rootScope) {
+CCMDashboard.directive('getSiblings', ["$http", "$compile", "$rootScope", "CCMDashboardService", function ($http, $compile, $rootScope, CCMDashboardService) {
     return {
         require: '?ngModel',
         scope: {
-            key: '='
+            key: '=',
         },
         link: function (scope, element, attrs) {
             element.bind('click', function () {
+               // var ID = attrs.infoId;
+                //CCMDashboardService.GetCCMAppointmentInfo(ID);
                 if (element.hasClass('ViewDetail')) {
                     element.parents('table').find('.ViewDetail').removeClass('hidden');
                     element.parents('table').find('.CloseDetail').addClass('hidden');

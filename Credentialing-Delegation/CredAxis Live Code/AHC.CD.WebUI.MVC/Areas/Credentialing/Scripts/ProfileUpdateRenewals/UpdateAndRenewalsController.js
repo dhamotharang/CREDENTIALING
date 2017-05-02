@@ -103,13 +103,23 @@
         }
         if (profileUpdates.ApprovalStatus == 'Pending' || profileUpdates.ApprovalStatus == 'OnHold') {
             if (profileUpdates.IsSelected == "false") {
-
+                
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)].IsSelected = "true";
                 $scope.SelectedData.push($rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)]);
 
-            } else {
+                //if(IsProvider)
+                //    this.TableHighlight = { "background-color": "rgb(233, 236, 235)", "color": "#32306b", "font-weight": "bold"}
+                //else
+                //    this.TableHighlight = { "background-color": "rgb(233, 236, 235)", "color": "#32306b", "font-weight": "bold", "cursor": "pointer" }
+
+            } else {                
                 $scope.SelectedData.splice($scope.SelectedData.indexOf($rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)]), 1)
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)].IsSelected = "false";
+
+                //if (IsProvider)
+                //    this.TableHighlight = { "background-color": "white", "color": "black"}
+                //else
+                //    this.TableHighlight = { "background-color": "white", "color": "black", "cursor": "pointer" }
             }
         }
     }
@@ -359,7 +369,9 @@
             modificationType: Data.Modification
         };
         UpdateAndRenewalsService.GetProfileUpdateDataByID(data).then(function (result) {
-            $scope.displayDataForProfileUpdate = UpdateAndRenewalsFactory.getValue(result.data);
+            $scope.displayDataForProfileUpdate = UpdateAndRenewalsFactory.getValue(result.data[0].Value);
+            //$rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: Data.ProfileUpdatesTrackerId })[0])].DecisionMadeBy = result.data[1].Value;
+            $rootScope.TemporaryObject.DecisionMadeBy = result.data[1].Value;
             $scope.LoadingStatus = false;
         }, function (error) {
             UpdateAndRenewalsFactory.modalDismiss();
@@ -432,6 +444,7 @@
             }
             else {
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: Data.ProfileUpdatesTrackerId })[0])].ApprovalStatus = ApprovalStatus;
+                $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: Data.ProfileUpdatesTrackerId })[0])].RejectionReason = $rootScope.TemporaryObject.RejectionReason;
             }
             $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
             $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
@@ -505,6 +518,10 @@
                     }
                     for (i in $rootScope.TempProfileUpdates) {
                         $rootScope.TempProfileUpdates[i].IsSelected = "false";
+                        //if (IsProvider)
+                        //    this.TableHighlight = { "background-color": "white", "color": "black" }
+                        //else
+                        //    this.TableHighlight = { "background-color": "white", "color": "black", "cursor": "pointer" }
                     }
                     $scope.tableStateValueUpdateAndHistory = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueUpdateAndHistory);
                     $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
@@ -524,7 +541,12 @@
             else {
                 for (i in $rootScope.TempProfileUpdates) {
                     $rootScope.TempProfileUpdates[i].IsSelected = "false";
+                    //if (IsProvider)
+                    //    this.TableHighlight = { "background-color": "white", "color": "black" }
+                    //else
+                    //    this.TableHighlight = { "background-color": "white", "color": "black", "cursor": "pointer" }
                 }
+
                 $scope.SelectedData = [];
                 $scope.ApproveAllStatus = false;
                 toaster.pop('error', "", (Mainresults.length - ProfileUpdaetIDs.length + ' Failed ' + 'Please try after sometime !!!'));

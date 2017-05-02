@@ -440,7 +440,16 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
             try {
                 $http.get("/TaskTracker/GetAllProviders")
            .then(function (response) {
-               $scope.Providers = response.data;
+               $scope.ProvidersData = response.data;
+               for(var data in $scope.ProvidersData)
+               {
+                   if($scope.ProvidersData[data].Status == "Active")
+                   {
+                       $scope.ProvidersData[data].Name = $scope.ProvidersData[data].Name.split('-')[0];
+                       $scope.Providers.push($scope.ProvidersData[data]);                       
+                   }
+               }
+
            });
             }
             catch (e) { };
@@ -455,7 +464,8 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
 
     $scope.ProviderData = "";
     $scope.SelectProvider = function (ProfileId) {
-
+        //$scope.tempObject = "";
+        $scope.tempObject.Degree = "";
         try {
             $http.get("/Profile/ProfessionalReference/GetProfileData?profileId=" + ProfileId)
        .then(function (response) {
@@ -478,32 +488,39 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
                $scope.tempObject.speciality = $scope.ProviderData.providers.SpecialtyDetails[0];
                $scope.tempObject.SpecialtyID = $scope.ProviderData.providers.SpecialtyDetails[0].SpecialtyID;
                $scope.tempObject.speciality.SpecialtyID = $scope.ProviderData.providers.SpecialtyDetails[0].SpecialtyID;
-               //$scope.tempObject.speciality.Specialty.Name = $scope.masterSpecialties[0].Name;
-               //$scope.tempObject.speciality.Name = $scope.masterSpecialties[0].Name;
+               //$scope.tempObject.BoardCerifiedOption = $scope.ProviderData.providers.SpecialtyDetails[0].IsBoardCertified == "";
+               if ($scope.ProviderData.providers.SpecialtyDetails[0].IsBoardCertified == "YES")
+                   $scope.tempObject.BoardCerifiedOption = 1;
+               else if($scope.ProviderData.providers.SpecialtyDetails[0].IsBoardCertified == "NO")
+                   $scope.tempObject.BoardCerifiedOption = 2;
            }
            for (var number in $scope.ProviderData.providers.ContactDetail.PhoneDetails) {
                if (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].Preference == "Primary")) {
                    if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Mobile") {
                        $scope.tempObject.Telephone = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
+                       $scope.tempObject.PhoneCountryCode = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[0];
                    }
                }
                else if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Mobile") {
                    $scope.tempObject.Telephone = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
+                   $scope.tempObject.PhoneCountryCode = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[0];
                    //break;
                }
 
                if (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].Preference == "Primary")) {
                    if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Fax") {
                        $scope.tempObject.Fax = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
+                       $scope.tempObject.FaxCountryCode = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[0];
                    }
                }
                else if ($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneType == "Fax") {
                    $scope.tempObject.Fax = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[1];
+                   $scope.tempObject.FaxCountryCode = (($scope.ProviderData.providers.ContactDetail.PhoneDetails[number].PhoneNumber).split('-'))[0];
                    //break;
                }
            }
-
-           $scope.tempObject.Degree = $scope.ProviderData.providers.EducationDetails[0].QualificationDegree;
+           if ($scope.ProviderData.providers.EducationDetails.length != 0)
+               $scope.tempObject.Degree = $scope.ProviderData.providers.EducationDetails[0].QualificationDegree;           
            $scope.tempObject.FirstName = $scope.ProviderData.providers.PersonalDetail.FirstName;
            $("#ProvidersSearchResultDiv").hide();
        });
