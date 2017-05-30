@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace AHC.CD.Business.Users
 {
@@ -213,6 +214,8 @@ namespace AHC.CD.Business.Users
 
         public async Task<int> InitiateProviderAsync(string authenticateUserId, Profile profile, DocumentDTO cvDocument, DocumentDTO contractDocument)
         {
+            profile.CreatedOnDate = DateTime.Now;
+            profile.CreatedBy = HttpContext.Current.User.Identity.Name;            
             var profileId = await CreateUserWithProviderRoleAsync(authenticateUserId, profile);
 
             await UpdateProviderIdAndContractAsync(profileId, contractDocument, cvDocument);
@@ -477,6 +480,20 @@ namespace AHC.CD.Business.Users
             {
                 throw ex;
             }
-        }       
+        }
+
+        public async Task<int> GetCDUserID(string userAuthID)
+        {
+            try
+            {
+                var userRepo = unitOfWork.GetGenericRepository<CDUser>();
+                var user = await userRepo.FindAsync(u => u.AuthenicateUserId == userAuthID);
+                return user.CDUserID;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AHC.CD.Data.ADO.Notification;
+using AHC.CD.Data.Repository;
 using AHC.CD.Data.Repository.Notification;
+using AHC.CD.Entities;
 using AHC.CD.Entities.Notification;
 using System;
 using System.Collections.Generic;
@@ -14,12 +16,14 @@ namespace AHC.CD.Business.Notification
 {
     public class RealTimeNotificationManager : IRealTimeNotificationManager
     {
-        private IRealTimeNotificationRepository realTimeNotificationRepository = new RealTimeNotificationADORepository();
+        private IRealTimeNotificationRepository realTimeNotificationRepository = null;
+        private readonly IUnitOfWork uow = null;
 
-        //public RealTimeNotificationManager(IRealTimeNotificationRepository realTimeNotificationRepository)
-        //{
-        //    this.realTimeNotificationRepository = realTimeNotificationRepository;
-        //}
+        public RealTimeNotificationManager(IUnitOfWork uow, IRealTimeNotificationRepository realTimeNotificationRepository)
+        {
+            this.uow = uow;
+            this.realTimeNotificationRepository = realTimeNotificationRepository;
+        }
 
         public int GetAllPendingRequestCount(NotificationDelegate.DependencyDelegate dependencyDelegate)
         {
@@ -39,6 +43,36 @@ namespace AHC.CD.Business.Notification
             try
             {
                 return realTimeNotificationRepository.GetAllPendingRequest(dependencyDelegate);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public dynamic GetTaskExpiriesCount(NotificationDelegate.DependencyDelegate dependencyDelegate)
+        {
+            try
+            {
+                return realTimeNotificationRepository.GetTaskExpiriesCount(dependencyDelegate);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int GetCDUserID(string userAuthID)
+        {
+            try
+            {
+                var userRepo = uow.GetGenericRepository<CDUser>();
+                var user = userRepo.Find(u => u.AuthenicateUserId == userAuthID);
+                if (user != null)
+                    return user.CDUserID;
+                else
+                    return 0;
             }
             catch (Exception ex)
             {

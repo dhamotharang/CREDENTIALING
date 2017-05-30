@@ -186,7 +186,7 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
     });
     //-------------- CV Information data from database ------------------
     $rootScope.$on('CVInformation', function (event, val) {
-        $scope.ProfessionalWorkExperiencesPendingRequest = profileUpdates.getUpdates('Work History', 'CV');
+        $scope.CVPendingRequest = profileUpdates.getUpdates('Work History', 'CV');
         $scope.CVInformation = val;
     });
 
@@ -221,7 +221,7 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                             messageAlertEngine.callAlertMessage("uploadedCVInformation", data.successMessage, "success", true);
 
                             if (data.CVInformationID != 0) {
-                                $scope.ProfessionalWorkExperiencesPendingRequest = true;
+                                $scope.CVPendingRequest = true;
                             }
 
 
@@ -349,6 +349,7 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -709,6 +710,7 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -857,6 +859,7 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -1020,6 +1023,7 @@ profileApp.controller('WorkHistoryController', ['$scope', '$rootScope', '$http',
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,

@@ -951,7 +951,7 @@ initCredApp.controller('listController', ['$scope', '$http', '$timeout', 'messag
                             //$scope.allProviders.splice($scope.FilterProviders.indexOf(newData), 1);
                             $scope.getByType(obj.Modification);
                             $scope.HideDetails();
-                        }).error(function () { $scope.error_message = "An Error occured !! Please Try Again !!"; })
+                        }).error(function () { $scope.error_message = "An Error occurred !! Please Try Again !!"; })
                         $scope.flag = false;
                     }
                     else {
@@ -1041,7 +1041,7 @@ initCredApp.controller('listController', ['$scope', '$http', '$timeout', 'messag
 
             }
 
-        }).error(function () { $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.error_message = "An Error occurred !! Please Try Again !!"; })
 
         $scope.HideDetails();
     };
@@ -1202,7 +1202,7 @@ initCredApp.controller('listController', ['$scope', '$http', '$timeout', 'messag
 
             }
 
-        }).error(function () { $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.error_message = "An Error occurred !! Please Try Again !!"; })
         $scope.HideDetails();
     };
 
@@ -1320,7 +1320,7 @@ initCredApp.controller('listController', ['$scope', '$http', '$timeout', 'messag
 
         }).success(function (resultData) {
 
-        }).error(function () { $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.error_message = "An Error occurred !! Please Try Again !!"; })
 
 
     }

@@ -165,16 +165,16 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                             break;
                         }
                     }
-
+                    var CredentialingContractRequests = TemporaryData.CredentialingContractRequests.Where(c => c.StatusType == StatusType.Active);
                     if (!flag)
                     {
-                        foreach (var credReqData in TemporaryData.CredentialingContractRequests)
+                        foreach (var credReqData in CredentialingContractRequests)
                         {
                             if (credReqData.Status == "Active" && credReqData.ContractRequestStatus != "Inactive")
                             {
                                 credReqData.DocumentPath = GetContractRequestDoc(credReqData.CredentialingContractRequestID);
                             }
-                            CompleteButtonStatus = credReqData.ContractGrid.Count() > 0 && credReqData.ContractGrid.Any(x=>x.Status != StatusType.Inactive.ToString()) ? false : true;
+                            CompleteButtonStatus = credReqData.ContractGrid.Count() > 0 && credReqData.ContractGrid.Any(x=>x.Status == StatusType.Active.ToString()) ? false : true;
                         }
                         //CompleteButtonStatus = true;
                     }
@@ -885,7 +885,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             }
             //var dataCredentialingContractRequest1 = JsonConvert.SerializeObject(dataCredentialingContractRequest, new JsonSerializerSettings { DateTimeZoneHandling = DateTimeZoneHandling.Local });
             //return Json(new { status = status, dataCredentialingContractRequest = dataCredentialingContractRequest1 }, JsonRequestBehavior.AllowGet);
-            return JsonConvert.SerializeObject(new { status = status, dataCredentialingContractRequest = dataCredentialingContractRequest }, new JsonSerializerSettings { DateTimeZoneHandling = DateTimeZoneHandling.Local });
+            return JsonConvert.SerializeObject(new { status = status,currentuser=HttpContext.User.Identity.Name ,dataCredentialingContractRequest = dataCredentialingContractRequest }, new JsonSerializerSettings { DateTimeZoneHandling = DateTimeZoneHandling.Local });
         }
 
         [HttpPost]

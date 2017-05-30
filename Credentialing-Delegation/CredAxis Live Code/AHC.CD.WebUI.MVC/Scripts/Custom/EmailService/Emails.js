@@ -81,7 +81,7 @@ EmailServiceApp.controller("EmailServiceController", function ($rootScope, $time
     $scope.globalSearchBoxData = '';
     $rootScope.emailItems = [];
     $rootScope.messageTabName = 'Sent';
-
+    $rootScope.GlobalSearchbox = true;
     var ctrl = this;
     this.displayed = [];
     var pipecall = 0;

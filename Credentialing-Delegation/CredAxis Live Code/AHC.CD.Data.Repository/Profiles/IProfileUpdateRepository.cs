@@ -13,5 +13,6 @@ namespace AHC.CD.Data.Repository.Profiles
         List<ProfileUpdatesTrackerDTO> GetAllUpdatesByID(int profileID);
         List<ProfileUpdatesTrackerDTO> GetAllUpdatesHistory();
         List<ProfileUpdatesTrackerDTO> GetAllUpdatesHistoryByID(int profileID);
+        //List<AHC.CD.Entities.MasterProfile.HospitalPrivilege.HospitalPrivilegeDetail> GetAllhospitalpreviligesByID(int hospitalpreviligeinfoid);
     }
 }

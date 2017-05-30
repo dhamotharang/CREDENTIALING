@@ -130,6 +130,10 @@ FacilityInformationApp.controller('FacilityInformationController', ['$scope', '$
 
     masterDataService.getMasterData(rootDir + "/MasterDataNew/GetAllMidLevelPractitioners").then(function (Providers) {
         $scope.MidLevelProviders = Providers;
+        for(var m=0;m<$scope.MidLevelProviders.length;m++)
+        {
+            $scope.MidLevelProviders[m].PersonalDetail.FullName = $scope.MidLevelProviders[m].PersonalDetail.FirstName + " " + $scope.MidLevelProviders[m].PersonalDetail.MiddleName + " " + $scope.MidLevelProviders[m].PersonalDetail.LastName;
+        }
     });
 
 

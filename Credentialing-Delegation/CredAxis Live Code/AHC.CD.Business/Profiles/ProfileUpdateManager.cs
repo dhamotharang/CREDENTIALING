@@ -298,9 +298,10 @@ namespace AHC.CD.Business.Profiles
                 case "Federal DEA": return filteredFinalDataList = ConstructChangesForFederalDEA(updatedData.oldData, updatedData.NewConvertedData);
                 case "Profile Disclosure": return filteredFinalDataList = ConstructChangesForDisclosure(updatedData.oldData, updatedData.NewConvertedData);
                 case "Personal Details": return filteredFinalDataList = ConstructChangesForPersonalDetail(updatedData.oldData, updatedData.NewConvertedData);
-                case "Language Info": return filteredFinalDataList = ConstructChangesForLanguages(updatedData.oldData, updatedData.NewConvertedData);
+                case "Language Information": return filteredFinalDataList = ConstructChangesForLanguages(updatedData.oldData, updatedData.NewConvertedData);
                 case "Contact Details": return filteredFinalDataList = ConstructChangesForContact(updatedData.oldData, updatedData.NewConvertedData);
                 case "Facility": return filteredFinalDataList = ConstructChangesForPracticeLocation(updatedData.oldData, updatedData.NewConvertedData);
+                case "Other Information": return filteredFinalDataList = ConstructChangesForPracticeLocationOtherInformation(updatedData.oldData, updatedData.NewConvertedData);
                 case "Office Hours": return filteredFinalDataList = ConstructChangesForOfficeHours(updatedData.oldData, updatedData.NewConvertedData);
                 case "Open Practice Status": return filteredFinalDataList = ConstructChangesForPracitceStatus(updatedData.oldData, updatedData.NewConvertedData);
                 case "CoveringColleague": return filteredFinalDataList = ConstructChangesForCoveringCollegues(updatedData.oldData, updatedData.NewConvertedData);
@@ -648,7 +649,7 @@ namespace AHC.CD.Business.Profiles
             if (oldData.DEANumber != newData.DEANumber)
             {
                 ProfileUpdatedData DEA = new ProfileUpdatedData();
-                DEA.FieldName = "DEANumber";
+                DEA.FieldName = "DEA Number";
                 DEA.OldValue = oldData.DEANumber;
                 DEA.NewValue = newData.DEANumber;
                 updatedList.Add(DEA);
@@ -656,7 +657,7 @@ namespace AHC.CD.Business.Profiles
             if (oldData.ExpiryDate != newData.ExpiryDate)
             {
                 ProfileUpdatedData DEA = new ProfileUpdatedData();
-                DEA.FieldName = "ExpiryDate";
+                DEA.FieldName = "Expiry Date";
 
                 if (oldData.ExpiryDate != null)
                 {
@@ -674,7 +675,7 @@ namespace AHC.CD.Business.Profiles
             if (oldData.IsInGoodStanding != newData.IsInGoodStanding)
             {
                 ProfileUpdatedData DEA = new ProfileUpdatedData();
-                DEA.FieldName = "GoodStandingYesNoOption";
+                DEA.FieldName = "License in good standing?";
                 DEA.OldValue = oldData.IsInGoodStanding;
                 DEA.NewValue = newData.IsInGoodStanding;
                 updatedList.Add(DEA);
@@ -682,7 +683,7 @@ namespace AHC.CD.Business.Profiles
             if (oldData.IssueDate != newData.IssueDate)
             {
                 ProfileUpdatedData DEA = new ProfileUpdatedData();
-                DEA.FieldName = "IssueDate";
+                DEA.FieldName = "Issue Date";
 
                 if (oldData.IssueDate != null)
                 {
@@ -700,7 +701,7 @@ namespace AHC.CD.Business.Profiles
             if (oldData.StateOfReg != newData.StateOfReg)
             {
                 ProfileUpdatedData DEA = new ProfileUpdatedData();
-                DEA.FieldName = "StateOfReg";
+                DEA.FieldName = "State of Registration";
                 DEA.OldValue = oldData.StateOfReg;
                 DEA.NewValue = newData.StateOfReg;
                 updatedList.Add(DEA);
@@ -737,10 +738,14 @@ namespace AHC.CD.Business.Profiles
         private List<ProfileUpdatedData> ConstructChangesForDisclosure(dynamic oldDisclosureData, dynamic newDisclosureData)
         {
             List<ProfileUpdatedData> updatedList = new List<ProfileUpdatedData>();
-            ProfileDisclosure data = new JavaScriptSerializer().Deserialize<ProfileDisclosure>(oldDisclosureData);
+            
             var disclosureRepo = uow.GetGenericRepository<ProfileDisclosure>();
+            var questionRepo = uow.GetGenericRepository<Question>();
+            var questionList = questionRepo.GetAll();
 
-            ProfileDisclosure oldData = disclosureRepo.Find(d => d.ProfileDisclosureID == data.ProfileDisclosureID, "ProfileDisclosureQuestionAnswers, ProfileDisclosureQuestionAnswers.Question");
+            ProfileDisclosure oldData = new JavaScriptSerializer().Deserialize<ProfileDisclosure>(oldDisclosureData);
+
+            //ProfileDisclosure oldData = disclosureRepo.Find(d => d.ProfileDisclosureID == data.ProfileDisclosureID, "ProfileDisclosureQuestionAnswers, ProfileDisclosureQuestionAnswers.Question");
 
             ProfileDisclosure newData = new JavaScriptSerializer().Deserialize<ProfileDisclosure>(newDisclosureData);
 
@@ -749,10 +754,11 @@ namespace AHC.CD.Business.Profiles
 
             for (int i = 0; i < count; i++)
             {
-                if (oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).ProviderDisclousreAnswer != newData.ProfileDisclosureQuestionAnswers.ElementAt(i).ProviderDisclousreAnswer)
+                if (oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).ProviderDisclousreAnswer != newData.ProfileDisclosureQuestionAnswers.ElementAt(i).ProviderDisclousreAnswer || oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).Reason != newData.ProfileDisclosureQuestionAnswers.ElementAt(i).Reason)
                 {
+                    var questionTitle = questionList.FirstOrDefault(q => q.QuestionID == oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).QuestionID).Title;
                     ProfileUpdatedData disclosure = new ProfileUpdatedData();
-                    disclosure.FieldName = oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).Question.Title;
+                    disclosure.FieldName = questionTitle;
 
                     if (oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).Reason != null)
                         disclosure.OldValue = oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).ProviderDisclousreAnswer + "(Reason : " + oldData.ProfileDisclosureQuestionAnswers.ElementAt(i).Reason + ")";
@@ -780,7 +786,7 @@ namespace AHC.CD.Business.Profiles
             var personalRepo = uow.GetGenericRepository<PersonalDetail>();
             PersonalDetail data = new JavaScriptSerializer().Deserialize<PersonalDetail>(oldPersonalData);
             PersonalDetail oldData = personalRepo.Find(d => d.PersonalDetailID == data.PersonalDetailID, "ProviderLevel, ProviderTitles, ProviderTitles.ProviderType");
-
+            oldData.ProviderTitles = oldData.ProviderTitles.Where(p => p.Status == StatusType.Active.ToString()).ToList();
 
             PersonalDetail newData = new JavaScriptSerializer().Deserialize<PersonalDetail>(newPersonalData);
 
@@ -873,12 +879,12 @@ namespace AHC.CD.Business.Profiles
             string oldValue = "";
             if (oldCount > 0)
             {
-                if (oldData.ProviderTitles.ElementAt(0).ProviderType.Status == "Active")
+                if (oldData.ProviderTitles.ElementAt(0).Status == StatusType.Active.ToString())
                     oldValue = oldData.ProviderTitles.ElementAt(0).ProviderType.Title;
 
                 for (int i = 1; i < oldCount; i++)
                 {
-                    if (oldData.ProviderTitles.ElementAt(i).ProviderType.Status == "Active")
+                    if (oldData.ProviderTitles.ElementAt(i).Status == StatusType.Active.ToString())
                         oldValue = oldValue + "," + oldData.ProviderTitles.ElementAt(i).ProviderType.Title;
 
                 }
@@ -887,33 +893,33 @@ namespace AHC.CD.Business.Profiles
             string newValue = "";
             if (newCount > 0)
             {
-                foreach (var item in ProviderTitles)
-                {
-                    if (item.ProviderTypeID == newData.ProviderTitles.ElementAt(0).ProviderTypeId && newData.ProviderTitles.ElementAt(0).Status == "Active")
-                    {
-                        newValue = item.Title;
-                    }
-                }
+                newValue = ProviderTitles.FirstOrDefault(t => t.ProviderTypeID == newData.ProviderTitles.ElementAt(0).ProviderTypeId && newData.ProviderTitles.ElementAt(0).Status == StatusType.Active.ToString()).Title;
+                //foreach (var item in ProviderTitles)
+                //{
+                //    if (item.ProviderTypeID == newData.ProviderTitles.ElementAt(0).ProviderTypeId && newData.ProviderTitles.ElementAt(0).Status == StatusType.Active.ToString())
+                //    {
+                //        newValue = item.Title;
+                //    }
+                //}
 
                 for (int i = 1; i < newCount; i++)
                 {
-                    foreach (var item in ProviderTitles)
+                    if (newValue != "")
                     {
-                        if (newValue != "")
-                        {
-                            if (item.ProviderTypeID == newData.ProviderTitles.ElementAt(i).ProviderTypeId && newData.ProviderTitles.ElementAt(i).Status == "Active")
-                            {
-                                newValue = newValue + "," + item.Title;
-                            }
-                        }
-                        else
-                        {
-                            if (item.ProviderTypeID == newData.ProviderTitles.ElementAt(i).ProviderTypeId && newData.ProviderTitles.ElementAt(i).Status == "Active")
-                            {
-                                newValue = item.Title;
-                            }
-                        }
+                        newValue = newValue + "," + ProviderTitles.FirstOrDefault(t => t.ProviderTypeID == newData.ProviderTitles.ElementAt(i).ProviderTypeId && newData.ProviderTitles.ElementAt(i).Status == StatusType.Active.ToString()).Title;
+                        //if (item.ProviderTypeID == newData.ProviderTitles.ElementAt(i).ProviderTypeId && newData.ProviderTitles.ElementAt(i).Status == StatusType.Active.ToString())
+                        //{
+                        //    newValue = newValue + "," + item.Title;
+                        //}
                     }
+                    else
+                    {
+                        newValue = ProviderTitles.FirstOrDefault(t => t.ProviderTypeID == newData.ProviderTitles.ElementAt(i).ProviderTypeId && newData.ProviderTitles.ElementAt(i).Status == StatusType.Active.ToString()).Title;
+                        //if (item.ProviderTypeID == newData.ProviderTitles.ElementAt(i).ProviderTypeId && newData.ProviderTitles.ElementAt(i).Status == StatusType.Active.ToString())
+                        //{
+                        //    newValue = item.Title;
+                        //}
+                    }                   
 
                 }
             }
@@ -2347,6 +2353,100 @@ namespace AHC.CD.Business.Profiles
             return updatedList;
         }
 
+        private List<ProfileUpdatedData> ConstructChangesForPracticeLocationOtherInformation(dynamic oldLocationData, dynamic newLocationData)
+        {
+            List<ProfileUpdatedData> updatedList = new List<ProfileUpdatedData>();
+
+            PracticeLocationDetail oldData = new JavaScriptSerializer().Deserialize<PracticeLocationDetail>(oldLocationData);
+            PracticeLocationDetail newData = new JavaScriptSerializer().Deserialize<PracticeLocationDetail>(newLocationData);
+
+            if (oldData.PracticeLocationCorporateName != newData.PracticeLocationCorporateName)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Corporate or Practice Name";
+                otherInfo.OldValue = oldData.PracticeLocationCorporateName;
+                otherInfo.NewValue = newData.PracticeLocationCorporateName;
+                updatedList.Add(otherInfo);
+            }
+
+            if (oldData.GroupName != newData.GroupName)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Group Name";
+                otherInfo.OldValue = oldData.GroupName;
+                otherInfo.NewValue = newData.GroupName;
+                updatedList.Add(otherInfo);
+            }
+
+            if (oldData.IsPrimary != newData.IsPrimary)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Is it your primary practice location?";
+                otherInfo.OldValue = oldData.IsPrimary;
+                otherInfo.NewValue = newData.IsPrimary;
+                updatedList.Add(otherInfo);
+            }
+
+            if (oldData.CurrentlyPracticingAtThisAddress != newData.CurrentlyPracticingAtThisAddress)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Currently Practicing At This Address?";
+                otherInfo.OldValue = oldData.CurrentlyPracticingAtThisAddress;
+                otherInfo.NewValue = newData.CurrentlyPracticingAtThisAddress;
+                updatedList.Add(otherInfo);
+            }
+
+            if (oldData.StartDate != newData.StartDate)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Start Date";
+                if (oldData.StartDate != null)
+                {
+                    DateTime oldDate = oldData.StartDate.Value.ToLocalTime();
+                    otherInfo.OldValue = ConvertToDateString(oldDate);
+                }
+                if (newData.StartDate != null)
+                {
+                    DateTime newDate = newData.StartDate.Value.ToLocalTime();
+                    otherInfo.NewValue = ConvertToDateString(newDate);
+                }
+
+                updatedList.Add(otherInfo);
+
+            }
+
+            if (oldData.SendGeneralCorrespondence != newData.SendGeneralCorrespondence)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Send General Correspondence Here?";
+                otherInfo.OldValue = oldData.SendGeneralCorrespondence;
+                otherInfo.NewValue = newData.SendGeneralCorrespondence;
+                updatedList.Add(otherInfo);
+            }
+
+            if (oldData.PrimaryTaxId != newData.PrimaryTaxId)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Select primary tax ID";
+                otherInfo.OldValue = oldData.PrimaryTaxId;
+                otherInfo.NewValue = newData.PrimaryTaxId;
+                updatedList.Add(otherInfo);
+            }
+
+            if (oldData.PracticeExclusively != newData.PracticeExclusively)
+            {
+                ProfileUpdatedData otherInfo = new ProfileUpdatedData();
+                otherInfo.FieldName = "Do you practice exclusively within inpatient setting ?";
+                otherInfo.OldValue = oldData.PracticeExclusively;
+                otherInfo.NewValue = newData.PracticeExclusively;
+                updatedList.Add(otherInfo);
+            }
+
+
+
+            return updatedList;
+        }
+
         public string SaveDocumentTemporarily(DocumentDTO document, string documentSubPath, string documentTitle, int profileId)
         {
             string documentTemporaryPath = AddTemporaryDocument(documentSubPath, documentTitle, null, document, profileId);
@@ -2476,6 +2576,25 @@ namespace AHC.CD.Business.Profiles
 
 
             return email;
+        }
+
+
+        public void dropAllHospitalPrivilegeDetails(int HospitalPrivilegeInformationID)
+        {
+            try
+            {
+                var HospitalPrivilegeInforepo = uow.GetGenericRepository<AHC.CD.Entities.MasterProfile.HospitalPrivilege.HospitalPrivilegeInformation>();
+                AHC.CD.Entities.MasterProfile.HospitalPrivilege.HospitalPrivilegeInformation hospitalPrivilegeInformation = HospitalPrivilegeInforepo.Find(p => p.HospitalPrivilegeInformationID == HospitalPrivilegeInformationID);
+                if (hospitalPrivilegeInformation.HospitalPrivilegeYesNoOption == YesNoOption.NO)
+                {
+                    hospitalPrivilegeInformation.HospitalPrivilegeDetails.Clear();
+                }
+                HospitalPrivilegeInforepo.SaveAsync();           
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         #region Private Methods

@@ -274,7 +274,7 @@ paymentRemittanceApp.controller('PaymentRemittanceController', function ($scope,
                                 Address: $scope.ConstructAddress(tempaddress),
                                 EmailAddress: data.paymentRemittancePerson.PaymentAndRemittancePerson.EmailAddress
                             });
-                            messageAlertEngine.callAlertMessage("paymentRemittancePersonSuccessMsg", "PaymentRemittancePerson Information Added successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("paymentRemittancePersonSuccessMsg", "Payment and Remittance Information Added successfully.", "success", true);
                         }
                         else {
                             messageAlertEngine.callAlertMessage("alertPaymentRemittancePerson", data.status, "danger", true);
@@ -404,7 +404,7 @@ paymentRemittanceApp.controller('PaymentRemittanceController', function ($scope,
                                 Address: $scope.ConstructAddress(tempaddress),
                                 EmailAddress: data.paymentRemittancePerson.PaymentAndRemittancePerson.EmailAddress
                             };
-                            messageAlertEngine.callAlertMessage("paymentRemittancePersonSuccessMsg", "PaymentRemittancePerson Information Updated successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("paymentRemittancePersonSuccessMsg", "Payment and Remittance Information Updated successfully.", "success", true);
                         }
                         else {
                             messageAlertEngine.callAlertMessage("alertPaymentRemittancePerson", data.status, "danger", true);

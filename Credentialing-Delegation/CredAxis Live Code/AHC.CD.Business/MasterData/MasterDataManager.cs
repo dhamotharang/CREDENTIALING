@@ -1438,6 +1438,7 @@ namespace AHC.CD.Business.MasterData
             try
             {
                 MidLevelPractitioners = await repositoryManager.GetAsync<Profile>(f => f.PersonalDetail.ProviderLevelID == 2);
+                MidLevelPractitioners = MidLevelPractitioners.OrderBy(x => x.PersonalDetail.FirstName); 
             }
             catch (Exception)
             {

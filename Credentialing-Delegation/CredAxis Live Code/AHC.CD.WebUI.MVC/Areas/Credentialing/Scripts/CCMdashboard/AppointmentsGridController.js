@@ -22,7 +22,7 @@
         });
     };
 
-    //--Method to check the pending item is selected or not
+    //------- Method to check the pending item is selected or not -----------
     this.CheckPendingSelected = function isPendingSelected(records) {
         return records.some(function (record) {
             return record.SelectStatus == true;
@@ -43,6 +43,7 @@
         if (args.RowObject !== null && args.RowObject !== undefined) {
             $rootScope.ToHighLightRowObject = args.RowObject;
             $scope.TempToHighLightRowObject = args.RowObject;
+
         }
         switch (args.type) {
             case "New":
@@ -69,9 +70,25 @@
                 break;
         }
         $scope.tableStateValue = CCMDashboardFactory.resetTableState($scope.tableStateValue);
+        if (args.RowObject) $self.swapRow(args.RowObject);
         $self.callServer($scope.tableStateValue, args.RowObject);
         $timeout(countUp, 8000);
     });
+
+    this.swapRow = function (obj) {
+        try {
+            var index = $rootScope.TempCCMAppointments.indexOf(obj);
+            obj = $rootScope.TempCCMAppointments[index];
+            if (index > -1) {
+                $rootScope.TempCCMAppointments.splice(index, 1);
+                $rootScope.TempCCMAppointments.splice(0, 0, obj);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+
+
+    }
 
     var countUp = function () {
         $scope.TempToHighLightRowObject = "";
@@ -84,249 +101,119 @@
         $rootScope.VisibilityControl = '';
         $rootScope.TempObjectForStatus.SingleDetailedApprovalAction = false;
     }
+
     //==================================================Report Approval Form Submission Script Start ======================================================
+    //-----to clear digital sign-----
     $scope.cleardigitalsignature = function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
-    //==================================================Report Approval Form Submission Script End   ======================================================
-    //$scope.CheckStatus = function (appointment,event) {
-    //    if ((appointment.Status == 'Pending' || appointment.Status == 'New') && !$rootScope.TempObjectForStatus.SingleDetailedApprovalAction) {
-    //        $rootScope.TempCCMAppointments[$rootScope.TempCCMAppointments.indexOf(appointment)].SelectStatus = !appointment.SelectStatus;
-    //        //$scope.tableStateValue = CCMDashboardFactory.resetTableState($scope.tableStateValue);
-    //        //$self.callServer($scope.tableStateValue);
-    //        if ($filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true }).length > 0) {
-    //            $rootScope.TempObjectForStatus.QuickApprovalAction = true;
-    //        } else {
-    //            $rootScope.TempObjectForStatus.QuickApprovalAction = false;
-    //        }
-    //    }
-    //}
+
+    $scope.showreusesignaturediv = true;
+    $scope.showuploaddiv = false;
+    $scope.showsignaturediv = false;
+    $scope.errormessageforsignature = false;
+    $scope.SavingStatus = false;
+    $scope.errormessageforuploadsignature = false;
+    $scope.RemarkForApprovalStatus = "";
+    $scope.validatesignature = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPgAAABiCAYAAAB9LB4uAAACaklEQVR4Xu3TAREAAAgCMelf2h5/swFDdo4AgazAsskEI0DgDNwTEAgLGHi4XNEIGLgfIBAWMPBwuaIRMHA/QCAsYODhckUjYOB+gEBYwMDD5YpGwMD9AIGwgIGHyxWNgIH7AQJhAQMPlysaAQP3AwTCAgYeLlc0AgbuBwiEBQw8XK5oBAzcDxAICxh4uFzRCBi4HyAQFjDwcLmiETBwP0AgLGDg4XJFI2DgfoBAWMDAw+WKRsDA/QCBsICBh8sVjYCB+wECYQEDD5crGgED9wMEwgIGHi5XNAIG7gcIhAUMPFyuaAQM3A8QCAsYeLhc0QgYuB8gEBYw8HC5ohEwcD9AICxg4OFyRSNg4H6AQFjAwMPlikbAwP0AgbCAgYfLFY2AgfsBAmEBAw+XKxoBA/cDBMICBh4uVzQCBu4HCIQFDDxcrmgEDNwPEAgLGHi4XNEIGLgfIBAWMPBwuaIRMHA/QCAsYODhckUjYOB+gEBYwMDD5YpGwMD9AIGwgIGHyxWNgIH7AQJhAQMPlysaAQP3AwTCAgYeLlc0AgbuBwiEBQw8XK5oBAzcDxAICxh4uFzRCBi4HyAQFjDwcLmiETBwP0AgLGDg4XJFI2DgfoBAWMDAw+WKRsDA/QCBsICBh8sVjYCB+wECYQEDD5crGgED9wMEwgIGHi5XNAIG7gcIhAUMPFyuaAQM3A8QCAsYeLhc0QgYuB8gEBYw8HC5ohEwcD9AICxg4OFyRSNg4H6AQFjAwMPlikbAwP0AgbCAgYfLFY2AgfsBAmEBAw+XKxoBA/cDBMICBh4uVzQCBu4HCIQFDDxcrmgEHgEaAGNMPbq1AAAAAElFTkSuQmCC";
+
+    //--------- To Change the signature option ----
+    $scope.ChangeSignatureOption = function () {
+        type = event.currentTarget.value;
+        var canvas;
+        canvas = document.getElementById('SignatureCanvas');
+        context = canvas.getContext('2d');
+        if (type == 'upload') {
+            $('#selectfile').trigger('click', function () { });
+            $scope.showreusesignaturediv = false;
+            $scope.showsignaturediv = false;
+            $scope.showuploaddiv = true;
+        } else if (type == 'digitalsignature') {
+            $scope.showreusesignaturediv = false;
+            $scope.showuploaddiv = false;
+            $scope.errormessageforsignature = false;
+            $scope.showsignaturediv = true;
+        }
+        else if (type == 'reusedigitalsignature') {
+            $scope.showsignaturediv = false;
+            $scope.showuploaddiv = false;
+            $scope.showreusesignaturediv = true;
+        }
+      
+        if (type == 'upload' || type == 'reusedigitalsignature') {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        if (type != 'upload') {
+            $("#SignatureFile").replaceWith($("#SignatureFile").val('').clone(true));
+        }
+    };
+
+    //-----This method will validate the input --------
+    $scope.SaveAppoinmentDecision = function (decision) {
+        $scope.SavingStatus = true;
+       
+        try {
+            CCMDashboardFactory.ResetFormForValidation(angular.element("#MultipleCCMAction"));
+        } catch (e) {
+
+        }
+
+        if (angular.element("#signatureOption").val() == "digitalsignature") {
+            var canvas;
+            canvas = document.getElementById('SignatureCanvas');
+            $scope.image = canvas.toDataURL("image/png");
+            if ($scope.image == document.getElementById('blank').toDataURL() || $scope.image == $scope.validatesignature)
+                $scope.errormessageforsignature = true;
+            else {
+                $scope.errormessageforsignature = false;
+                $self.submitForm(decision);
+
+            }
+        }
+        if (angular.element("#signatureOption").val() == "reusedigitalsignature") {
+            $scope.image = $rootScope.SignaturePath;
+        }
+        if (angular.element("#signatureOption").val() != "digitalsignature") {
+            if ($("#MultipleCCMAction").valid() == false && $("#signatureOption").val() == "upload")
+                $scope.errormessageforuploadsignature = true;
+
+            if ($("#MultipleCCMAction").valid()) {
+                $scope.errormessageforuploadsignature = false;
+                $self.submitForm(decision);
+            }
+        }
+
+    }
+    //------ To submit the form -----
+    this.submitForm = function (decision) {
+        var selectedRows = $filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true });
+        var QuickActionSet = selectedRows.map(function (a) { return { CredentialingInfoId: a.ProviderCredentialingInfoID, CredentialingAppointmentDetailID: a.CredentialingAppointmentDetailID, ProfileId: a.ProfileID, RecommendedLevel: a.RecommendedLevel } });
+        var AppointmentsStatus = decision == "Approve" ? 1 : (decision == "Reject") ? 2 : 3;
+        var formdata = new FormData();
+        var form5 = angular.element("#MultipleCCMAction").serializeArray();
+        for (var i in form5) {
+            formdata.append(form5[i].name, form5[i].value);
+        }
+        formdata.append('AppointmentsStatus', AppointmentsStatus);
+        jQuery.each(QuickActionSet, function (key, value) {
+            formdata.append('QuickActionSet[' + key + '][CredentialingAppointmentDetailID]', QuickActionSet[key]['CredentialingAppointmentDetailID']); formdata.append('QuickActionSet[' + key + '][CredentialingInfoId]', QuickActionSet[key]['CredentialingInfoId']); formdata.append('QuickActionSet[' + key + '][ProfileId]', QuickActionSet[key]['ProfileId']); formdata.append('QuickActionSet[' + key + '][RecommendedLevel]', QuickActionSet[key]['RecommendedLevel']);
+        })
+        formdata.append(angular.element("#SignatureFile")[0].name, angular.element("#SignatureFile")[0].files[0]);
+        formdata.append('SignaturePath', $rootScope.SignaturePath);
+        CCMDashboardService.SaveQuickActionAppointments(formdata).then(function (response) {
+            console.log(response);
+        });
+    }
+
     $scope.SwitchViews = function () {
         $rootScope.TempObjectForStatus.CredentailingApprovalRequest = false;
         $rootScope.TempObjectForStatus.AppointmentDashboard = true
         $scope.$parent.GridType = "";
     }
+
     $scope.TableExport = function (type, tableID) {
         CCMDashboardFactory.exportToTable(type, tableID);
     }
-
-    //================================== Temporary function Declaration End ===============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //================================= Chart Container Starts  ===========================================================================================
-    //$scope.options = {
-    //    chart: {
-    //        type: 'multiBarChart',
-    //        height: 450,
-    //        margin: {
-    //            top: 20,
-    //            right: 20,
-    //            bottom: 45,
-    //            left: 45
-    //        },
-    //        clipEdge: true,
-    //        duration: 500,
-    //        stacked: true,
-    //        xAxis: {
-    //            axisLabel: 'Time (ms)',
-    //            showMaxMin: false,
-    //            tickFormat: function (d) {
-    //                return d3.format(',f')(d);
-    //            }
-    //        },
-    //        yAxis: {
-    //            axisLabel: 'Y Axis',
-    //            axisLabelDistance: -20,
-    //            tickFormat: function (d) {
-    //                return d3.format(',.1f')(d);
-    //            }
-    //        }
-    //    }
-    //};
-
-    //$scope.data = generateData();
-
-    ///* Random Data Generator (took from nvd3.org) */
-    //function generateData() {
-    //    return stream_layers(3, 50 + Math.random() * 50, .1).map(function (data, i) {
-    //        return {
-    //            key: 'Stream' + i,
-    //            values: data
-    //        };
-    //    });
-    //}
-
-    ///* Inspired by Lee Byron's test data generator. */
-    //function stream_layers(n, m, o) {
-    //    if (arguments.length < 3) o = 0;
-    //    function bump(a) {
-    //        var x = 1 / (.1 + Math.random()),
-    //            y = 2 * Math.random() - .5,
-    //            z = 10 / (.1 + Math.random());
-    //        for (var i = 0; i < m; i++) {
-    //            var w = (i / m - y) * z;
-    //            a[i] += x * Math.exp(-w * w);
-    //        }
-    //    }
-    //    return d3.range(n).map(function () {
-    //        var a = [], i;
-    //        for (i = 0; i < m; i++) a[i] = o + o * Math.random();
-    //        for (i = 0; i < 5; i++) bump(a);
-    //        return a.map(stream_index);
-    //    });
-    //}
-
-    ///* Another layer generator using gamma distributions. */
-    //function stream_waves(n, m) {
-    //    return d3.range(n).map(function (i) {
-    //        return d3.range(m).map(function (j) {
-    //            var x = 20 * j / m - i / 3;
-    //            return 2 * x * Math.exp(-.5 * x);
-    //        }).map(stream_index);
-    //    });
-    //}
-
-    //function stream_index(d, i) {
-    //    return { x: i, y: Math.max(0, d) };
-    //}
-
-    //$scope.options1 = {
-    //    chart: {
-    //        type: 'discreteBarChart',
-    //        height: 450,
-    //        margin: {
-    //            top: 20,
-    //            right: 20,
-    //            bottom: 50,
-    //            left: 55
-    //        },
-    //        x: function (d) { return d.label; },
-    //        y: function (d) { return d.value + (1e-10); },
-    //        showValues: true,
-    //        valueFormat: function (d) {
-    //            return d3.format(',.4f')(d);
-    //        },
-    //        duration: 500,
-    //        xAxis: {
-    //            axisLabel: 'X Axis'
-    //        },
-    //        yAxis: {
-    //            axisLabel: 'Y Axis',
-    //            axisLabelDistance: -10
-    //        }
-    //    }
-    //};
-
-    //$scope.data1 = [
-    //    {
-    //        key: "Cumulative Return",
-    //        values: [
-    //            {
-    //                "label": "A",
-    //                "value": -29.765957771107
-    //            },
-    //            {
-    //                "label": "B",
-    //                "value": 0
-    //            },
-    //            {
-    //                "label": "C",
-    //                "value": 32.807804682612
-    //            },
-    //            {
-    //                "label": "D",
-    //                "value": 196.45946739256
-    //            },
-    //            {
-    //                "label": "E",
-    //                "value": 0.19434030906893
-    //            },
-    //            {
-    //                "label": "F",
-    //                "value": -98.079782601442
-    //            },
-    //            {
-    //                "label": "G",
-    //                "value": -13.925743130903
-    //            },
-    //            {
-    //                "label": "H",
-    //                "value": -5.1387322875705
-    //            }
-    //        ]
-    //    }
-    //]
-    //================================= Chart Container Ends  ===============================================================================================
 
 
 }]);

@@ -408,6 +408,9 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                 if ($scope.Tasks[i].PlanName != null) {
                     $scope.Tasks[i].ViewPlanName = $scope.Tasks[i].PlanName.PlanName;
                 }
+                else {
+                    $scope.Tasks[i].ViewPlanName = "Not Available";
+                }
                 for (var j in $scope.users) {
                     if ($scope.Tasks[i].AssignedTo.AuthenicateUserId == $scope.users[j].AuthenicateUserId)
                         $scope.Tasks[i].AssignedToName = $scope.users[j].UserName;
@@ -586,6 +589,9 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.TempNotes = '';
         var tempforscroll = '';
         var NoteBy = '';
+        if (task.ViewPlanName == "Not Available")
+            task.ViewPlanName = "";
+
         if (task.ModeOfFollowUp != "" && task.ModeOfFollowUp != null) {
             $scope.Tempfollowup = angular.copy(task.ModeOfFollowUp);
             $scope.Tempfollowup1 = JSON.stringify(angular.copy(task.ModeOfFollowUp));
@@ -1061,7 +1067,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                                 $scope.Tasks[j].InsuranceCompanyName = updatedinsurancecompany;
                                 $scope.Tasks[j].PlanID = data.PlanID;
                                 $scope.Tasks[j].PlanName = data.PlanName;
-                                $scope.Tasks[j].ViewPlanName = updatedPlanName;
+                                $scope.Tasks[j].ViewPlanName = updatedPlanName != "" ? updatedPlanName : "Not Available";
                                 $scope.Tasks[j].ModeOfFollowUp = data.ModeOfFollowUp;
                                 $scope.mode = data.ModeOfFollowUp;
                                 $scope.Tasks[j].AssignedToName = validateassignedtoforedit;
@@ -1074,26 +1080,26 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                             }
                         }
 
-                        $.ajax({
-                            url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + localStorage.getItem("UserID"),
-                            //data: {
-                            //    format:  'json'
-                            //},
-                            error: function () {
-                                //$('#info').html('<p>An error has occurred</p>');
-                            },
-                            dataType: 'json',
-                            success: function (data) {
+                        //$.ajax({
+                        //    url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + localStorage.getItem("UserID"),
+                        //    //data: {
+                        //    //    format:  'json'
+                        //    //},
+                        //    error: function () {
+                        //        //$('#info').html('<p>An error has occurred</p>');
+                        //    },
+                        //    dataType: 'json',
+                        //    success: function (data) {
 
-                                localStorage.setItem("expired_Task", data.Result.ExpiredCount);
-                                localStorage.setItem("expiring_Task", data.Result.ExpiringTodayCount);
-                                localStorage.setItem("DataStatus", "Updated");
-                                $("#expired_Task").html("");
-                                $("#expiring_Task").html("");
-                                $("#expired_Task").html(localStorage.getItem("expired_Task"));
-                                $("#expiring_Task").html(localStorage.getItem("expiring_Task"));
-                            },
-                        })
+                        //        localStorage.setItem("expired_Task", data.Result.ExpiredCount);
+                        //        localStorage.setItem("expiring_Task", data.Result.ExpiringTodayCount);
+                        //        localStorage.setItem("DataStatus", "Updated");
+                        //        $("#expired_Task").html("");
+                        //        $("#expiring_Task").html("");
+                        //        $("#expired_Task").html(localStorage.getItem("expired_Task"));
+                        //        $("#expiring_Task").html(localStorage.getItem("expiring_Task"));
+                        //    },
+                        //})
                         $rootScope.trackerItems1 = angular.copy($scope.Tasks);
                         ctrl.temp = $scope.Tasks;
                         $scope.canceleditupdate();
@@ -1106,7 +1112,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                         $scope.task.ModeOfFollowUp = $scope.mode;
                         $scope.task.Notes = $scope.notess;
                         if ($scope.task.PlanName == "") {
-                            $scope.task.ViewPlanName = '';
+                            $scope.task.ViewPlanName = "Not Available";
                         }
                         else
                             $scope.task.ViewPlanName = $scope.task.PlanName;
@@ -1671,7 +1677,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                 Subject: histories.TaskTrackerHistories[j].Subject, NextFollowUpDate: $scope.ConvertDate(histories.TaskTrackerHistories[j].NextFollowUpDate),
                 ModeOfFollowUp: JSON.parse(histories.TaskTrackerHistories[j].ModeOfFollowUp),
                 InsuranceCompanyName: TasksAssignedinsurancecompanyname,
-                ViewPlanName: TasksAssignedplanname,
+                ViewPlanName: TasksAssignedplanname != "" ? TasksAssignedplanname : "Not Available",
                 LastUpdatedBy: histories.TaskTrackerHistories[j].LastUpdatedBy,
                 //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == $scope.TasksAssignedtoMe[k].AssignedToId })[0].AuthenicateUserId, AssignedTo: AssignedTo, HospitalID: $scope.TasksAssignedtoMe[k].HospitalID,
                 AssignedToId: AssignedToId[j], AssignedTo: AssignedTo[j],

@@ -68,7 +68,7 @@ profileApp.controller('LiabilityCtrl', ['$scope', '$rootScope', '$http', 'master
     //calling the method using $on(PSP-public subscriber pattern)
     $rootScope.$on('ProfessionalLiabilityInfoes', function (event, val) {
 
-        $scope.ProfessionalLiabilityPendingRequest = profileUpdates.getUpdates('Professional Liability', 'Professional Liability Info');
+        $scope.ProfessionalLiabilityPendingRequest = profileUpdates.getUpdates('Professional Liability', 'Professional Liability Information');
 
         $scope.ProfessionalLiabilityInfoes = val;
         for (var i = 0; i < $scope.ProfessionalLiabilityInfoes.length ; i++) {
@@ -246,6 +246,7 @@ profileApp.controller('LiabilityCtrl', ['$scope', '$rootScope', '$http', 'master
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,

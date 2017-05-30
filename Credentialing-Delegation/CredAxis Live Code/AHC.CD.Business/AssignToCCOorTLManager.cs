@@ -322,6 +322,29 @@ namespace AHC.CD.Business
         }
 
 
+        public List<int?> GetAlreadyAssignedProviders(List<int?> ProfileIDs, string CCorTL)
+        {
+            List<int?> ProfileIds = new List<int?>();
+            try
+            {
+                var ProviderUserRepo = uow.GetGenericRepository<ProviderUser>();
+                foreach (var id in ProfileIDs)
+                {
+                    var provider = ProviderUserRepo.Find(p => (p.ProfileId == id) && (p.ProfileUser.RoleCode == CCorTL));
+                    if(provider==null)
+                    {
+                        ProfileIds.Add(id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ProfileIds;
+        }
+
+
         //public void AssignTasksofaProvidertoAssignedCCO(int? CDUserID, List<int?> ProfileIDs)
         //{
         //    var TaskTrackerRepo = uow.GetGenericRepository<AHC.CD.Entities.TaskTracker.TaskTracker>();

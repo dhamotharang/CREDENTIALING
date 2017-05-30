@@ -11,5 +11,6 @@ namespace AHC.CD.Data.ADO.AspnetUser
        dynamic GetUserDetailsByUserID(string userID);
        List<dynamic> GetCCOAndCRADetails();
        dynamic UsersPasswordLastUpdated(string GUID);
+       string GetUserAuthID(string userName);
     }
 }

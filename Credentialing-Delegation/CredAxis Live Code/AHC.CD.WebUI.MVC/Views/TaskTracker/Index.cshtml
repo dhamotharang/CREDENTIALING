@@ -127,12 +127,12 @@
                         }
                     }
                     
-                    <div id="AddScheduleBtn" class="legend2 " style="margin-left: 93%; margin-right: 43px;">
+                    @*<div id="AddScheduleBtn" class="legend2 " style="margin-left: 93%; margin-right: 43px;">
                         <button ng-click="SetReminderModal()" class="btn btn-xs btn-primary" id="AddSchedule" tooltip data-toggle="tooltip" data-placement="top" title="Set Reminder"><i class="fa fa-calendar"></i></button>
                     </div>
                     <div ng-show="showSetReminder">
                         @Html.Partial("~/Views/Prototypes/Reminders/_setReminder.cshtml")
-                    </div>
+                    </div>*@
                     @*<div id="addButton" class="legend2 pull-right">
                             <button ng-click="showAddView()" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
                         </div>*@
@@ -140,8 +140,6 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="active"><a id="tabs1" data-toggle="tab" ng-click="showtabdata();tabName('DailyTasks')" href="#tab1">My Daily Tasks</a></li>
                             @*<li><a id="tabs2" data-toggle="tab" ng-click="showtabdata();tabName('TasksAssigned')" href="#tab1">Assigned By Me</a></li>*@
-                            <li><a id="tabs3" data-toggle="tab" ng-click="showtabdata();tabName('AllTasks')" href="#tab1">All Tasks</a></li>
-                            <li><a id="tabs4" data-toggle="tab" ng-click="showtabdata();tabName('ClosedTasks')" href="#tab1">Closed Tasks</a></li>
                             @if (HttpContext.Current.User.Identity.IsAuthenticated)
                             {
                                 var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
@@ -151,8 +149,14 @@
                                     {
                                         <li><a id="tabs5" data-toggle="tab" ng-click="showtabdata();tabName('AllTaskForAdmin')" href="#tab1">All Tasks</a></li>
                                     }
+                                    else
+                                    {
+                                        <li><a id="tabs3" data-toggle="tab" ng-click="showtabdata();tabName('AllTasks')" href="#tab1">All Tasks</a></li>
+                                    }
                                 }
-                            }
+                            }                            
+                            <li><a id="tabs4" data-toggle="tab" ng-click="showtabdata();tabName('ClosedTasks')" href="#tab1">Closed Tasks</a></li>
+                            
                             <li><a id="tabs6" data-toggle="tab" ng-click="showtabdata();tabName('History')" href="#tab1" ng-show="history">Task History</a></li>
                             <label tooltip data-toggle="tooltip" data-placement="top" title="Close" ng-show="history" style="color:red;cursor:pointer" class="fa fa-close" ng-click="closeHistory()"></label>
                         </ul>

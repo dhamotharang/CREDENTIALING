@@ -140,11 +140,11 @@ namespace AHC.CD.Business.Credentialing.Loading
                 var credentialingInfoRepo = uow.GetGenericRepository<CredentialingInfo>();
                 CredentialingInfo credentialingInfo = await credentialingInfoRepo.FindAsync(c => c.CredentialingInfoID == credentialingInfoID, "CredentialingContractRequests.ContractGrid, CredentialingContractRequests.ContractGrid.Report, CredentialingContractRequests.ContractGrid.ProfileSpecialty.Specialty, CredentialingContractRequests.ContractGrid.ProfileSpecialty.SpecialtyBoardCertifiedDetail, CredentialingContractRequests.ContractGrid.ProfileSpecialty.SpecialtyBoardCertifiedDetail.SpecialtyBoard, CredentialingContractRequests.ContractGrid.ProfilePracticeLocation.Facility,CredentialingContractRequests.ContractGrid.ProfilePracticeLocation.BillingContactPerson, CredentialingContractRequests.ContractGrid.CredentialingInfo.Plan.PlanLOBs, CredentialingContractRequests.ContractGrid.CredentialingInfo.Profile, CredentialingContractRequests.ContractGrid.BusinessEntity, CredentialingContractRequests.ContractGrid.LOB");
                 List<ContractGrid> contractGrid = null;
-                List<ContractGrid> requiredContractGrid = new List<ContractGrid>();
+                List<ContractGrid> requiredContractGrid = new List<ContractGrid>();                
                 if (credentialingInfo.CredentialingContractRequests != null)
                 {
                     List<CredentialingContractRequest> credentialingContractRequest = credentialingInfo.CredentialingContractRequests.Where(r => r.ContractGrid != null).ToList();
-                    contractGrid = credentialingContractRequest.SelectMany(r => r.ContractGrid).ToList();
+                    contractGrid = (credentialingContractRequest.SelectMany(r => r.ContractGrid).ToList()).Where(p=>p.Status=="Active").ToList();
                 }
                 foreach (var item in contractGrid)
                 {
@@ -230,7 +230,7 @@ namespace AHC.CD.Business.Credentialing.Loading
                     CredentialingActivityLog credentialingActivityLog = new CredentialingActivityLog();
                     credentialingActivityLog.ActivityByID = userId;
                     credentialingActivityLog.ActivityType = AHC.CD.Entities.MasterData.Enums.ActivityType.Report;
-                    credentialingActivityLog.ActivityStatusType = AHC.CD.Entities.MasterData.Enums.ActivityStatusType.Completed;
+                    //credentialingActivityLog.ActivityStatusType = AHC.CD.Entities.MasterData.Enums.ActivityStatusType.Completed;
                     credentialingActivityLogs.Add(credentialingActivityLog);
                     credentialingLog.CredentialingActivityLogs = credentialingActivityLogs;
                 }
@@ -334,7 +334,7 @@ namespace AHC.CD.Business.Credentialing.Loading
             foreach (ContractGrid grid in inactivateCredentialingContractRequest.ContractGrid)
             {
                 grid.StatusType = Entities.MasterData.Enums.StatusType.Inactive;
-                grid.ContractGridStatusType = null;
+                grid.ContractGridStatusType = StatusType.Declined;
             }
             credentialingRequestRepo.Update(inactivateCredentialingContractRequest);
             credentialingRequestRepo.Save();
@@ -369,8 +369,8 @@ namespace AHC.CD.Business.Credentialing.Loading
             {
                 var contractGridRepo = uow.GetGenericRepository<ContractGrid>();
                 ContractGrid inactivateContractGrid = await contractGridRepo.FindAsync(c => c.ContractGridID == contractGridID, "Report");
-                inactivateContractGrid.StatusType = Entities.MasterData.Enums.StatusType.Inactive;
-                inactivateContractGrid.StatusType = null;
+                //inactivateContractGrid.StatusType = Entities.MasterData.Enums.StatusType.Inactive;
+                inactivateContractGrid.StatusType = StatusType.Declined;                
                 contractGridRepo.Update(inactivateContractGrid);
                 contractGridRepo.Save();
                 return inactivateContractGrid.ContractGridID;

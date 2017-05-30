@@ -53,28 +53,28 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
         //get all AdmittingPrivileges data
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllAdmittingPrivileges()
         {
             var data = await masterDataManager.GetAllAdmittingPrivilegeAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllMilitaryPresentDuties()
         {
             var data = await masterDataManager.GetAllMilitaryPresentDutyAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllMilitaryDischarges()
         {
             var data = await masterDataManager.GetAllMilitaryDischargeAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllCertificates()
         {
             var data = await masterDataManager.GetAllCertificationAsync();
@@ -88,14 +88,14 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllSpecialities()
         {
             var data = await masterDataManager.GetAllSpecialtyAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllSchools()
         {
             var data = await masterDataManager.GetAllSchoolAsync();
@@ -109,14 +109,14 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllVisaTypes()
         {
             var data = await masterDataManager.GetAllVisaTypeAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllInsuaranceCompanyNames()
         {
             var data = await masterDataManager.GetAllInsuaranceCompanyNameAsync();
@@ -130,126 +130,126 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllLicenseStatus()
         {
             var data = await masterDataManager.GetAllLicenseStatusAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllStaffCategories()
         {
             var data = await masterDataManager.GetAllStaffCategoryAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllPracticeServiceQuestions()
         {
             var data = await masterDataManager.GetAllPracticeServiceQuestionAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllPracticeOpenStatusQuestions()
         {
             var data = await masterDataManager.GetAllPracticeOpenStatusQuestionAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllPracticeAccessibilityQuestions()
         {
             var data = await masterDataManager.GetAllPracticeAccessibilityQuestionAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllProviderTypes()
         {
             var data = await masterDataManager.GetAllProviderTypeAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllProviderLevels()
         {
             var data = await masterDataManager.GetAllProviderLevelsAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllOrganizationGroupAsync()
         {
             var data = await masterDataManager.GetAllOrganizationGroupAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllDEASchedules()
         {
             var data = await masterDataManager.GetAllDEAScheduleAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllHospitals()
         {
             var data = await masterDataManager.GetAllHospitalAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllInsuranceCarriers()
         {
             var data = await masterDataManager.GetAllInsuranceCarrierAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllQuestions()
         {
             var data = await masterDataManager.GetAllQuestionsAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllQuestionCategories()
         {
             var data = await masterDataManager.GetAllQuestionCategoriesAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllMilitaryBranches()
         {
             var data = await masterDataManager.GetAllMilitaryBranchAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllMilitaryRanks()
         {
             var data = await masterDataManager.GetAllMilitaryRanks();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<string> GetAllCities()
         {
             var data = await masterDataManager.GetCitiesAllAsync();
             return JsonConvert.SerializeObject(data);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<string> GetAllGroups()
         {
             var data = await masterDataManager.GetAllGroupsAsync();
             return JsonConvert.SerializeObject(data);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<string> GetAllOrganizationGroups()
         {
             var data = await masterDataManager.GetAllOrganizationGroupsAsync();
@@ -4116,7 +4116,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(new { status = status, facility = dataModelFacilityInformation }, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<string> GetAllMidLevelPractitioners()
         {
             var data = await masterDataManager.GetAllMidLevelPractitionersAsync();

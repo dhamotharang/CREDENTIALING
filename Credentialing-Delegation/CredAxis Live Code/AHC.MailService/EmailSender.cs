@@ -162,7 +162,9 @@ namespace AHC.MailService
                         //var b = email.SendingDate.ToString().Split(' ')[0];
                         //b = DateTime.Parse(b).ToString("MM/dd/yyyy");
                         
-                        if ((email.SendingDate.HasValue ? (email.SendingDate.Value.Date<=System.DateTime.Now.Date?true:false) : false) && (email.IsRecurrenceEnabled == YesNoOption.YES.ToString() ? ((email.EmailRecurrenceDetail.FromDate.HasValue ? email.EmailRecurrenceDetail.FromDate.Value.Date <= DateTime.Now.Date : true) && (email.EmailRecurrenceDetail.ToDate.HasValue ? email.EmailRecurrenceDetail.ToDate.Value.Date >= DateTime.Now.Date : true)) : true))
+                        if ((email.SendingDate.HasValue ? (email.SendingDate.Value.Date<=System.DateTime.Now.Date?true:false) : false) && (email.IsRecurrenceEnabled == YesNoOption.YES.ToString() ? 
+                                                                                                                                            ((email.EmailRecurrenceDetail.FromDate.HasValue ? email.EmailRecurrenceDetail.FromDate.Value.Date <= DateTime.Now.Date : true) 
+                                                                                                                                            && (email.EmailRecurrenceDetail.ToDate.HasValue ? email.EmailRecurrenceDetail.ToDate.Value.Date >= DateTime.Now.Date : true)) : false))
                         {
                             string toList = "";
                             string ccList = "";

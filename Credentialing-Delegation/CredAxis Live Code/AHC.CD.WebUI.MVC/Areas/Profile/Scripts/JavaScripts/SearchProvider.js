@@ -244,7 +244,7 @@ providerapp.controller('ProviderCtrl', function ($scope, $http, $location, $filt
             } catch (e) {
               
             }
-        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occurred !! Please Try Again !!"; })
 
     }
     
@@ -281,7 +281,7 @@ providerapp.controller('ProviderCtrl', function ($scope, $http, $location, $filt
             }
 
             
-        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occurred !! Please Try Again !!"; })
     }
 
     var tempindex;

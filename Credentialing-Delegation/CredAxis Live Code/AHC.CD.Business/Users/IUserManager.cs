@@ -31,6 +31,7 @@ namespace AHC.CD.Business.Users
         Task<UserDashboardNotification> MarkNotificationAsRead(int dashboardNotificationID);
         List<CDUser> GetAllUsers();
         Task<IEnumerable<CDUser>> GetAllCDUsers();
-        IEnumerable<CDUser> GetAllCDUsers1();       
+        IEnumerable<CDUser> GetAllCDUsers1();
+        Task<int> GetCDUserID(string userAuthID);
     }
 }

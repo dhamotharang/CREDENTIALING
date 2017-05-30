@@ -32,6 +32,9 @@ namespace AHC.CD.Entities.EmailNotifications
         [ForeignKey("CreatedBy")]
         public CDUser CreatedByUser { get; set; }
 
+        [Column(TypeName = "datetime2")]
+        public DateTime? CreatedOn { get; set; }
+
         public List<CDUser_GroupEmail> CDUserGroupMails { get; set; }
 
         #region Status

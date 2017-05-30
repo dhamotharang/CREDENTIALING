@@ -34,7 +34,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         private IChangeNotificationManager notificationManager;
         private IProfileUpdateManager profileUpdateManager = null;
         private IMasterDataManager masterDataManager = null;
-        
+
 
         public ProfessionalReferenceController(IProfileManager profileManager, IErrorLogger errorLogger, IChangeNotificationManager notificationManager, IProfileUpdateManager profileUpdateManager, IMasterDataManager masterDataManager)
         {
@@ -42,7 +42,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             this.errorLogger = errorLogger;
             this.notificationManager = notificationManager;
             this.profileUpdateManager = profileUpdateManager;
-            this.masterDataManager = masterDataManager;            
+            this.masterDataManager = masterDataManager;
         }
 
         protected ApplicationUserManager _authUserManager;
@@ -86,7 +86,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 {
                     dataModelProfessionalReference = AutoMapper.Mapper.Map<ProfessionalReferenceViewModel, ProfessionalReferenceInfo>(professionalReference);
 
-                    
+
                     await profileManager.AddProfessionalReferenceAsync(profileId, dataModelProfessionalReference);
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Reference Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -98,7 +98,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             }
             catch (DatabaseValidationException ex)
             {
-                errorLogger.LogError(ex);                
+                errorLogger.LogError(ex);
                 status = ex.ValidationError;
             }
 
@@ -140,7 +140,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (isCCO)
                     {
-                        
+
                         await profileManager.UpdateProfessionalReferenceAsync(profileId, dataModelProfessionalReference);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -174,7 +174,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         profileUpdateManager.AddProfileUpdateForProvider(professionalReference, dataModelProfessionalReference, tracker);
                         successMessage = SuccessMessage.PROFESSIONAL_REFERENCE_DETAIL_UPDATE_REQUEST_SUCCESS;
                     }
-                    
+
                 }
                 else
                 {
@@ -224,7 +224,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 dataModelProfessionalReference = AutoMapper.Mapper.Map<ProfessionalReferenceViewModel, ProfessionalReferenceInfo>(professionalReference);
                 var UserAuthID = UserDetail.Id;
-               
+
                 await profileManager.RemoveProfessionalReferenceAsync(profileId, dataModelProfessionalReference, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Professional Reference Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -258,22 +258,32 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 AHC.CD.Entities.MasterProfile.Profile providers = profileManager.GetProviderInformation(profileId);
                 providers.ContactDetail.EmailIDs = providers.ContactDetail.EmailIDs.Where(p => p.PreferenceType == PreferenceType.Primary).ToList();
                 if ((providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary).ToList().Count)!=0)
-                providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary).ToList();
+                providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary && p.Status=="Active").ToList();
                 else
-                    providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary).ToList();
-                //if(providers.SpecialtyDetails.Count==0)
-                //{
-                //    providers.SpecialtyDetails.ToList().Add(providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary).ToList().FirstOrDefault());
-                //}
-                if (providers.EducationDetails.Count!=0)
-                    providers.EducationDetails.ToList()[0] = providers.EducationDetails.Where(p => p.GraduationType == "Graduate").FirstOrDefault(); ;
+                    providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary && p.Status == "Active").ToList();
+
+                if (providers.PracticeLocationDetails.ToList().Find(p => p.IsPrimary == "YES") != null)
+                {
+                    providers.PracticeLocationDetails = providers.PracticeLocationDetails.ToList().Where(p => p.IsPrimary == "YES").ToList();
+                    providers.PracticeLocationDetails.ToList().Last().Facility = profileManager.GetFacilityDetail(providers.PracticeLocationDetails.ToList().Last().Facility.FacilityID);
+                }
+                else if (providers.PracticeLocationDetails.ToList().Where(p => p.IsPrimary == "NO") != null)
+                {
+                    providers.PracticeLocationDetails = providers.PracticeLocationDetails.ToList().Where(p => p.IsPrimary == "NO").ToList();
+                    providers.PracticeLocationDetails.ToList().Last().Facility = profileManager.GetFacilityDetail(providers.PracticeLocationDetails.ToList().Last().FacilityId);
+                }
+                var EducationDetails = new List<Entities.MasterProfile.EducationHistory.EducationDetail>();
+                if (providers.EducationDetails.Count != 0)
+                    EducationDetails = providers.EducationDetails.ToList();
+                    providers.EducationDetails = new List<Entities.MasterProfile.EducationHistory.EducationDetail>();
+                    providers.EducationDetails.Add(EducationDetails.Where(p => p.GraduationType == "Graduate").FirstOrDefault());
                 return Json(new { providers }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
                 throw;
             }
-        }     
+        }
 
 
         private async Task<string> GetUserAuthId()
@@ -300,7 +310,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA" || r.Name == "TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {

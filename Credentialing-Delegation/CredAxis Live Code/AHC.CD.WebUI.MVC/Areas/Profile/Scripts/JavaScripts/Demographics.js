@@ -197,7 +197,7 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
             $scope.Provider.PersonalDetails.MaritalStatusType = "";
         }
         //$scope.getTemplate('Demographic', 'Personal Detail');
-        $scope.PersonalDetailsPendingRequest = profileUpdates.getUpdates('Demographic', 'Personal Detail');
+        $scope.PersonalDetailsPendingRequest = profileUpdates.getUpdates('Demographic', 'Personal Details');
 
     });
     $rootScope.$on('OtherLegalNames', function (event, val) {
@@ -254,7 +254,7 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
     });
     $rootScope.$on('LanguageInfo', function (event, val) {
         $scope.Provider.LanguageInfo = val;
-        $scope.LanguageInfoPendingRequest = profileUpdates.getUpdates('Demographic', 'Language Info');
+        $scope.LanguageInfoPendingRequest = profileUpdates.getUpdates('Demographic', 'Language Information');
     });
 
     $rootScope.$on("LoadRequireMasterDataDemographics", function () {
@@ -957,6 +957,7 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,

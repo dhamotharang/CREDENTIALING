@@ -16,6 +16,10 @@ namespace AHC.CD.Entities.Credentialing.CCMPortal
 
         public int Provider_ID { get; set; }
 
+        public int ProfileID { get; set; }
+
+        public int CredentialingAppointmentDetailID { get; set; }
+
         public string NPI { get; set; }
 
         public string ProviderName { get; set; }

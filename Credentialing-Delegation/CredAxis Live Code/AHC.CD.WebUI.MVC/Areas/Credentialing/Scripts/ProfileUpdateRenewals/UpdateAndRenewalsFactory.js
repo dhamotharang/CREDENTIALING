@@ -407,12 +407,106 @@
                     newvalue.NewValue = null;
             };
 
-
+            if (newvalue.FieldName == "IsPrivate") {
+                newvalue.FieldName = "Is Private?";
+                newvalue.OldValue = newvalue.OldValue == "True" ? "Yes" : "No";
+                newvalue.NewValue = newvalue.OldValue == "True" ? "Yes" : "No";
+            };
+            
             if ($rootScope.TemporaryObject.Section == 'Identification And License' && $rootScope.TemporaryObject.SubSection == 'State License') {
 
                 if (newvalue.FieldName == "Provider Type") {
                     newvalue.FieldName = "StateLicense Type";
                 }
+            }
+
+            if ($rootScope.TemporaryObject.Section == 'Identification And License' && $rootScope.TemporaryObject.SubSection == 'CDS Information') {
+
+                if (newvalue.FieldName == "CertNumber") {
+                    newvalue.FieldName = "CDS Number";
+                }
+            }
+
+            if ($rootScope.TemporaryObject.Section == 'Identification And License' && $rootScope.TemporaryObject.SubSection == 'CDS Information') {
+
+                if (newvalue.FieldName == "State") {
+                    newvalue.FieldName = "Issue State";
+                }
+            }            
+
+            if ($rootScope.TemporaryObject.Section == 'Identification And License' && $rootScope.TemporaryObject.SubSection == 'Other Identification Number') {
+
+                if (newvalue.FieldName == "NPINumber") {
+                    newvalue.FieldName = "NPI Number";
+                }
+                if (newvalue.FieldName == "CAQHNumber") {
+                    newvalue.FieldName = "CAQH Number";
+                }
+                if (newvalue.FieldName == "NPIUserName") {
+                    newvalue.FieldName = "NPI User Name";
+                }
+                if (newvalue.FieldName == "NPIPassword") {
+                    newvalue.FieldName = "NPI Password";
+                }
+                if (newvalue.FieldName == "CAQHUserName") {
+                    newvalue.FieldName = "CAQH User Name";
+                }
+                if (newvalue.FieldName == "CAQHPassword") {
+                    newvalue.FieldName = "CAQH Password";
+                }
+                if (newvalue.FieldName == "UPINNumber") {
+                    newvalue.FieldName = "UPIN Number";
+                }
+                if (newvalue.FieldName == "USMLENumber") {
+                    newvalue.FieldName = "USMLE Number";
+                }
+                
+            }
+
+            if ($rootScope.TemporaryObject.Section == 'Demographic' && $rootScope.TemporaryObject.SubSection == 'Other Legal Name') {
+
+                if (newvalue.FieldName == "OtherFirstName") {
+                    newvalue.FieldName = "FirstName";
+                }
+                if (newvalue.FieldName == "OtherMiddleName") {
+                    newvalue.FieldName = "Middle Name";
+                }
+                if (newvalue.FieldName == "OtherLastName") {
+                    newvalue.FieldName = "Last Name";
+                }
+                if (newvalue.FieldName == "StartDate") {
+                    newvalue.FieldName = "When did you start using other name";
+                }
+                if (newvalue.FieldName == "EndDate") {
+                    newvalue.FieldName = "When did you stop using other name";
+                }
+
+            }
+
+            if ($rootScope.TemporaryObject.Section == 'Demographic' && $rootScope.TemporaryObject.SubSection == 'Personal Identification') {
+
+                if (newvalue.FieldName == "SSN") {
+                    newvalue.FieldName = "Social Security Number";
+                }
+                if (newvalue.FieldName == "DL") {
+                    newvalue.FieldName = "Driver's License";
+                }
+                if (newvalue.FieldName == "DLState") {
+                    newvalue.FieldName = "Issue State of DL";
+                }
+                if (newvalue.FieldName == "SSNCertificatePath") {
+                    newvalue.FieldName = "SSN Supporting Document";
+                }
+                if (newvalue.FieldName == "DLCertificatePath") {
+                    newvalue.FieldName = "DL Supporting Document";
+                }
+
+            }
+
+            if ($rootScope.TemporaryObject.Section == 'Hospital Privilege' && $rootScope.TemporaryObject.SubSection == 'Hospital Privilege Detail') {
+                if (newvalue.FieldName == "AffilicationStartDate") {
+                    newvalue.FieldName = "Affiliation Start Date";
+                }                
             }
 
             if (newvalue.FieldName == 'HospitalContactInfoID') {

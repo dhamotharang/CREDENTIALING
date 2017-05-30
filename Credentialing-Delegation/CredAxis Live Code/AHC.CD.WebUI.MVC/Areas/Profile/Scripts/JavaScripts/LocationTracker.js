@@ -109,14 +109,15 @@ locationApp.controller('locationController', ['$scope', '$http', '$filter', func
         success(function (data, status, headers, config) {
             $scope.detailprogressbar = false;
             $scope.practiceProvidersList = data;
-            for (var i in $scope.practiceProvidersList) {
-                for (var j in $scope.practiceProvidersList[i].PersonalDetail.ProviderTitles) {
-                    if ($scope.practiceProvidersList[i].PersonalDetail.ProviderTitles[j].Status != 'Inactive') {
-                        $scope.practiceProvidersList[i].ProviderTitle = $scope.practiceProvidersList[i].PersonalDetail.ProviderTitles[j].ProviderType.Title;
-                        break;
-                    }
-                }
-            }
+            //for (var i in $scope.practiceProvidersList) {
+            //    for (var j in $scope.practiceProvidersList[i].PersonalDetail.ProviderTitles) {
+            //        if ($scope.practiceProvidersList[i].PersonalDetail.ProviderTitles[j].Status != 'Inactive') {
+            //            $scope.practiceProvidersList[i].ProviderTitle = $scope.practiceProvidersList[i].PersonalDetail.ProviderTitles[j].ProviderType.Title;
+                       
+            //            break;
+            //        }
+            //    }
+            //}
             $scope.showLocationList = true;
         }).
         error(function (data, status, headers, config) {

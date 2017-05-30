@@ -2,9 +2,10 @@
 $(document).ready(function () {
     var cnd = $.connection.cnDHub;
 
-    cnd.client.logoutCall = function (userSessionId) {
+    //cnd.client.logoutCall = function (userSessionId) {
 
-    };
+    //};
+
     // Start the connection.
     $.connection.hub.start().done(function () {
         $('#logoutBtn').click(function () {
@@ -110,36 +111,36 @@ var Notify = function () {
             console.log(data);
             cduserdata = data;
             myData = data.cdUser.DashboardNotifications;
-            if (!localStorage.hasOwnProperty('expired_Task')) {
+            //if (!localStorage.hasOwnProperty('expired_Task')) {
 
-                //if (sessionStorage.getItem("DataStatus")=="false") {
-                $.ajax({
-                    url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + cduserdata.cdUser.CDUserID,
-                    //data: {
-                    //    format:  'json'
-                    //},
-                    error: function () {
-                        //$('#info').html('<p>An error has occurred</p>');
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        var expired = data.Result.ExpiredCount;
-                        var expiringToday = data.Result.ExpiringTodayCount;
-                        ExpiredTaskCount = data.Result.ExpiredCount;
-                        ExpiringTaskCount = data.Result.ExpiringTodayCount;
-                        localStorage.setItem("UserID", cduserdata.cdUser.CDUserID);
-                        localStorage.setItem("expired_Task", expired);
-                        localStorage.setItem("expiring_Task", expiringToday);
-                        localStorage.setItem("DataStatus", "true");
-                        $("#expired_Task").append(expired);
-                        $("#expiring_Task").append(expiringToday);
-                    },
-                })
-            }
-            else {
-                $("#expired_Task").append(localStorage.getItem("expired_Task"));
-                $("#expiring_Task").append(localStorage.getItem("expiring_Task"));
-            }
+            //    //if (sessionStorage.getItem("DataStatus")=="false") {
+//    $.ajax({
+            //        url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + cduserdata.cdUser.CDUserID,
+            //        //data: {
+            //        //    format:  'json'
+            //        //},
+//        error: function () {
+//            //$('#info').html('<p>An error has occurred</p>');
+//        },
+//        dataType: 'json',
+//        success: function (data) {
+            //            var expired = data.Result.ExpiredCount;
+            //            var expiringToday = data.Result.ExpiringTodayCount;
+            //            ExpiredTaskCount = data.Result.ExpiredCount;
+            //            ExpiringTaskCount = data.Result.ExpiringTodayCount;
+            //            localStorage.setItem("UserID", cduserdata.cdUser.CDUserID);
+            //            localStorage.setItem("expired_Task", expired);
+            //            localStorage.setItem("expiring_Task", expiringToday);
+            //            localStorage.setItem("DataStatus", "true");
+            //            $("#expired_Task").append(expired);
+            //            $("#expiring_Task").append(expiringToday);
+            //        },
+            //    })
+            //}
+            //else {
+            //    $("#expired_Task").append(localStorage.getItem("expired_Task"));
+            //    $("#expiring_Task").append(localStorage.getItem("expiring_Task"));
+            //}
             var cnt = 0;
             if (myData.length == 0) {
                 $("#alertArea").append('<li id="alertNotifications"><div><p class="text-center">No New Notifications Available.</p></div></a><hr style="padding:0; margin:0"/></li>');

@@ -463,6 +463,7 @@ namespace AHC.CD.Business.Email
                 groupemail.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
                 groupemail.CreatedBy = cduser.CDUserID;
                 groupemail.LastUpdatedBy = cduser.CDUserID;
+                groupemail.CreatedOn = DateTime.Now;
                 groupemail.CDUserGroupMails = new List<CDUser_GroupEmail>();
                 GroupMailRepo.Create(groupemail);
                 await GroupMailRepo.SaveAsync();
@@ -789,7 +790,7 @@ namespace AHC.CD.Business.Email
                     if (grp != null)
                     {
                         var EmailGrpId = grp.EmailGroupID;
-                        List<string> result = (from key in Cduser_GrpMailrepo.Get(x => x.EmailGroupID == grp.EmailGroupID, "CDUser")
+                        List<string> result = (from key in Cduser_GrpMailrepo.Get(x => x.EmailGroupID == grp.EmailGroupID && x.Status=="Active", "CDUser")
                                                select key.CDUser.EmailId).ToList();
                         FinalList.Add(item, result);
 
@@ -826,6 +827,7 @@ namespace AHC.CD.Business.Email
                     dto.CurrentCDuserId = cduserId;
                     dto.Emails = item.CDUserGroupMails.ToDictionary(z => z.CDUserId, z => z.CDUser.EmailId);
                     dto.LastUpdatedBy = item.LastUpdateByUser;
+                    dto.CreatedOn = item.CreatedOn;
                     dto.GroupMailUserDetails = new List<SearchUserforGroupMailDTO>();
                     item.CDUserGroupMails.ForEach(x => { dto.GroupMailUserDetails.Add(ConstructResultForGroupMail(x.CDUser)); });
                     result.Add(dto);
@@ -1004,6 +1006,7 @@ namespace AHC.CD.Business.Email
                 if (emailToBeStopped.EmailRecipients.All(e => e.Status == Entities.MasterData.Enums.StatusType.Inactive.ToString()))
                 {
                     emailToBeStopped.StatusType = Entities.MasterData.Enums.StatusType.Inactive;
+                    emailToBeStopped.IsRecurrenceEnabled = YesNoOption.NO.ToString();
                 }
                 emailServiceRepository.Update(emailToBeStopped);
                 await emailServiceRepository.SaveAsync();

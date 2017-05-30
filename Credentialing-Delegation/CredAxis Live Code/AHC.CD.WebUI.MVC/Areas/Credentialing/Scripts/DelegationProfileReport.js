@@ -145,9 +145,11 @@ Cred_SPA_App.controller('delegationProfileCtrl', function ($scope, $http, $rootS
                       var obj = $scope.delegationProfileObj.ProviderProfessionalDetails[i];
 
                       if (i == 0) {
-                          $scope.PrimarySpecility = obj;
-                      } else {
-                          $scope.SecondarySpecility.push(obj);
+                          if (obj.Preference == "Primary")
+                              $scope.PrimarySpecility = obj;
+                          else {
+                              $scope.SecondarySpecility.push(obj);
+                          }
                       }
                   }
               }
@@ -352,6 +354,7 @@ Cred_SPA_App.controller('delegationProfileCtrl', function ($scope, $http, $rootS
 
 
     $scope.SaveDelegationProfileReport = function (remarks, PrintId) {
+        $rootScope.selectallbtn = false;
         var OutputFile;
         $scope.remarks = remarks;
         $scope.showLoading = false;

@@ -88,8 +88,11 @@
         }
         $scope.CredentialingInfo = {};
         $scope.ActivityLogs = [];
+        $scope.testCredentialing = "";
         $scope.getCredentialingInfo = function (profileID, planID) {
-            $scope.dataLoaded = false;
+         $scope.dataLoaded = false;
+         $scope.GetCredStatus = "";
+
             if (!$scope.dataLoaded) {
                 $http({
                     method: 'GET',
@@ -100,6 +103,9 @@
                         if (data.credInfo != null) {
                             $scope.ProviderDetail(data.credInfo);
                             $scope.CredentialingInfo = data.credInfo;
+                            $scope.GetCredStatus = data.credInfo.CredentialingLogs[0].Credentialing;
+                            console.log("CredentialingInfo" + data.credInfo.CredentialingLogs[0].Credentialing);
+                            $scope.testCredentialing = angular.copy(data.credInfo.CredentialingLogs[0].Credentialing);
                             $scope.getCurrentActivity(data.credInfo);
                         }
                     } catch (e) {
@@ -174,14 +180,14 @@
                 if ($scope.ActivityStatusType == true) {
                     $scope.isDroped = true;
                     $scope.lastActivity = $scope.ConvertDateFormat($scope.ActivityLog[$scope.ActivityLog.length - 1].LastModifiedDate);
-                    $scope.SubmitSPA($scope.credentialingInfoID);
+                    $scope.credtype = $rootScope.isrecredentialing;
+                    $scope.SubmitSPA($scope.credentialingInfoID, $scope.credtype);
                 }
                 if ($scope.ActivityLog != null) {
                     $scope.checkForStatus($scope.ActivityLog);
                 }
             }
         }
-
         $scope.SubmitSPA = function (credId) {
             $scope.$parent.ViewOnlyMode = false;
             sessionStorage.setItem('ViewOnlyMode', $scope.$parent.ViewOnlyMode);
@@ -205,19 +211,19 @@
         $rootScope.timelineActivity = [];
         $scope.timelineTimeStamp = [];
         $scope.stamp = '';
-
         $scope.checkForStatus = function (data) {
             var FirstName = "";
             var MiddleName = "";
             var LastName = "";
-            var isrecredentialing = $scope.credentialingInfo.CredentialingLogs[0].Credentialing;
-            $scope.typeOfCredentialing = angular.copy(isrecredentialing);
+            $rootScope.isrecredentialing = angular.copy($scope.testCredentialing);
+            console.log("recredentialing" + $rootScope.isrecredentialing);
+            $scope.typeOfCredentialing = angular.copy($rootScope.isrecredentialing);
             if (data != null && data.length != 0) {
                 $rootScope.timelineActivity = [];
                 for (var i = 0; i < data.length ; i++) {
                     switch (data[i].Activity) {
                         case "Initiation":
-                            if (data[i].ActivityStatus == "Completed" && isrecredentialing == "Credentialing") {
+                            if (data[i].ActivityStatus == "Completed" && $rootScope.isrecredentialing == "Credentialing") {
                                 $scope.Initiated = "progtrckr-done";
                                 $scope.isInitiated = true;
                                 $scope.$parent.PSVTabStatus = true;
@@ -268,9 +274,10 @@
                                     ActivityByName: $scope.updatedByForInitiation,
                                     LastModifiedDate: $scope.updatedDateForInitiation
                                 };
+                                debugger;
                                 $rootScope.timelineActivity.push(tempactivity);
                             }
-                            else if (data[i].ActivityStatus == "Completed" && isrecredentialing == "ReCredentialing") {
+                            else if (data[i].ActivityStatus == "Completed" && $rootScope.isrecredentialing == "ReCredentialing") {
                                 $scope.Initiated = "progtrckr-done";
                                 $scope.isdeCredentialed = true;
                                 $scope.$parent.PSVTabStatus = true;
@@ -435,7 +442,7 @@
                             break;
 
                         case "Loading":
-                            if (data[i].ActivityStatus == "Completed" && isrecredentialing == "Credentialing") {
+                            if (data[i].ActivityStatus == "Completed" && $rootScope.isrecredentialing == "Credentialing") {
                                 $scope.Loaded = "progtrckr-done";
                                 $scope.isLoaded = true;
                                 if (data[i].ActivityBy != null && data[i].ActivityBy.Profile != null && data[i].ActivityBy.Profile.PersonalDetail != null) {
@@ -496,7 +503,7 @@
                                 };
                                 $rootScope.timelineActivity.push(tempactivity);
                             }
-                            else if (data[i].ActivityStatus == "Completed" && isrecredentialing == "ReCredentialing") {
+                            else if (data[i].ActivityStatus == "Completed" && $rootScope.isrecredentialing == "ReCredentialing") {
                                 $scope.isdeCredentialed = true;
                                 $scope.Loaded = "progtrckr-done";
                                 $scope.isLoaded = true;
@@ -566,10 +573,12 @@
                                     LastModifiedDate: $scope.updatedDateForReCredentialing
                                 };
                                 $rootScope.timelineActivity.push(tempactivity);
+                                
                             }
                             break;
 
                         case "Closure":
+                            var tempactivity
                             if (data[i].ActivityStatus == "Completed") {
                                 $scope.Completed = "progtrckr-done";
                                 $scope.isCompleted = true;
@@ -620,12 +629,13 @@
                                     ActivityByName: $scope.updatedByForCompleted,
                                     LastModifiedDate: $scope.updatedDateForCompleted
                                 };
-                                if (isrecredentialing == "ReCredentialing") {
-                                    tempactivity.Activity = $scope.providerName + " Re-Credentialing Process Completed for " + $scope.planName;
-                                } else if (isrecredentialing == "Credentialing") {
+                                
+                                if ($rootScope.isrecredentialing == "ReCredentialing") {
+                                tempactivity.Activity = $scope.providerName + " Re-Credentialing Process Completed for " + $scope.planName;
+                                } else if ($rootScope.isrecredentialing == "Credentialing") {
                                     tempactivity.Activity = $scope.providerName + " Credentialing Process Completed for " + $scope.planName;
                                 }
-                                $rootScope.timelineActivity.push(tempactivity);
+                            $rootScope.timelineActivity.push(tempactivity);
                             }
                             break;
 
@@ -683,6 +693,7 @@
                                             }
                                         }
                                     }
+                                    $rootScope.timelineActivity.reverse();
                                     $rootScope.timelineActivity.push(TimeLineActivityLogs[k]);
                                     $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
                                 }                                

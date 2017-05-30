@@ -19,6 +19,30 @@
                 el.append(template);
                 $compile(template)(scope);
             });
+        },
+        controller: function ($scope) {
+            $scope.ChangeColor = function (id) {
+                var ColorClass = "";
+                angular.element("#Updates").removeClass("biscit_blue");
+                angular.element("#Renewals").removeClass("biscit_green");
+                angular.element("#CredentialingRequest").removeClass("biscit_time");
+                angular.element("#ViewHistory").removeClass("biscit_Sea");
+                switch (id) {
+                    case "Updates":
+                        ColorClass = "biscit_blue";
+                        break;
+                    case "Renewals":
+                        ColorClass = "biscit_green";
+                        break;
+                    case "CredentialingRequest":
+                        ColorClass = "biscit_time";
+                        break;
+                    case "ViewHistory":
+                        ColorClass = "biscit_Sea";
+                        break;
+                }
+                angular.element("#"+id).addClass(ColorClass);
+            }
         }
     }
 }]);

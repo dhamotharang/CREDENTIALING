@@ -23,6 +23,10 @@ using System.Text.RegularExpressions;
 using AHC.UtilityService;
 using AHC.CD.Entities;
 using AHC.CD.Business.Users;
+using AHC.CD.WebUI.MVC.Areas.Credentialing.Models.CCMPortal;
+using AHC.CD.Resources.Document;
+using AHC.CD.Entities.Credentialing.CCMPortal;
+using System.Dynamic;
 
 namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 {
@@ -189,6 +193,126 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             }
         }
 
+        #region new methods
+        /// <summary>
+        /// Method to return the ccm action result data
+        /// </summary>
+        /// <param name="CredInfoID">Credentialing Info ID</param>
+        /// <returns>CCM Action Data with signature path</returns>
+        /// <remarks>author Manoj</remarks>
+        public async Task<ActionResult> GetCCMActionData(int CredInfoID)
+        {
+            try
+            {
+                object obj = new
+                {
+                    // SignaturePath = appointmentManager.GetCCMSignature(await GetUserAuthId()),
+                    CredentialingInfo = await appointmentManager.GetCCMActionData(CredInfoID)
+                };
+
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        /// <summary>
+        /// Method to return to all the Appointments 
+        /// </summary>
+        /// <param name="ApprovalStatus">ApprovalStatus(New/Pending/OnHold)</param>
+        /// <returns>author Manoj</returns>
+        public async Task<ActionResult> GetAllAppointmentsList(string ApprovalStatus = null)
+        {
+            object data = new
+            {
+                SignaturePath = appointmentManager.GetCCMSignature(await GetUserAuthId()),
+                AppointmentsInfo = await appointmentManager.GetCCMAppointmentsInfo(ApprovalStatus)
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Method to save Quick Action Results
+        /// </summary>
+        /// <param name="AppointmentsResult">Appointment Results</param>
+        /// <returns></returns>
+        /// <remarks>Need to be Implement Backend for multiple saving </remarks>
+        [HttpPost]
+        [AjaxAction]
+        public async Task<string> SaveCCMQuickActionResultsAsync(CCMQuickActionViewModal AppointmentsResult)
+        {
+            dynamic ccmRequestStatus = new ExpandoObject();
+            var status = "";
+            try
+            {
+                //if (AppointmentsResult.SignaturePath != null && !AppointmentsResult.SignaturePath.Contains("\\ApplicationDocuments\\"))
+                if (AppointmentsResult.SignatureFile != null)
+                {
+                    //Code for Converting digital signature to a Bitmap image format - Tulasidhar.
+                    Bitmap bmpReturn = null;
+                    string filename = UniqueKeyGenerator.GetUniqueKey() + "_CCMSignature.png";
+                    string path = HttpContext.Request.MapPath("~/ApplicationDocuments/CCMSignatureDocuments/" + filename);
+                    var base64Data = Regex.Match(AppointmentsResult.SignaturePath, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+                    byte[] byteBuffer = Convert.FromBase64String(base64Data);
+                    MemoryStream memoryStream = new MemoryStream(byteBuffer);
+                    using (memoryStream)
+                    {
+                        memoryStream.Position = 0;
+                        bmpReturn = (Bitmap)Bitmap.FromStream(memoryStream);
+
+                        bmpReturn.Save(path, ImageFormat.Png);
+                        memoryStream.Close();
+                    }
+                    AppointmentsResult.SignaturePath = filename;
+                    status = "true";
+
+                }
+                else if (AppointmentsResult.SignaturePath != null && AppointmentsResult.SignaturePath.Contains("\\ApplicationDocuments\\"))
+                {
+                    status = "true";
+
+                }
+                else
+                {
+                    status = "Signature is null";
+                    if (ModelState.IsValid)
+                    {
+                        DocumentDTO document = CreateDocument(AppointmentsResult.SignatureFile);
+                        // saving document
+                        AppointmentsResult.SignaturePath = appointmentManager.AddDocument(DocumentRootPath.CCM_ATTACH_DOCUMENT_PATH, DocumentTitle.CCM_DOCUMENT, null, document);
+                        status = "true";
+                    }
+                }
+                if (status == "true")
+                {
+                    AppointmentsResult.SignedByID = await GetUserAuthId();
+                    CCMQuickActionDTO CCMActionResult = null;
+                    CCMActionResult = AutoMapper.Mapper.Map<CCMQuickActionViewModal, CCMQuickActionDTO>(AppointmentsResult);
+                    ccmRequestStatus = await appointmentManager.SaveCCMQuickActionResultsAsync(CCMActionResult);
+
+                    //string MessageTitle = AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Approved ? "Approved" : AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected?"Rejected":"OnHold";
+                    //Parallel.ForEach(AppointmentsResult.QuickActionSet, x => {
+                    //    ChangeNotificationDetail notification = null;
+                    //    notification = new ChangeNotificationDetail(x.ProfileId, User.Identity.Name, "CCM Appointment Result", MessageTitle);
+                    //    notificationManager.SaveNotificationDetailAsyncForCCO(notification, AppointmentsResult.AppointmentsStatus.ToString(), x.CredentialingAppointmentDetailID);
+                    //});
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return JsonConvert.SerializeObject(ccmRequestStatus);
+        }
+
+
+        #endregion
+
 
 
         public async Task<ActionResult> GetAllCredentialingFilterList()
@@ -201,7 +325,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 
         [HttpPost]
         [AjaxAction]
-        public async Task<ActionResult> CCMActionUploadAsync(int profileId, CredentialingAppointmentDetailViewModel credentialingAppointmentDetailViewModel)
+        public async Task<ActionResult> CCMActionUploadAsync(CredentialingAppointmentDetailViewModel credentialingAppointmentDetailViewModel, int profileId)
         {
             string status = "";
             CredentialingAppointmentDetail credentialingAppointmentDetail = null;
@@ -235,6 +359,10 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     {
                         notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Rejected");
                     }
+                    else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Onhold)
+                    {
+                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "OnHold");
+                    }
 
                     await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);
                     credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath = filename;
@@ -257,6 +385,10 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected)
                     {
                         notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Rejected");
+                    }
+                    else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Onhold)
+                    {
+                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "OnHold");
                     }
 
                     await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);
@@ -281,6 +413,10 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                         else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected)
                         {
                             notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Rejected");
+                        }
+                        else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Onhold)
+                        {
+                            notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "OnHold");
                         }
 
                         await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);

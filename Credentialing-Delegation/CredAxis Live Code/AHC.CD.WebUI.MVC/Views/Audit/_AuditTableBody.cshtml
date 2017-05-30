@@ -1,0 +1,29 @@
+﻿@model IEnumerable<AHC.CD.Entities.DTO.AuditMessageDTO>
+@using AHC.CD.WebUI.MVC.CustomHelpers; 
+
+
+@{
+    
+    var NullMapper = new NullValueMapper();
+    var Date = new DateFormatTimeSlice();
+    int loopIndex = 0;
+}
+@foreach (var item in Model)
+{
+    <tr class="cursor_pointer wrap-words @((loopIndex==Convert.ToInt32(Model.Count()/2))?"load-next-set":"")" id="SearchAuditDynamicRow_@loopIndex">
+        <td class="col-lg-2">@NullMapper.NullStringMap(item.Controller,"-")</td>
+        <td class="col-lg-2">@NullMapper.NullStringMap(item.Action,"-")</td>
+        <td class="col-lg-2">@NullMapper.NullStringMap(item.DateTime, "-")</td>
+        <td class="col-lg-2">@NullMapper.NullStringMap(item.User,"-")</td>
+        <td class="col-lg-1 wrap-words">@NullMapper.NullStringMap(item.URL,"-")</td>
+        <td class="col-lg-2">@NullMapper.NullStringMap(item.Category,"-")</td>
+        <td class="col-lg-1">@NullMapper.NullStringMap(item.IP, "-")</td>
+    </tr>
+    loopIndex++;
+}
+
+<script>
+    var totalcount = '@ViewBag.TotalLogCount';
+    var informationlogcount='@ViewBag.InformationCount';
+    var alertlogcount='@ViewBag.AlertCount';
+</script>

@@ -942,7 +942,7 @@ initCredApp.controller('singleProviderCtrl', function ($scope, $http, $q, $timeo
             } catch (e) {
 
             }
-        }).error(function (resultData) { $scope.loadingAjax = false; $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function (resultData) { $scope.loadingAjax = false; $scope.error_message = "An Error occurred !! Please Try Again !!"; })
         //$('#credsearch', '#recredsearch', '#decredsearch').removeClass("inactive");
     }
 

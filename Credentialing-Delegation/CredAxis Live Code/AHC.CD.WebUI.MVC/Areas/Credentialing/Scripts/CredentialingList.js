@@ -126,7 +126,8 @@ credentialingList.controller('credentialingListController', ['$scope', '$http', 
                             if (data.CredentialingActivityLogs[i].ActivityStatus == "Completed") {
 
                                 //$scope.status.push("Completed");
-                                $scope.data[index].CurrentStatus = "Completed";
+                                //$scope.data[index].CurrentStatus = "Completed";
+                                $scope.data[index].CurrentStatus = "Submitted";
                                 $scope.data[index].isStatusDropped = true;
 
                             } else {
@@ -255,6 +256,24 @@ credentialingList.controller('credentialingListController', ['$scope', '$http', 
                 }
 
             }
+            //for (var d = 0; d < $scope.data.length; d++) {
+            //    if ($scope.data[d].CurrentStatus == "Completed") {
+            //        $scope.data.splice($scope.data[d], 1);
+            //    }
+            //}
+            //while ($scope.data.length != 0) {
+            //    var d = 0;
+            //    if ($scope.data[d].CurrentStatus == "Completed") {
+            //        $scope.data.splice($scope.data[d], 1);
+            //        d++;
+            //    }
+            //    else if ($scope.data[d].CurrentStatus == "Undefined") {
+            //        $scope.data.splice($scope.data[d], 1);
+            //        d++;
+            //    }
+
+            //}
+
         }
     }
 
@@ -456,6 +475,12 @@ credentialingList.controller('credentialingListController', ['$scope', '$http', 
              try {
                  $scope.data = [];
                  $scope.data = data;
+                 //for (var i = 0; i < $scope.data.length ; i++) {
+                 //    if ($scope.data[i].CredentialingLogs[c].CredentialingActivityLogs[0].ActivityStatus == "Completed") {
+                 //        $scope.data.pop($scope.data[i]);
+                 //        break;
+                 //    }
+                 //}
                  for (var i = 0; i < $scope.data.length ; i++) {
                      $scope.data[i].InitiationDate = $scope.ConvertDateFormat($scope.data[i].InitiationDate);
                      $scope.data[i].FirstName = $scope.data[i].Profile.PersonalDetail.FirstName;
@@ -463,13 +488,14 @@ credentialingList.controller('credentialingListController', ['$scope', '$http', 
                      $scope.data[i].PlanName = $scope.data[i].Plan.PlanName;
                      var CredlogData = "";
                      var flag = 0;
-                     for (var c = 0; c < $scope.data[i].CredentialingLogs.length; c++) {
+                     for (var c = 0; c < $scope.data[i].CredentialingLogs.length; c++) {                         
                          if ($scope.data[i].CredentialingLogs[c].Credentialing == "Dropped") {
                              CredlogData = $scope.data[i].CredentialingLogs[c];
                              flag = 1;
                              break;
                          }
                      }
+                    
                      if (flag == 0) {
                          for (var c = 0; c < $scope.data[i].CredentialingLogs.length; c++) {
                              if ($scope.data[i].CredentialingLogs[c].Credentialing == "Credentialing") {

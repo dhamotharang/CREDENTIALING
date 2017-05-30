@@ -1,19 +1,5 @@
-﻿@*<div class="col-lg-4 zero-padding-left-right">
-        <div class="btn-group btn-group-md pull-left" ng-if="!TempObjectForStatus.QuickApprovalAction">
+﻿@model AHC.CD.WebUI.MVC.Areas.Credentialing.Models.CCMPortal.CCMQuickActionViewModal
 
-        </div>
-    </div>
-    <div class="col-lg-4 tripijodal zero-padding-left-right">
-    </div>
-    <div class="col-lg-4 zero-padding-left-right">
-        <div class="btn-group btn-group-md pull-right">
-            <button class="btn" style="background-color: #464957; border-color: #337AB7; color:white" data-toggle="tooltip" data-placement="top" ng-click="GridView=!GridView" title="Statistics"><span><i class="fa fa-bar-chart bigger-120"></i></span></button>
-        </div>
-        <div class="btn-group btn-group-md pull-right" id="ExportPanel">
-        </div>
-    </div>
-    <div class="clearfix">
-    </div>*@
 <div class="col-lg-12 zero-padding-left-right form-style" @*ng-show="GridView"*@>
     <fieldset>
         <legend>
@@ -45,13 +31,13 @@
                     <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="!TempObjectForStatus.QuickApprovalAction">Action</th>
                 </tr>
                 <tr>
-                    <td class="hideData"><input st-search="ProviderName" type="text" placeholder="Filter ProviderName" id="ProviderName" class="form-control input-sm" /></td>
-                    <td class="hideData"><input st-search="Specialty" type="text" placeholder="Filter Specialty" id="Specialty" class="form-control input-sm" /></td>
-                    <td class="hideData"><input st-search="PlanName" type="text" placeholder="Filter Plan" id="PlanName" class="form-control input-sm" /></td>
-                    <td class="hideData"><input st-search="CredInitiationDate" type="text" placeholder="Filter CredInitiationDate" id="CredInitiationDate" class="form-control input-sm" /></td>
-                    <td class="hideData"><input st-search="AppointmentDate" type="text" placeholder="Filter AppointmentDate" id="AppointmentDate" class="form-control input-sm" /></td>
-                    <td class="hideData"><input st-search="RecommendedLevel" type="text" placeholder="Filter RecommendedLevel" id="RecommendedLevel" class="form-control input-sm" /></td>
-                    <td class="hideData"><input st-search="Status" type="text" placeholder="Filter Status" id="Status" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="ProviderName" type="text" placeholder="Provider Name" id="ProviderName" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="Specialty" type="text" placeholder="Specialty" id="Specialty" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="PlanName" type="text" placeholder="Plan" id="PlanName" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="CredInitiationDate" type="text" placeholder="Initiation Date" id="CredInitiationDate" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="AppointmentDate" type="text" placeholder="Appointment Date" id="AppointmentDate" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="RecommendedLevel" type="text" placeholder="Level" id="RecommendedLevel" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="Status" type="text" placeholder="Status" id="Status" class="form-control input-sm" /></td>
                     <td class="hidecontent"></td>
                 </tr>
             </thead>
@@ -69,15 +55,15 @@
                         <span ng-show="appointment.SelectStatus"> <i class="fa fa-check"></i></span>
                     </td>
                     <td class="col-lg-1 wrap-words" style="width: 3%;" ng-if="!TempObjectForStatus.QuickApprovalAction">
-                        <button get-siblings class="btn btn-default btn-xs ViewDetail" key="$index+'_AppointMentView'" ng-click="GetCredentialingDetails(appointment.ProviderCredentialingInfoID)" @*info-id={{appointment.ProviderCredentialingInfoID}}*@> <i class="fa fa-eye"></i></button>
+                        <button get-siblings class="btn btn-default btn-xs ViewDetail" key="$index+'_AppointMentView'" ng-click="GetCredentialingDetails(appointment.ProviderCredentialingInfoID,appointment.ProfileID)" @*info-id={{appointment.ProviderCredentialingInfoID}}*@> <i class="fa fa-eye"></i></button>
                         <button get-siblings class="btn btn-danger btn-xs hidden CloseDetail"><i class="fa fa-times"></i></button>
                     </td>
                 </tr>
-              
+
                 <tr ng-if="VisibilityControl==($index+'_AppointMentView')" ng-controller="SPAIndexController as spa" style="border-top-color: rgba(13, 1, 25, 0.4); border-top-style: solid; border-top-width: 3px; border-bottom-color: rgba(13, 1, 25, 0.4); border-bottom-style: solid; border-bottom-width: 3px; border-radius: 3px;">
                     <td colspan="8" style="padding-left:0px;padding-right:0px">
                         <div ng-include="'/Credentialing/CCMPortal/SPAIndexPage'" style="background-color: white;">
-                        @*<div ng-include="'/Credentialing/CCM/CCMSPAPage?id='+appointment.ProviderCredentialingInfoID" style="background-color: white;">*@
+                            @*<div ng-include="'/Credentialing/CCM/CCMSPAPage?id='+appointment.ProviderCredentialingInfoID" style="background-color: white;">*@
                         </div>
                     </td>
                 </tr>
@@ -135,42 +121,85 @@
                 <h4 class="modal-title CenterBold">Do you want to Accept/Reject Selected Requests ?</h4>
             </div>
             <div class="panel-body" style="padding: 0px;padding-top: 4px;">
-                <div class="col-lg-6 form-group">
-                    <label class="control-label small">Remark </label>
-                    <div>
-                        <span>
-                            <textarea cols="14" id="RemarkForApprovalStatus" name="RemarkForApprovalStatus" rows="4" style="width: 100%;"></textarea>
-                        </span>
+                <form id="MultipleCCMAction">
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label small">Remark </label>
+                        <div>
+                            <span>
+                                @Html.TextAreaFor(x => x.RemarksForAppointments, new { @cols = "14", @rows = "5", style = "width:100%", })
+                                @*<textarea cols="14" id="RemarkForApprovalStatus" ng-model="RemarkForApprovalStatus" name="RemarkForApprovalStatus" rows="5" style="width: 100%;"></textarea>*@
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-6 form-group">
-                    <label class="control-label small" for="FirstName">
-                        Signature : <select class="input-xs" style="color:black">
-                            <option value="Digital Signature">Digital Signature</option>
-                            <option value="Digital Signature">Use Previous Signature</option>
-                            <option value="Digital Signature">Upload Signature</option>
-                        </select>
-                    </label>
-                    <div>
-                        <span>
-                            <canvas id="SignatureCanvas" height="80" width="220" style="border: solid;" ng-signature-pad="signature" class="ng-isolate-scope"></canvas>
-                            <button id="clear" ng-click="cleardigitalsignature()" class="btn btn-primary btn-xs" style="margin-bottom: 14px;">
-                                Clear
-                            </button>
-                        </span>
+                    <input type="hidden" name="SignaturePath" value="{{image}}" />
+                    <div class="col-lg-6 form-group">
+                        <label class="control-label small" for="Signature">
+                            Signature : <select class="input-xs" style="color:black" id="signatureOption" ng-model="signatureOption" ng-init="signatureOption='digitalsignature'" ng-value="SignaturePath == null?'digitalsignature':'reusedigitalsignature'" ng-change="ChangeSignatureOption()">
+                                <option value="digitalsignature" ng-selected="SignaturePath == null">Digital Signature</option>
+                                <option value="reusedigitalsignature" ng-selected="SignaturePath != null">Use Previous Signature</option>
+                                <option value="upload">Upload Signature</option>
+                            </select>
+                        </label>
+                        <div>
+                            <div ng-show="showreusesignaturediv" class="fileinput fileinput-exists col-lg-8 col-md-8 col-sm-8 control-label">
+                                <div>
+                                    <img id="image" ng-show="SignaturePath!=null" height="98" width="248" ng-src="{{SignaturePath}}" />
+                                    <span style="color:red" ng-show="SignaturePath==null" class="pull-left">No Previous Signature Found.</span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div ng-show="showsignaturediv">
+                                <span class="fileinput fileinput-exists col-lg-9 col-md-9 col-sm-9 control-label">
+                                    <canvas id="SignatureCanvas" height="98" width="248" style="border: solid;" ng-signature-pad="signature"></canvas>
+                                    <span class="text-danger" style="color:red" ng-show="errormessageforsignature">Please Provide the Signature</span>
+                                    <canvas id='blank' style='display:none'></canvas>
+                                    @*<pre ng-bind="signature | json" hidden></pre>*@
+                                    @*<button ng-click="savedigitalsignature()" class="btn btn-success">Save</button>*@
+                                </span>
+                                <span class="col-lg-1">
+                                    <a id="clear" ng-click="cleardigitalsignature()" class="btn btn-xs btn-primary" style="margin-top: 83px; margin-left: 20px;">Clear</a>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div ng-show="showuploaddiv" class="fileinput fileinput-exists col-lg-9 col-md-9 col-sm-9 control-label" data-provides="fileinput">
+                                @*<div class="fileinput-preview thumbnail file_preview_upload" style="width:100%;height:150px; line-height: 83px; background-image: url('/Content/Images/no-img.jpg'); background-size: 100% 97%;" data-trigger="fileinput"><img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{tempObject.CredentialingAppointmentResult.SignaturePath}}"></div>*@
+                                <div class="fileinput-preview thumbnail file_preview_upload" style="width:248px ;height:107px; line-height: 83px; background-image: url('/Content/Images/no-img.jpg'); background-size: 100% 97%; " data-trigger="fileinput">
+                                    <img ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{uploadedSignaturePath}}" ng-show="uploadedSignaturePath!=null">
+                                    @Html.ValidationMessageFor(m => m.SignatureFile, "", new { data_ng_toggle = "check", @class = "text-danger", @id = "errorid" })
+                                </div>
+                                <div style="margin-top: -28px; margin-left: 254px;">
+                                    <span class="btn btn-primary btn-xs btn-file">
+                                        <span class="fileinput-new"><i class="fa fa-search"></i></span>
+                                        <span id="selectfile" class="fileinput-exists" tooltip data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-search"></i></span>
+                                        @Html.TextBoxFor(model => model.SignatureFile, new { type = "file", data_ng_model = "uploadedSignaturePath", required = "required", data_ng_change = "checkUpload()" })
+                                        @*<input data-ng-change="checkUpload()" data-ng-model="uploadedSignaturePath" data-val="true" data-val-postedfileextension="Please select the file of type jpeg, .png, .jpg, .bmp" data-val-postedfileextension-allowedfileextensions="jpeg,jpg,png,bmp,PNG,JPEG,JPG,BMP,gif,GIF,PDF,pdf,DOC,doc,DOCX,docx,XLSX,xlsx" data-val-postedfileextension-isrequiredproperty="False" data-val-postedfilesize="Digital Signature should be less than 10 MB of size." data-val-postedfilesize-allowedfilesize="10485760" data-val-postedfilesize-isrequiredproperty="False" data-val-postedfilesize-propertyname="SignatureFile" data-val-required="Please select Digital Signature." id="CredentialingAppointmentResult_SignatureFile" name="CredentialingAppointmentResult.SignatureFile" required="required" type="file">*@
+                                    </span>
+                                    <button ng-if="form.$valid" class="btn btn-success btn-xs fileinput-exists" ng-init="check='true'" type="submit" tooltip data-toggle="tooltip" data-placement="bottom" title="Upload"><i class="fa fa-upload"></i></button>
+                                    <button ng-show="tempObject.CredentialingInfo.SignaturePath!=null && form.$valid" ng-click="ProfilePictureRemove(Provider.ProfilePhotoPath)" class="btn btn-danger btn-xs fileinput-exists" data-toggle="tooltip" data-placement="bottom" title="Remove"><i class="fa fa-trash"></i></button>
+
+                                    <span ng-if="form.$valid" ng-hide="valstaus">Please click on upload button to upload the selected picture.</span>
+                                </div>
+                                <span class="text-danger" style="color:red" ng-show="errormessageforuploadsignature">Please upload the Signature</span>
+
+                            </div>
+                        </div>
+                       @* <input type="hidden" name="AppointmentsStatus" ng-value="AppointmentsStatus" />*@
+                       
                     </div>
-                </div>
+                </form>
             </div>
             <div class="panel-footer">
                 <div>
-                    <button class="btn btn-danger btn-xs pull-left " ng-click="">Reject</button>
-                    <button class="btn btn-warning btn-xs" style=" margin-left: 260px;" ng-click="">On Hold</button>
-                    <button class="btn btn-primary btn-xs pull-right" ng-click="">Approve</button>
+                    <button class="btn btn-danger btn-xs pull-left " ng-click="SaveAppoinmentDecision('Reject')">Reject</button>
+                    <button class="btn btn-warning btn-xs" style=" margin-left: 260px;" ng-click="SaveAppoinmentDecision('OnHold')">On Hold</button>
+                    <button class="btn btn-primary btn-xs pull-right" ng-click="SaveAppoinmentDecision('Approve')">Approve</button>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
+
 <script src="~/Areas/Credentialing/Scripts/CCMdashboard/AppointmentsGridController.js"></script>
 <script src="~/Areas/Credentialing/Scripts/CCMdashboard/SPAPageController.js"></script>
 <script>

@@ -111,6 +111,7 @@ NotesTemplates.controller('NotesTemplateController', ['$scope', '$http', '$filte
     };
 
     $scope.addNotesTemplate = function (NotesTemplate) {
+        $scope.error1 = false;
         $scope.disableEdit = true;
         $scope.disableDelete = true;
         $scope.disableAdd = true;

@@ -189,7 +189,7 @@
                                                 <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip">
                                                     <table class="table table-striped table-bordered table-hover table-condensed marginBottomAutosearch">
                                                         <tbody>
-                                                            <tr ng-repeat="location in Locations track by $index" ng-click="selectedLocation(location)" class="pointer">
+                                                            <tr ng-repeat="location in temporaryLocations = ( Locations|filter:tempObject.City) track by $index" ng-click="selectedLocation(location)" class="pointer">
                                                                 <td>{{location.City}} - {{location.State}} - {{location.CountryCode}}</td>
                                                             </tr>
                                                             <tr ng-if="Locations.length == 0">
@@ -216,6 +216,7 @@
                                                 @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
+
                                         <div class="col-md-12">
                                             <div class="col-lg-3 form-group">
                                                 @Html.LabelFor(model => model.County, htmlAttributes: new { @class = "control-label small" })
@@ -575,11 +576,11 @@
                                                         @Html.LabelFor(model => model.FacilityDetail.Service.LaboratoryServicesYesNoOption, htmlAttributes: new { @class = "control-label small" })
                                                         <div class="radio">
                                                             @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
-                                                        {
-                                                            <label class="radio-inline">
-                                                                @Html.RadioButtonFor(model => model.FacilityDetail.Service.LaboratoryServicesYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Service.LaboratoryServicesYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
-                                                            </label>
-                                                        }
+                                                            {
+                                                                <label class="radio-inline">
+                                                                    @Html.RadioButtonFor(model => model.FacilityDetail.Service.LaboratoryServicesYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Service.LaboratoryServicesYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                                                </label>
+                                                            }
                                                         </div>
                                                         @Html.ValidationMessageFor(model => model.FacilityDetail.Service.LaboratoryServicesYesNoOption, "", new { @class = "text-danger" })
                                                     </div>
@@ -600,11 +601,11 @@
                                                         @Html.LabelFor(model => model.FacilityDetail.Service.RadiologyServicesYesNoOption, htmlAttributes: new { @class = "control-label small" })
                                                         <div class="radio">
                                                             @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
-                                                        {
-                                                            <label class="radio-inline">
-                                                                @Html.RadioButtonFor(model => model.FacilityDetail.Service.RadiologyServicesYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Service.RadiologyServicesYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
-                                                            </label>
-                                                        }
+                                                            {
+                                                                <label class="radio-inline">
+                                                                    @Html.RadioButtonFor(model => model.FacilityDetail.Service.RadiologyServicesYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Service.RadiologyServicesYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                                                </label>
+                                                            }
                                                         </div>
                                                         @Html.ValidationMessageFor(model => model.FacilityDetail.Service.RadiologyServicesYesNoOption, "", new { @class = "text-danger" })
                                                     </div>
@@ -629,11 +630,11 @@
                                                         <label class="control-label small">{{serviceQuestion.ShortTitle}}</label>
                                                         <div class="radio">
                                                             @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
-                                                        {
-                                                            <label class="radio-inline">
-                                                                <input type="radio" name="FacilityDetail.Service.FacilityServiceQuestionAnswers[{{$index}}].AnswerYesNoOption" value="@value" ng-model="tempObject.FacilityDetail.Service.FacilityServiceQuestionAnswers[$index].Answer"> @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
-                                                            </label>
-                                                        }
+                                                            {
+                                                                <label class="radio-inline">
+                                                                    <input type="radio" name="FacilityDetail.Service.FacilityServiceQuestionAnswers[{{$index}}].AnswerYesNoOption" value="@value" ng-model="tempObject.FacilityDetail.Service.FacilityServiceQuestionAnswers[$index].Answer"> @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                                                </label>
+                                                            }
 
                                                         </div>
                                                     </div>
@@ -647,11 +648,11 @@
                                                         @Html.LabelFor(model => model.FacilityDetail.Service.IsAnesthesiaAdministeredYesNoOption, htmlAttributes: new { @class = "control-label small" })
                                                         <div class="radio">
                                                             @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
-                                                        {
-                                                            <label class="radio-inline">
-                                                                @Html.RadioButtonFor(model => model.FacilityDetail.Service.IsAnesthesiaAdministeredYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Service.IsAnesthesiaAdministeredYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
-                                                            </label>
-                                                        }
+                                                            {
+                                                                <label class="radio-inline">
+                                                                    @Html.RadioButtonFor(model => model.FacilityDetail.Service.IsAnesthesiaAdministeredYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Service.IsAnesthesiaAdministeredYesNoOption" }) @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                                                </label>
+                                                            }
                                                         </div>
                                                         @Html.ValidationMessageFor(model => model.FacilityDetail.Service.IsAnesthesiaAdministeredYesNoOption, "", new { @class = "text-danger" })
                                                     </div>
@@ -760,11 +761,11 @@
                                                             </td>
                                                             <td @*ng-init="tempObject.FacilityDetail.Language.NonEnglishLanguages[$index].InterpretersAvailable = 'YES' "*@>
                                                                 @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
-                                                            {
-                                                                <label class="radio-inline">
-                                                                    <input type="radio" name="FacilityDetail.Language.NonEnglishLanguages[{{$index}}].InterpretersAvailableYesNoOption" ng-model="tempObject.FacilityDetail.Language.NonEnglishLanguages[$index].InterpretersAvailable" value="@value" data-val="true" data-val-required="Please specify if Interpreter's Available." /> @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
-                                                                </label>
-                                                            }
+                                                                {
+                                                                    <label class="radio-inline">
+                                                                        <input type="radio" name="FacilityDetail.Language.NonEnglishLanguages[{{$index}}].InterpretersAvailableYesNoOption" ng-model="tempObject.FacilityDetail.Language.NonEnglishLanguages[$index].InterpretersAvailable" value="@value" data-val="true" data-val-required="Please specify if Interpreter's Available." /> @value.GetType().GetMember(value.ToString())[0].GetCustomAttributesData()[0].ToString().Split('"')[1]
+                                                                    </label>
+                                                                }
                                                                 <br />
                                                                 <span class="text-danger field-validation-error" data-valmsg-for="FacilityDetail.Language.NonEnglishLanguages[{{$index}}].InterpretersAvailableYesNoOption" data-valmsg-replace="true">
                                                                     <span for="FacilityDetail.Language.NonEnglishLanguages[{{$index}}].InterpretersAvailableYesNoOption" class=""></span>
@@ -781,11 +782,11 @@
                                             @Html.LabelFor(model => model.FacilityDetail.Language.AmericanSignLanguageYesNoOption, htmlAttributes: new { @class = "control-label small" })
                                             &nbsp;&nbsp;
                                             @foreach (var value in Enum.GetValues(typeof(AHC.CD.Entities.MasterData.Enums.YesNoOption)))
-                                        {
-                                            <label class="radio-inline">
-                                                @Html.RadioButtonFor(model => model.FacilityDetail.Language.AmericanSignLanguageYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Language.AmericanSignLanguageYesNoOption" }) @value.ToString()
-                                            </label>
-                                        }
+                                            {
+                                                <label class="radio-inline">
+                                                    @Html.RadioButtonFor(model => model.FacilityDetail.Language.AmericanSignLanguageYesNoOption, (int)value, new { data_ng_model = "tempObject.FacilityDetail.Language.AmericanSignLanguageYesNoOption" }) @value.ToString()
+                                                </label>
+                                            }
                                             <br />
                                             @Html.ValidationMessageFor(model => model.FacilityDetail.Language.AmericanSignLanguageYesNoOption, "", new { @class = "text-danger" })
                                         </div>
@@ -974,8 +975,8 @@
                                                                 <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="Mid_Level_Practioner">
                                                                     <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
                                                                         <tbody>
-                                                                            <tr ng-repeat="c in MidLevelProviders track by $index" ng-click="Select_Mid_Level_Practioner(c,'Mid_Level_Practioner')" class="pointer">
-                                                                                <td>{{c.PersonalDetail.FirstName}}</td>
+                                                                            <tr ng-repeat="c in tempMidLevelProviders=(MidLevelProviders | filter : practitioner) track by $index" ng-click="Select_Mid_Level_Practioner(c,'Mid_Level_Practioner')" class="pointer">
+                                                                                <td>{{c.PersonalDetail.FullName}}</td>
                                                                             </tr>
                                                                             <tr ng-if="MidLevelProviders.length == 0">
                                                                                 <td>No data..... </td>

@@ -47,7 +47,7 @@ namespace AHC.CD.WebUI.MVC
 
             if (await IsMinimumPasswwordAge(UserID, CurrentPassword, NewPassword))
             {
-                return await Task.FromResult(IdentityResult.Failed("You have to wait for atleast one day to change your password "));
+                return await Task.FromResult(IdentityResult.Failed("You have to wait for at least one day to change your password "));
             }
             if (await IsPreviousPassword(UserID, CurrentPassword, NewPassword))
             {
@@ -78,15 +78,35 @@ namespace AHC.CD.WebUI.MVC
         }
         private async Task AddToPasswordHistoryAsync(string PasswordHash, string NewPassword, ApplicationUser appuser, string Type)
         {
-            if (Type == "Change")
+            try
             {
-                appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash });
+                if (Type == "Change")
+                {
+                    appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash });
+                }
+                else
+                {
+                    int flag = 0;
+                    for (int i=0;i<appuser.UserUsedPassword.Count;i++)
+                    {
+                        var IsPasswordHashMatch = PasswordHasher.VerifyHashedPassword(appuser.UserUsedPassword.ElementAt(i).HashPassword, NewPassword);
+                        if (IsPasswordHashMatch == PasswordVerificationResult.Success)
+                        {
+                            flag = 1;
+                            appuser.UserUsedPassword.ElementAt(i).CreatedDate = DateTimeOffset.Now;
+                            break;
+                        }
+                    }
+                    if (flag==1)
+                    {
+                        appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash });                   
+                    }                    
+                }
                 await UpdateAsync(appuser);
             }
-            else
+            catch (Exception ex)
             {
-                appuser.UserUsedPassword.FirstOrDefault(a => PasswordHasher.VerifyHashedPassword(a.HashPassword, NewPassword) == PasswordVerificationResult.Success).CreatedDate = DateTimeOffset.Now;
-                await UpdateAsync(appuser);
+                throw ex;
             }
 
         }
@@ -218,7 +238,7 @@ namespace AHC.CD.WebUI.MVC
             var roleManager = HttpContext.Current.GetOwinContext().Get<ApplicationRoleManager>();
             const string password = "Password@123456";
 
-            var rolesString = new string[] { "ADM", "CCO", "CRA", "TL", "PRO", "CCM", "MGT", "HR" };
+            var rolesString = new string[] { "ADM", "CCO", "CRA", "TL", "PRO", "CCM", "MGT", "HR", "SYSADM" };
 
             var role = roleManager.FindByName("SuperAdmin");
             if (role == null)

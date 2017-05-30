@@ -146,9 +146,4 @@ CCMActionApp.controller('psvController', function ($scope, $http, $filter) {
     };
 
     //=======================PSV ends=========================================
-
-
-
-
-
 });

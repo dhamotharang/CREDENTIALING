@@ -274,7 +274,7 @@ credentialingContactApp.controller('CredentialingContactController', function ($
                                     $scope.CredentialingContacts[i] = data.credentialingContact;
                                 }
                             }
-                            messageAlertEngine.callAlertMessage("credentialingContactSuccessMsg", "Credentialing Contact Information Added successfully.", "success", true);
+                            messageAlertEngine.callAlertMessage("credentialingContactSuccessMsg", "Credentialing Contact Information Updated successfully.", "success", true);
                         }
                         else {
                             messageAlertEngine.callAlertMessage("alertCredentialingContact", data.status, "danger", true);

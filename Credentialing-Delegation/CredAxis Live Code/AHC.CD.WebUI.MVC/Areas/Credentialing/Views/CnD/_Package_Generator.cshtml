@@ -75,12 +75,12 @@
                                                     </span>
                                                     <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
                                                 </div>
-                                            @*@Html.HiddenFor(model => model.DocumentPath, new { ng_value = "tempObject.DocumentPath2" })*@
-                                            @*@Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })*@
-                                            <p style="color:red;" class="fileinput-new">{{PlanDocumentSaveStatus}}</p>
-                                           <p style="color:red;" class="fileinput-exists" ng-if="isErrorForPlanDocument">{{PlanDocumentSaveStatus}}</p>
-                                             </div>
+                                                @*@Html.HiddenFor(model => model.DocumentPath, new { ng_value = "tempObject.DocumentPath2" })*@
+                                                @*@Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })*@
+                                                <p style="color:red;" class="fileinput-new">{{PlanDocumentSaveStatus}}</p>
+                                                <p style="color:red;" class="fileinput-exists" ng-if="isErrorForPlanDocument">{{PlanDocumentSaveStatus}}</p>
                                             </div>
+                                        </div>
                                         <div class="col-lg-12">
                                             @Html.CheckBoxFor(model => model.IsPrivate, new { data_ng_model = "TempObject.IsPrivate", id = "Private" }) Private
                                         </div>
@@ -104,51 +104,54 @@
                                     Please wait...
                                 </div>
                             </div>
-                            <br/>
+                            <br />
                             <div class="col-lg-12 form-style" ng-if="AttachPlanPanelLoadingAjax && isGeneratePdf">
-                                <div class="panel">  
+                                <div class="panel">
                                     <fieldset>
                                         <legend>
                                             Search
                                         </legend>
                                         <div class="col-lg-12 form-group">
-                                            <div class="col-lg-6 form-group pull-left" style="padding-left: 0">
-                                                <label class="control-label small">Payer</label>
-                                                <input type="text" class="form-control input-sm" placeholder="Select Payer" name="PlanPdfNamePayer" ng-model="tempObject.seletedPDFPayerName" ng-click="searchCumDropDownforSelectPayer('ForTypePlanPayer'+$index);tempObject.PlanPdfNamePayer=''" data-searchdropdown="searchdropdown" />
-                                                <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForTypePlanPayer{{$index}}" style =" margin-left: 0px; margin-top: 55px; ">
-                                                    <table class="pull-left table table-striped table-bordered table-hover table-condensed">
-                                                        <tbody>
-                                                            <tr ng-repeat="payer in  Payers = ( NewpdfTemplateList   | unique: 'Payer'  | filter:tempObject.seletedPDFPayerName) track by $index" ng-click="addIntoTypePdfDropDown1(payer,'ForTypePlanPayer')" class="pointer">
-                                                                
-                                                                <td>{{payer.Payer}}</td>
-                                                            </tr>
-                                                            <tr ng-if="Payers.length == 0">
-                                                                <td>Payer not found..... </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                            @if (System.Configuration.ConfigurationManager.AppSettings["PlanformPayer"] == "false")
+                                            {
+                                                <div class="col-lg-6 form-group pull-left" style="padding-left: 0">
+                                                    <label class="control-label small">Payer</label>
+                                                    <input type="text" class="form-control input-sm" placeholder="Select Payer" name="PlanPdfNamePayer" ng-model="tempObject.seletedPDFPayerName" ng-click="searchCumDropDownforSelectPayer('ForTypePlanPayer'+$index);tempObject.PlanPdfNamePayer=''" data-searchdropdown="searchdropdown" />
+                                                    <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForTypePlanPayer{{$index}}" style=" margin-left: 0px; margin-top: 55px; ">
+                                                        <table class="pull-left table table-striped table-bordered table-hover table-condensed">
+                                                            <tbody>
+                                                                <tr ng-repeat="payer in  Payers = ( NewpdfTemplateList   | unique: 'Payer'  | filter:tempObject.seletedPDFPayerName) track by $index" ng-click="addIntoTypePdfDropDown1(payer,'ForTypePlanPayer')" class="pointer">
+
+                                                                    <td>{{payer.Payer}}</td>
+                                                                </tr>
+                                                                <tr ng-if="Payers.length == 0">
+                                                                    <td>Payer not found..... </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6 form-group pull-right" style="padding-right: 0">
-                                                <label class="control-label small">Region</label>
-                                                <input type="text" class="form-control input-sm" placeholder="Select Region" name="PlanPdfNameState" ng-model="tempObject.seletedPDFStateName" ng-click="searchCumDropDownforSelectState('ForTypePlanState'+$index);tempObject.PlanPdfNameState=''" data-searchdropdown="searchdropdown" />
-                                                <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForTypePlanState{{$index}}" style="margin-top:55px;">
-                                                    <table class="table table-striped table-bordered table-hover table-condensed">
-                                                        <tbody>
-                                                            <tr ng-repeat="region in Regions = ( NewpdfTemplateList  | unique: 'Region' | filter : tempObject.seletedPDFStateName) track by $index" ng-click="addIntoTypePdfDropDown2(region,'ForTypePlanState')" class="pointer">
-                                                                <td>{{region.Region}}</td>
-                                                            </tr>
-                                                            <tr ng-if="Regions.length == 0">
-                                                                <td>Region not found..... </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                <div class="col-lg-6 form-group pull-right" style="padding-right: 0">
+                                                    <label class="control-label small">Region</label>
+                                                    <input type="text" class="form-control input-sm" placeholder="Select Region" name="PlanPdfNameState" ng-model="tempObject.seletedPDFStateName" ng-click="searchCumDropDownforSelectState('ForTypePlanState'+$index);tempObject.PlanPdfNameState=''" data-searchdropdown="searchdropdown" />
+                                                    <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForTypePlanState{{$index}}" style="margin-top:55px;">
+                                                        <table class="table table-striped table-bordered table-hover table-condensed">
+                                                            <tbody>
+                                                                <tr ng-repeat="region in Regions = ( NewpdfTemplateList  | unique: 'Region' | filter : tempObject.seletedPDFStateName) track by $index" ng-click="addIntoTypePdfDropDown2(region,'ForTypePlanState')" class="pointer">
+                                                                    <td>{{region.Region}}</td>
+                                                                </tr>
+                                                                <tr ng-if="Regions.length == 0">
+                                                                    <td>Region not found..... </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            }
                                             <div>
                                                 <label class="control-label small">Plan Template*</label>
                                                 <input type="text" class="form-control input-sm" placeholder="Select Plan Template" name="PlanPdfName" ng-model="tempObject.seletedPDFName" ng-click="searchCumDropDownforGeneratePlan();" data-searchdropdown="searchdropdown" />
-                                                <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForTypePlan" style="margin-top:117px;">
+                                                <div class="ProviderTypeSelectAutoList1 popover fade bottom in" role="tooltip" id="ForTypePlan" style="margin-top:51px;">
                                                     <table class="table table-striped table-bordered table-hover table-condensed">
                                                         <tbody>
                                                             <tr ng-repeat="temp in fpdfTemplateList = ( NewpdfTemplateList   | filter:tempObject.seletedPDFName ) track by $index" ng-click="addIntoTypePdfDropDown(temp)" class="pointer">
@@ -173,8 +176,8 @@
                                         </div>
                                         <div class="clearfix"></div>
                                         <br />
-                                        </fieldset>
-                  </div>
+                                    </fieldset>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-12" ng-if="!AttachPlanFormPanel" style="padding-left: 0px; padding-right: 0px;">
@@ -206,7 +209,7 @@
                                         <tr ng-repeat="p in PlanForm track by $index" ng-if="PlanForm.length != 0">
                                             <td><input type="checkbox" ng-model="p.isCheck" style="width:15px;height:15px;" ng-click="ToggleSelection(p)" /></td>
                                             <td><i class="wrap-words">{{p.Title}}</i></td>
-                                            <td><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{p.FilePath}}" target="_blank" class="btn btn-xs btn-default"  data-toggle="tooltip" data-placement="bottom" title="View"><i class="fa fa-eye"></i></a></td>
+                                            <td><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{p.FilePath}}" target="_blank" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="bottom" title="View"><i class="fa fa-eye"></i></a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -243,11 +246,11 @@
                                                     </span>
                                                     <a href="#" class="input-group-addon btn btn-default btn-sm fileinput-exists" data-dismiss="fileinput">Remove</a>
                                                 </div>
-                                            <p style="color:red;" class="fileinput-new">{{ProfileDocumentSaveStatus}}</p>
+                                                <p style="color:red;" class="fileinput-new">{{ProfileDocumentSaveStatus}}</p>
                                                 <p style="color:red;" class="fileinput-exists" ng-if="myvar==1">{{ProfileDocumentSaveStatus}}</p>
 
-                                        </div>
                                             </div>
+                                        </div>
                                         <div class="col-lg-12 pull-right">
                                             @Html.CheckBoxFor(model => model.IsPrivate, new { data_ng_model = "TempObject.IsPrivate1", id = "Private" }) Private
                                         </div>
@@ -304,7 +307,7 @@
                                         <tr ng-repeat="q in ProfileDocument track by $index" ng-if="ProfileDocument.length != 0">
                                             <td><input type="checkbox" ng-model="q.isCheck" style="width:15px;height:15px;" ng-click="ToggleSelection(q)" /></td>
                                             <td class="wrap-words">{{q.Title}}</td>
-                                            <td><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{q.FilePath}}" target="_blank" class="btn btn-xs btn-default"  data-toggle="tooltip" data-placement="bottom" title="View"><i class="fa fa-eye"></i></a></td>
+                                            <td><a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{q.FilePath}}" target="_blank" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="bottom" title="View"><i class="fa fa-eye"></i></a></td>
                                             @*<td><a href="/Document/View?path={{q.FilePath}}" target="_blank" class="btn btn-xs btn-primary" ng-click="editPlanForm()" toggle data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit"></i></a></td>*@
                                         </tr>
                                     </tbody>
@@ -331,9 +334,9 @@
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="p in PackageGenerated track by $index">
-                                            <td >
-                                                <a ng-show="$index!=PackageGenerated.length-1 && $index<PackageGenerated.length-1" class="btn btn-xs btn-info"  data-toggle="tooltip" data-placement="right" title="Reorder the document" ng-click="moveDocumentDown($index)"><i class="fa fa-sort-down"></i></a>
-                                                <a ng-show="$index != 0" class="btn btn-xs btn-info"  data-toggle="tooltip" data-placement="right" title="Reorder the document" ng-click="moveDocumentUp($index)"><i class="fa fa-sort-up"></i></a>
+                                            <td>
+                                                <a ng-show="$index!=PackageGenerated.length-1 && $index<PackageGenerated.length-1" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="right" title="Reorder the document" ng-click="moveDocumentDown($index)"><i class="fa fa-sort-down"></i></a>
+                                                <a ng-show="$index != 0" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="right" title="Reorder the document" ng-click="moveDocumentUp($index)"><i class="fa fa-sort-up"></i></a>
                                             </td>
                                             <td>{{p.Title}}</td>
                                             @*<td><a class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a></td>
@@ -361,4 +364,3 @@
         </fieldset>
     </div>
 </div>
-

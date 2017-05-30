@@ -1,4 +1,6 @@
 ﻿using AHC.CD.Business.Credentialing.AppointmentInfo;
+
+using AHC.CD.WebUI.MVC.CustomHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,12 +42,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             return PartialView("~/Areas/Credentialing/Views/CCMPortal/_SPA_Document.cshtml");
         }
 
-        public async Task<ActionResult> GetAllAppointmentsList(string ApprovalStatus = null)
-        {
-            var data = await appointmentManager.GetCCMAppointmentsInfo(ApprovalStatus);
-
-            return Json(data, JsonRequestBehavior.AllowGet);
-        }
-
+    
+     
     }
 }

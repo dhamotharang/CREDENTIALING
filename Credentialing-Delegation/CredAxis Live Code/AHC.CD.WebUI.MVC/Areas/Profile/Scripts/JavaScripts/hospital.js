@@ -31,10 +31,10 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
     // rootScoped on emitted value catches the value for the model and insert to get the old data
     $rootScope.$on('HospitalPrivilegeInformation', function (event, val) {
 
-        $scope.HospitalInformationPendingRequest = profileUpdates.getUpdates('Hospital Privilege', 'Hospital Information');
-        $scope.HospitalPrivilegeInformationPendingRequest = profileUpdates.getUpdates('Hospital Privilege', 'Hospital Privilege Information');
+        $scope.HospitalInformationPendingRequest = profileUpdates.getUpdates('Hospital Privilege', 'Hospital Privilege Information');
+        $scope.HospitalPrivilegeInformationPendingRequest = profileUpdates.getUpdates('Hospital Privilege', 'Hospital Privilege Detail');
 
-       
+
         try {
             $scope.HospitalPrivilegeInformations = val;
             var tempHospitalPrivilegeDetails = [];
@@ -47,7 +47,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
             if ($scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails.length > 0) {
                 for (var i = 0; i < $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails.length ; i++) {
                     if (!$scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[i].SpecialtyID) { $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[i].SpecialtyID = ""; }
-                    $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[i].TableState = $scope.HospitalPrivilegeInformations.TableState;
+                    // $scope.HospitalPrivilegeInformations.HospitalPrivilegeDetails[i].TableState = $scope.HospitalPrivilegeInformations.TableState;
                 }
             }
 
@@ -94,6 +94,11 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
     //To Display the drop down div
     $scope.searchCumDropDown = function (divId) {
         $("#" + divId).show();
+        if (divId.includes("ForContact")) {
+            $scope.tempObject.HospitalContactInfo = {};
+            $scope.tempObject.HospitalContactInfo.HospitalContactPersons = [];
+            $scope.tempObject.HospitalContactInfo.HospitalContactPersons = $scope.tempObject.Hospital.HospitalContactInfoes[0].HospitalContactPersons;
+        }
         //alert($scope.tempObject.HospitalContactPerson.ContactPersonName);
         if ($scope.tempObject.HospitalContactPerson.ContactPersonName == '') {
             $scope.tempObject.HospitalContactPerson.HospitalContactPersonID = null;
@@ -101,7 +106,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
             $scope.tempObject.HospitalContactPerson.ContactPersonFax = '';
         }
     };
-    
+
     $scope.addIntoHospitalDropDown = function (hospital, div) {
         $scope.tempObject.Hospital = angular.copy(hospital);
         $("#" + div).hide();
@@ -187,7 +192,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
     //Controls the View and Add feature on the page
     $scope.operateViewAndAddControl = function (sectionValue) {
         $rootScope.closeAlertMessage();
-       // $scope.HospitalInformationPendingRequest = false;
+        // $scope.HospitalInformationPendingRequest = false;
         $scope.tempObject = {};
         $scope.buttonLabel = "Add"
         $scope.visibilityControl = sectionValue;
@@ -262,7 +267,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
     $scope.saveHopitalPrivilegeInformation = function (hospitalPrivilegeInformation) {
         loadingOn();
         $scope.message.desc = "";
-        
+
         var validationStatus;
         var url;
 
@@ -293,12 +298,15 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                   
+
                     try {
                         if (data.status == "true") {
                             try {
                                 if ($scope.HospitalPrivilegeInformations != null) {
                                     $scope.HospitalInformationPendingRequest = true;
+                                }
+                                if (data.ActionType == "Update") {
+                                    $scope.HospitalPrivilegeInformations.TableState = true;
                                 }
                                 $scope.HospitalPrivilegeInformations
                                 $scope.HospitalPrivilegeInformations = angular.copy(data.hospitalPrivilegeInformation);
@@ -306,7 +314,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                             catch (e)
                             { }
                             $scope.operateCancelControl('');
-                            
+
                             //messageAlertEngine.callAlertMessage("alertHospitalPrivilegeInformation", "Hospital Privilege Information Saved Successfully!!!!", "success", true);
                             messageAlertEngine.callAlertMessage("alertHospitalPrivilegeInformation", data.successMessage, "success", true);
                             $scope.resetDates();
@@ -314,7 +322,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                             messageAlertEngine.callAlertMessage("alertHospitalPrivilegeInformation", data.status, "danger", true);
                         }
                     } catch (e) {
-                    
+
                     }
                 },
                 error: function (e) {
@@ -343,13 +351,13 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
             $scope.isLocationError = true;
         }
     });
-    
+
     $scope.ClearHospital = function () {
         $scope.isHospitalError = true;
         $scope.isLocationError = true;
     }
 
-    $scope.isHospitalError=true;
+    $scope.isHospitalError = true;
     $scope.isLocationError = true;
     $scope.setErrorBitHospital = function (name) {
         if (name == "") {
@@ -370,13 +378,13 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
     //====================== Hospital Privilege Detail ===================
     $scope.saveHospitalPrivilegeDetail = function (hospitalPrivilegeInformation, IndexValue) {
         $scope.HospitalPrivilegeError = '';
-       
+
         $scope.indexVal = IndexValue;
         var validationStatus;
         var url;
         var myData = {};
         var $formDataHospitalPrivilege;
-        
+
 
 
         if ($scope.visibilityControl == 'addhospitalPrivilegeInformation') {
@@ -429,7 +437,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    
+
                     try {
                         if (hospitalPrivilegeInformation.PreferenceType == "1") {
                             $scope.setPrimary();
@@ -529,7 +537,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                             $scope.HospitalPrivilegeError = data.status.split(",");
                         }
                     } catch (e) {
-                        
+
                     }
                 },
                 error: function (e) {
@@ -578,6 +586,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -605,7 +614,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                             $scope.errorHospitalPrivilegeInformation = "Sorry for Inconvenience !!!! Please Try Again Later...";
                         }
                     } catch (e) {
-                        
+
                     }
                 },
                 error: function (e) {
@@ -696,7 +705,7 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
                         }
                     }
                 } catch (e) {
-                  
+
                 }
             });
         }

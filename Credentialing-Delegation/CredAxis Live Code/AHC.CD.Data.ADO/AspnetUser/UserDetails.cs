@@ -55,6 +55,7 @@ namespace AHC.CD.Data.ADO.AspnetUser
         }
 
 
+
         public dynamic UsersPasswordLastUpdated(string GUID)
         {
             List<dynamic> Data = new List<dynamic>();
@@ -71,6 +72,27 @@ namespace AHC.CD.Data.ADO.AspnetUser
                 throw e;
             }
             return Data[0];
+        }
+
+
+        public string GetUserAuthID(string userName)
+        {
+            string userAuthID = "";
+            try
+            {
+                DynamicParameters values = new DynamicParameters();
+                values.Add("@userName", userName);
+
+                string query = "SELECT * FROM [dbo].[AspNetUsers] where UserName = @userName";
+                var user = dp.ExecuteQuesryForASPNETUserWithParams<dynamic>(values, query);
+                userAuthID = user.Id;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return userAuthID;
         }
     }
 }

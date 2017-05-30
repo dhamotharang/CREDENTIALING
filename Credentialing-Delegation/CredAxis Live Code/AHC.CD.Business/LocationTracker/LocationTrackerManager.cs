@@ -61,7 +61,17 @@ namespace AHC.CD.Business.LocationTracker
                     var IsTrue = item.PracticeLocationDetails.Any(f => f.FacilityId == facilityID && f.Status != AHC.CD.Entities.MasterData.Enums.StatusType.Inactive.ToString());
 
                     if (IsTrue)
+                    {
+                        var providerTitle = "";
+                        if (item.PersonalDetail != null && item.PersonalDetail.ProviderTitles.Count > 0)
+                        {
+                            item.PersonalDetail.ProviderTitles = item.PersonalDetail.ProviderTitles.Where(s => s.Status == StatusType.Active.ToString()).ToList();
+                            providerTitle = String.Join(", ", item.PersonalDetail.ProviderTitles.Select(s => s.ProviderType.Title));
+                        }
+                        item.PersonalDetail.ProviderTitles.ElementAt(0).ProviderType.Title = providerTitle;
                         profiles.Add(item);
+                    }
+                        
                 }
 
 
@@ -177,6 +187,17 @@ namespace AHC.CD.Business.LocationTracker
 
                 //    }
                 //}
+                var providerTitle = "";
+                foreach (var profile in profiles)
+                {
+                    if (profile.PersonalDetail != null && profile.PersonalDetail.ProviderTitles.Count > 0)
+                    {
+                        profile.PersonalDetail.ProviderTitles = profile.PersonalDetail.ProviderTitles.Where(s => s.Status == StatusType.Active.ToString()).ToList();
+                       providerTitle = String.Join(", ", profile.PersonalDetail.ProviderTitles.Select(s => s.ProviderType.Title));
+                    }
+                    profile.PersonalDetail.ProviderTitles.ElementAt(0).ProviderType.Title = providerTitle;
+                }
+                
 
                 return profiles;
             }

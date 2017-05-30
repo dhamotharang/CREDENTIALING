@@ -74,7 +74,7 @@ namespace AHC.CD.Resources.Messages
 
         #region Practice Location
 
-        public static string PRACTICE_LOCATION_DETAIL_UPDATE_SUCCESS = "Practice Location Information Updated Successfully !!!!";
+        public static string PRACTICE_LOCATION_DETAIL_UPDATE_SUCCESS = "Other Information Updated Successfully !!!!";
         public static string PRACTICE_LOCATION_FACILITY_UPDATE_SUCCESS = "Facility Information Updated Successfully !!!!";
         public static string OPEN_PRACTICE_STATUS_DETAIL_UPDATE_SUCCESS = "Open Practice Status Updated successfully !!!!";
         public static string OPEN_PRACTICE_STATUS_DETAIL_ADD_SUCCESS = "Open Practice Status Added successfully !!!!";
@@ -187,7 +187,7 @@ namespace AHC.CD.Resources.Messages
 
         #region Practice Location
 
-        public static string PRACTICE_LOCATION_DETAIL_UPDATE_REQUEST_SUCCESS = "Practice Location Information Update Request Sent Successfully !!!!";
+        public static string PRACTICE_LOCATION_DETAIL_UPDATE_REQUEST_SUCCESS = "Other Information Update Request Sent Successfully !!!!";
         public static string PRACTICE_LOCATION_FACILITY_UPDATE_REQUEST_SUCCESS = "Facility Information Update Request Sent Successfully !!!!";
         public static string OPEN_PRACTICE_STATUS_DETAIL_UPDATE_REQUEST_SUCCESS = "Open Practice Status Update Request Sent Successfully !!!!";
         public static string PRACTICE_PROVIDER_SUPERVISOR_UPDATE_REQUEST_SUCCESS = "Supervising Practitioner Update Request Sent Successfully !!!!";

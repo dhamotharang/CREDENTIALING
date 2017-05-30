@@ -1,31 +1,37 @@
-﻿CCMDashboard.controller("CCMDashboardController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "CCMDashboardService", "CCMDashboardFactory", "$http", function ($rootScope, $scope, toaster, $timeout, $filter, CCMDashboardService, CCMDashboardFactory, $http) {
+﻿CCMDashboard.controller("CCMDashboardController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "CCMDashboardService", "CCMDashboardFactory", "$http", "$location", function ($rootScope, $scope, toaster, $timeout, $filter, CCMDashboardService, CCMDashboardFactory, $http, $location) {
     toaster.pop('Success', "Success", 'Welcome');
     var AppointmentDate = new Date();
+    var infoId = 0;
+    var profileId = 0;
     $scope.GridType = "";
+    $scope.BisuctCounts = { All: 0, Approved: 0, Rejected: 0, Pending: 0 };
     //================================== Temporary function Declaration Start ===============================================================================
-    
-    $scope.MasterData = function () {
+
+    $rootScope.MasterData = function () {
         CCMDashboardService.GetCCMAppointments().then(function (result) {
-           $scope.BisuctCounts = CCMDashboardFactory.LoadCounts(result.data);
-            for (var i in result.data) {
-                result.data[i].AppointmentDate = CCMDashboardFactory.ConvertDate(result.data[i].AppointmentDate);
-                result.data[i].CredInitiationDate = CCMDashboardFactory.ConvertDate(result.data[i].CredInitiationDate);
+            console.log(result);
+            $scope.BisuctCounts = CCMDashboardFactory.LoadCounts(result.data.AppointmentsInfo);
+         
+            for (var i in result.data.AppointmentsInfo) {
+                result.data.AppointmentsInfo[i].AppointmentDate = CCMDashboardFactory.ConvertDate(result.data.AppointmentsInfo[i].AppointmentDate);
+                result.data.AppointmentsInfo[i].CredInitiationDate = CCMDashboardFactory.ConvertDate(result.data.AppointmentsInfo[i].CredInitiationDate);
             }
-            $rootScope.CCMAppointments = result.data;
+            $rootScope.CCMAppointments = result.data.AppointmentsInfo;
+            $rootScope.SignaturePath = result.data.SignaturePath;
             $scope.loadEvents();
             $rootScope.TempCCMAppointments = result.data;
-           
+            if ($rootScope.tableCaption!="") { CCMDashboardFactory.ResetTable() };
             AppointmentDate = $filter('date')(AppointmentDate, "yyyy-MM-dd");
             $rootScope.filteredCCMAppointmentsByDate = $filter('CCMDashboardFilterByAppointmentDate')(AppointmentDate);
         }, function (error) {
             toaster.pop('error', "", 'Please try after sometime !!!');
-        })
+        });
     }
     $rootScope.GridData = function (AppointmentType, RowObject) {
         $scope.GridType = AppointmentType;
         $rootScope.$broadcast('AppointmentsGrid', { type: AppointmentType, RowObject: RowObject });
     };
-    
+
     //================================== Temporary function Declaration End ===============================================================================
     //===================================CalendarPlugIn Script=============================================================================================
     'use strict';
@@ -62,6 +68,51 @@
         $rootScope.filteredCCMAppointmentsByDate = $filter('CCMDashboardFilterByAppointmentDate')(AppointmentDate);
     };
 
+
+   
+    $rootScope.tempObject = {};
+    //-------- Method to fetch the CCM action result ----
+    $scope.GetCredentialingDetails = function (ProviderCredentialingInfoID, ProfileId) {
+        $location.url('/CCM_ACTION');
+        $rootScope.tempObject = {};
+        $rootScope.ProfileId = ProfileId;
+        infoId = ProviderCredentialingInfoID;
+        profileId = ProfileId
+        CCMDashboardService.GetAppointmentInfo(ProviderCredentialingInfoID).then(function (response) {
+            //$rootScope.tempObject = angular.copy(response.data);
+            CCMDashboardFactory.FormatCCMdata(response.data);
+        }, function (error) {
+            toaster.pop('error', "", 'Please try after sometime !!!');
+        });
+    };
+    //--------- Method to fetch the PSV Result ----------
+    $scope.GetPSVDetails = function () {
+        if ($rootScope.tempObject.PSVdata != undefined) {
+            return;
+        }
+        CCMDashboardService.GetProfileVerificationParameter().then(function (response) {
+            CCMDashboardFactory.FormatPSVId(response.data);
+        });
+
+        CCMDashboardService.GetPSVInfo(infoId).then(function (response) {
+            response.data.psvReport = JSON.parse(response.data.psvReport);
+            CCMDashboardFactory.FormatPSVData(response.data.psvReport);
+        }, function (error) {
+            toaster.pop('error', "", 'Please try after sometime !!!');
+        });
+    };
+    //--------- Method to fetch the Documents -----------
+    $scope.GetDocumentsDetails = function () {
+        if ($rootScope.tempObject.Docs != undefined) {
+            return;
+        }
+        CCMDashboardService.GetDocumentsInfo(profileId).then(function (response) {
+            CCMDashboardFactory.FormatDocuments(response.data);
+        }, function (error) {
+            toaster.pop('error', "", 'Please try after sometime !!!');
+        });
+    };
+
     function createRandomEvents() {
         var events = [];
         var startDay = Math.floor(Math.random() * 90) - 45;
@@ -79,23 +130,9 @@
         }
         return events;
     }
+
     //==================================================Script END=========================================================================================
 
 
-    $scope.tempObject = {};
-    $scope.GetCredentialingDetails = function (ProviderCredentialingInfoID)
-    {
 
-        $scope.tempObject = {};
-        $http({
-            method: 'GET',
-            url: '/Credentialing/CCM/CCMSPAPage?id=' + ProviderCredentialingInfoID
-        }).then(function successCallback(response) {                        
-            $scope.ccoList = angular.copy(response.data);
-            $scope.tempObject = $scope.ccoList;            
-        }, function errorCallback(response) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    }
 }]);

@@ -265,7 +265,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         professionalLiability.InsuranceCertificateFile = null;
                         tracker.ProfileId = profileId;
                         tracker.Section = "Professional Liability";
-                        tracker.SubSection = "Professional Liability Info";
+                        tracker.SubSection = "Professional Liability Information";
                         tracker.userAuthId = userId;
                         tracker.objId = professionalLiability.ProfessionalLiabilityInfoID;
                         tracker.ModificationType = AHC.CD.Entities.MasterData.Enums.ModificationType.Renewal.ToString();
@@ -276,7 +276,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                         dynamic uniqueRecord = new ExpandoObject();
                         uniqueRecord.FieldName = "Professional Liability Detail";
-                        uniqueRecord.Value = insuranceCarrierDeatil.Name + (insuranceCarrierAddress != null ? " - " + insuranceCarrierAddress.LocationName : " ") + professionalLiability.PolicyNumber;
+                        uniqueRecord.Value = insuranceCarrierDeatil.Name + (insuranceCarrierAddress != null ? " - " + insuranceCarrierAddress.LocationName : " ") + " " + professionalLiability.PolicyNumber;
 
                         tracker.UniqueData = JsonConvert.SerializeObject(uniqueRecord);
 

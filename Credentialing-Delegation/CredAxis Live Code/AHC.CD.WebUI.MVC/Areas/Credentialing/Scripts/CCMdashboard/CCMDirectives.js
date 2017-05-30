@@ -161,3 +161,19 @@ CCMDashboard.directive('pageSelect', function () {
         }
     }
 })
+
+
+CCMDashboard.directive('saving', function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        scope: {
+            ngModel: '=',
+            loading: '='
+        },
+        template: '<span class="" ng-show="loading" ng-disabled="loading" class="loading" style="padding-top:3px"><img src="/Content/Images/ajax-loader.gif" width="20" height="20" />Saving... </button>',
+        link: function (scope, element, attr) {
+
+        }
+    }
+});

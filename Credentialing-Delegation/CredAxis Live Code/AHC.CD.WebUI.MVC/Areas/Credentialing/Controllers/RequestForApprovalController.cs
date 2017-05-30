@@ -70,11 +70,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                 ViewBag.providerorCCO = isPRO;
                 if (isPRO)
                 {
+                    ViewBag.Provider = true;
                     string UserAuthId = await GetUserAuthId();
                     int ProfileID = Convert.ToInt32(await iRequestForApprovalManager.GetProfileID(UserAuthId));
                     UpdateAndRenwalDTO = await iRequestForApprovalManager.GetAllUpdatesAndRenewalsForProviderAsync(ProfileID);
                 }
                 else{
+                    ViewBag.Provider = false;
                     UpdateAndRenwalDTO = await iRequestForApprovalManager.GetAllUpdatesAndRenewalsAsync();
                 }
             }

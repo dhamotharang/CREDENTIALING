@@ -151,59 +151,61 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             List<ProfileUpdatedData> updatedDatas = new List<ProfileUpdatedData>();
             ProfileUpdatedData currentUpdatedData = new ProfileUpdatedData();
 
-            if (status.Equals("Approved") || status.Equals("Rejected"))
-            {
-                uniqueUdatedData = profileUpdateManager.GetDataById(trackerId);
-            }
-            else
-            {
-                profileUpdates = profileUpdateManager.GetUpdatesByTrackerId(trackerId, status, modificationType);
-                foreach (var item in profileUpdates)
-                {
-                    List<ProfileUpdatedData> eachUpadtedDatas = new List<ProfileUpdatedData>();
-                    eachUpadtedDatas = profileUpdateManager.GetDataById(item.ProfileUpdatesTrackerId);
-                    foreach (var innerItem in eachUpadtedDatas)
-                    {
-                        updatedDatas.Add(innerItem);
-                    }
-                }
+            uniqueUdatedData = profileUpdateManager.GetDataById(trackerId);
 
-                //get lst field value
-                if (updatedDatas.Count != 0)
-                {
-                    uniqueUdatedData.Add(updatedDatas[0]);
-                    for (int i = 1; i < updatedDatas.Count; i++)
-                    {
-                        var flag = 0;
-                        currentUpdatedData = updatedDatas[i];
-                        for (int j = 0; j < uniqueUdatedData.Count; j++)
-                        {
-                            if (currentUpdatedData.FieldName.Equals(uniqueUdatedData[j].FieldName))
-                            {
-                                flag = 1;
-                                break;
-                            }
-                        }
-                        if (flag == 0)
-                        {
-                            uniqueUdatedData.Add(updatedDatas[i]);
-                        }
-                    }
+            //if (status.Equals("Approved") || status.Equals("Rejected"))
+            //{
+            //    uniqueUdatedData = profileUpdateManager.GetDataById(trackerId);
+            //}
+            //else
+            //{
+            //    profileUpdates = profileUpdateManager.GetUpdatesByTrackerId(trackerId, status, modificationType);
+            //    foreach (var item in profileUpdates)
+            //    {
+            //        List<ProfileUpdatedData> eachUpadtedDatas = new List<ProfileUpdatedData>();
+            //        eachUpadtedDatas = profileUpdateManager.GetDataById(item.ProfileUpdatesTrackerId);
+            //        foreach (var innerItem in eachUpadtedDatas)
+            //        {
+            //            updatedDatas.Add(innerItem);
+            //        }
+            //    }
 
-                    for (int i = 0; i < uniqueUdatedData.Count; i++)
-                    {
-                        for (int j = 0; j < updatedDatas.Count; j++)
-                        {
-                            if (updatedDatas[j].FieldName.Equals(uniqueUdatedData[i].FieldName))
-                            {
-                                uniqueUdatedData[i].OldValue = updatedDatas[j].OldValue;
-                                uniqueUdatedData[i].NewValue = updatedDatas[j].NewValue;
+            //    //get lst field value
+            //    if (updatedDatas.Count != 0)
+            //    {
+            //        uniqueUdatedData.Add(updatedDatas[0]);
+            //        for (int i = 1; i < updatedDatas.Count; i++)
+            //        {
+            //            var flag = 0;
+            //            currentUpdatedData = updatedDatas[i];
+            //            for (int j = 0; j < uniqueUdatedData.Count; j++)
+            //            {
+            //                if (currentUpdatedData.FieldName.Equals(uniqueUdatedData[j].FieldName))
+            //                {
+            //                    flag = 1;
+            //                    break;
+            //                }
+            //            }
+            //            if (flag == 0)
+            //            {
+            //                uniqueUdatedData.Add(updatedDatas[i]);
+            //            }
+            //        }
 
-                            }
-                        }
-                    }
-                }
-            }
+            //        for (int i = 0; i < uniqueUdatedData.Count; i++)
+            //        {
+            //            for (int j = 0; j < updatedDatas.Count; j++)
+            //            {
+            //                if (updatedDatas[j].FieldName.Equals(uniqueUdatedData[i].FieldName))
+            //                {
+            //                    uniqueUdatedData[i].OldValue = updatedDatas[j].OldValue;
+            //                    uniqueUdatedData[i].NewValue = updatedDatas[j].NewValue;
+
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
             
             dynamic changedData = new ExpandoObject();
@@ -223,7 +225,17 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
 
             List<ProfileUpdatesTracker> profileUpdates = new List<ProfileUpdatesTracker>();
             profileUpdates = profileUpdateManager.GetUpdatesByTrackerId(tracker.TrackerId, approvedStatus, modification);
-
+            //if (profileUpdates.Any(x => x.SubSection == "Hospital Privilege Information") && (tracker.ApprovalStatus == "Dropped" || tracker.ApprovalStatus == "Rejected"))
+            //{
+            //    profileUpdateManager.dropAllHospitalPrivilegeDetails(profileUpdates[0].Profile.HospitalPrivilegeInformation.HospitalPrivilegeInformationID);
+            //}
+            foreach (var update in profileUpdates)
+            {
+                if((update.SubSection=="Hospital Privilege Information") && (tracker.ApprovalStatus == "Dropped" || tracker.ApprovalStatus == "Rejected"))
+                {
+                    profileUpdateManager.dropAllHospitalPrivilegeDetails(update.Profile.HospitalPrivilegeInformation.HospitalPrivilegeInformationID);
+                }
+            }
 
             List<ApprovalSubmission> trackers = new List<ApprovalSubmission>();
             foreach (var item in profileUpdates)

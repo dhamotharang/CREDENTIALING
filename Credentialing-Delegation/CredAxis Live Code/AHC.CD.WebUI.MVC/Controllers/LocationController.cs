@@ -22,7 +22,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             this.masterDataManager = masterDataManager;
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "city")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "city")]
         public async Task<JsonResult> Get(string city)
         {
             IEnumerable<LocationDetail> locations = new List<LocationDetail>();
@@ -45,26 +45,38 @@ namespace AHC.CD.WebUI.MVC.Controllers
         }
 
         IEnumerable<LocationDetail> locations = null;
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "city")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "city")]
         public async Task<JsonResult> GetCities(string city)
         {
             // Jugad Technology Implemented
             // Need to put data in cache when the project starts for the first time.
-            if (this.ControllerContext.HttpContext.Cache["LOCATIONS"] == null)
+            //if (this.ControllerContext.HttpContext.Cache["LOCATIONS"] == null)
+            //{
+            //    var data = await masterDataManager.GetCitiesAllAsync();
+            //    locations = data.ToList();
+            //    this.ControllerContext.HttpContext.Cache["LOCATIONS"] = locations;
+            //}
+            //else
+            //{
+            //    locations = (IEnumerable<LocationDetail>)this.ControllerContext.HttpContext.Cache["LOCATIONS"];
+            //}
+
+            //locations = from loc in locations
+            //            where loc.City.ToLower().StartsWith(city.ToLower())
+            //            select loc;
+            try
             {
                 var data = await masterDataManager.GetCitiesAllAsync();
                 locations = data.ToList();
-                this.ControllerContext.HttpContext.Cache["LOCATIONS"] = locations;
+
+                locations = from loc in locations
+                            where loc.City.ToLower().StartsWith(city.ToLower())
+                            select loc;
             }
-            else
+            catch (Exception e)
             {
-                locations = (IEnumerable<LocationDetail>)this.ControllerContext.HttpContext.Cache["LOCATIONS"];
+                throw e;
             }
-
-            locations = from loc in locations
-                        where loc.City.ToLower().StartsWith(city.ToLower())
-                        select loc;
-
             return Json(locations, JsonRequestBehavior.AllowGet);
         }
 

@@ -251,7 +251,7 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
             }
 
 
-        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occurred !! Please Try Again !!"; })
     }
 
 
@@ -488,7 +488,9 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
             }
 
             $scope.selectedProviders1 = [];
-            if (Ignorestatus == false) {
+            if (document.getElementById('checkbox') != null && document.getElementById('checkbox').checked == true) {
+                $scope.Ignorestatus = false;
+
                 for (var pro in $scope.selectedProviders) {
                     if ($scope.CCOorTL == "CCO")
                         if ($scope.selectedProviders[pro].CCO == "") {
@@ -502,44 +504,90 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
                 }
 
             }
-            else {
+            else if (document.getElementById('checkbox') == null) {
+                $scope.Ignorestatus = true;
                 $scope.selectedProviders1 = $scope.selectedProviders;
+            }
+            else {
+                $scope.Ignorestatus = true;
+                $scope.selectedProviders1 = $scope.selectedProviders;
+            }
+            if ($scope.Ignorestatus == true) {
+                if ($scope.CCOorTL == "CCO") {
+                    ccoList();
+                    for (var i = 0; i < $rootScope.ProviderData.length; i++) {
+                        for (var j = 0; j < $scope.selectedProviders.length; j++) {
+                            if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID) {
+                                $rootScope.ProviderData[i].CCO = $scope.NameofCCOorTLAssigned;
+                            }
+                        }
+
+                    }
+                }
+                else if ($scope.CCOorTL == "TL") {
+                    tlList();
+                    for (var i = 0; i < $rootScope.ProviderData.length; i++) {
+                        for (var j = 0; j < $scope.selectedProviders.length; j++) {
+                            if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID) {
+                                $rootScope.ProviderData[i].TL = $scope.NameofCCOorTLAssigned;
+                            }
+                        }
+
+                    }
+                }
+            }
+            if ($scope.Ignorestatus == false) {
+                if ($scope.CCOorTL == "CCO") {
+                    ccoList();
+                    for (var i = 0; i < $rootScope.ProviderData.length; i++) {
+                        for (var j = 0; j < $scope.selectedProviders.length; j++) {
+                            if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID && $rootScope.ProviderData[i].CCO=="") {
+                                $rootScope.ProviderData[i].CCO = $scope.NameofCCOorTLAssigned;
+                            }
+                        }   
+
+                    }
+                }
+                else if ($scope.CCOorTL == "TL") {
+                    tlList();
+                    for (var i = 0; i < $rootScope.ProviderData.length; i++) {
+                        for (var j = 0; j < $scope.selectedProviders.length; j++) {
+                            if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID && $rootScope.ProviderData[i].TL == "") {
+                                $rootScope.ProviderData[i].TL = $scope.NameofCCOorTLAssigned;
+                            }
+                        }
+
+                    }
+                }
             }
             $.ajax({
                 url: url,
                 type: "POST",
                 dataType: 'json',
-                data: { "ProfileIDs": $scope.selectedProvidersProfileIDs, "profileUserId": profileUserId, "Status": Ignorestatus },
+                data: { "ProfileIDs": $scope.selectedProvidersProfileIDs, "profileUserId": profileUserId, "Status": $scope.Ignorestatus, "CCorTL": $scope.CCOorTL },
                 //data: { "selectedProviders": $scope.selectedProviders, "profileUserId": profileUserId },
 
                 success: function (data, status, headers, config) {
+                    if (!Ignorestatus) {
+                        $scope.tempSelectedProviders = [];
+                        for (var s in $scope.selectedProviders) {
+                            for (var id in data.ProfileIds) {
+                                if (($scope.selectedProviders[s].ProfileID) == data.ProfileIds[id]) {
+                                    $scope.tempSelectedProviders.push($scope.selectedProviders[s]);
+                                }
+                            }
+                        }
+                        $scope.selectedProviders = [];
+                        $scope.selectedProviders = $scope.tempSelectedProviders;
+                        $scope.tempSelectedProviders = [];
+                    }
                     //$scope.ShowProfileDelegation = false;
-                    if ($scope.CCOorTL == "CCO") {
-                        ccoList();
-                        for (var i = 0; i < $rootScope.ProviderData.length; i++) {
-                            for (var j = 0; j < $scope.selectedProviders.length; j++) {
-                                if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID) {
-                                    $rootScope.ProviderData[i].CCO = $scope.NameofCCOorTLAssigned;
-                                }
-                            }
 
-                        }
-                    }
-                    else if ($scope.CCOorTL == "TL") {
-                        tlList();
-                        for (var i = 0; i < $rootScope.ProviderData.length; i++) {
-                            for (var j = 0; j < $scope.selectedProviders.length; j++) {
-                                if ($rootScope.ProviderData[i].ProfileID == $scope.selectedProviders[j].ProfileID) {
-                                    $rootScope.ProviderData[i].TL = $scope.NameofCCOorTLAssigned;
-                                }
-                            }
 
-                        }
-                    }
-                    
 
                     try {
                         if (data.status == "true") {
+                            //$scope.selectedProviders1 = $scope.selectedProviders;
                             //$scope.selectedProvidersProfileIDs = [];
 
 
@@ -555,6 +603,8 @@ ccoassingmentApp.controller('ccoAssignmentCtrl', ["$scope", "$rootScope", "$http
 
 
                         //$scope.CCOorTL = "";
+                        if (document.getElementById("checkbox"))
+                            document.getElementById("checkbox").checked = false;
                         Ignorestatus = true;
                         $('#inactiveWarningModal2').modal();
 
@@ -615,8 +665,8 @@ function showLocationList(ele) {
 }
 var Ignorestatus = true;
 var CheckBoxFunction = function () {
-
-    if ($('#checkbox').is(':checked')) {
+    var checkboxvalue = document.getElementById('checkbox').checked;
+    if (checkboxvalue) {
         //$('#appTimes').find('input').attr('disabled', true);
         Ignorestatus = false;
     } else {
@@ -625,23 +675,5 @@ var CheckBoxFunction = function () {
     }
 
 
-    //$scope.selectedProviders1 = [];
-    if (Ignorestatus == false) {
-        for (var pro in $scope.selectedProviders) {
-            if ($scope.CCOorTL == "CCO")
-                if ($scope.selectedProviders[pro].CCO == "") {
-                    $scope.selectedProviders1.push($scope.selectedProviders[pro]);
-                }
-            if ($scope.CCOorTL == "TL") {
-                if ($scope.selectedProviders[pro].TL == "") {
-                    $scope.selectedProviders1.push($scope.selectedProviders[pro]);
-                }
-            }
-        }
-
-    }
-    else {
-        $scope.selectedProviders1 = $scope.selectedProviders;
-    }
 
 }

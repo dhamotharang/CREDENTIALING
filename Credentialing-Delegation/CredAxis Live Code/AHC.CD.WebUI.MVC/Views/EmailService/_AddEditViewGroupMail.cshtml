@@ -195,7 +195,7 @@
                     <div class="col-lg-4 form-group">
                         <label for="id2">Description *</label>
                         <div id="id2">
-                            <textarea class="large-compact" name="Description" ng-model="tempObject.Description" cols="30" rows="10"></textarea>
+                            <textarea class="large-compact" name="Description" ng-model="tempObject.Description" cols="30" rows="10"></textarea><br>
                             <span style="color:red" ng-if="descriptionErrorMessage">Please provide Description</span>
                         </div>
                     </div>
@@ -247,7 +247,7 @@
                                         </select>
 
                                     </span>
-                                    <span class="col-lg-8"><input st-search="" ng-model="searchBox" class="form-control" placeholder="Global Search ..." type="text" />@*<input class="form-control input-sm" name="GlobalSearch" autocomplete="off" ng-model="search" placeholder="Global Search" style="width:116%">*@</span>
+                                    <span class="col-lg-8"><input st-search="" ng-model="searchBox" class="form-control" ng-disabled="GlobalSearchbox" id="GlobalSearchboxid" placeholder="Global Search ..." type="text" />@*<input class="form-control input-sm" name="GlobalSearch" autocomplete="off" ng-model="search" placeholder="Global Search" style="width:116%">*@</span>
                                 </div>
 
                                 <div>
@@ -305,7 +305,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 resultPanel">
+            <div class="col-lg-8 resultPanel" ng-hide="GlobalSearchbox">
                 <div ng-cloak class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -370,10 +370,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            
+            <div class="col-lg-4" ng-show="selectedUsersGrid || editgrid">
                 <div ng-cloak class="panel panel-primary selectedPanel">
                     <div class="panel-heading">
                         <h5 class="panel-title">Selected Members</h5>
+                        &nbsp;
                     </div>
                     <div class="panel-body">
                         <div class="col-lg-12" style="margin-bottom:2%;margin-top:-2%">
@@ -386,9 +388,9 @@
                         <div class="col-lg-12" style="border-bottom: 1px solid; border-bottom-color: darkblue; max-height: 450px; overflow-y: scroll; overflow: auto">
                             <div class="col-lg-12" ng-repeat="data in filteredtempdata = (tempSelectedObject.EmailObj | filter:AddedEmailId) track by $index">
                                 @*<div class="col-lg-1" style="margin-top:18%;padding-left:0px">
-                                        <input id="checkbox3{{$index}}" class="checkbox-custom" name="checkbox-3" ng-model="data.isChecked" type="checkbox" ng-click="removeSelected(data)" />
-                                        <label for="checkbox3{{$index}}" class="checkbox-custom-label"></label>
-                                    </div>*@
+                                <input id="checkbox3{{$index}}" class="checkbox-custom" name="checkbox-3" ng-model="data.isChecked" type="checkbox" ng-click="removeSelected(data)" />
+                                <label for="checkbox3{{$index}}" class="checkbox-custom-label"></label>
+                            </div>*@
                                 <div class="col-lg-2">
                                     <span ng-if="data.ProfileImagePath!=null" class="imgSpan"><img id="profileImg" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{data.ProfileImagePath}}" alt="Document" class="mg-thumbnail" /></span><span ng-if="data.ProfileImagePath==null" class="imgSpan"><img id="profileImg" ng-src="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"] /Content/Images/a0.jpg" alt="Document" class="mg-thumbnail" /></span>
                                 </div>

@@ -99,7 +99,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateDisclosureQuestionAsync(int profileId, ProfileDisclosureViewModel disclosureQuestion)
         {
             string status = "true";
-            string ActionType = "Update";
+            string ActionType = "";
             string successMessage = "";
             ProfileDisclosure dataModelDisclosureQuestion = null;
             bool isCCO = await GetUserRole();
@@ -134,6 +134,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     }
                     else if (!isCCO && disclosureQuestion.ProfileDisclosureID != 0)
                     {
+                        ActionType = "Update";
                         string userId = await GetUserAuthId();
                         ProfileUpdateTrackerBusinessModel tracker = new ProfileUpdateTrackerBusinessModel();
 

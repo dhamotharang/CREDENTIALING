@@ -804,100 +804,100 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
 
     var StateLicensecolumns = [
                 { title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 180 },
-                { title: "LicenseNumber", key: "LicenseNumber", width: 120 },
-                { title: "IssueState", key: "IssueState", width: 100 },
+                { title: "License Number", key: "LicenseNumber", width: 120 },
+                { title: "Issue State", key: "IssueState", width: 100 },
                 { title: "Status", key: "Status", width: 100 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }
+                { title: "Expiry Date", key: "ExpiryDate", width: 100 },
+                { title: "Days Left", key: "dayLeft", width: 100 }
     ];
 
     var FederalDEACoulumns = [
                 { title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 180 },
-                { title: "DEANumber", key: "DEANumber", width: 120 },
-                { title: "IssueState", key: "IssueState", width: 100 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }
+                { title: "DEA Number", key: "DEANumber", width: 120 },
+                { title: "Issue State", key: "IssueState", width: 100 },
+                { title: "Expiry Date", key: "ExpiryDate", width: 100 },
+                { title: "Days Left", key: "dayLeft", width: 100 }
     ]
     var CDSColumns = [
                 { title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 180 },
-                { title: "CDSNumber", key: "CertNumber", width: 120 },
+                { title: "CDS Number", key: "CertNumber", width: 120 },
                 { title: "State", key: "State", width: 100 },
                 { title: "Expiry Date", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }
+                { title: "Days Left", key: "dayLeft", width: 100 }
     ]
     var SpecialityBoardColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 160 },
-                { title: "SpecialtyBoardName", key: "SpecialtyBoardName", width: 280 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }]
+                { title: "Specialty Board Name", key: "SpecialtyBoardName", width: 280 },
+                { title: "Expiry Date", key: "ExpiryDate", width: 100 },
+                { title: "Days Left", key: "dayLeft", width: 100 }]
     var HospitalPreviligesColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 80 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 80 },
                 { title: "Name", key: "Fullname", width: 120 },
-                { title: "HospitalName", key: "HospitalName", width: 240 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 80 },
-                { title: "DaysLeft", key: "dayLeft", width: 70 }]
+                { title: "Hospital Name", key: "HospitalName", width: 240 },
+                { title: "Expiry Date", key: "ExpiryDate", width: 80 },
+                { title: "Days Left", key: "dayLeft", width: 70 }]
 
     var ProfessionalLiabilityColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 160 },
-                { title: "PolicyNumber", key: "PolicyNumber", width: 100 },
-                { title: "InsuranceCarrier", key: "InsuranceCarrier", width: 180 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }]
+                { title: "Policy Number", key: "PolicyNumber", width: 100 },
+                { title: "Insurance Carrier", key: "InsuranceCarrier", width: 180 },
+                { title: "Expiry Date", key: "ExpiryDate", width: 100 },
+                { title: "Days Left", key: "dayLeft", width: 100 }]
 
     var WorkersCompColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 180 },
-                { title: "WorkersCompensationNumber", key: "WorkersCompensationNumber", width: 200 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }]
+                { title: "Workers Compensation Number", key: "WorkersCompensationNumber", width: 200 },
+                { title: "Expiry Date", key: "ExpiryDate", width: 100 },
+                { title: "Days Left", key: "dayLeft", width: 100 }]
 
     var MedicareInformationColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 180 },
-                { title: "LicenseNumber", key: "LicenseNumber", width: 200 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }]
+                { title: "License Number", key: "LicenseNumber", width: 200 },
+                { title: "Expiry Date", key: "ExpiryDate", width: 100 },
+                { title: "Days Left", key: "dayLeft", width: 100 }]
 
     var MedicaidInformationColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 180 },
-                { title: "LicenseNumber", key: "LicenseNumber", width: 200 },
-                { title: "ExpiryDate", key: "ExpiryDate", width: 100 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }]
+                { title: "License Number", key: "LicenseNumber", width: 200 },
+                { title: "Expiry Date", key: "ExpiryDate", width: 100 },
+                { title: "Days Left", key: "dayLeft", width: 100 }]
 
     var CAQHColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
-                { title: "RelationShip", key: "ProviderRelationShip", width: 90 },
+                { title: "Relationship", key: "ProviderRelationShip", width: 90 },
                 { title: "Name", key: "Fullname", width: 180 },
-                { title: "CAQHNumber", key: "CAQHNumber", width: 150 },
-                { title: "NextAttestationDate", key: "NextAttestationDate", width: 150 },
-                { title: "DaysLeft", key: "dayLeft", width: 100 }]
+                { title: "CAQH Number", key: "CAQHNumber", width: 150 },
+                { title: "Next Attestation Date", key: "NextAttestationDate", width: 150 },
+                { title: "Days Left", key: "dayLeft", width: 100 }]
 
     var UpcomingRecredentialColumns =
                 [{ title: "NPI", key: "NPINumber", width: 80 },
                 { title: "Name", key: "Fullname", width: 90 },
                 { title: "Plan", key: "Plan", width: 70 },
                 { title: "LOB", key: "LOBName", width: 60 },
-                { title: "ParticipatingStatus", key: "ParticipatingStatus", width: 200 },
-                { title: "GroupID", key: "GroupID", width: 70 },
-                { title: "ProviderID", key: "ProviderID", width: 70 },
-                { title: "EffectiveDate", key: "ProviderID", width: 70 },
-                { title: "ReCredDate", key: "ReCredentialingDate", width: 90 },
-                { title: "daysLeft", key: "dayLeft", width: 60 }, ]
+                { title: "Participating Status", key: "ParticipatingStatus", width: 200 },
+                { title: "Group ID", key: "GroupID", width: 70 },
+                { title: "Provider ID", key: "ProviderID", width: 70 },
+                { title: "Effective Date", key: "ProviderID", width: 70 },
+                { title: "ReCred Date", key: "ReCredentialingDate", width: 90 },
+                { title: "Days Left", key: "dayLeft", width: 60 }, ]
 
     var jsonobject = [{ Name: StateLicensecolumns },
                       { Name: FederalDEACoulumns },
@@ -914,6 +914,7 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
     $scope.headersScript = function (id, PDFData, doc) {
         doc.autoTable(id, PDFData, {
             beforePageContent: 'Test',
+            overflow: 'linebreak',
             startY: 60,
             drawHeaderRow: function (row, data) {
                 row.height = 46;
@@ -944,9 +945,9 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
             },
             styles: {
                 overflow: 'linebreak',
-                fontSize: 8,
-                tableWidth: 'auto',
-                columnWidth: 'auto',
+                fontSize: 50,
+                rowHeight: 60,
+                columnWidth: 'wrap'
             },
             columnStyles: {
                 1: {
@@ -956,7 +957,11 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
 
 
         });
+
+       
     }
+
+    
     $scope.disabled = false;
     $scope.GeneratePDF = function () {
         //State License PDF Printing Section
@@ -1032,7 +1037,7 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
             $scope.disabled = false;
             doc.addPage();
             var PDFData = angular.copy($scope.Licenses);
-            doc.text("Speciality Board", 350, 50);
+            doc.text("Specialty/Board", 350, 50);
             $scope.headersScript(jsonobject[3].Name, PDFData, doc)
 
         }
@@ -1169,6 +1174,7 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
             doc.addPage();
             var PDFData = angular.copy($scope.Licenses);
             doc.text("Upcoming Recredentials", 320, 50);
+            
             $scope.headersScript(jsonobject[10].Name, PDFData, doc)
         }
         $scope.getLicensTypeData($scope.FinalLicense[0]);
@@ -1752,10 +1758,12 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
         }
 
     }
-
+    $scope.tempnumberofdays = "";
     //------------------- get data according Selected days -----------------------
     $scope.getDataAccordingDays = function (days) {
+        
         $scope.InnerFilterDay = 0;
+            $scope.tempnumberofdays = days;
         $scope.filterDays = days;
         //  $scope.selectedSection = 6;
         //  $scope.Selected_Day = '';
@@ -1774,6 +1782,7 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
         $scope.getDataBasedOnCount();
 
         $scope.GetCurrentPageData($scope.Licenses, 1);
+            
     };
 
 
@@ -1861,7 +1870,7 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
         $scope.LicenseTypeCode = licenseData.LicenseTypeCode;
         $scope.Show = licenseData.Show;
         $scope.MasterLicenses = angular.copy($scope.Licenses);
-        $scope.getDataBasedOnCount();
+        //$scope.getDataBasedOnCount();
         $scope.GetCurrentPageData($scope.Licenses, 1);
     }
 
@@ -1906,6 +1915,7 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
         //// $scope.Licenses = angular.copy(Templicenses);
         // $scope.GetCurrentPageData($scope.Licenses, 1);
 
+
         var Templicenses = [];
 
         var newTemp = (CCOLicenseService.getAllLicenseDataForTab(SelectedTab));
@@ -1922,6 +1932,7 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
         $scope.LicenseData = $scope.addFullName($scope.LicenseData);
         $scope.GrandTotalLicenses = CCOLicenseService.GetGrandTotalLicenses();
         $scope.Licenses = angular.copy(Templicenses);
+
         $scope.GetCurrentPageData($scope.Licenses, 1);
         $scope.newTemp = [];
     };
@@ -2156,6 +2167,13 @@ dashboardApp.controller("CCODashboardController", ["$scope", "$rootScope", "$htt
     $scope.DayFilterData = angular.copy($scope.Licenses);
 
     $scope.getDaysLeftForSelectedTab = function (Days, SelectedTab) {
+        if (Days == "") {
+            Days = $scope.tempnumberofdays;
+        }
+
+
+        $scope.mastertempfilterdata = Days;
+
         var Templicenses = [];
         $scope.selectedSection = 6;
         var newTemp = (CCOLicenseService.getAllLicenseDataForTab(SelectedTab));

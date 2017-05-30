@@ -494,7 +494,7 @@ where  new.Name='Doctor'";
 
         public static readonly string PROVIDERREQUESTCOUNT = @"SELECT count(*) RequestCount FROM [dbo].[CredentialingRequests]
                                                                  Where [Status] != 'Inactive' and [ProfileID]=@ID;";
-                
+
         public static readonly string PROVIDERHISTORYCOUNT = @"select sum(a.HistoryCount) as HistoryCount from (SELECT count(*) as HistoryCount
                                                                 FROM [dbo].[ProfileUpdatesTrackers] 
                                                                 where [ProfileId]=@ID and [ApprovalStatus] in ('Rejected','Approved','Dropped')
@@ -546,7 +546,7 @@ where  new.Name='Doctor'";
                                                             [dbo].[PersonalDetails] as pd on  p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID inner join
                                                             [dbo].[OtherIdentificationNumbers] as od on p.OtherIdentificationNumber_OtherIdentificationNumberID = od.OtherIdentificationNumberID
                                                             ) as result
-                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') order by ProfileUpdatesTrackerId Desc;";
+                                                            where result.ApprovalStatus in('Pending', 'OnHold') order by ProfileUpdatesTrackerId Desc;";
 
 
 
@@ -577,7 +577,7 @@ where  new.Name='Doctor'";
                                                             [dbo].[PersonalDetails] as pd on  p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID inner join
                                                             [dbo].[OtherIdentificationNumbers] as od on p.OtherIdentificationNumber_OtherIdentificationNumberID = od.OtherIdentificationNumberID
                                                             where t.[ProfileId]=@ID) as result
-                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') order by ProfileUpdatesTrackerId desc;";
+                                                            where result.ApprovalStatus in('Pending', 'OnHold') order by ProfileUpdatesTrackerId desc;";
 
 
 
@@ -638,9 +638,9 @@ where  new.Name='Doctor'";
                                                           inner join [dbo].[Profiles] as p2
                                                           on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                           on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
-                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID order by ProfileUpdatesTrackerId Desc;";
+                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID order by LastModifiedDate Desc;";
 
-        
+
 
         public static readonly string PROVIDERUPDATERENEWALHISTORY = @"SELECT [ProfileUpdatesTrackerId]
 	                                                          ,p4.NPINumber
@@ -672,12 +672,13 @@ where  new.Name='Doctor'";
                                                               ,[Url]
                                                               ,[UniqueData]
                                                               ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                              ,[LastModifiedDate] as orderbyModifiedDate
                                                           FROM [dbo].[ProfileUpdatesTrackers]
                                                           where [ProfileId]=@ID and [ApprovalStatus] in ('Rejected','Approved','Dropped')) as p 
                                                           inner join [dbo].[Profiles] as p2
                                                           on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                           on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
-                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID order by ModifiedDate desc;";
+                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID order by orderbyModifiedDate desc;";
 
 
 
@@ -693,7 +694,7 @@ where  new.Name='Doctor'";
                                                           FROM [dbo].[CredentialingRequests]
                                                           Where [Status] != 'Inactive' and [CredentialingRequestID] =@ID)as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID
 												          inner join [dbo].[Profiles] as pf on s.[ProfileID]=pf.ProfileID";
-        public static readonly string CREDREQUESTHISTORYDATABYID = @"Select [CredentialingRequestID],s.[ProfileID],pf.ProfilePhotoPath,[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],s.[RejectionReason],[ModifiedDate] from (SELECT [CredentialingRequestID]
+        public static readonly string CREDREQUESTHISTORYDATABYID = @"Select [CredentialingRequestID],s.[ProfileID],pf.ProfilePhotoPath,[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],s.[RejectionReason],[ModifiedDate], u.[EmailId] as DecisionMadeBy  from (SELECT [CredentialingRequestID]
                                                                       ,[NPINumber]
 	                                                                  ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
 													                  ,[ProfileID]
@@ -701,9 +702,10 @@ where  new.Name='Doctor'";
 													                  ,[RejectionReason]
                                                                       ,[ApprovalStatus] as [CurrentStatus]
                                                                       ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+																	  ,[DecisionMadeBy]
                                                                   FROM [dbo].[CredentialingRequestTrackers]
                                                                   Where [Status] != 'Inactive' and [CredentialingRequestID] =@ID)as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID
-												                  inner join [dbo].[Profiles] as pf on s.[ProfileID]=pf.ProfileID;";
+												                  inner join [dbo].[CDUsers] as u on s.[DecisionMadeBy]=u.[CDUserID] inner join [dbo].[Profiles] as pf on s.[ProfileID]=pf.ProfileID;";
 
         #region Request History records
 
@@ -739,13 +741,14 @@ where  new.Name='Doctor'";
                                                         ,[UniqueData],
 													    [LastModifiedBy]
                                                         ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+														,[LastModifiedDate] as [orderbyModifiedDate]
                                                         FROM [dbo].[ProfileUpdatesTrackers]
                                                         where [Modification] = 'Update' and [ApprovalStatus] in ('Rejected','Approved','Dropped')) as p 
                                                         inner join [dbo].[Profiles] as p2
                                                         on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                         on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
                                                         on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID
-                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID;";
+                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID order by [orderbyModifiedDate] Desc;";
 
         public static readonly string RENEWAL_HISTORY = @"SELECT [ProfileUpdatesTrackerId]
                                                         ,p4.NPINumber
@@ -779,13 +782,14 @@ where  new.Name='Doctor'";
                                                         ,[UniqueData],
 													    [LastModifiedBy]
                                                         ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                        , [LastModifiedDate] as OrderbyModifiedDate
                                                         FROM [dbo].[ProfileUpdatesTrackers]
                                                         where [Modification] = 'Renewal' and [ApprovalStatus] in ('Rejected','Approved','Dropped')) as p 
                                                         inner join [dbo].[Profiles] as p2
                                                         on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                         on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
                                                         on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID
-                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID;";
+                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID order by OrderbyModifiedDate desc;";
 
         public static readonly string PROVIDER_UPDATE_HISTORY = @"SELECT [ProfileUpdatesTrackerId]
 	                                                          ,p4.NPINumber
@@ -819,13 +823,14 @@ where  new.Name='Doctor'";
                                                               ,[UniqueData],
 															  [LastModifiedBy]
                                                               ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                              ,[LastModifiedDate] as OrderByModifiedDate
                                                           FROM [dbo].[ProfileUpdatesTrackers]
                                                           where [ProfileId]=@ID and [Modification] = 'Update' and [ApprovalStatus] in ('Rejected','Approved','Dropped')) as p 
                                                           inner join [dbo].[Profiles] as p2
                                                           on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                           on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
                                                           on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID
-                                                         left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID;";
+                                                         left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID order by OrderByModifiedDate desc;";
 
         public static readonly string PROVIDER_RENEWAL_HISTORY = @"SELECT [ProfileUpdatesTrackerId]
 	                                                          ,p4.NPINumber
@@ -859,16 +864,17 @@ where  new.Name='Doctor'";
                                                               ,[UniqueData],
 															  [LastModifiedBy]
                                                               ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+                                                              ,[LastModifiedDate] as OrderByModifiedDate
                                                           FROM [dbo].[ProfileUpdatesTrackers]
                                                           where [ProfileId]=@ID and [Modification] = 'Renewal' and [ApprovalStatus] in ('Rejected','Approved','Dropped')) as p 
                                                           inner join [dbo].[Profiles] as p2
                                                           on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                           on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
                                                           on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID
-														  left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID;";
+														  left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID order by OrderByModifiedDate desc;";
 
 
-        public static readonly string CRED_REQUEST_HISTORY_DATA = @"Select [CredentialingRequestID],[ProfileID],ProfilePhotoPath,[NPINumber],ProviderName,PlanName,[CurrentStatus],[RejectionReason],[ModifiedDate],DecisionMadeBy from (SELECT [CredentialingRequestID]
+        public static readonly string CRED_REQUEST_HISTORY_DATA = @"Select [CredentialingRequestID],[ProfileID],ProfilePhotoPath,[NPINumber],ProviderName,PlanName,[CurrentStatus],[RejectionReason],[ModifiedDate],[OrderbyDate],DecisionMadeBy from (SELECT [CredentialingRequestID]
                                                                       ,[NPINumber]
 	                                                                  ,CONCAT(  per.[Salutation],' ',per.[FirstName],' ',  per.[LastName] ) as [ProviderName]
 													                  ,s.[ProfileID]
@@ -876,6 +882,7 @@ where  new.Name='Doctor'";
 													                  ,[RejectionReason]
                                                                       ,[ApprovalStatus] as [CurrentStatus]
                                                                       ,CONVERT(VARCHAR(10), s.[LastModifiedDate], 110) as [ModifiedDate]
+																	  ,s.[LastModifiedDate] as [OrderbyDate]
 																	  ,pf.ProfilePhotoPath
 																	  ,p.PlanName
 																	  ,usr.[EmailId] as DecisionMadeBy
@@ -883,7 +890,7 @@ where  new.Name='Doctor'";
 												                  inner join [dbo].[Profiles] as pf  on s.[ProfileID]=pf.ProfileID
 																  inner join [dbo].[PersonalDetails] as per 
 																  on pf.PersonalDetail_PersonalDetailID=per.PersonalDetailID
-																  left join [dbo].[CDUsers] as usr on s.DecisionMadeBy=usr.CDUserID) as d;";
+																  left join [dbo].[CDUsers] as usr on s.DecisionMadeBy=usr.CDUserID) as d order by [OrderbyDate] desc";
 
 
         public static readonly string PROVIDER_CRED_REQUEST_HISTORY_DATA = @"Select [CredentialingRequestID],[ProfileID],ProfilePhotoPath,[NPINumber], CONCAT([Salutation],' ', [FirstName],' ',  [LastName] ) as [ProviderName],PlanName,[CurrentStatus],[RejectionReason],[ModifiedDate], [DecisionMadeBy] from (SELECT [CredentialingRequestID]
@@ -899,15 +906,68 @@ where  new.Name='Doctor'";
 																	  p.PlanName
 																	  ,usr.[EmailId] as [DecisionMadeBy]
                                                                       ,CONVERT(VARCHAR(10), s.[LastModifiedDate], 110) as [ModifiedDate]
+                                                                      ,s.[LastModifiedDate] as OrderByModifiedDate
                                                                   FROM [dbo].[CredentialingRequestTrackers] as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID and [ProfileID]=@ID
 												                  inner join [dbo].[Profiles] as pf on s.[ProfileID]=pf.ProfileID
 																  inner join [dbo].[PersonalDetails] as per 
 																  on pf.PersonalDetail_PersonalDetailID=per.PersonalDetailID
-																  left join [dbo].[CDUsers] as usr on s.DecisionMadeBy=usr.CDUserID) as d;";
+																  left join [dbo].[CDUsers] as usr on s.DecisionMadeBy=usr.CDUserID) as d order by OrderByModifiedDate desc;";
 
         #endregion
 
         #endregion
+
+        #region SQL Dependency Queries
+
+        public static readonly string TasksExpired = @"SELECT [TaskTrackerId]
+                                                        ,[ProfileID]
+                                                        ,[SubSectionName]
+                                                        ,[Subject]
+                                                        ,[NextFollowUpDate]
+                                                        ,[ModeOfFollowUp]
+                                                        ,[InsuaranceCompanyNameID]
+                                                        ,[PlanID]
+                                                        ,[AssignedToId]
+                                                        ,[AssignedById]
+                                                        ,[HospitalID]
+                                                        ,[Notes]
+                                                        ,[LastUpdatedBy]
+                                                        ,[Status]
+                                                        ,[LastModifiedDate]
+                                                    FROM [CREDAXIS_PROFILE_V1_2_16b4e26aebff4f5bb439c4e2e0b42f74].[dbo].[TaskTrackers]
+                                                    where [AssignedToId]= @ID and [Status] = 'OPEN' and [NextFollowUpDate] < CURRENT_TIMESTAMP;";
+
+        public static readonly string TasksToBeExpired = @"SELECT [TaskTrackerId]
+                                                        ,[ProfileID]
+                                                        ,[SubSectionName]
+                                                        ,[Subject]
+                                                        ,[NextFollowUpDate]
+                                                        ,[ModeOfFollowUp]
+                                                        ,[InsuaranceCompanyNameID]
+                                                        ,[PlanID]
+                                                        ,[AssignedToId]
+                                                        ,[AssignedById]
+                                                        ,[HospitalID]
+                                                        ,[Notes]
+                                                        ,[LastUpdatedBy]
+                                                        ,[Status]
+                                                        ,[LastModifiedDate]
+                                                    FROM [CREDAXIS_PROFILE_V1_2_16b4e26aebff4f5bb439c4e2e0b42f74].[dbo].[TaskTrackers]
+                                                    where [AssignedToId]= @ID and [Status] = 'OPEN' and [NextFollowUpDate] = CURRENT_TIMESTAMP;";
+
+        #endregion
+
+        #region Audit LOG
+
+        public static readonly string AUDITLOGTOTALCOUNT = @"SELECT COUNT(*) FROM [AuditMessages]";
+        public static readonly string AUDITLOGALERTCOUNT = @"SELECT COUNT(*) FROM [AuditMessages] where CATEGORY='Alert'";
+        public static readonly string AUDITLOGINFORMATIONCOUNT = @"SELECT COUNT(*) FROM [AuditMessages] where CATEGORY='Information'";
+        public static readonly string AUDITLOGGENERICQUERY = @"SELECT * FROM (SELECT * FROM [AuditMessages] [REPLACESEARCHQUERY]) as P [REPLACESORTQUERY]";
+
+
+        #endregion
+
+        //public static readonly string hospitalpreviligesdetails = @"SELECT COUNT(*) FROM [AuditMessages]";
 
     }
 }

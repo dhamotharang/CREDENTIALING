@@ -84,7 +84,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     dataModelStateLicense = AutoMapper.Mapper.Map<StateLicenseViewModel, StateLicenseInformation>(stateLicense);
                     DocumentDTO document = CreateDocument(stateLicense.StateLicenseDocumentFile);
 
-                  
+
                     await profileManager.AddStateLicenseAsync(profileId, dataModelStateLicense, document);
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and License - State License Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -120,7 +120,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
         public async Task<ActionResult> UpdateStateLicenseAsync(int profileId, AHC.CD.WebUI.MVC.Areas.Profile.Models.IdentificationAndLicenses.StateLicenseViewModel stateLicense)
         {
             string status = "true";
-            string ActionType="Update";
+            string ActionType = "Update";
             string successMessage = "";
             StateLicenseInformation dataModelStateLicense = null;
             bool isCCO = await GetUserRole();
@@ -140,7 +140,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (isCCO)
                     {
-                      
+
                         await profileManager.UpdateStateLicenseAsync(profileId, dataModelStateLicense, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -241,7 +241,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                         DocumentDTO document = CreateDocument(stateLicense.StateLicenseDocumentFile);
                         //DocumentDTO document = null;
 
-                      
+
                         await profileManager.RenewStateLicenseAsync(profileId, dataModelStateLicense, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -424,7 +424,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 dataModelStateLicenseInformation = AutoMapper.Mapper.Map<StateLicenseViewModel, StateLicenseInformation>(stateLicense);
                 var UserAuthID = UserDetail.Id;
-                
+
                 await profileManager.RemoveStateLicenseAsync(profileId, dataModelStateLicenseInformation, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification And License - State License Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -468,7 +468,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 {
                     dataModelFederalDEA = AutoMapper.Mapper.Map<FederalDEAInformationViewModel, FederalDEAInformation>(federalDea);
                     DocumentDTO document = CreateDocument(federalDea.DEALicenceCertFile);
-                                   
+
                     await profileManager.AddFederalDEALicenseAsync(profileId, dataModelFederalDEA, document);
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - DEA License Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -527,7 +527,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (isCCO)
                     {
-                       
+
                         await profileManager.UpdateFederalDEALicenseAsync(profileId, dataModelFederalDEA, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -623,7 +623,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         //DocumentDTO document = CreateDocument(federalDea.DEALicenceCertFile);
                         //DocumentDTO document = null;
-                      
+
                         await profileManager.RenewFederalDEALicenseAsync(profileId, dataModelFederalDEA, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -713,7 +713,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 dataModelFederalDEAInformation = AutoMapper.Mapper.Map<FederalDEAInformationViewModel, FederalDEAInformation>(federalDEAInformationViewModel);
                 var UserAuthID = UserDetail.Id;
-                
+
                 dataModelFederalDEAInformation = await profileManager.RemoveFederalDEALicenseAsync(profileId, dataModelFederalDEAInformation, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - DEA License Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -759,7 +759,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     dataModelCDSCLicense = AutoMapper.Mapper.Map<CDSCInformationViewModel, CDSCInformation>(CDSCInformation);
 
                     DocumentDTO document = CreateDocument(CDSCInformation.CDSCCerificateFile);
-                   
+
                     await profileManager.AddCDSCLicenseAsync(profileId, dataModelCDSCLicense, document);
                     ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - CDS Information Details", "Added");
                     await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -815,7 +815,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (isCCO)
                     {
-                    
+
                         await profileManager.UpdateCDSCLicenseAsync(profileId, dataModelCDSCLicense, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -909,7 +909,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         //DocumentDTO document = CreateDocument(CDSCInformation.CDSCCerificateFile);
 
-                      
+
                         await profileManager.RenewCDSCLicenseAsync(profileId, dataModelCDSCLicense, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -996,10 +996,10 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             }
             try
             {
-                
+
                 dataModelCDSCInformation = AutoMapper.Mapper.Map<CDSCInformationViewModel, CDSCInformation>(CDSCInformation);
                 var UserAuthID = UserDetail.Id;
-                
+
                 await profileManager.RemoveCDSCLicenseAsync(profileId, dataModelCDSCInformation, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - CDS Information Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -1098,7 +1098,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (isCCO)
                     {
-                   
+
                         await profileManager.UpdateMedicareInformationAsync(profileId, dataModelMedicareInformation, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -1187,7 +1187,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 dataModelMedicareInformation = AutoMapper.Mapper.Map<MedicareInformationViewModel, MedicareInformation>(medicareInformationViewModel);
                 var UserAuthID = UserDetail.Id;
-              
+
                 await profileManager.RemoveMedicareInformationAsync(profileId, dataModelMedicareInformation, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Medicare Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
@@ -1287,7 +1287,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (isCCO)
                     {
-                      
+
                         await profileManager.UpdateMedicaidInformationAsync(profileId, dataModelMedicaidInformation, document);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -1377,8 +1377,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 dataModelMedicaidInformation = AutoMapper.Mapper.Map<MedicaidInformationViewModel, MedicaidInformation>(medicaidInformationViewModel);
                 var UserAuthID = UserDetail.Id;
-              
-                await profileManager.RemoveMedicaidInformationAsync(profileId, dataModelMedicaidInformation,UserAuthID);
+
+                await profileManager.RemoveMedicaidInformationAsync(profileId, dataModelMedicaidInformation, UserAuthID);
                 ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Medicaid Details", "Removed");
                 await notificationManager.SaveNotificationDetailAsyncForAdd(notification, isCCO);
             }
@@ -1428,7 +1428,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
                     if (OtherIdentificationNumber.OtherIdentificationNumberID == 0)
                     {
-                      
+
                         await profileManager.UpdateOtherIdentificationNumberAsync(profileId, dataModelOtherIdentificationNumber);
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Identification and Licenses - Other Identification Details", "Added");
                         await notificationManager.SaveNotificationDetailAsync(notification);
@@ -1436,7 +1436,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     else if (isCCO && OtherIdentificationNumber.OtherIdentificationNumberID != 0)
                     {
                         dataModelOtherIdentificationNumber = AutoMapper.Mapper.Map<OtherIdentificationNumberViewModel, OtherIdentificationNumber>(OtherIdentificationNumber);
-                       
+
                         await profileManager.UpdateOtherIdentificationNumberAsync(profileId, dataModelOtherIdentificationNumber);
                         if (Request.UrlReferrer.AbsolutePath.IndexOf(RequestSourcePath.RequestSource, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
@@ -1521,7 +1521,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             var appUser = new ApplicationUser() { UserName = currentUser };
             var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
 
-            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA"||r.Name=="TL").Select(r => r.Id).ToList();
+            var roleIDs = RoleManager.Roles.ToList().Where(r => r.Name == "CCO" || r.Name == "CRA" || r.Name == "CRA" || r.Name == "TL").Select(r => r.Id).ToList();
 
             foreach (var id in roleIDs)
             {
@@ -1533,7 +1533,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
 
             return status;
         }
-      
+
         private async Task<ApplicationUser> GetUser()
         {
             var currentUser = HttpContext.User.Identity.Name;

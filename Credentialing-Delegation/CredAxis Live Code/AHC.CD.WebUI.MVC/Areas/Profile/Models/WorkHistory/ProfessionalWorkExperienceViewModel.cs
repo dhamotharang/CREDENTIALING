@@ -74,7 +74,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Models.WorkHistory
         public string ZipCode { get; set; }
 
         [Display(Name = "Phone Number")]
-        [RegularExpression(RegularExpression.FOR_NUMBERS, ErrorMessage = "Please enter only numbers in Phone number. ")]
+        //[RegularExpression(RegularExpression.FOR_NUMBERS, ErrorMessage = "Please enter only numbers in Phone number. ")]
         //[MaxLength(10, ErrorMessage = "Phone number must be of 10 digits")]
        // [MinLength(10, ErrorMessage = "Phone number must be of 10 digits")]
         public string EmployerMobile { get; set; }

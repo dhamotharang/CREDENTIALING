@@ -75,7 +75,8 @@
 
         @if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
-            var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+        var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+        <input type="hidden" value="@User.Identity.GetUserId()" id="userAuthID" />
             if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CRA"))
             {
                 <span><a id="expired_Task" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/TaskTracker/Index" class="btn btn-xs btn-circle newCountButtonsExpired " tooltip="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title=" Expired Tasks" style="color:white;font-weight:bolder;"></a></span>

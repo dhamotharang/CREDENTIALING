@@ -13,5 +13,6 @@ namespace AHC.CD.Data.Repository.Notification
     {
         int GetAllPendingRequestCount(NotificationDelegate.DependencyDelegate dependencyDelegate);
         dynamic GetAllPendingRequest(NotificationDelegate.DependencyDelegate dependencyDelegate);
+        dynamic GetTaskExpiriesCount(NotificationDelegate.DependencyDelegate dependencyDelegate);
     }
 }

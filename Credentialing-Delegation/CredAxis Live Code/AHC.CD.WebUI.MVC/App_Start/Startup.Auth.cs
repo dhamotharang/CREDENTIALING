@@ -22,8 +22,6 @@ namespace AHC.CD.WebUI.MVC
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
-            app.MapSignalR();
-
             // Configure the Session Timeout
 
             int minutes = int.Parse(ConfigurationManager.AppSettings["sessionTimeout"]);

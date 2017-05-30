@@ -26,7 +26,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <UseGlobalApplicationHostFile />
-    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +56,10 @@
     </Reference>
     <Reference Include="BundleTransformer.Core">
       <HintPath>..\packages\BundleTransformer.Core.1.9.25\lib\net40\BundleTransformer.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="DynamicBundles">
       <HintPath>..\packages\DynamicBundles.0.9.0.0\lib\net451\DynamicBundles.dll</HintPath>
@@ -118,6 +122,9 @@
     <Reference Include="PlatformSpellCheck">
       <HintPath>..\packages\PlatformSpellCheck.1.0.0\lib\net45\PlatformSpellCheck.dll</HintPath>
     </Reference>
+    <Reference Include="Pratian.Components.Media.Excel">
+      <HintPath>..\packages\Pratian.Components.Media.Excel.1.1.8\lib\Pratian.Components.Media.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Select.HtmlToPdf, Version=2.3.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Select.HtmlToPdf.2.3.0.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
@@ -127,6 +134,9 @@
     </Reference>
     <Reference Include="Simplify.Windows.Forms">
       <HintPath>..\packages\Simplify.Windows.Forms.1.0.0\lib\net40\Simplify.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetLight">
+      <HintPath>..\packages\SpreadsheetLight.3.4.9\lib\SpreadsheetLight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -273,7 +283,11 @@
     <Compile Include="Areas\Credentialing\Controllers\LineOfBusinessController.cs" />
     <Compile Include="Areas\Credentialing\Controllers\PDFMappingController.cs" />
     <Compile Include="Areas\Credentialing\Controllers\RequestForApprovalController.cs" />
+    <Compile Include="Areas\Credentialing\Models\CCMPortal\CCMQuickActionViewModal.cs" />
+    <Compile Include="Areas\Credentialing\Models\CCMPortal\QuickActionIdSet.cs" />
     <Compile Include="Areas\Credentialing\Models\CredentialingRequestTracker\CredentialingRequestTrackerViewModel.cs" />
+    <Compile Include="Areas\Credentialing\Models\ExportToExcel\ExcelColumn.cs" />
+    <Compile Include="Areas\Credentialing\Models\RequestForApproval\ProfileUpdateRequestViewModel.cs" />
     <Compile Include="Areas\Credentialing\Models\Timeline\TimelineActivityViewModel.cs" />
     <Compile Include="Areas\Initiation\Models\ManageUserViewModel.cs" />
     <Compile Include="Areas\PlanPDF\Controllers\ArtificialIntelligenceController.cs" />
@@ -532,9 +546,12 @@
     <Compile Include="Controllers\VerificationController.cs" />
     <Compile Include="CustomHelpers\AjaxActionFilter.cs" />
     <Compile Include="CustomHelpers\AjaxAuthorize.cs" />
+    <Compile Include="CustomHelpers\DateFormatTimeSlice.cs" />
     <Compile Include="CustomHelpers\DateTimeModelBinder.cs" />
     <Compile Include="CustomHelpers\FieldMaskHelper.cs" />
+    <Compile Include="CustomHelpers\NullValueMapper.cs" />
     <Compile Include="CustomHelpers\PasswordExpirationCheckAttribute.cs" />
+    <Compile Include="CustomHelpers\RedirectOnError.cs" />
     <Compile Include="CustomHelpers\SkipPasswordExpirationCheckAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -969,6 +986,7 @@
     <Content Include="Areas\Credentialing\Scripts\ReCred_InitiationJS.js" />
     <Content Include="Areas\Credentialing\Scripts\SingleProviderJS.js" />
     <Content Include="Areas\Credentialing\Scripts\verification.js" />
+    <Content Include="CustomHTML\ApprovalModal.html" />
     <Content Include="Areas\Credentialing\Views\CCMPortal\Index.cshtml" />
     <Content Include="Areas\Credentialing\Views\CnD\Pagination.html" />
     <Content Include="Areas\Initiation\Scripts\EmailConfiguration.js" />
@@ -1044,6 +1062,7 @@
     <Content Include="Client Scripts\MvcFoolproofValidation.js" />
     <Content Include="Client Scripts\MvcFoolproofValidation.min.js" />
     <Content Include="Content\animate.min.css" />
+    <Content Include="Content\Audit\AuditTrail.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\calendar.min.css" />
@@ -1059,6 +1078,8 @@
     <Content Include="Content\Images\error.jpg" />
     <Content Include="Content\Images\facebook.gif" />
     <Content Include="Content\Images\loader.gif" />
+    <Content Include="Content\Images\Loading1.gif" />
+    <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\loadingData.GIF" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\logo2.png" />
@@ -1106,6 +1127,7 @@
     <Content Include="Content\Images\Plans\Simply.jpg" />
     <Content Include="Content\Images\Plans\Ultimate.jpg" />
     <Content Include="Content\Images\Plans\WellCare.jpg" />
+    <Content Include="Content\Images\progress.gif" />
     <Content Include="Content\Images\Providers\Pariksith_Singh.jpg" />
     <Content Include="Content\Images\Providers\provider1.jpg" />
     <Content Include="Content\Images\Providers\provider2.jpg" />
@@ -1135,6 +1157,8 @@
     <Content Include="Content\Images\svg-loaders\three-dots.svg" />
     <Content Include="Content\Images\UltimateHealthPlan.png" />
     <Content Include="Content\ngToast-animations.min.css" />
+    <Content Include="Content\PratianComponentCSS\pt-table_v1.css" />
+    <Content Include="Content\PratianComponentCSS\ptGrid.css" />
     <Content Include="Content\Profile\datepicker.css" />
     <Content Include="Content\Profile\Util.css" />
     <Content Include="Content\nvd3\nv.d3.css" />
@@ -1274,6 +1298,8 @@
     <Content Include="Scripts\Audit\AuditDirectives.js" />
     <Content Include="Scripts\Audit\AuditFactories.js" />
     <Content Include="Scripts\Audit\AuditFiltters.js" />
+    <Content Include="Scripts\Audit\AuditJQueryApp\AuditJQueryApp.js" />
+    <Content Include="Scripts\Audit\AuditJQueryApp\JQueryServiceRepository.js" />
     <Content Include="Scripts\Audit\AuditServices.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -2007,6 +2033,7 @@
     <Content Include="Scripts\Custom\BridgeQueue\BridgeQueueJSON.json" />
     <Content Include="Scripts\Custom\BridgeQueue\TempProfile.Json" />
     <None Include="Properties\PublishProfiles\cREDaXIS.pubxml" />
+    <None Include="Properties\PublishProfiles\Prakash.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\BootstrapSlider.js" />
     <Content Include="Scripts\Custom\Admin\Notification\NotificationApp.js" />
@@ -2199,6 +2226,7 @@
     <Content Include="Scripts\Lib\Jquery\jquery-1.11.0.js" />
     <Content Include="Content\SharedCss\jquery-ui.css" />
     <Content Include="Scripts\Lib\Jquery\jquery-1.11.2.min.js" />
+    <Content Include="Scripts\Lib\Jquery\jquery-2.2.0.js" />
     <Content Include="Scripts\Lib\Jquery\jquery-ui.js" />
     <Content Include="Scripts\Lib\Jquery\jquery.circliful.min.js" />
     <Content Include="Scripts\Lib\Jquery\jquery.mask.min.js" />
@@ -2240,6 +2268,7 @@
     <Content Include="Scripts\Lib\pdfGeneration\jspdf.plugin.standard_fonts_metrics.js" />
     <Content Include="Scripts\Lib\pdfGeneration\sprintf.js" />
     <Content Include="Scripts\Lib\pdfGeneration\tableExport.js" />
+    <Content Include="Scripts\Lib\PratianComponent\pt_grid_lib.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\ng-signature-pad.js" />
     <Content Include="Scripts\Prototypes\jquery.datetimepicker.full.js" />
@@ -2627,6 +2656,10 @@
     <Content Include="Views\Prototypes\ProviderDashboard.cshtml" />
     <Content Include="Views\Prototypes\Reminders\_setReminder.cshtml" />
     <Content Include="Views\Prototypes\Reminders\_reminderNotification.cshtml" />
+    <Content Include="Views\Audit\Home.cshtml" />
+    <Content Include="Views\Audit\_AuditMain.cshtml" />
+    <Content Include="Views\Audit\_AuditTableBody.cshtml" />
+    <Content Include="Views\Audit\_AuditTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ApplicationDocuments\DecredentialingReasons\" />
@@ -2663,7 +2696,7 @@
     <Folder Include="GeneratedForm\" />
     <Folder Include="GeneratedPdf\" />
     <Folder Include="GeneratedTemplatePdf\" />
-    <Folder Include="Scripts\Lib\NewFolder1\" />
+    <Folder Include="Scripts\Lib\NewFolder2\" />
     <Folder Include="TempGeneratedForm\" />
     <Folder Include="TempGeneratedPdf\" />
     <Folder Include="Views\AHCUtil\" />

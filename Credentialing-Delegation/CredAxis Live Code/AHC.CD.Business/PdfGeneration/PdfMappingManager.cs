@@ -555,7 +555,7 @@ namespace AHC.CD.Business.PdfGeneration
                 var profileRepo = uow.GetGenericRepository<Profile>();
                 Profile profile = profileRepo.Find(s => s.Status != AHC.CD.Entities.MasterData.Enums.StatusType.Inactive.ToString() && s.ProfileID == profileId, includeProperties);
 
-                otherDocument.IsPrivate = true;
+                otherDocument.IsPrivate = false;
                 otherDocument.DocumentPath = outputFileName;
                 otherDocument.Title = documentTitle;
                 otherDocument.ModifiedBy = CDUserId;
@@ -581,7 +581,8 @@ namespace AHC.CD.Business.PdfGeneration
                 var profileRepo = uow.GetGenericRepository<Profile>();
                 Profile profile = profileRepo.Find(s => s.Status != AHC.CD.Entities.MasterData.Enums.StatusType.Inactive.ToString() && s.ProfileID == profileId, includeProperties);
 
-                otherDocument.IsPrivate = true;
+                //otherDocument.IsPrivate = true;
+                otherDocument.IsPrivate = false;
                 otherDocument.DocumentPath = outputFileName;
                 otherDocument.Title = documentTitle;
                 otherDocument.ModifiedBy = CDUserId;

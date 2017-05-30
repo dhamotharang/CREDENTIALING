@@ -697,7 +697,7 @@ prototypeApp.controller('PrototypesCtrl', ["$scope", "$rootScope", "$http", "$q"
             }
 
 
-        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.progressbar = false; $scope.error_message = "An Error occurred !! Please Try Again !!"; })
     }
 
     //Created function to be called when data loaded dynamically

@@ -75,7 +75,6 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 var a = User.Identity.GetUserId();
                 var Role = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
                 ViewBag.Roles = Role;
-
                 if (Role[0] == "PRO")
                 {
                     int UserId = Convert.ToInt32(this.userManager.GetProfileId(User.Identity.GetUserId()));

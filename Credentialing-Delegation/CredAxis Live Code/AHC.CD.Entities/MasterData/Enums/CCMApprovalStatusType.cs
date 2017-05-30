@@ -10,5 +10,6 @@ namespace AHC.CD.Entities.MasterData.Enums
     {
         Approved=1,
         Rejected,
+        Onhold,
     }
 }

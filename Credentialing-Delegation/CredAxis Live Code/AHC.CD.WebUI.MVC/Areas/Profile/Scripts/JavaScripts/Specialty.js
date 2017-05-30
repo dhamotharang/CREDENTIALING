@@ -53,9 +53,30 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
     }
     // rootScoped on emitted value catches the value for the model and insert to get the old data for Specialty Details
     $rootScope.$on('SpecialtyDetails', function (event, val) {
+        for (var spclty in val) {
+            if (val[spclty].SpecialtyBoardCertifiedDetail != null || val[spclty].SpecialtyBoardNotCertifiedDetail != null) {
+                for (var board in $scope.masterSpecialtyBoards) {
+                    if (val[spclty].SpecialtyBoardCertifiedDetail != null) {
+                        if (val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoardID == $scope.masterSpecialtyBoards[board].SpecialtyBoardID) {
+                            if (val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard == null)
+                            val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard = {}
+                            val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard.Name = $scope.masterSpecialtyBoards[board].Name;
+                        }
+                    }
+                    else if (val[spclty].SpecialtyBoardNotCertifiedDetail != null) {
+                        if (val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard == null)
+                            val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard = {}
+                        if (val[spclty].SpecialtyBoardNotCertifiedDetail.SpecialtyBoardID == $scope.masterSpecialtyBoards[board].SpecialtyBoardID) {
+                            val[spclty].SpecialtyBoardNotCertifiedDetail.SpecialtyBoard.Name = $scope.masterSpecialtyBoards[board].Name;
+                        }
+                    }
+                }
+            }
+        }
+
         $scope.Specialties = val;
         console.log($scope.Specialties);
-        $scope.SpecialtyDetailsPendingRequest = profileUpdates.getUpdates('Board Specialty', 'Specialty Details');
+        $scope.SpecialtyDetailsPendingRequest = profileUpdates.getUpdates('Specialty/Board', 'Specialty Details');
 
         //for (var i = 0; i < $scope.Specialties.length ; i++) {
         //    if ($scope.Specialties[i].SpecialtyBoardCertifiedDetail != null) {
@@ -73,7 +94,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
     $rootScope.$on('PracticeInterest', function (event, val) {
         $scope.practiceInterest = val;
 
-        $scope.PracticeInterestPendingRequest = profileUpdates.getUpdates('Board Specialty', 'Practice Interest');
+        $scope.PracticeInterestPendingRequest = profileUpdates.getUpdates('Specialty/Board', 'Practice Interest');
     });
 
     $scope.setFiles = function (file) {
@@ -119,7 +140,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
         //For Client side validation in the Edit Div
         ResetFormForValidation($formData);
         validationStatus = $formData.valid();
-        
+
         var SpecialtyBoardName = $($formData[0]).find($("[name='SpecialtyBoardCertifiedDetail.SpecialtyBoardID'] option:selected")).text();
         //var SpecialtyName = $($formData[0]).find($("[name='SpecialtyID'] option:selected")).text();
         //if (SpecialtyName == "")
@@ -188,7 +209,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             //$scope.SpeciatyDetailsErrorList = data.status.split(",");
                         }
                     } catch (e) {
-                     
+
                     }
                 },
                 error: function (e) {
@@ -219,19 +240,19 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
             for (var i = 0; i < $scope.masterSpecialties.length; i++) {
                 if ($scope.masterSpecialties[i].Name == name) {
                     $scope.tempObject.Specialty.TaxonomyCode = $scope.masterSpecialties[i].TaxonomyCode;
-                    
-                }                
+
+                }
             }
             console.log($scope.tempObject.Specialty.TaxonomyCode);
             //if (Length == $scope.masterSpecialties[i].length)
             //alert($)
             $scope.errormessage = false;
-            $scope.hasError = false;            
+            $scope.hasError = false;
         }
     };
 
 
-    
+
 
 
 
@@ -264,9 +285,9 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
         //For Client side validation in the Edit Div
         ResetFormForValidation($formData);
         validationStatus = $formData.valid();
-      
+
         var SpecialtyBoardName = $($formData[0]).find($("[name='SpecialtyBoardCertifiedDetail.SpecialtyBoardID'] option:selected")).text();
-        
+
         if (validationStatus && !$scope.hasError) {
             //Simple POST request example (passing data) :
             $.ajax({
@@ -280,7 +301,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                 success: function (data) {
                     try {
                         if (data.status == "true") {
-                            
+
                             //if (UserRole == "PRO" && specialty.SpecialtyID!=0) {
                             //    data.specialty.TableState = true;
                             //}
@@ -297,7 +318,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             //--------- speciality object binding ------------
                             for (var i in $scope.masterSpecialties) {
                                 if ($scope.masterSpecialties[i].SpecialtyID == data.specialty.SpecialtyID) {
-                                    
+
                                     data.specialty.Specialty = angular.copy($scope.masterSpecialties[i]);
                                     if (UserRole == "PRO" && specialty.SpecialtyID != 0) {
                                         data.specialty.TableState = true;
@@ -341,7 +362,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             //$scope.SpeciatyDetailsErrorList = data.status.split(",");
                         }
                     } catch (e) {
-                        
+
                     }
                 },
                 error: function (e) {
@@ -399,6 +420,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -419,7 +441,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             $scope.errorSpecialty = "Sorry for Inconvenience !!!! Please Try Again Later...";
                         }
                     } catch (e) {
-                     
+
                     }
                 },
                 error: function (e) {
@@ -433,7 +455,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
     };
 
     //To save, add and update a Practice Interest.
-    $scope.savePracticeInterest = function (practiceInterest,PracticeInterestID) {
+    $scope.savePracticeInterest = function (practiceInterest, PracticeInterestID) {
         loadingOn();
         var validationStatus;
         var url;
@@ -467,7 +489,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                 success: function (data) {
                     try {
                         if (data.status == "true") {
-                            if (UserRole == "PRO" && PracticeInterestID != 0 && PracticeInterestID!=undefined) {
+                            if (UserRole == "PRO" && PracticeInterestID != 0 && PracticeInterestID != undefined) {
                                 data.practiceInterest.TableState = true;
                             }
 
@@ -477,7 +499,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             if ($scope.typeOfSaveForPracticeInterest == "Add") {
                                 $rootScope.visibilityControl = "addedNewPracticeInterest";
                                 messageAlertEngine.callAlertMessage('addedNewPracticeInterest', "Practice Interest saved successfully !!!!", "success", true);
-                               
+
                             } else {
                                 $scope.PracticeInterestPendingRequest = true;
                                 $rootScope.visibilityControl = "updatedPracticeInterest";
@@ -491,7 +513,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                             //$scope.SpeciatyDetailsErrorList = data.status.split(",");
                         }
                     } catch (e) {
-                       
+
                     }
                 },
                 error: function (e) {
@@ -555,29 +577,52 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
     }
     $rootScope.SpecialtyLoaded = true;
     $scope.dataLoaded = false;
+
+    $scope.masterSpecialtyBoards = {}
     $rootScope.$on('Specialty', function () {
-        if (!$scope.dataLoaded) {
-            $rootScope.SpecialtyLoaded = false;
-            $http({
-                method: 'GET',
-                url: rootDir + '/Profile/MasterProfile/GetBoardSpecialtiesProfileDataAsync?profileId=' + profileId
-            }).success(function (data, status, headers, config) {
-                try {
-                    for (key in data) {
-                        $rootScope.$emit(key, data[key]);
-                        //call respective controller to load data (PSP)
-                    }
-                    $rootScope.SpecialtyLoaded = true;
-                    $rootScope.$broadcast("LoadRequireMasterDataSpecialty");
-                } catch (e) {
-                    $rootScope.SpecialtyLoaded = true;
+
+        $http({
+            method: 'GET',
+            url: rootDir + '/Profile/MasterData/getAllspecialtyBoards'
+        }).success(function (data, status, headers, config) {
+            try {
+                $scope.masterSpecialtyBoards = data;
+
+                if (!$scope.dataLoaded) {
+                    $rootScope.SpecialtyLoaded = false;
+                    $http({
+                        method: 'GET',
+                        url: rootDir + '/Profile/MasterProfile/GetBoardSpecialtiesProfileDataAsync?profileId=' + profileId
+                    }).success(function (data, status, headers, config) {
+                        try {                           
+                            for (key in data) {
+                                $rootScope.$emit(key, data[key]);
+                                //call respective controller to load data (PSP)
+                            }
+                            $rootScope.SpecialtyLoaded = true;
+                            $rootScope.$broadcast("LoadRequireMasterDataSpecialty");
+                        } catch (e) {
+                            $rootScope.SpecialtyLoaded = true;
+                        }
+
+                    }).error(function (data, status, headers, config) {
+                        $rootScope.SpecialtyLoaded = true;
+                    });
+                    $scope.dataLoaded = true;
                 }
 
-            }).error(function (data, status, headers, config) {
-                $rootScope.SpecialtyLoaded = true;
-            });
-            $scope.dataLoaded = true;
-        }
+
+            } catch (e) {
+
+            }
+
+        }).error(function (data, status, headers, config) {
+            $rootScope.SpecialtyLoaded = true;
+        });
+
     });
-    
+
+
+
+
 }]);

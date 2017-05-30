@@ -82,7 +82,7 @@
         $rootScope.AppointmentDate = [];
         $rootScope.ForAppointmentDetail = [];
         $rootScope.Plans = [];
-        for (var i = 0; i < NoAppointmentScheuled.length; i++) {
+        for (var i = 0; i < NoAppointmentScheuled.length; i++) {            
             $rootScope.NoCreadentialing.push({
                 CredentialingInfoID: NoAppointmentScheuled[i].CredentialingInfoID,
                 ProviderID: NoAppointmentScheuled[i].CredentialingLogs[0].CredentialingAppointmentDetail.CredentialingAppointmentDetailID,
@@ -99,6 +99,8 @@
             });
             $rootScope.Plans.push(NoAppointmentScheuled[i].Plan.PlanName)
         }
+
+
         for (var i in $rootScope.NoCreadentialing) {
             if ($rootScope.NoCreadentialing[i].statusForApp == true) {
                 $rootScope.ForAppointmentDetail.push($rootScope.NoCreadentialing[i]);

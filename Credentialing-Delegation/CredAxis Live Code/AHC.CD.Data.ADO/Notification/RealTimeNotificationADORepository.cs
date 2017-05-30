@@ -1,7 +1,12 @@
-﻿using AHC.CD.Data.Repository.Notification;
+﻿using AHC.CD.Data.ADO.AspnetUser;
+using AHC.CD.Data.Repository;
+using AHC.CD.Data.Repository.Notification;
+using AHC.CD.Entities;
 using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Entities.MasterProfile.ProfileUpdateRenewal;
 using AHC.CD.Entities.Notification;
+using AHC.CD.Entities.TaskTracker;
+using AHC.CD.Resources.DatabaseQueries;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,11 +16,20 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace AHC.CD.Data.ADO.Notification
 {
     public class RealTimeNotificationADORepository : IRealTimeNotificationRepository
     {
+        private readonly IUnitOfWork uow = null;
+        private IUserDetails userDetails = null;
+        public RealTimeNotificationADORepository(IUnitOfWork uow, IUserDetails userDetails)
+        {
+            this.uow = uow;
+            this.userDetails = userDetails;
+        }
+
         private string ConnString = ConfigurationManager.ConnectionStrings["EFEntityContext"].ConnectionString;
 
         public int GetAllPendingRequestCount(NotificationDelegate.DependencyDelegate dependencyDelegate)
@@ -64,6 +78,58 @@ namespace AHC.CD.Data.ADO.Notification
                 throw ex;
             }
             
+        }
+
+        public dynamic GetTaskExpiriesCount(NotificationDelegate.DependencyDelegate dependencyDelegate)
+        {
+            try
+            {
+                
+                List<TaskTracker> trackers = new List<TaskTracker>();
+
+                //var userAuthID = userDetails.GetUserAuthID(HttpContext.Current.User.Identity.Name);
+                //var cdUserID = GetCDUserID(userAuthID.ToString());
+
+                dynamic taskExpiries = new ExpandoObject();
+
+                string tasksExpiredQuery = @"SELECT [TaskTrackerId]
+                                                        ,[ProfileID]
+                                                        ,[SubSectionName]
+                                                        ,[Subject]
+                                                        ,[NextFollowUpDate]
+                                                        ,[ModeOfFollowUp]
+                                                        ,[InsuaranceCompanyNameID]
+                                                        ,[PlanID]
+                                                        ,[AssignedToId]
+                                                        ,[AssignedById]
+                                                        ,[HospitalID]
+                                                        ,[Notes]
+                                                        ,[LastUpdatedBy]
+                                                        ,[Status]
+                                                        ,[LastModifiedDate]
+                                                    FROM [dbo].[TaskTrackers]
+                                                    where [Status] in ('OPEN','REOPEN')";
+
+                var tasksExpiredCount = CreateSqlDependency(tasksExpiredQuery, dependencyDelegate, CommandType.Text);
+                trackers = (from DataRow row in tasksExpiredCount.Rows
+
+                            select new TaskTracker
+                       {
+                           TaskTrackerId = (int)row["TaskTrackerId"],
+                           NextFollowUpDate = Convert.ToDateTime(row["NextFollowUpDate"]),
+                           AssignedToId = (int)row["AssignedToId"]
+
+                       }).ToList();
+
+                taskExpiries.TasksExpiredCount = trackers.Where(t => t.NextFollowUpDate.Date < DateTime.Now.Date);
+                taskExpiries.TasksToBeExpiredCount = trackers.Where(t => t.NextFollowUpDate.Date == DateTime.Now.Date);
+
+                return taskExpiries;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         #region Private Methods
@@ -141,9 +207,22 @@ namespace AHC.CD.Data.ADO.Notification
             }
         }
 
+
+        private int GetCDUserID(string userAuthID)
+        {
+            try
+            {
+                var userRepo = uow.GetGenericRepository<CDUser>();
+                var user = userRepo.Find(u => u.AuthenicateUserId == userAuthID);
+                return user.CDUserID;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         #endregion
 
-
-        
     }
 }

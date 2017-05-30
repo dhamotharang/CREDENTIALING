@@ -2,11 +2,11 @@
 //=========================== Controller declaration ==========================
 profileApp.controller('educationController', ['$scope', '$rootScope', '$http', 'masterDataService', 'locationService', 'messageAlertEngine', '$filter', 'profileUpdates', function ($scope, $rootScope, $http, masterDataService, locationService, messageAlertEngine, $filter, profileUpdates) {
 
-    $scope.UnderGraduateSchoolDetailPendingRequest = profileUpdates.getUpdates('Education History', 'Under Graduate/Professional');
-    $scope.GraduateSchoolDetailPendingRequest = profileUpdates.getUpdates('Education History', 'Graduate/Medical');
+    $scope.UnderGraduateSchoolDetailPendingRequest = profileUpdates.getUpdates('Education History', 'Under Graduate/Professional Details');
+    $scope.GraduateSchoolDetailPendingRequest = profileUpdates.getUpdates('Education History', 'Graduate/Medical Details');
     $scope.ECFMGDetailPendingRequest = profileUpdates.getUpdates('Education History', 'ECFMG Details');
-    $scope.ProgramDetailPendingRequest = profileUpdates.getUpdates('Education History', 'Residency/Internship/Fellowship');
-    $scope.CMECertificationDetailPendingRequest = profileUpdates.getUpdates('Education History', 'PostGraduate Training/CME');
+    $scope.ProgramDetailPendingRequest = profileUpdates.getUpdates('Education History', 'Residency/Internship/Fellowship Details');
+    $scope.CMECertificationDetailPendingRequest = profileUpdates.getUpdates('Education History', 'PostGraduate Training/CME Details');
 
     $scope.setFiles = function (file) {
         $(file).parent().parent().find(".jancyFileWrapTexts").find("span").width($(file).parent().parent().width() < 243 ? $(file).parent().parent().width() : 243);
@@ -664,6 +664,7 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -813,6 +814,7 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -1250,6 +1252,7 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -1693,6 +1696,7 @@ profileApp.controller('educationController', ['$scope', '$rootScope', '$http', '
                 url: url,
                 type: 'POST',
                 data: new FormData($formData[0]),
+                async: false,
                 cache: false,
                 contentType: false,
                 processData: false,

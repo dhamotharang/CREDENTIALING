@@ -245,8 +245,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     {
                         document = CreateDocument(otherDocument.File);
                     }
-                    if (isCCO)
-                    {
+                    if (isCCO || otherDocument.IsPrivate)
+                    {                        
                         string documentpath = profileManager.UpdateOtherDocumentAsync(profileId, dataModelOtherDocument, document);
                         dataModelOtherDocument.DocumentPath = documentpath;
                         ChangeNotificationDetail notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "Document Repository - Other Documents", "Updated");

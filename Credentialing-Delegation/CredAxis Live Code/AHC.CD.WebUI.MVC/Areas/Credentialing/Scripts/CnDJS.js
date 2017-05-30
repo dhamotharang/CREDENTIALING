@@ -1615,7 +1615,7 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
 
         }).success(function (resultData) {
             
-        }).error(function () { $scope.loadingAjax = false; $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.loadingAjax = false; $scope.error_message = "An Error occurred !! Please Try Again !!"; })
     }
 
 
@@ -1714,42 +1714,17 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
     $scope.setCreLid = function (id) {
         sessionStorage.setItem('CreListId', id);
     }
-    //$scope.credListId = sessionStorage.getItem('CreListId');
-    //if (sessionStorage.getItem('Droped')) {
-    //    $scope.isDroped = sessionStorage.getItem('Droped');
-    //} else {
-    //    $scope.isDroped = false;
-    //}
-    //---------------------submit spa---------------------
-    //for (var i in $scope.credentialingInfo.CredentialingLogs)
-    //{
-    //    for (var j in $scope.credentialingInfo.CredentialingLogs[i].CredentialingActivityLogs) {
-    //        if ($scope.credentialingInfo.CredentialingLogs[i].CredentialingActivityLogs[j].Activity == "Closure" && $scope.credentialingInfo.CredentialingLogs[i].CredentialingActivityLogs[j].ActivityStatus == "Completed") {
-    //            $scope.ViewOnlyMode = false;
-    //            sessionStorage.setItem('ViewOnlyMode', $scope.ViewOnlyMode);
-    //        }
-    //        else {
-    //            $scope.ViewOnlyMode = $scope.credentialingInfo.Status == 'Inactive' ? false : true;
-    //            sessionStorage.setItem('ViewOnlyMode', $scope.ViewOnlyMode);
-    //        }
-    //    }
-    //}
-    
-        
-    //$scope.ViewOnlyMode = $scope.credentialingInfo.Status == 'Inactive' ? false : true;
     jQuery.grep($scope.credentialingInfo.CredentialingLogs, function (ele) {
         if (ele.Credentialing = "Credentialing") {
             jQuery.grep(ele.CredentialingActivityLogs, function (log) { $scope.ViewOnlyMode = (log.Activity == "Closure" && log.ActivityStatus == "Completed") ? false : true; });
         }
     });
     sessionStorage.setItem('ViewOnlyMode', $scope.ViewOnlyMode);
-    
-
     $scope.SubmitSPA = function (credId) {
         $http.post(rootDir + '/Credentialing/CnD/SubmitSPA?CredentialingInfoID=' + credId).
        success(function (data, status, headers, config) {
-           //$window.location.reload(true);
            try {
+
                $scope.ViewOnlyMode = data.status == 'true' ? false : true;
                sessionStorage.setItem('ViewOnlyMode', $scope.ViewOnlyMode);
                var statusfortimeline = data.status;
@@ -1760,17 +1735,33 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
                        completedBy = $scope.users[j].FullName;
                    }
                }
-               var completedDate = $rootScope.changeDateTime(new Date());
-               try {
-                   var tempactivity = {
-                       Activity: $rootScope.providerfullName + " Credentialing Process Completed for " + $rootScope.planNameUniv,
-                       ActivityByName: completedBy,
-                       LastModifiedDate: completedDate
-                   };
-                   $rootScope.timelineActivity.unshift(tempactivity);
-                   $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
-               } catch (e) {
+              if ($rootScope.isrecredentialing == "Credentialing") {
+                   var completedDate = $rootScope.changeDateTime(new Date());
+                   try {
+                       var tempactivity = {
+                           Activity: $rootScope.providerfullName + "  Credentialing Process Completed for " + $rootScope.planNameUniv,
+                           ActivityByName: completedBy,
+                           LastModifiedDate: completedDate
+                       };
+                       $rootScope.timelineActivity.unshift(tempactivity);
+                       $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
+                   } catch (e) {
 
+                   }
+               }
+              else if ($rootScope.isrecredentialing == "ReCredentialing") {
+                   var completedDate = $rootScope.changeDateTime(new Date());
+                   try {
+                       var tempactivity = {
+                           Activity: $rootScope.providerfullName + " Re-Credentialing Process Completed for " + $rootScope.planNameUniv,
+                           ActivityByName: completedBy,
+                           LastModifiedDate: completedDate
+                       };
+                       $rootScope.timelineActivity.unshift(tempactivity);
+                       $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
+                   } catch (e) {
+
+                   }
                }
                $timeout(function () { $("#summary2").find('a').trigger('click'); });
            } catch (e) {
@@ -1818,7 +1809,9 @@ Cred_SPA_App.service('messageAlertEngine', ['$rootScope', '$timeout', function (
         $rootScope.messageType = "";
     }
 }]);
-
+Cred_SPA_App.run(['$rootScope', function ($rootScope) {
+    $rootScope.isrecredentialing = "";
+}])
 $(document).ready(function () {
     $(".ProviderTypeSelectAutoList").hide();
     $(".ProviderTypeSelectAutoList1").hide();

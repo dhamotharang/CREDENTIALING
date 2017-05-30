@@ -130,6 +130,7 @@ namespace AHC.CD.Business.Notification
 
             foreach (var profile in profileList)
             {
+                profile.PersonalDetail.ProviderTitles = profile.PersonalDetail.ProviderTitles.Where(p => p.StatusType == StatusType.Active).ToList();
                 Expiries.Add(FillExpiryInformation(profile));
 
             }

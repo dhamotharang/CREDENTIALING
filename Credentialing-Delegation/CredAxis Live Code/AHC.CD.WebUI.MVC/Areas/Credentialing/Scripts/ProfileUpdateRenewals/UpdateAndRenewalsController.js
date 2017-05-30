@@ -25,7 +25,7 @@
     $scope.SelectedDataForCredRequest = [];
     $scope.MasterSettings = $filter("MasterSettingFiltter")("Updates");
     $scope.Traffic = tracking;
-
+    
     //=================================== Variable Declaration End ===================================
 
 
@@ -161,21 +161,36 @@
     $scope.GridData = function (type) {
         switch (type) {
             case "Updates":
+                $scope.dropbuttonstatus = false;
+                $scope.pointer = (IsProvider)? false:true;
                 $scope.GetAllUpdatesAndRenewals(type);
+                $scope.SelectedDataForCredRequest.length = 0;
                 break;
             case "Renewals":
+                $scope.dropbuttonstatus = false;
+                $scope.pointer = (IsProvider)? false:true;
                 $scope.GetAllUpdatesAndRenewals(type);
+                $scope.SelectedDataForCredRequest.length = 0;
                 break;
             case "CredentialingRequest":
+                $scope.dropbuttonstatus = false;
+                $scope.pointer = (IsProvider)?false:true;
                 $scope.GetAllCredentialingRequests();
+                $scope.SelectedData.length = 0;
                 break;
             case "ViewHistory":
+                $scope.dropbuttonstatus = true;
                 $scope.GetUpdateHistory();
+                $scope.pointer = false;
+                $scope.SelectedData.length = 0;
+                $scope.SelectedDataForCredRequest.length = 0;
                 break;
         }
         $scope.tableStateValue = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValue);
         $self.callServerUpdateAndHistory($scope.tableStateValue);
     }
+
+    
     $scope.RejectAction = function () {
         $scope.RejectStatus = !$scope.RejectStatus;
     }
@@ -203,6 +218,7 @@
     //==================================== Crud Operations Start =========================================
 
     $scope.GetAllUpdatesAndRenewals = function (Type) {
+        
         $scope.SelectAllButton = false;
         $scope.ProfileUpdateandRenewalFilter = false;
         $self.displayedUpdateAndRenewals = [];
@@ -219,6 +235,9 @@
             if (Type == 'Updates') {
                 $rootScope.TempProfileUpdates = $filter('filter')($rootScope.ProfileUpdates, { Modification: "Update" });
                 $scope.MasterSettings = $filter("MasterSettingFiltter")("Updates");
+                $timeout(function () {
+                    angular.element("#Updates").addClass("biscit_blue");
+                })
             }
             else {
                 $rootScope.TempProfileUpdates = $filter('filter')($rootScope.ProfileUpdates, { Modification: "Renewal" });
@@ -226,6 +245,7 @@
             }
 
             $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
+
         }, function (error) {
             toaster.pop('error', "", 'Please try after sometime !!!');
         })
@@ -355,13 +375,24 @@
             toaster.pop('error', "", 'Please try after sometime !!!');
         })
     }
+    $scope.dropbuttonstatus = false;
     $scope.GetProfileUpdateDataByID = function (Data) {
+        if(Data.ApprovalStatus == "Approved" || Data.ApprovalStatus == "Rejected")
+        {
+            $scope.dropbuttonstatus = true;
+        }
         $scope.LoadingStatus = true;
         $scope.RejectStatus = false;
         $scope.CancelButtonStatus = false;
         $rootScope.TemporaryObject = angular.copy(Data);
         $rootScope.TemporaryObject.Reason = "";
+        $rootScope.TemporaryObject.ProfileID = Data.ProfileId;
+        if ($rootScope.TemporaryObject.ProfileID == undefined) {
+            $rootScope.TemporaryObject.ProfileID = Data.ProfileID;
+        }
         $rootScope.TemporaryObject.Reason = $rootScope.TemporaryObject.RejectionReason;
+        $rootScope.TemporaryObject.RejectionReason = "";
+        $rootScope.TemporaryObject.RejectionReason = Data.RejectionReason;
         $rootScope.TemporaryObject.UniqueData = JSON.parse($rootScope.TemporaryObject.UniqueData);       
         var data = {
             trackerId: Data.ProfileUpdatesTrackerId,
@@ -369,6 +400,7 @@
             modificationType: Data.Modification
         };
         UpdateAndRenewalsService.GetProfileUpdateDataByID(data).then(function (result) {
+            console.log(result.data[0].Value);
             $scope.displayDataForProfileUpdate = UpdateAndRenewalsFactory.getValue(result.data[0].Value);
             //$rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf($filter('filter')($rootScope.TempProfileUpdates, { ProfileUpdatesTrackerId: Data.ProfileUpdatesTrackerId })[0])].DecisionMadeBy = result.data[1].Value;
             $rootScope.TemporaryObject.DecisionMadeBy = result.data[1].Value;
@@ -595,6 +627,6 @@
 
 
     //==================================== Crud Operations Start =========================================
-
+    
 
 }]);

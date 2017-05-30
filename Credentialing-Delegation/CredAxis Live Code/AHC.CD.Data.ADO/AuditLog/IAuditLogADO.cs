@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AHC.CD.Entities.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,6 @@ namespace AHC.CD.Data.ADO.AuditLog
     public interface IAuditLogADO
     {
         List<dynamic> GetAllAuditLogADOAsync();
+        Task<AduitDTO> GetAllAuditLog(AuditSearchDTO auditSearchDTO);
     }
 }

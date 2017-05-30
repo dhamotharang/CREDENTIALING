@@ -7,15 +7,15 @@
         <fieldset class="wrap-words">
             <legend>
                 @if (!ViewBag.Roles.Contains("CCO") && !ViewBag.Roles.Contains("CRA") && !ViewBag.Roles.Contains("TL"))
-                {
-                    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="PersonalDetailsPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
-                }
+{
+    <i style="font-size:20px" tooltip data-toggle="tooltip" data-placement="top" title="This section is under observation by your credentialing co-ordinator" ng-show="PersonalDetailsPendingRequest" class="fa text-danger fa-exclamation-circle"></i>
+}
                 Personal Details
             </legend>
             @if (ProfileActionValidator.IsAuthorized(ProfileActionType.Edit, ViewBag.Roles, false))
             {
                 <div class="legend2 pull-right">
-                    <button id="editPersonalInfo" ng-if="visibilityControl!='EditPersonalDetails'" class="btn btn-xs btn-primary" ng-click="PersonalDetailsToggle('EditPersonalDetails')" ng-hide="Provider.PersonalDetails.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit Personal Details"><i class="fa fa-edit"></i></button>
+                    <button id="editPersonalInfo" ng-if="visibilityControl!='EditPersonalDetails'" class="btn btn-xs btn-primary" ng-click="PersonalDetailsToggle('EditPersonalDetails')" ng-hide="Provider.PersonalDetails.TableState" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
                     <button class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="left" data-trigger="hover" data-content="Do not use nicknames or initials, unless they are part of your legal names"><i class="fa fa-question"></i></button>
                     @*<button class="btn btn-xs btn-danger" tooltip data-toggle="tooltip" data-placement="top" title="Edit Personal Details"><i class="fa fa-exclamation-circle"></i></button>*@
 
@@ -401,7 +401,7 @@
                                     </tr>
                                 </thead>
                                 <tbody ng-repeat="ha in (HomeAddresses | orderBy:AddressPredicate:reverse | orderEmpty:'AddressPreferenceType':'toBottom') track by $index">
-                                    <tr ng-class="{isprimary:ha.AddressPreferenceType==1}">                                   
+                                    <tr ng-class="{isprimary:ha.AddressPreferenceType==1, 'TableColor':ha.TableState}">
 
                                         <td class="col-lg-2 wrap-words">
                                             @if (ProfileActionValidator.IsMasked(ViewBag.Roles))

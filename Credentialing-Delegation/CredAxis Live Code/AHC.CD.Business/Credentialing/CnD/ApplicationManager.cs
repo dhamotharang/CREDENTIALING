@@ -156,6 +156,7 @@ namespace AHC.CD.Business.Credentialing.CnD
                 }
                 foreach (var Data in resultSet.CredentialingLogs)
                 {
+                    //Data.CredentialingActivityLogs = Data.CredentialingActivityLogs.OrderByDescending(p => p.CredentialingActivityLogID).ToList();
                     if (Data.Credentialing != AHC.CD.Entities.MasterData.Enums.CredentialingType.ReCredentialing.ToString())
                     {
                         credentialingLog.Add(Data);
@@ -191,7 +192,7 @@ namespace AHC.CD.Business.Credentialing.CnD
                 //resultSet.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Inactive;
 
                 //------------update  logs--------------------------------
-                CredentialingLog latestCredentialingLog = resultSet.CredentialingLogs.OrderByDescending(c => c.LastModifiedDate).Where(x=>x.Credentialing == CD.Entities.MasterData.Enums.CredentialingType.Credentialing.ToString()).FirstOrDefault();
+                CredentialingLog latestCredentialingLog = resultSet.CredentialingLogs.OrderByDescending(c => c.LastModifiedDate).Where(x=>x.Credentialing == CD.Entities.MasterData.Enums.CredentialingType.Credentialing.ToString() || x.Credentialing == CD.Entities.MasterData.Enums.CredentialingType.ReCredentialing.ToString()).FirstOrDefault();
                 if (latestCredentialingLog != null)
                 {
                     CredentialingActivityLog credentialingActivityLog = new CredentialingActivityLog();

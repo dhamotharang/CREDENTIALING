@@ -95,5 +95,15 @@ namespace AHC.CD.Business
         /// <returns></returns>
         int GetCountOfAlreadyAssignedProviders(List<int?> ProfileIDs, string CCorTL);
 
+        /// <summary>
+        /// Author : Manideep Innamuri
+        /// Date : 10th May 2017
+        /// Description : Method to get the already Assigned ProfileIDs
+        /// </summary>
+        /// <param name="ProfileIDs"></param>
+        /// <param name="CCorTL"></param>
+        /// <returns></returns>
+        List<int?> GetAlreadyAssignedProviders(List<int?> ProfileIDs, string CCorTL);
+
     }
 }

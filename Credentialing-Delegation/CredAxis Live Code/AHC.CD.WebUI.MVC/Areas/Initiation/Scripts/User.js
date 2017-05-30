@@ -36,7 +36,8 @@ userApp.controller("userController", ['$scope', '$timeout', '$http', '$filter', 
 
     $scope.Roles = [];
     $scope.Roles = [
-        { Code: "ADM",  Name:"Admin" },
+        { Code: "ADM", Name: "Admin" },
+        { Code: "SYSADM", Name: "System Admin" },
         { Code: "CCM", Name: "Credentialing Committee" },
         { Code: "CCO", Name: "Credentialing Coordinator" },
         { Code: "CRA", Name: "Credentialing Admin" },

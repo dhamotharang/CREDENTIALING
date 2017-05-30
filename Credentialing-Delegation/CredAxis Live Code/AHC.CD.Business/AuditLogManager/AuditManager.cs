@@ -18,5 +18,6 @@ namespace AHC.CD.Business.AuditLogManager
         {
             return iAuditLogADO.GetAllAuditLogADOAsync();
         }
+
     }
 }

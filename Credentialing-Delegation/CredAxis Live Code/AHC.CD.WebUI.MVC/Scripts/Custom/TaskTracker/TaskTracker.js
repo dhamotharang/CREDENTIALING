@@ -906,7 +906,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                 Subject: histories.TaskTrackerHistories[j].Subject, NextFollowUpDate: $scope.ConvertDate(histories.TaskTrackerHistories[j].NextFollowUpDate),
                 ModeOfFollowUp: JSON.parse(histories.TaskTrackerHistories[j].ModeOfFollowUp),
                 InsuranceCompanyName: TasksAssignedinsurancecompanyname,
-                PlanName: TasksAssignedplanname,
+                PlanName: TasksAssignedplanname != "" ? TasksAssignedplanname : "Not Available",
                 LastUpdatedBy: histories.TaskTrackerHistories[j].LastUpdatedBy,
                 //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == $scope.TasksAssignedtoMe[k].AssignedToId })[0].AuthenicateUserId, AssignedTo: AssignedTo, HospitalID: $scope.TasksAssignedtoMe[k].HospitalID,
                 AssignedToId: AssignedToId[j], AssignedTo: AssignedTo[j],
@@ -1125,7 +1125,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                         Subject: $scope.TasksAssignedtoMe[k].Subject, NextFollowUpDate: followupdatefortasksassigned,
                         ModeOfFollowUp: $scope.TasksAssignedtoMe[k].ModeOfFollowUp, FollowUp: Followups,
                         InsuranceCompanyName: TasksAssignedinsurancecompanyname,
-                        PlanName: TasksAssignedplanname.PlanName,
+                        PlanName: TasksAssignedplanname != "" ? TasksAssignedplanname.PlanName : "Not Available",
                         //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == $scope.TasksAssignedtoMe[k].AssignedToId })[0].AuthenicateUserId, AssignedTo: AssignedTo, HospitalID: $scope.TasksAssignedtoMe[k].HospitalID,
                         AssignedToId: AssignedToId, AssignedTo: AssignedTo, HospitalID: $scope.TasksAssignedtoMe[k].HospitalID,
                         Hospital: HospitalNamefortaskassigned, Notes: $scope.TasksAssignedtoMe[k].Notes, ModifiedDate: $scope.TasksAssignedtoMe[k].LastModifiedDate,
@@ -1306,7 +1306,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                         Subject: $scope.AllTasks[k].Subject, NextFollowUpDate: followupdateforalltasks,
                         ModeOfFollowUp: $scope.AllTasks[k].ModeOfFollowUp, FollowUp: Followups,
                         InsuranceCompanyName: InsuranceCompanyforalltasks,
-                        PlanName: Planforalltasks.PlanName,
+                        PlanName: Planforalltasks != "" ? Planforalltasks.PlanName : "Not Available",
                         //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == $scope.AllTasks[k].AssignedToId })[0].AuthenicateUserId, AssignedTo: AssignedTo, HospitalID: $scope.AllTasks[k].HospitalID,
                         AssignedToId: Assignedtoid, AssignedTo: AssignedTo, HospitalID: $scope.AllTasks[k].HospitalID,
                         Hospital: HospitalNameforremainingtasks, Notes: $scope.AllTasks[k].Notes, ModifiedDate: $scope.AllTasks[k].LastModifiedDate,
@@ -1327,7 +1327,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                         Subject: $scope.AllTasks[k].Subject, NextFollowUpDate: followupdateforalltasks,
                         ModeOfFollowUp: $scope.AllTasks[k].ModeOfFollowUp, FollowUp: Followups,
                         InsuranceCompanyName: TasksAssignedinsurancecompanyname,
-                        PlanName: Planforalltasks.PlanName,
+                        PlanName: Planforalltasks != "" ? Planforalltasks.PlanName : "Not Available",
                         //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == $scope.TasksAssignedtoMe[k].AssignedToId })[0].AuthenicateUserId, AssignedTo: AssignedTo, HospitalID: $scope.TasksAssignedtoMe[k].HospitalID,
                         AssignedToId: AssignedToId, AssignedTo: AssignedTo, HospitalID: $scope.AllTasks[k].HospitalID,
                         Hospital: HospitalNamefortaskassigned, Notes: $scope.AllTasks[k].Notes, ModifiedDate: $scope.AllTasks[k].LastModifiedDate,
@@ -1405,7 +1405,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                     Subject: $scope.Tasks[k].Subject, NextFollowUpDate: followupdatefortasksassigned,
                     ModeOfFollowUp: $scope.Tasks[k].ModeOfFollowUp, FollowUp: Followups,
                     InsuranceCompanyName: TasksAssignedinsurancecompanyname,
-                    PlanName: TasksAssignedplanname,
+                    PlanName: TasksAssignedplanname != "" ? TasksAssignedplanname.PlanName : "Not Available",
                     //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == $scope.TasksAssignedtoMe[k].AssignedToId })[0].AuthenicateUserId, AssignedTo: AssignedTo, HospitalID: $scope.TasksAssignedtoMe[k].HospitalID,
                     AssignedToId: AssignedToId, AssignedTo: AssignedTo, AssignedById: AssignedById, AssignedBy: AssignedBy, HospitalID: $scope.Tasks[k].HospitalID,
                     Hospital: HospitalNamefortaskassigned, Notes: $scope.Tasks[k].Notes, ModifiedDate: $scope.Tasks[k].LastModifiedDate,
@@ -1436,6 +1436,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     //To Display the drop down div
     $scope.searchCumDropDown = function (divId) {
+        if (divId == "ForNotes") {
+            $scope.hidenotesdiv = false;
+        }
         $(".ProviderTypeSelectAutoList").hide();
         $("#" + divId).show();
     };
@@ -1452,12 +1455,14 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     // Select functions for dropdowns
     $scope.SelectProvider = function (Provider) {
+        $scope.errormessageforprovider = false;
         $scope.task.ProfileID = Provider.ProfileId;
         $scope.task.ProviderName = Provider.Name;
 
         $(".ProviderTypeSelectAutoList").hide();
     }
     $scope.SelectUser = function (User) {
+        $scope.errormessageforAssignedto = false;
         $scope.task.AssignedToId = User.AuthenicateUserId;
         $scope.task.AssignedTo = User.UserName;
         $(".ProviderTypeSelectAutoList").hide();
@@ -1480,16 +1485,20 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         //$scope.task.FollowUp = Followup.Name
         $(".ProviderTypeSelectAutoList").hide();
     }
+
+
     $scope.RemoveFollowup = function (followup) {
         $scope.Tempfollowup1 = "";
         $scope.Followups.push(followup);
         $scope.Tempfollowup = $.grep($scope.Tempfollowup, function (element) {
             return element.Name != followup.Name;
         });
+        $scope.
         $scope.Tempfollowup1 = JSON.stringify(angular.copy($scope.Tempfollowup));
 
     }
     $scope.SelectSubSection = function (SubSection) {
+        $scope.errormessageforsubsection = false;
         $scope.task.SubSectionName = SubSection.SubSectionName;
         $(".ProviderTypeSelectAutoList").hide();
     }
@@ -1501,6 +1510,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     // Manage partial Views
     $scope.showAddView = function () {
+        $scope.errormessageforsubject = false;
+        $scope.errormessageforfollowupdate = false;
         $scope.VisibilityControl = "";
         $scope.Tempfollowup1 = "";
         $scope.notetask = true;
@@ -1653,6 +1664,10 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     //CRUD functions/////////
     $scope.addNewTask = function (task) {
+        if (task.NextFollowUpDate == undefined)
+            $scope.errormessageforfollowupdate = true;
+        if (task.Subject == undefined)
+            $scope.errormessageforsubject = true;
         //ctrl.callServer($scope.t);
         $scope.notetask = false;
         $scope.errormessage = false;
@@ -1788,7 +1803,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                 ModeOfFollowUp: data.ModeOfFollowUp, FollowUp: Followups,
                                 //InsuranceCompanyName: Insurancecompanyforaddtask,
                                 InsuranceCompanyName: Insurancecompanyforaddtask,
-                                PlanName: PlanNameforaddtask,
+                                PlanName: PlanNameforaddtask != "" ? PlanNameforaddtask : "Not Available",
                                 AssignedById: data.AssignedById,
                                 //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].AuthenicateUserId, AssignedTo: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].UserName, HospitalID: data.HospitalID,
                                 AssignedToId: Assignedtoid, AssignedTo: AssignedTo, HospitalID: data.HospitalID,
@@ -1812,7 +1827,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                 Subject: data.Subject, NextFollowUpDate: followupdateforaddtask,
                                 ModeOfFollowUp: data.ModeOfFollowUp, FollowUp: Followups,
                                 InsuranceCompanyName: Insurancecompanyforaddtask,
-                                PlanName: PlanNameforaddtask,
+                                PlanName: PlanNameforaddtask != "" ? PlanNameforaddtask : "Not Available",
                                 AssignedById: data.AssignedById,
                                 //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].AuthenicateUserId, AssignedTo: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].UserName, HospitalID: data.HospitalID,
                                 AssignedToId: Assignedtoid, AssignedTo: AssignedTo, HospitalID: data.HospitalID,
@@ -1827,7 +1842,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                             };
                             $scope.TasksAssigned.splice(0, 0, TasksAssignedforaddedtask);
                             $rootScope.$broadcast("evnt", $scope.TasksAssigned);
-                            $scope.RemainingTasks.splice(0, 0, DailyTasksforaddedtask);
+                            $scope.RemainingTasks.splice(0, 0, TasksAssignedforaddedtask);
                             $rootScope.$broadcast("event", $scope.RemainingTasks);
                             //$("#numberOfNotifications").text(parseInt($("#numberOfNotifications")[0].textContent) + 1);
                         }
@@ -1855,6 +1870,11 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         }
     }
     $scope.editTask = function () {
+        if ($scope.validation == "")
+            $scope.errormessageforfollowupdate = true;
+        if ($scope.subjval == "")
+            $scope.errormessageforsubject = true;
+        $scope.flag = true;
         var d1 = new $.Deferred();
         $scope.errormessage = false;
         $scope.errormessageforAssignedto = false;
@@ -1921,37 +1941,37 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                         data = JSON.parse(data);
                         data.daysleft = $filter("TimeDiff")($scope.task.NextFollowUpDate);
                         //here comes new data for Next followUp date
-                        $.ajax({
-                            url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + localStorage.getItem("UserID"),
-                            //data: {
-                            //    format:  'json'
-                            //},
-                            error: function () {
-                                //$('#info').html('<p>An error has occurred</p>');
-                            },
-                            dataType: 'json',
-                            success: function (data) {
-                                var expired = data.Result.ExpiredCount;
-                                var expiringToday = data.Result.ExpiringTodayCount;
-                                localStorage.setItem("UserID", cduserdata.cdUser.CDUserID);
-                                if (expired == "" || expired == null || expired == undefined) {
-                                    expired = 0;
-                                }
-                                if (expiringToday == "" || expiringToday == null || expiringToday == undefined) {
-                                    expiringToday = 0;
-                                }
-                                //sessionStorage.setItem("expired_Task", data.Result.ExpiredCount);
-                                //sessionStorage.setItem("expiring_Task", data.Result.ExpiringTodayCount);
-                                //sessionStorage.setItem("DataStatus", "Updated");
+                        //$.ajax({
+                        //    url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + localStorage.getItem("UserID"),
+                        //    //data: {
+                        //    //    format:  'json'
+                        //    //},
+                        //    error: function () {
+                        //        //$('#info').html('<p>An error has occurred</p>');
+                        //    },
+                        //    dataType: 'json',
+                        //    success: function (data) {
+                        //        var expired = data.Result.ExpiredCount;
+                        //        var expiringToday = data.Result.ExpiringTodayCount;
+                        //        localStorage.setItem("UserID", cduserdata.cdUser.CDUserID);
+                        //        if (expired == "" || expired == null || expired == undefined) {
+                        //            expired = 0;
+                        //        }
+                        //        if (expiringToday == "" || expiringToday == null || expiringToday == undefined) {
+                        //            expiringToday = 0;
+                        //        }
+                        //        //sessionStorage.setItem("expired_Task", data.Result.ExpiredCount);
+                        //        //sessionStorage.setItem("expiring_Task", data.Result.ExpiringTodayCount);
+                        //        //sessionStorage.setItem("DataStatus", "Updated");
 
-                                localStorage.setItem("expired_Task", expired);
-                                localStorage.setItem("expiring_Task", expiringToday);
-                                $("#expired_Task").html("");
-                                $("#expiring_Task").html("");
-                                $("#expired_Task").html(expired);
-                                $("#expiring_Task").html(expiringToday);
-                            },
-                        })
+                        //        localStorage.setItem("expired_Task", expired);
+                        //        localStorage.setItem("expiring_Task", expiringToday);
+                        //        $("#expired_Task").html("");
+                        //        $("#expiring_Task").html("");
+                        //        $("#expired_Task").html(expired);
+                        //        $("#expiring_Task").html(expiringToday);
+                        //    },
+                        //})
 
                         data.ModeOfFollowUp = JSON.parse(data.ModeOfFollowUp);
                         var editedTask = [];
@@ -2024,7 +2044,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                     ModeOfFollowUp: data.ModeOfFollowUp, FollowUp: Followups,
                                     //InsuranceCompanyName: updatedinsurancecompany,
                                     InsuranceCompanyName: updatedinsurancecompany,
-                                    PlanName: TasksAssignedplanname,
+                                    PlanName: TasksAssignedplanname != "" ? TasksAssignedplanname : "Not Available",
                                     //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].AuthenicateUserId, AssignedTo: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].UserName, HospitalID: data.HospitalID,
                                     AssignedToId: Assignedtoid, AssignedTo: AssignedTo, HospitalID: data.HospitalID,
                                     AssignedById: data.AssignedById,
@@ -2062,7 +2082,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                     Subject: data.Subject, NextFollowUpDate: updateddate,
                                     ModeOfFollowUp: data.ModeOfFollowUp, FollowUp: Followups,
                                     InsuranceCompanyName: updatedinsurancecompany,
-                                    PlanName: TasksAssignedplanname,
+                                    PlanName: TasksAssignedplanname != "" ? TasksAssignedplanname : "Not Available",
                                     //InsuranceCompanyName: data.InsuranceCompanyName,
                                     //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].AuthenicateUserId, AssignedTo: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].UserName, HospitalID: data.HospitalID,
                                     AssignedToId: Assignedtoid, AssignedTo: AssignedTo, HospitalID: data.HospitalID,
@@ -2100,7 +2120,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                     ModeOfFollowUp: data.ModeOfFollowUp, FollowUp: Followups,
                                     //InsuranceCompanyName: updatedinsurancecompany,
                                     InsuranceCompanyName: updatedinsurancecompany,
-                                    PlanName: TasksAssignedplanname,
+                                    PlanName: TasksAssignedplanname != "" ? TasksAssignedplanname : "Not Available",
                                     //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].AuthenicateUserId, AssignedTo: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].UserName, HospitalID: data.HospitalID,
                                     AssignedToId: Assignedtoid, AssignedTo: AssignedTo, HospitalID: data.HospitalID,
                                     AssignedById: data.AssignedById,
@@ -2131,7 +2151,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                     Subject: data.Subject, NextFollowUpDate: updateddate,
                                     ModeOfFollowUp: data.ModeOfFollowUp, FollowUp: Followups,
                                     InsuranceCompanyName: updatedinsurancecompany,
-                                    PlanName: TasksAssignedplanname,
+                                    PlanName: TasksAssignedplanname != "" ? TasksAssignedplanname : "Not Available",
                                     //AssignedToId: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].AuthenicateUserId, AssignedTo: $scope.users.filter(function (users) { return users.CDUserID == data.AssignedToId })[0].UserName, HospitalID: data.HospitalID,
                                     AssignedToId: Assignedtoid, AssignedTo: AssignedTo, HospitalID: data.HospitalID,
                                     AssignedById: data.AssignedById,
@@ -2231,6 +2251,10 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                     }
                 });
             }
+            else {
+                $scope.flag = false;
+                $scope.progressbar = true;
+            }
             return d1.promise();
             ctrl.callServer($scope.t);
             // $formData.reset();
@@ -2312,6 +2336,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
                if ($rootScope.tabNames == 'CloseTasks') {
                    opened = $scope.ClosedTasks.splice($scope.ClosedTasks.indexOf($scope.ClosedTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+                   //Added By Manideep Innamuri
+                   opened[0].AssignedTo = opened[0].LastUpdatedBy;
                    $scope.TasksAssigned.push(opened[0]);
                    for (var j in $scope.TasksAssigned) {
                        if ($scope.TasksAssigned[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
@@ -2361,6 +2387,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     }
 
 
+
+
     $scope.CloseTask = function () {
         var promise = $scope.editTask().then(function () {
             $scope.removeTask();
@@ -2368,14 +2396,41 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         });
     }
     ////////////////////////////
-
+    $scope.errormessageforsubject = false;
+    $scope.errormessageforfollowupdate = false;
     //To initiate Removal Confirmation Modal
     $scope.inactiveWarning = function (task) {
+        $scope.validationfunction = true;
+        $scope.remVal();
+        $scope.remnextfollowupVal($scope.followupdatevalue);
+        $scope.errormessageforfollowupdate = false;
+        if (task.ProviderName == null || task.ProviderName == "") {
+            $scope.errormessageforprovider = true;
+        }
+        if ((task.SubSectionName == null || task.SubSectionName == "")) {
+            $scope.errormessageforsubsection = true;
+        }
+        if (task.Subject == null || task.Subject == "") {
+            $scope.errormessageforsubject = true;
+        }
+        if ((task.NextFollowUpDate == null || task.NextFollowUpDate == "" || task.NextFollowUpDate == undefined) && !$scope.errormessageforfollowupdate) {
+            $scope.errormessageforfollowupdate = false;
+            $scope.errormessageforfollowupdate = true;
+        }
+
+        if (task.ModeOfFollowUp.length == 0 || $scope.Followups.length == 4) {
+            $scope.errormessage = true;
+        }
+        if (task.AssignedTo == null || task.AssignedTo == "") {
+            $scope.errormessageforAssignedto = true;
+        }
+
         if (angular.isObject(task)) {
             $scope.TemporaryTask = {};
             $scope.TemporaryTask = angular.copy(task);
         }
-        $('#inactiveWarningModal').modal();
+        if (!$scope.errormessageforprovider && !$scope.errormessageforsubsection && !$scope.errormessageforsubject && !$scope.errormessageforfollowupdate && !$scope.errormessage && !$scope.errormessageforAssignedto)
+            $('#inactiveWarningModal').modal();
     }
     $scope.QuickRemove = function (task) {
         if (angular.isObject(task)) {
@@ -2695,6 +2750,10 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.Followups = angular.copy(TempFollowupHelper);
         $scope.Tempfollowup = [];
         $scope.Tempfollowup1 = "";
+
+        //if (task.PlanName == "Not Available")
+        //    task.PlanName = "";
+
         if (task.ModeOfFollowUp != "" && task.ModeOfFollowUp != null) {
             $scope.Tempfollowup = angular.copy(task.ModeOfFollowUp);
             $scope.Tempfollowup1 = JSON.stringify(angular.copy(task.ModeOfFollowUp));
@@ -2729,18 +2788,24 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     }
 
     $scope.cancelForRemoveTask = function () {
-        $('#addButton').show();
-        $scope.errormessage = false;
-        $scope.errormessageforAssignedto = false;
-        $scope.errormessageforprovider = false;
-        $scope.errormessageforsubsection = false;
-        $scope.errormessageforHospitalName = false;
-        $scope.errormessageforInsurancecompany = false;
-        $scope.editViewforTab1 = false;
-        $scope.VisibilityControl = "";
-        $scope.addView = false;
-        $scope.TableView = true;
-
+        if ($scope.flag) {
+            $('#addButton').show();
+            $scope.errormessage = false;
+            $scope.errormessageforAssignedto = false;
+            $scope.errormessageforprovider = false;
+            $scope.errormessageforsubsection = false;
+            $scope.errormessageforHospitalName = false;
+            $scope.errormessageforInsurancecompany = false;
+            $scope.editViewforTab1 = false;
+            $scope.VisibilityControl = "";
+            $scope.addView = false;
+            $scope.detailViewfortab = false;
+            $scope.detailView = false;
+            $scope.TableView = true;
+        }
+        else {
+            $scope.detailViewfortab = false;
+        }
     }
 
 
@@ -2904,7 +2969,41 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     //    //$location.$$hash = ''
     //}
 
+    $scope.validationfunction = false;
+    $scope.remVal = function () {
+        if ($scope.validationfunction) {
+            if ($('#TempSUb').val().length != 0) {
+                $scope.errormessageforsubject = false;
+            }
+            else {
+                $scope.subjval = "";
+                $scope.errormessageforsubject = true;
+            }
+        }
+    }
+
+    $scope.followupdatevalue = "";
+    $scope.remnextfollowupVal = function (NextFollowUpDate) {
+        $scope.followupdatevalue = NextFollowUpDate;
+        if ($scope.validationfunction) {
+            if (($('#Tempfollowup').val().length != 0 && $('#Tempfollowup').val() != "") || (NextFollowUpDate != "" && NextFollowUpDate != undefined)) {
+                $scope.errormessageforfollowupdate = false;
+
+            }
+            else {
+                $scope.validation = "";
+                $scope.errormessageforfollowupdate = true;
+            }
+        }
+    }
+
+    $scope.closenotesDiv = function () {
+        $("#HospitalList").hide();
+        $scope.hidenotesdiv = true;
+    }
     $scope.showeditView = function (task, editviewfortab) {
+        $scope.errormessageforsubject = false;
+        $scope.errormessageforfollowupdate = false;
         $('#addButton').hide();
         $scope.NoteTime = true;
         $scope.errormessage = false;
@@ -2924,6 +3023,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         var tempforscroll = '';
         var NoteBy = '';
         $scope.Providers = angular.copy(AllProviders);
+        if (task.PlanName == "Not Available")
+            task.PlanName = "";
+
         if (task.ModeOfFollowUp != "" && task.ModeOfFollowUp != null) {
             $scope.Tempfollowup = angular.copy(task.ModeOfFollowUp);
             $scope.Tempfollowup1 = JSON.stringify(angular.copy(task.ModeOfFollowUp));
@@ -3145,21 +3247,20 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         task.selected ? task.selected = false : task.selected = true;
     }
 
-    $scope.SetReminderModal = function()
-    {
+    $scope.SetReminderModal = function () {
         $scope.showSetReminder = true;
     }
 
-    
+
     //-----check box for Tasks--------------------
     $scope.taskList = {
         tasks: [],
         remainingTime: '',
         reminderDate: '',
-        reminderDateTime:'',
-        taskCount:0
+        reminderDateTime: '',
+        taskCount: 0
     };
-    
+
     //Close the Set Reminder Calender
     $scope.CancelReminder = function () {
         $scope.showSetReminder = false;
@@ -3187,8 +3288,10 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.taskList.reminderDateTime = ReminderDateTime;
         localStorage.setItem("TaskReminders", JSON.stringify($scope.taskList));
         $scope.taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
-        
+
     }
+
+
 
     $scope.clerCheckBoxForAllTasks = function () {
 
@@ -3207,8 +3310,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     $scope.checkedTask = false; // to set the status of checked tasks
 
     //Method to add/remove the checked/unchecked tasks from the list
-    $scope.getCheckedTask = function (task, checkedStatus)
-    {
+    $scope.getCheckedTask = function (task, checkedStatus) {
         $scope.newTask = angular.copy(task);
         task.selected ? task.selected = false : task.selected = true;
         // If task is checked, add it to the List
@@ -3220,18 +3322,19 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
 
         // If task is unchecked, remove it from the List
-        if (task.selected == false)
-        {
+        if (task.selected == false) {
             $scope.taskList.taskCount--;
             for (var i = 0; i < $scope.taskList.tasks.length; i++) {
                 if ($scope.taskList.tasks[i].TaskTrackerId == $scope.newTask.TaskTrackerId)
-                    $scope.taskList.tasks.splice($scope.taskList.tasks[i],1);
+                    $scope.taskList.tasks.splice($scope.taskList.tasks[i], 1);
             }
-            
+
         }
-       
+
 
     }
+
+
 });
 
 function ResetFormForValidation(form) {
@@ -3243,11 +3346,21 @@ function ResetFormForValidation(form) {
 
 
 
+
+
 $(document).ready(function () {
     $(".ProviderTypeSelectAutoList").hide();
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
     $("#sidemenu").addClass("menu-in");
     $("#page-wrapper").addClass("menuup");
+
+    $('#TempSUb').change(function () {
+        if ($('#TempSUb').val().length != 0 && $('#TempSUb').val() != "") {
+            $scope.errormessageforsubject = false;
+        }
+    });
+
+
 });
 
 $(document).click(function (event) {

@@ -75,7 +75,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 {
                     ProfileID = x.ProfileID,
                     NPINumber = x.OtherIdentificationNumber.NPINumber,
-                    FullTitles = x.PersonalDetail.ProviderTitles,
+                    FullTitles = x.PersonalDetail.ProviderTitles.Where(p => p.Status == "Active"),
                     FirstName = x.PersonalDetail.FirstName,
                     LastName = x.PersonalDetail.LastName,
                     FullRelations = x.ContractInfoes.Count() != 0 ? (x.ContractInfoes.FirstOrDefault().ProviderRelationship) : null,
@@ -166,16 +166,19 @@ namespace AHC.CD.WebUI.MVC.Controllers
         /// <param name="profileUserId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> AssignProviderstoCCO(List<int?> ProfileIDs, int profileUserId, string Status)
+        public async Task<ActionResult> AssignProviderstoCCO(List<int?> ProfileIDs, int profileUserId, string Status, string CCorTL)
         {
             string status = "true";
+            List<int?> ProfileIds = new List<int?>();
             try
             {
                 var currentUser = HttpContext.User.Identity.Name;
                 var appUser = new ApplicationUser() { UserName = currentUser };
                 var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
                 string userId = user.Id;
+                ProfileIds = _AssignToCCOorTLManager.GetAlreadyAssignedProviders(ProfileIDs, CCorTL);
                 await _AssignToCCOorTLManager.AssignMultipleProfilesToCCo(ProfileIDs, profileUserId, userId, Status);
+                
             }
             #region CatchBlock
             catch (DatabaseValidationException ex)
@@ -194,7 +197,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 status = ExceptionMessage.TL_ASSIGN_EXCEPTION;
             }
             #endregion
-            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ProfileIds = ProfileIds }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -206,9 +209,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
         /// <param name="profileUserId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> AssignProviderstoTL(List<int?> ProfileIDs, int profileUserId, string Status)
+        public async Task<ActionResult> AssignProviderstoTL(List<int?> ProfileIDs, int profileUserId, string Status, string CCorTL)
         {
             string status = "true";
+            List<int?> ProfileIds = new List<int?>();
             try
             {
                 var currentUser = HttpContext.User.Identity.Name;
@@ -216,6 +220,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 var user = await AuthUserManager.FindByNameAsync(appUser.UserName);
                 string userId = user.Id;
                 await _AssignToCCOorTLManager.AssignMultipleProfilesToTL(ProfileIDs, profileUserId, userId, Status);
+                ProfileIds = _AssignToCCOorTLManager.GetAlreadyAssignedProviders(ProfileIDs, CCorTL);
             }
             #region CatchBlock
             catch (DatabaseValidationException ex)
@@ -234,7 +239,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 status = ExceptionMessage.TL_ASSIGN_EXCEPTION;
             }
             #endregion
-            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, ProfileIds = ProfileIds }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -255,6 +260,28 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 throw ex;
             }
             return count;
+        }
+
+
+        /// <summary>
+        /// Author : Manideep Innamuri
+        /// Description : Method to get the profileid's of already assigned Providers
+        /// </summary>
+        /// <param name="ProfileIDs"></param>
+        /// <param name="CCorTL"></param>
+        /// <returns></returns>
+        public List<int?> GetProfileIdsOfAlreadyAssignedProviders(List<int?> ProfileIDs, string CCorTL)
+        {
+            List<int?> profileIds = new List<int?>();
+            try
+            {
+                profileIds = _AssignToCCOorTLManager.GetAlreadyAssignedProviders(ProfileIDs, CCorTL);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return profileIds;
         }
     }
 }

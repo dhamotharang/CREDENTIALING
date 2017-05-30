@@ -64,10 +64,18 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
         public ActionResult ViewUsers()
         {
+
+            ViewBag.UserData = GetUserDetails();
             return View();
         }
 
         public JsonResult SearchUser()
+        {
+            List<UsersList> userlist = GetUserDetails();
+            return Json(userlist, JsonRequestBehavior.AllowGet);
+        }
+
+        private List<UsersList> GetUserDetails()
         {
             List<UsersList> userlist = new List<UsersList>();
             try
@@ -105,7 +113,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 throw ex;
             }
-            return Json(userlist, JsonRequestBehavior.AllowGet);
+            return userlist;
         }
 
         public async Task<bool> RemoveRoleofaUser(string role, string email, string authid)
@@ -624,7 +632,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 mail.Subject = ConfigurationManager.AppSettings["LockoutMailSubject"].ToString();
                 mail.IsBodyHtml = true;
                 string htmlBody;
-                htmlBody = "Hi Team,<br/><br/><br/><br/><br/><br/>We found a suspicious activities with username <b>" + UserName + "</b>  and from  IP Address <b>" + IPaddress + "</b><br/><br/>" + "and this user name is lockout for <b>" + ConfigurationManager.AppSettings["LockoutDuration"].ToString() + "</b> mins ." + "<br/><br/><br/><br/><br/><br/><br/><br/>" + ConfigurationManager.AppSettings["LockoutDisclaimerMessage"].ToString();
+                htmlBody = "<p style='font-size: 105%' font>Dear Application Administrator,<br/><br/><b style='font-size: 205%;color: #3366ff;'>Unusual sign – in activity</b></h6>We detected something unusual about a recent sign – in to the CredAxis account " + UserName + "<br/><br/><b>Sign – in details,</b><br/>IP address:" + IPaddress + "<br/>Date: " + DateTime.Now.DayOfWeek + "," + DateTime.Now.Day + DateTime.Today.ToString("MMMM") + "&nbsp;&nbsp;" + DateTime.Now.Year + "&nbsp;&nbsp;" + DateTime.Now.TimeOfDay + "<br/><br/>This user Account is lockout for <b>" + ConfigurationManager.AppSettings["LockoutDuration"].ToString() + "</b> mins ." + "<br/><br/>" + ConfigurationManager.AppSettings["Ifthiswasgenuineuser"].ToString() + "<br/><br/>" + ConfigurationManager.AppSettings["Ifyouarenotsure"].ToString() + "<br/><br/>" + "Thanks,<br/>The System Support Team<br/><img src='"+GetBaseUrl()+"Content/Images/logo2.png' style='width: 55px;height: 40px;' /></p>";
+
+
+
+                
                 mail.Body = htmlBody;
                 SmtpClient smtpClient = new SmtpClient();
                 Task.Factory.StartNew(() =>
@@ -658,6 +670,18 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 logger.Log(auditMessage);
             });
+        }
+        public string GetBaseUrl()
+        {
+            var request = HttpContext.ApplicationInstance.Request;
+            var appUrl = HttpRuntime.AppDomainAppVirtualPath;
+
+
+            if (!string.IsNullOrWhiteSpace(appUrl)) appUrl += "/";
+
+
+            var baseUrl = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, appUrl);
+            return baseUrl;
         }
 
         #region Helpers

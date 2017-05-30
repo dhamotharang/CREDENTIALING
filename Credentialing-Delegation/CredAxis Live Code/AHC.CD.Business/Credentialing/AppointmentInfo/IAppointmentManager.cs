@@ -24,5 +24,11 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
         Task<CredentialingInfo> GetCredentialinfoByID(int id);
         Task<string> GenerateWelcomeLetter(int profileid, string welcomeletterinitialdate, string servicecommencingdate);
         Task<List<CCMAppiontment>> GetCCMAppointmentsInfo(string ApprovalStatus);
+
+        Task<CCMActionDTO> GetCCMActionData(int CredInfoID);
+
+        string AddDocument(string docRootPath, string docTitle, DateTime? expiryDate, DocumentDTO document);
+
+        Task<dynamic> SaveCCMQuickActionResultsAsync(CCMQuickActionDTO CCMActionResult);
     }
 }

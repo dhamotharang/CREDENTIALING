@@ -14,7 +14,7 @@
             </legend>
             <div ng-hide="visibilityControl=='_EditHospitalPrivilegeInformation' || !HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption" class="legend2 pull-right">
                 <button type="button" class="btn btn-xs btn-primary" data-container="body" data-toggle="popover" popover data-placement="left" data-trigger="hover" data-content="Print" data-original-title="" title="" ng-if="contractInfoes[0].ContractGroupInfoes.length> 0" ng-click="printData('Profile_GroupInformation','GroupInformation')"><i class="fa fa-print"></i></button>
-                <button id="editHospitalPrivyesNo" ng-click="operateEditControl('_EditHospitalPrivilegeInformation',HospitalPrivilegeInformations)" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                <button id="editHospitalPrivyesNo" ng-click="operateEditControl('_EditHospitalPrivilegeInformation',HospitalPrivilegeInformations)" ng-hide="HospitalPrivilegeInformations.TableState" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
             </div>
             <div class="col-lg-12">
                 <table ng-show="!HospitalPrivilegeInformations.HospitalPrivilegeYesNoOption && visibilityControl!='_EditHospitalPrivilegeInformation'" class="table table-bordered">
@@ -146,7 +146,8 @@
                                 </tr>
                             </thead>
                             <tbody ng-repeat="hospitalPrivilegeInformation in HospitalPrivilegeInformations.HospitalPrivilegeDetails track by $index">
-                                <tr ng-class="{'1':'isprimary', '2':''}[hospitalPrivilegeInformation.PreferenceType]">
+                                @*<tr ng-class="{'1':'isprimary', '2':''}[hospitalPrivilegeInformation.PreferenceType]">*@
+                                <tr ng-class="{'isprimary':hospitalPrivilegeInformation.PreferenceType=='1', '':hospitalPrivilegeInformation.PreferenceType=='2','TableColor':hospitalPrivilegeInformation.TableState}">
                                     <td>{{hospitalPrivilegeInformation.Hospital.HospitalName || 'Not Available'}}</td>
                                     <td>{{getSpecialityForProvider(hospitalPrivilegeInformation.SpecialtyID).Specialty.Name || 'Not Available'}}</td>
                                     <td>{{hospitalPrivilegeInformation.HospitalContactInfo.Street || 'Not Available'}}</td>

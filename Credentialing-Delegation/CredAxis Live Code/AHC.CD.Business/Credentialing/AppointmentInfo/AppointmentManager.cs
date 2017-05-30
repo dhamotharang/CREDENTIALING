@@ -9,6 +9,7 @@ using AHC.CD.Entities.Credentialing.AppointmentInformation;
 using AHC.CD.Entities.Credentialing.CCMPortal;
 using AHC.CD.Entities.Credentialing.Loading;
 using AHC.CD.Entities.Credentialing.LoadingInformation;
+using AHC.CD.Entities.MasterData.Enums;
 using AHC.CD.Entities.MasterProfile;
 using AHC.CD.Exceptions.Credentialing;
 using AHC.CD.Resources.Document;
@@ -261,6 +262,29 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
             }
         }
 
+        /// <summary>
+        /// Method to save the CCM Quick Action Result
+        /// </summary>
+        /// <param name="credentialingAppointmentDetailID"></param>
+        /// <param name="credentialingAppointmentResult"></param>
+        /// <param name="authUserId"></param>
+        /// <returns></returns>
+        public async Task<dynamic> SaveCCMQuickActionResultsAsync(CCMQuickActionDTO CCMActionResult) {
+            try
+            {
+                CCMActionResult.SignedByID = GetUserId(CCMActionResult.SignedByID).ToString();
+                CCMActionResult.SignedDate = DateTime.Now;
+                return await ccmAppointmentRepo.SaveCCMQuickActionResultsAsync(CCMActionResult);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+          
+        }
+
+
+
         public async Task<int> SaveResultForScheduledAppointmentwithdigitalsignature(int credentialingAppointmentDetailID, CredentialingAppointmentResult credentialingAppointmentResult, string authUserId)
         {
             try
@@ -402,6 +426,7 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
                 {
                     if (CredData.Profile.Status == AHC.CD.Entities.MasterData.Enums.StatusType.Active.ToString())
                     {
+                        CredData.Profile.PersonalDetail.ProviderTitles = CredData.Profile.PersonalDetail.ProviderTitles.Where(p => p.StatusType == StatusType.Active).ToList();
                         CredentialingLog credentialingLog = CredData.CredentialingLogs.OrderByDescending(c => c.LastModifiedDate).FirstOrDefault();
                         if (credentialingLog != null)
                         {
@@ -489,7 +514,7 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
         }
 
         /// <summary>
-        /// Private method to add a document
+        /// public method to add a document
         /// </summary>
         /// <param name="docRootPath"></param>
         /// <param name="docTitle"></param>
@@ -497,7 +522,7 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
         /// <param name="document"></param>
         /// <param name="profileId"></param>
         /// <returns></returns>
-        private string AddDocument(string docRootPath, string docTitle, DateTime? expiryDate, DocumentDTO document)
+        public string AddDocument(string docRootPath, string docTitle, DateTime? expiryDate, DocumentDTO document)
         {
             //Create a profile document object
             ProfileDocument profileDocument = CreateProfileDocumentObject(docTitle, null, expiryDate);
@@ -560,7 +585,7 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
                 var updatedCredentialList = new Object();
                 foreach (CredentialingInfo CredData in credentialList)
                 {
-
+                    CredData.Profile.PersonalDetail.ProviderTitles = CredData.Profile.PersonalDetail.ProviderTitles.Where(p => p.StatusType == StatusType.Active).ToList();
                     CredentialingLog credentialingLog = CredData.CredentialingLogs.OrderByDescending(c => c.LastModifiedDate).FirstOrDefault();
                     if (credentialingLog != null)
                     {
@@ -630,6 +655,11 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
             return await ccmAppointmentRepo.GetCCMAppointmentsInfo(ApprovalStatus);
         }
 
-      
+        public async Task<CCMActionDTO> GetCCMActionData(int CredInfoID)
+        {
+
+            return await ccmAppointmentRepo.GetCCMActionData(CredInfoID);
+        }
+
     }
 }

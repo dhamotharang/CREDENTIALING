@@ -119,7 +119,7 @@ dashboardApp.service('ProviderLicenseService', function ($filter) {
                 var ExpiredLicense = 0;
 
                 for (var j in data[i].Licenses) {
-                    if (data[i].Licenses[j].dayLeft < 0) {
+                    if (data[i].Licenses[j].dayLeft <= 0) {
                         ExpiredLicense++;
                         GrandTotalLicenses++;
                     } else if (data[i].Licenses[j].dayLeft < 90) {
@@ -335,7 +335,7 @@ dashboardApp.controller("ProviderDashboardController", ["$scope", "$http", "$fil
     $scope.getExpiredLicenses = function (licenseData) {
         var licenses = [];
         for (var i = 0; i < licenseData.Licenses.length; i++) {
-            if (licenseData.Licenses[i].dayLeft < 0) {
+            if (licenseData.Licenses[i].dayLeft <= 0) {
                 licenses.push(licenseData.Licenses[i]);
             }
         }

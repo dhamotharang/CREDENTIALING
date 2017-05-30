@@ -73,6 +73,9 @@ using AHC.CD.Business.BusinessModels.TaskTracker;
 using AHC.CD.WebUI.MVC.Areas.PlanPDF.Models;
 using AHC.CD.Entities.PackageGenerate;
 using AHC.CD.WebUI.MVC.Areas.Plans.Models;
+using AHC.ActivityLogging;
+using AHC.CD.WebUI.MVC.Areas.Credentialing.Models.CCMPortal;
+using AHC.CD.Entities.Credentialing.CCMPortal;
 
 namespace AHC.CD.WebUI.MVC.App_Start
 {
@@ -113,9 +116,6 @@ namespace AHC.CD.WebUI.MVC.App_Start
             Mapper.CreateMap<SubPlan, SubPlan>();
 
             #endregion
-
-
-
 
 
             #region Profile
@@ -662,6 +662,9 @@ namespace AHC.CD.WebUI.MVC.App_Start
             Mapper.CreateMap<ProfileReport, ProfileReport>();
 
             Mapper.CreateMap<ProfileReport, ProfileReportViewModel>();
+
+            Mapper.CreateMap<CCMQuickActionViewModal, CCMQuickActionDTO>();
+            Mapper.CreateMap<QuickActionIdSet, QuickActionIdSetDTO>();
 
             #endregion
 

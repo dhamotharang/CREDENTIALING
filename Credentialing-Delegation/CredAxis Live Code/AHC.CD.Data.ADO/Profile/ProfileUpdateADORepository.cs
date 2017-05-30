@@ -84,5 +84,23 @@ namespace AHC.CD.Data.ADO.Profile
 
             return updatesHistoryList;
         }
+
+
+        //public List<AHC.CD.Entities.MasterProfile.HospitalPrivilege.HospitalPrivilegeDetail> GetAllhospitalpreviligesByID(int hospitalpreviligeinfoid)
+        //{
+        //    List<AHC.CD.Entities.MasterProfile.HospitalPrivilege.HospitalPrivilegeDetail> hospitaldetailList = null;
+        //    DynamicParameters parameters = new DynamicParameters();
+        //    parameters.Add("@hospitalpreviligeinfoid", hospitalpreviligeinfoid);
+        //    try
+        //    {
+        //        hospitaldetailList = _genericDapperRepo.ExecuteStoredProcedure<AHC.CD.Entities.MasterProfile.HospitalPrivilege.HospitalPrivilegeDetail>("spGetAllHospitalPreviliges", parameters).ToList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+
+        //    return hospitaldetailList;
+        //}
     }
 }

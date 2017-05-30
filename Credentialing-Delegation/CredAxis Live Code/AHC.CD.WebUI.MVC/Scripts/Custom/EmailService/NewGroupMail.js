@@ -161,7 +161,7 @@ EmailServiceApp.filter("Status", function (View) {
 })
 
 EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeout, $scope, $http, $filter, $q, Resource1, messageAlertEngine, ngTableParams, toaster) {
-   
+
     ///// declarations /////
 
     //$rootScope.tempObject.EmailObj = [];    
@@ -169,6 +169,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
 
     $scope.grpNameErrorMessage = false;
     $scope.descriptionErrorMessage = false;
+    $rootScope.Alldatascope =false;
     var tempId = '';
     $scope.allUsers = false;
     $scope.data = [];
@@ -188,7 +189,9 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         tempSearchDataVal = [];
         tempUserSearchDataVal = [];
         $rootScope.tempSelectedObject = [];
-        $rootScope.tempSelectedObject.EmailObj = [];
+        $rootScope.tempSelectedObject.EmailObj = [
+            $scope.AllSelectStatus=false
+        ];
         $rootScope.tempObject = [];
         $rootScope.tempObject.EmailObj = [];
         $rootScope.ProviderData = [];
@@ -211,7 +214,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
             else {
                 $rootScope.UserDataResult.push($rootScope.searchDataVal[i]);
             }
-        }        
+        }
         $rootScope.searchDataVal = angular.copy(tempSearchDataVal);
         tempUserSearchDataVal = angular.copy($rootScope.UserDataResult);
 
@@ -239,8 +242,16 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         var number = pagination.number || 10;
 
         Resource1.getPage(start, number, tableState).then(function (result) {
+            //if(ctrl.displayed.length!=0)
             ctrl.displayed = result.data;
             ctrl.temp = ctrl.displayed;
+            console.log($('#GlobalSearchboxid').val());
+            if ($('#GlobalSearchboxid').val() == 0) {
+                if (ctrl.temp.length == 0)
+                    $rootScope.GlobalSearchbox = true;
+                else
+                    $rootScope.GlobalSearchbox = false;
+            }
             tableState.pagination.numberOfPages = result.numberOfPages;//set the number of pages so the pagination can update            
             ctrl.isLoading = false;
         });
@@ -297,6 +308,16 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
 
     };
 
+    $scope.ConvertDate = function (date) {
+        var followupdateforupdatetask = "";
+        if (date !== null || date !== "") {
+            var date5 = date.split('T');
+            var date5 = date5[0].split('-');
+            followupdateforupdatetask = date5[1] + "/" + date5[2] + "/" + date5[0];
+        }
+        return followupdateforupdatetask;
+    }
+
     //// Http calls //////////
     $scope.GetAllGroupMails = function () {
         var d = new $q.defer();
@@ -307,6 +328,11 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
          $rootScope.activeGroups = [];
          $rootScope.inactiveGroups = [];
          for (var i = 0; i < $rootScope.tempGroupMails.length; i++) {
+             if ($rootScope.tempGroupMails[i].CreatedOn != null) {
+                 $rootScope.tempGroupMails[i].CreatedOn = $scope.ConvertDate($rootScope.tempGroupMails[i].CreatedOn);
+             }
+             $rootScope.tempGroupMails[i].CreatedByEmail = $rootScope.tempGroupMails[i].CreatedBy.EmailId;
+             $rootScope.tempGroupMails[i].GroupMailUserDetailslength = $rootScope.tempGroupMails[i].GroupMailUserDetails.length;
              $rootScope.tempGroupMails[i].EmailObj = [];
              for (var Key in $rootScope.tempGroupMails[i].Emails) {
                  $rootScope.tempGroupMails[i].EmailObj.push({ CDuserId: Key, EmailIds: $rootScope.tempGroupMails[i].Emails[Key], isChecked: true });
@@ -343,6 +369,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
       error(function (data, status, headers, config) {
       });
     $scope.UpdateGroup = function () {
+        $rootScope.editgrid = false;
         if ($rootScope.tempObject.EmailObj.length == 0) {
             messageAlertEngine.callAlertMessage('grperrorMsgDiv', "Please add atleast one Email Id ....", "danger", true);
         }
@@ -409,9 +436,9 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
                                    tempUserSearchDataVal.push(otherUserObjForUpdate[i]);
                                }
                            } catch (e) {
-                               
+
                            }
-                           
+
                            $rootScope.tableView = true;
                            $rootScope.isView = false;
                            $rootScope.isEdit = false;
@@ -752,7 +779,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
             $scope.columnStatus = $filter('Status')('Others');
         }
         var scope = angular.element(document.getElementById('paginationId')).scope();
-        
+
         $scope.t = {
             sort: {},
             search: {},
@@ -768,19 +795,23 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         switch (name) {
             case "All":
                 $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.tempObject.EmailObj);
+                $rootScope.Alldatascope = true;
                 $scope.SelectedMembersColumnStatus = $filter('Status')('All');
                 break;
             case "Provider":
                 $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.ProviderData);
+                $rootScope.Alldatascope = false;
                 $scope.SelectedMembersColumnStatus = $filter('Status')('Provider');
                 break;
             case "Users":
                 $rootScope.tempSelectedObject.EmailObj = [];
+                $rootScope.Alldatascope = false;
                 $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.UsersData);
                 $scope.SelectedMembersColumnStatus = $filter('Status')('User');
                 break;
             case "Others":
                 $rootScope.tempSelectedObject.EmailObj = [];
+                $rootScope.Alldatascope = false;
                 $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.otherUsersData);
                 $scope.SelectedMembersColumnStatus = $filter('Status')('Others');
                 break;
@@ -896,7 +927,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
     $scope.ReActivateGroup = function (id) {
         tempId = id;
         $('#ActivateWarningModal').modal();
-    }     
+    }
 
     $scope.pushEmail = function (data) {
         var msg = '';
@@ -912,33 +943,34 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         } else {
             $rootScope.tempObject.EmailObj = jQuery.grep($rootScope.tempObject.EmailObj, function (ele) { return ele.CDuserId != data.CDuserId });
             $rootScope.tempObject.EmailObj.push(data);
-            $scope.isPush = true;            
+            $scope.isPush = true;
             msg = "Selected";
             status = true;
         }
 
-        if ((data.hasOwnProperty("UserType"))) {           
+        $rootScope.selectedUsersGrid = true;
+
+        if ((data.hasOwnProperty("UserType"))) {
             if (data.UserType == "Provider") {
                 if ($rootScope.searchDataVal.filter(function (names) { return names.CDuserId == data.CDuserId })[0] != undefined) {
                     $rootScope.searchDataVal.filter(function (names) { return names.CDuserId == data.CDuserId })[0].isChecked = status;
-                }                
+                }
                 toaster.pop('Success', "", 'Provider' + " " + (data.FullName == null ? " " : data.FullName) + " " + msg);
             }
             else if (data.UserType == "User" || data.UserType == "OtherUser") {
                 if ($rootScope.UserDataResult.filter(function (names) { return names.CDuserId == data.CDuserId })[0] != undefined) {
                     $rootScope.UserDataResult.filter(function (names) { return names.CDuserId == data.CDuserId })[0].isChecked = status;
-                }                
+                }
                 toaster.pop('Success', "", 'User' + " " + (data.FullName == null ? " " : data.FullName) + " " + msg);
             }
         }
 
         $scope.SelectedMembersColumnStatus = $filter('Status')('All');
-        $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.tempObject.EmailObj);        
+        $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.tempObject.EmailObj);
         $scope.separateData($rootScope.tempSelectedObject.EmailObj);
     }
 
     $scope.removeSelected = function (data) {
-        //$rootScope.tempObject.EmailObj.splice($rootScope.tempObject.EmailObj.indexOf(data), 1);
         $rootScope.tempObject.EmailObj.splice($rootScope.tempObject.EmailObj.indexOf(jQuery.grep($rootScope.tempObject.EmailObj, function (ele) { return ele.CDuserId == data.CDuserId })[0]), 1);
         $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.tempObject.EmailObj);
         $scope.separateData($rootScope.tempSelectedObject.EmailObj);
@@ -969,13 +1001,19 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
                 }
                 $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.ProviderData);
                 toaster.pop('Success', "", 'Provider' + (data.FullName == null ? " " : data.FullName) + 'Removed');
+                if ($rootScope.Alldatascope== true) {
+                  $scope.viewSpecificData("All");
+                 }
             }
-            if (data.UserType == "OtherUser") {
+            else if (data.UserType == "OtherUser") {
                 if ($rootScope.UserDataResult.filter(function (names) { return names.CDuserId == data.CDuserId })[0] != undefined) {
                     $rootScope.UserDataResult.filter(function (names) { return names.CDuserId == data.CDuserId })[0].isChecked = false;
                 }
                 $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.otherUsersData);
-                toaster.pop('Success', "", 'Other Member' +" "+ (data.FullName == null ? " " : data.FullName) + 'Removed');
+                toaster.pop('Success', "", 'Other Member' + " " + (data.FullName == null ? " " : data.FullName) + 'Removed');
+                if ($rootScope.Alldatascope== true) {
+                   $scope.viewSpecificData("All");
+                }
             }
         } catch (e) {
 
@@ -1037,13 +1075,16 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
 
     }
 
+    $rootScope.selectedUsersGrid = false;
     $scope.AddOtherMember = function () {
+        
         var regx1 = /^[a-z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)?@[a-z][a-zA-Z-0-9]*\.[a-z]+(\.[a-z]+)?$/;
         var emailids = $('#otherEmailId').val().split(';');
         for (var i = 0; i < emailids.length; i++) {
             if (emailids[i] != "") {
                 if (regx1.test(emailids[i].toLowerCase()) == true) {
                     $scope.errMsgForotherEmail = false;
+                    $rootScope.selectedUsersGrid = true;
                 }
                 else { $scope.errMsgForotherEmail = true; }
             }
@@ -1054,7 +1095,8 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
             var obj = {
                 EmailIds: $scope.OtherEmail,
                 FullName: $scope.OtherPersonName,
-                CDuserId: 0
+                CDuserId: 0,
+                UserType:"OtherUser"
             };
             toaster.pop('Success', "", 'Other Member' + ($scope.OtherPersonName == null ? " " : $scope.OtherPersonName) + " " + "with email id" + " " + $scope.OtherEmail + " " + 'Added');
             $rootScope.tempObject.EmailObj.push(obj);
@@ -1062,6 +1104,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
             $rootScope.otherUsersData.push(obj);
             $scope.OtherEmail = "";
             $scope.OtherPersonName = "";
+            UserType = "";
         }
     }
 
@@ -1095,6 +1138,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         ctrl.callServer($scope.t);
     }
     $rootScope.CancelAddView = function () {
+        $rootScope.editgrid = false;
         $rootScope.visibility = 'groupMailList';
         $rootScope.tableView = true;
         $rootScope.isView = false;
@@ -1140,12 +1184,14 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         ctrl.callServer($scope.t);
     }
     $rootScope.EditGroup = function (GroupMail) {
+        $rootScope.editgrid = true;
         $rootScope.tempObject = angular.copy(GroupMail);
         $rootScope.tempObject.EmailObj = angular.copy(GroupMail.GroupMailUserDetails)
         $rootScope.tempSelectedObject.EmailObj = angular.copy($rootScope.tempObject.GroupMailUserDetails);
         $rootScope.tempEditGroupName = GroupMail.EmailGroupName;
         $rootScope.groupMailList = [];
         //$scope.new_search();
+        
         $rootScope.isView = false;
         $rootScope.tableView = false;
         $rootScope.isEdit = true;
@@ -1265,7 +1311,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         var This = $(this);
         var selected = $(this).val();
         $('#checkboxAll').prop('checked', false);
-        var scope = angular.element(document.getElementById('paginationId')).scope();        
+        var scope = angular.element(document.getElementById('paginationId')).scope();
         $scope.addNewMember = false;
         $rootScope.selectedProviderData = [];
         $rootScope.selectedIPAData = [];
@@ -1308,6 +1354,20 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
 
                 }
             }
+            if ($rootScope.selectedRelationshipData.length == 0 && $rootScope.selectedIPAData.length == 0 && $rootScope.selectedProviderData.length == 0) {
+                $rootScope.searchResult = [];
+                $scope.t = {
+                    sort: {},
+                    search: {},
+                    pagination: {
+                        start: 0
+                    }
+                };
+                $scope.t.pagination.numberOfPages = 0;
+                ctrl.displayed = angular.copy($rootScope.searchResult);
+                ctrl.callServer($scope.t);
+
+            }
             if ($rootScope.selectedRelationshipData.length != 0) {
                 $rootScope.groupMailList = angular.copy($rootScope.selectedRelationshipData);
                 $rootScope.searchResult = angular.copy($rootScope.selectedRelationshipData);
@@ -1321,7 +1381,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
                 $scope.t.pagination.numberOfPages = 0;
                 ctrl.displayed = [].concat($rootScope.selectedRelationshipData);
                 ctrl.callServer($scope.t);
-                
+
             }
             else if ($rootScope.selectedIPAData.length != 0) {
                 $rootScope.groupMailList = angular.copy($rootScope.selectedIPAData);

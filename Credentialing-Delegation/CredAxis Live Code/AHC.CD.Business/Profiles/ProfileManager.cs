@@ -1417,6 +1417,7 @@ namespace AHC.CD.Business
         {
             try
             {
+                medicaidInformation.StatusType = StatusType.Active;
                 if (profileRepository.Any(p => p.MedicaidInformations.Any(s => s.Status != AHC.CD.Entities.MasterData.Enums.StatusType.Inactive.ToString() && s.LicenseNumber.Equals(medicaidInformation.LicenseNumber))))
                 {
                     throw new DuplicateMedicaidNumberException(ExceptionMessage.MEDICAID_NUMBER_EXISTS_EXCEPTION);
@@ -3422,8 +3423,10 @@ namespace AHC.CD.Business
         {
             var userRepo = uow.GetGenericRepository<CDUser>();
             var user = userRepo.Find(u => u.AuthenicateUserId == UserAuthId);
-
-            return user.CDUserID;
+            if (user != null)
+                return user.CDUserID;
+            else
+                return 0;
         }
 
         public async Task SaveProfileTemp(Profile profile)
@@ -4014,7 +4017,7 @@ namespace AHC.CD.Business
                 var obj1 = JsonConvert.SerializeObject(otherDocuments.Documents);
                 List<OtherDocument> providerDocuments = JsonConvert.DeserializeObject<List<OtherDocument>>(obj1);
                 //List<OtherDocument> providerDocuments = otherDocuments.All().Cast<OtherDocument>().ToList();
-               
+
 
                 return new DocumentRepositoryViewModel
                 {
@@ -4038,7 +4041,7 @@ namespace AHC.CD.Business
                     ProfessionalWorkExperiences = profile.ProfessionalWorkExperiences.Where(w => (w.Status != StatusType.Inactive.ToString())).ToList(),
                     ContractInfoes = profile.ContractInfoes.Where(c => !c.ContractStatus.Equals(ContractStatus.Inactive.ToString())).ToList(),
                     //OtherDocuments = profile.OtherDocuments.Where(p => (p.Status != StatusType.Inactive.ToString())).Where(p => (p.IsPrivate == true && p.ModifiedBy == CDUserId.ToString()) || (p.IsPrivate == false)).ToList(),
-                    OtherDocuments = providerDocuments,
+                    OtherDocuments = providerDocuments.Where(p => (p.Status != StatusType.Inactive.ToString())).Where(p => (p.IsPrivate == true && p.ModifiedBy == CDUserId.ToString()) || (p.IsPrivate == false)).ToList(),
                     ProfileVerificationInfo = ProfileVerificatnInfo,
                     credentialLog = credInfo == null ? null : credInfo.CredentialingLogs
                 };
@@ -4652,7 +4655,7 @@ namespace AHC.CD.Business
             demographics.PersonalIdentification = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Personal Identification").ToList(), profile.PersonalIdentification, isProvider);
             demographics.BirthInformation = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Birth Information").ToList(), profile.BirthInformation, isProvider);
             demographics.VisaDetail = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Citizenship Information").ToList(), profile.VisaDetail, isProvider);
-            demographics.LanguageInfo = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Language Info").ToList(), profile.LanguageInfo, isProvider);
+            demographics.LanguageInfo = GetGenericMappedData(demographicsData.Where(x => x.SubSection == "Language Information").ToList(), profile.LanguageInfo, isProvider);
             demographics.ProfilePhotoPath = profile.ProfilePhotoPath;
             return demographics;
         }
@@ -4682,10 +4685,11 @@ namespace AHC.CD.Business
 
         private dynamic HospitalPrivilegesMapper(dynamic hospitalPrivilege, Profile profile, bool isProvider)
         {
+            Profile TempProfile = AutoMapper.Mapper.Map<Profile, Profile>(profile);
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
-            var hospitalPrivileges = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Hospital Privilege").ToList();            
+            var hospitalPrivileges = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Hospital Privilege").ToList();
             hospitalPrivilege.HospitalPrivilegeInformation = GetGenericMappedData(hospitalPrivileges.Where(x => x.SubSection == "Hospital Privilege Information").ToList(), profile.HospitalPrivilegeInformation, isProvider);
-            hospitalPrivilege.HospitalPrivilegeInformation.HospitalPrivilegeDetails = GetGenericListMappedData(hospitalPrivileges.Where(x => x.SubSection == "Hospital Privilege Detail").ToList(), profile.HospitalPrivilegeInformation.HospitalPrivilegeDetails.ToList(), isProvider);
+            hospitalPrivilege.HospitalPrivilegeInformation.HospitalPrivilegeDetails = GetGenericListMappedData(hospitalPrivileges.Where(x => x.SubSection == "Hospital Privilege Detail").ToList(), TempProfile.HospitalPrivilegeInformation.HospitalPrivilegeDetails.ToList(), isProvider);
             return hospitalPrivilege;
         }
 
@@ -4693,7 +4697,7 @@ namespace AHC.CD.Business
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var professionalLiabilities = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Professional Liability").ToList();
-            professionalLiability.ProfessionalLiabilityInfoes = GetGenericListMappedData(professionalLiabilities.Where(x => x.SubSection == "Professional Liability Info").ToList(), profile.ProfessionalLiabilityInfoes.Where(l => (l.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            professionalLiability.ProfessionalLiabilityInfoes = GetGenericListMappedData(professionalLiabilities.Where(x => x.SubSection == "Professional Liability Information").ToList(), profile.ProfessionalLiabilityInfoes.Where(l => (l.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             return professionalLiability;
         }
 
@@ -4741,7 +4745,7 @@ namespace AHC.CD.Business
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var disclosureQuestions = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Disclosure Question").ToList();
-            disclosureQuestion.ProfileDisclosure = GetGenericMappedData(disclosureQuestions.Where(x => x.SubSection == "Profile Disclosure").ToList(), profile.ProfileDisclosure, isProvider);
+            disclosureQuestion.ProfileDisclosure = GetGenericMappedDataforDisclosureQuestion(disclosureQuestions.Where(x => x.SubSection == "Profile Disclosure").ToList(), profile.ProfileDisclosure, isProvider);
             return disclosureQuestion;
         }
 
@@ -4764,7 +4768,7 @@ namespace AHC.CD.Business
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var practiceLocationDetails = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Practice Location").ToList();
-           
+
             var profilePracticeLocationDetails = profile.PracticeLocationDetails.Where(c => !c.Status.Equals(StatusType.Inactive.ToString())).ToList();
 
             practiceLocations = GetGenericListMappedData(practiceLocationDetails.Where(x => x.SubSection == "Other Information").ToList(), profilePracticeLocationDetails, isProvider);
@@ -4834,6 +4838,34 @@ namespace AHC.CD.Business
 
             return Temporary;
         }
+
+        private dynamic GetGenericMappedDataforDisclosureQuestion<T>(List<ProfileUpdatesTracker> profileUpdatesTracker, T GenericObject, bool isProvider) where T : class
+        {
+            dynamic data = new ExpandoObject();
+            if (GenericObject == null)
+            {
+                return null;
+            }
+            if (isProvider)
+            {
+                int PrimaryKeyValue = uow.GetGenericRepository<T>().GetPrimaryKeyValue<T>(GenericObject);
+                bool TableState = profileUpdatesTracker.Any(x => x.RespectiveObjectId == PrimaryKeyValue) ? true : false;
+                if (TableState)
+                {
+                    T tempObj = JsonConvert.DeserializeObject<T>(profileUpdatesTracker.FirstOrDefault(x => x.RespectiveObjectId == PrimaryKeyValue).NewConvertedData);
+                    GenericObject = AutoMapper.Mapper.Map<T, T>(GenericObject, tempObj);
+                    var ListOfNavigationProperties = uow.GetGenericRepository<T>().GetNavigationProperties(GenericObject);
+                    NavigationPropertyMapper(ref GenericObject, ListOfNavigationProperties);
+                }
+                data = Merge<T>(GenericObject, TableState);
+            }
+            else
+            {
+                data = Merge<T>(GenericObject, false);
+            }
+            return data;
+        }
+
         private dynamic GetGenericMappedData<T>(List<ProfileUpdatesTracker> profileUpdatesTracker, T GenericObject, bool isProvider) where T : class
         {
             dynamic data = new ExpandoObject();
@@ -4847,7 +4879,7 @@ namespace AHC.CD.Business
                 bool TableState = profileUpdatesTracker.Any(x => x.RespectiveObjectId == PrimaryKeyValue) ? true : false;
                 if (TableState)
                 {
-                    T tempObj = JsonConvert.DeserializeObject<T>(profileUpdatesTracker.FirstOrDefault(x => x.RespectiveObjectId == PrimaryKeyValue).NewData);
+                    T tempObj = JsonConvert.DeserializeObject<T>(profileUpdatesTracker.FirstOrDefault(x => x.RespectiveObjectId == PrimaryKeyValue).NewConvertedData);
                     GenericObject = AutoMapper.Mapper.Map<T, T>(tempObj, GenericObject);
                     var ListOfNavigationProperties = uow.GetGenericRepository<T>().GetNavigationProperties(GenericObject);
                     NavigationPropertyMapper(ref GenericObject, ListOfNavigationProperties);
@@ -4891,7 +4923,28 @@ namespace AHC.CD.Business
 
         #endregion
 
+        /// <summary>
+        /// Author :  Manideep Innamuri
+        /// Date : 17th May 2017
+        /// Description : Method to get the particular Facility Details
+        /// </summary>
+        /// <param name="FacilityID"></param>
+        /// <returns></returns>
+        public AHC.CD.Entities.MasterData.Account.Branch.Facility GetFacilityDetail(int? FacilityID)
+        {
+            AHC.CD.Entities.MasterData.Account.Branch.Facility facility = new Entities.MasterData.Account.Branch.Facility();
+            try
+            {
+                var facilitygenericrepo = uow.GetGenericRepository<AHC.CD.Entities.MasterData.Account.Branch.Facility>();
+                facility = facilitygenericrepo.Find(p => p.FacilityID == FacilityID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return facility;
 
+        }
 
 
 

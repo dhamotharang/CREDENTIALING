@@ -1317,7 +1317,7 @@ profileApp.controller('profileAppCtrl', ['$scope', '$rootScope', '$http', 'maste
             })
               .error(function () {
                   $scope.progressbar = false;
-                  $scope.error_message = "An Error occured !! Please Try Again !!";
+                  $scope.error_message = "An Error occurred !! Please Try Again !!";
                   $scope.loading = false;
               })
         }
@@ -1456,7 +1456,7 @@ profileApp.controller('profileAppCtrl', ['$scope', '$rootScope', '$http', 'maste
     //        }
     //    }
     //}
-    
+    $scope.sucessmsg = true;
     $scope.InitiateCredentialing = function () {
 
         var url = null;
@@ -1496,8 +1496,12 @@ profileApp.controller('profileAppCtrl', ['$scope', '$rootScope', '$http', 'maste
                 try {
                     //----------- "success" message -----------
                     if (data.status == "true") {
+                        $scope.sucessmsg = false;
+                        $scope.review5 = false;
+                        $scope.review1 = true;
                         if ($scope.roleCCO) {
                             messageAlertEngine.callAlertMessage('successfulInitiated', "Credentialing Initiated successfully. !!!!", "success", true);
+                            
                         }
                         else {
                             messageAlertEngine.callAlertMessage('successfulInitiatedProvider', "Credentialing Request sent successfully. !!!!", "success", true);

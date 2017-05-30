@@ -471,7 +471,10 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         }
     }
 
+    $rootScope.selectedUsersGrid = false;
+
     $scope.pushEmail = function (data) {
+        $rootScope.selectedUsersGrid = true;
         if ($rootScope.tempObject.EmailObj.indexOf(data) > -1) {
             $rootScope.tempObject.EmailObj.splice($rootScope.tempObject.EmailObj.indexOf(data), 1);
         } else {
@@ -632,7 +635,7 @@ EmailServiceApp.controller("GroupEmailController", function ($rootScope, $timeou
         style: 'border:none',
         multiple: true,
         tickIcon: '',
-        size: false
+        size: false,
     });
 
     //$(function () {

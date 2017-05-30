@@ -37,5 +37,7 @@ namespace AHC.CD.Business.Profiles
 
         Task<T> GetProfileDataByID<T>(T t, int ID) where T : class;
         Task<string> GetUserName(int trackerID);
+
+         void dropAllHospitalPrivilegeDetails(int HospitalPrivilegeInformationID);
     }
 }

@@ -390,6 +390,29 @@ namespace AHC.CD.Data.ADO.CoreRepository
             }
         }
 
+        public T ExecuteQuesryForASPNETUserWithParams<T>(Dapper.DynamicParameters DP, string Query)
+        {
+            using (IDbConnection connection = OpenConnectionForASPNETUsers())
+            {
+                try
+                {
+                    var result = connection.Query<T>(Query, DP);
+                    return result.FirstOrDefault();
+                }
+
+                catch (ArgumentNullException ex)
+                {
+                    throw ex;
+                }
+
+
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+        }
 
         public T QueryMultiple<T>(string Query, DynamicParameters dp, Func<SqlMapper.GridReader, T> ObjectMapping)
         {

@@ -1779,8 +1779,8 @@ profileApp.controller('practiceLocationController', ['$scope', '$rootScope', '$h
                 processData: false,
                 success: function (data) {
                     if (data.status == "true") {
-                        if (PracticeLocationDetail.OpenPracticeStatus!=null)
-                        if (UserRole == "PRO" && PracticeLocationDetail.OpenPracticeStatus.OpenPracticeStatusID!=0) {
+                        //if (PracticeLocationDetail.OpenPracticeStatus!=null)
+                        if (UserRole == "PRO" && data.ActionType=="Update") {
                             data.openPracticeStatus.TableState = true;
                         }
 

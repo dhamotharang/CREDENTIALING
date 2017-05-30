@@ -23,7 +23,7 @@ namespace AHC.CD.WebUI.MVC.Areas.MasterData.Controllers
         {
             return View();
         }
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetGroups(int organizationId = 1)
         {
             return Json(await OrganizationManager.GetGroupsAsync(organizationId), JsonRequestBehavior.AllowGet);

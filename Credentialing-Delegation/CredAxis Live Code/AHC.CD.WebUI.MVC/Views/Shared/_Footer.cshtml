@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     Layout = null;
 }
 
@@ -11,6 +12,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->*@
+
 <div class="footer">
     <hr />
     <div class="col-lg-7">
@@ -23,6 +25,7 @@
         </ul>        
     </div>   
     <input type="hidden" value="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]" id="appRoot">
+    <input type="hidden" value="" id="cdUserID">
 </div>
 
 
@@ -50,21 +53,28 @@
 <script>
 
     $(function () {
+
+        Notify();
         // Declare a proxy to reference the hub.
         var cnd = $.connection.cnDHub;
 
         cnd.client.logoutCall = function (loggedInUserName) {
           
             if ($('#loggedInUserName').text() == loggedInUserName) {
-                //$('#logoutBtn').trigger('click');
-                var logOff = $('#appRoot').val();
-                $('#logoutForm').attr('action', logOff + '/Account/LogOff');
+                ////$('#logoutBtn').trigger('click');
+                //var logOff = $('#appRoot').val();
+                //$('#logoutForm').attr('action', logOff + '/Account/LogOff');
                 document.getElementById('logoutForm').submit();
             };
         };
 
         cnd.client.Notification = function () {
-            Notify();
+            notify();
+        }
+
+        cnd.client.NotifyCDUserID = function (userIDs) {
+            sessionStorage.setItem('CDUserID', userIDs.CDUserID);
+            sessionStorage.setItem('UserAuthID', userIDs.UserAuthID);
         }
 
         cnd.client.NotifyCount = function (data) {
@@ -87,10 +97,41 @@
 
         };
 
+        cnd.client.NotifyClientTasksExpiriesCount = function (data) {
+            if (sessionStorage.getItem('UserAuthID') == $("#userAuthID").val()) {
+                var taskExpiredCounts = [];
+                var taskToBeExpiredCounts = [];
+                for (var i = 0; i < data.TasksExpiredCount.length; i++) {
+                    if (data.TasksExpiredCount[i].AssignedToId.toString() === sessionStorage.getItem('CDUserID'))
+                        taskExpiredCounts.push(data.TasksExpiredCount[i]);
+                }
+
+                for (var i = 0; i < data.TasksToBeExpiredCount.length; i++) {
+                    if (data.TasksToBeExpiredCount[i].AssignedToId.toString() === sessionStorage.getItem('CDUserID'))
+                        taskToBeExpiredCounts.push(data.TasksToBeExpiredCount[i]);
+                }
+
+                $("#expired_Task").promise().then(function () {
+                    $("#expired_Task").empty();
+                    $("#expired_Task").append(taskExpiredCounts.length);
+                })
+
+                $("#expiring_Task").promise().then(function () {
+                    $("#expiring_Task").empty();
+                    $("#expiring_Task").append(taskToBeExpiredCounts.length);
+                })
+            }
+        };
+
+
+        
+
         // Start the connection.
         $.connection.hub.start().done(function () {
+            //Notify();
+            cnd.server.storeCDUserIDIntoSession($("#userAuthID").val());
             cnd.server.notifyPendingRequestCount();
-            Notify();
+            cnd.server.notifyTasksExpiriesCount();
             $('#logoutBtn').click(function () {
                 cnd.server.logout($('#loggedInUserName').text());
                

@@ -337,6 +337,10 @@ profileApp.controller("ContractGridController", function ($scope, $rootScope, $q
     $scope.isEdit = false;
     $scope.isView = false;
     $scope.EditContractGrid = function (ContractGridID, PlanName, LOBName) {
+        $scope.tempObject.Report.WelcomeLetterPath = "";
+        $scope.TempPlanName = "";
+        $scope.TempLOBName = "";
+
         $scope.tableView = false;
         $scope.AjaxLoading = true;
         $scope.printData = false;
@@ -444,6 +448,10 @@ profileApp.controller("ContractGridController", function ($scope, $rootScope, $q
                             $rootScope.randomsItems[IdIndex].InitiatedDate = $scope.ConvertDateFormat(data.dataContractGrid.Report.InitiatedDate);
                             $rootScope.randomsItems[IdIndex].EffectiveDate = $scope.ConvertDateFormat(data.dataContractGrid.Report.InitiatedDate);
                             $rootScope.randomsItems[IdIndex].TerminationDate = $scope.ConvertDateFormat(data.dataContractGrid.Report.TerminationDate);
+                            $rootScope.randomsItems[IdIndex].WelcomeLetterPath = data.dataContractGrid.Report.WelcomeLetterPath;
+                            $scope.tempObject.Report.WelcomeLetterPath = data.dataContractGrid.Report.WelcomeLetterPath;
+                            $scope.TempPlanName = data.dataContractGrid.CredentialingInfo.Plan.PlanName;
+                            $scope.TempLOBName = data.dataContractGrid.LOB.LOBName;
                             $scope.AjaxLoading = false;
                             messageAlertEngine.callAlertMessage("successfullySaved", "Contract successfully saved.", "success", true);
                             $scope.isEdit = false;

@@ -1,28 +1,25 @@
-﻿<table class="table table-striped">
-    <thead>
-        <tr>
-            <th class="col-lg-1"></th>
-            <th class="col-lg-9">Document</th>
+﻿<div class="col-lg-12" ng-init="GetDocumentsDetails()" ng-if="tempObject.Docs!=undefined">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="col-lg-1"></th>
+                <th class="col-lg-9">Document</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="l in tempObject.Docs track by $index" ng-init="CountDoc()">
+                <td><a ng-show="$index != countDocument - 1 && $index < countDoc - 1" ng-if="l.Status" class="btn btn-xs btn-info"><i class="fa fa-sort-down" ng-click="moveDocumentDown($index)"></i></a> <a ng-show="$index != 0" ng-if="l.Status" class="btn btn-xs btn-info"><i class="fa fa-sort-up" ng-click="moveDocumentUp($index)"></i></a></td>
+                <td>{{l.LicenseName}}</td>
+                <td>
+                    <a class="btn btn-xs btn-primary" data-toggle="modal" href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{l.LicenseDocPath}}" target="_blank"><i class="fa fa-eye"></i></a>
+                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Document/View?path=@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]{{l.LicenseDocPath}}" class="btn btn-xs btn-primary" data-toggle="modal" download="{{l.LicenseName}}"><i class="fa fa-download"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr @*ng-repeat="l in spaDoc track by $index" ng-init="CountDoc()"*@ class="ng-scope">
-            <td></td>
-            <td class="ng-binding">Birth Certificate</td>
-            <td>
-                <a class="btn btn-xs btn-primary" data-toggle="modal" href="/Document/View?path=\Documents\BirthCertificate\xluB7Yu6-cmeucert_20170131_100217.pdf" target="_blank"><i class="fa fa-eye"></i></a>
-                <a href="/Document/View?path=\Documents\BirthCertificate\xluB7Yu6-cmeucert_20170131_100217.pdf" class="btn btn-xs btn-primary" data-toggle="modal" download="Birth Certificate"><i class="fa fa-download"></i></a>
-            </td>
-        </tr>
-        <tr @*ng-repeat="l in spaDoc track by $index" ng-init="CountDoc()"*@ class="ng-scope">
-            <td></td>
-            <td class="ng-binding">CV</td>
-            <td>
-                <a class="btn btn-xs btn-primary" data-toggle="modal" href="/Document/View?path=\Documents\CV\uiffgfQ8-eStatement.pdf" target="_blank"><i class="fa fa-eye"></i></a>
-                <a href="/Document/View?path=\Documents\CV\uiffgfQ8-eStatement.pdf" class="btn btn-xs btn-primary" data-toggle="modal" download="CV"><i class="fa fa-download"></i></a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+</div>
+<div ng-if="tempObject.Docs == undefined">
+    <div style="text-align:center;font-weight:bold;padding-top:10px"> <img src="~/Content/Images/loading.gif" width="22px" /><h4> Loading...</h4></div>
+</div>

@@ -4,6 +4,40 @@
                 Loading Sent Mails...Please wait...
             </div>
         </div>*@
+    <style>
+        .comma:not(:first-child) {
+            margin-left: -.3em;
+        }
+
+        /* next 2 rules are for spacing when the first .comma is empty too */
+        .comma:first-child:empty ~ .comma:not(:empty) {
+            margin-left: 0;
+        }
+
+            .comma:first-child:empty ~ .comma:not(:empty) ~ .comma:not(:empty) {
+                margin-left: -.3em;
+            }
+
+        .comma:empty {
+            display: none;
+        }
+
+        .comma:not(:first-child):before {
+            content: ", ";
+        }
+
+        .comma:not(:first-child):before {
+            content: ", ";
+        }
+
+        .comma:empty + .comma:not(:empty):before {
+            content: "";
+        }
+
+        .comma:not(:empty) ~ .comma:empty + .comma:not(:empty):before {
+            content: ", ";
+        }
+    </style>
     <div ng-show="messageTabName = 'Sent'">
         <div ng-class="{'false':'col-lg-5','true':'col-lg-12'}[list]" style="padding-left:10px; padding-right:0px;">
             <div class="panel-default form-style">
@@ -66,36 +100,51 @@
                 <br />
                 <fieldset>
                     <div class="legend2 pull-right">
-                        <button class="btn btn-xs btn-default" ng-click="closeList()" tooltip data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-times"></i></button>
+                        <button class="btn btn-xs btn-default" ng-click="closeList()"  data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-times"></i></button>
                     </div>
                     <br />
-                    <div class="col-lg-3 text-right">
-
-                        <div><p class="muted" style="margin-bottom:15px;">From:</p></div>
-                        <div><p class="muted" style="margin-bottom:15px;">To:</p></div>
-                        <div><p class="muted" style="margin-bottom:15px;">Date:</p></div>
-                        <div><p class="muted" style="margin-bottom:15px;">Subject:</p></div>
-                        <div ng-if="Details.EmailAttachments.length > 0"><p class="muted" style="margin-bottom:15px;">Attachment(s):</p><br /></div>
-
-                        <div><p class="muted" style="margin-bottom:15px;">CC:</p></div>
-                        @*<div><p class="muted" style="margin-bottom:15px;">BCC:</p></div>*@
+                    <div class="col-sm-12">
+                        <div class="col-sm-3" style="padding:0px;">From:</div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <span>{{Details.From}}</span>
+                        </div>
                     </div>
-
-                    <div class="text-left col-lg-7">
-                        <div><p><label>{{Details.From}}</label></p></div>
-                        <div><p><label ng-repeat="recipient in Details.EmailRecipients track by $index" ng-if="recipient.RecipientType == 'To'">{{recipient.Recipient}} </label></p></div>
-                        <div><p><label>{{Details.LastModifiedDate | date:'medium'}}</label></p></div>
-                        <div><p><label>{{Details.Subject}}</label></p></div>
-                        <div ng-if="Details.EmailAttachments.length > 0"><span ng-repeat="att in Details.EmailAttachments track by $index">&nbsp;<a target="_blank" href="/Document/View?path={{att.AttachmentRelativePath}}" title="{{att.AttachmentRelativePath}}"><i class="fa fa-file" title=""></i></a></span></div>
-                        <div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'CC'">{{recipient.Recipient || 'Not Available'}} </label></p></div>
-                        @*<div><p><label ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'BCC'">{{recipient.Recipient}} </label></p></div>*@
+                    <div class="col-sm-12">
+                        <div class="col-sm-3" style="padding:0px;">To:</div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <span class="comma" ng-repeat=" recipient in Details.EmailRecipients track by $index" ng-if="recipient.RecipientType == 'To'">{{recipient.Recipient}} </span>
+                        </div>
                     </div>
-                    <hr />
-                    <div class="col-lg-12">
-                        <p class="muted col-lg-3 text-right" style="margin-bottom:15px;">Body:</p>
-                        <p style="padding-left: 0px; overflow: auto;overflow-wrap:break-word;" class="col-lg-9 text-left bodyForMail" ng-bind-html="renderHtml(Details.Body)"></p>
+                    <div class="col-sm-12">
+                        <div class="col-sm-3" style="padding:0px;">Cc:</div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <span class="comma" ng-repeat="recipient in Details.EmailRecipients" ng-if="recipient.RecipientType == 'CC'">{{recipient.Recipient || 'Not Available'}} </span>
+                        </div>
                     </div>
-
+                    <div class="col-sm-12">
+                        <div class="col-sm-3" style="padding:0px;">Date:</div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <span>{{Details.LastModifiedDate | date:'medium'}}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-3" style="padding:0px;">Subject:</div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <span>{{Details.Subject}}</span>
+                        </div>
+                    </div>
+                    <div ng-if="Details.EmailAttachments.length > 0" class="col-sm-12">
+                        <div class="col-sm-3" style="padding:0px;">Attachment(s):</div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <span ng-repeat="att in Details.EmailAttachments track by $index">&nbsp;<a target="_blank" href="/Document/View?path={{att.AttachmentRelativePath}}" title="{{att.AttachmentRelativePath}}"><i class="fa fa-file" title=""></i></a></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-3" style="padding:0px;">Body:</div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <p style="padding-left: 0px; overflow: auto;overflow-wrap:break-word;" class="col-lg-9 text-left bodyForMail" ng-bind-html="renderHtml(Details.Body)"></p>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </div>

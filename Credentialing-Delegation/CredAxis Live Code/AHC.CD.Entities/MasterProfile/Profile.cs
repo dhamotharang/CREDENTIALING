@@ -196,6 +196,11 @@ namespace AHC.CD.Entities.MasterProfile
 
         #endregion
 
+        public string CreatedBy { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime? CreatedOnDate { get; set; }
+
         [Column(TypeName = "datetime2")]
         public DateTime LastModifiedDate { get; set; }
 

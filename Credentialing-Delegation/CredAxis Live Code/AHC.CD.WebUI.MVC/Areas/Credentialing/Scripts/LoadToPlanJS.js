@@ -892,7 +892,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
 
 
-
+    $rootScope.selectallbtn = true;
     $scope.ShowVisibility = '';
     $scope.LoadedData = [];
     if ($scope.credentialingInfo != null && $scope.credentialingInfo.CredentialingContractRequests != null) {
@@ -996,7 +996,14 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
             }
 
+            if($scope.LoadedData[i].DocumentPath!=null)
+            {
+                $rootScope.selectallbtn = false;
+            }
+
         }
+
+        
 
     }
 
@@ -1624,19 +1631,36 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
                         $scope.ContractSpecialityList = [];
                         $scope.ContractLocationsList = [];
                         $scope.loadID = data.dataCredentialingContractRequest.ContractGrid[0].CredentialingInfo.InitiatedByID;
-                       for (var j = 0; j < $scope.users.length; j++) {
-                            if ($scope.users[j].CDUserID == $scope.loadID) {
-                               if ($scope.users[j].FullName != null) {
-                                   $rootScope.updatedByForLoading = $scope.users[j].FullName;
-                               }
-                               else {
-                                $rootScope.updatedByForLoading = $scope.users[j].Email;
-                               }
+                       //for (var j = 0; j < $scope.users.length; j++) {
+                       //     if ($scope.users[j].CDUserID == $scope.loadID) {
+                       //        if ($scope.users[j].FullName != null) {
+                       //            $rootScope.updatedByForLoading = $scope.users[j].FullName;
+                       //        }
+                       //        else {
+                       //         $rootScope.updatedByForLoading = $scope.users[j].Email;
+                       //        }
 
 
+                       //     }
+                        // }
+                        $scope.updatetimeanduserid = true;
+                        for (t = 0; t < $rootScope.timelineActivity.length ; t++)
+                        {
+                            if ($rootScope.timelineActivity[t].Activity.includes("Load to Plan done"))
+                            {
+                                $rootScope.updatedByForLoading = $rootScope.timelineActivity[t].ActivityByName;
+                                $scope.updatetimeanduserid = false;
+                                break;
                             }
+                            //if(data == $rootScope.timelineActivity.length )
+                            //{
+                            //    break;
+                            //}
                         }
-                        $rootScope.updatedDateForLoading = $rootScope.changeDateTime(data.dataCredentialingContractRequest.ContractGrid[0].LastModifiedDate);
+                        if ($scope.updatetimeanduserid) {
+                            $rootScope.updatedByForLoading = data.currentuser;
+                            $rootScope.updatedDateForLoading = $rootScope.changeDateTime(data.dataCredentialingContractRequest.ContractGrid[0].LastModifiedDate);
+                        }
                         try {
                             var tempactivity = {
                                 Activity: $rootScope.tempActivity,
@@ -1865,6 +1889,10 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
                 for (var i = 0; i < $scope.LoadedData.length; i++) {
                     if ($scope.LoadedData[i].CredentialingContractRequestID == ccrID) {
                         $scope.LoadedData[i].DocumentPath = data;
+                        if ($scope.LoadedData[i].DocumentPath != null && $scope.LoadedData[i].DocumentPath != "")
+                        {
+                            $rootScope.selectallbtn = false;
+                        }
                     }
 
                 }
@@ -2016,8 +2044,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
 
     //----------------------------------
-    $scope.SelectDocument = function (credprofile) {
-
+    $scope.SelectDocument = function (credprofile) {        
         for (var m = 0; m < $scope.LoadedData.length; m++) {
             $scope.errorTemplate[m] = false;
         }
@@ -2221,7 +2248,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     };
 
 
-    $scope.AvailableTemplates = [{ path: "/Content/Document/Provider Profile for Wellcare.pdf", show: false }, { path: "/Content/Document//Provider Profile for Wellcare - BLANK.pdf", show: false }]
+    $scope.AvailableTemplates = [{ path: "/Content/Document/A2HC Provider Profile for Wellcare.pdf", show: false }, { path: "/Content/Document/AHC Provider Profile for Wellcare - BLANK.pdf", show: false }]
 
     //==================select template==============
     $scope.selectedTemplate = null;

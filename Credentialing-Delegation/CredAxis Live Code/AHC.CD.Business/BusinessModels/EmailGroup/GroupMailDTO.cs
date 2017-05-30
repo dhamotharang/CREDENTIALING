@@ -21,5 +21,6 @@ namespace AHC.CD.Business.BusinessModels.EmailGroup
         public string Status { get; set; }
         public int CurrentCDuserId { get; set; }
         public List<SearchUserforGroupMailDTO> GroupMailUserDetails { get; set; }
+        public DateTime? CreatedOn { get; set; }
     }
 }

@@ -585,7 +585,7 @@ initCredApp.controller('singleProviderCtrl', ['$scope', '$http', '$timeout', '$f
             } catch (e) {
 
             }
-        }).error(function () { $scope.loadingAjax = false; $scope.error_message = "An Error occured !! Please Try Again !!"; })
+        }).error(function () { $scope.loadingAjax = false; $scope.error_message = "An Error occurred !! Please Try Again !!"; })
     }
 
 
@@ -1034,8 +1034,7 @@ initCredApp.controller('singleProviderCtrl', ['$scope', '$http', '$timeout', '$f
                     gtcharCheck = false;
                 }
             }
-
-            var $form = ($("#" + Form_Id)[0]);
+            var $form = ($("#" + Form_Id)[0]);           
             $.ajax({
                 url: rootDir + '/Credentialing/Auditing/SendPackageGeneratorEmail?doclist=' + $scope.docList1,
                 type: 'POST',
@@ -1046,11 +1045,12 @@ initCredApp.controller('singleProviderCtrl', ['$scope', '$http', '$timeout', '$f
                 processData: false,
                 success: function (data) {
                     try {
-                        if (data.status == "true") {
+                        if (data.status == "true") {                            
                             $('#composeMail').modal('toggle');
                             $scope.compose = false;
                             $scope.tempObject.IntervalFactor = null;
                             $scope.ClearModalData();
+                            $scope.CancelSelectedDoc();
                             messageAlertEngine.callAlertMessage('LoadedSuccess', "Email scheduled for sending.", "success", true);
                         }
                         else if (data.status == "File Size Exceeded") {
@@ -1075,6 +1075,17 @@ initCredApp.controller('singleProviderCtrl', ['$scope', '$http', '$timeout', '$f
         else {
             $("#newEmailForm .field-validation-error").show();
         }
+    }
+
+    $scope.CancelSelectedDoc = function () {
+
+        for (var i = 0; i < $scope.spaDoc.length; i++) {
+            $scope.spaDoc[i].Status = false;
+        }
+        $scope.isSelectAll = false;
+        $scope.countDoc = 0;
+        $scope.selectedDocument = [];
+        $('#selectAllId').attr('checked', false);
     }
 
     $scope.ClearModalData = function () {
@@ -1985,7 +1996,12 @@ initCredApp.controller('singleProviderCtrl', ['$scope', '$http', '$timeout', '$f
         var flag = 0;
         for (var i = 0; i < $scope.selectedDocument.length; i++)
         {
-            if ($scope.selectedDocument[i].LicenseID == Doc.LicenseID) {
+            //if ($scope.selectedDocument[i].LicenseID == Doc.LicenseID) {
+            //    flag = 1;
+            //    $scope.selectedDocument.splice(i, 1);
+            //    break;
+            //}
+            if (Doc.Status == false) {
                 flag = 1;
                 $scope.selectedDocument.splice(i, 1);
                 break;
@@ -3114,7 +3130,7 @@ initCredApp.controller('singleProviderCtrl', ['$scope', '$http', '$timeout', '$f
                 }).error(function () {
                     $scope.docList = [];
                     $('#Provider').show();
-                    messageAlertEngine.callAlertMessage('pkgGeneratedError', "An Error occured !! Please Try Again !!", "success", true);
+                    messageAlertEngine.callAlertMessage('pkgGeneratedError', "An Error occurred !! Please Try Again !!", "success", true);
                     $('#selectAllId').prop('checked', false);
                     $scope.isSelectAll = false;
                     //for (var i = 0; i < $scope.spaDoc.length; i++) {

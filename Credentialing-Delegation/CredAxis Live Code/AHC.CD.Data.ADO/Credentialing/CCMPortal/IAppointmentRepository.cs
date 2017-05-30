@@ -10,5 +10,9 @@ namespace AHC.CD.Data.ADO.Credentialing.CCMPortal
    public interface IAppointmentRepository
     {
         Task<List<CCMAppiontment>> GetCCMAppointmentsInfo(string ApprovalStatus);
+
+        Task<CCMActionDTO> GetCCMActionData(int CredInfoID);
+
+        Task<dynamic> SaveCCMQuickActionResultsAsync(CCMQuickActionDTO CCMActionResult);
     }
 }

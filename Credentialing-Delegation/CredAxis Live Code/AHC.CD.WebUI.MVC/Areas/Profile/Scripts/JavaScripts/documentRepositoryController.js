@@ -1352,8 +1352,12 @@ profileApp.controller('DocumentRepositoryController', ['$scope', '$rootScope', '
 
                     $scope.LicenseTypes[19].Licenses[j].Private = obj.IsPrivate;
 
-                    $scope.LicenseTypes[19].Licenses[j].TableState = true;
-
+                    if ($scope.LicenseTypes[19].Licenses[j].Private) {
+                        $scope.DocumentRepositoryPendingRequest = false;
+                        $scope.LicenseTypes[19].Licenses[j].TableState = false;
+                    }
+                    else
+                        $scope.LicenseTypes[19].Licenses[j].TableState = true;
                 }
 
             }
@@ -1374,6 +1378,7 @@ profileApp.controller('DocumentRepositoryController', ['$scope', '$rootScope', '
                     url: rootDir + '/Profile/DocumentRepository/RemoveOtherDocument?profileId=' + profileId + "&OtherDocumentID=" + $scope.ID,
                     type: 'POST',
                     data: new FormData($form[0]),
+                    async: false,
                     cache: false,
                     contentType: false,
                     processData: false,
