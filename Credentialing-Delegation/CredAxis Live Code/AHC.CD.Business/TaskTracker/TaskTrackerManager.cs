@@ -320,7 +320,7 @@ namespace AHC.CD.Business.TaskTracker
             try
             {
                 int trackerID = GetUserId(authid);
-                taskRepo.ReactiveTask(trackerId, trackerID);
+                taskRepo.ReactiveTask(trackerId, trackerID, ActionPerformedBy);
                 Entities.TaskTracker.TaskTracker task = uow.GetGenericRepository<Entities.TaskTracker.TaskTracker>().Find(t => t.TaskTrackerId == trackerId);
                 if (task.AssignedById != task.AssignedToId)
                 {
@@ -397,7 +397,7 @@ namespace AHC.CD.Business.TaskTracker
         {
             try
             {
-                var userID = GetUserId(userAuthID); 
+                var userID = GetUserId(userAuthID);
                 foreach (var reminder in reminders)
                 {
                     reminder.ScheduledByID = userID;
@@ -484,6 +484,68 @@ namespace AHC.CD.Business.TaskTracker
 
 
 
-        
+
+
+
+        public async Task<List<TaskReminder>> GetReminders(string userAuthID)
+        {
+            try
+            {
+                var userID = GetUserId(userAuthID);
+
+                return await taskRepo.GetReminders(userID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public async Task<bool> DismissReminder(int taskID, string userAuthID)
+        {
+            try
+            {
+                var userID = GetUserId(userAuthID);
+                bool status = await taskRepo.DismissReminder(taskID, userID);
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, string userAuthID)
+        {
+            try
+            {
+                var userID = GetUserId(userAuthID);
+                bool status = await taskRepo.RescheduleReminder(taskID, scheduledDateTime,userID);
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<bool> DismissAllReminder(int[] taskIDs, string userAuthID)
+        {
+            try
+            {
+                var userID = GetUserId(userAuthID);
+                bool status = await taskRepo.DismissAllReminder(taskIDs,  userID);
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

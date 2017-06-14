@@ -38,10 +38,10 @@ $(function () {
 $(document).ready(function () {
     var url = document.location.toString();
     if (url.match('#')) {
-        var tabhighlight = url.split('#')[1];
+        var tabhighlight = url.split('#/')[1];
         $('a[href=#' + tabhighlight + ']').trigger("click");
         setTimeout(function () {
-            var sectionhighlight = url.split('#')[2];
+            var sectionhighlight = url.split('#/')[2];
             if (sectionhighlight) {
                 $('html, body').animate({
                     scrollTop: $('#' + sectionhighlight).offset().top

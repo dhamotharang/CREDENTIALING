@@ -1,4 +1,4 @@
-var profileApp = angular.module('profileApp', ['smart-table', 'ui.bootstrap', 'timepickerPop', 'mgcrea.ngStrap', "wysiwyg.module", 'colorpicker.module', 'ahc.cd.autosearch', 'angular-svg-round-progress']);
+var profileApp = angular.module('profileApp', ['smart-table', 'ui.bootstrap', 'timepickerPop', 'mgcrea.ngStrap', "wysiwyg.module", 'colorpicker.module', 'ahc.cd.autosearch', 'angular-svg-round-progress','toaster']);
 
 
 profileApp.config(function ($datepickerProvider) {

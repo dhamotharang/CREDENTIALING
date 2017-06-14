@@ -1,5 +1,6 @@
 ﻿using AHC.CD.Data.Repository;
 using AHC.CD.Data.Repository.TaskTracker;
+using AHC.CD.Entities.MasterData.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
         {
             this.taskRepo = new EFGenericRepository<AHC.CD.Entities.TaskTracker.TaskTracker>();
             this.profileRepo = new EFGenericRepository<AHC.CD.Entities.MasterProfile.Profile>();
-            this.reminderRepo = new EFGenericRepository<AHC.CD.Entities.TaskTracker.TaskReminder>(); 
+            this.reminderRepo = new EFGenericRepository<AHC.CD.Entities.TaskTracker.TaskReminder>();
         }
 
         public AHC.CD.Entities.TaskTracker.TaskTracker AddTask(Entities.TaskTracker.TaskTracker taskTracker)
@@ -29,7 +30,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
                 taskRepo.Save();
                 return taskTracker;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -59,7 +60,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
         {
             try
             {
-                Entities.TaskTracker.TaskTracker task = taskRepo.Find(t => t.TaskTrackerId == taskTrackerId && (t.Status == AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.OPEN.ToString()||t.Status == AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.REOPEN.ToString()));
+                Entities.TaskTracker.TaskTracker task = taskRepo.Find(t => t.TaskTrackerId == taskTrackerId && (t.Status == AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.OPEN.ToString() || t.Status == AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.REOPEN.ToString()));
                 task.StatusType = AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.CLOSED;
                 taskRepo.Update(task);
                 taskRepo.Save();
@@ -68,21 +69,23 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
             {
                 throw;
             }
-            
+
         }
-        public void ReactiveTask(int taskTrackerId,int taskID)
+        public void ReactiveTask(int taskTrackerId, int taskID, string ActionPerformedBy)
         {
             try
             {
                 Entities.TaskTracker.TaskTracker task = taskRepo.Find(t => t.TaskTrackerId == taskTrackerId && t.Status == AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.CLOSED.ToString());
                 if (task.AssignedById == taskID)
-                { 
-                task.AssignedToId = task.AssignedById;
+                {
+                    task.AssignedToId = task.AssignedById;
+                    task.LastUpdatedBy = ActionPerformedBy;
                 }
                 else
                 {
                     task.AssignedById = taskID;
                     task.AssignedToId = taskID;
+                    task.LastUpdatedBy = ActionPerformedBy;
                 }
                 task.StatusType = AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.REOPEN;
                 taskRepo.Update(task);
@@ -105,7 +108,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
 
                 return task;
             }
-            catch (Exception) 
+            catch (Exception)
             {
                 throw;
             }
@@ -129,9 +132,9 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
                         if (profile.PersonalDetail != null && profile.PersonalDetail.MiddleName != null)
                             providers.Add(new { ProfileId = profile.ProfileID, Status = profile.Status, FirstName = profile.PersonalDetail.FirstName.Trim(), Name = profile.PersonalDetail.FirstName.Trim() + " " + profile.PersonalDetail.MiddleName.Trim() + " " + profile.PersonalDetail.LastName.Trim() + "-" + profile.OtherIdentificationNumber.NPINumber, HospitalInfo = profile.HospitalPrivilegeInformation });
                         else
-                            providers.Add(new { ProfileId = profile.ProfileID, Status= profile.Status, FirstName = profile.PersonalDetail.FirstName.Trim(), Name = profile.PersonalDetail.FirstName.Trim() + " " + profile.PersonalDetail.LastName.Trim() + "-" + profile.OtherIdentificationNumber.NPINumber, HospitalInfo = profile.HospitalPrivilegeInformation });
+                            providers.Add(new { ProfileId = profile.ProfileID, Status = profile.Status, FirstName = profile.PersonalDetail.FirstName.Trim(), Name = profile.PersonalDetail.FirstName.Trim() + " " + profile.PersonalDetail.LastName.Trim() + "-" + profile.OtherIdentificationNumber.NPINumber, HospitalInfo = profile.HospitalPrivilegeInformation });
                     }
-                    
+
                 }
 
                 return providers;
@@ -148,7 +151,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
             try
             {
                 //var tasks = await taskRepo.GetAsync(t => t.Status != AHC.CD.Entities.MasterData.Enums.StatusType.Inactive.ToString(), "AssignedTo,InsuranceCompanyName");
-                var tasks = (await taskRepo.GetAsync(x=>x.AssignedTo!=null && x.AssignedTo.AuthenicateUserId==userAuthId,"AssignedTo,TaskTrackerHistories,InsuranceCompanyName")).ToList().OrderBy(c => c.NextFollowUpDate);
+                var tasks = (await taskRepo.GetAsync(x => x.AssignedTo != null && x.AssignedTo.AuthenicateUserId == userAuthId, "AssignedTo,TaskTrackerHistories,InsuranceCompanyName")).ToList().OrderBy(c => c.NextFollowUpDate);
                 //var tasksForUser = tasks.Where(s => s.AssignedTo != null && s.AssignedTo.AuthenicateUserId == userAuthId).ToList();
 
                 return tasks;
@@ -176,7 +179,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
         public async Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByProfileId(int profileid)
         {
             try
-            {                
+            {
                 var tasks = (await taskRepo.GetAsync(x => x.ProfileID == profileid, "AssignedTo,TaskTrackerHistories,PlanName")).ToList().OrderBy(c => c.NextFollowUpDate);
                 return tasks;
             }
@@ -194,7 +197,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
                 foreach (var reminder in reminders)
                 {
                     reminderRepo.Create(reminder);
-                }                
+                }
                 await reminderRepo.SaveAsync();
 
                 return true;
@@ -202,6 +205,78 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+
+        public async Task<List<Entities.TaskTracker.TaskReminder>> GetReminders(int scheduledByID)
+        {
+            try
+            {
+                var taskReminders = await reminderRepo.GetAsync(m => m.ScheduledByID == scheduledByID && m.Status == StatusType.Active.ToString());
+                return taskReminders.ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<bool> DismissReminder(int taskID, int scheduledByID)
+        {
+            try
+            {
+                var taskReminder = await reminderRepo.FindAsync(m => m.TaskReminderID == taskID && m.ScheduledByID == scheduledByID);
+                taskReminder.StatusType = StatusType.Inactive;
+                reminderRepo.Update(taskReminder);
+                reminderRepo.Save();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public async Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, int scheduledByID)
+        {
+            try
+            {
+                var taskReminder = await reminderRepo.FindAsync(m => m.TaskReminderID == taskID && m.ScheduledByID == scheduledByID);
+                taskReminder.ScheduledDateTime = scheduledDateTime;
+                reminderRepo.Update(taskReminder);
+                reminderRepo.Save();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<bool> DismissAllReminder(int[] taskIDs, int scheduledByID)
+        {
+            try
+            {
+                var taskReminders = await reminderRepo.GetAsync(m => taskIDs.Contains(m.TaskReminderID) && m.ScheduledByID == scheduledByID);
+
+                foreach (var taskReminder in taskReminders)
+                {
+                    taskReminder.StatusType = StatusType.Inactive;
+                    reminderRepo.Update(taskReminder);
+                }
+                reminderRepo.Save();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

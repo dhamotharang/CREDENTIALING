@@ -61,7 +61,6 @@ $(function () {
     //Make only visible area scrollable
     $("#widgetarea").css({"max-height":$("body").height()});
     //Bind widgetarea to nicescroll
-    $("#widgetarea").niceScroll({horizrailenabled:false});
 
 
     // Toggle Buttons
@@ -111,18 +110,18 @@ $(".widget-body").on('shown.bs.collapse', function () {
 // -------------------------------
 
 $(window).scroll(function(){
-    $("#widgetarea").getNiceScroll().resize();
-    $(".chathistory").getNiceScroll().resize();
-    rightbarTopPos();
-    leftbarTopPos();
+    $("#widgetarea").resize();
+    $(".chathistory").resize();
+    //rightbarTopPos();
+    //leftbarTopPos();
 });
 
-$(window).resize(function(){
-    widgetheight();
+//$(window).resize(function(){
+//    widgetheight();
 
-    rightbarRightPos();
-    $("#sidebar").getNiceScroll().resize();
-});
+//    rightbarRightPos();
+//    $("#sidebar").resize();
+//});
 rightbarRightPos();
 
 
@@ -136,7 +135,6 @@ enquire.register("screen and (max-width: 767px)", {
         $(function() {
 
             //Bind sidebar to nicescroll
-            $("#sidebar").niceScroll({horizrailenabled:false});
             leftbarScrollShow();
 
             //Click on body and hide leftbar
@@ -159,7 +157,7 @@ enquire.register("screen and (max-width: 767px)", {
     },
     unmatch : function() {
         //Remove nicescroll to clear up some memory
-            $("#sidebar").niceScroll().remove();
+            $("#sidebar").remove();
             $("#sidebar").css("overflow","visible");
 
         //hide leftbar
@@ -174,11 +172,11 @@ enquire.register("screen and (max-width: 767px)", {
 //Fixing the show of scroll rails even when sidebar is hidden
 function leftbarScrollShow () {
     if ($("body").hasClass("show-leftbar")) {
-        $("#sidebar").getNiceScroll().show();
+        $("#sidebar").show();
     } else {
-        $("#sidebar").getNiceScroll().hide();
+        $("#sidebar").hide();
     }
-    $("#sidebar").getNiceScroll().resize();
+    $("#sidebar").resize();
 }
 
 //set Top positions for changing between static and fixed header
@@ -194,11 +192,11 @@ function rightbarTopPos() {
 
 //Set Right position for fixed layouts
 function rightbarRightPos () {
-    if ($('body').hasClass('fixed-layout')) {
-        var $pc = $('#page-content');
-        var ending_right = ($(window).width() - ($pc.offset().left + $pc.outerWidth()));
-        if (ending_right<0) ending_right=0;
-        $('#page-rightbar').css('right',ending_right);
+    if ($('body').hasClass('fixed-layout1')) {
+        //var $pc = $('#page-content');
+        //var ending_right = ($(window).width() - ($pc.offset().left + $pc.outerWidth()));
+        //if (ending_right<0) ending_right=0;
+        $('#page-rightbar').css('right',0);
     }
 }
 
@@ -213,7 +211,7 @@ function checkpageheight() {
 // Recalculate widget area to area visible
 function widgetheight() {
     $("#widgetarea").css({"max-height":$("body").height()});
-    $("#widgetarea").getNiceScroll().resize();
+    $("#widgetarea").resize();
 }
 
 // -------------------------------

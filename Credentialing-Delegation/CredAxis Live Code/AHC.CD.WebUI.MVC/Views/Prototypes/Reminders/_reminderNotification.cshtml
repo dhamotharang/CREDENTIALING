@@ -4,16 +4,15 @@
 <style>
     .tableDataFont {
         font-size: smaller;
-        margin-top: 4px;
+        margin-top: 1px;
         color: #333;
     }
 
     .scroll {
-        height: 91px;
-        background: #ffffff;
+        height: 120px;
+        border: 1px solid #e4e4e4;
         overflow: scroll;
         padding-top: 7px;
-        box-shadow: 0px 1px 5px rgba(164, 170, 171, 0.6);
     }
 
         .scroll::-webkit-scrollbar {
@@ -24,7 +23,6 @@
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
             border-radius: 5px;
         }*/
-
         .scroll::-webkit-scrollbar-thumb {
             border-radius: 5px;
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
@@ -49,7 +47,7 @@
             right: -80%;
         }
 
-        /*create a cirlce*/
+    /*create a cirlce*/
     .circle {
         /*width: 90px;
         height: 84px;*/
@@ -63,61 +61,142 @@
         padding-top: 13px;
     }
 
+    #taskelement:hover {
+        font-weight: 500;
+        color: black;
+    }
 
+    .SelectedTaskStyle {
+        background-color: #337ab7;
+        color: white;
+        line-height:1.5;
+        cursor:pointer;
+    }
+    #TaskList {
+        cursor: pointer;
+    } 
+    .ZeroPaddingLeft {
+        padding-left: 0px;
+    }
+
+    .Padding_5_px {
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+    .tableDataFont div > .popover {
+        left: 80px;
+    }
+    .snoozeButton, .snoozeButton:active, .snoozeButton:focus {
+        margin-left: -3px;
+        background: white;
+        border-radius: 0;
+        border: 1px solid #b9b9b9;
+    }
 </style>
 <link href="~/Content/Prototypes/blink.css" rel="stylesheet" />
 
-<div class="RemainderBody col-lg-4 col-xs-4 " style="background-color: #fff; box-shadow: 1px 7px 14px 5px rgba(0,0,0,0.75); ">
+<div id="ReminderFullBody" class="RemainderBody col-lg-4 col-xs-4 " style="background-color: white;
+    border: 1px solid #ababab;
+    box-shadow: 1px 0px 14px 5px rgba(193, 193, 193, 0.75);
+">
+    <div class="row">
+        <div class="col-lg-12">
+        <span class="col-lg-4"></span>
+        <span id="Rem_count" class="col-lg-6" style="color: #337ab7;"></span></div>
+    </div>
+    <div class="row" style="padding-top:8px;">
+        <div class="col-lg-1" style="margin-top: 3px;"><i class="fa fa-calendar fa-2x"></i></div>
+        <div class="col-lg-11" id="Rem_header_bar">
+            
+        </div>
+    </div>
     <div class="row">
 
-        <div class="col-lg-12 col-xs-12" id="reminderHeader" style="text-align: center; background-color: #337ab7; color: white;padding:5px">
-            <b class="pull-left" style="font-size:large">🔔</b>
-            <div class="col-lg-6 col-xs-6"> <b style="font-size: large;">03-15-2017</b> at 5:15PM </div>
-            <div class="col-lg-5 col-xs-5 pull-right">2-Reminder(S) </div>
-
-        </div>
     </div>
 
     @*<div class=" col-lg-2 col-xs-2" id="timeBlinker" style="text-align: center; margin-top: 22px; color: #333; font-family: 'Orbitron', sans-serif; font-weight: 700px; font-size: 15px; /*text-shadow: 0px 2px 25px rgba(144, 244, 253, .6);*/ ">
         @*<div class="circle blink_me"><b>12h 36m</b><br /><b>left</b></div>*@
     @*</div>*@
-    <div class="col-lg-12 col-xs-12 scroll" style="margin-top: 13px;">
-        <div class="row tableDataFont" id="TaskList" >
-
+    <div class="col-lg-12 col-xs-12 scroll" style="margin-top: 12px;">
+        <div class=" tableDataFont" id="TaskList">
+            
         </div>
+       
     </div>
     <div class="row">
-        <div class="col-lg-12 rem_pannel" style="color: #333">
-
-            <div class="rem_pannel_header" style="font-weight:600">Snooze For :</div>
-            <div class="rem_pannel_body">
-                <select class="form-control input-sm" id="snoozeInterval" ng-model="snoozeTime" style="height: 21px;font-weight:700; padding: initial; color: black; background-color: #ccc;">
-                    <option value="5000" selected>5 Minutes</option>
-                    <option value="10000">10 Minutes</option>
-                    <option value="30000">30 Minutes</option>
-                </select>
+        <div class="col-lg-12 " style="margin-top:5px;">
+            <button id="DismissBtn" 
+                    class="CollapseReminder btn btn-xs snoozeButton pull-right"
+                    style="width: 72px;"
+                    onclick="DismissSingleTask()">Dismiss
+            </button>
+        </div>
+    </div>
+    <div class="row" style="background-color:#f1f1f1;">
+        <div class="col-lg-12" style="font-weight:lighter;color:#616060;font-size: 12px;">Click Snooze to be reminded in:</div>
+        <div class="col-lg-12 rem_pannel" 
+             style="padding-bottom: 7px;color: #333;">
+            <div class="col-lg-4 ZeroPaddingLeft">
+                    <select class="" id="snoozeInterval" style="width: 190px;height:22px;font-size: 13px;">
+                        <option value="300000" selected>5 Minutes</option>
+                        <option value="600000">10 Minutes</option>
+                        <option value="1800000">30 Minutes</option>
+                        <option value="3600000">1 hour</option>
+                    </select>
             </div>
-
-
+            <div class="col-lg-4">
+                <button id="SNOOZE"
+                        class="SnoozerReminder btn btn-xs snoozeButton"
+                        style="margin-left:50px;"
+                        onclick="Snoozereminder()">
+                    Snooze
+                </button>
+                
+            </div>
+            <div class="col-lg-4" style="padding-right: 0;">
+                <button id="DismissBtn"
+                        class="CollapseReminder btn btn-xs snoozeButton pull-right"
+                        onclick="DismissAllTasks()">
+                   Dismiss All
+                </button>
+            </div>
+           
+            @*<div class="rem_pannel_header" style="font-weight:lighter;color:grey;">Snooze For :</div>
+            <div class="rem_pannel_body col-lg-12 ZeroPaddingLeft">
+                <div class="col-lg-6 ZeroPaddingLeft">
+                    <select class="form-control input-sm" id="snoozeInterval" style="width: 174px;height: 21px;font-weight:700; padding: initial; color: black; background-color: #ccc;">
+                        <option value="300000" selected>5 Minutes</option>
+                        <option value="600000">10 Minutes</option>
+                        <option value="1800000">30 Minutes</option>
+                        <option value="3600000">1 hour</option>
+                    </select>
+                </div>
+                <button class="SnoozerReminder btn btn-primary btn-xs col-lg-6" id="SNOOZE" style="margin-left: 41px; width: 174px;height: 21px; font-weight: 700;padding: initial;width: 155px;" onclick="Snoozereminder()">SNOOZE</button>
+            </div>*@
         </div>
-        <div class="col-lg-12" style="margin: 5px;">
-            <button id="DismissBtn" class="CollapseReminder btn btn-danger btn-xs col-lg-6" style="margin-left:-3px">DISMISS</button>
-            <button class="CollapseReminder btn btn-primary btn-xs col-lg-6 pull-right" id="SNOOZE" onclick="Snoozereminder()">SNOOZE</button>
-        </div>
+        @*<div class="col-lg-12" style="margin: 5px;">
+            
+            <div class="col-lg-2"></div>
+            <button id="DismissBtn" class="CollapseReminder btn btn-danger btn-xs col-lg-5" style="margin-left:-3px;width: 157px;" >DISMISS ALL</button>
+
+        </div>*@
     </div>
 </div>
 
 <script>
     $('.CollapseReminder').click(function () {
         $(".RemainderBody").addClass('show');
-  
+
     });
 
-    function Snoozereminder() {
-        setTimeout(function () {
-            $(".RemainderBody").removeClass('show');
-        }, document.getElementById("snoozeInterval").value);
-    }
+    //function Snoozereminder() {
+    //    setTimeout(function () {
+    //        $(".RemainderBody").removeClass('show');
+    //    }, document.getElementById("snoozeInterval").value);
+    //}
 </script>
 
 

@@ -248,8 +248,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
             var status = "";
             try
             {
-                //if (AppointmentsResult.SignaturePath != null && !AppointmentsResult.SignaturePath.Contains("\\ApplicationDocuments\\"))
-                if (AppointmentsResult.SignatureFile != null)
+                if (AppointmentsResult.SignaturePath != null && !AppointmentsResult.SignaturePath.Contains("\\ApplicationDocuments\\"))
                 {
                     //Code for Converting digital signature to a Bitmap image format - Tulasidhar.
                     Bitmap bmpReturn = null;
@@ -293,12 +292,13 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     CCMActionResult = AutoMapper.Mapper.Map<CCMQuickActionViewModal, CCMQuickActionDTO>(AppointmentsResult);
                     ccmRequestStatus = await appointmentManager.SaveCCMQuickActionResultsAsync(CCMActionResult);
 
-                    //string MessageTitle = AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Approved ? "Approved" : AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected?"Rejected":"OnHold";
-                    //Parallel.ForEach(AppointmentsResult.QuickActionSet, x => {
-                    //    ChangeNotificationDetail notification = null;
-                    //    notification = new ChangeNotificationDetail(x.ProfileId, User.Identity.Name, "CCM Appointment Result", MessageTitle);
-                    //    notificationManager.SaveNotificationDetailAsyncForCCO(notification, AppointmentsResult.AppointmentsStatus.ToString(), x.CredentialingAppointmentDetailID);
-                    //});
+                    string MessageTitle = AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Approved ? "Approved" : AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected ? "Rejected" : "Onhold";
+                    Parallel.ForEach(AppointmentsResult.QuickActionSet, x =>
+                    {
+                        ChangeNotificationDetail notification = null;
+                        notification = new ChangeNotificationDetail(x.ProfileId, User.Identity.Name, "CCM Appointment Result", MessageTitle);
+                        notificationManager.SaveNotificationDetailAsyncForCCO(notification, AppointmentsResult.AppointmentsStatus.ToString(), x.CredentialingAppointmentDetailID);
+                    });
                 }
             }
 

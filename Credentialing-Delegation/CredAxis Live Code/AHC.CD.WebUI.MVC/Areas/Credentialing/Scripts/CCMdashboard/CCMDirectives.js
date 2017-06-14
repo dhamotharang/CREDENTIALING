@@ -101,25 +101,25 @@ CCMDashboard.directive('selectRow', ["$rootScope", "$http", "$compile", "CCMDash
         link: function (scope, element, attrs, ngModel, $scope) {
             element.bind('click', function () {
                 scope.object;
-                if ((scope.object.Status == 'Pending') && !$rootScope.TempObjectForStatus.SingleDetailedApprovalAction) {
-                    if ($filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true, Status: 'New' }).length == 0) {
+                if ((scope.object.Status == 'Onhold') && !$rootScope.TempObjectForStatus.SingleDetailedApprovalAction) {
+                    //if ($filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true, Status: 'Onhold' }).length == 0) {
                         $rootScope.TempCCMAppointments[$rootScope.TempCCMAppointments.indexOf(scope.object)].SelectStatus = !scope.object.SelectStatus;
                         if ($filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true }).length > 0) {
                             $rootScope.TempObjectForStatus.QuickApprovalAction = true;
                         } else {
                             $rootScope.TempObjectForStatus.QuickApprovalAction = false;
                         }
-                    }
+                    //}
                 }
                 if ((scope.object.Status == 'New') && !$rootScope.TempObjectForStatus.SingleDetailedApprovalAction) {
-                    if ($filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true, Status: 'Pending' }).length == 0) {
+                    //if ($filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true, Status: 'New' }).length == 0) {
                         $rootScope.TempCCMAppointments[$rootScope.TempCCMAppointments.indexOf(scope.object)].SelectStatus = !scope.object.SelectStatus;
                         if ($filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true }).length > 0) {
                             $rootScope.TempObjectForStatus.QuickApprovalAction = true;
                         } else {
                             $rootScope.TempObjectForStatus.QuickApprovalAction = false;
                         }
-                    }
+                    //}
                 }
                 scope.$apply();
             })

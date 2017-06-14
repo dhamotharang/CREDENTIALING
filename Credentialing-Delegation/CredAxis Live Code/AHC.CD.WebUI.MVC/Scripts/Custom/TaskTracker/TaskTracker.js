@@ -1,5 +1,5 @@
 ﻿//Module declaration
-var trackerApp = angular.module('TrackerApp', ['ui.bootstrap', 'smart-table', 'mgcrea.ngStrap', 'loadingInteceptor']);
+var trackerApp = angular.module('TrackerApp', ['ui.bootstrap', 'smart-table', 'mgcrea.ngStrap', 'loadingInteceptor','toaster']);
 
 //$(document).ready(function () {
 //    $("#sidemenu").addClass("menu-in");
@@ -273,7 +273,7 @@ trackerApp.filter("TimeDiff", function () {
 })
 var TempFollowupHelper = [];
 //Controller declaration
-trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll, $location, $http, $q, $filter, messageAlertEngine, Resource) {
+trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll, $location, $http, $q, $filter, messageAlertEngine, Resource, toaster) {
     //$interval, $timeout,
 
     $scope.DailyTasks = [];
@@ -310,6 +310,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     $scope.history = false;
     $scope.TableView = true;
     $scope.showLoading = true;
+    $scope.showOnClose = true;
     //$scope.InsuranceCompanyHelper = [];
     var currentcduserdata = "";
     $scope.InactiveCDUsers = [];
@@ -516,6 +517,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
             ctrl.displayed = result.data;
             ctrl.temp = ctrl.displayed;
             console.log(result.data);
+            ctrl.displayed = $scope.setInitialTaskData(ctrl.displayed);
 
             if ($rootScope.tabNames == 'DailyTask' && sortData == true) {
                 //ctrl.temp1 = ctrl.displayed;
@@ -598,8 +600,27 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     $rootScope.tabName = function (name) {
         $rootScope.$broadcast(name);
+       // $scope.ShowSetRemainderButton(name);
     };
 
+    //$scope.ShowSetRemainderButton = function (name) {
+
+    //    if (name == 'DailyTasks') {
+    //        if ($rootScope.trackerItems.length>0)
+    //            $('#AddScheduleBtn').show();
+    //        else
+    //            $('#AddScheduleBtn').hide();
+    //    }
+    //    else if (name == 'AllTasks') {
+    //        if ($scope.RemainingTasks.length > 0)
+    //            $('#AddScheduleBtn').show();
+    //        else
+    //            $('#AddScheduleBtn').hide();
+    //    }
+    //    else {
+    //        $('#AddScheduleBtn').hide();
+    //    }
+    //}
     // functions to catch the data after broadcasting/////
     $rootScope.$on('DailyTasks', function () {
         $scope.tabStatus = $filter('ResetTabStatus')('DailyTask');
@@ -623,6 +644,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
             //}
         }
         $rootScope.tabNames = 'DailyTask';
+        $scope.showOnClose = true;
         $scope.cancelEditViewforTab();
         $rootScope.trackerItems = $scope.TasksAssigned;
         $rootScope.DailyTasksTracker = angular.copy($rootScope.trackerItems);
@@ -649,6 +671,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.tabStatus = $filter('ResetTabStatus')('TaskAssigned');
         //j++;
         $rootScope.tabNames = 'TasksAssigne';
+        $scope.showOnClose = true;
         $scope.cancelEditViewforTab();
         //$scope.t.sort.predicate = "NextFollowUpDate";
         //$scope.t.sort.reverse = false;
@@ -677,6 +700,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $rootScope.tabNames = 'AllTask';
         $rootScope.trackerItems = $scope.RemainingTasks;
         $scope.cancelEditViewforTab();
+        $scope.showOnClose = true;
+
         //$rootScope.trackerItems = $scope.RemainingTasksPagination;
         $rootScope.AllTasksTracker = angular.copy($rootScope.trackerItems);
         $scope.t.pagination.start = 0;
@@ -697,6 +722,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     $rootScope.$on('ClosedTasks', function () {
         $scope.tabStatus = $filter('ResetTabStatus')('ClosedTask');
         $rootScope.tabNames = 'CloseTasks';
+        $scope.showOnClose = false;
         // $rootScope.tabNames = 'ClosedTasks';
         $scope.cancelEditViewforTab();
         $rootScope.trackerItems = $scope.ClosedTasks;
@@ -718,6 +744,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.tabStatus = $filter('ResetTabStatus')('AllTasksForAdmin');
         $rootScope.tabNames = 'AdminTasks';
         // $rootScope.tabNames = 'ClosedTasks';
+        $scope.showOnClose = false;
         $scope.cancelEditViewforTab();
         $rootScope.trackerItems = $scope.AllTasksForAdmin;
         $rootScope.AllTasksTracker = angular.copy($rootScope.trackerItems);
@@ -738,6 +765,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.tabStatus = $filter('ResetTabStatus')('HistoryTask');
         $rootScope.tabNames = 'HistoryTask';
         $scope.cancelEditViewforTab();
+        $scope.showOnClose = false;
         $rootScope.trackerItems = $scope.TaskHistory;
         $scope.t.pagination.start = 0;
         $scope.t.pagination.numberOfPages = 0;
@@ -1493,12 +1521,12 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.Tempfollowup = $.grep($scope.Tempfollowup, function (element) {
             return element.Name != followup.Name;
         });
-        $scope.
+        //$scope.
         $scope.Tempfollowup1 = JSON.stringify(angular.copy($scope.Tempfollowup));
 
     }
     $scope.SelectSubSection = function (SubSection) {
-        $scope.errormessageforsubsection = false;
+        //$scope.errormessageforsubsection = false;
         $scope.task.SubSectionName = SubSection.SubSectionName;
         $(".ProviderTypeSelectAutoList").hide();
     }
@@ -1510,8 +1538,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     // Manage partial Views
     $scope.showAddView = function () {
-        $scope.errormessageforsubject = false;
-        $scope.errormessageforfollowupdate = false;
+        //$scope.validationfunction = true;
+        //$scope.errormessageforsubject = false;
+        //$scope.errormessageforfollowupdate = false;
         $scope.VisibilityControl = "";
         $scope.Tempfollowup1 = "";
         $scope.notetask = true;
@@ -1664,10 +1693,11 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     //CRUD functions/////////
     $scope.addNewTask = function (task) {
-        if (task.NextFollowUpDate == undefined)
-            $scope.errormessageforfollowupdate = true;
-        if (task.Subject == undefined)
-            $scope.errormessageforsubject = true;
+        //$scope.validationfunction = true;
+        //if (task.NextFollowUpDate == undefined)
+        //    $scope.errormessageforfollowupdate = true;
+        //if (task.Subject == undefined)
+        //    $scope.errormessageforsubject = true;
         //ctrl.callServer($scope.t);
         $scope.notetask = false;
         $scope.errormessage = false;
@@ -1868,12 +1898,17 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         else {
             $scope.errormessage = true;
         }
+        //$scope.validationfunction = false;
     }
     $scope.editTask = function () {
-        if ($scope.validation == "")
-            $scope.errormessageforfollowupdate = true;
-        if ($scope.subjval == "")
-            $scope.errormessageforsubject = true;
+        //$scope.validationfunction = true;
+        //$scope.remVal();
+        //$scope.remnextfollowupVal($scope.followupdatevalue);
+        //if ($scope.validation == "")
+        //    $scope.errormessageforfollowupdate = true;
+        //if ($scope.subjval == "")
+        //    $scope.errormessageforsubject = true;
+        $scope.CancelReminder();//for closing reminder data
         $scope.flag = true;
         var d1 = new $.Deferred();
         $scope.errormessage = false;
@@ -1940,6 +1975,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                         $('#addButton').show();
                         data = JSON.parse(data);
                         data.daysleft = $filter("TimeDiff")($scope.task.NextFollowUpDate);
+
                         //here comes new data for Next followUp date
                         //$.ajax({
                         //    url: rootDir + '/Dashboard/GetTaskExpiryCounts?cdUserID=' + localStorage.getItem("UserID"),
@@ -2396,41 +2432,43 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         });
     }
     ////////////////////////////
-    $scope.errormessageforsubject = false;
-    $scope.errormessageforfollowupdate = false;
+    //$scope.errormessageforsubject = false;
+    //$scope.errormessageforfollowupdate = false;
     //To initiate Removal Confirmation Modal
     $scope.inactiveWarning = function (task) {
-        $scope.validationfunction = true;
-        $scope.remVal();
-        $scope.remnextfollowupVal($scope.followupdatevalue);
-        $scope.errormessageforfollowupdate = false;
-        if (task.ProviderName == null || task.ProviderName == "") {
-            $scope.errormessageforprovider = true;
-        }
-        if ((task.SubSectionName == null || task.SubSectionName == "")) {
-            $scope.errormessageforsubsection = true;
-        }
-        if (task.Subject == null || task.Subject == "") {
-            $scope.errormessageforsubject = true;
-        }
-        if ((task.NextFollowUpDate == null || task.NextFollowUpDate == "" || task.NextFollowUpDate == undefined) && !$scope.errormessageforfollowupdate) {
-            $scope.errormessageforfollowupdate = false;
-            $scope.errormessageforfollowupdate = true;
-        }
+        //$scope.validationfunction = true;
+        //$scope.remVal();
+        //$scope.remnextfollowupVal($scope.followupdatevalue);
+        //$scope.errormessageforfollowupdate = false;
+        //if (task.ProviderName == null || task.ProviderName == "") {
+        //    $scope.errormessageforprovider = true;
+        //}
+        //if ((task.SubSectionName == null || task.SubSectionName == "")) {
+        //    $scope.errormessageforsubsection = true;
+        //}
+        //if (task.Subject == null || task.Subject == "") {
+        //    $scope.errormessageforsubject = true;
+        //}
+        //if ((task.NextFollowUpDate == null || task.NextFollowUpDate == "" || task.NextFollowUpDate == undefined) && !$scope.errormessageforfollowupdate) {
+        //    $scope.errormessageforfollowupdate = false;
+        //    $scope.errormessageforfollowupdate = true;
+        //}
 
-        if (task.ModeOfFollowUp.length == 0 || $scope.Followups.length == 4) {
-            $scope.errormessage = true;
-        }
-        if (task.AssignedTo == null || task.AssignedTo == "") {
-            $scope.errormessageforAssignedto = true;
-        }
+        //if (task.ModeOfFollowUp.length == 0 || $scope.Followups.length == 4) {
+        //    $scope.errormessage = true;
+        //}
+        //if (task.AssignedTo == null || task.AssignedTo == "") {
+        //    $scope.errormessageforAssignedto = true;
+        //}
 
         if (angular.isObject(task)) {
             $scope.TemporaryTask = {};
             $scope.TemporaryTask = angular.copy(task);
         }
-        if (!$scope.errormessageforprovider && !$scope.errormessageforsubsection && !$scope.errormessageforsubject && !$scope.errormessageforfollowupdate && !$scope.errormessage && !$scope.errormessageforAssignedto)
+        //if (!$scope.errormessageforprovider && !$scope.errormessageforsubsection && !$scope.errormessageforsubject && !$scope.errormessageforfollowupdate && !$scope.errormessage && !$scope.errormessageforAssignedto)
             $('#inactiveWarningModal').modal();
+
+        //$scope.validationfunction = false;
     }
     $scope.QuickRemove = function (task) {
         if (angular.isObject(task)) {
@@ -2520,6 +2558,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.detailViewfortab3 = false;
         $scope.progressbar = true;
         $scope.TableView = true;
+        $scope.ResetRemData();
 
     }
 
@@ -2570,6 +2609,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     //}
 
     $scope.showDetailViewforTab1 = function (task) {
+        $scope.showOnClose = false;
         $scope.TableView = false;
         $scope.detailViewfortab = true;
         $scope.viewTemp = [];
@@ -2721,7 +2761,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     }
     $scope.cancelViewforTab1 = function () {
-
+        $scope.showOnClose = true;
         $scope.detailViewfortab = false;
         $scope.TableView = true;
         //if ($rootScope.tabNames == 'DailyTask') {
@@ -2730,6 +2770,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         //else if ($rootScope.tabNames == 'TasksAssigne') {
         //    $rootScope.$broadcast('TasksAssigned');
         //}
+        if ($rootScope.tabNames == 'CloseTasks') {
+            $scope.showOnClose = false;
+        }
         if ($rootScope.tabNames == 'DailyTask') {
             $("a[id='tabs1']").parent("li").tab('show')
             //$rootScope.$broadcast('DailyTasks');
@@ -2740,6 +2783,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     $scope.showEditViewforTab1 = function (task) {
         $('#addButton').hide();
+        $scope.showOnClose = false;
         $scope.errormessage = false;
         $scope.errormessageforAssignedto = false;
         $scope.errormessageforprovider = false;
@@ -2838,6 +2882,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.VisibilityControl = "";
         $scope.progressbar = false;
         $scope.Tempfollowup = [];
+        $scope.showOnClose = true;
         $scope.task = angular.copy(currentTask);
         for (var i in $scope.RemainingTasks) {
             if (currentTask.TaskTrackerId == $scope.RemainingTasks[i].TaskTrackerId) {
@@ -2969,41 +3014,42 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     //    //$location.$$hash = ''
     //}
 
-    $scope.validationfunction = false;
-    $scope.remVal = function () {
-        if ($scope.validationfunction) {
-            if ($('#TempSUb').val().length != 0) {
-                $scope.errormessageforsubject = false;
-            }
-            else {
-                $scope.subjval = "";
-                $scope.errormessageforsubject = true;
-            }
-        }
-    }
+    //$scope.validationfunction = false;
+    //$scope.remVal = function () {
+    //    if ($scope.validationfunction) {
+    //        if ($('#TempSUb').val().length != 0) {
+    //            $scope.errormessageforsubject = false;
+    //        }
+    //        else {
+    //            $scope.subjval = "";
+    //            $scope.errormessageforsubject = true;
+    //        }
+    //    }
+    //}
 
-    $scope.followupdatevalue = "";
-    $scope.remnextfollowupVal = function (NextFollowUpDate) {
-        $scope.followupdatevalue = NextFollowUpDate;
-        if ($scope.validationfunction) {
-            if (($('#Tempfollowup').val().length != 0 && $('#Tempfollowup').val() != "") || (NextFollowUpDate != "" && NextFollowUpDate != undefined)) {
-                $scope.errormessageforfollowupdate = false;
+    //$scope.followupdatevalue = "";
+    //$scope.remnextfollowupVal = function (NextFollowUpDate) {
+    //    $scope.followupdatevalue = NextFollowUpDate;
+    //    if ($scope.validationfunction) {
+    //        if (($('#Tempfollowup').val().length != 0 && $('#Tempfollowup').val() != "") || (NextFollowUpDate != "" && NextFollowUpDate != undefined)) {
+    //            $scope.errormessageforfollowupdate = false;
 
-            }
-            else {
-                $scope.validation = "";
-                $scope.errormessageforfollowupdate = true;
-            }
-        }
-    }
+    //        }
+    //        else {
+    //            $scope.validation = "";
+    //            $scope.errormessageforfollowupdate = true;
+    //        }
+    //    }
+    //}
 
-    $scope.closenotesDiv = function () {
-        $("#HospitalList").hide();
-        $scope.hidenotesdiv = true;
-    }
+    //$scope.closenotesDiv = function () {
+    //    $("#HospitalList").hide();
+    //    $scope.hidenotesdiv = true;
+    //}
     $scope.showeditView = function (task, editviewfortab) {
-        $scope.errormessageforsubject = false;
-        $scope.errormessageforfollowupdate = false;
+        //$scope.validationfunction = false;
+        //$scope.errormessageforsubject = false;
+        //$scope.errormessageforfollowupdate = false;
         $('#addButton').hide();
         $scope.NoteTime = true;
         $scope.errormessage = false;
@@ -3022,6 +3068,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.TempNotes = '';
         var tempforscroll = '';
         var NoteBy = '';
+        $scope.showOnClose = false;
         $scope.Providers = angular.copy(AllProviders);
         if (task.PlanName == "Not Available")
             task.PlanName = "";
@@ -3243,14 +3290,95 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     // Method to set the row selected 
     $scope.showSetReminder = false;
-    $scope.setSelectedRow = function (task) {
-        task.selected ? task.selected = false : task.selected = true;
+    
+    $scope.selTask = [];
+    $scope.selTaskIDs = [];
+    $scope.selectRemTask = function (event, provider) {
+        if (!$scope.showOnClose) {
+            return;
+        }
+        if (provider.SelectStatus == true) {
+            provider.SelectStatus = false;
+            $scope.selTask.splice($scope.selTask.indexOf(provider), 1);
+            $scope.selTaskIDs.splice($scope.selTaskIDs.indexOf(provider), 1);
+            if ($scope.selTask.length == 0) {
+                $scope.CancelReminder();
+            }
+        }
+        else  {
+            provider.SelectStatus = true;
+            $scope.selTask.push(provider);
+            $scope.selTaskIDs.push(provider);
+        }
+        $scope.taskList.tasks = angular.copy($scope.selTask);
+        //provider.SelectStatus = provider.SelectStatus == true ? false : true;
+        //$scope.selectedProviders.push(provider);
+        console.log($scope.selTask);
     }
-
+    $scope.setInitialTaskData = function (data) {
+        if (localStorage.getItem("TaskReminders") != [] || localStorage.getItem("TaskReminders") != "" || localStorage.getItem("TaskReminders") != undefined) {
+            var StoredReminderData = JSON.parse(localStorage.getItem("TaskReminders"));
+            var taskDataFromApp = [];
+            $.each(StoredReminderData, function (k, v) {
+                v = JSON.parse(v.ReminderInfo);
+                taskDataFromApp.push(v);
+            });
+            if ((data != [] || data != "") && (taskDataFromApp != [] || taskDataFromApp != "")) {
+                $.each(data, function (Mkey, Mvalue) {
+                    $.each(taskDataFromApp, function (Skey, Svalue) {
+                        if (Mvalue.TaskTrackerId == Svalue.TaskTrackerId) {
+                            Mvalue["SetReminder"] = true;
+                        }
+                        //else {
+                        //    Mvalue["SetReminder"] = false;
+                        //}
+                    });
+                });
+            }
+        }
+        else {
+            if ((data != [] || data != "")) {
+                $.each(data, function (key, value) {
+                    value["SetReminder"] = false;
+                });
+            }
+        }
+        return data;
+    };
+    $scope.selectedTasks = function () {
+        $scope.taskList.tasks = $filter('filter')($scope.mc.displayed, { checked: true });
+    }
     $scope.SetReminderModal = function () {
         $scope.showSetReminder = true;
+        $scope.ShowAddButton = true;
     }
-
+    $scope.ReSetReminderModal = function (id) {
+        $scope.showSetReminder = true;
+        $scope.ShowAddButton = false;
+        $scope.RescheduleID = id;
+    }
+  
+    $scope.OpenReminderModalForReschedule = function () { };
+    //$scope.RescheduleReminderFromTaskTracker = function (taskID) {
+    //    var ReminderDateTime = new Date($('#datetimepicker3').val());
+    //    $.ajax({
+    //        url: rootDir + '/TaskTracker/RescheduleReminder',
+    //        data: JSON.stringify({ 'taskID': taskID, 'scheduledDateTime': date }),
+    //        type: "POST",
+    //        contentType: "application/json",
+    //        success: function (response) {
+    //            if (response) {
+    //                $(".RemainderBody").addClass('show');
+    //                $('#ReminderFullBody').remove();
+    //                clearInterval(reminderInterval);
+    //                TaskNotificationReminder();
+    //            }
+    //        },
+    //        error: function (error) {
+    //            //alert("Sorry, there is some problem!");
+    //        }
+    //    });
+    //};
 
     //-----check box for Tasks--------------------
     $scope.taskList = {
@@ -3264,14 +3392,46 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     //Close the Set Reminder Calender
     $scope.CancelReminder = function () {
         $scope.showSetReminder = false;
+        $scope.ResetRemData();
     }
+
+    $scope.ReSetReminder = function () {
+        $scope.showSetReminder = false;
+        var TaskData = JSON.parse(localStorage.getItem("TaskReminders"));
+        var IDToReschedule;
+        $.each(TaskData, function (key, value) {
+            var temp = JSON.parse(value.ReminderInfo);
+            if (temp.TaskTrackerId == $scope.RescheduleID) {
+                IDToReschedule = value.TaskReminderID;
+            }
+        })
+        var ReminderDateTime = new Date($('#datetimepicker3').val());
+        var DateToReschedule = ReminderDateTime.getUTCFullYear() + '/' + (ReminderDateTime.getMonth() + 1) + '/' + ReminderDateTime.getDate() + ' ' + ReminderDateTime.getHours() + ':' + ReminderDateTime.getMinutes() + ':' + ReminderDateTime.getSeconds();
+
+        $.ajax({
+            url: rootDir + '/TaskTracker/RescheduleReminder',
+            data: JSON.stringify({ 'taskID': IDToReschedule, 'scheduledDateTime': DateToReschedule }),
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+                if (response) {
+                    $(".RemainderBody").addClass('show');
+                    $('#ReminderFullBody').remove();
+                    clearInterval(reminderInterval);
+                    TaskNotificationReminder();
+                }
+            },
+            error: function (error) {
+                //alert("Sorry, there is some problem!");
+            }
+        });
+    };
 
     //Set the Date time for task reminder
     $scope.SetReminder = function () {
         $scope.showSetReminder = false;
         $scope.TaskReminder = [];
         console.log($scope.taskList.tasks);
-
         var ReminderDateTime = new Date($('#datetimepicker3').val());
         for (var i = 0; i < $scope.taskList.tasks.length; i++) {
             $scope.TaskReminder.push({ ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime });
@@ -3280,18 +3440,37 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         }
 
         $http.post(rootDir + '/TaskTracker/SetReminder', $scope.TaskReminder).success(function (data) {
+            toaster.pop('Success', "Success", 'Reminder Set Successfully');
+            $.each(ctrl.displayed, function (Mkey, Mvalue) {
+                $.each($scope.taskList.tasks, function (Skey, Svalue) {
+                    if (Mvalue.TaskTrackerId == Svalue.TaskTrackerId) {
+                        Mvalue["SetReminder"] = true;
+                    }
+                });
+            });
+            //console.log(ctrl.displayed)
+            $scope.ResetRemData();
+            TaskNotificationReminder();
             if ($rootScope.tabNames == "AllTask")
                 $scope.clerCheckBoxForAllTasks();
             else if ($rootScope.tabNames == "DailyTask")
                 $scope.clerCheckBoxForDailyTasks();
-        }).error(function (data) { });
+        }).error(function (data) {
+                toaster .pop('error', "error", 'Some Error Occured, please try again later');
+            });
         $scope.taskList.reminderDateTime = ReminderDateTime;
         localStorage.setItem("TaskReminders", JSON.stringify($scope.taskList));
         $scope.taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
 
     }
 
-
+    $scope.ResetRemData = function () {
+        angular.forEach($scope.selTask, function (value, key) {
+            value.SelectStatus = false;
+        });
+        $scope.selTask = [];
+        $scope.taskList.tasks = angular.copy($scope.selTask);
+    };
 
     $scope.clerCheckBoxForAllTasks = function () {
 
@@ -3309,27 +3488,30 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     $scope.checkedTask = false; // to set the status of checked tasks
 
+   
     //Method to add/remove the checked/unchecked tasks from the list
-    $scope.getCheckedTask = function (task, checkedStatus) {
-        $scope.newTask = angular.copy(task);
-        task.selected ? task.selected = false : task.selected = true;
-        // If task is checked, add it to the List
-        if (task.selected == true) {
-            $scope.newTask.ProviderName = $scope.newTask.ProviderName.substr(0, $scope.newTask.ProviderName.indexOf('-'));
-            $scope.taskList.tasks.push($scope.newTask);
-            $scope.taskList.taskCount++;
-        }
+    $scope.getCheckedTask = function (evt, task, checkedStatus) {
+        console.log(evt);
+        $scope.changeClass();
+        //$scope.newTask = angular.copy(task);
+        //task.selected ? task.selected = false : task.selected = true;
+        //// If task is checked, add it to the List
+        //if (task.selected == true) {
+        //    $scope.newTask.ProviderName = $scope.newTask.ProviderName.substr(0, $scope.newTask.ProviderName.indexOf('-'));
+        //    $scope.taskList.tasks.push($scope.newTask);
+        //    $scope.taskList.taskCount++;
+        //}
 
 
-        // If task is unchecked, remove it from the List
-        if (task.selected == false) {
-            $scope.taskList.taskCount--;
-            for (var i = 0; i < $scope.taskList.tasks.length; i++) {
-                if ($scope.taskList.tasks[i].TaskTrackerId == $scope.newTask.TaskTrackerId)
-                    $scope.taskList.tasks.splice($scope.taskList.tasks[i], 1);
-            }
+        //// If task is unchecked, remove it from the List
+        //if (task.selected == false) {
+        //    $scope.taskList.taskCount--;
+        //    for (var i = 0; i < $scope.taskList.tasks.length; i++) {
+        //        if ($scope.taskList.tasks[i].TaskTrackerId == $scope.newTask.TaskTrackerId)
+        //            $scope.taskList.tasks.splice($scope.taskList.tasks[i], 1);
+        //    }
 
-        }
+        //}
 
 
     }
@@ -3344,7 +3526,13 @@ function ResetFormForValidation(form) {
     $.validator.unobtrusive.parse(form);
 }
 
-
+//function ToggleSelectionClass(This) {
+//    if ($(This).hasClass('danger')) {
+//    $(This).toggleClass('danger');
+//    }
+//    $('.ActionButton').toggleClass('show hide');
+//    $('.SetRemButton').toggleClass('hide show');
+//}
 
 
 
@@ -3354,11 +3542,11 @@ $(document).ready(function () {
     $("#sidemenu").addClass("menu-in");
     $("#page-wrapper").addClass("menuup");
 
-    $('#TempSUb').change(function () {
-        if ($('#TempSUb').val().length != 0 && $('#TempSUb').val() != "") {
-            $scope.errormessageforsubject = false;
-        }
-    });
+    //$('#TempSUb').change(function () {
+    //    if ($('#TempSUb').val().length != 0 && $('#TempSUb').val() != "") {
+    //        $scope.errormessageforsubject = false;
+    //    }
+    //});
 
 
 });

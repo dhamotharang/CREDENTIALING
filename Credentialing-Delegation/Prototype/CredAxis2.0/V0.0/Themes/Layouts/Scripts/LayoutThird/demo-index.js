@@ -5,8 +5,6 @@ jQuery(document).ready(function() {
         repeat: 10
     });
 
-    $("#threads,#comments,#users").niceScroll({horizrailenabled:false,railoffset: {left:0}});
-
     try {
     //Easy Pie Chart
     $('.easypiechart#returningvisits').easyPieChart({

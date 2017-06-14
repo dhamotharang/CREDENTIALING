@@ -85,5 +85,9 @@ namespace AHC.CD.Entities.Credentialing.CCMPortal
 
         public string AssignedCCO { get; set; }
 
+        public int SignedByID { get; set; }
+
+        public string SignedByName { get; set; }
+
     }
 }

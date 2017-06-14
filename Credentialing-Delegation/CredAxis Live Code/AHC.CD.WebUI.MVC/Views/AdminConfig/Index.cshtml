@@ -10,6 +10,7 @@
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 }
 <div id="page-wrapper">
+
     <div class="container-fluid wrap-words">
         <div class="row">
             <div class="col-lg-12">
@@ -67,6 +68,19 @@
 
                         </p>
                     </div>
+                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        var roles = Context.GetOwinContext().GetUserManager<AHC.CD.WebUI.MVC.ApplicationUserManager>().GetRoles(User.Identity.GetUserId());
+
+                        if (roles.Contains("CRA"))
+                        {
+                            <div class="col-md-4">
+                                <p>
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Account/ViewUsers" class="btn btn-primary"><i class="fa fa-key"></i>&nbsp;Reset Password</a>
+                                </p>
+                            </div>
+                        }
+                    }
                     @*<div class="col-md-4">
                             <p>
                                 <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Initiation/InitiateUser/EmailConfiguration" class="btn btn-primary"><i class="fa fa-cog fa-fw"></i> Manage Email Configuration</a>

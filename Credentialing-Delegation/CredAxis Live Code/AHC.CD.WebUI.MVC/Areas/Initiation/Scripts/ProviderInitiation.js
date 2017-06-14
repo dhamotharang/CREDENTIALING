@@ -401,10 +401,10 @@ providerApp.controller("providerController", ['$scope','$timeout', '$http', 'loc
 	    //if ($("#ContactDetail_PhoneDetails_0__CountryCode").hasClass("input-validation-error") && !$("#ContactDetail_PhoneDetails_0__Number").hasClass("input-validation-error")) {
 	    //    $("#ContactDetail_PhoneDetails_0__Number").addClass("input-validation-error");
 	    //}
-	    if ($scope.NPIUserNameTempStatus < 4 && $scope.NPIPasswordTempStatus < 4) {
-	        $scope.Profile.OtherIdentificationNumber.NPIUserName = "";
-	        $scope.Profile.OtherIdentificationNumber.NPIPassword = "";
-	    }
+	    //if ($scope.NPIUserNameTempStatus < 4 && $scope.NPIPasswordTempStatus < 4) {
+	    //    $scope.Profile.OtherIdentificationNumber.NPIUserName = "";
+	    //    $scope.Profile.OtherIdentificationNumber.NPIPassword = "";
+	    //}
 
 	    var $form = $("#" + Form_Id);
 	    ResetFormForValidation($form);

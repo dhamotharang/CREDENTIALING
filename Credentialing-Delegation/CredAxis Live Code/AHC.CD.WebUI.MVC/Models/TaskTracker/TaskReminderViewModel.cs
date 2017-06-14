@@ -22,11 +22,12 @@ namespace AHC.CD.WebUI.MVC.Models.TaskTracker
 
         public DateTime CreatedDate { get; set; }        
         
-        public DateTime ScheduledDateTime { get; set; }
+        public string ScheduledDateTime { get; set; }
 
         public DateTime LastModifiedDate { get; set; }
 
         public StatusType StatusType { get; set; }
-        
+        //Snooze time in minutes
+        public int SnoozeTime { get; set; }
     }
 }

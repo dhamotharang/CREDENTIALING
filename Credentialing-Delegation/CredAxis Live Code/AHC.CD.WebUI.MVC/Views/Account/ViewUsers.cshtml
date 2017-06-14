@@ -22,11 +22,12 @@
         }
     </style>
 
-
-
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>*@
+    <script src="~/Scripts/Shared/lodash.min.js"></script>
     <script>
         var UserData=@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.UserData))
     </script>
+
     <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
     <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
     <script src="~/Scripts/Lib/CDN Service/angular-strap.min.js"></script>
@@ -34,6 +35,7 @@
     <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
     <script src="~/Scripts/Lib/Angular/angular-animate.min.js"></script>
     <script src="~/Scripts/Lib/Angular/toaster.js"></script>
+
     <script src="~/Scripts/Custom/ResetPassword.js"></script>
 }
 <div id="page-wrapper" ng-app="Resetpasswordapp" ng-controller="ResetPasswordController as rc" ng-init="Getlist()" ng-cloak>
@@ -44,10 +46,11 @@
             <div class="col-lg-12">
                 <ol class="breadcrumb">
                     <li>
-                        <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                        @*<i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>*@
+                        <i class="fa fa-cogs"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/AdminConfig/Index"> Admin Config</a>
                     </li>
                     <li class="active">
-                        <i class="fa fa-list"></i> Change Role of an Existing User/ Reset Password
+                        <i class="fa fa-list"></i> @*Change Role of an Existing User/ Reset Password*@Reset Password
                     </li>
                 </ol>
             </div>
@@ -65,24 +68,26 @@
                     <table st-pipe="rc.callServerForUserData" st-table="rc.USERDATAS" st-safe-src="UsersPagination" class="table table-bordered table-condensed customtbodyStyle table-striped">
                         <thead>
                             <tr>
-                                <th class="col-lg-2" st-sort="Email">Email</th>
+                                @*<th class="col-lg-2" st-sort="Email">Email</th>*@
+                                <th class="col-lg-2" st-sort="Email">User Name</th>
                                 <th class="col-lg-2" st-sort="Name">Name</th>
                                 <th class="col-lg-1" st-sort="Role">Role</th>
                                 @*<th class='col-lg-1 col-md-1 col-sm-1 '>
-                        Remove Role
-                    </th>
-                    <th class='col-lg-2 col-md-2 col-sm-2 '>
-                        Change Role
-                    </th>
-                    <th class='col-lg-2 col-md-2 col-sm-2 '>
-                        Add Role
-                    </th>*@
+                                        Remove Role
+                                    </th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                        Change Role
+                                    </th>
+                                    <th class='col-lg-2 col-md-2 col-sm-2 '>
+                                        Add Role
+                                    </th>*@
                                 <th class="col-lg-1" st-skip-natural="true">Reset Password</th>
 
                             </tr>
                             <tr>
                                 <td class="col-lg-2">
-                                    <input st-search="Email" placeholder="search for Email" class="input-sm form-control" />
+                                    @*<input st-search="Email" placeholder="search for Email" class="input-sm form-control" />*@
+                                    <input st-search="Email" placeholder="User Name" class="input-sm form-control" />
                                 </td>
                                 <td class="col-lg-2">
                                     <input st-search="Name" placeholder="Name" class="input-sm form-control" />
@@ -93,34 +98,40 @@
                                 <td class="col-lg-1"></td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody ng-show="rc.USERDATAS.length!=0">
                             <tr ng-repeat="row in rc.USERDATAS">
                                 <td class="col-lg-2">{{row.Email}}</td>
                                 <td class="col-lg-1">{{row.Name}}</td>
-                                <td class="col-lg-1">{{row.Role}}</td>
+                                <td class="col-lg-1">{{row.RoleList}}</td>
+                                @*<td class="col-lg-1">{{row.Role}}</td>*@
                                 @*<td>
-                        <label style="font-size:13px" class="text-success active" ng-if="row.NumberofRoles >1">
-                            {{row.Role}}
-                            <i style="color:red;font-size:16px" class="fa fa-close pointer" ng-click="RemoveRole(row.Role,row.Email,row.AuthenticateUserId)"></i>
-                        </label>
-                    </td>*@
+                                        <label style="font-size:13px" class="text-success active" ng-if="row.NumberofRoles >1">
+                                            {{row.Role}}
+                                            <i style="color:red;font-size:16px" class="fa fa-close pointer" ng-click="RemoveRole(row.Role,row.Email,row.AuthenticateUserId)"></i>
+                                        </label>
+                                    </td>*@
                                 @*<td class="col-lg-2 input-group">
-                        <select name="RoleCode" ng-model="role" class="selectchangerole col-lg-9 input-sm" ng-change="changerolefun(row.AuthenticateUserId,$index)">
-                            <option class="wrap-words" value="">Change Role</option>
-                            <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="role == role.Code">{{role.Name}}</option>
-                        </select> &nbsp;
-                        <button id="updatebutton{{$index}}" class="tulasi updatebtn btn btn-info btn-sm " data-placement="bottom" title="Update Role" ng-click="ChangeRole(role,row.Email,row.AuthenticateUserId,row.Role)" disabled><i class="fa fa-chevron-circle-right"></i></button>
-                    </td>*@
+                                        <select name="RoleCode" ng-model="role" class="selectchangerole col-lg-9 input-sm" ng-change="changerolefun(row.AuthenticateUserId,$index)">
+                                            <option class="wrap-words" value="">Change Role</option>
+                                            <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="role == role.Code">{{role.Name}}</option>
+                                        </select> &nbsp;
+                                        <button id="updatebutton{{$index}}" class="tulasi updatebtn btn btn-info btn-sm " data-placement="bottom" title="Update Role" ng-click="ChangeRole(role,row.Email,row.AuthenticateUserId,row.Role)" disabled><i class="fa fa-chevron-circle-right"></i></button>
+                                    </td>*@
                                 @*<td class="col-lg-2 input-group">
-                    @*<button type="button" id="updatebutton{{$index}}" data-toggle="tooltip" data-placement="bottom" title="Update" class="btn btn-sm btn-info updatebtn" ng-click="ChangeRole(role,p.Email)"><i class="fa fa-chevron-circle-right"></i></button>*@
+                                    @*<button type="button" id="updatebutton{{$index}}" data-toggle="tooltip" data-placement="bottom" title="Update" class="btn btn-sm btn-info updatebtn" ng-click="ChangeRole(role,p.Email)"><i class="fa fa-chevron-circle-right"></i></button>*@
                                 @*<button id="updatebutton{{$index}}" class="tulasi btn btn-info btn-sm " data-placement="bottom" title="Update Role" ng-click="ChangeRole(role,p.Email,p.AuthenticateUserId,p.Role)" data-toggle="modal" data-target="#myModal" disabled><i class="fa fa-chevron-circle-right"></i></button>*@
                                 @*<select name="RoleCode" ng-model="addrole" class="selectaddrole col-lg-9 input-sm" ng-change="addrolefun(row.AuthenticateUserId,$index)">
-                            <option value="">Add New Role</option>
-                            <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="addrole == role.Code">{{role.Name}}</option>
-                        </select> &nbsp;
-                        <button id="addbutton{{$index}}" class="tulasi btn btn-info btn-sm " data-placement="bottom" title="Add Role" ng-click="AddRole(addrole,row.Email,row.AuthenticateUserId)" disabled><i class="fa fa-chevron-circle-right"></i></button>
-                    </td>*@
+                                            <option value="">Add New Role</option>
+                                            <option ng-repeat="role in Roles" value="{{role.Code}}" ng-selected="addrole == role.Code">{{role.Name}}</option>
+                                        </select> &nbsp;
+                                        <button id="addbutton{{$index}}" class="tulasi btn btn-info btn-sm " data-placement="bottom" title="Add Role" ng-click="AddRole(addrole,row.Email,row.AuthenticateUserId)" disabled><i class="fa fa-chevron-circle-right"></i></button>
+                                    </td>*@
                                 <td class="col-lg-1"><button id="PasswordReset" data-placement="bottom" title="Reset Password" class="btn btn-sm btn-info" ng-click="PasswordReset(row.Email)"><i class="fa fa-fire"></i></button></td>
+                            </tr>                                                                         
+                        </tbody>
+                        <tbody ng-show="rc.USERDATAS.length==0" >
+                            <tr class=""  >
+                                <td colspan="4"><p style="text-align:center">No Data Available</p> </td>
                             </tr>
                         </tbody>
                         <tfoot>

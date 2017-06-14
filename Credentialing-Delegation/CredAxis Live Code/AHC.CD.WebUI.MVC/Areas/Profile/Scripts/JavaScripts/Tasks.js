@@ -52,8 +52,8 @@ $(document).ready(function () {
     $("#page-wrapper").addClass("menuup");
 });
 profileApp.value("tabStatus", [{ tabName: "ProviderTask", Displayed: [], daysleft: true, Assigned: false, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
-                                { tabName: "HistoryTask", Displayed: [], daysleft: false, Assigned: false, subSection: false, PlanName: false, followup: false, followUpDate: false, updatedOn: true, updatedby: true, editBtn: false, removeBtn: false, historyBtn: false, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
-                                { tabName: "ClosedTask", Displayed: [], daysleft: false, Assigned: true, Assignedby: false, subSection: true, PlanName: true, followup: true, followUpDate: false, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } }
+{ tabName: "HistoryTask", Displayed: [], daysleft: false, Assigned: false, subSection: false, PlanName: false, followup: false, followUpDate: false, updatedOn: true, updatedby: true, editBtn: false, removeBtn: false, historyBtn: false, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
+{ tabName: "ClosedTask", Displayed: [], daysleft: false, Assigned: true, Assignedby: false, subSection: true, PlanName: true, followup: true, followUpDate: false, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } }
 ])
 
 profileApp.filter("ResetTabStatus", function (tabStatus) {
@@ -124,7 +124,7 @@ profileApp.directive('stPersist', function ($rootScope) {
     };
 });
 
-profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$rootScope', '$filter', 'Resource', 'messageAlertEngine', function ($scope, $http, $q, $rootScope, $filter, Resource, messageAlertEngine) {
+profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$rootScope', '$filter', 'Resource', 'messageAlertEngine', 'toaster', function ($scope, $http, $q, $rootScope, $filter, Resource, messageAlertEngine, toaster) {
     $scope.Tasks = [];
     $rootScope.TasksLoaded = false;
     $scope.TableView = true;
@@ -141,7 +141,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     $http.get(rootDir + "/MasterDataNew/GetAllNotesTemplates").success(function (value) {
         try {
 
-            for (var i = 0; i < value.length ; i++) {
+            for (var i = 0; i < value.length; i++) {
                 if (value[i] != null) {
                     value[i].LastModifiedDate = ($scope.ConvertDateFormat(value[i].LastModifiedDate)).toString();
                     value[i].CreatedDate = ($scope.ConvertDateFormat(value[i].CreatedDate)).toString();
@@ -180,13 +180,13 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     function HospitalsData() {
         var defer = $q.defer();
         $http.get(rootDir + '/Profile/MasterData/GetAllHospitals').
-        success(function (data, status, headers, config) {
-            $scope.Hospitals = data;
-            defer.resolve(data);
-        }).
-        error(function (data, status, headers, config) {
-            defer.reject();
-        });
+            success(function (data, status, headers, config) {
+                $scope.Hospitals = data;
+                defer.resolve(data);
+            }).
+            error(function (data, status, headers, config) {
+                defer.reject();
+            });
         return defer.promise;
     }
     //function InsuranceCompaniesData() {
@@ -206,14 +206,14 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     function PlansData() {
         var defer = $q.defer();
         $http.get(rootDir + '/MasterDataNew/GetAllPlanNames').
-        success(function (data, status, headers, config) {
-            $scope.PlanNames = data;
+            success(function (data, status, headers, config) {
+                $scope.PlanNames = data;
 
-            defer.resolve(data);
-        }).
-        error(function (data, status, headers, config) {
-            defer.reject();
-        });
+                defer.resolve(data);
+            }).
+            error(function (data, status, headers, config) {
+                defer.reject();
+            });
         return defer.promise;
     }
 
@@ -265,6 +265,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.tabStatus = $filter('ResetTabStatus')('ProviderTask');
         $scope.addView = false;
         $scope.detailViewfortab = false;
+        $scope.showOnClose = true;
         $scope.showeditbtn = true;
         $scope.TabName = 'Provider Tasks';
         $rootScope.tabNames = 'ProviderTasks';
@@ -291,6 +292,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.tabStatus = $filter('ResetTabStatus')('HistoryTask');
         $scope.addView = false;
         $scope.detailViewfortab = false;
+        $scope.showOnClose = false;
         $scope.showeditbtn = false;
         $scope.TabName = 'History Tasks';
         $rootScope.tabNames = 'HistoryTasks';
@@ -335,10 +337,10 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                     $scope.tabStatus = $filter('ResetTabStatus')('ProviderTask');
                     $scope.LoadData();
                 }).
-            error(function (data, status, headers, config) {
-                defer.reject();
-                $rootScope.TasksLoaded = true;
-            });
+                error(function (data, status, headers, config) {
+                    defer.reject();
+                    $rootScope.TasksLoaded = true;
+                });
             return defer.promise;
             $scope.dataLoaded = true;
         }
@@ -347,7 +349,8 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     $rootScope.$on('ClosedTasks', function () {
         $scope.addView = false;
         $scope.detailViewfortab = false;
-        $scope.showeditbtn = false;
+        $scope.showOnClose = false;
+        $scope.showeditbtn = false; 
         $scope.TabName = 'Closed Tasks';
         $scope.tabStatus = $filter('ResetTabStatus')('ClosedTask');
         $rootScope.tabNames = 'ClosedTasks';
@@ -367,6 +370,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.taskhistorytab = false;
     });
     $rootScope.$on('History', function () {
+        $scope.showOnClose = false;
         $scope.cancelEditViewforTab();
         $rootScope.trackerItems = $scope.TaskHistory;
         $scope.t.pagination.start = 0;
@@ -378,15 +382,15 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     $scope.LoadData = function () {
         $scope.progressbar = false;
         $q.all([$q.when(CDUsersData()),
-            $q.when(HospitalsData()),
-            $q.when(ProvidersData()),
-            $q.when(PlansData()),
-            //$q.when(InsuranceCompaniesData()),
-            $q.when(LoginUsersData()),
-            $q.when(SubSectionData())
+        $q.when(HospitalsData()),
+        $q.when(ProvidersData()),
+        $q.when(PlansData()),
+        //$q.when(InsuranceCompaniesData()),
+        $q.when(LoginUsersData()),
+        $q.when(SubSectionData())
         ]).then(function (response) {
             $scope.Followups = [{ Name: "Phone Call", Type: "PhoneCall" }, { Name: "Email", Type: "Email" },
-                                { Name: "Online Form Completion", Type: "OnlineFormCompletion" }, { Name: "Paper Form Completion", Type: "PaperFormCompletion" }];
+            { Name: "Online Form Completion", Type: "OnlineFormCompletion" }, { Name: "Paper Form Completion", Type: "PaperFormCompletion" }];
             $scope.FollowupHelper = angular.copy($scope.Followups);
             TempFollowupHelper = angular.copy($scope.Followups);
             for (var i = 0; i < $scope.LoginUsers.length; i++) {
@@ -450,6 +454,8 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     //}
 
     $scope.cancelEditViewforTasks = function () {
+        $scope.subjectvalidation = "";
+        $scope.NextFollowUpDatevalidation = ""
         $('#addButton').show();
         $scope.errormessage = false;
         $scope.errormessageforAssignedto = false;
@@ -552,9 +558,11 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     $scope.SelectSubSection = function (SubSection) {
         $scope.task.SubSectionName = SubSection.SubSectionName;
         $(".ProviderTypeSelectAutoList").hide();
+        $scope.errormessageforsubsection = false;
     }
     $scope.showeditView = function (task, editviewfortab) {
-
+        $scope.validationfunction = false;
+        $scope.errormessageforsubject = false;
         $scope.detailViewfortab = false;
         $('#addButton').hide();
         $scope.visible = 'edit';
@@ -755,6 +763,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.task.AssignedToId = User.AuthenicateUserId;
         $scope.task.AssignedToName = User.UserName;
         $(".ProviderTypeSelectAutoList").hide();
+        $scope.errormessageforAssignedto = false;
     }
     //$scope.AddSelectUser = function (User) {
     //    $scope.task.AssignedToId = User.AuthenicateUserId;
@@ -773,50 +782,50 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
     $scope.removeTask = function () {
         $scope.progressbar = false;
         $http.post(rootDir + '/TaskTracker/Inactivetask?taskTrackerID=' + $scope.TemporaryTask.TaskTrackerId).
-   success(function (data, status, headers, config) {
-       if (data == "true") {
-           messageAlertEngine.callAlertMessage("successfullySaved", "Task closed successfully", "success", true);
-       }
-       //var closedtask = $.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; });
-       $.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0].Status = "CLOSED";
-       $scope.ClosedTasks.push($.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0]);
-       $scope.Tasks.splice($scope.Tasks.indexOf($scope.Tasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-       if ($rootScope.tabNames == 'ProviderTasks') {
-           $rootScope.$broadcast('ProviderTasks');
-       }
-       else if ($rootScope.tabNames == 'ClosedTasks') {
-           $rootScope.$broadcast('ClosedTasks');
-       }
-       //for (var j in $scope.Tasks) {
-       //    if ($scope.Tasks[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-       //        $scope.Tasks[j].Status = "CLOSED";
-       //    }
-       //}
-       //var updateddate = $scope.ConvertDate(data.NextFollowUpDate);
+            success(function (data, status, headers, config) {
+                if (data == "true") {
+                    messageAlertEngine.callAlertMessage("successfullySaved", "Task closed successfully", "success", true);
+                }
+                //var closedtask = $.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; });
+                $.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0].Status = "CLOSED";
+                $scope.ClosedTasks.push($.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0]);
+                $scope.Tasks.splice($scope.Tasks.indexOf($scope.Tasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+                if ($rootScope.tabNames == 'ProviderTasks') {
+                    $rootScope.$broadcast('ProviderTasks');
+                }
+                else if ($rootScope.tabNames == 'ClosedTasks') {
+                    $rootScope.$broadcast('ClosedTasks');
+                }
+                //for (var j in $scope.Tasks) {
+                //    if ($scope.Tasks[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                //        $scope.Tasks[j].Status = "CLOSED";
+                //    }
+                //}
+                //var updateddate = $scope.ConvertDate(data.NextFollowUpDate);
 
-       //for (var j in $scope.Tasks) {
-       //    if ($scope.Tasks[j].TaskTrackerId == data.TaskTrackerId) {
-       //        $scope.Tasks[j].Subject = data.Subject;
-       //        $scope.Tasks[j].SubSectionName = data.SubSectionName;
-       //        $scope.Tasks[j].NextFollowUpDate = updateddate;
-       //        $scope.Tasks[j].Status = data.Status;
-       //        $scope.Tasks[j].InsuranceCompanyName.CompanyName = updatedinsurancecompany;
-       //        $scope.Tasks[j].ModeOfFollowUp = data.ModeOfFollowUp;
-       //        $scope.Tasks[j].AssignedToName = assignedtoName;
-       //    }
+                //for (var j in $scope.Tasks) {
+                //    if ($scope.Tasks[j].TaskTrackerId == data.TaskTrackerId) {
+                //        $scope.Tasks[j].Subject = data.Subject;
+                //        $scope.Tasks[j].SubSectionName = data.SubSectionName;
+                //        $scope.Tasks[j].NextFollowUpDate = updateddate;
+                //        $scope.Tasks[j].Status = data.Status;
+                //        $scope.Tasks[j].InsuranceCompanyName.CompanyName = updatedinsurancecompany;
+                //        $scope.Tasks[j].ModeOfFollowUp = data.ModeOfFollowUp;
+                //        $scope.Tasks[j].AssignedToName = assignedtoName;
+                //    }
 
-       //}
+                //}
 
-       //$rootScope.trackerItems1 = angular.copy($scope.Tasks);
+                //$rootScope.trackerItems1 = angular.copy($scope.Tasks);
 
-       //ctrl.temp = $scope.Tasks;
-       //$scope.t.pagination.start = 0;
-       //ctrl.callServer($scope.t);
+                //ctrl.temp = $scope.Tasks;
+                //$scope.t.pagination.start = 0;
+                //ctrl.callServer($scope.t);
 
-   }).
-   error(function (data, status, headers, config) {
-       messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
-   });
+            }).
+            error(function (data, status, headers, config) {
+                messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
+            });
         $scope.progressbar = true;
     }
     $scope.Quickreopen = function (task) {
@@ -830,38 +839,38 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.progressbar = false;
         var opened = [];
         $http.post(rootDir + '/TaskTracker/Reactivetask?taskTrackerID=' + $scope.TemporaryTask.TaskTrackerId).
-           success(function (data, status, headers, config) {
-               if (data == "true") {
-                   messageAlertEngine.callAlertMessage("successfullySaved", "Task reopened successfully", "success", true);
-               }
-               $.grep($scope.ClosedTasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0].Status = "OPEN";
-               $scope.Tasks.push($.grep($scope.ClosedTasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0]);
-               $scope.ClosedTasks.splice($scope.ClosedTasks.indexOf($scope.ClosedTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+            success(function (data, status, headers, config) {
+                if (data == "true") {
+                    messageAlertEngine.callAlertMessage("successfullySaved", "Task reopened successfully", "success", true);
+                }
+                $.grep($scope.ClosedTasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0].Status = "OPEN";
+                $scope.Tasks.push($.grep($scope.ClosedTasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0]);
+                $scope.ClosedTasks.splice($scope.ClosedTasks.indexOf($scope.ClosedTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
 
-               for (var j in $scope.Tasks) {
-                   if ($scope.Tasks[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-                       $scope.Tasks[j].AssignedToName = $scope.ProviderNameforNotes;
-                       $scope.Tasks[j].AssignedToId = cduserdata.cdUser.CDUserID;
-                   }
-               }
-               if ($rootScope.tabNames == 'ProviderTasks') {
-                   $rootScope.$broadcast('ProviderTasks');
-               }
-               else if ($rootScope.tabNames == 'ClosedTasks') {
-                   $rootScope.$broadcast('ClosedTasks');
-               }
-               //$rootScope.trackerItems1 = angular.copy($scope.Tasks);
+                for (var j in $scope.Tasks) {
+                    if ($scope.Tasks[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                        $scope.Tasks[j].AssignedToName = $scope.ProviderNameforNotes;
+                        $scope.Tasks[j].AssignedToId = cduserdata.cdUser.CDUserID;
+                    }
+                }
+                if ($rootScope.tabNames == 'ProviderTasks') {
+                    $rootScope.$broadcast('ProviderTasks');
+                }
+                else if ($rootScope.tabNames == 'ClosedTasks') {
+                    $rootScope.$broadcast('ClosedTasks');
+                }
+                //$rootScope.trackerItems1 = angular.copy($scope.Tasks);
 
-               //ctrl.temp = $scope.Tasks;
-               //$scope.t.pagination.start = 0;
-               //ctrl.callServer($scope.t);
+                //ctrl.temp = $scope.Tasks;
+                //$scope.t.pagination.start = 0;
+                //ctrl.callServer($scope.t);
 
-           }).
+            }).
 
 
-           error(function (data, status, headers, config) {
-               messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
-           });
+            error(function (data, status, headers, config) {
+                messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
+            });
         $scope.progressbar = true;
     }
     $scope.ConvertDate = function (date) {
@@ -951,10 +960,17 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.TableView = true;
 
     }
+    $scope.subjectvalidation = false;
+    $scope.NextFollowUpDatevalidation = false;
     $scope.editTask = function () {
+        $scope.validationfunction = true;
+        //$scope.remVal();
+        //$scope.remnextfollowupVal($scope.followupdatevalue);
+        $scope.errormessageforsubject = false;
+        $scope.errormessageforNextFollowup = false;
         var d1 = new $.Deferred();
-        $scope.errormessage = false;
-        $scope.progressbar = false;
+        $scope.errormessage = "";
+        $scope.progressbar = "";
         var validationStatus;
         var validationCount = 0;
         var url;
@@ -970,6 +986,24 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         var validateassignedtoforedit = $($formData[0]).find($("[name='AssignedTo']")).val();
         var validatenextfollowupdate = $($formData[0]).find($("[name='NextFollowUpDate']")).val();
         var subsectionresultforedit = $scope.validatesubsectionName(validatesubsectionnameforedit);
+
+        if ($('#Subject_Task').val() == "") {
+            $scope.errormessageforsubject = true;
+            $scope.subjectvalidation = true;
+        }
+        else {
+            $scope.errormessageforsubject = false;
+            $scope.subjectvalidation = "";
+        }
+        if (validatenextfollowupdate == "") {
+            $scope.errormessageforNextFollowup = true;
+            $scope.NextFollowUpDatevalidation = true;
+        }
+        else {
+            $scope.errormessageforNextFollowup = false;
+            $scope.NextFollowUpDatevalidation = "";
+        }
+
         if (subsectionresultforedit == "") {
             $scope.errormessageforsubsection = true;
             validationCount++;
@@ -992,7 +1026,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
 
         var NextFollowupStatus = moment(validatenextfollowupdate, "MM/DD/YYYY", true).isValid();
         if (!NextFollowupStatus) {
-            $scope.errormessageforNextFollowup = true;
+            //$scope.errormessageforNextFollowup = true;
             validationCount++;
         }
         ResetFormForValidation($formData);
@@ -1146,11 +1180,11 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
 
     $scope.TasksData = function () {
         $http.get(rootDir + '/TaskTracker/GetAllUsers').
-           success(function (data, status, headers, config) {
-               $scope.LoginUsers = data;
-           }).
-           error(function (data, status, headers, config) {
-           });
+            success(function (data, status, headers, config) {
+                $scope.LoginUsers = data;
+            }).
+            error(function (data, status, headers, config) {
+            });
     }
     $scope.showDetailViewforTab1 = function (task) {
         $scope.TableView = false;
@@ -1305,6 +1339,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         return followupdateforupdatetask;
     }
     $scope.showAddView = function () {
+        $scope.errormessageforsubject = false;
         $scope.errormessageforNextFollowup = false;
         $scope.VisibilityControl = "";
         $scope.Tempfollowup1 = "";
@@ -1426,6 +1461,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         //ctrl.temp = $rootScope.trackerItems;
     }
     $scope.addNewTask = function (task) {
+        $scope.errormessageforNextFollowup = false;
         //ctrl.callServer($scope.t);
         $scope.errormessage = false;
         $scope.errormessageforAssignedto = false;
@@ -1434,6 +1470,10 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.errormessageforHospitalName = false;
         $scope.errormessageforInsurancecompany = false;
         $scope.progressbar = false;
+        //if (task.NextFollowUpDate == "" || task.NextFollowUpDate == undefined) {
+        //    $scope.validationfunction = true;
+        //    $scope.errormessageforNextFollowup = true;
+        //}
         var validationCount = 0;
         var validationStatus;
         var url;
@@ -1470,6 +1510,25 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
             $scope.errormessageforInsurancecompany = true;
             validationCount++;
         }
+
+        if (task.Subject == "" || task.Subject == undefined)
+        {
+            $scope.errormessageforsubject = true;
+        }
+        else
+        {
+            $scope.errormessageforsubject = false;
+        }
+
+        if (task.NextFollowUpDate == "" || task.NextFollowUpDate == undefined)
+        {
+            $scope.errormessageforNextFollowup = true;
+        }
+        else
+        {
+            $scope.errormessageforNextFollowup = false;
+        }
+
 
         url = rootDir + "/TaskTracker/AddTask"
         ResetFormForValidation($formData);
@@ -1743,12 +1802,203 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
 
     }
     $scope.inactiveWarning = function (task) {
+        $scope.validationfunction = true;
+        $scope.errormessageforsubject = false;
+        $scope.errormessageforNextFollowup = false;
         if (angular.isObject(task)) {
             $scope.TemporaryTask = {};
             $scope.TemporaryTask = angular.copy(task);
+            if (task.ProviderName == null || task.ProviderName == "") {
+                $scope.errormessageforprovider = true;
+            }
+            if ((task.SubSectionName == null || task.SubSectionName == "")) {
+                $scope.errormessageforsubsection = true;
+            }
+            if ((task.Subject == null || task.Subject == "")) {
+                $scope.errormessageforsubject = true;
+            }
+            if ((task.NextFollowUpDate == null || task.NextFollowUpDate == "")) {
+                $scope.errormessageforNextFollowup = true;
+            }
+
+            if (task.ModeOfFollowUp.length == 0 || $scope.Followups.length == 4) {
+                $scope.errormessage = true;
+            }
+            if (task.AssignedToName == null || task.AssignedToName == "") {
+                $scope.errormessageforAssignedto = true;
+            }
+
+            if (angular.isObject(task)) {
+                $scope.TemporaryTask = {};
+                $scope.TemporaryTask = angular.copy(task);
+            }
+            if (!$scope.errormessageforsubsection && !$scope.errormessageforsubject && !$scope.errormessageforNextFollowup && !$scope.errormessage && !$scope.errormessageforAssignedto)
+                $('#inactiveWarningModal').modal();
         }
-        $('#inactiveWarningModal').modal();
+        //$scope.subjectvalidation = "";
+        //$scope.NextFollowUpDatevalidation=""
+        //$('#inactiveWarningModal').modal();
     }
+
+    $scope.validationfunction = false;
+    $scope.remVal = function () {
+        if ($scope.validationfunction) {
+            if ($('#Subject_Task').val().length != 0) {
+                $scope.errormessageforsubject = false;
+            }
+            else {
+                $scope.subjval = "";
+                $scope.errormessageforsubject = true;
+            }
+        }
+    }
+
+    $scope.followupdatevalue = "";
+    $scope.remnextfollowupVal = function (NextFollowUpDate) {
+        $scope.followupdatevalue = NextFollowUpDate;
+        if ($scope.validationfunction) {
+            if (($('#Tempfollowup').val().length != 0 && $('#Tempfollowup').val() != "") || $scope.followupdatevalue != undefined) {
+                $scope.errormessageforNextFollowup = false;
+
+            }
+            else {
+                $scope.validation = "";
+                $scope.errormessageforNextFollowup = true;
+            }
+        }
+    }
+
+    $scope.showSetReminder = false;
+    $scope.showOnClose = true;
+
+    $scope.selTask = [];
+    $scope.selTaskIDs = [];
+    $scope.selectRemTask = function (event, provider) {
+        debugger;
+        if (!$scope.showOnClose) {
+            return;
+        }
+        if (provider.SelectStatus == true) {
+            provider.SelectStatus = false;
+            $scope.selTask.splice($scope.selTask.indexOf(provider), 1);
+            $scope.selTaskIDs.splice($scope.selTaskIDs.indexOf(provider), 1);
+            if ($scope.selTask.length == 0) {
+                $scope.CancelReminder();
+            }
+        }
+        else {
+            provider.SelectStatus = true;
+            $scope.selTask.push(provider);
+            $scope.selTaskIDs.push(provider);
+        }
+        $scope.taskList.tasks = angular.copy($scope.selTask);
+        //provider.SelectStatus = provider.SelectStatus == true ? false : true;
+        //$scope.selectedProviders.push(provider);
+        console.log($scope.selTask);
+    }
+
+    $scope.selectedTasks = function () {
+        $scope.taskList.tasks = $filter('filter')($scope.mc.displayed, { checked: true });
+    }
+    $scope.SetReminderModal = function () {
+        $scope.showSetReminder = true;
+        $scope.ShowAddButton = true;
+    }
+    $scope.ReSetReminderModal = function (id) {
+        $scope.showSetReminder = true;
+        $scope.ShowAddButton = false;
+        $scope.RescheduleID = id;
+    }
+
+    $scope.taskList = {
+        tasks: [],
+        remainingTime: '',
+        reminderDate: '',
+        reminderDateTime: '',
+        taskCount: 0
+    };
+
+    //Close the Set Reminder Calender
+    $scope.CancelReminder = function () {
+        $scope.showSetReminder = false;
+        $scope.ResetRemData();
+    }
+
+    $scope.ReSetReminder = function () {
+        $scope.showSetReminder = false;
+        var TaskData = JSON.parse(localStorage.getItem("TaskReminders"));
+        var IDToReschedule;
+        $.each(TaskData, function (key, value) {
+            var temp = JSON.parse(value.ReminderInfo);
+            if (temp.TaskTrackerId == $scope.RescheduleID) {
+                IDToReschedule = value.TaskReminderID;
+            }
+        })
+        var ReminderDateTime = new Date($('#datetimepicker3').val());
+        var DateToReschedule = ReminderDateTime.getUTCFullYear() + '/' + (ReminderDateTime.getMonth() + 1) + '/' + ReminderDateTime.getDate() + ' ' + ReminderDateTime.getHours() + ':' + ReminderDateTime.getMinutes() + ':' + ReminderDateTime.getSeconds();
+
+        $.ajax({
+            url: rootDir + '/TaskTracker/RescheduleReminder',
+            data: JSON.stringify({ 'taskID': IDToReschedule, 'scheduledDateTime': DateToReschedule }),
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+                if (response) {
+                    $(".RemainderBody").addClass('show');
+                    $('#ReminderFullBody').remove();
+                    clearInterval(reminderInterval);
+                    TaskNotificationReminder();
+                }
+            },
+            error: function (error) {
+                //alert("Sorry, there is some problem!");
+            }
+        });
+    };
+
+    //Set the Date time for task reminder
+    $scope.SetReminder = function () {
+        $scope.showSetReminder = false;
+        $scope.TaskReminder = [];
+        //console.log($scope.taskList.tasks);
+        var ReminderDateTime = new Date($('#datetimepicker3').val());
+        for (var i = 0; i < $scope.taskList.tasks.length; i++) {
+            $scope.TaskReminder.push({ ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime });
+            $scope.taskList.reminderDateTime = ReminderDateTime;
+            //$scope.TaskReminder = { ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime };
+        }
+
+        $http.post(rootDir + '/TaskTracker/SetReminder', $scope.TaskReminder).success(function (data) {
+            toaster.pop('Success', "Success", 'Reminder Set Successfully');
+            $.each(ctrl.displayed, function (Mkey, Mvalue) {
+                $.each($scope.taskList.tasks, function (Skey, Svalue) {
+                    if (Mvalue.TaskTrackerId == Svalue.TaskTrackerId) {
+                        Mvalue["SetReminder"] = true;
+                    }
+                });
+            });
+            $scope.ResetRemData();
+            TaskNotificationReminder();
+            if ($rootScope.tabNames == "AllTask")
+                $scope.clerCheckBoxForAllTasks();
+            else if ($rootScope.tabNames == "DailyTask")
+                $scope.clerCheckBoxForDailyTasks();
+        }).error(function (data) {
+            toaster.pop('error', "error", 'Some Error Occured, please try again later');
+        });
+        $scope.taskList.reminderDateTime = ReminderDateTime;
+        localStorage.setItem("TaskReminders", JSON.stringify($scope.taskList));
+        $scope.taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
+
+    }
+
+    $scope.ResetRemData = function () {
+        angular.forEach($scope.selTask, function (value, key) {
+            value.SelectStatus = false;
+        });
+        $scope.selTask = [];
+        $scope.taskList.tasks = angular.copy($scope.selTask);
+    };
 
 }])
 

@@ -15,6 +15,8 @@ using AHC.CD.Entities;
 using System.Threading.Tasks;
 using AHC.CD.Entities.TaskTracker;
 using PGChat;
+using AutoMapper;
+using System.IO;
 
 namespace AHC.CD.WebUI.MVC.Controllers
 {
@@ -68,7 +70,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         {
             string status = "false";
             TaskTrackerBusinessModel tracker = null;
-            
+
             try
             {
                 var userAuthId = GetUserAuthId();
@@ -76,7 +78,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 tracker = AutoMapper.Mapper.Map<TaskTrackerViewModel, TaskTrackerBusinessModel>(taskTracker, tracker);
                 return JsonConvert.SerializeObject(taskTrackerManager.AddTask(tracker, User.Identity.Name));
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -102,18 +104,18 @@ namespace AHC.CD.WebUI.MVC.Controllers
         public string Inactivetask(int taskTrackerID)
         {
             string status = "false";
-            
+
             try
             {
-                taskTrackerManager.InactiveTask(taskTrackerID,User.Identity.Name);
-                status="true";
+                taskTrackerManager.InactiveTask(taskTrackerID, User.Identity.Name);
+                status = "true";
                 return status;
             }
             catch (Exception)
             {
                 throw;
             }
-            
+
         }
 
         public string Reactivetask(int taskTrackerID)
@@ -123,7 +125,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             try
             {
                 authID = GetUserAuthId();
-                taskTrackerManager.ReactiveTask(taskTrackerID, User.Identity.Name,authID);
+                taskTrackerManager.ReactiveTask(taskTrackerID, User.Identity.Name, authID);
                 status = "true";
                 return status;
             }
@@ -154,7 +156,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             try
             {
                 var users = await userManager.GetAllCDUsers();
-               
+
 
                 foreach (var user in users)
                 {
@@ -180,7 +182,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             List<object> cdUsers = new List<object>();
             try
             {
-                var users =  userManager.GetAllCDUsers1();
+                var users = userManager.GetAllCDUsers1();
                 foreach (var user in users)
                 {
                     user.CDRoles = null;
@@ -194,7 +196,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                         });
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -253,7 +255,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             }
             catch (Exception)
             {
-                
+
                 throw;
             }
         }
@@ -262,7 +264,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
         public async Task<string> GetAllTasksByUserId()
         {
-           
+
             try
             {
                 var tasks = await taskTrackerManager.GetAllTasksByUserId(GetUserAuthId());
@@ -279,11 +281,20 @@ namespace AHC.CD.WebUI.MVC.Controllers
             }
         }
 
-        public async Task<string> SetReminder(List<TaskReminder> reminders)
+        public async Task<string> SetReminder(List<TaskReminderViewModel> reminders)
         {
             try
             {
-                var status = await taskTrackerManager.SetReminder(reminders, GetUserAuthId());
+                foreach (var reminder in reminders)
+                {
+                    if (reminder.ScheduledDateTime == null)
+                    {
+                        reminder.ScheduledDateTime = reminder.LastModifiedDate.ToString();
+                    }
+                }
+                Mapper.CreateMap<TaskReminderViewModel, TaskReminder>().ForMember(d => d.ScheduledDateTime, opt => opt.MapFrom(src => Convert.ToDateTime(src.ScheduledDateTime)));
+                var taskReminders = Mapper.Map<List<TaskReminderViewModel>, List<TaskReminder>>(reminders);
+                var status = await taskTrackerManager.SetReminder(taskReminders, GetUserAuthId());
 
                 return status.ToString();
             }
@@ -293,14 +304,90 @@ namespace AHC.CD.WebUI.MVC.Controllers
             }
         }
 
+        public async Task<ActionResult> GetReminders()
+        {
+            try
+            {
+                var reminders = await taskTrackerManager.GetReminders(GetUserAuthId());
+                string responseView = RenderPartialToString(this.ControllerContext, "~/Views/Prototypes/Reminders/_reminderNotification.cshtml", null);
+               return  Json(new { reminders = reminders, responseView = responseView },JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DismissReminder(int taskID)
+        {
+            try
+            {
+                var status = await taskTrackerManager.DismissReminder(taskID, GetUserAuthId());
+
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<bool> DismissAllReminder(int[] taskIDs)
+        {
+            try
+            {
+                var status = await taskTrackerManager.DismissAllReminder(taskIDs, GetUserAuthId());
+
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<bool> RescheduleReminder(int taskID, string scheduledDateTime)
+        {
+            try
+            {
+                DateTime _scheduledDateTime = Convert.ToDateTime(scheduledDateTime);
+                var status = await taskTrackerManager.RescheduleReminder(taskID, _scheduledDateTime, GetUserAuthId());
+
+                return status;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         #region Private Methods
 
         private string GetUserAuthId()
         {
-            var currentUser = HttpContext.User.Identity.Name;
+            var currentUser = User.Identity.Name;
             var appUser = new ApplicationUser() { UserName = currentUser };
             ApplicationUser user = AuthUserManager.FindByNameSync(appUser);
             return user.Id;
+        }
+
+        private string RenderPartialToString(ControllerContext controllerContext, String viewURL, Object model)
+        {
+            if (model != null)
+            {
+                controllerContext.Controller.ViewData.Model = model;
+            }
+            using (var sw = new StringWriter())
+            {
+                var ViewResult = ViewEngines.Engines.FindPartialView(controllerContext, viewURL);
+                var ViewContext = new ViewContext(controllerContext, ViewResult.View, controllerContext.Controller.ViewData, controllerContext.Controller.TempData, sw);
+                ViewResult.View.Render(ViewContext, sw);
+                ViewResult.ViewEngine.ReleaseView(controllerContext, ViewResult.View);
+                return sw.GetStringBuilder().ToString();
+            }
         }
 
         #endregion

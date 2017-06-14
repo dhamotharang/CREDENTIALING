@@ -16,7 +16,7 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
             var value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
             var convertedValue = ConvertToDateString(value.AttemptedValue.ToString());
             var date = DateTime.ParseExact(convertedValue, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            //var date = DateTime.ParseExact(convertedValue, "MM/dd/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+            //var date = DateTime.ParseExact(convertedValue, "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
 
             return date;
         }
@@ -26,8 +26,9 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
             if (date != null)
             {
                 string format = "MM/dd/yyyy";
-                //string format = "MM/dd/yyyy h:mm:ss tt";
-                Regex r = new Regex(@"\d{2}/\d{2}/\d{4}");
+                //string format = "M/d/yyyy h:mm:ss tt";
+               //Regex r = new Regex(@"\d{1,2}/\d{1,2}/\d{4}.*");
+                 Regex r = new Regex(@"\d{2}/\d{2}/\d{4}");
 
                 var isValid = r.IsMatch(date);
 

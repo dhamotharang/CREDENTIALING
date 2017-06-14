@@ -12,7 +12,7 @@ namespace AHC.CD.Data.Repository.TaskTracker
         AHC.CD.Entities.TaskTracker.TaskTracker AddTask(AHC.CD.Entities.TaskTracker.TaskTracker taskTracker);
         AHC.CD.Entities.TaskTracker.TaskTracker UpdateTask(AHC.CD.Entities.TaskTracker.TaskTracker taskTracker);
         void InactiveTask(int taskTrackerId);
-        void ReactiveTask(int taskTrackerId, int taskID);
+        void ReactiveTask(int taskTrackerId, int taskID,string ActionPerformedBy);
         AHC.CD.Entities.TaskTracker.TaskTracker GetTaskById(int taskTrackerId);
 
         Task<IEnumerable<object>> GetAllProvider();
@@ -20,5 +20,10 @@ namespace AHC.CD.Data.Repository.TaskTracker
         Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByUserId(string userAuthId);
         Task<IEnumerable<AHC.CD.Entities.TaskTracker.TaskTracker>> GetAllTasksByProfileId(int profileid);
         Task<bool> SetReminder(List<TaskReminder> reminders);
+        Task<List<TaskReminder>> GetReminders(int scheduledByID);
+        Task<bool> DismissReminder(int taskID, int scheduledByID);
+        Task<bool> DismissAllReminder(int[] taskIDs, int scheduledByID);
+
+        Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, int scheduledByID);
     }
 }

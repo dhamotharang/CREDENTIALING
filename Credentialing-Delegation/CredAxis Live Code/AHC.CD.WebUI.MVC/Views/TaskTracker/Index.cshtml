@@ -10,18 +10,22 @@
     <link href="~/Content/SharedCss/jasny-bootstrap.css" rel="stylesheet" />
     <link href="~/Content/SharedCss/AngularStrapDatepicker.css" rel="stylesheet" />
     <link href="~/Content/Provider/ng-table.css" rel="stylesheet" />
+    <link href="~/Content/toaster.css" rel="stylesheet" />
     <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
     <script src="~/Scripts/Lib/Bootstrap/jasny-bootstrap.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/angular-animate.min.js"></script>
     <script src="~/Scripts/Lib/Angular/ng-table.js"></script>
+    <script src="~/Scripts/Lib/Angular/toaster.js"></script>
     <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
     <script src="~/Scripts/Lib/CDN%20Service/angular-strap.tpl.min.js"></script>
     <script src="~/Scripts/Lib/Angular/ng-table-resizable-columns.js"></script>
     <script src="~/Scripts/Custom/TaskTracker/LoadingInterceptor.js"></script>
     <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
     @*<script src="~/Scripts/angular-timer-all.min.js"></script>*@
+<script src="~/Scripts/Prototypes/jquery.datetimepicker.full.js"></script>
     <script src="~/Scripts/Custom/TaskTracker/TaskTracker.js"></script>
     <script src="~/Scripts/Custom/TaskTracker/trackerPageDirective.js"></script>
     <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
@@ -62,7 +66,7 @@
     }
 
     .emptyData {
-        color: "#E27B7B";
+        color: #E27B7B;
     }
 
     /*Provider Type Style*/
@@ -87,11 +91,17 @@
         width: 50px;
         text-align: center;
     }
+
+    .st-selected {
+        cursor: pointer !important;
+        background-color: rgb(102, 135, 162) !important;
+        color: white !important;
+    }
 </style>
 
 
 <div id="page-wrapper" ng-app="TrackerApp">
-
+    <toaster-container toaster-options="{'time-out': 2000,'position-class': 'toast-top-right','close-button':true}"></toaster-container>
     <div class="container-fluid" ng-controller="TrackerCtrl as mc" ng-init="progressbar = false;LoadData()">
 
         <div class="row">
@@ -120,19 +130,23 @@
                         {
                             if (roles.Contains("CCO") || roles.Contains("CRA"))
                             {
-                                <div id="addButton" class="legend2 pull-right">
-                                    <button ng-click="showAddView()" class="btn btn-xs btn-primary" id="NewwAdd" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
+                                <div class="legend2  pull-right">
+                                    @*<span id="AddScheduleBtn" class="">
+                                            <button ng-click="SetReminderModal()" class="btn btn-xs btn-primary" id="AddSchedule" tooltip data-toggle="tooltip" data-placement="top" title="Set Reminder"><i class="fa fa-calendar"></i></button>
+                                        </span>*@
+                                    <span id="addButton" class="">
+                                        <button ng-click="showAddView()" class="btn btn-xs btn-primary" id="NewwAdd" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
+                                    </span>
+
+                                    <div id="showingDateTimePicker" ng-show="showSetReminder">
+                                        @Html.Partial("~/Views/Prototypes/Reminders/_setReminder.cshtml")
+                                    </div>
                                 </div>
                             }
                         }
                     }
-                    
-                    @*<div id="AddScheduleBtn" class="legend2 " style="margin-left: 93%; margin-right: 43px;">
-                        <button ng-click="SetReminderModal()" class="btn btn-xs btn-primary" id="AddSchedule" tooltip data-toggle="tooltip" data-placement="top" title="Set Reminder"><i class="fa fa-calendar"></i></button>
-                    </div>
-                    <div ng-show="showSetReminder">
-                        @Html.Partial("~/Views/Prototypes/Reminders/_setReminder.cshtml")
-                    </div>*@
+
+
                     @*<div id="addButton" class="legend2 pull-right">
                             <button ng-click="showAddView()" class="btn btn-xs btn-primary" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
                         </div>*@
@@ -154,13 +168,16 @@
                                         <li><a id="tabs3" data-toggle="tab" ng-click="showtabdata();tabName('AllTasks')" href="#tab1">All Tasks</a></li>
                                     }
                                 }
-                            }                            
+                            }
                             <li><a id="tabs4" data-toggle="tab" ng-click="showtabdata();tabName('ClosedTasks')" href="#tab1">Closed Tasks</a></li>
-                            
+
                             <li><a id="tabs6" data-toggle="tab" ng-click="showtabdata();tabName('History')" href="#tab1" ng-show="history">Task History</a></li>
                             <label tooltip data-toggle="tooltip" data-placement="top" title="Close" ng-show="history" style="color:red;cursor:pointer" class="fa fa-close" ng-click="closeHistory()"></label>
                         </ul>
                         <div class="clearfix"></div>
+                        <div class="pull-right" style="color:red;" ng-show="selTask.length<1&&showOnClose&&!mc.displayed.length==0">
+                            *Please select the provider(s) to Set Reminder
+                        </div>
                         <div class="col-lg-12 zero-padding-left-right-div">
                             <div ng-show="activeMessageDiv=='successfullySaved'" class="alert alert-success" role="alert">
                                 <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>

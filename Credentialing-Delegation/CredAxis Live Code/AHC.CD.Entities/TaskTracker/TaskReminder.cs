@@ -33,6 +33,8 @@ namespace AHC.CD.Entities.TaskTracker
 
         [Column(TypeName = "datetime2")]
         public DateTime LastModifiedDate { get; set; }
+        //Snooze time in minutes
+        public int SnoozeTime { get; set; }
 
         #region Status
 

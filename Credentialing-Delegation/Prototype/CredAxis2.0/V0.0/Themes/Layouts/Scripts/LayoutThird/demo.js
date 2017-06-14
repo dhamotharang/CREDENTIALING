@@ -6,21 +6,18 @@ $(document).ready(
     $('.popovers').popover({container: 'body', trigger: 'hover', placement: 'top'}); //bootstrap's popover
     $('.tooltips').tooltip(); //bootstrap's tooltip
 
-    $(".chathistory").niceScroll({horizrailenabled:false});  //chathistory scroll
-
     try {
         //Set nicescroll on notifications
-        $(".scrollthis").niceScroll({horizrailenabled:false});
         $('.dropdown').on('shown.bs.dropdown', function () {
-            $(".scrollthis").getNiceScroll().resize();
-            $(".scrollthis").getNiceScroll().show();
+            $(".scrollthis").resize();
+            $(".scrollthis").show();
         });
         $('.dropdown').on('hide.bs.dropdown', function ()  {
-            $(".scrollthis").getNiceScroll().hide();
+            $(".scrollthis").hide();
         });
 
         $(window).scroll(function(){
-            $(".scrollthis").getNiceScroll().resize();
+            $(".scrollthis").resize();
         });
     } catch(e) {}
 
@@ -88,7 +85,7 @@ $('.chatinput textarea').keypress(function (e) {
         $(".chathistory").html(oo+ "<div class='chatmsg'><p>"+chatmsg+"</p><span class='timestamp'>"+n+"</span></div>");
 
 
-    $(".chathistory").getNiceScroll().resize();
+    $(".chathistory").resize();
     $(".chathistory").animate({ scrollTop: $(document).height() }, 0);
 
     $(this).val(''); // empty textarea

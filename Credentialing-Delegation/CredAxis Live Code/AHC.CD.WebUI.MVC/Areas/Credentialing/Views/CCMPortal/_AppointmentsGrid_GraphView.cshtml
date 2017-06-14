@@ -8,8 +8,8 @@
         <div class="btn-group pull-right legend2 ng-scope">
             @*<span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Export CSV" ng-click="TableExport('CSV','#CCMGrid')"><span><i class="fa fa-file-code-o bigger-120"></i></span></button></span>*@
             <span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Export Excel" ng-click="TableExport('Excel','#CCMGrid')"><span><i class="fa fa-file-excel-o bigger-120"></i></span></button></span>
-            @*<span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#CCMGrid')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></button></span>*@
-            <span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></button></span>
+            <span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Export to PDF" ng-click="TableExport('Pdf','#CCMGrid')"><span><i class="fa fa-file-pdf-o bigger-120"></i></span></button></span>
+            @*<span><button class="btn btn-xs btn-primary ng-scope" data-toggle="tooltip" data-placement="top" title="Print"><span><i class="fa fa-print bigger-120"></i></span></button></span>*@
             <span><button class="btn  btn-xs btn-warning" data-toggle="tooltip" data-placement="top" ng-click="SwitchViews();" title="Return To Appointment DashBoard"><span><i class="fa fa-arrow-left"></i></span></button></span>
         </div>
         @*<div class="col-lg-4 zero-padding-left-right pull-right">
@@ -20,21 +20,23 @@
         <table id="CCMGrid" class="table  table-bordered" st-pipe="pc.callServer" st-table="pc.displayed" st-safe-src="CCMAppointments">
             <thead style="color:black">
                 <tr style="cursor:pointer">
+                    <th st-sort="NPI" class="col-lg-2">NPI</th>
                     <th st-sort="ProviderName" class="col-lg-2">Provider Name</th>
                     <th st-sort="Specialty" class="col-lg-2">Specialty</th>
                     <th st-sort="PlanName" class="col-lg-1">Plan</th>
-                    <th st-sort="CredInitiationDate" class="col-lg-2">Initiation Date</th>
-                    <th st-sort="AppointmentDate" class="col-lg-2">Appointment Date</th>
+                    <th st-sort="CredInitiationDate" class="col-lg-2">Initiated Date</th>
+                    <th st-sort="AppointmentDate" class="col-lg-1">Appointment Date</th>
                     <th st-sort="RecommendedLevel" class="col-lg-1">Level</th>
                     <th st-sort="Status" class="col-lg-1">Status</th>
                     <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="TempObjectForStatus.QuickApprovalAction"><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#ActionModal">Quick Action</button></th>
                     <th class="hidecontent" style="width: 3%;" st-skip-natural="true" ng-if="!TempObjectForStatus.QuickApprovalAction">Action</th>
                 </tr>
                 <tr>
+                    <td class="hideData"><input st-search="NPI" type="text" placeholder="NPI" id="NPI" class="form-control input-sm" /></td>
                     <td class="hideData"><input st-search="ProviderName" type="text" placeholder="Provider Name" id="ProviderName" class="form-control input-sm" /></td>
                     <td class="hideData"><input st-search="Specialty" type="text" placeholder="Specialty" id="Specialty" class="form-control input-sm" /></td>
                     <td class="hideData"><input st-search="PlanName" type="text" placeholder="Plan" id="PlanName" class="form-control input-sm" /></td>
-                    <td class="hideData"><input st-search="CredInitiationDate" type="text" placeholder="Initiation Date" id="CredInitiationDate" class="form-control input-sm" /></td>
+                    <td class="hideData"><input st-search="CredInitiationDate" type="text" placeholder="Initiated Date" id="CredInitiationDate" class="form-control input-sm" /></td>
                     <td class="hideData"><input st-search="AppointmentDate" type="text" placeholder="Appointment Date" id="AppointmentDate" class="form-control input-sm" /></td>
                     <td class="hideData"><input st-search="RecommendedLevel" type="text" placeholder="Level" id="RecommendedLevel" class="form-control input-sm" /></td>
                     <td class="hideData"><input st-search="Status" type="text" placeholder="Status" id="Status" class="form-control input-sm" /></td>
@@ -43,10 +45,11 @@
             </thead>
             <tbody ng-show="!pc.isLoading" ng-repeat="appointment in pc.displayed track by $index">
                 <tr id="firstrow" style="cursor:pointer" @*ng-style="appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction ? { 'background-color':'rgb(114, 58, 115)',color:'white','font-weight':'bold' } : {'background-color':'white',color:'black'}"*@
-                    ng-class="{'PendingRequest':appointment.Status=='Pending' && appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction,'NewRequest': appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction,'RowHighliting':appointment.Provider_ID == TempToHighLightRowObject.Provider_ID}">
+                    ng-class="{'PendingRequest':appointment.Status=='Onhold' && appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction,'NewRequest': appointment.SelectStatus && !TempObjectForStatus.SingleDetailedApprovalAction,'RowHighliting':appointment.Provider_ID == TempToHighLightRowObject.Provider_ID}">                
+                    <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.NPI || 'Not Available'}}</td>
                     <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.ProviderName || 'Not Available'}}</td>
                     <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.Specialty || 'Not Available'}}</td>
-                    <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.PlanName || 'Not Available'}}</td>
+                    <td class="col-lg-1 wrap-words" select-row object="appointment">{{appointment.PlanName || 'Not Available'}}</td>
                     <td class="col-lg-2 wrap-words" select-row object="appointment">{{appointment.CredInitiationDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
                     <td class="col-lg-1 wrap-words" select-row object="appointment">{{appointment.AppointmentDate | date:"MM/dd/yyyy" || 'Not Available'}}</td>
                     <td class="col-lg-1 wrap-words" select-row object="appointment">{{appointment.RecommendedLevel || 'Not Available'}}</td>
@@ -59,9 +62,9 @@
                         <button get-siblings class="btn btn-danger btn-xs hidden CloseDetail"><i class="fa fa-times"></i></button>
                     </td>
                 </tr>
-
+                
                 <tr ng-if="VisibilityControl==($index+'_AppointMentView')" ng-controller="SPAIndexController as spa" style="border-top-color: rgba(13, 1, 25, 0.4); border-top-style: solid; border-top-width: 3px; border-bottom-color: rgba(13, 1, 25, 0.4); border-bottom-style: solid; border-bottom-width: 3px; border-radius: 3px;">
-                    <td colspan="8" style="padding-left:0px;padding-right:0px">
+                    <td colspan="9" style="padding-left:0px;padding-right:0px">
                         <div ng-include="'/Credentialing/CCMPortal/SPAIndexPage'" style="background-color: white;">
                             @*<div ng-include="'/Credentialing/CCM/CCMSPAPage?id='+appointment.ProviderCredentialingInfoID" style="background-color: white;">*@
                         </div>
@@ -70,16 +73,21 @@
 
 
             </tbody>
+            <tbody ng-if="pc.displayed.length==0">
+                <tr>
+                    <td colspan="9" style="font:bold;text-align:center;color:black">No Data Available</td>
+                </tr>
+            </tbody>
             <tbody ng-show="pc.isLoading">
                 <tr>
-                    <td colspan="8" class="text-center">
+                    <td colspan="9" class="text-center">
                         <div class="loading-indicator"></div>
                     </td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="8"></td>
+                    <td id="PaginationCss" style="cursor:pointer" class="text-center" st-pagination="" st-items-by-page="10" colspan="9"></td>
                 </tr>
             </tfoot>
         </table>
@@ -131,13 +139,21 @@
                             </span>
                         </div>
                     </div>
-                    <input type="hidden" name="SignaturePath" value="{{image}}" />
+                    @*<input type="hidden" name="SignaturePath" value="{{image}}" />*@
                     <div class="col-lg-6 form-group">
-                        <label class="control-label small" for="Signature">
+                        @*<label class="control-label small" for="Signature">
                             Signature : <select class="input-xs" style="color:black" id="signatureOption" ng-model="signatureOption" ng-init="signatureOption='digitalsignature'" ng-value="SignaturePath == null?'digitalsignature':'reusedigitalsignature'" ng-change="ChangeSignatureOption()">
                                 <option value="digitalsignature" ng-selected="SignaturePath == null">Digital Signature</option>
                                 <option value="reusedigitalsignature" ng-selected="SignaturePath != null">Use Previous Signature</option>
                                 <option value="upload">Upload Signature</option>
+                            </select>
+                        </label>*@
+                        <label class="control-label small" for="Signature">
+                            Signature : <select class="input-xs" style="color:black" id="signatureOption" ng-model="signatureOption" ng-change="ChangeSignatureOption()">
+                                <option ng-hide="SignatureOption" selected disabled hidden value="">--select--</option>    
+                                <option value="digitalsignature" ng-selected="SignatureOption=='digitalsignature'">Digital Signature</option>
+                                <option value="reusedigitalsignature" ng-selected="SignatureOption=='reusedigitalsignature'">Use Previous Signature</option>
+                                <option value="upload" ng-selected="SignatureOption=='upload'">Upload Signature</option>
                             </select>
                         </label>
                         <div>
@@ -190,9 +206,9 @@
             </div>
             <div class="panel-footer">
                 <div>
-                    <button class="btn btn-danger btn-xs pull-left " ng-click="SaveAppoinmentDecision('Reject')">Reject</button>
-                    <button class="btn btn-warning btn-xs" style=" margin-left: 260px;" ng-click="SaveAppoinmentDecision('OnHold')">On Hold</button>
-                    <button class="btn btn-primary btn-xs pull-right" ng-click="SaveAppoinmentDecision('Approve')">Approve</button>
+                    <button class="btn btn-danger btn-xs pull-left " ng-click="SaveAppoinmentDecision('Rejected')">Reject</button>
+                    <button class="btn btn-warning btn-xs" style=" margin-left: 260px;" ng-click="SaveAppoinmentDecision('Onhold')">On Hold</button>
+                    <button class="btn btn-primary btn-xs pull-right" ng-click="SaveAppoinmentDecision('Approved')">Approve</button>
                 </div>
             </div>
         </div>

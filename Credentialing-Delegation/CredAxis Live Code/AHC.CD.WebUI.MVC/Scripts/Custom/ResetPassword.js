@@ -14,6 +14,72 @@ userApp.factory("UserDataFactory", ["$rootScope", "$q", "$filter", function ($ro
         if (params.sort.predicate) {
             $rootScope.filtered = $filter('orderBy')($rootScope.filtered, params.sort.predicate, params.sort.reverse);
         }
+        $rootScope.tempfilteredData = $rootScope.filtered;
+        //for (var role = 0; role <= $rootScope.filtered.length; role++)
+        //{
+        //    if ($rootScope.filtered[role].Role == "CRA")
+        //    {
+        //        $rootScope.filtered[role].Role = "Credentialing Admin";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "CCO") {
+        //        $rootScope.filtered[role].Role = "Credential Coordinator";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "PRO") {
+        //        $rootScope.filtered[role].Role = "Provider";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "ADM") {
+        //        $rootScope.filtered[role].Role = "Admin";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "CCM") {
+        //        $rootScope.filtered[role].Role = "Credentialing Committee";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "HR") {
+        //        $rootScope.filtered[role].Role = "Humman Resource";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "MGT") {
+        //        $rootScope.filtered[role].Role = "Management";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "SuperAdmin") {
+        //        $rootScope.filtered[role].Role = "Super Admin";
+        //    }
+        //    else if ($rootScope.filtered[role].Role == "TL") {
+        //        $rootScope.filtered[role].Role = "Team Lead";
+        //    }
+        //}
+        for (var record = 0; record < $rootScope.filtered.length; record++) {
+            //$rootScope.filtered[record].RoleList = [];
+            $rootScope.filtered[record].RoleList = "";
+            //$rootScope.filtered[record].RoleList.push($rootScope.filtered[record].Role);
+            $rootScope.filtered[record].RoleList += $rootScope.filtered[record].Role;
+            for (var record1 = 0; record1 < $rootScope.tempfilteredData.length; record1++) {
+                if ($rootScope.filtered[record].AuthenticateUserId == $rootScope.tempfilteredData[record1].AuthenticateUserId && $rootScope.filtered[record].Role != $rootScope.tempfilteredData[record1].Role) {
+                    if ($rootScope.filtered[record].RoleList == null) {
+                        $rootScope.filtered[record].RoleList = "";
+                    }
+                    $rootScope.filtered[record].RoleList += "," + $rootScope.tempfilteredData[record1].Role;
+                    //$rootScope.filtered.splice($rootScope.filtered[record1], 1);
+                }
+            }
+        }
+
+        var uniqueNames = _.groupBy($rootScope.filtered, "Email");
+
+        var array = [];
+        _.forOwn(uniqueNames, function (value, key) {
+            array.push(value);
+        });
+        $rootScope.filtered = [];
+        for (var ar = 0; ar < array.length; ar++) {
+            //$rootScope.filtered[ar].AuthenticateUserId = array[ar].AuthenticateUserId;
+            //$rootScope.filtered[ar].Email = array[ar].Email;
+            //$rootScope.filtered[ar].Name = array[ar].Name;
+            //$rootScope.filtered[ar].NumberofRoles = array[ar].NumberofRoles;
+            //$rootScope.filtered[ar].Role = array[ar].Role;
+            //$rootScope.filtered[ar].RoleList = array[ar].RoleList;
+            $rootScope.filtered[ar] = array[ar][0];
+        }
+
+
         var result = $rootScope.filtered.slice(start, start + number);
         deferred.resolve({
             data: result,
@@ -84,7 +150,7 @@ userApp.controller("ResetPasswordController", ['$scope', '$http', '$rootScope', 
     $scope.mydata;
     $scope.UsersPagination = [];
     $scope.errormessage;
-
+    
 
 
 
@@ -113,45 +179,45 @@ userApp.controller("ResetPasswordController", ['$scope', '$http', '$rootScope', 
         var d = new $.Deferred();
         $scope.showLoading = true;
         $http.get(rootDir + '/Account/SearchUser')
-       .success(function (data, status, headers, config) {
-           $scope.mydata = angular.copy(data);
-           for (var i in $scope.mydata) {
-               if ($scope.mydata[i].Name == null) { $scope.mydata[i].Name = ""; }
-           }
-           if ($scope.mydata.length > 9) {
-               for (i = 0; i < 10; i++) {
-                   $scope.UsersPagination[i] = $scope.mydata[i];
-               }
-               $scope.bigTotalItems = $scope.mydata.length;
+            .success(function (data, status, headers, config) {
+                $scope.mydata = angular.copy(data);
+                for (var i in $scope.mydata) {
+                    if ($scope.mydata[i].Name == null) { $scope.mydata[i].Name = ""; }
+                }
+                if ($scope.mydata.length > 9) {
+                    for (i = 0; i < 10; i++) {
+                        $scope.UsersPagination[i] = $scope.mydata[i];
+                    }
+                    $scope.bigTotalItems = $scope.mydata.length;
 
-               $scope.CurrentPage = [];
-               $scope.bigCurrentPage = 1;
+                    $scope.CurrentPage = [];
+                    $scope.bigCurrentPage = 1;
 
-               var startIndex = ($scope.bigCurrentPage - 1) * 10;
-               var endIndex = startIndex + 9;
+                    var startIndex = ($scope.bigCurrentPage - 1) * 10;
+                    var endIndex = startIndex + 9;
 
-               for (startIndex; startIndex <= endIndex ; startIndex++) {
-                   if ($scope.mydata[startIndex]) {
-                       $scope.CurrentPage.push($scope.mydata[startIndex]);
-                   } else {
-                       break;
-                   }
-               }
-           }
+                    for (startIndex; startIndex <= endIndex; startIndex++) {
+                        if ($scope.mydata[startIndex]) {
+                            $scope.CurrentPage.push($scope.mydata[startIndex]);
+                        } else {
+                            break;
+                        }
+                    }
+                }
 
-           else {
-               $scope.UsersPagination = angular.copy($scope.mydata);
-               $scope.bigTotalItems = $scope.mydata.length;
-           }
-           $scope.showLoading = false;
-           d.resolve();
+                else {
+                    $scope.UsersPagination = angular.copy($scope.mydata);
+                    $scope.bigTotalItems = $scope.mydata.length;
+                }
+                $scope.showLoading = false;
+                d.resolve();
 
-           //$('#mydiv').show();
-       }).
-        error(function (data, status, headers, config) {
-            $scope.showLoading = false;
-            //return d.promise();
-        });
+                //$('#mydiv').show();
+            }).
+            error(function (data, status, headers, config) {
+                $scope.showLoading = false;
+                //return d.promise();
+            });
         return d.promise();
     }
 
@@ -210,63 +276,63 @@ userApp.controller("ResetPasswordController", ['$scope', '$http', '$rootScope', 
     $scope.ChangeRole = function (newRole, Email, authid, oldrole) {
         $scope.showLoading = true;
         $http.get(rootDir + '/Account/ChangeRole', { params: { "NewRoleCode": newRole, "Email": Email, "authId": authid, "OldRoleCode": oldrole } })
-      .success(function (data, status, headers, config) {
-          var promise = $scope.Getlist().then(function () {
-              toaster.pop('Success', "Success", 'Role Changed successfully');
-              $('.tulasi').attr('disabled', true);
-          });
-      }).
-       error(function (data, status, headers, config) {
-           toaster.pop('error', "", 'Error occured while changing Role.. Please try after sometime');
-           $scope.showLoading = false;
-       });
+            .success(function (data, status, headers, config) {
+                var promise = $scope.Getlist().then(function () {
+                    toaster.pop('Success', "Success", 'Role Changed successfully');
+                    $('.tulasi').attr('disabled', true);
+                });
+            }).
+            error(function (data, status, headers, config) {
+                toaster.pop('error', "", 'Error occured while changing Role.. Please try after sometime');
+                $scope.showLoading = false;
+            });
     }
 
     $scope.PasswordReset = function (Email) {
         $scope.showLoading = true;
         $http.get(rootDir + "/Account/PasswordReset", { params: { "Email": Email } })
-      .success(function (data) {
-          $scope.showLoading = false;
-          toaster.pop('Success', "Success", 'Password has been resetted successfully');
-      })
-          .error(function (data, status, headers, config) {
-              toaster.pop('error', "", 'Error occured while resetting Password.. Please try after sometime');
-              $scope.showLoading = false;
-          });
+            .success(function (data) {
+                $scope.showLoading = false;
+                toaster.pop('Success', "Success", 'Password has been resetted successfully');
+            })
+            .error(function (data, status, headers, config) {
+                toaster.pop('error', "", 'Error occured while resetting Password.. Please try after sometime');
+                $scope.showLoading = false;
+            });
     }
 
     $scope.RemoveRole = function (role, email, authid) {
         $scope.showLoading = true;
         $http.get(rootDir + '/Account/RemoveRoleofaUser', { params: { "role": role, "email": email, "authid": authid } })
-      .success(function (data, status, headers, config) {
-          if (data == 'True') {
-              var promise = $scope.Getlist().then(function () {
-                  toaster.pop('Success', "Success", 'Role removed successfully');
-              });
-          }
-          else {
-              $scope.showLoading = false;
-          }
-      }).
-       error(function (data, status, headers, config) {
-           toaster.pop('error', "", 'Error occured while removing Role.. Please try after sometime');
-           $scope.showLoading = false;
-       });
+            .success(function (data, status, headers, config) {
+                if (data == 'True') {
+                    var promise = $scope.Getlist().then(function () {
+                        toaster.pop('Success', "Success", 'Role removed successfully');
+                    });
+                }
+                else {
+                    $scope.showLoading = false;
+                }
+            }).
+            error(function (data, status, headers, config) {
+                toaster.pop('error', "", 'Error occured while removing Role.. Please try after sometime');
+                $scope.showLoading = false;
+            });
     }
 
     $scope.AddRole = function (newRole, Email, authid) {
         $scope.showLoading = true;
         $http.get(rootDir + '/Account/AddRoleforaUser', { params: { "role": newRole, "email": Email, "authid": authid } })
-      .success(function (data, status, headers, config) {
-          var promise = $scope.Getlist().then(function () {
-              toaster.pop('Success', "Success", 'Role added successfully');
-              $('.tulasi').attr('disabled', true);
-          });
-      }).
-       error(function (data, status, headers, config) {
-           toaster.pop('error', "", 'Error occured while adding Role.. Please try after sometime');
-           $scope.showLoading = false;
-       });
+            .success(function (data, status, headers, config) {
+                var promise = $scope.Getlist().then(function () {
+                    toaster.pop('Success', "Success", 'Role added successfully');
+                    $('.tulasi').attr('disabled', true);
+                });
+            }).
+            error(function (data, status, headers, config) {
+                toaster.pop('error', "", 'Error occured while adding Role.. Please try after sometime');
+                $scope.showLoading = false;
+            });
     }
 
     //pagination
@@ -288,7 +354,7 @@ userApp.controller("ResetPasswordController", ['$scope', '$http', '$rootScope', 
         var startIndex = (newValue - 1) * 10;
         var endIndex = startIndex + 9;
         if ($scope.mydata) {
-            for (startIndex; startIndex <= endIndex ; startIndex++) {
+            for (startIndex; startIndex <= endIndex; startIndex++) {
                 if ($scope.mydata[startIndex]) {
                     $scope.CurrentPage.push($scope.mydata[startIndex]);
                     $scope.UsersPagination.push($scope.mydata[startIndex]);

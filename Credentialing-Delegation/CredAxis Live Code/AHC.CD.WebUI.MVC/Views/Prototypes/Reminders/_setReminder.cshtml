@@ -40,63 +40,48 @@
 
         </header>
     </div>
-    <div class="col-lg-12 col-sm-12">
-        <input id="datetimepicker3" type="text" style="display: none;" value="2017/03/23 12:56">
-
+    <div class="col-lg-12 col-sm-12  reminderCalender">
     </div>
     <div class="col-lg-12 col-sm-12 col-xs-12">
         <button id="resetBtn" type="button" class="btn btn-sm btn-danger col-lg-4 col-xs-3" ng-click="CancelReminder()"><i class=""></i> Cancel</button>
-        <button id="searchBtn" type="button" class="btn btn-sm btn-success col-lg-4 col-xs-3 pull-right" ng-click="SetReminder()"><i class=" fa fa-clock-o" style="font-size:medium"></i>&nbsp; Set</button>
-        
+        <button ng-show="ShowAddButton" id="searchBtn" type="button" class="btn btn-sm btn-success col-lg-4 col-xs-3 pull-right" ng-click="SetReminder()"><i class=" fa fa-clock-o" style="font-size:medium"></i>&nbsp; Set</button>
+        <button ng-hide="ShowAddButton" id="rescheduleBtn" type="button" class="btn btn-sm btn-primary col-lg-4 col-xs-3 pull-right" ng-click="ReSetReminder()"><i class=" fa fa-clock-o" style="font-size:medium"></i>&nbsp; ReSet</button>
     </div>
 
 </div>
 
 <script>
+    var str = '<input id="datetimepicker3" type="text" style="display: none;" value="2017/03/23 12:56">'
+    $('.reminderCalender').html(str);
     $('#datetimepicker3').val(Date.now()); //set the current date
 
     $.datetimepicker.setLocale('en');
 
-    $('#datetimepicker_format').datetimepicker({ value: '2015/04/15 05:03', format: $("#datetimepicker_format_value").val() });
-    console.log($('#datetimepicker_format').datetimepicker('getValue'));
-
-    $("#datetimepicker_format_change").on("click", function (e) {
-        $("#datetimepicker_format").data('xdsoft_datetimepicker').setOptions({ format: $("#datetimepicker_format_value").val() });
-    });
-    $("#datetimepicker_format_locale").on("change", function (e) {
-        $.datetimepicker.setLocale($(e.currentTarget).val());
-    });
-
-    $('#datetimepicker').datetimepicker({
-        dayOfWeekStart: 1,
-        lang: 'en',
-        disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
-        startDate: '1986/01/05'
-    });
-    $('#datetimepicker').datetimepicker({ value: '2015/04/15 05:03', step: 10 });
-
     $('.some_class').datetimepicker();
 
-    $('#default_datetimepicker').datetimepicker({
-        formatTime: 'H:i',
-        formatDate: 'd.m.Y',
-        //defaultDate:'8.12.1986', // it's my birthday
-        defaultDate: '+03.01.1970', // it's my birthday
-        defaultTime: '10:00',
-        timepickerScrollbar: false
-    });
+    //$('#default_datetimepicker').datetimepicker({
+    //    formatTime: 'H:i',
+    //    formatDate: 'd.m.Y',
+    //    //defaultDate:'8.12.1986', // it's my birthday
+    //    defaultDate: '+03.01.1970', // it's my birthday
+    //    defaultTime: '10:00',
+    //    timepickerScrollbar: false
+    //});
 
-    $('#datetimepicker2').datetimepicker({
-        yearOffset: 222,
-        lang: 'ch',
-        timepicker: false,
-        format: 'd/m/Y',
-        formatDate: 'Y/m/d',
-        minDate: '-1970/01/02', // yesterday is minimum date
-        maxDate: '+1970/01/02' // and tommorow is maximum date calendar
-    });
+    //$('#datetimepicker2').datetimepicker({
+    //    yearOffset: 222,
+    //    lang: 'ch',
+    //    timepicker: false,
+    //    format: 'd/m/Y',
+    //    formatDate: 'Y/m/d',
+    //    minDate: '-1970/01/02', // yesterday is minimum date
+    //    maxDate: '+1970/01/02' // and tommorow is maximum date calendar
+    //});
     $('#datetimepicker3').datetimepicker({
         inline: true,
+        defaultDate: new Date(), // it's my birthday
+        defaultTime: '00:00',
+        minDate: 0, // yesterday is minimum date
         step: 30
     });
     //$('#datetimepicker4').datetimepicker();
@@ -129,5 +114,5 @@
 
 
 </script>
-<script src="~/Scripts/Custom/TaskTracker/TaskTracker.js"></script>
+@*<script src="~/Scripts/Custom/TaskTracker/TaskTracker.js"></script>*@
 

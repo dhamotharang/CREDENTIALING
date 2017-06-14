@@ -1,4 +1,4 @@
-﻿CCMDashboard.controller("AppointmentGridController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "CCMDashboardService", "CCMDashboardFactory", function ($rootScope, $scope, toaster, $timeout, $filter, CCMDashboardService, CCMDashboardFactory) {
+﻿CCMDashboard.controller("AppointmentGridController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "$loadash", "CCMDashboardService", "CCMDashboardFactory", function ($rootScope, $scope, toaster, $timeout, $filter, $loadash, CCMDashboardService, CCMDashboardFactory) {
     //================================= Variable Declaration Satrt====================================================================================
     var $self = this;
     this.displayed = [];
@@ -46,8 +46,9 @@
 
         }
         switch (args.type) {
-            case "New":
-                $rootScope.TempCCMAppointments = $rootScope.CCMAppointments;
+            case "Appointments":
+                //$rootScope.TempCCMAppointments = $filter('orderBy')($rootScope.CCMAppointments, 'AppointmentDate', true);  
+                $rootScope.TempCCMAppointments = $rootScope.CCMAppointments;                
                 $rootScope.tableCaption = "Appointments";
                 break;
             case "Approved":
@@ -58,17 +59,37 @@
                 $rootScope.TempCCMAppointments = $filter('filter')($rootScope.CCMAppointments, { Status: "Rejected" });
                 $rootScope.tableCaption = "Rejected";
                 break;
+            case "New":
+                $rootScope.TempCCMAppointments = [];
+                for (var i in $rootScope.CCMAppointments) {
+                    if (($rootScope.CCMAppointments[i].Status == "New") || ($rootScope.CCMAppointments[i].Status == "Onhold")) {
+                        $rootScope.TempCCMAppointments.push($rootScope.CCMAppointments[i]);
+                    }
+                }
+                $rootScope.tableCaption = "Pending";
+                break;
             case "Pending":
                 $rootScope.TempCCMAppointments = [];
                 //$rootScope.TempCCMAppointments = $filter('filter')($rootScope.CCMAppointments, { Status: "OnHold" }) || $filter('filter')($rootScope.CCMAppointments, { Status: "New" });
                 for (var i in $rootScope.CCMAppointments) {
-                    if (($rootScope.CCMAppointments[i].Status == "New") || ($rootScope.CCMAppointments[i].Status == "OnHold")) {
+                    if (($rootScope.CCMAppointments[i].Status == "New") || ($rootScope.CCMAppointments[i].Status == "Onhold")) {
+                        $rootScope.TempCCMAppointments.push($rootScope.CCMAppointments[i]);
+                    }
+                }
+                $rootScope.tableCaption = "Pending";
+                break;
+            case "Onhold":
+                $rootScope.TempCCMAppointments = [];
+                //$rootScope.TempCCMAppointments = $filter('filter')($rootScope.CCMAppointments, { Status: "OnHold" }) || $filter('filter')($rootScope.CCMAppointments, { Status: "New" });
+                for (var i in $rootScope.CCMAppointments) {
+                    if (($rootScope.CCMAppointments[i].Status == "New") || ($rootScope.CCMAppointments[i].Status == "Onhold")) {
                         $rootScope.TempCCMAppointments.push($rootScope.CCMAppointments[i]);
                     }
                 }
                 $rootScope.tableCaption = "Pending";
                 break;
         }
+        $rootScope.TempCCMAppointments = $filter('orderBy')($rootScope.TempCCMAppointments, 'AppointmentDate', true);
         $scope.tableStateValue = CCMDashboardFactory.resetTableState($scope.tableStateValue);
         if (args.RowObject) $self.swapRow(args.RowObject);
         $self.callServer($scope.tableStateValue, args.RowObject);
@@ -108,9 +129,9 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    $scope.showreusesignaturediv = true;
+    //$scope.showreusesignaturediv = true;
     $scope.showuploaddiv = false;
-    $scope.showsignaturediv = false;
+    //$scope.showsignaturediv = false;
     $scope.errormessageforsignature = false;
     $scope.SavingStatus = false;
     $scope.errormessageforuploadsignature = false;
@@ -125,19 +146,19 @@
         context = canvas.getContext('2d');
         if (type == 'upload') {
             $('#selectfile').trigger('click', function () { });
-            $scope.showreusesignaturediv = false;
-            $scope.showsignaturediv = false;
+            $rootScope.showreusesignaturediv = false;
+            $rootScope.showsignaturediv = false;
             $scope.showuploaddiv = true;
         } else if (type == 'digitalsignature') {
-            $scope.showreusesignaturediv = false;
+            $rootScope.showreusesignaturediv = false;
             $scope.showuploaddiv = false;
             $scope.errormessageforsignature = false;
-            $scope.showsignaturediv = true;
+            $rootScope.showsignaturediv = true;
         }
         else if (type == 'reusedigitalsignature') {
-            $scope.showsignaturediv = false;
+            $rootScope.showsignaturediv = false;
             $scope.showuploaddiv = false;
-            $scope.showreusesignaturediv = true;
+            $rootScope.showreusesignaturediv = true;
         }
       
         if (type == 'upload' || type == 'reusedigitalsignature') {
@@ -185,12 +206,13 @@
 
     }
     //------ To submit the form -----
-    this.submitForm = function (decision) {
+    this.submitForm = function (decision, RowObject) {
         var selectedRows = $filter('filter')($rootScope.TempCCMAppointments, { SelectStatus: true });
         var QuickActionSet = selectedRows.map(function (a) { return { CredentialingInfoId: a.ProviderCredentialingInfoID, CredentialingAppointmentDetailID: a.CredentialingAppointmentDetailID, ProfileId: a.ProfileID, RecommendedLevel: a.RecommendedLevel } });
-        var AppointmentsStatus = decision == "Approve" ? 1 : (decision == "Reject") ? 2 : 3;
+        var AppointmentsStatus = decision == "Approved" ? 1 : (decision == "Rejected") ? 2 : 3;
         var formdata = new FormData();
         var form5 = angular.element("#MultipleCCMAction").serializeArray();
+        var Singanture = $scope.image;
         for (var i in form5) {
             formdata.append(form5[i].name, form5[i].value);
         }
@@ -199,9 +221,37 @@
             formdata.append('QuickActionSet[' + key + '][CredentialingAppointmentDetailID]', QuickActionSet[key]['CredentialingAppointmentDetailID']); formdata.append('QuickActionSet[' + key + '][CredentialingInfoId]', QuickActionSet[key]['CredentialingInfoId']); formdata.append('QuickActionSet[' + key + '][ProfileId]', QuickActionSet[key]['ProfileId']); formdata.append('QuickActionSet[' + key + '][RecommendedLevel]', QuickActionSet[key]['RecommendedLevel']);
         })
         formdata.append(angular.element("#SignatureFile")[0].name, angular.element("#SignatureFile")[0].files[0]);
-        formdata.append('SignaturePath', $rootScope.SignaturePath);
+        formdata.append('SignaturePath', Singanture); 
+       
         CCMDashboardService.SaveQuickActionAppointments(formdata).then(function (response) {
             console.log(response);
+
+            for (var i = 0; i < response.data.length; i++) {
+                for (var j = 0; j < $rootScope.CCMAppointments.length; j++) {
+                    if ($rootScope.CCMAppointments[j].CredentialingAppointmentDetailID == response.data[i].CCMRequestID)
+                        $rootScope.CCMAppointments[j].Status = decision;
+                }
+            }
+
+            var CredIDs = $loadash.map($loadash.filter(response.data, { CredRequestStatus: "true" }), 'CCMRequestID');
+            
+            //for (var j = 0; j < $rootScope.CCMAppointments.length; j++) {
+            //    if ($rootScope.CCMAppointments[j].CredentialingAppointmentDetailID == 4002)
+            //        $rootScope.CCMAppointments[j].Status = decision;
+            //}
+
+            $("#ActionModal").hide();
+            angular.element('body').removeClass('modal-open');
+            angular.element('.modal-backdrop').remove();
+
+            toaster.pop('Success', "Success", CredIDs.length + " Request Approved Successfully");
+            if (CredIDs.length != response.data.length) {
+                toaster.pop('error', "", (response.data.length - CredIDs.length + ' Failed ' + 'Please try after sometime !!!'));
+            }
+
+            $rootScope.$broadcast('AppointmentsGrid', { type: "Pending", RowObject: "" });
+            $rootScope.BisuctCounts = CCMDashboardFactory.LoadCounts($rootScope.CCMAppointments);
+            
         });
     }
 

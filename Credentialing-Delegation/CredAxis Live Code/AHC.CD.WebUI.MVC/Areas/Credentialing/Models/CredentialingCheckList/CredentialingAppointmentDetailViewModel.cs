@@ -51,7 +51,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Models.CredentialingCheckList
 
         public string RemarksForMalpracticeIssue { get; set; }
 
-        [RegularExpression(RegularExpression.FOR_NUMBERS, ErrorMessage = ValidationErrorMessage.CHARACTERS_ONLY_NUMBERS)]
+        [RegularExpression(RegularExpression.FOR_NUMBERS, ErrorMessage = "Please enter valid Years in Practice. Only Numeric Digits accepted.")]
         public string YearsInPractice { get; set; }
 
         public YesNoOption? SiteVisitRequiredYesNoOption { get; set; }

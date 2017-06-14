@@ -23,7 +23,7 @@
                    //new { Link="Credentialing/DelegationProfileReport/Index", Controller="DelegationProfileReport", LinkText="Delegation Profile Report", Roles="ADM,CCO"  },
 
                    new { Link="EmailService/Index", Controller="EmailService", LinkText="Messages", Roles="CCO,ADM,CRA"  },
-                    new { Link="Account/ViewUsers", Controller="Account", LinkText="Reset Password/Change Role", Roles="SuperAdmin,SYSADM"  },
+                    new { Link="Account/ViewUsers", Controller="Account", LinkText="Reset Password/Change Role", Roles="SuperAdmin,SYSADM"},
                     new { Link="Initiation/InitiateUser/Index", Controller="Account", LinkText="Create User", Roles="SuperAdmin"  },
 
                     new { Link="TaskTracker/Index", Controller="TaskTracker", LinkText="Task Tracker", Roles="CCO,ADM,CRA"  },
@@ -129,7 +129,7 @@
                                             where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
                                             .Any(x => roles.Contains(x))
                                             select item;
-                            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CCM") || roles.Contains("CRA"))
+                            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CRA"))
                             {
                                 <li class="@(ViewContext.RouteData.Values["controller"].Equals("SearchProfileForTL") ? "active" : "")">
                                         <a href="#"><i class="fa fa-user fa-fw"></i>Cred/De-Cred<span class="fa arrow"></span></a>
@@ -143,16 +143,28 @@
 
                                     }
                                     </li>
+                                }
+                                else if (roles.Contains("CCM"))
+                                {
+                                    foreach (var link in credLinks)
+                                    {
+
+                                        <li class="@(ViewContext.RouteData.Values["controller"].Equals(link.Controller) ? "active" : "")">
+                                            <a href="~/@link.Link"><i class="fa fa-fw fa-user"></i>@link.LinkText</a>
+
+                                        </li>
+
+                                    }
+                                }
                             }
-                        }
-                        else
-                        {
-                            var credLinks = from item in credentialingNonDelegatedMenus
-                                            where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                                            .Any(x => roles.Contains(x))
-                                            select item;
-                            if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CCM") || roles.Contains("CRA"))
+                            else
                             {
+                                var credLinks = from item in credentialingNonDelegatedMenus
+                                                where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                                .Any(x => roles.Contains(x))
+                                                select item;
+                                if (roles.Contains("ADM") || roles.Contains("CCO") || roles.Contains("CRA"))
+                                {
                                 <li class="@(ViewContext.RouteData.Values["controller"].Equals("SearchProfileForTL") ? "active" : "")">
                                         <a href="#"><i class="fa fa-user fa-fw"></i>Cred/De-Cred<span class="fa arrow"></span></a>
                                         @foreach (var link in credLinks)
@@ -165,8 +177,9 @@
 
                                     }
                                     </li>
+                                }
+                                
                             }
-                        }
 
                         @*var prototypeLinks = from item in prototypeMenus
                                              where item.Roles.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries)

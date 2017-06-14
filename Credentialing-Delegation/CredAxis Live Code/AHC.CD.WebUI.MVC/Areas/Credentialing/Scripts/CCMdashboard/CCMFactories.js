@@ -40,13 +40,13 @@ CCMDashboard.factory('CCMDashboardFactory', ['$q', '$rootScope', '$filter', '$ti
     function exportToTable(type, tableId) {
         switch (type) {
             case "Excel":
-                angular.element(tableId).tableExport({ type: 'excel', escape: 'false', ignoreColumn: '[7]' })
+                angular.element(tableId).tableExport({ type: 'excel', escape: 'false', ignoreColumn: '[9]' })
                 break;
             case "CSV":
-                angular.element(tableId).tableExport({ type: 'csv', escape: 'false', ignoreColumn: '[7]' })
+                angular.element(tableId).tableExport({ type: 'csv', escape: 'false', ignoreColumn: '[9]' })
                 break;
             case "Pdf":
-                angular.element(tableId).tableExport({ type: 'pdf', pdfFontSize: '10', escape: 'false', ignoreColumn: '[7]', htmlContent: 'true' })
+                angular.element(tableId).tableExport({ type: 'pdf', pdfFontSize: '10', escape: 'false', ignoreColumn: '[9]', htmlContent: 'true' })
                 break;
         }
     }
@@ -94,7 +94,7 @@ CCMDashboard.factory('CCMDashboardFactory', ['$q', '$rootScope', '$filter', '$ti
         var Counts={};
         Counts.All = GetCount(obj,'All');
         Counts.Approved = GetCount(obj, 'Approved');
-        Counts.Pending = GetCount(obj, 'OnHold');
+        Counts.Pending = GetCount(obj, 'Onhold');
         Counts.Pending += GetCount(obj, 'New');
         Counts.Rejected = GetCount(obj, 'Rejected');
         return Counts;
@@ -103,7 +103,7 @@ CCMDashboard.factory('CCMDashboardFactory', ['$q', '$rootScope', '$filter', '$ti
         data.CredentialingInfo.AppointmentDate = ConvertDateFormat(data.CredentialingInfo.AppointmentDate);
         data.CredentialingInfo.WelcomeLetterMailedDate = data.CredentialingInfo.WelcomeLetterMailedDate != null ? ConvertDateFormat(data.CredentialingInfo.WelcomeLetterMailedDate) : null;
         data.CredentialingInfo.SignedDate = data.CredentialingInfo.SignedDate != null ? ConvertDateFormat(data.CredentialingInfo.SignedDate) : null;
-        $rootScope.tempObject.CredentialingInfo = angular.copy(data);
+        $rootScope.tempObject = angular.copy(data);
     }
     function formatPSVData(data) {
         {

@@ -1,5 +1,7 @@
 ﻿var CCMDashboard = angular.module("CCMDashboard", ['toaster', 'smart-table', 'ui.rCalendar', 'ngSignaturePad', 'ngRoute', 'mgcrea.ngStrap', 'chieffancypants.loadingBar']);
 
+CCMDashboard.constant("$loadash", window._);
+
 CCMDashboard.run(["$rootScope", "$timeout", "$window", "$route", function ($rootScope, $timeout, $window, $route) {
     $route.reload();
     $rootScope.CCMAppointments = [];
@@ -10,6 +12,10 @@ CCMDashboard.run(["$rootScope", "$timeout", "$window", "$route", function ($root
     $rootScope.VisibilityControl = '';
     $rootScope.tableCaption = "";
     $rootScope.ToHighLightRowObject = "";
+    $rootScope.SignatureOption = "digitalsignature";
+    $rootScope.SignaturePath = "";
+    $rootScope.showsignaturediv = true;
+    $rootScope.showreusesignaturediv = false;
   
     //$rootScope.GridType = "ffgdfg";
 }]);

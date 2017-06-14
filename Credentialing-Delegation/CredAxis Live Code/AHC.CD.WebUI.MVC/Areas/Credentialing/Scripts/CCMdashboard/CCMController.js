@@ -4,13 +4,13 @@
     var infoId = 0;
     var profileId = 0;
     $scope.GridType = "";
-    $scope.BisuctCounts = { All: 0, Approved: 0, Rejected: 0, Pending: 0 };
+    $rootScope.BisuctCounts = { All: 0, Approved: 0, Rejected: 0, Pending: 0 };
     //================================== Temporary function Declaration Start ===============================================================================
 
     $rootScope.MasterData = function () {
         CCMDashboardService.GetCCMAppointments().then(function (result) {
             console.log(result);
-            $scope.BisuctCounts = CCMDashboardFactory.LoadCounts(result.data.AppointmentsInfo);
+            $rootScope.BisuctCounts = CCMDashboardFactory.LoadCounts(result.data.AppointmentsInfo);
          
             for (var i in result.data.AppointmentsInfo) {
                 result.data.AppointmentsInfo[i].AppointmentDate = CCMDashboardFactory.ConvertDate(result.data.AppointmentsInfo[i].AppointmentDate);
@@ -18,6 +18,11 @@
             }
             $rootScope.CCMAppointments = result.data.AppointmentsInfo;
             $rootScope.SignaturePath = result.data.SignaturePath;
+            if ($rootScope.SignaturePath != null) {
+                $rootScope.SignatureOption = "reusedigitalsignature";
+                $rootScope.showsignaturediv = false;
+                $rootScope.showreusesignaturediv = true;
+            }
             $scope.loadEvents();
             $rootScope.TempCCMAppointments = result.data;
             if ($rootScope.tableCaption!="") { CCMDashboardFactory.ResetTable() };
@@ -31,6 +36,17 @@
         $scope.GridType = AppointmentType;
         $rootScope.$broadcast('AppointmentsGrid', { type: AppointmentType, RowObject: RowObject });
     };
+
+    //================http ==============
+    $scope.checkForHttp = function (value) {
+        if (value.indexOf('http') > -1) {
+            value = value;
+        } else {
+            value = 'http://' + value;
+        }
+        var open_link = window.open('', '_blank');
+        open_link.location = value;
+    }
 
     //================================== Temporary function Declaration End ===============================================================================
     //===================================CalendarPlugIn Script=============================================================================================
