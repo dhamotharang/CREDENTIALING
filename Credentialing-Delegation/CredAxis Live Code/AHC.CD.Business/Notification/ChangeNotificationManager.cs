@@ -787,7 +787,7 @@ namespace AHC.CD.Business.Notification
                                         Action = "Appointment Schedule",
                                         ActionPerformed = "Appointment Scheduled" + " on " + AppointmentDate + " By",
                                         ActionPerformedByUser = ActionPerformedBy,
-                                        RedirectURL = "/Credentialing/CCM/Index"
+                                        RedirectURL = "/Credentialing/CCMPortal/Index"
                                     });
                                     cdUserRepo.Update(CCM);
                                     await cdUserRepo.SaveAsync();
@@ -956,7 +956,7 @@ namespace AHC.CD.Business.Notification
                                         Action = "Cancellation of Credentialing Committee Meeting",
                                         ActionPerformed = "Appointment is canceled on " + AppointmentDate + " By",
                                         ActionPerformedByUser = ActionPerformedBy,
-                                        RedirectURL = "/Credentialing/CCM/Index"
+                                        RedirectURL = "/Credentialing/CCMPortal/Index"
                                     });
                                     cdUserRepo.Update(CCM);
                                     await cdUserRepo.SaveAsync();
@@ -1002,32 +1002,34 @@ namespace AHC.CD.Business.Notification
                         {
                             TempccoList.DashboardNotifications = new List<UserDashboardNotification>();
                         }
-                        if (ApprovalStatus == "Approved")
+                        if (ApprovalStatus == "Approved" || ApprovalStatus == "Rejected")
                         {
                             TempccoList.DashboardNotifications.Add(new UserDashboardNotification
                             {
                                 StatusType = Entities.MasterData.Enums.StatusType.Active,
                                 AcknowledgementStatusType = Entities.MasterData.Enums.AcknowledgementStatusType.Unread,
                                 Action = "CCM Approval Status",
-                                ActionPerformed = "CCM approved the provider credentialing on " + DateTime.Now.ToString("MM/dd/yyyy"),
+                                ActionPerformed = "CCM " + ApprovalStatus + " the provider credentialing on " + DateTime.Now.ToString("MM/dd/yyyy"),
                                 ActionPerformedByUser = changeNotificationDetail.ActionPerformedUser,
                                 //RedirectURL = "/Credentialing/Initiation/CredentialingList"
                                 RedirectURL = "/Credentialing/CnD/Application/" + applicationId
                             });
                         }
-                        else
+                        else if(ApprovalStatus == "Onhold")
                         {
                             TempccoList.DashboardNotifications.Add(new UserDashboardNotification
                             {
                                 StatusType = Entities.MasterData.Enums.StatusType.Active,
                                 AcknowledgementStatusType = Entities.MasterData.Enums.AcknowledgementStatusType.Unread,
                                 Action = "CCM Approval Status",
-                                ActionPerformed = "CCM rejected the provider credentialing on " + DateTime.Now.ToString("MM/dd/yyyy"),
+                                ActionPerformed = "The Provider Credentialing is On-Hold from " + DateTime.Now.ToString("MM/dd/yyyy"),
                                 ActionPerformedByUser = changeNotificationDetail.ActionPerformedUser,
                                 //RedirectURL = "/Credentialing/Initiation/CredentialingList"
                                 RedirectURL = "/Credentialing/CnD/Application/" + applicationId
                             });
                         }
+
+                        
 
                         cdUserRepo.Update(TempccoList);
                         break;

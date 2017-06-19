@@ -1,5 +1,5 @@
 ﻿Cred_SPA_App.controller('PlanSummaryController',
-    function ($scope, $q, $rootScope, $timeout, $http, messageAlertEngine) {
+    function ($scope, $q, $rootScope, $timeout, $filter, $http, messageAlertEngine) {
         $scope.ActivityStatusType = false;
         $scope.$on('LTPStatus', function (event, args) {
 
@@ -220,6 +220,7 @@
             $scope.typeOfCredentialing = angular.copy($rootScope.isrecredentialing);
             if (data != null && data.length != 0) {
                 $rootScope.timelineActivity = [];
+                data = $filter('orderBy')(data, 'LastModifiedDate', false);
                 for (var i = 0; i < data.length ; i++) {
                     switch (data[i].Activity) {
                         case "Initiation":
@@ -437,6 +438,8 @@
                                     ActivityByName: $scope.updatedByForCCM,
                                     LastModifiedDate: $scope.updatedDateForCCM
                                 };
+
+                                
                                 $rootScope.timelineActivity.push(tempactivity);
                             }
                             break;
@@ -710,9 +713,11 @@
                     }
                 }
             }
-                        
-            $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
+
             $scope.sortarray($rootScope.timelineActivity);
+            $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
+            //$scope.sortarray($rootScope.timelineActivity);
+            
                
         }
 

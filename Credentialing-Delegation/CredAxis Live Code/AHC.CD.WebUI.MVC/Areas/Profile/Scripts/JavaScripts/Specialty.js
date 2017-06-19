@@ -64,8 +64,8 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                         }
                     }
                     else if (val[spclty].SpecialtyBoardNotCertifiedDetail != null) {
-                        if (val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard == null)
-                            val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard = {}
+                        //if (val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard == null)
+                        //    val[spclty].SpecialtyBoardCertifiedDetail.SpecialtyBoard = {}
                         if (val[spclty].SpecialtyBoardNotCertifiedDetail.SpecialtyBoardID == $scope.masterSpecialtyBoards[board].SpecialtyBoardID) {
                             val[spclty].SpecialtyBoardNotCertifiedDetail.SpecialtyBoard.Name = $scope.masterSpecialtyBoards[board].Name;
                         }

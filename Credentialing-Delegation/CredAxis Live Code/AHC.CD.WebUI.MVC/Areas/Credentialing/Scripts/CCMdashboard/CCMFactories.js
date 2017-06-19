@@ -101,9 +101,17 @@ CCMDashboard.factory('CCMDashboardFactory', ['$q', '$rootScope', '$filter', '$ti
     }
     function formatCCMdata(data) {
         data.CredentialingInfo.AppointmentDate = ConvertDateFormat(data.CredentialingInfo.AppointmentDate);
-        data.CredentialingInfo.WelcomeLetterMailedDate = data.CredentialingInfo.WelcomeLetterMailedDate != null ? ConvertDateFormat(data.CredentialingInfo.WelcomeLetterMailedDate) : null;
+        data.CredentialingInfo.WelcomeLetterMailedDate = data.CredentialingInfo.WelcomeLetterMailedDate != null ? ConvertDateFormat(data.CredentialingInfo.WelcomeLetterMailedDate) : null;        
         data.CredentialingInfo.SignedDate = data.CredentialingInfo.SignedDate != null ? ConvertDateFormat(data.CredentialingInfo.SignedDate) : null;
+
+        if (data.CredentialingInfo.WelcomeLetterMailedDate)           
+            data.CredentialingInfo.WelcomeLetterMailedDate = data.CredentialingInfo.WelcomeLetterMailedDate.split(" ")[0];
+        
+        
+
         $rootScope.tempObject = angular.copy(data);
+
+
     }
     function formatPSVData(data) {
         {

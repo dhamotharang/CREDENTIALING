@@ -116,7 +116,7 @@
                 <div class="col-lg-4 form-group">
                     <label class="control-label small">Next Followup *</label>
                     @*<input id="followUp" type="text" @*readonly="readonly" ng-focus="searchCumDropDown()" autocomplete="off" data-date-format="MM/dd/yyyy" ng-class="{'input-validation-error':NextFollowUpDate>=Today()}" data-bs-datepicker="bs-datepicker" data-val="true" data-val-required="Please select the Next Followup date" ng-model="task.NextFollowUpDate" name="NextFollowUpDate" class="form-control input-sm" />*@
-                    @Html.TextBoxFor(model => model.NextFollowUpDate, new { @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format", data_ng_model = "task.NextFollowUpDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker" })
+                    @Html.TextBoxFor(model => model.NextFollowUpDate, new { @class = "form-control input-sm", placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format", data_ng_model = "task.NextFollowUpDate", data_date_format = "MM/dd/yyyy", data_bs_datepicker = "bs-datepicker", data_ng_click = "closenotesDiv()" })
                     @Html.ValidationMessageFor(model => model.NextFollowUpDate, "", new { @class = "text-danger" })
                     @*<span ng-show="errormessageforfollowupdate" class="text-danger">Please enter next Followup Date</span>*@
                 </div>
@@ -186,11 +186,11 @@
                 <div class="col-lg-4 form-group">
                     <label class="control-label small">Hospital</label>
                     <input type="hidden" name="HospitalID" value="{{task.HospitalID}}" />
-                    <input class="form-control input-sm" name="HospitalName" autocomplete="off" ng-model="task.Hospital" ng-focus="searchCumDropDown('HospitalList')" placeholder="Select Hospital" />
+                    <input class="form-control input-sm" name="HospitalName" autocomplete="off" ng-model="task.Hospital" ng-blur="hideHospitalSearchDiv=true" ng-focus="hideHospitalSearchDiv=false;searchCumDropDown('HospitalList')" placeholder="Select Hospital" />
                     @*<span ng-if="Hospitals.length == 0" class="text-danger field-validation-error">
                             <span>Please select the Hospital.</span>
                         </span>*@
-                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="HospitalList">
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" ng-hide="hideHospitalSearchDiv" id="HospitalList">
                         <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
                             <tbody>
                                 <tr ng-repeat="hospital in filteredHospitalsResults = (Hospitals | filter:task.Hospital)" ng-click="SelectHospital(hospital)" class="pointer">
@@ -266,18 +266,18 @@
                     @*<textarea class="form-control input-sm" id="someitem"></textarea>*@
                     @*<textarea ng-if="notetask" style="background-color:white" name="Notes" class="form-control input-sm hideDropDown" ng-model="task.Notes" ng-click="hideDropDown()"></textarea>*@
                     <input type="hidden" name="Notes" value="{{TempNotes}} {{task.Notes}}">
-                    <textarea id="textareaappend" style="border-bottom:none;background-color:white" name="Notes" class="form-control input-sm hideDropDown" ng-model="task.Notes" ng-focus="searchCumDropDown('ForNotes')" "></textarea>
-                    <div class="ProviderTypeSelectAutoList popover fade bottom in Width" role="tooltip" id="ForNotes" style="margin-top: 6.5%;" ng-hide="filterNotesData.length==0 && NotesTemplates.length!=0 || hidenotesdiv">
+                    <textarea id="textareaappend" style="border-bottom:none;background-color:white" name="Notes" class="form-control input-sm hideDropDown" elastic ng-blur="hidenotesdiv=true" ng-model="task.Notes" ng-focus="hidenotesdiv=false;searchCumDropDown('ForNotes');"></textarea>
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in Width" role="tooltip" id="ForNotes" style="margin-top: 6.5%;" ng-hide="(task.Notes.length > 0 && filterNotesData.length==0) || hidenotesdiv">
                         <table class="table table-striped table-bordered table-hover table-condensed">
                             <tbody>
-                                <tr ng-repeat="temp in filterNotesData=(NotesTemplates|filter: task.Notes   ) track by $index" ng-click="addIntoNotesTextBox(temp.Description,'ForNotes')" class="pointer">
+                                <tr ng-repeat="temp in filterNotesData=(NotesTemplates|filter:task.Notes) track by $index" ng-click="addIntoNotesTextBox(temp.Description,'ForNotes')" class="pointer">
                                     <td>{{temp.Code}}-{{temp.Description}}</td>
 
                                 </tr>
 
-                                <tr ng-if="filterNotesData.length==0 && NotesTemplates.length!=0 ">
+                                @*<tr ng-if="!filterNotesData.length">
                                     <td>Notes Template Not Found</td>
-                                </tr>
+                                </tr>*@
                                 <tr ng-if="NotesTemplates.length==0 ">
                                     <td>No  Data  Found</td>
                                 </tr>
@@ -325,7 +325,7 @@
 
                     @*<span><button type="submit" ng-if="VisibilityControl == 'editViewforTab3' || VisibilityControl == 'editViewforTab1' " class="btn btn-primary btn-sm pull-right" ng-click="editTask()">Update</button></span>*@
                     <span></span>
-                    <span><button type="button" ng-if="VisibilityControl == 'editViewforTab3'|| VisibilityControl == 'editViewforTab2'|| VisibilityControl == 'editViewforTab'" class="btn btn-primary btn-sm " ng-click="inactiveWarning(task)">Save and Close Task</button></span>
+                    <span><button type="submit" ng-if="VisibilityControl == 'editViewforTab3'|| VisibilityControl == 'editViewforTab2'|| VisibilityControl == 'editViewforTab'" class="btn btn-primary btn-sm " ng-click="inactiveWarning(task)">Save and Close Task</button></span>
 
                 </div>
             </div>

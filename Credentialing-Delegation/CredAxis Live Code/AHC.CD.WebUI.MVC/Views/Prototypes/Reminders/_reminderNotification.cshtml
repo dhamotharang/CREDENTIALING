@@ -2,6 +2,12 @@
 
 
 <style>
+    .draggable {
+        width: 150px;
+        height: 150px;
+        padding: 0.5em;
+    }
+
     .tableDataFont {
         font-size: smaller;
         margin-top: 1px;
@@ -95,17 +101,39 @@
         border-radius: 0;
         border: 1px solid #b9b9b9;
     }
+    
+    .btn-minimize {
+        width: 10px;
+        height: 1px;
+        background-color: #fc0404;
+    }
+
+    .btn-minimize.btn-plus {
+        background-color: #0F0;
+    }
+
 </style>
+<script>
+        $( function() {
+            $("#ReminderFullBody").draggable();
+
+        $(".btn-minimize").click(function () {
+            $(this).toggleClass('btn-plus');
+            $(".RemainderBody").slideToggle();
+        });
+  } );
+</script>
 <link href="~/Content/Prototypes/blink.css" rel="stylesheet" />
 
-<div id="ReminderFullBody" class="RemainderBody col-lg-4 col-xs-4 " style="background-color: white;
+<div id="ReminderFullBody" class="RemainderBody col-lg-4 col-xs-4" style="background-color: white;
     border: 1px solid #ababab;
-    box-shadow: 1px 0px 14px 5px rgba(193, 193, 193, 0.75);
-">
+    box-shadow: 1px 0px 14px 5px rgba(193, 193, 193, 0.75);">
     <div class="row">
         <div class="col-lg-12">
         <span class="col-lg-4"></span>
+        @*<span class="btn-minimize pull-right"><button>-</button></span>*@
         <span id="Rem_count" class="col-lg-6" style="color: #337ab7;"></span></div>
+        
     </div>
     <div class="row" style="padding-top:8px;">
         <div class="col-lg-1" style="margin-top: 3px;"><i class="fa fa-calendar fa-2x"></i></div>
@@ -139,18 +167,18 @@
         <div class="col-lg-12" style="font-weight:lighter;color:#616060;font-size: 12px;">Click Snooze to be reminded in:</div>
         <div class="col-lg-12 rem_pannel" 
              style="padding-bottom: 7px;color: #333;">
-            <div class="col-lg-4 ZeroPaddingLeft">
-                    <select class="" id="snoozeInterval" style="width: 190px;height:22px;font-size: 13px;">
+            <div class="col-lg-5 ZeroPaddingLeft">
+                    <select class="" id="snoozeInterval" style="width:170px;height:22px;font-size: 13px;">
                         <option value="300000" selected>5 Minutes</option>
                         <option value="600000">10 Minutes</option>
                         <option value="1800000">30 Minutes</option>
                         <option value="3600000">1 hour</option>
                     </select>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <button id="SNOOZE"
                         class="SnoozerReminder btn btn-xs snoozeButton"
-                        style="margin-left:50px;"
+                        style="margin-left:1px;"
                         onclick="Snoozereminder()">
                     Snooze
                 </button>

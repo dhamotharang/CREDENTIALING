@@ -656,7 +656,8 @@ var GetTheTaskDate = function (DateTime) {
 var GetTheTaskTime = function (DateTime) {
     var dt = new Date(parseInt(DateTime));
 
-    var output = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+    //var output = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+    var output = dt.getHours() + ":" + dt.getMinutes() + (dt.getHours() >= 12 ? ' PM' : ' AM'); 
 
     return output;
 };
@@ -670,7 +671,7 @@ var UpperHeader = function (DateTime, task) {
     var TaskDate = GetTheTaskDate(DateTime);
     var TaskTime = GetTheTaskTime(DateTime);
     var remheader = '<div><b style="font-size: 17px;">' + task.ReminderInfo.Subject + '</b></div>' +
-        '<div style="line-height: 0.3;"><b style="font-size: 12px;font-weight:500;color: #337ab7;">' + TaskDate + '-' + TaskTime+'</b></div>';
+        '<div style="line-height: 0.9;"><b style="font-size: 12px;font-weight:500;color: #337ab7;">' + TaskDate + '-' + TaskTime+'</b></div>';
     return remheader;
 
     //var reminderHead = '<b class="pull-left" style="font-size:large"> </b>' +
@@ -709,7 +710,7 @@ var getReminderView = function (taskStored) {
                 taskStored[i].ReminderInfo = JSON.parse(taskStored[i].ReminderInfo);
                 taskStored[i].ScheduledDateTime = taskStored[i].ScheduledDateTime.replace("/Date(", '').replace(")/", '');
                 var minsToRemind = checkReminderTime(taskStored[i].ScheduledDateTime);
-                if (minsToRemind <= 30) {
+                if (minsToRemind <= 0) {
                     var TaskMsg = ShowMsgForReminder(minsToRemind);
                     TaskCountToShow += 1;
                     if (TaskCount == 1) {
@@ -771,7 +772,7 @@ var TaskNotificationReminder = function () {
             view = response.responseView;
             getReminderView(taskStored);
 
-            reminderInterval = setInterval(function () { CheckReminder() }, 240000); // calling function repeatedly to check reminder
+            reminderInterval = setInterval(function () { CheckReminder() }, 30000); // calling function repeatedly to check reminder
         },
         error: function (error) {
             //alert("Sorry, there is some problem!");
@@ -788,9 +789,12 @@ var CheckReminder = function () {
 
 var Snoozereminder = function () {
     taskObj = SelectedTaskObject;
-    taskObj.ScheduledDateTime = taskObj.ScheduledDateTime.replace("/Date(", '').replace(")/", '');
+    //taskObj.ScheduledDateTime = taskObj.ScheduledDateTime.replace("/Date(", '').replace(")/", '');
+    var currentDate = new Date();
+    var currentDateTime = currentDate.getUTCFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + ' ' + currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
     var snoozeTime = $('#snoozeInterval').val();
-    var date = new Date(parseInt(taskObj.ScheduledDateTime) + parseInt(snoozeTime));
+    var currentDateInMilliSec = Date.parse(currentDateTime);
+    var date = new Date(parseInt(currentDateInMilliSec) + parseInt(snoozeTime));
     var dataToShow = date.getUTCFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     $.ajax({
         url: rootDir + '/TaskTracker/RescheduleReminder',
@@ -864,6 +868,7 @@ $(document).ready(function () {
     //});
     var StaticVariable = new Date();
     TaskNotificationReminder();
+    //$('#ReminderFullBody').draggable();
 
 
 })

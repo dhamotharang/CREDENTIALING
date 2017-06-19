@@ -4737,7 +4737,7 @@ namespace AHC.CD.Business
         {
             var profileUpdatesTrackerRepo = uow.GetGenericRepository<ProfileUpdatesTracker>();
             var professionalAffiliationInfos = profileUpdatesTrackerRepo.GetAll().Where(p => (p.ApprovalStatus == ApprovalStatusType.Pending.ToString() || p.ApprovalStatus == ApprovalStatusType.OnHold.ToString()) && p.Section == "Professional Affiliation").ToList();
-            professionalAffiliationInfo.StateLicenses = GetGenericListMappedData(professionalAffiliationInfos.Where(x => x.SubSection == "Professional Affiliation Detail").ToList(), profile.ProfessionalAffiliationInfos.Where(a => (a.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
+            professionalAffiliationInfo.ProfessionalAffiliationInfos = GetGenericListMappedData(professionalAffiliationInfos.Where(x => x.SubSection == "Professional Affiliation Detail").ToList(), profile.ProfessionalAffiliationInfos.Where(a => (a.Status != StatusType.Inactive.ToString())).ToList(), isProvider);
             return professionalAffiliationInfo;
         }
 

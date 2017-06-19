@@ -844,7 +844,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
             $('#SUMMARY').removeClass('active');
             $('#psv').removeClass('active');
             $('#credentialing_action').addClass('active');
-        } else if ($scope.initActivityStatus == "CCM" && $scope.creddInfo.Plan.DelegatedType == "YES" && CredlogDataForLoading.CredentialingAppointmentDetail.CredentialingAppointmentResult.ApprovalStatus != 'Rejected') {
+        } else if ($scope.initActivityStatus == "CCM" && $scope.creddInfo.Plan.DelegatedType == "YES" && CredlogDataForLoading.CredentialingAppointmentDetail.CredentialingAppointmentResult.ApprovalStatus == 'Approved') {
             $('#summary2').removeClass('active');
             $('#psvtab').removeClass('active');
             $('#ccmtab').removeClass('active');
@@ -872,6 +872,9 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
                 if (CredlogDataForLoading.CredentialingAppointmentDetail.CredentialingAppointmentResult != null) {
                     if (CredlogDataForLoading.CredentialingAppointmentDetail.CredentialingAppointmentResult.ApprovalStatus == 'Rejected') {
+                        $scope.ccmStatus = true;
+
+                    } else if (CredlogDataForLoading.CredentialingAppointmentDetail.CredentialingAppointmentResult.ApprovalStatus == 'Onhold') {
                         $scope.ccmStatus = true;
 
                     }

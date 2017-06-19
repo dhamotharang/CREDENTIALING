@@ -166,6 +166,13 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
         $scope.YearsList.push(i);
     }
 
+    $scope.clearAssignedToCCO = function () {
+        if ($scope.tempObject1.AssignedToCCO == "") {
+            $scope.tempObject1.AssignedToCCOID = "";
+            $scope.tempObject1.AssignedToCCO = "";
+        }
+    }
+
     $scope.SelectCCO = function (cconame) {
         $scope.tempObject1.AssignedToCCOID = cconame.CDUserID;
         $scope.tempObject1.AssignedToCCO = cconame.UserName;
@@ -1007,6 +1014,13 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
             if (LogData.CredentialingAppointmentDetail != null) {
                 if (LogData.CredentialingAppointmentDetail.CredentialingAppointmentResult != null) {
                     if (LogData.CredentialingAppointmentDetail.CredentialingAppointmentResult.ApprovalStatus == 'Rejected') {
+                        $scope.ccmStatus = true;
+                        $('#credentialing_action').addClass('active');
+                        $('#credentialing_action1').addClass('active');
+                        $('#summary2').removeClass('active');
+                        $('#SUMMARY').removeClass('active');
+                    }
+                    if (LogData.CredentialingAppointmentDetail.CredentialingAppointmentResult.ApprovalStatus == 'Onhold') {
                         $scope.ccmStatus = true;
                         $('#credentialing_action').addClass('active');
                         $('#credentialing_action1').addClass('active');

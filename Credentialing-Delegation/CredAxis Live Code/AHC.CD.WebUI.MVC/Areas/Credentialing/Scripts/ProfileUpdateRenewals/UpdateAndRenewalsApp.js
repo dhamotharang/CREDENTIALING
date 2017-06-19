@@ -31,7 +31,7 @@ UpdateAndRenewalsApp.run(["$rootScope", function ($rootScope) {
 UpdateAndRenewalsApp.config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
     cfpLoadingBarProvider.includeSpinner = false;
-    cfpLoadingBarProvider.includeBar = true;
+    cfpLoadingBarProvider.includeBar = false;
     $httpProvider.interceptors.push('interceptHttp');
 }]);
 

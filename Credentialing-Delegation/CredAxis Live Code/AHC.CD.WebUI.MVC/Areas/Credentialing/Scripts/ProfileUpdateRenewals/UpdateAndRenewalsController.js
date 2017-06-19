@@ -1,6 +1,6 @@
 ﻿UpdateAndRenewalsApp.controller("UpdateAndRenewalsController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "$loadash", "UpdateAndRenewalsService", "UpdateAndRenewalsFactory", "tracking", function ($rootScope, $scope, toaster, $timeout, $filter, $loadash, UpdateAndRenewalsService, UpdateAndRenewalsFactory, tracking) {
 
-     //=================================== Variable Declaration Start ===================================
+    //=================================== Variable Declaration Start ===================================
 
     var $self = this;
     $scope.popoverIsVisible = false;
@@ -25,7 +25,9 @@
     $scope.SelectedDataForCredRequest = [];
     $scope.MasterSettings = $filter("MasterSettingFiltter")("Updates");
     $scope.Traffic = tracking;
-    
+    $scope.count = 0;
+    $scope.profileupdatesloadingsymbol = true;
+
     //=================================== Variable Declaration End ===================================
 
 
@@ -44,6 +46,11 @@
         var number = pagination.number || 5;
         $scope.tableStateValueUpdateAndHistory = tableState;
         UpdateAndRenewalsFactory.getPageForUpdateAndHistory(start, number, tableState).then(function (result) {
+            $scope.count++;
+            if ($scope.count == 3)
+            {
+                $scope.profileupdatesloadingsymbol = false;
+            }
             $self.displayedUpdateAndRenewals = result.data;
             tableState.pagination.numberOfPages = result.numberOfPages;
             $self.isLoadingUpdateAndRenewals = false
@@ -103,7 +110,7 @@
         }
         if (profileUpdates.ApprovalStatus == 'Pending' || profileUpdates.ApprovalStatus == 'OnHold') {
             if (profileUpdates.IsSelected == "false") {
-                
+
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)].IsSelected = "true";
                 $scope.SelectedData.push($rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)]);
 
@@ -112,7 +119,7 @@
                 //else
                 //    this.TableHighlight = { "background-color": "rgb(233, 236, 235)", "color": "#32306b", "font-weight": "bold", "cursor": "pointer" }
 
-            } else {                
+            } else {
                 $scope.SelectedData.splice($scope.SelectedData.indexOf($rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)]), 1)
                 $rootScope.TempProfileUpdates[$rootScope.TempProfileUpdates.indexOf(profileUpdates)].IsSelected = "false";
 
@@ -161,24 +168,28 @@
     $scope.GridData = function (type) {
         switch (type) {
             case "Updates":
+                $scope.count = 0;
                 $scope.dropbuttonstatus = false;
-                $scope.pointer = (IsProvider)? false:true;
+                $scope.pointer = (IsProvider) ? false : true;
                 $scope.GetAllUpdatesAndRenewals(type);
                 $scope.SelectedDataForCredRequest.length = 0;
                 break;
             case "Renewals":
+                $scope.count = 0;
                 $scope.dropbuttonstatus = false;
-                $scope.pointer = (IsProvider)? false:true;
+                $scope.pointer = (IsProvider) ? false : true;
                 $scope.GetAllUpdatesAndRenewals(type);
                 $scope.SelectedDataForCredRequest.length = 0;
                 break;
             case "CredentialingRequest":
+                $scope.count = 0;
                 $scope.dropbuttonstatus = false;
-                $scope.pointer = (IsProvider)?false:true;
+                $scope.pointer = (IsProvider) ? false : true;
                 $scope.GetAllCredentialingRequests();
                 $scope.SelectedData.length = 0;
                 break;
             case "ViewHistory":
+                $scope.count = 0;
                 $scope.dropbuttonstatus = true;
                 $scope.GetUpdateHistory();
                 $scope.pointer = false;
@@ -190,7 +201,7 @@
         $self.callServerUpdateAndHistory($scope.tableStateValue);
     }
 
-    
+
     $scope.RejectAction = function () {
         $scope.RejectStatus = !$scope.RejectStatus;
     }
@@ -218,7 +229,7 @@
     //==================================== Crud Operations Start =========================================
 
     $scope.GetAllUpdatesAndRenewals = function (Type) {
-        
+
         $scope.SelectAllButton = false;
         $scope.ProfileUpdateandRenewalFilter = false;
         $self.displayedUpdateAndRenewals = [];
@@ -294,9 +305,9 @@
             $scope.MasterSettings = $filter("MasterSettingFiltter")("UpdatesHistory");
             $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
         },
-        function (Error) {
-            toaster.pop('error', "", 'Please try after sometime !!!');
-        });
+            function (Error) {
+                toaster.pop('error', "", 'Please try after sometime !!!');
+            });
     }
 
     $scope.GetRenewalHistory = function () {
@@ -320,9 +331,9 @@
             $scope.MasterSettings = $filter("MasterSettingFiltter")("RenewalsHistory");
             $self.callServerUpdateAndHistory($scope.tableStateValueUpdateAndHistory);
         },
-        function (Error) {
-            toaster.pop('error', "", 'Please try after sometime !!!');
-        });
+            function (Error) {
+                toaster.pop('error', "", 'Please try after sometime !!!');
+            });
     }
 
     $scope.GetCredRequestHistory = function () {
@@ -347,9 +358,9 @@
             $scope.tableStateValueCredentialingRequest = UpdateAndRenewalsFactory.resetTableState($scope.tableStateValueCredentialingRequest);
             $self.callServerCredentialingRequest($scope.tableStateValueCredentialingRequest);
         },
-        function (Error) {
-            toaster.pop('error', "", 'Please try after sometime !!!');
-        });
+            function (Error) {
+                toaster.pop('error', "", 'Please try after sometime !!!');
+            });
     }
 
 
@@ -377,8 +388,7 @@
     }
     $scope.dropbuttonstatus = false;
     $scope.GetProfileUpdateDataByID = function (Data) {
-        if(Data.ApprovalStatus == "Approved" || Data.ApprovalStatus == "Rejected")
-        {
+        if (Data.ApprovalStatus == "Approved" || Data.ApprovalStatus == "Rejected") {
             $scope.dropbuttonstatus = true;
         }
         $scope.LoadingStatus = true;
@@ -393,7 +403,7 @@
         $rootScope.TemporaryObject.Reason = $rootScope.TemporaryObject.RejectionReason;
         $rootScope.TemporaryObject.RejectionReason = "";
         $rootScope.TemporaryObject.RejectionReason = Data.RejectionReason;
-        $rootScope.TemporaryObject.UniqueData = JSON.parse($rootScope.TemporaryObject.UniqueData);       
+        $rootScope.TemporaryObject.UniqueData = JSON.parse($rootScope.TemporaryObject.UniqueData);
         var data = {
             trackerId: Data.ProfileUpdatesTrackerId,
             status: Data.ApprovalStatus,
@@ -584,14 +594,14 @@
                 toaster.pop('error', "", (Mainresults.length - ProfileUpdaetIDs.length + ' Failed ' + 'Please try after sometime !!!'));
             }
         },
-        function (errors) {
-            for (i in $rootScope.TempProfileUpdates) {
-                $rootScope.TempProfileUpdates[i].IsSelected = "false";
-            }
-            $scope.SelectedData = [];
-            $scope.ApproveAllStatus = false;
-            toaster.pop('error', "", 'Please try after sometime !!!');
-        })
+            function (errors) {
+                for (i in $rootScope.TempProfileUpdates) {
+                    $rootScope.TempProfileUpdates[i].IsSelected = "false";
+                }
+                $scope.SelectedData = [];
+                $scope.ApproveAllStatus = false;
+                toaster.pop('error', "", 'Please try after sometime !!!');
+            })
     }
     $scope.SetApprovalForAllCredentialing = function () {
         if ($scope.ApproveAllStatusForCredRequest) {
@@ -609,7 +619,7 @@
                 $rootScope.CredentialingRequests[$rootScope.CredentialingRequests.indexOf($filter('filter')($rootScope.CredentialingRequests, { CredentialingRequestID: CredRequestIDs[i] })[0])].CurrentStatus = "Approved";
                 $rootScope.TempCredentialingRequests[$rootScope.TempCredentialingRequests.indexOf($filter('filter')($rootScope.TempCredentialingRequests, { CredentialingRequestID: CredRequestIDs[i] })[0])].CurrentStatus = "Approved";
                 $rootScope.TempCredentialingRequests.splice($rootScope.TempCredentialingRequests.indexOf($filter('filter')($rootScope.TempCredentialingRequests, { CredentialingRequestID: CredRequestIDs[i] })[0]), 1);
-                $scope.SelectedDataForCredRequest.splice($scope.SelectedDataForCredRequest.indexOf($filter('filter')($scope.SelectedDataForCredRequest, { CredentialingRequestID: CredRequestIDs[i] })[0]),1);
+                $scope.SelectedDataForCredRequest.splice($scope.SelectedDataForCredRequest.indexOf($filter('filter')($scope.SelectedDataForCredRequest, { CredentialingRequestID: CredRequestIDs[i] })[0]), 1);
             }
             for (i in $rootScope.TempCredentialingRequests) {
                 $rootScope.TempCredentialingRequests[i].IsSelected = "false";
@@ -627,6 +637,6 @@
 
 
     //==================================== Crud Operations Start =========================================
-    
+
 
 }]);

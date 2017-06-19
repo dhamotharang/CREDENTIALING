@@ -89,5 +89,6 @@ namespace AHC.CD.Entities.Credentialing.CCMPortal
 
         public string SignedByName { get; set; }
 
+        public string CVDocPath { get; set; }
     }
 }

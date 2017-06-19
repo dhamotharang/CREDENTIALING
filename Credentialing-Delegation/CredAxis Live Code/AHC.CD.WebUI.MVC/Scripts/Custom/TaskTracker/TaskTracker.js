@@ -49,6 +49,23 @@ trackerApp.config(function ($datepickerProvider) {
     });
 })
 
+trackerApp.directive('elastic', [
+        '$timeout',
+        function ($timeout) {
+            return {
+                restrict: 'A',
+                link: function ($scope, element) {
+                    $scope.initialHeight = $scope.initialHeight || element[0].style.height;
+                    var resize = function () {
+                        element[0].style.height = $scope.initialHeight;
+                        element[0].style.height = "" + element[0].scrollHeight + "px";
+                    };
+                    element.on("input change", resize);
+                    $timeout(resize, 0);
+                }
+            };
+        }
+    ]);
 
 trackerApp.directive('stRatio', function () {
     return {
@@ -1462,11 +1479,13 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         });
     }
 
+    $scope.hideHospitalSearchDiv = false;
+
     //To Display the drop down div
     $scope.searchCumDropDown = function (divId) {
-        if (divId == "ForNotes") {
-            $scope.hidenotesdiv = false;
-        }
+        //if (divId == "ForNotes") {
+        //    $scope.hidenotesdiv = false;
+        //}
         $(".ProviderTypeSelectAutoList").hide();
         $("#" + divId).show();
     };
@@ -1526,7 +1545,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     }
     $scope.SelectSubSection = function (SubSection) {
-        //$scope.errormessageforsubsection = false;
+        $scope.errormessageforsubsection = false;
         $scope.task.SubSectionName = SubSection.SubSectionName;
         $(".ProviderTypeSelectAutoList").hide();
     }
@@ -2461,11 +2480,63 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         //    $scope.errormessageforAssignedto = true;
         //}
 
+        $scope.errormessage = false;
+        $scope.errormessageforAssignedto = false;
+        $scope.errormessageforprovider = false;
+        $scope.errormessageforsubsection = false;
+        $scope.errormessageforHospitalName = false;
+        $scope.errormessageforInsurancecompany = false;
+        var $formData;
+        $formData = $('#newTaskFormDiv');
+        var validationCount = 0;
+
+        var validatemodeoffollowupforedit = $($formData[0]).find($("[name='ModeOfFollowUp']")).val();
+        var validateprovidernameforedit = $($formData[0]).find($("[name='ProviderName']")).val();
+        var validatesubsectionnameforedit = $($formData[0]).find($("[name='SubSectionName']")).val();
+        var validatehospitalnameforedit = $($formData[0]).find($("[name='HospitalName']")).val();
+        var validateinsurancecompanynameforedit = $($formData[0]).find($("[name='InsuranceCompany']")).val();
+
+        var validateassignedtoforedit = $($formData[0]).find($("[name='AssignedTo']")).val();
+        var assignedtoresultforedit = $scope.validateAssignedTo(validateassignedtoforedit);
+        if (assignedtoresultforedit == "") {
+            $scope.errormessageforAssignedto = true;
+            validationCount++;
+        }
+        var providernameresultforedit = $scope.validateproviderName(validateprovidernameforedit);
+        if (providernameresultforedit == "") {
+            $scope.errormessageforprovider = true;
+            validationCount++;
+        }
+        var subsectionresultforedit = $scope.validatesubsectionName(validatesubsectionnameforedit);
+        if (subsectionresultforedit == "") {
+            $scope.errormessageforsubsection = true;
+            validationCount++;
+        }
+        var hospitalnameresultforedit = $scope.validateHospitalName(validatehospitalnameforedit);
+        if (hospitalnameresultforedit == "invalid") {
+            $scope.errormessageforHospitalName = true;
+            validationCount++;
+        }
+        var insurancecompanyresultforedit = $scope.validateInsuranceCompany(validateinsurancecompanynameforedit)
+        if (insurancecompanyresultforedit == "invalid") {
+            $scope.errormessageforInsurancecompany = true;
+            validationCount++;
+        }
+
         if (angular.isObject(task)) {
             $scope.TemporaryTask = {};
             $scope.TemporaryTask = angular.copy(task);
         }
+
+        if ($scope.Followups.length == 4)
+        {
+            $scope.errormessage = true;
+        }
+        ResetFormForValidation($formData);
+        validationStatus = $formData.valid();
+
         //if (!$scope.errormessageforprovider && !$scope.errormessageforsubsection && !$scope.errormessageforsubject && !$scope.errormessageforfollowupdate && !$scope.errormessage && !$scope.errormessageforAssignedto)
+        if (validationCount == 0 && !$scope.errormessage && validationStatus)
             $('#inactiveWarningModal').modal();
 
         //$scope.validationfunction = false;
@@ -3042,10 +3113,10 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     //    }
     //}
 
-    //$scope.closenotesDiv = function () {
-    //    $("#HospitalList").hide();
-    //    $scope.hidenotesdiv = true;
-    //}
+    $scope.closenotesDiv = function () {
+        $("#HospitalList").hide();
+        $scope.hidenotesdiv = true;
+    }
     $scope.showeditView = function (task, editviewfortab) {
         //$scope.validationfunction = false;
         //$scope.errormessageforsubject = false;
@@ -3328,9 +3399,11 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                     $.each(taskDataFromApp, function (Skey, Svalue) {
                         if (Mvalue.TaskTrackerId == Svalue.TaskTrackerId) {
                             Mvalue["SetReminder"] = true;
+                            Mvalue["ScheduledDateTime"] = new Date(parseInt(Svalue.ScheduledDateTime.replace("/Date(", "").replace(")/", ""), 10));
                         }
                         //else {
                         //    Mvalue["SetReminder"] = false;
+                        //  returnValue = new Date(parseInt(StoredReminderData[0].ScheduledDateTime.replace("/Date(", "").replace(")/", ""), 10));
                         //}
                     });
                 });

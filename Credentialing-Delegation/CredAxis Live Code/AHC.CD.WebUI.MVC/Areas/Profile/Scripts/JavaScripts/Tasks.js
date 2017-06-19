@@ -72,6 +72,24 @@ profileApp.filter("TimeDiff", function () {
 });
 var TempFollowupHelper = [];
 
+profileApp.directive('elastic', [
+    '$timeout',
+    function ($timeout) {
+        return {
+            restrict: 'A',
+            link: function ($scope, element) {
+                $scope.initialHeight = $scope.initialHeight || element[0].style.height;
+                var resize = function () {
+                    element[0].style.height = $scope.initialHeight;
+                    element[0].style.height = "" + element[0].scrollHeight + "px";
+                };
+                element.on("input change", resize);
+                $timeout(resize, 0);
+            }
+        };
+    }
+]);
+
 profileApp.directive('stPersist', function ($rootScope) {
     return {
         require: '^stTable',
@@ -126,6 +144,7 @@ profileApp.directive('stPersist', function ($rootScope) {
 
 profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$rootScope', '$filter', 'Resource', 'messageAlertEngine', 'toaster', function ($scope, $http, $q, $rootScope, $filter, Resource, messageAlertEngine, toaster) {
     $scope.Tasks = [];
+    $scope.Providers = [];
     $rootScope.TasksLoaded = false;
     $scope.TableView = true;
     var ctrl = this;
@@ -336,13 +355,13 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                     }
                     $scope.tabStatus = $filter('ResetTabStatus')('ProviderTask');
                     $scope.LoadData();
+                    $scope.dataLoaded = true;
                 }).
                 error(function (data, status, headers, config) {
                     defer.reject();
                     $rootScope.TasksLoaded = true;
                 });
-            return defer.promise;
-            $scope.dataLoaded = true;
+            return defer.promise;            
         }
 
     });
@@ -380,6 +399,8 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         ctrl.temp = $scope.TaskHistory;
     });
     $scope.LoadData = function () {
+        $scope.users = [];
+        $scope.CDUsers = [];
         $scope.progressbar = false;
         $q.all([$q.when(CDUsersData()),
         $q.when(HospitalsData()),
@@ -1963,6 +1984,10 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         //console.log($scope.taskList.tasks);
         var ReminderDateTime = new Date($('#datetimepicker3').val());
         for (var i = 0; i < $scope.taskList.tasks.length; i++) {
+            var ProviderName = '';
+
+            jQuery.grep($scope.Providers, function (ele) { if (ele.ProfileId == $scope.taskList.tasks[i].ProfileID) ProviderName = ele.Name });
+            $scope.taskList.tasks[i].ProviderName = ProviderName;
             $scope.TaskReminder.push({ ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime });
             $scope.taskList.reminderDateTime = ReminderDateTime;
             //$scope.TaskReminder = { ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime };

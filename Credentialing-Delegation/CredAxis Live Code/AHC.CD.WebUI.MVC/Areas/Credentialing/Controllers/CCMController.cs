@@ -361,7 +361,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     }
                     else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Onhold)
                     {
-                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "OnHold");
+                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Onhold");
                     }
 
                     await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);
@@ -388,7 +388,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     }
                     else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Onhold)
                     {
-                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "OnHold");
+                        notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Onhold");
                     }
 
                     await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);
@@ -416,7 +416,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                         }
                         else if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType == Entities.MasterData.Enums.CCMApprovalStatusType.Onhold)
                         {
-                            notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "OnHold");
+                            notification = new ChangeNotificationDetail(profileId, User.Identity.Name, "CCM Appointment Result", "Onhold");
                         }
 
                         await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);

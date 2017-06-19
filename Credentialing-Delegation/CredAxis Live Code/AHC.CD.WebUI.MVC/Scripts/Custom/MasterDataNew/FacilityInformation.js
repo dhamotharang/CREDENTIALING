@@ -132,7 +132,7 @@ FacilityInformationApp.controller('FacilityInformationController', ['$scope', '$
         $scope.MidLevelProviders = Providers;
         for(var m=0;m<$scope.MidLevelProviders.length;m++)
         {
-            $scope.MidLevelProviders[m].PersonalDetail.FullName = $scope.MidLevelProviders[m].PersonalDetail.FirstName + " " + $scope.MidLevelProviders[m].PersonalDetail.MiddleName + " " + $scope.MidLevelProviders[m].PersonalDetail.LastName;
+            $scope.MidLevelProviders[m].PersonalDetail.FullName = $scope.MidLevelProviders[m].PersonalDetail.FirstName + " " + (($scope.MidLevelProviders[m].PersonalDetail.MiddleName != null)?$scope.MidLevelProviders[m].PersonalDetail.MiddleName:"") + " " + $scope.MidLevelProviders[m].PersonalDetail.LastName;
         }
     });
 

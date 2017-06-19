@@ -44,7 +44,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         /// Method to get all Email Templates
         /// </summary>
         /// <returns></returns>
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllEmailTemplates()
         {
             var data = await masterDataManager.GetAllEmailTemplatesAsync();
@@ -81,7 +81,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllQualificationDegrees()
         {
             var data = await masterDataManager.GetAllQualificationDegreeAsync();
@@ -102,7 +102,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllspecialtyBoards()
         {
             var data = await masterDataManager.GetAllspecialtyBoardAsync();
@@ -123,7 +123,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllVisaStatus()
         {
             var data = await masterDataManager.GetAllVisaStatusAsync();
@@ -3276,7 +3276,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         #endregion
 
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "planID")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "planID")]
         public async Task<JsonResult> GetAllLOBsOfPlanContractByPlanID(int planID)
         {
             //var data = await masterDataManager.GetAllLOBsOfPlanContractByPlanIDAsync(planID);
@@ -3300,7 +3300,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
             return JsonConvert.SerializeObject(data);
         }
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
 
         public async Task<JsonResult> GetAllPlanNames()
         {
@@ -3310,7 +3310,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllInactivePlans()
         {
             var data = await masterDataManager.GetAllInactivePlansAsync();
@@ -3326,7 +3326,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<JsonResult> GetAllLobs()
         {
             var data = await masterDataManager.GetAllLOBAsync();
@@ -3342,7 +3342,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllMasterBusinessContactPerson()
         {
             var data = await masterDataManager.GetAllMasterBusinessContactPersonAsync();
@@ -3416,7 +3416,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllMasterBillingContactPerson()
         {
             var data = await masterDataManager.GetAllMasterBillingContactPersonAsync();
@@ -3490,7 +3490,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllMasterPaymentRemittancePerson()
         {
             var data = await masterDataManager.GetAllMasterPaymentRemittancePersonAsync();
@@ -3575,7 +3575,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllMasterCredentialingContactPerson()
         {
             var data = await masterDataManager.GetAllMasterCredentialingContactPersonAsync();
@@ -3651,7 +3651,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllProfileSubSections()
         {
             var data = await masterDataManager.GetAllProfileSubSectionsAsync();
@@ -3727,7 +3727,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllVerificationLinks()
         {
             var data = await masterDataManager.GetAllVerificationLinksAsync();
@@ -3826,7 +3826,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllDecredentialingReasons()
         {
             var data = await masterDataManager.GetAllDecredentialingReasonsAsync();
@@ -3937,7 +3937,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "Code")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData", VaryByParam = "Code")]
         public JsonResult GetNotesTemplateByCode(string Code)
         {
             return Json(new { data = masterDataManager.GetNotesTemplateByCode(Code) }, JsonRequestBehavior.AllowGet);
@@ -3984,7 +3984,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return Json(new { status = result, NotesTemplate = Template }, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public JsonResult GetAllNotesTemplates()
         {
             var data = masterDataManager.GetAllNotesTemplates().Where(x => x.Status == AHC.CD.Entities.MasterData.Enums.StatusType.Active.ToString());
@@ -4000,7 +4000,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return View();
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<string> GetAllMasterFacilityInformation()
         {
             var data = await masterDataManager.GetAllMasterFacilityInformationAsync();
@@ -4008,21 +4008,21 @@ namespace AHC.CD.WebUI.MVC.Controllers
             return JsonConvert.SerializeObject(data);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllAccessibilityQuestions()
         {
             var data = await masterDataManager.GetAllAccessibilityQuestionsAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllPracticeTypes()
         {
             var data = await masterDataManager.GetAllPracticeTypesAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
+        //[OutputCache(Location = System.Web.UI.OutputCacheLocation.Server, CacheProfile = "MasterData")]
         public async Task<ActionResult> GetAllServiceQuestions()
         {
             var data = await masterDataManager.GetAllServiceQuestionsAsync();

@@ -95,9 +95,16 @@ namespace AHC.CD.WebUI.MVC.Controllers
                         }
                     }
                 }
-                var expires = await this.ExpiryNotification.GetExpiries(User.Identity.GetUserId());
-                ViewBag.expiresData = expires;
-                return View();
+                if(Role[0] == "CCM")
+                {
+                    return RedirectToAction("Index", "CCMPortal", new { area = "Credentialing" });
+                }
+                else
+                {
+                    var expires = await this.ExpiryNotification.GetExpiries(User.Identity.GetUserId());
+                    ViewBag.expiresData = expires;
+                    return View();
+                }
             }
             catch (Exception)
             {

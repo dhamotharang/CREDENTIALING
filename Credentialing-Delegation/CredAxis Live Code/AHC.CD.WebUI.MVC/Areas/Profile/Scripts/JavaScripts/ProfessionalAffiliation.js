@@ -276,7 +276,7 @@ profileApp.controller('professionalAppCtrl', ['$scope', '$rootScope', '$http', '
                         $rootScope.$emit(key, data[key]);
                         //call respective controller to load data (PSP)
                     }
-                    $scope.ProfessionalAffiliations = data.StateLicenses;
+                    //$scope.ProfessionalAffiliations = data.StateLicenses;
                     $rootScope.ProfessionalAffiliationLoaded = true;
                     //$rootScope.$broadcast("LoadRequireMasterDataProfessionalAffiliation");
                 } catch (e) {
