@@ -284,12 +284,12 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     organizationGroup = AutoMapper.Mapper.Map<MasterDataOrganizationGroupViewModel, OrganizationGroup>(organizationGroupDetails);
 
                     organizationGroup.OrganizationGroupID = masterDataAddEdit.AddOrganizationGroup(organizationGroup);
-                    var urlToRemove = Url.Action("GetAllOrganizationGroups", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllOrganizationGroupAsync", "MasterData", new { Area = "Profile" });
-                    var urlToRemove2 = Url.Action("GetAllOrganizationGroupAsync", "MasterDataNew");
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove2);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllOrganizationGroups", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllOrganizationGroupAsync", "MasterData", new { Area = "Profile" });
+                    //var urlToRemove2 = Url.Action("GetAllOrganizationGroupAsync", "MasterDataNew");
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove2);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -328,12 +328,12 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     organizationGroup = AutoMapper.Mapper.Map<MasterDataOrganizationGroupViewModel, OrganizationGroup>(organizationGroupDetails);
 
                     await masterDataAddEdit.UpdateOrganizationGroup(organizationGroup);
-                    var urlToRemove = Url.Action("GetAllOrganizationGroups", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllOrganizationGroupAsync", "MasterData", new { Area = "Profile" });
-                    var urlToRemove2 = Url.Action("GetAllOrganizationGroupAsync", "MasterDataNew");
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove2);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllOrganizationGroups", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllOrganizationGroupAsync", "MasterData", new { Area = "Profile" });
+                    //var urlToRemove2 = Url.Action("GetAllOrganizationGroupAsync", "MasterDataNew");
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove2);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -381,8 +381,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     organizationGroup = AutoMapper.Mapper.Map<OrganizationGroupViewModel, Group>(organizationGroupDetails);
 
                     organizationGroup.GroupID = masterDataAddEdit.AddGroup(organizationGroup);
-                    var urlToRemove = Url.Action("GetAllGroups", "MasterDataNew");
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllGroups", "MasterDataNew");
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -421,8 +421,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     organizationGroup = AutoMapper.Mapper.Map<OrganizationGroupViewModel, Group>(organizationGroupDetails);
 
                     await masterDataAddEdit.UpdateGroup(organizationGroup);
-                    var urlToRemove = Url.Action("GetAllGroups", "MasterDataNew");
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllGroups", "MasterDataNew");
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -470,10 +470,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     providerLevel = AutoMapper.Mapper.Map<ProviderLevelViewModel, ProviderLevel>(providerLevelDetails);
 
                     providerLevel.ProviderLevelID = masterDataAddEdit.AddProviderLevel(providerLevel);
-                    var urlToRemove = Url.Action("GetAllProviderLevels", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllProviderLevels", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllProviderLevels", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllProviderLevels", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -512,10 +512,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     providerLevel = AutoMapper.Mapper.Map<ProviderLevelViewModel, ProviderLevel>(providerLevelDetails);
 
                     await masterDataAddEdit.UpdateProviderLevel(providerLevel);
-                    var urlToRemove = Url.Action("GetAllProviderLevels", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllProviderLevels", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllProviderLevels", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllProviderLevels", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -563,10 +563,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     visaType = AutoMapper.Mapper.Map<VisaTypeViewModel, VisaType>(visaTypeDetails);
 
                     visaType.VisaTypeID = masterDataAddEdit.AddVisaType(visaType);
-                    var urlToRemove = Url.Action("GetAllVisaTypes", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllVisaTypes", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllVisaTypes", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllVisaTypes", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -607,10 +607,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     visaType = AutoMapper.Mapper.Map<VisaTypeViewModel, VisaType>(visaTypeDetails);
 
                     await masterDataAddEdit.UpdateVisaType(visaType);
-                    var urlToRemove = Url.Action("GetAllVisaTypes", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllVisaTypes", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllVisaTypes", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllVisaTypes", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -659,10 +659,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     visaStatus = AutoMapper.Mapper.Map<VisaStatusViewModel, VisaStatus>(visaStatusDetails);
 
                     visaStatus.VisaStatusID = masterDataAddEdit.AddVisaStatus(visaStatus);
-                    var urlToRemove = Url.Action("GetAllVisaStatus", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllVisaStatus", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllVisaStatus", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllVisaStatus", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -701,10 +701,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     visaStatus = AutoMapper.Mapper.Map<VisaStatusViewModel, VisaStatus>(visaStatusDetails);
 
                     await masterDataAddEdit.UpdateVisaStatus(visaStatus);
-                    var urlToRemove = Url.Action("GetAllVisaStatus", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllVisaStatus", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllVisaStatus", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllVisaStatus", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -752,10 +752,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     insuaranceCompanyName = AutoMapper.Mapper.Map<InsuaranceCompanyNameViewModel, InsuaranceCompanyName>(insuaranceCompanyNameDetails);
 
                     insuaranceCompanyName.InsuaranceCompanyNameID = masterDataAddEdit.AddInsuaranceCompany(insuaranceCompanyName);
-                    var urlToRemove = Url.Action("GetAllInsuaranceCompanyNames", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllInsuaranceCompanyNames", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllInsuaranceCompanyNames", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllInsuaranceCompanyNames", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -795,10 +795,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     insuaranceCompanyName = AutoMapper.Mapper.Map<InsuaranceCompanyNameViewModel, InsuaranceCompanyName>(insuaranceCompanyNameDetails);
 
                     await masterDataAddEdit.UpdateInsuaranceCompany(insuaranceCompanyName);
-                    var urlToRemove = Url.Action("GetAllInsuaranceCompanyNames", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllInsuaranceCompanyNames", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllInsuaranceCompanyNames", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllInsuaranceCompanyNames", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -845,10 +845,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     stateLicenseStatus = AutoMapper.Mapper.Map<StateLicenseStatusViewModel, StateLicenseStatus>(stateLicenseStatusDetails);
 
                     stateLicenseStatus.StateLicenseStatusID = masterDataAddEdit.AddStateLicenseStatus(stateLicenseStatus);
-                    var urlToRemove = Url.Action("GetAllLicenseStatus", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllLicenseStatus", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //var urlToRemove = Url.Action("GetAllLicenseStatus", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllLicenseStatus", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
                 }
                 else
                 {
@@ -887,10 +887,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     stateLicenseStatus = AutoMapper.Mapper.Map<StateLicenseStatusViewModel, StateLicenseStatus>(stateLicenseStatusDetails);
 
                     await masterDataAddEdit.UpdateStateLicenseStatus(stateLicenseStatus);
-                    var urlToRemove = Url.Action("GetAllLicenseStatus", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllLicenseStatus", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllLicenseStatus", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllLicenseStatus", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -938,10 +938,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     staffCategory = AutoMapper.Mapper.Map<StaffCategoryViewModel, StaffCategory>(staffCategoryDetails);
 
                     staffCategory.StaffCategoryID = masterDataAddEdit.AddStaffCategory(staffCategory);
-                    var urlToRemove = Url.Action("GetAllStaffCategories", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllStaffCategories", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllStaffCategories", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllStaffCategories", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -980,10 +980,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     staffCategory = AutoMapper.Mapper.Map<StaffCategoryViewModel, StaffCategory>(staffCategoryDetails);
 
                     await masterDataAddEdit.UpdateStaffCategory(staffCategory);
-                    var urlToRemove = Url.Action("GetAllStaffCategories", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllStaffCategories", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllStaffCategories", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllStaffCategories", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1027,10 +1027,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 {
                     specialtyBoard = AutoMapper.Mapper.Map<SpecialtyBoardViewModel, SpecialtyBoard>(specialtyBoardDetails);
                     specialtyBoard.SpecialtyBoardID = masterDataAddEdit.AddSpecialityBoard(specialtyBoard);
-                    var urlToRemove = Url.Action("GetAllspecialtyBoards", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllspecialtyBoards", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllspecialtyBoards", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllspecialtyBoards", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1066,10 +1066,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 {
                     specialtyBoard = AutoMapper.Mapper.Map<SpecialtyBoardViewModel, SpecialtyBoard>(specialtyBoardDetails);
                     await masterDataAddEdit.UpdateSpecialityBoard(specialtyBoard);
-                    var urlToRemove = Url.Action("GetAllspecialtyBoards", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllspecialtyBoards", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllspecialtyBoards", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllspecialtyBoards", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1110,10 +1110,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 {
                     specialty = AutoMapper.Mapper.Map<SpecialtyViewModel, Specialty>(specialtyDetails);
                     specialty.SpecialtyID = masterDataAddEdit.AddSpeciality(specialty);
-                    var urlToRemove = Url.Action("GetAllSpecialities", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllSpecialities", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllSpecialities", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllSpecialities", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1151,10 +1151,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     specialty = AutoMapper.Mapper.Map<SpecialtyViewModel, Specialty>(specialtyDetails);
 
                     await masterDataAddEdit.UpdateSpeciality(specialty);
-                    var urlToRemove = Url.Action("GetAllSpecialities", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllSpecialities", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllSpecialities", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllSpecialities", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1198,10 +1198,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     school = AutoMapper.Mapper.Map<SchoolViewModel, School>(schoolDetails);
 
                     school.SchoolID = masterDataAddEdit.AddSchool(school);
-                    var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1242,10 +1242,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     SchoolCon = AutoMapper.Mapper.Map<SchoolContactInfoViewModel, SchoolContactInfo>(contactDetails);
                     masterDataAddEdit.AddSchoolContactInfo(SchoolId, SchoolCon);
-                    var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -1288,10 +1288,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     school = AutoMapper.Mapper.Map<SchoolViewModel, School>(schoolDetails);
 
                     await masterDataAddEdit.UpdateSchool(school);
-                    var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
 
                 }
                 else
@@ -1331,10 +1331,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     schoolContactInfo = AutoMapper.Mapper.Map<SchoolContactInfoViewModel, SchoolContactInfo>(schoolContactDetails);
 
                     masterDataAddEdit.UpdateSchoolContactInfo(schoolContactInfo);
-                    var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllSchools", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllSchools", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1380,10 +1380,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     dEASchedule = AutoMapper.Mapper.Map<DEAScheduleViewModel, DEASchedule>(dEAScheduleDetails);
 
                     dEASchedule.DEAScheduleID = masterDataAddEdit.AddDEASchedule(dEASchedule);
-                    var urlToRemove = Url.Action("GetAllDEASchedules", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllDEASchedules", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllDEASchedules", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllDEASchedules", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
 
                 }
                 else
@@ -1423,10 +1423,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     dEASchedule = AutoMapper.Mapper.Map<DEAScheduleViewModel, DEASchedule>(dEAScheduleDetails);
 
                     await masterDataAddEdit.UpdateDEASchedule(dEASchedule);
-                    var urlToRemove = Url.Action("GetAllDEASchedules", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllDEASchedules", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllDEASchedules", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllDEASchedules", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1475,10 +1475,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     militaryBranch = AutoMapper.Mapper.Map<MilitaryBranchViewModel, MilitaryBranch>(militaryBranchDetails);
                     masterDataAddEdit.AddMilitaryBranch(militaryBranch);
-                    var urlToRemove = Url.Action("GetAllMilitaryBranches", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryBranches", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryBranches", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryBranches", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -1521,10 +1521,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     militaryBranch = AutoMapper.Mapper.Map<MilitaryBranchViewModel, MilitaryBranch>(militaryBranchDetails);
                     masterDataAddEdit.UpdateMilitaryBranch(militaryBranch);
-                    var urlToRemove = Url.Action("GetAllMilitaryBranches", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryBranches", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryBranches", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryBranches", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -1578,10 +1578,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     militaryRank = AutoMapper.Mapper.Map<MilitaryRankViewModel, MilitaryRank>(militaryRankDetails);
                     int id = masterDataAddEdit.AddMilitaryRank(militaryRank);
                     militaryRank.MilitaryRankID = id;
-                    var urlToRemove = Url.Action("GetAllMilitaryRanks", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryRanks", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryRanks", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryRanks", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -1625,10 +1625,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     militaryRank = AutoMapper.Mapper.Map<MilitaryRankViewModel, MilitaryRank>(militaryRankDetails);
                     masterDataAddEdit.UpdateMilitaryRank(militaryRank);
-                    var urlToRemove = Url.Action("GetAllMilitaryRanks", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryRanks", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryRanks", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryRanks", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
 
                 }
 
@@ -1717,10 +1717,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     privilege = AutoMapper.Mapper.Map<AdmittingPrivilegeViewModel, AdmittingPrivilege>(admitingPrivilege);
 
                     privilege.AdmittingPrivilegeID = masterDataAddEdit.AddAdmittingPrivileges(privilege);
-                    var urlToRemove = Url.Action("GetAllAdmittingPrivileges", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllAdmittingPrivileges", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllAdmittingPrivileges", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllAdmittingPrivileges", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1759,10 +1759,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     privilege = AutoMapper.Mapper.Map<AdmittingPrivilegeViewModel, AdmittingPrivilege>(admitingPrivilege);
 
                     await masterDataAddEdit.UpdateAdmittingPrivilege(privilege);
-                    var urlToRemove = Url.Action("GetAllAdmittingPrivileges", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllAdmittingPrivileges", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllAdmittingPrivileges", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllAdmittingPrivileges", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1807,10 +1807,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     certification = AutoMapper.Mapper.Map<CertificationViewModel, Certification>(certificationDetails);
 
                     certification.CertificationID = masterDataAddEdit.AddCertification(certification);
-                    var urlToRemove = Url.Action("GetAllCertificates", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllCertificates", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllCertificates", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllCertificates", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -1849,10 +1849,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     certification = AutoMapper.Mapper.Map<CertificationViewModel, Certification>(certificationDetails);
 
                     await masterDataAddEdit.UpdateCertification(certification);
-                    var urlToRemove = Url.Action("GetAllCertificates", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllCertificates", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllCertificates", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllCertificates", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
 
                 }
                 else
@@ -1895,10 +1895,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     hospital = AutoMapper.Mapper.Map<HospitalViewModel, Hospital>(hospitalDetails);
                     masterDataAddEdit.AddHospital(hospital);
-                    var urlToRemove = Url.Action("GetAllHospitals", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllHospitals", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllHospitals", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllHospitals", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -1945,8 +1945,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     hospital = AutoMapper.Mapper.Map<HospitalContactInfoViewModel, HospitalContactInfo>(contactDetails);
                     masterDataAddEdit.AddHospitalContactInfo(hospitalId, hospital);
-                    var urlToRemove = Url.Action("GetAllHospitalContactInfoes", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllHospitalContactInfoes", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -1993,8 +1993,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     person = AutoMapper.Mapper.Map<HospitalContactPersonViewModel, HospitalContactPerson>(personDetails);
                     masterDataAddEdit.AddHospitalContactPerson(hospitalId, contactId, person);
-                    var urlToRemove = Url.Action("GetAllHospitalContactPersons", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllHospitalContactPersons", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -2041,10 +2041,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     hospital = AutoMapper.Mapper.Map<HospitalOnlyViewModel, Hospital>(hospitalDetails);
                     masterDataAddEdit.UpdateHospital(hospital);
-                    var urlToRemove = Url.Action("GetAllHospitals", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllHospitals", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllHospitals", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllHospitals", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -2087,8 +2087,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                 hospitalContactInfo = AutoMapper.Mapper.Map<HospitalContactInfoViewModel, HospitalContactInfo>(hospitalContactInfoViewModel);
                 masterDataAddEdit.UpdateHospitalContact(hospitalContactInfo);
-                var urlToRemove = Url.Action("GetAllHospitalContactInfoes", "MasterData", new { Area = "Profile" });
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllHospitalContactInfoes", "MasterData", new { Area = "Profile" });
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
 
             catch (DatabaseValidationException ex)
@@ -2119,8 +2119,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
             hospitalContactPerson = AutoMapper.Mapper.Map<HospitalContactPersonViewModel, HospitalContactPerson>(hospitalContactPersonViewModel);
             masterDataAddEdit.UpdateHospitalContactPerson(hospitalContactPerson);
-            var urlToRemove = Url.Action("GetAllHospitalContactPersons", "MasterData", new { Area = "Profile" });
-            HttpResponse.RemoveOutputCacheItem(urlToRemove);
+            //var urlToRemove = Url.Action("GetAllHospitalContactPersons", "MasterData", new { Area = "Profile" });
+            //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             return Json(new { status = status, HospitalContactPerson = hospitalContactPerson }, JsonRequestBehavior.AllowGet);
         }
 
@@ -2147,10 +2147,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     insurance = AutoMapper.Mapper.Map<InsuranceCarrierViewModel, InsuranceCarrier>(insuranceDetails);
                     masterDataAddEdit.AddInsuranceCarrier(insurance);
-                    var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -2196,12 +2196,12 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     address = AutoMapper.Mapper.Map<InsuranceCarrierAddressViewModel, InsuranceCarrierAddress>(addressDetails);
                     masterDataAddEdit.AddInsuranceCarrierAddress(insuranceId, address);
-                    var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
-                    var urlToRemove2 = Url.Action("GetAllInsuranceCarrierAddresses", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove2);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
+                    //var urlToRemove2 = Url.Action("GetAllInsuranceCarrierAddresses", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove2);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -2244,10 +2244,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                 insurance = AutoMapper.Mapper.Map<InsuranceCarrierViewModel, InsuranceCarrier>(insuranceDetails);
                 masterDataAddEdit.UpdateInsuranceCarrier(insurance);
-                var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
+                //var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
 
             }
 
@@ -2283,12 +2283,12 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                 insurance = AutoMapper.Mapper.Map<InsuranceCarrierAddressViewModel, InsuranceCarrierAddress>(addressDetails);
                 masterDataAddEdit.UpdateInsuranceCarrierAddress(insurance);
-                var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
-                var urlToRemove2 = Url.Action("GetAllInsuranceCarrierAddresses", "MasterData", new { Area = "Profile" });
-                HttpResponse.RemoveOutputCacheItem(urlToRemove2);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllInsuranceCarriers", "MasterDataNew");
+                //var urlToRemove1 = Url.Action("GetAllInsuranceCarriers", "MasterData", new { Area = "Profile" });
+                //var urlToRemove2 = Url.Action("GetAllInsuranceCarrierAddresses", "MasterData", new { Area = "Profile" });
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove2);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
 
             catch (DatabaseValidationException ex)
@@ -2333,10 +2333,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     militaryDischarge = AutoMapper.Mapper.Map<MilitaryDischargeViewModel, MilitaryDischarge>(militaryDischargeDetails);
 
                     militaryDischarge.MilitaryDischargeID = masterDataAddEdit.AddMilitaryDischarge(militaryDischarge);
-                    var urlToRemove = Url.Action("GetAllMilitaryDischarges", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryDischarges", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryDischarges", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryDischarges", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2375,10 +2375,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     militaryDischarge = AutoMapper.Mapper.Map<MilitaryDischargeViewModel, MilitaryDischarge>(militaryDischargeDetails);
 
                     await masterDataAddEdit.UpdateMilitaryDischarge(militaryDischarge);
-                    var urlToRemove = Url.Action("GetAllMilitaryDischarges", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryDischarges", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryDischarges", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryDischarges", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2426,10 +2426,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     militaryPresentDuty = AutoMapper.Mapper.Map<MilitaryPresentDutyViewModel, MilitaryPresentDuty>(militaryPresentDutyDetails);
 
                     militaryPresentDuty.MilitaryPresentDutyID = masterDataAddEdit.AddMilitaryPresentDuty(militaryPresentDuty);
-                    var urlToRemove = Url.Action("GetAllMilitaryPresentDuties", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryPresentDuties", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryPresentDuties", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryPresentDuties", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2468,10 +2468,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     militaryPresentDuty = AutoMapper.Mapper.Map<MilitaryPresentDutyViewModel, MilitaryPresentDuty>(militaryPresentDutyDetails);
 
                     await masterDataAddEdit.UpdateMilitaryPresentDuty(militaryPresentDuty);
-                    var urlToRemove = Url.Action("GetAllMilitaryPresentDuties", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllMilitaryPresentDuties", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllMilitaryPresentDuties", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllMilitaryPresentDuties", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2519,10 +2519,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     practiceAccessibilityQuestion = AutoMapper.Mapper.Map<PracticeAccessibilityQuestionViewModel, FacilityAccessibilityQuestion>(practiceAccessibilityQuestionDetails);
 
                     practiceAccessibilityQuestion.FacilityAccessibilityQuestionId = masterDataAddEdit.AddPracticeAccessibilityQuestions(practiceAccessibilityQuestion);
-                    var urlToRemove = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2561,10 +2561,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     practiceAccessibilityQuestion = AutoMapper.Mapper.Map<PracticeAccessibilityQuestionViewModel, FacilityAccessibilityQuestion>(practiceAccessibilityQuestionDetails);
 
                     await masterDataAddEdit.UpdatePracticeAccessibilityQuestions(practiceAccessibilityQuestion);
-                    var urlToRemove = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllPracticeAccessibilityQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2612,10 +2612,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     practiceServiceQuestion = AutoMapper.Mapper.Map<PracticeServiceQuestionViewModel, FacilityServiceQuestion>(practiceServiceQuestionDetails);
 
                     practiceServiceQuestion.FacilityServiceQuestionID = masterDataAddEdit.AddPracticeServiceQuestion(practiceServiceQuestion);
-                    var urlToRemove = Url.Action("GetAllPracticeServiceQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllPracticeServiceQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllPracticeServiceQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllPracticeServiceQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2654,10 +2654,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     practiceServiceQuestion = AutoMapper.Mapper.Map<PracticeServiceQuestionViewModel, FacilityServiceQuestion>(practiceServiceQuestionDetails);
 
                     await masterDataAddEdit.UpdatePracticeServiceQuestion(practiceServiceQuestion);
-                    var urlToRemove = Url.Action("GetAllPracticeServiceQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllPracticeServiceQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllPracticeServiceQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllPracticeServiceQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2705,10 +2705,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     practiceOpenStatusQuestion = AutoMapper.Mapper.Map<PracticeOpenStatusQuestionViewModel, PracticeOpenStatusQuestion>(practiceOpenStatusQuestionDetails);
 
                     practiceOpenStatusQuestion.PracticeOpenStatusQuestionID = masterDataAddEdit.AddPracticeOpenStatusQuestion(practiceOpenStatusQuestion);
-                    var urlToRemove = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2747,10 +2747,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     practiceOpenStatusQuestion = AutoMapper.Mapper.Map<PracticeOpenStatusQuestionViewModel, PracticeOpenStatusQuestion>(practiceOpenStatusQuestionDetails);
 
                     await masterDataAddEdit.UpdatePracticeOpenStatusQuestion(practiceOpenStatusQuestion);
-                    var urlToRemove = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllPracticeOpenStatusQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2798,10 +2798,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     providerType = AutoMapper.Mapper.Map<ProviderTypeViewModel, ProviderType>(providerTypeDetails);
 
                     providerType.ProviderTypeID = masterDataAddEdit.AddProviderType(providerType);
-                    var urlToRemove = Url.Action("GetAllProviderTypes", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllProviderTypes", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllProviderTypes", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllProviderTypes", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2840,10 +2840,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     providerType = AutoMapper.Mapper.Map<ProviderTypeViewModel, ProviderType>(providerTypeDetails);
 
                     await masterDataAddEdit.UpdateProviderType(providerType);
-                    var urlToRemove = Url.Action("GetAllProviderTypes", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllProviderTypes", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllProviderTypes", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllProviderTypes", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2891,10 +2891,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     qualificationDegree = AutoMapper.Mapper.Map<QualificationDegreeViewModel, QualificationDegree>(qualificationDegreeDetails);
 
                     qualificationDegree.QualificationDegreeID = masterDataAddEdit.AddQualificationDegree(qualificationDegree);
-                    var urlToRemove = Url.Action("GetAllQualificationDegrees", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllQualificationDegrees", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllQualificationDegrees", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllQualificationDegrees", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2933,10 +2933,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     qualificationDegree = AutoMapper.Mapper.Map<QualificationDegreeViewModel, QualificationDegree>(qualificationDegreeDetails);
 
                     await masterDataAddEdit.UpdateQualificationDegree(qualificationDegree);
-                    var urlToRemove = Url.Action("GetAllQualificationDegrees", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllQualificationDegrees", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllQualificationDegrees", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllQualificationDegrees", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
                 else
                 {
@@ -2991,10 +2991,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     question = AutoMapper.Mapper.Map<QuestionViewModel, Question>(questionDetails);
                     masterDataAddEdit.AddQuestion(question);
-                    var urlToRemove = Url.Action("GetAllQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -3038,10 +3038,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     question = AutoMapper.Mapper.Map<QuestionViewModel, Question>(questionDetails);
                     masterDataAddEdit.UpdateQuestion(question);
-                    var urlToRemove = Url.Action("GetAllQuestions", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllQuestions", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllQuestions", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllQuestions", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -3089,10 +3089,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     questionCategory = AutoMapper.Mapper.Map<QuestionCategoryViewModel, QuestionCategory>(questionCategoryDetails);
                     masterDataAddEdit.AddQuestionCategory(questionCategory);
-                    var urlToRemove = Url.Action("GetAllQuestionCategories", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllQuestionCategories", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllQuestionCategories", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllQuestionCategories", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -3136,10 +3136,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     questionCategory = AutoMapper.Mapper.Map<QuestionCategoryViewModel, QuestionCategory>(questionCategoryDetails);
                     masterDataAddEdit.UpdateQuestionCategory(questionCategory);
-                    var urlToRemove = Url.Action("GetAllQuestionCategories", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllQuestionCategories", "MasterData", new { Area = "Profile" });
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllQuestionCategories", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllQuestionCategories", "MasterData", new { Area = "Profile" });
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -3197,8 +3197,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
                     var data = await masterDataManager.GetCitiesAllAsync();
                     locations = data.ToList();
                     this.ControllerContext.HttpContext.Cache["LOCATIONS"] = locations;
-                    var urlToRemove = Url.Action("GetAllCities", "MasterDataNew");
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllCities", "MasterDataNew");
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -3243,8 +3243,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     city = AutoMapper.Mapper.Map<CitiesViewModel, City>(cityDetails);
                     masterDataAddEdit.UpdateCity(city);
-                    var urlToRemove = Url.Action("GetAllCities", "MasterDataNew");
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //var urlToRemove = Url.Action("GetAllCities", "MasterDataNew");
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 }
 
                 else
@@ -3357,8 +3357,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelOfficeManager = AutoMapper.Mapper.Map<FacilityEmployeeMasterDataViewModel, MasterEmployee>(officeManager);
                 dataModelOfficeManager = await masterDataAddEdit.SaveOfficeManager(dataModelOfficeManager);
-                var urlToRemove = Url.Action("GetAllMasterBusinessContactPerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterBusinessContactPerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3386,8 +3386,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelOfficeManager = AutoMapper.Mapper.Map<FacilityEmployeeMasterDataViewModel, MasterEmployee>(officeManager);
                 dataModelOfficeManager = await masterDataAddEdit.SaveOfficeManager(dataModelOfficeManager);
-                var urlToRemove = Url.Action("GetAllMasterBusinessContactPerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterBusinessContactPerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3431,8 +3431,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelBillingContact = AutoMapper.Mapper.Map<FacilityEmployeeMasterDataViewModel, MasterEmployee>(billingContact);
                 dataModelBillingContact = await masterDataAddEdit.SaveBillingContact(dataModelBillingContact);
-                var urlToRemove = Url.Action("GetAllMasterBillingContactPerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterBillingContactPerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3460,8 +3460,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelBillingContact = AutoMapper.Mapper.Map<FacilityEmployeeMasterDataViewModel, MasterEmployee>(billingContact);
                 dataModelBillingContact = await masterDataAddEdit.SaveBillingContact(dataModelBillingContact);
-                var urlToRemove = Url.Action("GetAllMasterBillingContactPerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterBillingContactPerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3505,8 +3505,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelPaymentRemittancePerson = AutoMapper.Mapper.Map<PracticePaymentAndRemittanceMasterDataViewModel, MasterPracticePaymentRemittancePerson>(paymentRemittancePerson);
                 dataModelPaymentRemittancePerson = await masterDataAddEdit.SavePaymentAndRemittance(dataModelPaymentRemittancePerson);
-                var urlToRemove = Url.Action("GetAllMasterPaymentRemittancePerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterPaymentRemittancePerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3536,8 +3536,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelPaymentRemittancePerson = AutoMapper.Mapper.Map<PracticePaymentAndRemittanceMasterDataViewModel, MasterPracticePaymentRemittancePerson>(paymentRemittancePerson);
                 dataModelPaymentRemittancePerson = await masterDataAddEdit.SavePaymentAndRemittance(dataModelPaymentRemittancePerson);
-                var urlToRemove = Url.Action("GetAllMasterPaymentRemittancePerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterPaymentRemittancePerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3590,8 +3590,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelCredentialingContact = AutoMapper.Mapper.Map<FacilityEmployeeMasterDataViewModel, MasterEmployee>(credentialingContact);
                 dataModelCredentialingContact = await masterDataAddEdit.SaveCredentialingContact(dataModelCredentialingContact);
-                var urlToRemove = Url.Action("GetAllMasterCredentialingContactPerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterCredentialingContactPerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3619,8 +3619,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelCredentialingContact = AutoMapper.Mapper.Map<FacilityEmployeeMasterDataViewModel, MasterEmployee>(credentialingContact);
                 dataModelCredentialingContact = await masterDataAddEdit.SaveCredentialingContact(dataModelCredentialingContact);
-                var urlToRemove = Url.Action("GetAllMasterCredentialingContactPerson", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllMasterCredentialingContactPerson", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3668,8 +3668,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelProfileSubsection = AutoMapper.Mapper.Map<ProfileSubSectionViewModel, ProfileSubSection>(profilesubsection);
                 dataModelProfileSubsection = await masterDataAddEdit.SaveProfileSubSection(dataModelProfileSubsection);
-                var urlToRemove = Url.Action("GetAllProfileSubSections", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllProfileSubSections", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3697,8 +3697,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelProfileSubsection = AutoMapper.Mapper.Map<ProfileSubSectionViewModel, ProfileSubSection>(profilesubsection);
                 await masterDataAddEdit.UpdateProfileSubSection(dataModelProfileSubsection);
-                var urlToRemove = Url.Action("GetAllProfileSubSections", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllProfileSubSections", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3742,10 +3742,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelVerificationLink = AutoMapper.Mapper.Map<VerificationLinkViewModel, VerificationLink>(verificationlink);
                 dataModelVerificationLink = await masterDataAddEdit.SaveVerificationLink(dataModelVerificationLink);
-                var urlToRemove = Url.Action("GetAllVerificationLinks", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetAllVerificationLinks", "MasterData", new { Area = "Profile" });
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllVerificationLinks", "MasterDataNew");
+                //var urlToRemove1 = Url.Action("GetAllVerificationLinks", "MasterData", new { Area = "Profile" });
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3773,10 +3773,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelVerificationLink = AutoMapper.Mapper.Map<VerificationLinkViewModel, VerificationLink>(verificationlink);
                 dataModelVerificationLink = await masterDataAddEdit.SaveVerificationLink(dataModelVerificationLink);
-                var urlToRemove = Url.Action("GetAllVerificationLinks", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetAllVerificationLinks", "MasterData", new { Area = "Profile" });
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllVerificationLinks", "MasterDataNew");
+                //var urlToRemove1 = Url.Action("GetAllVerificationLinks", "MasterData", new { Area = "Profile" });
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3804,10 +3804,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 masterDataManager.InactivateVerificationLink(verificationLinkID);
 
-                var urlToRemove = Url.Action("GetAllVerificationLinks", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetAllVerificationLinks", "MasterData", new { Area = "Profile" });
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllVerificationLinks", "MasterDataNew");
+                //var urlToRemove1 = Url.Action("GetAllVerificationLinks", "MasterData", new { Area = "Profile" });
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 status = "true";
                 return status;
             }
@@ -3841,8 +3841,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelDecredentialingReason = AutoMapper.Mapper.Map<DecredemtialingReasonViewModel, DecredentialingReason>(decredentialingreason);
                 dataModelDecredentialingReason = await masterDataAddEdit.SaveDecredentialingReason(dataModelDecredentialingReason);
-                var urlToRemove = Url.Action("GetAllDecredentialingReasons", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllDecredentialingReasons", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3870,8 +3870,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 dataModelDecredentialingReason = AutoMapper.Mapper.Map<DecredemtialingReasonViewModel, DecredentialingReason>(decredentialingreason);
                 dataModelDecredentialingReason = await masterDataAddEdit.UpdateDecredentialingReason(dataModelDecredentialingReason);
-                var urlToRemove = Url.Action("GetAllDecredentialingReasons", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllDecredentialingReasons", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
             }
             catch (DatabaseValidationException ex)
             {
@@ -3899,8 +3899,8 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 masterDataManager.InactivateDecredentialingReason(DecredentialingReasonID);
                 status = "true";
-                var urlToRemove = Url.Action("GetAllDecredentialingReasons", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //var urlToRemove = Url.Action("GetAllDecredentialingReasons", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
                 return status;
             }
             catch (Exception)
@@ -3919,10 +3919,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
             try
             {
                 await masterDataManager.InactivateNotesTemplte(NotesTemplateID);
-                var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                //var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
+                //var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
                 status = "true";
                 return Json(new { status = status }, JsonRequestBehavior.AllowGet);
             }
@@ -3958,10 +3958,10 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                 NotesTemplate.NotesTemplateID = masterDataAddEdit.AddNotestemplate(Template);
 
-                var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                //var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
+                //var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
             }
             catch (Exception)
             {
@@ -3974,13 +3974,13 @@ namespace AHC.CD.WebUI.MVC.Controllers
             Template.CreatedDate = DateTime.Now;
             Template.StatusType = AHC.CD.Entities.MasterData.Enums.StatusType.Active;
             bool result = masterDataAddEdit.UpdateNotestemplate(Template);
-            if (result)
-            {
-                var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
-                var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
-                HttpResponse.RemoveOutputCacheItem(urlToRemove);
-                HttpResponse.RemoveOutputCacheItem(urlToRemove1);
-            }
+            //if (result)
+            //{
+            //    var urlToRemove = Url.Action("GetAllNotesTemplates", "MasterDataNew");
+            //    var urlToRemove1 = Url.Action("GetNotesTemplateByCode", "MasterDataNew");
+            //    HttpResponse.RemoveOutputCacheItem(urlToRemove);
+            //    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+            //}
             return Json(new { status = result, NotesTemplate = Template }, JsonRequestBehavior.AllowGet);
         }
 
@@ -4043,11 +4043,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     // OrganizationAccountId Has to be replaced with account information 
                     await masterDataManager.AddFacilityAsync(OrganizationAccountId.DefaultOrganizationAccountID, dataModelFacilityInformation);
-                    var urlToRemove = Url.Action("GetAllMasterFacilityInformation", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllFacilities", "MasterData", new { Area = "Profile" });
+                    //var urlToRemove = Url.Action("GetAllMasterFacilityInformation", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllFacilities", "MasterData", new { Area = "Profile" });
 
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
                 }
                 else
                 {
@@ -4086,11 +4086,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
 
                     // OrganizationAccountId Has to be replaced with account information 
                     await masterDataManager.UpdateFacilityAsync(OrganizationAccountId.DefaultOrganizationAccountID, dataModelFacilityInformation);
-                    var urlToRemove = Url.Action("GetAllMasterFacilityInformation", "MasterDataNew");
-                    var urlToRemove1 = Url.Action("GetAllFacilities", "MasterData", new { Area = "Profile" });
+                    //var urlToRemove = Url.Action("GetAllMasterFacilityInformation", "MasterDataNew");
+                    //var urlToRemove1 = Url.Action("GetAllFacilities", "MasterData", new { Area = "Profile" });
 
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove);
-                    HttpResponse.RemoveOutputCacheItem(urlToRemove1);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove);
+                    //HttpResponse.RemoveOutputCacheItem(urlToRemove1);
                 }
                 else
                 {

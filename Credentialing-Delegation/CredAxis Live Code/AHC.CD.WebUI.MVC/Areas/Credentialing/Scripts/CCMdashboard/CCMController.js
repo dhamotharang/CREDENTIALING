@@ -20,8 +20,11 @@
             $rootScope.SignaturePath = result.data.SignaturePath;
             if ($rootScope.SignaturePath != null) {
                 $rootScope.SignatureOption = "reusedigitalsignature";
+                $rootScope.SignatureOption1 = "reusedigitalsignature";
                 $rootScope.showsignaturediv = false;
                 $rootScope.showreusesignaturediv = true;
+                $rootScope.showsignaturediv1 = false;
+                $rootScope.showreusesignaturediv1 = true;
             }
             $scope.loadEvents();
             $rootScope.TempCCMAppointments = result.data;
@@ -54,14 +57,14 @@
     $scope.changeMode = function (mode) {
         $scope.mode = mode;
     };
-    $scope.selectedDate = new Date();
+    $rootScope.selectedDate = new Date();
     $scope.today = function () {
-        $scope.currentDate = new Date();
+        $rootScope.currentDate = new Date();
     };
 
     $scope.isToday = function () {
         var today = new Date(),
-            currentCalendarDate = new Date($scope.currentDate);
+            currentCalendarDate = new Date($rootScope.currentDate);
 
         today.setHours(0, 0, 0, 0);
         currentCalendarDate.setHours(0, 0, 0, 0);
@@ -79,8 +82,8 @@
     };
 
     $scope.onTimeSelected = function (selectedTime) {
-        $scope.selectedDate = selectedTime;
-        AppointmentDate = $filter('date')($scope.selectedDate, "yyyy-MM-dd");
+        $rootScope.selectedDate = selectedTime;
+        AppointmentDate = $filter('date')($rootScope.selectedDate, "yyyy-MM-dd");
         $rootScope.filteredCCMAppointmentsByDate = $filter('CCMDashboardFilterByAppointmentDate')(AppointmentDate);
     };
 

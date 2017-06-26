@@ -354,7 +354,7 @@ profileApp.controller("ContractGridController", function ($scope, $rootScope, $q
         $http.get(rootDir + '/Credentialing/CnD/GetContractGridById?ContractGridID=' + ContractGridID)
         .success(function (Data) {
             $scope.tempObject = angular.copy(Data);
-            $scope.tempObject.Report.WelcomeLetterPath = "";
+            //$scope.tempObject.Report.WelcomeLetterPath = "";
             //$scope.tempObject.Report.InitiatedDate = $scope.dateConvert($scope.tempObject.Report.InitiatedDate);
             //$scope.tempObject.Report.TerminationDate = $scope.dateConvert($scope.tempObject.Report.TerminationDate);
             console.log($scope.tempObject);

@@ -265,7 +265,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                         bmpReturn.Save(path, ImageFormat.Png);
                         memoryStream.Close();
                     }
-                    AppointmentsResult.SignaturePath = filename;
+                    AppointmentsResult.SignaturePath = "\\ApplicationDocuments\\CCMSignatureDocuments\\" + filename;
                     status = "true";
 
                 }
@@ -293,12 +293,19 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     ccmRequestStatus = await appointmentManager.SaveCCMQuickActionResultsAsync(CCMActionResult);
 
                     string MessageTitle = AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Approved ? "Approved" : AppointmentsResult.AppointmentsStatus == Entities.MasterData.Enums.CCMApprovalStatusType.Rejected ? "Rejected" : "Onhold";
-                    Parallel.ForEach(AppointmentsResult.QuickActionSet, x =>
+                    //Parallel.ForEach(AppointmentsResult.QuickActionSet, x =>
+                    //{
+                    //    ChangeNotificationDetail notification = null;                        
+                    //    notification = new ChangeNotificationDetail(x.ProfileId, User.Identity.Name, "CCM Appointment Result", MessageTitle);
+                    //    notificationManager.SaveNotificationDetailAsyncForCCO(notification, AppointmentsResult.AppointmentsStatus.ToString(), x.CredentialingAppointmentDetailID);
+                    //});
+
+                    foreach (var request in AppointmentsResult.QuickActionSet)
                     {
                         ChangeNotificationDetail notification = null;
-                        notification = new ChangeNotificationDetail(x.ProfileId, User.Identity.Name, "CCM Appointment Result", MessageTitle);
-                        notificationManager.SaveNotificationDetailAsyncForCCO(notification, AppointmentsResult.AppointmentsStatus.ToString(), x.CredentialingAppointmentDetailID);
-                    });
+                        notification = new ChangeNotificationDetail(request.ProfileId, User.Identity.Name, "CCM Appointment Result", MessageTitle);
+                        await notificationManager.SaveNotificationDetailAsyncForCCO(notification, AppointmentsResult.AppointmentsStatus.ToString(), request.CredentialingAppointmentDetailID);
+                    }
                 }
             }
 
@@ -365,7 +372,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                     }
 
                     await notificationManager.SaveNotificationDetailAsyncForCCO(notification, credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.ApprovalStatusType.ToString(), credentialingAppointmentDetailViewModel.CredentialingAppointmentDetailID);
-                    credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath = filename;
+                    credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath = "\\ApplicationDocuments\\CCMSignatureDocuments\\" + filename;
                     //credentialingAppointmentDetailViewModel.FileUploadPath = null;
 
                     credentialingAppointmentDetail = AutoMapper.Mapper.Map<CredentialingAppointmentDetailViewModel, CredentialingAppointmentDetail>(credentialingAppointmentDetailViewModel);

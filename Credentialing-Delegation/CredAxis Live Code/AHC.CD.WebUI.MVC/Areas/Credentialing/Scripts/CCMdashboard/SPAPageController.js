@@ -1,7 +1,7 @@
 ﻿CCMDashboard.controller("SPAIndexController", ["$rootScope", "$scope", "toaster", "$timeout", "$filter", "$http", "CCMDashboardService", "CCMDashboardFactory", function ($rootScope, $scope, toaster, $timeout, $filter, $http, CCMDashboardService, CCMDashboardFactory) {
     $scope.Status = "dfsdf";
     //$scope.showreusesignaturediv = true;
-    $scope.showuploaddiv = false;
+    $rootScope.showuploaddiv = false;
     //$scope.showsignaturediv = false;
     $scope.errormessageforsignature = false;
     $scope.SavingStatus = false;
@@ -99,16 +99,16 @@
             $('#selectfile').trigger('click', function () { });
             $rootScope.showreusesignaturediv = false;
             $rootScope.showsignaturediv = false;
-            $scope.showuploaddiv = true;
+            $rootScope.showuploaddiv = true;
         } else if (type == 'digitalsignature') {
             $rootScope.showreusesignaturediv = false;
-            $scope.showuploaddiv = false;
+            $rootScope.showuploaddiv = false;
             $scope.errormessageforsignature = false;
             $rootScope.showsignaturediv = true;
         }
         else if (type == 'reusedigitalsignature') {
             $rootScope.showsignaturediv = false;
-            $scope.showuploaddiv = false;
+            $rootScope.showuploaddiv = false;
             $rootScope.showreusesignaturediv = true;
         }
         else { }

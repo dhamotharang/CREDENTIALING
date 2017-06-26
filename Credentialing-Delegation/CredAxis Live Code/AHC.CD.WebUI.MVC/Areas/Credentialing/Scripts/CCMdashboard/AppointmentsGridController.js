@@ -130,7 +130,7 @@
     }
 
     //$scope.showreusesignaturediv = true;
-    $scope.showuploaddiv = false;
+    $rootScope.showuploaddiv1 = false;
     //$scope.showsignaturediv = false;
     $scope.errormessageforsignature = false;
     $scope.SavingStatus = false;
@@ -146,19 +146,19 @@
         context = canvas.getContext('2d');
         if (type == 'upload') {
             $('#selectfile').trigger('click', function () { });
-            $rootScope.showreusesignaturediv = false;
-            $rootScope.showsignaturediv = false;
-            $scope.showuploaddiv = true;
+            $rootScope.showreusesignaturediv1 = false;
+            $rootScope.showsignaturediv1 = false;
+            $rootScope.showuploaddiv1 = true;
         } else if (type == 'digitalsignature') {
-            $rootScope.showreusesignaturediv = false;
-            $scope.showuploaddiv = false;
+            $rootScope.showreusesignaturediv1 = false;
+            $rootScope.showuploaddiv1 = false;
             $scope.errormessageforsignature = false;
-            $rootScope.showsignaturediv = true;
+            $rootScope.showsignaturediv1 = true;
         }
         else if (type == 'reusedigitalsignature') {
-            $rootScope.showsignaturediv = false;
-            $scope.showuploaddiv = false;
-            $rootScope.showreusesignaturediv = true;
+            $rootScope.showsignaturediv1 = false;
+            $rootScope.showuploaddiv1 = false;
+            $rootScope.showreusesignaturediv1 = true;
         }
       
         if (type == 'upload' || type == 'reusedigitalsignature') {
@@ -172,7 +172,7 @@
     //-----This method will validate the input --------
     $scope.SaveAppoinmentDecision = function (decision) {
         $scope.SavingStatus = true;
-       
+        $scope.image = "";
         try {
             CCMDashboardFactory.ResetFormForValidation(angular.element("#MultipleCCMAction"));
         } catch (e) {
@@ -234,7 +234,7 @@
             }
 
             var CredIDs = $loadash.map($loadash.filter(response.data, { CredRequestStatus: "true" }), 'CCMRequestID');
-            
+
             //for (var j = 0; j < $rootScope.CCMAppointments.length; j++) {
             //    if ($rootScope.CCMAppointments[j].CredentialingAppointmentDetailID == 4002)
             //        $rootScope.CCMAppointments[j].Status = decision;
@@ -244,9 +244,13 @@
             angular.element('body').removeClass('modal-open');
             angular.element('.modal-backdrop').remove();
 
-            toaster.pop('Success', "Success", CredIDs.length + " Request Approved Successfully");
+            if (decision == "Approved" || decision == "Rejected") 
+                toaster.pop('Success', "Success", CredIDs.length + " Request(s) " + decision + " Successfully");
+            else
+                toaster.pop('Success', "Success", CredIDs.length + " Request(s) On-Hold Successfully");
+
             if (CredIDs.length != response.data.length) {
-                toaster.pop('error', "", (response.data.length - CredIDs.length + ' Failed ' + 'Please try after sometime !!!'));
+                toaster.pop('error', "", (response.data.length - CredIDs.length + 'Request(s) Failed ' + 'Please try after sometime !!!'));
             }
 
             $rootScope.$broadcast('AppointmentsGrid', { type: "Pending", RowObject: "" });
@@ -259,6 +263,7 @@
         $rootScope.TempObjectForStatus.CredentailingApprovalRequest = false;
         $rootScope.TempObjectForStatus.AppointmentDashboard = true
         $scope.$parent.GridType = "";
+        $rootScope.currentDate = $rootScope.selectedDate;
     }
 
     $scope.TableExport = function (type, tableID) {

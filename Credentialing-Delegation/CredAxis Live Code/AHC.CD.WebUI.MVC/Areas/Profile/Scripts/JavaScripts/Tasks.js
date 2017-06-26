@@ -510,6 +510,8 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         Resource.getPage(start, number, tableState).then(function (result) {
             ctrl.displayed = result.data;
             ctrl.temp = ctrl.displayed;
+            ctrl.displayed = $scope.setInitialTaskData(ctrl.displayed);
+
             if ($rootScope.tabNames == 'ProviderTasks' && sortData == true) {
                 $scope.tableDailyValue1 = angular.copy(tableState);
             }
@@ -582,6 +584,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.errormessageforsubsection = false;
     }
     $scope.showeditView = function (task, editviewfortab) {
+        $scope.selTask = [];
         $scope.validationfunction = false;
         $scope.errormessageforsubject = false;
         $scope.detailViewfortab = false;
@@ -961,6 +964,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         }
     });
     $scope.showtabdata = function () {
+        $scope.selTask = [];
         $('#addButton').show();
         $scope.errormessage = false;
         $scope.errormessageforAssignedto = false;
@@ -1917,7 +1921,39 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         //$scope.selectedProviders.push(provider);
         console.log($scope.selTask);
     }
-
+    $scope.setInitialTaskData = function (data) {
+        if (localStorage.getItem("TaskReminders") != [] || localStorage.getItem("TaskReminders") != "" || localStorage.getItem("TaskReminders") != undefined) {
+            var StoredReminderData = JSON.parse(localStorage.getItem("TaskReminders"));
+            var taskDataFromApp = [];
+            $.each(StoredReminderData, function (k, v) {
+                v = JSON.parse(v.ReminderInfo);
+                taskDataFromApp.push(v);
+            });
+            if ((data != [] || data != "") && (taskDataFromApp != [] || taskDataFromApp != "" || taskDataFromApp != undefined)) {
+                $.each(data, function (Mkey, Mvalue) {
+                    $.each(taskDataFromApp, function (Skey, Svalue) {
+                        if (Mvalue.TaskTrackerId == Svalue.TaskTrackerId) {
+                            Mvalue["SetReminder"] = true;
+                            if (Svalue.ScheduledDateTime != null && Svalue.ScheduledDateTime != undefined)
+                            Mvalue["ScheduledDateTime"] = new Date(parseInt(Svalue.ScheduledDateTime.replace("/Date(", "").replace(")/", ""), 10));
+                        }
+                        //else {
+                        //    Mvalue["SetReminder"] = false;
+                        //  returnValue = new Date(parseInt(StoredReminderData[0].ScheduledDateTime.replace("/Date(", "").replace(")/", ""), 10));
+                        //}
+                    });
+                });
+            }
+        }
+        else {
+            if ((data != [] || data != "")) {
+                $.each(data, function (key, value) {
+                    value["SetReminder"] = false;
+                });
+            }
+        }
+        return data;
+    };
     $scope.selectedTasks = function () {
         $scope.taskList.tasks = $filter('filter')($scope.mc.displayed, { checked: true });
     }

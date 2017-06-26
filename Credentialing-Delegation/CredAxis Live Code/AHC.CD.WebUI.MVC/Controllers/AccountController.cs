@@ -173,6 +173,16 @@ namespace AHC.CD.WebUI.MVC.Controllers
             //}
             var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
             var result = await UserManager.ResetPasswordAsync(user.Id, code, "Password@123456");
+            if (result.Succeeded)
+            {
+                if(await UserManager.IsLockedOutAsync(user.Id))
+                {
+                    //reset invalid attempt count to zero so that user can login before lockout duration
+                    await UserManager.SetLockoutEndDateAsync(user.Id, new DateTimeOffset(DateTime.UtcNow));
+                }
+                
+            }
+
             AddErrors(result);
             return result.Succeeded;
             //return View();
@@ -244,14 +254,15 @@ namespace AHC.CD.WebUI.MVC.Controllers
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
-                case SignInStatus.Success:
+                case SignInStatus.Success:                 
+                    
                     if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "/")
                     {
                         return RedirectToLocal(returnUrl);
                     }
                     else
-                    {
-                       return RedirectToAction("Index", "Dashboard");
+                    {                        
+                        return RedirectToAction("Index", "Dashboard");
                     }
                 case SignInStatus.LockedOut:
                     SendLockoutMail(ConfigurationManager.AppSettings["LockoutMailID"].ToString(), model.Email, HttpContext.Request.UserHostAddress);

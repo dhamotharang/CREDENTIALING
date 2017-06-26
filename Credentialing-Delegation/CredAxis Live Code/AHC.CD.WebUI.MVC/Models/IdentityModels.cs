@@ -44,6 +44,8 @@ namespace AHC.CD.WebUI.MVC.Models
         public DateTimeOffset CreatedDate { get; set; }
         [Key, Column(Order = 1)]
         public string UserID { get; set; }
+
+        public string Modification { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

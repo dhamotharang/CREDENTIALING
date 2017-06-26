@@ -655,9 +655,22 @@ var GetTheTaskDate = function (DateTime) {
 };
 var GetTheTaskTime = function (DateTime) {
     var dt = new Date(parseInt(DateTime));
+    var hours = dt.getHours();
+    if (hours > 12) {
+        hours = hours - 12;
+    }
+    if (hours == 0)
+    {
+        hours = 12;
+    }
 
+    var minutes = dt.getMinutes();
+    if (minutes < 10)
+    {
+        minutes = 0 + "" + minutes;
+    }
     //var output = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-    var output = dt.getHours() + ":" + dt.getMinutes() + (dt.getHours() >= 12 ? ' PM' : ' AM'); 
+    var output = hours + ":" + minutes + (dt.getHours() >= 12 ? ' PM' : ' AM');
 
     return output;
 };
@@ -671,16 +684,16 @@ var UpperHeader = function (DateTime, task) {
     var TaskDate = GetTheTaskDate(DateTime);
     var TaskTime = GetTheTaskTime(DateTime);
     var remheader = '<div><b style="font-size: 17px;">' + task.ReminderInfo.Subject + '</b></div>' +
-        '<div style="line-height: 0.9;"><b style="font-size: 12px;font-weight:500;color: #337ab7;">' + TaskDate + '-' + TaskTime+'</b></div>';
+        '<div style="line-height: 0.9;"><b style="font-size: 12px;font-weight:500;color: #337ab7;">' + TaskDate + '-' + TaskTime + '</b></div>';
     return remheader;
 
     //var reminderHead = '<b class="pull-left" style="font-size:large"> </b>' +
-   //     '<div class="col-g-1"><b><i class="fa fa-calendar fa-2x"></i></b></div><div class="col-lg-8 col-xs-6"> <b style="font-size: large;">' + TaskDate + '</b> at ' + TaskTime + ' </div>'+
+    //     '<div class="col-g-1"><b><i class="fa fa-calendar fa-2x"></i></b></div><div class="col-lg-8 col-xs-6"> <b style="font-size: large;">' + TaskDate + '</b> at ' + TaskTime + ' </div>'+
     //    '<div class="col-lg-5 col-xs-5 pull-right"><span class="badge" style="background-color: #ccddff;color:black">' + TaskCountToShow + '-Task(s)</span> Reminder </div>';
     //return reminderHead;
-       
+
 };
-var getellSub = function(sub){
+var getellSub = function (sub) {
     var ret = sub.substring(0, 15) + '...';
     if (sub.length >= 16) {
         return ret;
@@ -699,7 +712,7 @@ var getellpname = function (pname) {
     }
 }
 var getReminderView = function (taskStored) {
-   
+
     var TaskCount = 1;
     TaskCountToShow = 0;
     var HTMLString = ''; //html strign declaration
@@ -721,22 +734,22 @@ var getReminderView = function (taskStored) {
 
                     var reminderHead = UpperHeader(taskStored[i].ScheduledDateTime, taskStored[i]);
                     $('#Rem_header_bar').html(reminderHead);
-                   // var sbjct = getellSub(taskStored[i].ReminderInfo.Subject);
-                   // var pname = getellpname(taskStored[i].ReminderInfo.ProviderName);
-                   // HTMLString += '<div id="taskelement_' + i + '" onclick="AssignselectedItem(' + taskStored[i].TaskReminderID + ',taskelement_' + i + ')">' +
+                    // var sbjct = getellSub(taskStored[i].ReminderInfo.Subject);
+                    // var pname = getellpname(taskStored[i].ReminderInfo.ProviderName);
+                    // HTMLString += '<div id="taskelement_' + i + '" onclick="AssignselectedItem(' + taskStored[i].TaskReminderID + ',taskelement_' + i + ')">' +
                     //    '<div data-toggle="popover" data-trigger="hover" data-content="' + taskStored[i].ReminderInfo.Subject +'" class="col-lg-3 col-xs-3 Padding_5_px SelectedTaskStyle_' + i + '" ><b>' + sbjct + '</b></div>' +
-                   //     '<div data-toggle="popover" data-trigger="hover" data-content="' + taskStored[i].ReminderInfo.ProviderName + '" class="col-lg-4 col-xs-4 Padding_5_px SelectedTaskStyle_' + i + '"  >' + pname + '</div>' +
-                   //     '<div class="col-lg-5 col-xs-5 Padding_5_px SelectedTaskStyle_' + i + '" >' + TaskMsg + ' </div>' +
-                   //     '</div>'
+                    //     '<div data-toggle="popover" data-trigger="hover" data-content="' + taskStored[i].ReminderInfo.ProviderName + '" class="col-lg-4 col-xs-4 Padding_5_px SelectedTaskStyle_' + i + '"  >' + pname + '</div>' +
+                    //     '<div class="col-lg-5 col-xs-5 Padding_5_px SelectedTaskStyle_' + i + '" >' + TaskMsg + ' </div>' +
+                    //     '</div>'
                     HTMLString += '<div class="row" id="taskelement_' + i + '" onclick="AssignselectedItem(' + taskStored[i].TaskReminderID + ',taskelement_' + i + ')">' +
-                    '<div class="col-lg-6"><i class="fa fa-calendar"></i>&nbsp; ' + taskStored[i].ReminderInfo.ProviderName + '</div>' +
+                        '<div class="col-lg-6"><i class="fa fa-calendar"></i>&nbsp; ' + taskStored[i].ReminderInfo.ProviderName + '</div>' +
                         ' <div class="col-lg-6">' + TaskMsg + '</div>' +
                         '</div>';
                     $('#TaskList').html(HTMLString);
                 }
             }
             $('#TaskList').find('div:first').click();
-           // $('[data-toggle="popover"]').popover(); 
+            // $('[data-toggle="popover"]').popover(); 
         }
     }
 };
@@ -795,7 +808,7 @@ var Snoozereminder = function () {
     var snoozeTime = $('#snoozeInterval').val();
     var currentDateInMilliSec = Date.parse(currentDateTime);
     var date = new Date(parseInt(currentDateInMilliSec) + parseInt(snoozeTime));
-    var dataToShow = date.getUTCFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    var dataToShow = date.getUTCFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     $.ajax({
         url: rootDir + '/TaskTracker/RescheduleReminder',
         data: JSON.stringify({ 'taskID': taskObj.TaskReminderID, 'scheduledDateTime': dataToShow }),
@@ -829,6 +842,7 @@ function DismissAllTasks() {
         success: function (response) {
             if (response) {
                 clearInterval(reminderInterval);
+                TaskNotificationReminder();
             }
         },
         error: function () { }

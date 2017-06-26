@@ -13,9 +13,15 @@ CCMDashboard.run(["$rootScope", "$timeout", "$window", "$route", function ($root
     $rootScope.tableCaption = "";
     $rootScope.ToHighLightRowObject = "";
     $rootScope.SignatureOption = "digitalsignature";
+    $rootScope.SignatureOption1 = "digitalsignature";
     $rootScope.SignaturePath = "";
     $rootScope.showsignaturediv = true;
     $rootScope.showreusesignaturediv = false;
+    $rootScope.showuploaddiv = false;
+    $rootScope.showsignaturediv1 = true;
+    $rootScope.showreusesignaturediv1 = false;
+    $rootScope.showuploaddiv1 = false;
+    $rootScope.currentDate = new Date();
   
     //$rootScope.GridType = "ffgdfg";
 }]);

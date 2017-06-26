@@ -68,12 +68,12 @@ namespace AHC.CD.WebUI.MVC
         {
             var PasswordHash = PasswordHasher.HashPassword(Password);
             var Result = await base.CreateAsync(appuser, Password);
-            await AddToUsedPasswordAsync(appuser, appuser.PasswordHash);
+            await AddToUsedPasswordAsync(appuser, appuser.PasswordHash, "Create");
             return Result;
         }
-        public Task AddToUsedPasswordAsync(ApplicationUser appuser, string userpassword)
+        public Task AddToUsedPasswordAsync(ApplicationUser appuser, string userpassword, string Type)
         {
-            appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = userpassword });
+            appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = userpassword, Modification = Type });
             return UpdateAsync(appuser);
         }
         private async Task AddToPasswordHistoryAsync(string PasswordHash, string NewPassword, ApplicationUser appuser, string Type)
@@ -82,7 +82,7 @@ namespace AHC.CD.WebUI.MVC
             {
                 if (Type == "Change")
                 {
-                    appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash });
+                    appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash, Modification = Type });
                 }
                 else
                 {
@@ -94,12 +94,13 @@ namespace AHC.CD.WebUI.MVC
                         {
                             flag = 1;
                             appuser.UserUsedPassword.ElementAt(i).CreatedDate = DateTimeOffset.Now;
+                            appuser.UserUsedPassword.ElementAt(i).Modification = "Reset";
                             break;
                         }
                     }
-                    if (flag==1)
+                    if (flag!=1)
                     {
-                        appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash });                   
+                        appuser.UserUsedPassword.Add(new UsedPassword() { UserID = appuser.Id, HashPassword = PasswordHash, Modification = Type });                   
                     }                    
                 }
                 await UpdateAsync(appuser);
@@ -127,7 +128,7 @@ namespace AHC.CD.WebUI.MVC
             int _minimumPasswordAge = int.Parse(ConfigurationManager.AppSettings["MinimumPasswordAge"]);
             if (tempDate != null)
             {
-                if ((DateTime.Today - tempDate.CreatedDate.Date).Days < _minimumPasswordAge)
+                if (tempDate.Modification == "Change" && (DateTime.Now - tempDate.CreatedDate).Days < _minimumPasswordAge)
                 {
                     return true;
                 }
@@ -224,7 +225,7 @@ namespace AHC.CD.WebUI.MVC
     // This is useful if you do not want to tear down the database each time you run the application.
     // public class ApplicationDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     // This example shows you how to create a new database if the Model changes
-    public class ApplicationDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+    public class ApplicationDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {

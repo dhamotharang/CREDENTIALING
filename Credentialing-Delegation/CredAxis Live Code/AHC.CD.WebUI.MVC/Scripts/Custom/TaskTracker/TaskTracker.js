@@ -513,7 +513,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
         var pagination = tableState.pagination;
         //sessionStorage.setItem('dailyValue', $scope.t.search.predicateObject);
-        console.log(pagination.number);
+        //console.log(pagination.number);
 
         var start = pagination.start || 0;
         var number = pagination.number || 10;
@@ -854,6 +854,13 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.Disablewatch = true;
     }
     $scope.showHistory = function (task) {
+        $scope.selTask = [];
+        console.log($scope.selTaskIDs);
+        for (var t = 0; t < $scope.selTaskIDs.length; t++)
+        {
+            if ($scope.selTaskIDs[t].SelectStatus != null && $scope.selTaskIDs[t].SelectStatus != undefined)
+            $scope.selTaskIDs[t].SelectStatus = false;
+        }
         $rootScope.previousTabName = $rootScope.tabNames;
         $scope.TaskHistory = [];
         $('.nav-tabs a:last').tab('show');
@@ -2611,6 +2618,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     });
 
     $scope.showtabdata = function () {
+        $scope.showSetReminder = false;
         $('#addButton').show();
         $scope.errormessage = false;
         $scope.errormessageforAssignedto = false;
@@ -2678,6 +2686,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
 
     //}
+    $rootScope.tabname = "";
 
     $scope.showDetailViewforTab1 = function (task) {
         $scope.showOnClose = false;
@@ -2691,6 +2700,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.taskView = task;
 
         if ($rootScope.tabNames == 'HistoryTask') {
+            $rootScope.tabname = "History"
             var dateTimeForNote = [];
             for (var h in task.Notes) {
                 if (task.Notes[h] != null) {
@@ -2832,7 +2842,29 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     }
     $scope.cancelViewforTab1 = function () {
+        if ($rootScope.tabname!="History")
         $scope.showOnClose = true;
+        $scope.detailViewfortab = false;
+        $scope.TableView = true;
+        //if ($rootScope.tabNames == 'DailyTask') {
+        //    $rootScope.$broadcast('DailyTasks');
+        //}
+        //else if ($rootScope.tabNames == 'TasksAssigne') {
+        //    $rootScope.$broadcast('TasksAssigned');
+        //}
+        if ($rootScope.tabNames == 'CloseTasks') {
+            $scope.showOnClose = false;
+        }
+        if ($rootScope.tabNames == 'DailyTask') {
+            $("a[id='tabs1']").parent("li").tab('show')
+            //$rootScope.$broadcast('DailyTasks');
+        }
+        //$scope.t.search.predicateObject = $scope.tableDailyValue.search.predicateObject;
+        //ctrl.callServer($scope.t);
+    }
+
+    $scope.cancelViewforTabhistory = function () {
+        $scope.showOnClose = false;
         $scope.detailViewfortab = false;
         $scope.TableView = true;
         //if ($rootScope.tabNames == 'DailyTask') {
@@ -3384,7 +3416,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.taskList.tasks = angular.copy($scope.selTask);
         //provider.SelectStatus = provider.SelectStatus == true ? false : true;
         //$scope.selectedProviders.push(provider);
-        console.log($scope.selTask);
+        //console.log($scope.selTask);
     }
     $scope.setInitialTaskData = function (data) {
         if (localStorage.getItem("TaskReminders") != [] || localStorage.getItem("TaskReminders") != "" || localStorage.getItem("TaskReminders") != undefined) {
@@ -3394,11 +3426,12 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                 v = JSON.parse(v.ReminderInfo);
                 taskDataFromApp.push(v);
             });
-            if ((data != [] || data != "") && (taskDataFromApp != [] || taskDataFromApp != "")) {
+            if ((data != [] || data != "") && (taskDataFromApp != [] || taskDataFromApp != "" || taskDataFromApp != undefined)) {
                 $.each(data, function (Mkey, Mvalue) {
                     $.each(taskDataFromApp, function (Skey, Svalue) {
                         if (Mvalue.TaskTrackerId == Svalue.TaskTrackerId) {
                             Mvalue["SetReminder"] = true;
+                            if (Svalue.ScheduledDateTime != null && Svalue.ScheduledDateTime != undefined)
                             Mvalue["ScheduledDateTime"] = new Date(parseInt(Svalue.ScheduledDateTime.replace("/Date(", "").replace(")/", ""), 10));
                         }
                         //else {
@@ -3504,7 +3537,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     $scope.SetReminder = function () {
         $scope.showSetReminder = false;
         $scope.TaskReminder = [];
-        console.log($scope.taskList.tasks);
+        //console.log($scope.taskList.tasks);
         var ReminderDateTime = new Date($('#datetimepicker3').val());
         for (var i = 0; i < $scope.taskList.tasks.length; i++) {
             $scope.TaskReminder.push({ ReminderInfo: JSON.stringify($scope.taskList.tasks[i]), CreatedDate: new Date(), ScheduledDateTime: ReminderDateTime });
@@ -3564,7 +3597,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
    
     //Method to add/remove the checked/unchecked tasks from the list
     $scope.getCheckedTask = function (evt, task, checkedStatus) {
-        console.log(evt);
+        //console.log(evt);
         $scope.changeClass();
         //$scope.newTask = angular.copy(task);
         //task.selected ? task.selected = false : task.selected = true;

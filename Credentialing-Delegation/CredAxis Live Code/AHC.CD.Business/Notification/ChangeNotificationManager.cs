@@ -980,63 +980,70 @@ namespace AHC.CD.Business.Notification
 
         public async Task SaveNotificationDetailAsyncForCCO(ChangeNotificationDetail changeNotificationDetail, string ApprovalStatus, int credentialingAppointmentDetailID)
         {
-            int? applicationId = null;
-            var credentialingInfoRepo = uow.GetGenericRepository<CredentialingInfo>();
-            List<CredentialingInfo> credentialingInfoes = credentialingInfoRepo.GetAll("CredentialingLogs.CredentialingAppointmentDetail").ToList();
-            foreach (var credInfo in credentialingInfoes)
+            try
             {
-                if (credInfo.CredentialingLogs.Count > 0 && credInfo.CredentialingLogs.Last().CredentialingAppointmentDetail != null && credInfo.CredentialingLogs.Last().CredentialingAppointmentDetail.CredentialingAppointmentDetailID == credentialingAppointmentDetailID)
+                int? applicationId = null;
+                var credentialingInfoRepo = uow.GetGenericRepository<CredentialingInfo>();
+                List<CredentialingInfo> credentialingInfoes = credentialingInfoRepo.GetAll("CredentialingLogs.CredentialingAppointmentDetail").ToList();
+                foreach (var credInfo in credentialingInfoes)
                 {
-                    applicationId = credInfo.CredentialingInfoID;
-                }
-            }
-
-            var ccoList = await cdUserRepo.GetAllAsync("CDRoles,CDRoles.CDRole,DashboardNotifications");
-            foreach (CDUser TempccoList in ccoList)
-            {
-                foreach (var TempccoListForRoles in TempccoList.CDRoles)
-                {
-                    if (TempccoListForRoles.CDRole.Code == "CCO" || TempccoListForRoles.CDRole.Code == "CRA")
+                    if (credInfo.CredentialingLogs.Count > 0 && credInfo.CredentialingLogs.Last().CredentialingAppointmentDetail != null && credInfo.CredentialingLogs.Last().CredentialingAppointmentDetail.CredentialingAppointmentDetailID == credentialingAppointmentDetailID)
                     {
-                        if (TempccoList.DashboardNotifications == null)
-                        {
-                            TempccoList.DashboardNotifications = new List<UserDashboardNotification>();
-                        }
-                        if (ApprovalStatus == "Approved" || ApprovalStatus == "Rejected")
-                        {
-                            TempccoList.DashboardNotifications.Add(new UserDashboardNotification
-                            {
-                                StatusType = Entities.MasterData.Enums.StatusType.Active,
-                                AcknowledgementStatusType = Entities.MasterData.Enums.AcknowledgementStatusType.Unread,
-                                Action = "CCM Approval Status",
-                                ActionPerformed = "CCM " + ApprovalStatus + " the provider credentialing on " + DateTime.Now.ToString("MM/dd/yyyy"),
-                                ActionPerformedByUser = changeNotificationDetail.ActionPerformedUser,
-                                //RedirectURL = "/Credentialing/Initiation/CredentialingList"
-                                RedirectURL = "/Credentialing/CnD/Application/" + applicationId
-                            });
-                        }
-                        else if(ApprovalStatus == "Onhold")
-                        {
-                            TempccoList.DashboardNotifications.Add(new UserDashboardNotification
-                            {
-                                StatusType = Entities.MasterData.Enums.StatusType.Active,
-                                AcknowledgementStatusType = Entities.MasterData.Enums.AcknowledgementStatusType.Unread,
-                                Action = "CCM Approval Status",
-                                ActionPerformed = "The Provider Credentialing is On-Hold from " + DateTime.Now.ToString("MM/dd/yyyy"),
-                                ActionPerformedByUser = changeNotificationDetail.ActionPerformedUser,
-                                //RedirectURL = "/Credentialing/Initiation/CredentialingList"
-                                RedirectURL = "/Credentialing/CnD/Application/" + applicationId
-                            });
-                        }
-
-                        
-
-                        cdUserRepo.Update(TempccoList);
-                        break;
+                        applicationId = credInfo.CredentialingInfoID;
                     }
                 }
+
+                var ccoList = await cdUserRepo.GetAllAsync("CDRoles,CDRoles.CDRole,DashboardNotifications");
+                foreach (CDUser TempccoList in ccoList)
+                {
+                    foreach (var TempccoListForRoles in TempccoList.CDRoles)
+                    {
+                        if (TempccoListForRoles.CDRole.Code == "CCO" || TempccoListForRoles.CDRole.Code == "CRA")
+                        {
+                            if (TempccoList.DashboardNotifications == null)
+                            {
+                                TempccoList.DashboardNotifications = new List<UserDashboardNotification>();
+                            }
+                            if (ApprovalStatus == "Approved" || ApprovalStatus == "Rejected")
+                            {
+                                TempccoList.DashboardNotifications.Add(new UserDashboardNotification
+                                {
+                                    StatusType = Entities.MasterData.Enums.StatusType.Active,
+                                    AcknowledgementStatusType = Entities.MasterData.Enums.AcknowledgementStatusType.Unread,
+                                    Action = "CCM Approval Status",
+                                    ActionPerformed = "CCM " + ApprovalStatus + " the provider credentialing on " + DateTime.Now.ToString("MM/dd/yyyy"),
+                                    ActionPerformedByUser = changeNotificationDetail.ActionPerformedUser,
+                                    //RedirectURL = "/Credentialing/Initiation/CredentialingList"
+                                    RedirectURL = "/Credentialing/CnD/Application/" + applicationId
+                                });
+                            }
+                            else if (ApprovalStatus == "Onhold")
+                            {
+                                TempccoList.DashboardNotifications.Add(new UserDashboardNotification
+                                {
+                                    StatusType = Entities.MasterData.Enums.StatusType.Active,
+                                    AcknowledgementStatusType = Entities.MasterData.Enums.AcknowledgementStatusType.Unread,
+                                    Action = "CCM Approval Status",
+                                    ActionPerformed = "The Provider Credentialing is On-Hold from " + DateTime.Now.ToString("MM/dd/yyyy"),
+                                    ActionPerformedByUser = changeNotificationDetail.ActionPerformedUser,
+                                    //RedirectURL = "/Credentialing/Initiation/CredentialingList"
+                                    RedirectURL = "/Credentialing/CnD/Application/" + applicationId
+                                });
+                            }
+
+
+
+                            cdUserRepo.Update(TempccoList);
+                            break;
+                        }
+                    }
+                }
+                await cdUserRepo.SaveAsync();
             }
-            await cdUserRepo.SaveAsync();
+            catch(Exception ex)
+            {
+                throw ex;
+            }
 
         }
 
