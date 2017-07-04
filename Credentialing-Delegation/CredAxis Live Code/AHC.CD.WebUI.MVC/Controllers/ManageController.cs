@@ -230,7 +230,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         [AllowAnonymous]
         [SkipPasswordExpirationCheck]
         public ActionResult ChangePassword()
-        {
+        {                        
             return View();
         }
 

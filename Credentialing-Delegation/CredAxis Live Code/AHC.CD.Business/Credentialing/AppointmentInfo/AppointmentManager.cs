@@ -226,6 +226,7 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
                 updateCredentialingAppointmentDetail.CredentialingAppointmentResult = new CredentialingAppointmentResult();
                 updateCredentialingAppointmentDetail.CredentialingAppointmentResult = AutoMapper.Mapper.Map<CredentialingAppointmentResult, CredentialingAppointmentResult>(credentialingAppointmentResult, updateCredentialingAppointmentDetail.CredentialingAppointmentResult);
                 updateCredentialingAppointmentDetail.CredentialingAppointmentResult.SignedByID = userID;
+                updateCredentialingAppointmentDetail.RecommendedLevel = credentialingAppointmentResult.CredentialingLevel.ToString();
                 updateCredentialingAppointmentDetail.CredentialingAppointmentResult.SignaturePath = AddDocument(DocumentRootPath.CCM_SIGNATURE_DOCUMENT_PATH, DocumentTitle.CCM_SIGN_DOCUMENT, null, CCMDocument);
                 credentialingAppointmentDetailRepo.Update(updateCredentialingAppointmentDetail);
                 credentialingAppointmentDetailRepo.Save();
@@ -316,6 +317,7 @@ namespace AHC.CD.Business.Credentialing.AppointmentInfo
                 credentialingInfoRepo.Save();
                 var credentialingAppointmentDetailRepo = uow.GetGenericRepository<CredentialingAppointmentDetail>();
                 CredentialingAppointmentDetail updateCredentialingAppointmentDetail = await credentialingAppointmentDetailRepo.FindAsync(c => c.CredentialingAppointmentDetailID == credentialingAppointmentDetailID, "CredentialingAppointmentResult");
+                updateCredentialingAppointmentDetail.RecommendedLevel = credentialingAppointmentResult.CredentialingLevel.ToString();
                 updateCredentialingAppointmentDetail.CredentialingAppointmentResult = new CredentialingAppointmentResult();
                 updateCredentialingAppointmentDetail.CredentialingAppointmentResult = AutoMapper.Mapper.Map<CredentialingAppointmentResult, CredentialingAppointmentResult>(credentialingAppointmentResult, updateCredentialingAppointmentDetail.CredentialingAppointmentResult);
                 updateCredentialingAppointmentDetail.CredentialingAppointmentResult.SignedByID = userID;

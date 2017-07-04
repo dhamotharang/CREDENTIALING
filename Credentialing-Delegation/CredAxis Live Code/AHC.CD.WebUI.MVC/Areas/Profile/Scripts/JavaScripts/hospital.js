@@ -100,10 +100,12 @@ profileApp.controller('hospitalcltr', ['$scope', '$rootScope', '$http', 'message
             $scope.tempObject.HospitalContactInfo.HospitalContactPersons = $scope.tempObject.Hospital.HospitalContactInfoes[0].HospitalContactPersons;
         }
         //alert($scope.tempObject.HospitalContactPerson.ContactPersonName);
-        if ($scope.tempObject.HospitalContactPerson.ContactPersonName == '') {
-            $scope.tempObject.HospitalContactPerson.HospitalContactPersonID = null;
-            $scope.tempObject.HospitalContactPerson.ContactPersonPhone = '';
-            $scope.tempObject.HospitalContactPerson.ContactPersonFax = '';
+        if ($scope.tempObject.HospitalContactPerson != null && $scope.tempObject.HospitalContactPerson != undefined) {
+            if ($scope.tempObject.HospitalContactPerson.ContactPersonName == '') {
+                $scope.tempObject.HospitalContactPerson.HospitalContactPersonID = null;
+                $scope.tempObject.HospitalContactPerson.ContactPersonPhone = '';
+                $scope.tempObject.HospitalContactPerson.ContactPersonFax = '';
+            }
         }
     };
 

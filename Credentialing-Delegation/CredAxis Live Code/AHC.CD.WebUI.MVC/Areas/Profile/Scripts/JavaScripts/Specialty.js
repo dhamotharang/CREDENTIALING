@@ -32,7 +32,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
     //------------------------------------Initializing variables to for display and fetch from database---------------------------------------
     $scope.Specialties = [];
     $scope.practiceInterest = {};
-
+    $rootScope.SpecialtyLoaded = false;
     $scope.masterSpecialties = [];
     $scope.masterSpecialtyBoards = [];
 
@@ -575,7 +575,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
             }
         }
     }
-    $rootScope.SpecialtyLoaded = true;
+    $rootScope.SpecialtyLoaded = false;
     $scope.dataLoaded = false;
 
     $scope.masterSpecialtyBoards = {}
@@ -590,6 +590,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
 
                 if (!$scope.dataLoaded) {
                     $rootScope.SpecialtyLoaded = false;
+                    
                     $http({
                         method: 'GET',
                         url: rootDir + '/Profile/MasterProfile/GetBoardSpecialtiesProfileDataAsync?profileId=' + profileId
@@ -600,9 +601,11 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                                 //call respective controller to load data (PSP)
                             }
                             $rootScope.SpecialtyLoaded = true;
+                            $rootScope.SpecialtyLoader = false;
                             $rootScope.$broadcast("LoadRequireMasterDataSpecialty");
                         } catch (e) {
                             $rootScope.SpecialtyLoaded = true;
+                            $rootScope.SpecialtyLoader = false;
                         }
 
                     }).error(function (data, status, headers, config) {

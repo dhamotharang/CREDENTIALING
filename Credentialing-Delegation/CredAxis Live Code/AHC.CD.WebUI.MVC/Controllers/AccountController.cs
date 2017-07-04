@@ -47,7 +47,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             SignInManager = signInManager;
             this.iEmailSender = iEmailSender;
         }
-        
+
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
         {
@@ -278,9 +278,9 @@ namespace AHC.CD.WebUI.MVC.Controllers
             }
         }
 
-        
 
-       
+
+
 
         //
         // GET: /Account/VerifyCode
@@ -631,7 +631,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         }
 
 
-        private void SendLockoutMail(string LockoutMailID,string UserName,string IPaddress)
+        private void SendLockoutMail(string LockoutMailID, string UserName, string IPaddress)
         {
             try
             {
@@ -642,11 +642,11 @@ namespace AHC.CD.WebUI.MVC.Controllers
                 mail.Subject = ConfigurationManager.AppSettings["LockoutMailSubject"].ToString();
                 mail.IsBodyHtml = true;
                 string htmlBody;
-                htmlBody = "<p style='font-size: 105%' font>Dear Application Administrator,<br/><br/><b style='font-size: 205%;color: #3366ff;'>Unusual sign – in activity</b></h6>We detected something unusual about a recent sign – in to the CredAxis account " + UserName + "<br/><br/><b>Sign – in details,</b><br/>IP address:" + IPaddress + "<br/>Date: " + DateTime.Now.DayOfWeek + "," + DateTime.Now.Day + DateTime.Today.ToString("MMMM") + "&nbsp;&nbsp;" + DateTime.Now.Year + "&nbsp;&nbsp;" + DateTime.Now.TimeOfDay + "<br/><br/>This user Account is lockout for <b>" + ConfigurationManager.AppSettings["LockoutDuration"].ToString() + "</b> mins ." + "<br/><br/>" + ConfigurationManager.AppSettings["Ifthiswasgenuineuser"].ToString() + "<br/><br/>" + ConfigurationManager.AppSettings["Ifyouarenotsure"].ToString() + "<br/><br/>" + "Thanks,<br/>The System Support Team<br/><img src='"+GetBaseUrl()+"Content/Images/logo2.png' style='width: 55px;height: 40px;' /></p>";
+                htmlBody = "<p style='font-size: 105%' font>Dear Application Administrator,<br/><br/><b style='font-size: 205%;color: #3366ff;'>Unusual sign – in activity</b></h6>We detected something unusual about a recent sign – in to the CredAxis account " + UserName + "<br/><br/><b>Sign – in details,</b><br/>IP address:" + IPaddress + "<br/>Date: " + DateTime.Now.DayOfWeek + "," + DateTime.Now.Day + DateTime.Today.ToString("MMMM") + "&nbsp;&nbsp;" + DateTime.Now.Year + "&nbsp;&nbsp;" + DateTime.Now.TimeOfDay + "<br/><br/>This user Account is lockout for <b>" + ConfigurationManager.AppSettings["LockoutDuration"].ToString() + "</b> mins ." + "<br/><br/>" + ConfigurationManager.AppSettings["Ifthiswasgenuineuser"].ToString() + "<br/><br/>" + ConfigurationManager.AppSettings["Ifyouarenotsure"].ToString() + "<br/><br/>" + "Thanks,<br/>The System Support Team<br/><img src='" + GetBaseUrl() + "Content/Images/logo2.png' style='width: 55px;height: 40px;' /></p>";
 
 
 
-                
+
                 mail.Body = htmlBody;
                 SmtpClient smtpClient = new SmtpClient();
                 Task.Factory.StartNew(() =>
@@ -662,7 +662,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         }
 
 
-        private void AuditLockoutLog(HttpContextBase HttpContext,string Username)
+        private void AuditLockoutLog(HttpContextBase HttpContext, string Username)
         {
             AuditMessage auditMessage = new AuditMessage();
             auditMessage.Controller = "Account";

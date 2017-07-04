@@ -84,36 +84,38 @@ as contracts
                 {
                     foreach (DataRow data in dt.Rows)
                     {
-                        AHC.CD.Data.ADO.DTO.ContractGridDTO ContractGridDTOObj = new AHC.CD.Data.ADO.DTO.ContractGridDTO();
-                        ContractGridDTOObj.ContractGridID = int.Parse(data["ContractGridID"].ToString());
-                        ContractGridDTOObj.PlanName = data["PlanName"].ToString();
-                        ContractGridDTOObj.ProviderFirstName = data["FirstName"].ToString();
-                        ContractGridDTOObj.ProviderMiddleName = data["MiddleName"].ToString();
-                        ContractGridDTOObj.ProviderLastName = data["LastName"].ToString();
-                        ContractGridDTOObj.PlanName = data["PlanName"].ToString();
-                        ContractGridDTOObj.LOBCode = data["LOBCode"].ToString();
-                        ContractGridDTOObj.LOBName = data["LOBName"].ToString();
-                        ContractGridDTOObj.ProviderID = data["ProviderID"].ToString();
-                        ContractGridDTOObj.ParticipatingStatus = data["ParticipatingStatus"].ToString();
-                        ContractGridDTOObj.TerminationDate = data["TerminationDate"].ToString();
-                        ContractGridDTOObj.InitiatedDate = data["InitiatedDate"].ToString();
-                        ContractGridDTOObj.GroupID = data["GroupID"].ToString();
-                        ContractGridDTOObj.CredentialingContractInfoPlanID = data["Report_CredentialingContractInfoFromPlanID"].ToString();
-                        ContractGridDTOObj.Status = data["Status"].ToString();
-                        ContractGridDTOObj.ContractGridStatus = data["ContractGridStatus"].ToString();
-                        ContractGridDTOObj.ProfileID = data["ProfileID"].ToString();
-                        ContractGridDTOObj.NPINumber = data["NPINumber"].ToString();
-                        ContractGridDTOObj.ProviderName = ContractGridDTOObj.ProviderFirstName + " " + ContractGridDTOObj.ProviderMiddleName.Trim() + " " + ContractGridDTOObj.ProviderLastName;
-                        //ContractGridDTOObj.PracticeLocationCorporateName = data["PracticeLocationCorporateName"].ToString();
-                        ContractGridDTOObj.FacilityName = data["FacilityName"].ToString();
-                        ContractGridDTOObj.FacilityStreet = data["Street"].ToString();
-                        ContractGridDTOObj.FacilityCity = data["City"].ToString();
-                        ContractGridDTOObj.FacilityState = data["State"].ToString();
-                        ContractGridDTOObj.FacilityCountry = data["Country"].ToString();
-                        ContractGridDTOObj.PanelStatus = data["PanelStatus"].ToString();
-                        //ContractGridDTOObj.InitiatedDate = ContractGridDTOObj.InitiatedDate == "" ? ContractGridDTOObj.InitiatedDate : ContractGridDTOObj.InitiatedDate.Split(' ')[0].Split('-')[1] + "-" + ContractGridDTOObj.InitiatedDate.Split(' ')[0].Split('-')[0] + "-" + ContractGridDTOObj.InitiatedDate.Split(' ')[0].Split('-')[2];
-                        //ContractGridDTOObj.TerminationDate = ContractGridDTOObj.TerminationDate == "" ? ContractGridDTOObj.TerminationDate : ContractGridDTOObj.TerminationDate.Split(' ')[0].Split('-')[1] + "-" + ContractGridDTOObj.TerminationDate.Split(' ')[0].Split('-')[0] + "-" + ContractGridDTOObj.TerminationDate.Split(' ')[0].Split('-')[2];
-                        ContractGridDTOList.Add(ContractGridDTOObj);
+                        if (!data["FirstName"].ToString().Contains("Test_")) {
+                            AHC.CD.Data.ADO.DTO.ContractGridDTO ContractGridDTOObj = new AHC.CD.Data.ADO.DTO.ContractGridDTO();
+                            ContractGridDTOObj.ContractGridID = int.Parse(data["ContractGridID"].ToString());
+                            ContractGridDTOObj.PlanName = data["PlanName"].ToString();
+                            ContractGridDTOObj.ProviderFirstName = data["FirstName"].ToString();
+                            ContractGridDTOObj.ProviderMiddleName = data["MiddleName"].ToString();
+                            ContractGridDTOObj.ProviderLastName = data["LastName"].ToString();
+                            ContractGridDTOObj.PlanName = data["PlanName"].ToString();
+                            ContractGridDTOObj.LOBCode = data["LOBCode"].ToString();
+                            ContractGridDTOObj.LOBName = data["LOBName"].ToString();
+                            ContractGridDTOObj.ProviderID = data["ProviderID"].ToString();
+                            ContractGridDTOObj.ParticipatingStatus = data["ParticipatingStatus"].ToString();
+                            ContractGridDTOObj.TerminationDate = data["TerminationDate"].ToString();
+                            ContractGridDTOObj.InitiatedDate = data["InitiatedDate"].ToString();
+                            ContractGridDTOObj.GroupID = data["GroupID"].ToString();
+                            ContractGridDTOObj.CredentialingContractInfoPlanID = data["Report_CredentialingContractInfoFromPlanID"].ToString();
+                            ContractGridDTOObj.Status = data["Status"].ToString();
+                            ContractGridDTOObj.ContractGridStatus = data["ContractGridStatus"].ToString();
+                            ContractGridDTOObj.ProfileID = data["ProfileID"].ToString();
+                            ContractGridDTOObj.NPINumber = data["NPINumber"].ToString();
+                            ContractGridDTOObj.ProviderName = ContractGridDTOObj.ProviderFirstName + " " + ContractGridDTOObj.ProviderMiddleName.Trim() + " " + ContractGridDTOObj.ProviderLastName;
+                            //ContractGridDTOObj.PracticeLocationCorporateName = data["PracticeLocationCorporateName"].ToString();
+                            ContractGridDTOObj.FacilityName = data["FacilityName"].ToString();
+                            ContractGridDTOObj.FacilityStreet = data["Street"].ToString();
+                            ContractGridDTOObj.FacilityCity = data["City"].ToString();
+                            ContractGridDTOObj.FacilityState = data["State"].ToString();
+                            ContractGridDTOObj.FacilityCountry = data["Country"].ToString();
+                            ContractGridDTOObj.PanelStatus = data["PanelStatus"].ToString();
+                            //ContractGridDTOObj.InitiatedDate = ContractGridDTOObj.InitiatedDate == "" ? ContractGridDTOObj.InitiatedDate : ContractGridDTOObj.InitiatedDate.Split(' ')[0].Split('-')[1] + "-" + ContractGridDTOObj.InitiatedDate.Split(' ')[0].Split('-')[0] + "-" + ContractGridDTOObj.InitiatedDate.Split(' ')[0].Split('-')[2];
+                            //ContractGridDTOObj.TerminationDate = ContractGridDTOObj.TerminationDate == "" ? ContractGridDTOObj.TerminationDate : ContractGridDTOObj.TerminationDate.Split(' ')[0].Split('-')[1] + "-" + ContractGridDTOObj.TerminationDate.Split(' ')[0].Split('-')[0] + "-" + ContractGridDTOObj.TerminationDate.Split(' ')[0].Split('-')[2];
+                            ContractGridDTOList.Add(ContractGridDTOObj);
+                        }
                     }
                 }
                 catch (Exception ex)

@@ -335,7 +335,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
         public async Task<ActionResult> CCMActionUploadAsync(CredentialingAppointmentDetailViewModel credentialingAppointmentDetailViewModel, int profileId)
         {
             string status = "";
-            CredentialingAppointmentDetail credentialingAppointmentDetail = null;
+            CredentialingAppointmentDetail credentialingAppointmentDetail = null;            
             try
             {
                 if (credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath != null && !credentialingAppointmentDetailViewModel.CredentialingAppointmentResult.SignaturePath.Contains("\\ApplicationDocuments\\"))

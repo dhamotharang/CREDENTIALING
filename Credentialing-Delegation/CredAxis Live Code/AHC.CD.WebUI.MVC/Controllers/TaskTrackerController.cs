@@ -86,7 +86,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
         [HttpPost]
         public string UpdateTask(TaskTrackerViewModel taskTracker)
         {
-            string status = "false";
+            //string status = "false";
             TaskTrackerBusinessModel tracker = null;
             try
             {

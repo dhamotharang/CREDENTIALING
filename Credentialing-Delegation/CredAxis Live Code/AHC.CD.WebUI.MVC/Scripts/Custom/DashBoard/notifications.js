@@ -843,6 +843,7 @@ function DismissAllTasks() {
             if (response) {
                 clearInterval(reminderInterval);
                 TaskNotificationReminder();
+                setTimeout(clearReminderIcon, 3000);
             }
         },
         error: function () { }
@@ -862,7 +863,7 @@ function DismissSingleTask() {
                         taskToDismiss = value;
                         TaskData.splice(key, 1);
                         TaskNotificationReminder();
-
+                        setTimeout(clearReminderIcon, 3000);
                     }
                 })
                 //localStorage.setItem("TaskReminders", JSON.stringify(TaskData));
@@ -871,8 +872,21 @@ function DismissSingleTask() {
         error: function (error) {
             //alert("Sorry, there is some problem!");
         }
-    });
+    });   
 
+};
+
+function clearReminderIcon() {
+    if ($('#maintrackerdiv').scope() != undefined) {
+        var data = $('#maintrackerdiv').scope().trackerItems;
+        $('#maintrackerdiv').scope().setInitialTaskData(data);
+        $('#maintrackerdiv').scope().$digest();
+    }
+    if ($('#profiletrackermaindiv').scope() != undefined) {
+        var profiledata = $('#profiletrackermaindiv').scope().trackerItems1;
+        $('#profiletrackermaindiv').scope().setInitialTaskData(profiledata);
+        $('#profiletrackermaindiv').scope().$digest();
+    }
 };
 $(document).ready(function () {
 

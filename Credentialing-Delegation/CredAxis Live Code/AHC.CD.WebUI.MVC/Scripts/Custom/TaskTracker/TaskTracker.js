@@ -1,5 +1,5 @@
 ﻿//Module declaration
-var trackerApp = angular.module('TrackerApp', ['ui.bootstrap', 'smart-table', 'mgcrea.ngStrap', 'loadingInteceptor','toaster']);
+var trackerApp = angular.module('TrackerApp', ['ui.bootstrap', 'smart-table', 'mgcrea.ngStrap', 'loadingInteceptor', 'toaster']);
 
 //$(document).ready(function () {
 //    $("#sidemenu").addClass("menu-in");
@@ -50,22 +50,22 @@ trackerApp.config(function ($datepickerProvider) {
 })
 
 trackerApp.directive('elastic', [
-        '$timeout',
-        function ($timeout) {
-            return {
-                restrict: 'A',
-                link: function ($scope, element) {
-                    $scope.initialHeight = $scope.initialHeight || element[0].style.height;
-                    var resize = function () {
-                        element[0].style.height = $scope.initialHeight;
-                        element[0].style.height = "" + element[0].scrollHeight + "px";
-                    };
-                    element.on("input change", resize);
-                    $timeout(resize, 0);
-                }
-            };
-        }
-    ]);
+    '$timeout',
+    function ($timeout) {
+        return {
+            restrict: 'A',
+            link: function ($scope, element) {
+                $scope.initialHeight = $scope.initialHeight || element[0].style.height;
+                var resize = function () {
+                    element[0].style.height = $scope.initialHeight;
+                    element[0].style.height = "" + element[0].scrollHeight + "px";
+                };
+                element.on("input change", resize);
+                $timeout(resize, 0);
+            }
+        };
+    }
+]);
 
 trackerApp.directive('stRatio', function () {
     return {
@@ -268,11 +268,11 @@ trackerApp.directive('stPersist', function ($rootScope) {
 
 
 trackerApp.value("tabStatus", [{ tabName: "DailyTask", Displayed: [], daysleft: true, Assigned: false, Assignedby: false, timeElapsed: false, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
-                               { tabName: "TaskAssigned", Displayed: [], daysleft: true, Assigned: true, Assignedby: false, timeElapsed: false, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
-                               { tabName: "AllTask", Displayed: [], daysleft: true, Assigned: true, Assignedby: false, timeElapsed: false, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
-                               { tabName: "ClosedTask", Displayed: [], daysleft: false, Assigned: true, Assignedby: false, timeElapsed: false, subSection: true, PlanName: true, followup: true, followUpDate: false, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
-                               { tabName: "HistoryTask", Displayed: [], daysleft: false, Assigned: true, Assignedby: false, timeElapsed: false, subSection: false, PlanName: false, followup: false, followUpDate: false, updatedOn: true, updatedby: true, editBtn: false, removeBtn: false, historyBtn: false, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
-                               { tabName: "AllTasksForAdmin", Displayed: [], daysleft: true, Assigned: true, Assignedby: true, timeElapsed: true, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: false, removeBtn: false, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } }])
+{ tabName: "TaskAssigned", Displayed: [], daysleft: true, Assigned: true, Assignedby: false, timeElapsed: false, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
+{ tabName: "AllTask", Displayed: [], daysleft: true, Assigned: true, Assignedby: false, timeElapsed: false, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
+{ tabName: "ClosedTask", Displayed: [], daysleft: false, Assigned: true, Assignedby: false, timeElapsed: false, subSection: true, PlanName: true, followup: true, followUpDate: false, updatedOn: false, updatedby: false, editBtn: true, removeBtn: true, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
+{ tabName: "HistoryTask", Displayed: [], daysleft: false, Assigned: true, Assignedby: false, timeElapsed: false, subSection: false, PlanName: false, followup: false, followUpDate: false, updatedOn: true, updatedby: true, editBtn: false, removeBtn: false, historyBtn: false, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } },
+{ tabName: "AllTasksForAdmin", Displayed: [], daysleft: true, Assigned: true, Assignedby: true, timeElapsed: true, subSection: true, PlanName: true, followup: true, followUpDate: true, updatedOn: false, updatedby: false, editBtn: false, removeBtn: false, historyBtn: true, TabStatus: true, DailyTableStatus: {}, predicate: {}, reset: { sort: {}, search: {}, pagination: { start: 0 } } }])
 
 trackerApp.filter("ResetTabStatus", function (tabStatus) {
     return function (status) {
@@ -336,7 +336,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     $http.get(rootDir + "/MasterDataNew/GetAllNotesTemplates").success(function (value) {
         try {
 
-            for (var i = 0; i < value.length ; i++) {
+            for (var i = 0; i < value.length; i++) {
                 if (value[i] != null) {
                     value[i].LastModifiedDate = ($scope.ConvertDateFormat(value[i].LastModifiedDate)).toString();
                     value[i].CreatedDate = ($scope.ConvertDateFormat(value[i].CreatedDate)).toString();
@@ -384,25 +384,25 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     function HospitalsData() {
         var defer = $q.defer();
         $http.get(rootDir + '/Profile/MasterData/GetAllHospitals').
-        success(function (data, status, headers, config) {
-            $scope.Hospitals = data;
-            defer.resolve(data);
-        }).
-        error(function (data, status, headers, config) {
-            defer.reject();
-        });
+            success(function (data, status, headers, config) {
+                $scope.Hospitals = data;
+                defer.resolve(data);
+            }).
+            error(function (data, status, headers, config) {
+                defer.reject();
+            });
         return defer.promise;
     }
     function GetCurrentUser() {
         var defer = $q.defer();
         $http.get(rootDir + '/Dashboard/GetMyNotification').
-        success(function (data, status, headers, config) {
-            currentcduserdata = data;
-            defer.resolve(data);
-        })
-        .error(function (data, status, headers, config) {
-            defer.reject();
-        });
+            success(function (data, status, headers, config) {
+                currentcduserdata = data;
+                defer.resolve(data);
+            })
+            .error(function (data, status, headers, config) {
+                defer.reject();
+            });
         return defer.promise;
     }
     //function InsuranceCompaniesData() {
@@ -422,14 +422,14 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     function PlanNamesData() {
         var defer = $q.defer();
         $http.get(rootDir + '/MasterDataNew/GetAllPlanNames').
-        success(function (data, status, headers, config) {
-            $scope.PlanNames = data;
-            //$scope.InsuranceCompanyHelper = data;
-            defer.resolve(data);
-        }).
-        error(function (data, status, headers, config) {
-            defer.reject();
-        });
+            success(function (data, status, headers, config) {
+                $scope.PlanNames = data;
+                //$scope.InsuranceCompanyHelper = data;
+                defer.resolve(data);
+            }).
+            error(function (data, status, headers, config) {
+                defer.reject();
+            });
         return defer.promise;
     }
 
@@ -456,17 +456,19 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
                 defer.resolve(data);
             }).
-        error(function (data, status, headers, config) {
-            defer.reject();
-        });
+            error(function (data, status, headers, config) {
+                defer.reject();
+            });
         return defer.promise;
     }
+    $scope.AllProvidersData = [];
     function ProvidersData() {
         var defer = $q.defer();
         $http.get(rootDir + '/TaskTracker/GetAllProviders').
             success(function (data, status, headers, config) {
                 AllProviders = data;
-                $scope.Providers = jQuery.grep(data, function (ele) { return ele.Status == "Active" });
+                $scope.AllProvidersData = data;
+                $scope.Providers = jQuery.grep(data, function (ele) { return ele.Status == "Active" || ele.Status == "Inactive" });
                 $scope.InactiveProviders = jQuery.grep(data, function (ele) { return ele.Status == "Inactive" });
                 defer.resolve(data);
             }).
@@ -534,7 +536,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
             ctrl.displayed = result.data;
             ctrl.temp = ctrl.displayed;
             console.log(result.data);
-            ctrl.displayed = $scope.setInitialTaskData(ctrl.displayed);
+            //ctrl.displayed = $scope.setInitialTaskData(ctrl.displayed);
 
             if ($rootScope.tabNames == 'DailyTask' && sortData == true) {
                 //ctrl.temp1 = ctrl.displayed;
@@ -616,8 +618,15 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     };
 
     $rootScope.tabName = function (name) {
+        $rootScope.tabNames = name;
+        if (name == "History") {
+            $scope.showOnClose = false;
+        }
+        else {
+            $scope.showOnClose = true;
+        }
         $rootScope.$broadcast(name);
-       // $scope.ShowSetRemainderButton(name);
+        // $scope.ShowSetRemainderButton(name);
     };
 
     //$scope.ShowSetRemainderButton = function (name) {
@@ -665,6 +674,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.cancelEditViewforTab();
         $rootScope.trackerItems = $scope.TasksAssigned;
         $rootScope.DailyTasksTracker = angular.copy($rootScope.trackerItems);
+        $rootScope.trackerItems = $scope.setInitialTaskData($rootScope.trackerItems)
         //var s = sessionStorage.getItem('dailyValue');
         $scope.t.pagination.start = 0;
         $scope.t.search.predicateObject = {};
@@ -698,6 +708,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.t.pagination.numberOfPages = 0;
         //tableState.sort = {};        
         $scope.t.search.predicateObject = {};
+        $rootScope.trackerItems = $scope.setInitialTaskData($rootScope.trackerItems)
         for (var i in names) {
             if ($scope.tableDailyValue2.hasOwnProperty('search')) {
                 if ($scope.tableDailyValue2.search.predicateObject.hasOwnProperty(names[i])) {
@@ -725,6 +736,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.t.pagination.numberOfPages = 0;
         $scope.t.search.predicateObject = {};
         $scope.t.sort.predicate = "NextFollowUpDate";
+        $rootScope.trackerItems = $scope.setInitialTaskData($rootScope.trackerItems)
         for (var i in names) {
             if ($scope.tableDailyValue3.hasOwnProperty('search')) {
                 if ($scope.tableDailyValue3.search.predicateObject.hasOwnProperty(names[i])) {
@@ -747,6 +759,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.t.pagination.start = 0;
         //$scope.t.pagination.numberOfPages = 0;
         $scope.t.search.predicateObject = {};
+        $rootScope.trackerItems = $scope.setInitialTaskData($rootScope.trackerItems)
         for (var i in names) {
             if ($scope.tableDailyValue4.hasOwnProperty('search')) {
                 if ($scope.tableDailyValue4.search.predicateObject.hasOwnProperty(names[i])) {
@@ -768,6 +781,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.t.pagination.start = 0;
         //$scope.t.pagination.numberOfPages = 0;
         $scope.t.search.predicateObject = {};
+        $rootScope.trackerItems = $scope.setInitialTaskData($rootScope.trackerItems)
         for (var i in names) {
             if ($scope.tableDailyValue5.hasOwnProperty('search')) {
                 if ($scope.tableDailyValue5.search.predicateObject.hasOwnProperty(names[i])) {
@@ -854,14 +868,19 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.Disablewatch = true;
     }
     $scope.showHistory = function (task) {
+        $rootScope.tab = $rootScope.tabNames;
+        $rootScope.tabNames = "History";
+        //if (task.TaskTrackerHistories == undefined)
+        //{
+        //    task.TaskTrackerHistories = $rootScope.tasktrackerhistories;
+        //}
         $scope.selTask = [];
         console.log($scope.selTaskIDs);
-        for (var t = 0; t < $scope.selTaskIDs.length; t++)
-        {
+        for (var t = 0; t < $scope.selTaskIDs.length; t++) {
             if ($scope.selTaskIDs[t].SelectStatus != null && $scope.selTaskIDs[t].SelectStatus != undefined)
-            $scope.selTaskIDs[t].SelectStatus = false;
+                $scope.selTaskIDs[t].SelectStatus = false;
         }
-        $rootScope.previousTabName = $rootScope.tabNames;
+        $rootScope.previousTabName = $rootScope.tab;
         $scope.TaskHistory = [];
         $('.nav-tabs a:last').tab('show');
         $scope.history = true;
@@ -870,19 +889,19 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         var sectionID = [];
         var histories = [];
 
-        if ($rootScope.tabNames == 'DailyTask') {
+        if ($rootScope.tab == 'DailyTask') {
             histories = $scope.TasksAssigned[$scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (taskId) { return taskId.TaskTrackerId == task.TaskTrackerId })[0])];
         }
-            //else if ($rootScope.tabNames == 'TasksAssigne') {
-            //    histories = $scope.DailyTasks[$scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (taskId) { return taskId.TaskTrackerId == task.TaskTrackerId })[0])];
-            //}
-        else if ($rootScope.tabNames == 'AllTask') {
+        //else if ($rootScope.tabNames == 'TasksAssigne') {
+        //    histories = $scope.DailyTasks[$scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (taskId) { return taskId.TaskTrackerId == task.TaskTrackerId })[0])];
+        //}
+        else if ($rootScope.tab == 'AllTask') {
             histories = $scope.RemainingTasks[$scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (taskId) { return taskId.TaskTrackerId == task.TaskTrackerId })[0])];
         }
-        else if ($rootScope.tabNames == 'CloseTasks') {
+        else if ($rootScope.tab == 'CloseTasks') {
             histories = $scope.ClosedTasks[$scope.ClosedTasks.indexOf($scope.ClosedTasks.filter(function (taskId) { return taskId.TaskTrackerId == task.TaskTrackerId })[0])];
         }
-        else if ($rootScope.tabNames == 'AdminTasks') {
+        else if ($rootScope.tab == 'AdminTasks') {
             histories = $scope.AllTasksForAdmin[$scope.AllTasksForAdmin.indexOf($scope.AllTasksForAdmin.filter(function (taskId) { return taskId.TaskTrackerId == task.TaskTrackerId })[0])];
         }
 
@@ -898,8 +917,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         for (var j in histories.TaskTrackerHistories) {
             var ProviderName = [];
             if (histories.TaskTrackerHistories[j].ProviderID != null)
-                for (var m in $scope.Providers) {
-                    if ($scope.Providers[m].ProfileId == histories.TaskTrackerHistories[j].ProviderID) { ProviderName[j] = $scope.Providers[m].Name; }
+                for (var m in $scope.AllProvidersData) {
+                    if ($scope.AllProvidersData[m].ProfileId == histories.TaskTrackerHistories[j].ProviderID) { ProviderName[j] = $scope.Providers[m].Name; }
                 }
 
             for (var i in $scope.SubSections) {
@@ -1033,14 +1052,14 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.progressbar = false;
         //var onLoad = 0;
         $q.all([$q.when(GetCurrentUser()),
-            $q.when(CDUsersData()),
-            $q.when(HospitalsData()),
-            $q.when(TasksData()),
-            $q.when(PlanNamesData()),
-            $q.when(ProvidersData()),
-            //$q.when(InsuranceCompaniesData()),
-            $q.when(LoginUsersData()),
-            $q.when(SubSectionData())
+        $q.when(CDUsersData()),
+        $q.when(HospitalsData()),
+        $q.when(TasksData()),
+        $q.when(PlanNamesData()),
+        $q.when(ProvidersData()),
+        //$q.when(InsuranceCompaniesData()),
+        $q.when(LoginUsersData()),
+        $q.when(SubSectionData())
         ]).then(function (response) {
             for (var i in $scope.Tasks) {
                 if ($scope.Tasks[i].ModeOfFollowUp != "") {
@@ -1094,10 +1113,10 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
             //                  { Name: "Provider Termination", TabName: "", SubSectionID: "" },
             //];
             $scope.Followups = [
-                                      { Name: "Phone Call", Type: "PhoneCall" },
-                                      { Name: "Email", Type: "Email" },
-                                      { Name: "Online Form Completion", Type: "OnlineFormCompletion" },
-                                      { Name: "Paper Form Completion", Type: "PaperFormCompletion" }
+                { Name: "Phone Call", Type: "PhoneCall" },
+                { Name: "Email", Type: "Email" },
+                { Name: "Online Form Completion", Type: "OnlineFormCompletion" },
+                { Name: "Paper Form Completion", Type: "PaperFormCompletion" }
             ];
             $scope.FollowupHelper = angular.copy($scope.Followups);
             TempFollowupHelper = angular.copy($scope.Followups);
@@ -2037,6 +2056,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
                         data.ModeOfFollowUp = JSON.parse(data.ModeOfFollowUp);
                         var editedTask = [];
+                        //$rootScope.tasktrackerhistories = data.TaskTrackerHistories;
                         //data.InsuaranceCompanyNames = JSON.parse(data.InsuaranceCompanyNames);
                         var tabID = "";
                         var sectionID = "";
@@ -2086,11 +2106,16 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                         if ($rootScope.tabNames == 'DailyTask') {
                             $scope.TasksAssigned[$scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (updates) { return updates.TaskTrackerId == data.TaskTrackerId })[0])].TaskTrackerHistories = (data.TaskTrackerHistories);
                         }
-                            //else if ($rootScope.tabNames == 'TasksAssigne') {
-                            //    $scope.DailyTasks[$scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (updates) { return updates.TaskTrackerId == data.TaskTrackerId })[0])].TaskTrackerHistories = (data.TaskTrackerHistories);
-                            //}
+                        //else if ($rootScope.tabNames == 'TasksAssigne') {
+                        //    $scope.DailyTasks[$scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (updates) { return updates.TaskTrackerId == data.TaskTrackerId })[0])].TaskTrackerHistories = (data.TaskTrackerHistories);
+                        //}
                         else if ($rootScope.tabNames == 'AllTask') {
                             $scope.RemainingTasks[$scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (updates) { return updates.TaskTrackerId == data.TaskTrackerId })[0])].TaskTrackerHistories = (data.TaskTrackerHistories);
+                            //var task = $.grep($scope.RemainingTasks, function (e) { return e.TaskTrackerId == data.TaskTrackerId; });
+                            //var task = $scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]);
+                            //if (task != null) {
+                            //    $scope.RemainingTasks.splice(task, 1);
+                            //}
                         }
                         //var updateHistory=$scope.TasksAssignedtoMe[$scope.TasksAssignedtoMe.indexOf($scope.TasksAssignedtoMe.filter(function (updates) { return updates.TaskTrackerId == data.TaskTrackerId })[0])].TaskTrackerHistories
                         //$scope.TasksAssignedtoMe.Push($.grep($scope.TasksAssignedtoMe,function(items){return items.}))
@@ -2121,21 +2146,27 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                 editedTask = angular.copy(TasksAssignedforedittask);
                                 $scope.TasksAssigned.splice(0, 0, TasksAssignedforedittask);
                                 $rootScope.$broadcast("evnt", $scope.TasksAssigned);
+                                //if (data.AssignedToId != $scope.result[0].CDUserID)
+                                var task = $scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]);
+                                $scope.RemainingTasks.splice(task, 1);
                                 $scope.RemainingTasks.splice(0, 0, TasksAssignedforedittask);
                                 $rootScope.$broadcast("event", $scope.RemainingTasks);
+                                //$rootScope.deepu = false;
                             }
                             else {
                                 //$scope.TasksAssignedPagination.splice($scope.TasksAssignedPagination.indexOf($scope.TasksAssignedPagination.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]), 1);
                                 $scope.TasksAssigned.splice($scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]), 1);
                                 $rootScope.$broadcast("evnt", $scope.TasksAssigned);
+                                $rootScope.tabNames = 'AllTask';
+                                $rootScope.deepu = true;
                             }
 
                             if (data.AssignedToId != currentcduserdata.cdUser.CDUserID) {
-                                for (var i in $scope.RemainingTasks) {
-                                    if ($scope.RemainingTasks[i].TaskTrackerId == data.TaskTrackerId) {
-                                        $scope.RemainingTasks.splice(i, 1);
-                                    }
-                                }
+                                //for (var i in $scope.RemainingTasks) {
+                                //    if ($scope.RemainingTasks[i].TaskTrackerId == data.TaskTrackerId) {
+                                //        $scope.RemainingTasks.splice(i, 1);
+                                //    }
+                                //}
                                 //$scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (DailyTasks) { return DailyTasks.TaskTrackerId == data.TaskTrackerId })[0]), 1);
                                 var DailyTasksforedittask = {
                                     TaskTrackerId: data.TaskTrackerId, ProfileID: data.ProfileID,
@@ -2158,6 +2189,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                     daysleft: data.daysleft
                                 };
                                 editedTask = angular.copy(DailyTasksforedittask);
+                                var task = $scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]);
+                                $scope.RemainingTasks.splice(task, 1);
                                 $scope.RemainingTasks.splice(0, 0, DailyTasksforedittask);
                                 //$rootScope.$broadcast("evn", $scope.DailyTasks);
                                 $rootScope.$broadcast("event", $scope.RemainingTasks);
@@ -2167,13 +2200,14 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                         }
                         else if (($scope.VisibilityControl == "editViewforTab") && ($rootScope.tabNames == 'AllTask')) {
 
+
                             if (data.AssignedToId == currentcduserdata.cdUser.CDUserID) {
                                 // $scope.AllTasks.splice($scope.AllTasks.indexOf($scope.AllTasks.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]), 1);
-                                for (var i in $scope.RemainingTasks) {
-                                    if ($scope.RemainingTasks[i].TaskTrackerId == data.TaskTrackerId) {
-                                        $scope.RemainingTasks.splice(i, 1);
-                                    }
-                                }
+                                //for (var i in $scope.RemainingTasks) {
+                                //    if ($scope.RemainingTasks[i].TaskTrackerId == data.TaskTrackerId) {
+                                //        $scope.RemainingTasks.splice(i, 1);
+                                //    }
+                                //}
                                 var TasksAssignedforedittask = {
                                     TaskTrackerId: data.TaskTrackerId, ProfileID: data.ProfileID,
                                     //ProviderName: $scope.Providers.filter(function (Providers) { return Providers.ProfileId == data.ProfileID })[0].Name == 'undefined' ? "" : $scope.Providers.filter(function (Providers) { return Providers.ProfileId == data.ProfileID })[0].Name, SubSectionName: data.SubSectionName,
@@ -2191,20 +2225,34 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                     SubSectionID: sectionID,
                                     CompleteStatus: "Open",
                                     LastUpdatedBy: data.LastUpdatedBy,
-                                    daysleft: data.daysleft
+                                    daysleft: data.daysleft,
+                                    TaskTrackerHistories: data.TaskTrackerHistories,
                                 };
+
                                 editedTask = angular.copy(TasksAssignedforedittask);
+                                //if (data.AssignedToId != $scope.result[0].CDUserID)
+                                var task = $scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]);
+                                if (task != null && TasksAssignedforedittask.AssignedTo == currentcduserdata.cdUser.EmailId) {
+                                    $scope.TasksAssigned.splice(task, 1);
+                                }
+
                                 $scope.TasksAssigned.splice(0, 0, TasksAssignedforedittask);
                                 $rootScope.$broadcast("evnt", $scope.TasksAssigned);
+                                //if (data.AssignedToId != $scope.result[0].CDUserID)
+                                //var kjhkh = $.grep($scope.RemainingTasks, function (e) { return e.TaskTrackerId == data.TaskTrackerId; })[0];
+                                var remtask = $scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]);
+                                if (remtask != null && TasksAssignedforedittask.AssignedTo == currentcduserdata.cdUser.EmailId) {
+                                    $scope.RemainingTasks.splice(remtask, 1);
+                                }
                                 $scope.RemainingTasks.splice(0, 0, TasksAssignedforedittask);
                                 $rootScope.$broadcast("event", $scope.RemainingTasks);
                             }
                             if (data.AssignedToId != currentcduserdata.cdUser.CDUserID) {
-                                for (var i in $scope.RemainingTasks) {
-                                    if ($scope.RemainingTasks[i].TaskTrackerId == data.TaskTrackerId) {
-                                        $scope.RemainingTasks.splice(i, 1);
-                                    }
-                                }
+                                //for (var i in $scope.RemainingTasks) {
+                                //    if ($scope.RemainingTasks[i].TaskTrackerId == data.TaskTrackerId) {
+                                //        $scope.RemainingTasks.splice(i, 1);
+                                //    }
+                                //}
                                 //$scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (DailyTasks) { return DailyTasks.TaskTrackerId == data.TaskTrackerId })[0]), 1);
                                 var AllTasksforedittask = {
                                     TaskTrackerId: data.TaskTrackerId, ProfileID: data.ProfileID,
@@ -2225,7 +2273,15 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                                     LastUpdatedBy: data.LastUpdatedBy,
                                     daysleft: data.daysleft
                                 };
+
+                                //var kjhkh = $.grep($scope.TasksAssigned, function (e) { return e.TaskTrackerId == data.TaskTrackerId; })[0];
+                                var task = $scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]);;
+                                if (task != null && task != -1 && AllTasksforedittask.AssignedTo != currentcduserdata.cdUser.EmailId) {
+                                    $scope.TasksAssigned.splice(task, 1);
+                                }
+                                var remtask = $scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (datas) { return datas.TaskTrackerId == data.TaskTrackerId })[0]);;
                                 editedTask = angular.copy(AllTasksforedittask);
+                                $scope.RemainingTasks.splice(remtask, 1);
                                 $scope.RemainingTasks.splice(0, 0, AllTasksforedittask);
                                 ctrl.temp = $scope.RemainingTasks;
                                 // ctrl.callServer();
@@ -2328,123 +2384,145 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $location.$$hash = ''
     }
     $scope.removeTask = function () {
+        var TaskData = JSON.parse(localStorage.getItem("TaskReminders"));
+        for (var task = 0; task < TaskData.length; task++) {
+            var remainderstring = "TaskTrackerId" + ":" + $scope.TemporaryTask.TaskTrackerId;
+            if ((TaskData[task].ReminderInfo).includes($scope.TemporaryTask.TaskTrackerId)) {
+                $scope.remainderid = TaskData[task].TaskReminderID;
+            }
+        }
+        DismissSingleTaskforremoveTask($scope.remainderid);
         $scope.progressbar = false;
         var closed = [];
         $http.post(rootDir + '/TaskTracker/Inactivetask?taskTrackerID=' + $scope.TemporaryTask.TaskTrackerId).
-           success(function (data, status, headers, config) {
-               if (data == "true") {
-                   messageAlertEngine.callAlertMessage("successfullySaved", "Task closed successfully", "success", true);
-               }
-               for (var j in $scope.TasksAssigned) {
-                   if ($scope.TasksAssigned[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-                       $scope.TasksAssigned[j].CompleteStatus = "CLOSED";
-                   }
-               }
-               if ($rootScope.tabNames == 'DailyTask') {
-                   closed = $scope.TasksAssigned.splice($scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-                   var tempclosed = $scope.RemainingTasks.splice($scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-                   $scope.ClosedTasks.push(closed[0]);
-               }
-               //$scope.ClosedTasks.push($scope.TasksAssigned.splice($scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1));
-               //$rootScope.$broadcast('DailyTasks');
-               //for (var i in $scope.DailyTasks) {
-               //    if ($scope.DailyTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-               //        $scope.DailyTasks[i].CompleteStatus = "Closed";
-               //    }
-               //}
-               for (var i in $scope.RemainingTasks) {
-                   if ($scope.RemainingTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-                       $scope.RemainingTasks[i].CompleteStatus = "CLOSED";
-                   }
-               }
+            success(function (data, status, headers, config) {
+                if (data == "true") {
+                    messageAlertEngine.callAlertMessage("successfullySaved", "Task closed successfully", "success", true);
+                }
+                for (var j in $scope.TasksAssigned) {
+                    if ($scope.TasksAssigned[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                        $scope.TasksAssigned[j].CompleteStatus = "CLOSED";
+                        if ($rootScope.tabNames != 'DailyTask') {
+                            $scope.TasksAssigned.splice(j, 1);
+                        }
+                    }
+                }
+                if ($rootScope.tabNames == 'DailyTask') {
+                    if ($scope.TasksAssigned.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0].SelectStatus != undefined)
+                        $scope.TasksAssigned.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0].SelectStatus = false;
+                    closed = $scope.TasksAssigned.splice($scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+                    var tempclosed = $scope.RemainingTasks.splice($scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+                    $scope.ClosedTasks.push(closed[0]);
+                }
+                //$scope.ClosedTasks.push($scope.TasksAssigned.splice($scope.TasksAssigned.indexOf($scope.TasksAssigned.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1));
+                //$rootScope.$broadcast('DailyTasks');
+                //for (var i in $scope.DailyTasks) {
+                //    if ($scope.DailyTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                //        $scope.DailyTasks[i].CompleteStatus = "Closed";
+                //    }
+                //}
+                for (var i in $scope.RemainingTasks) {
+                    if ($scope.RemainingTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                        $scope.RemainingTasks[i].CompleteStatus = "CLOSED";
+                    }
+                }
 
-               if ($rootScope.tabNames == 'DailyTask') {
-                   //ctrl.temp = $scope.TasksAssigned;
-                   //$rootScope.trackerItems = $scope.TasksAssigned;
-                   $rootScope.$broadcast('DailyTasks');
-               }
-                   //else if ($rootScope.tabNames == 'TasksAssigne') {
-                   //    closed = $scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-                   //    $scope.ClosedTasks.push(closed[0]);
-                   //    //ctrl.temp = $scope.DailyTasks;
-                   //    //$rootScope.trackerItems = $scope.DailyTasks;
-                   //    $rootScope.$broadcast('TasksAssigned');
-                   //}
-               else if ($rootScope.tabNames == 'AllTask') {
-                   closed = $scope.RemainingTasks.splice($scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-                   $scope.ClosedTasks.push(closed[0]);
-                   //ctrl.temp = $scope.RemainingTasks;
-                   //$rootScope.trackerItems = $scope.RemainingTasks;
-                   $rootScope.$broadcast('AllTasks');
-               }
-               //$scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (DailyTasks) { return DailyTasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-           }).
+                if ($rootScope.tabNames == 'DailyTask') {
+                    //ctrl.temp = $scope.TasksAssigned;
+                    //$rootScope.trackerItems = $scope.TasksAssigned;
+                    $rootScope.$broadcast('DailyTasks');
+                }
+                //else if ($rootScope.tabNames == 'TasksAssigne') {
+                //    closed = $scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+                //    $scope.ClosedTasks.push(closed[0]);
+                //    //ctrl.temp = $scope.DailyTasks;
+                //    //$rootScope.trackerItems = $scope.DailyTasks;
+                //    $rootScope.$broadcast('TasksAssigned');
+                //}
+                else if ($rootScope.tabNames == 'AllTask') {
+                    if ($scope.RemainingTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0].SelectStatus != undefined)
+                        $scope.RemainingTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0].SelectStatus = false;
+
+                    closed = $scope.RemainingTasks.splice($scope.RemainingTasks.indexOf($scope.RemainingTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+                    $scope.ClosedTasks.push(closed[0]);
+                    //ctrl.temp = $scope.RemainingTasks;
+                    //$rootScope.trackerItems = $scope.RemainingTasks;
+                    $rootScope.$broadcast('AllTasks');
+                }
+                //$scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (DailyTasks) { return DailyTasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+            }).
 
 
-           error(function (data, status, headers, config) {
-               messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
-           });
+            error(function (data, status, headers, config) {
+                messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
+            });
         $scope.progressbar = true;
+        $scope.selTask = [];
+        $scope.showOnClose = false;
     }
+
+
+
 
     $scope.reopenTask = function () {
         $scope.progressbar = false;
         var opened = [];
         $http.post(rootDir + '/TaskTracker/Reactivetask?taskTrackerID=' + $scope.TemporaryTask.TaskTrackerId).
-           success(function (data, status, headers, config) {
-               if (data == "true") {
-                   messageAlertEngine.callAlertMessage("successfullySaved", "Task reopened successfully", "success", true);
-               }
+            success(function (data, status, headers, config) {
+                if (data == "true") {
+                    messageAlertEngine.callAlertMessage("successfullySaved", "Task reopened successfully", "success", true);
+                }
 
-               if ($rootScope.tabNames == 'CloseTasks') {
-                   opened = $scope.ClosedTasks.splice($scope.ClosedTasks.indexOf($scope.ClosedTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-                   //Added By Manideep Innamuri
-                   opened[0].AssignedTo = opened[0].LastUpdatedBy;
-                   $scope.TasksAssigned.push(opened[0]);
-                   for (var j in $scope.TasksAssigned) {
-                       if ($scope.TasksAssigned[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-                           $scope.TasksAssigned[j].CompleteStatus = "Open";
-                       }
-                   }
-                   $rootScope.$broadcast('ClosedTasks');
-               }
+                if ($rootScope.tabNames == 'CloseTasks') {
+                    opened = $scope.ClosedTasks.splice($scope.ClosedTasks.indexOf($scope.ClosedTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+                    //Added By Manideep Innamuri
+                    opened[0].AssignedTo = opened[0].LastUpdatedBy;
+                    $scope.TasksAssigned.push(opened[0]);
+                    $scope.RemainingTasks.push(opened[0]);
+                    for (var j in $scope.TasksAssigned) {
+                        if ($scope.TasksAssigned[j].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                            $scope.TasksAssigned[j].CompleteStatus = "Open";
+                        }
+                    }
+                    $rootScope.$broadcast('ClosedTasks');
+                }
 
-               //for (var i in $scope.DailyTasks) {
-               //    if ($scope.DailyTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-               //        $scope.DailyTasks[i].CompleteStatus = "Open";
-               //    }
-               //}
-               for (var i in $scope.RemainingTasks) {
-                   if ($scope.RemainingTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
-                       $scope.RemainingTasks[i].CompleteStatus = "Open";
-                   }
-               }
+                //for (var i in $scope.DailyTasks) {
+                //    if ($scope.DailyTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                //        $scope.DailyTasks[i].CompleteStatus = "Open";
+                //    }
+                //}
+                for (var i in $scope.RemainingTasks) {
+                    if ($scope.RemainingTasks[i].TaskTrackerId == $scope.TemporaryTask.TaskTrackerId) {
+                        $scope.RemainingTasks[i].CompleteStatus = "Open";
+                    }
+                }
 
-               if ($rootScope.tabNames == 'DailyTask') {
-                   //ctrl.temp = $scope.TasksAssigned;
-                   //$rootScope.trackerItems = $scope.TasksAssigned;
-                   $rootScope.$broadcast('DailyTasks');
-               }
-                   //else if ($rootScope.tabNames == 'TasksAssigne') {
-                   //    //ctrl.temp = $scope.DailyTasks;
-                   //    //$rootScope.trackerItems = $scope.DailyTasks;
-                   //    $rootScope.$broadcast('TasksAssigned');
-                   //}
-               else if ($rootScope.tabNames == 'AllTask') {
-                   //ctrl.temp = $scope.RemainingTasks;
-                   //$rootScope.trackerItems = $scope.RemainingTasks;
-                   $rootScope.$broadcast('AllTasks');
-               }
+                if ($rootScope.tabNames == 'DailyTask') {
+                    //ctrl.temp = $scope.TasksAssigned;
+                    //$rootScope.trackerItems = $scope.TasksAssigned;
+                    $rootScope.$broadcast('DailyTasks');
+                }
+                //else if ($rootScope.tabNames == 'TasksAssigne') {
+                //    //ctrl.temp = $scope.DailyTasks;
+                //    //$rootScope.trackerItems = $scope.DailyTasks;
+                //    $rootScope.$broadcast('TasksAssigned');
+                //}
+                else if ($rootScope.tabNames == 'AllTask') {
+                    //ctrl.temp = $scope.RemainingTasks;
+                    //$rootScope.trackerItems = $scope.RemainingTasks;
+                    $rootScope.$broadcast('AllTasks');
+                }
 
-               //$rootScope.$broadcast("evnt", $scope.TasksAssigned);
-               //$rootScope.$broadcast("evn", $scope.DailyTasks);
-               //$scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (DailyTasks) { return DailyTasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
-           }).
+                //$rootScope.$broadcast("evnt", $scope.TasksAssigned);
+                //$rootScope.$broadcast("evn", $scope.DailyTasks);
+                //$scope.DailyTasks.splice($scope.DailyTasks.indexOf($scope.DailyTasks.filter(function (DailyTasks) { return DailyTasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
+            }).
 
 
-           error(function (data, status, headers, config) {
-               messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
-           });
+            error(function (data, status, headers, config) {
+                messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
+            });
         $scope.progressbar = true;
     }
 
@@ -2535,8 +2613,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
             $scope.TemporaryTask = angular.copy(task);
         }
 
-        if ($scope.Followups.length == 4)
-        {
+        if ($scope.Followups.length == 4) {
             $scope.errormessage = true;
         }
         ResetFormForValidation($formData);
@@ -2689,6 +2766,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
     $rootScope.tabname = "";
 
     $scope.showDetailViewforTab1 = function (task) {
+        if (task.tasktrackerhistories == undefined) {
+            //task.TaskTrackerHistories = $rootScope.tasktrackerhistories;
+        }
         $scope.showOnClose = false;
         $scope.TableView = false;
         $scope.detailViewfortab = true;
@@ -2723,9 +2803,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         if ($rootScope.tabNames == 'DailyTask') {
             var authID = $scope.TasksAssigned.filter(function (filterTask) { return filterTask.TaskTrackerId == task.TaskTrackerId })[0].AssignedById;
         }
-            //else if ($rootScope.tabNames == 'TasksAssigne') {
-            //    var authID = $scope.DailyTasks.filter(function (filterTask) { return filterTask.TaskTrackerId == task.TaskTrackerId })[0].AssignedById;
-            //}
+        //else if ($rootScope.tabNames == 'TasksAssigne') {
+        //    var authID = $scope.DailyTasks.filter(function (filterTask) { return filterTask.TaskTrackerId == task.TaskTrackerId })[0].AssignedById;
+        //}
         else if ($rootScope.tabNames == 'AllTask') {
             var authID = $scope.RemainingTasks.filter(function (filterTask) { return filterTask.TaskTrackerId == task.TaskTrackerId })[0].AssignedById;
         }
@@ -2768,6 +2848,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         //    }
         //}
 
+        if (task.TaskTrackerHistories == undefined) {
+            //task.TaskTrackerHistories = $rootScope.tasktrackerhistories;
+        }
         if ($rootScope.tabNames == 'HistoryTask') {
             for (var h in task.Notes) {
                 if (task.Notes[h] != null) {
@@ -2842,8 +2925,15 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     }
     $scope.cancelViewforTab1 = function () {
-        if ($rootScope.tabname!="History")
-        $scope.showOnClose = true;
+        $scope.CancelReminder();
+        if ($rootScope.deepu) {
+            $rootScope.tabNames = 'DailyTask';
+        }
+        $scope.selTask = [];
+        if ($rootScope.tabNames == "HistoryTask")
+            $scope.showOnClose = false;
+        else
+            $scope.showOnClose = true;
         $scope.detailViewfortab = false;
         $scope.TableView = true;
         //if ($rootScope.tabNames == 'DailyTask') {
@@ -2962,6 +3052,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.editViewforTab2 = false;
     }
     $scope.cancelEditViewforTab1 = function () {
+        $scope.CancelReminder();
         $('#addButton').show();
         $location.$$hash = ''
         //var hash = location.hash.replace('#', '');
@@ -3149,7 +3240,16 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $("#HospitalList").hide();
         $scope.hidenotesdiv = true;
     }
+
+    $scope.result = {};
     $scope.showeditView = function (task, editviewfortab) {
+        $scope.result = $.grep($scope.CDUsers, function (e) { return e.AuthenicateUserId == task.AssignedToId; });
+        //if (task.TaskTrackerHistories == undefined)
+        //{
+        //    $scope.showDetailViewforTab1(task);
+        //    $rootScope.break = true;
+        //}
+        //$rootScope.tasktrackerhistories = task.TaskTrackerHistories;        
         //$scope.validationfunction = false;
         //$scope.errormessageforsubject = false;
         //$scope.errormessageforfollowupdate = false;
@@ -3215,13 +3315,15 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                 dateTimeForNote1 = dateTimeForNote1[0] + " " + $scope.changeTimeTo24Hr(dateTimeForNote1[1]);
             }
         }
-
+        //if ($rootScope.deepu) {
+        //    $rootScope.tabNames = 'AllTask';
+        //}
         if ($rootScope.tabNames == 'DailyTask') {
             var authID = $scope.TasksAssigned.filter(function (filterTask) { return filterTask.TaskTrackerId == task.TaskTrackerId })[0].AssignedById;
-        }
+
             //else if ($rootScope.tabNames == 'TasksAssigne') {
             //    var authID = $scope.DailyTasks.filter(function (filterTask) { return filterTask.TaskTrackerId == task.TaskTrackerId })[0].AssignedById;
-            //}
+        }
         else if ($rootScope.tabNames == 'AllTask') {
             var authID = $scope.RemainingTasks.filter(function (filterTask) { return filterTask.TaskTrackerId == task.TaskTrackerId })[0].AssignedById;
         }
@@ -3393,7 +3495,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     // Method to set the row selected 
     $scope.showSetReminder = false;
-    
+
     $scope.selTask = [];
     $scope.selTaskIDs = [];
     $scope.selectRemTask = function (event, provider) {
@@ -3408,7 +3510,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                 $scope.CancelReminder();
             }
         }
-        else  {
+        else {
             provider.SelectStatus = true;
             $scope.selTask.push(provider);
             $scope.selTaskIDs.push(provider);
@@ -3419,6 +3521,9 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         //console.log($scope.selTask);
     }
     $scope.setInitialTaskData = function (data) {
+        $.each(data, function (Mkey, Mvalue) {
+            Mvalue["SetReminder"] = false;
+        });
         if (localStorage.getItem("TaskReminders") != [] || localStorage.getItem("TaskReminders") != "" || localStorage.getItem("TaskReminders") != undefined) {
             var StoredReminderData = JSON.parse(localStorage.getItem("TaskReminders"));
             var taskDataFromApp = [];
@@ -3430,9 +3535,10 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                 $.each(data, function (Mkey, Mvalue) {
                     $.each(taskDataFromApp, function (Skey, Svalue) {
                         if (Mvalue.TaskTrackerId == Svalue.TaskTrackerId) {
+                            //   console.log('matched Value: original data' + Mvalue.TaskTrackerId + 'local storage data:' + Svalue.TaskTrackerId);
                             Mvalue["SetReminder"] = true;
                             if (Svalue.ScheduledDateTime != null && Svalue.ScheduledDateTime != undefined)
-                            Mvalue["ScheduledDateTime"] = new Date(parseInt(Svalue.ScheduledDateTime.replace("/Date(", "").replace(")/", ""), 10));
+                                Mvalue["ScheduledDateTime"] = new Date(parseInt(Svalue.ScheduledDateTime.replace("/Date(", "").replace(")/", ""), 10));
                         }
                         //else {
                         //    Mvalue["SetReminder"] = false;
@@ -3463,7 +3569,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         $scope.ShowAddButton = false;
         $scope.RescheduleID = id;
     }
-  
+
     $scope.OpenReminderModalForReschedule = function () { };
     //$scope.RescheduleReminderFromTaskTracker = function (taskID) {
     //    var ReminderDateTime = new Date($('#datetimepicker3').val());
@@ -3562,8 +3668,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
             else if ($rootScope.tabNames == "DailyTask")
                 $scope.clerCheckBoxForDailyTasks();
         }).error(function (data) {
-                toaster .pop('error', "error", 'Some Error Occured, please try again later');
-            });
+            toaster.pop('error', "error", 'Some Error Occured, please try again later');
+        });
         $scope.taskList.reminderDateTime = ReminderDateTime;
         localStorage.setItem("TaskReminders", JSON.stringify($scope.taskList));
         $scope.taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
@@ -3594,7 +3700,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     $scope.checkedTask = false; // to set the status of checked tasks
 
-   
+
     //Method to add/remove the checked/unchecked tasks from the list
     $scope.getCheckedTask = function (evt, task, checkedStatus) {
         //console.log(evt);
@@ -3631,6 +3737,55 @@ function ResetFormForValidation(form) {
     $.validator.setDefaults({ ignore: null });
     $.validator.unobtrusive.parse(form);
 }
+
+
+function DismissSingleTaskforremoveTask(remainderid) {
+
+    $.ajax({
+        url: rootDir + '/TaskTracker/DismissReminder?taskID=' + remainderid,
+        type: "POST",
+        success: function (response) {
+            if (response) {
+                var TaskData = JSON.parse(localStorage.getItem("TaskReminders"));
+                $.each(TaskData, function (key, value) {
+                    if (value.TaskReminderID == SelectedTaskID) {
+                        taskToDismiss = value;
+                        TaskData.splice(key, 1);
+                        TaskNotificationReminder();
+
+                    }
+                })
+                //localStorage.setItem("TaskReminders", JSON.stringify(TaskData));
+            }
+        },
+        error: function (error) {
+            //alert("Sorry, there is some problem!");
+        }
+    });
+
+};
+
+
+var TaskNotificationReminder = function () {
+    $.ajax({
+        //url: rootDir + '/Prototypes/GetReminderNotification',
+        url: rootDir + '/TaskTracker/GetReminders',
+        type: "GET",
+        success: function (response) {
+            //var taskStored = JSON.parse(localStorage.getItem("TaskReminders"));
+            var taskStored = response.reminders;
+            localStorage.setItem("TaskReminders", JSON.stringify(response.reminders)); // setting the reminder objects into local storage
+            view = response.responseView;
+            getReminderView(taskStored);
+
+            reminderInterval = setInterval(function () { CheckReminder() }, 30000); // calling function repeatedly to check reminder
+        },
+        error: function (error) {
+            //alert("Sorry, there is some problem!");
+        }
+    });
+}
+
 
 //function ToggleSelectionClass(This) {
 //    if ($(This).hasClass('danger')) {

@@ -1038,9 +1038,12 @@ namespace AHC.CD.Business.Email
             try
             {
                 var emailrepo = uow.GetGenericRepository<EmailDetail>();
+                var Profilerepo = uow.GetGenericRepository<Profile>();
                 var res = await emailrepo.GetAllAsync();
                 foreach (var item in res)
                 {
+                    var profile = Profilerepo.Find(p => p.ContactDetail.EmailIDs.Any(e => e.EmailDetailID == item.EmailDetailID));
+                    if(profile.StatusType == StatusType.Active && !profile.PersonalDetail.FirstName.Contains("Test_"))
                     emails.Add(item.EmailAddress);
                 }
                 return emails;

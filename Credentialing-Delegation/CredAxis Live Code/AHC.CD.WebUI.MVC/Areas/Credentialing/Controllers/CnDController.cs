@@ -906,7 +906,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Credentialing.Controllers
                 throw;
             }
 
-            return Json(new { status = status, cdUserId = cdUserId }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = status, cdUserId = cdUserId , Date = DateTime.Now}, JsonRequestBehavior.AllowGet);
         }
         [Authorize(Roles = "CCO,CRA")]
         public async Task<ActionResult> ContractInfo()

@@ -274,8 +274,7 @@
                                     ActivityStatusType: data[i].ActivityStatusType,
                                     ActivityByName: $scope.updatedByForInitiation,
                                     LastModifiedDate: $scope.updatedDateForInitiation
-                                };
-                                debugger;
+                                };                                
                                 $rootScope.timelineActivity.push(tempactivity);
                             }
                             else if (data[i].ActivityStatus == "Completed" && $rootScope.isrecredentialing == "ReCredentialing") {
@@ -634,7 +633,7 @@
                                 };
                                 
                                 if ($rootScope.isrecredentialing == "ReCredentialing") {
-                                tempactivity.Activity = $scope.providerName + " Re-Credentialing Process Completed for " + $scope.planName;
+                                tempactivity.Activity = $scope.providerName +" "+ " Re-Credentialing Process Completed for " + $scope.planName;
                                 } else if ($rootScope.isrecredentialing == "Credentialing") {
                                     tempactivity.Activity = $scope.providerName + " Credentialing Process Completed for " + $scope.planName;
                                 }

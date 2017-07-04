@@ -812,6 +812,7 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                 }
                 //var closedtask = $.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; });
                 $.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0].Status = "CLOSED";
+                $scope.Tasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0].SelectStatus = false;
                 $scope.ClosedTasks.push($.grep($scope.Tasks, function (element) { return element.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId; })[0]);
                 $scope.Tasks.splice($scope.Tasks.indexOf($scope.Tasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
                 if ($rootScope.tabNames == 'ProviderTasks') {
@@ -851,6 +852,8 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
                 messageAlertEngine.callAlertMessage("errorInitiated", "Please try after sometime !!!!", "danger", true);
             });
         $scope.progressbar = true;
+        $scope.selTask = [];
+        $scope.showOnClose = false;        
     }
     $scope.Quickreopen = function (task) {
         if (angular.isObject(task)) {
@@ -1922,6 +1925,9 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         console.log($scope.selTask);
     }
     $scope.setInitialTaskData = function (data) {
+        $.each(data, function (Mkey, Mvalue) {
+            Mvalue["SetReminder"] = false;
+        });
         if (localStorage.getItem("TaskReminders") != [] || localStorage.getItem("TaskReminders") != "" || localStorage.getItem("TaskReminders") != undefined) {
             var StoredReminderData = JSON.parse(localStorage.getItem("TaskReminders"));
             var taskDataFromApp = [];

@@ -12,6 +12,7 @@ profileApp.config(function ($datepickerProvider) {
 var UserRole = UserRole;
 profileApp.controller('tabController', ['$scope', '$rootScope', '$http', 'messageAlertEngine', function ($scope, $rootScope, $http, messageAlertEngine) {
     $rootScope.ccoprofile = false;
+    $rootScope.SpecialtyLoader = false;
     $http.get(rootDir + '/Profile/CustomFieldGeneration/getRole').
         success(function (data, status, headers, config) {
             $rootScope.ccoprofile = data.role;
@@ -20,6 +21,10 @@ profileApp.controller('tabController', ['$scope', '$rootScope', '$http', 'messag
 
         });
     $scope.getTabData = function (tabName) {
+        if (tabName == "Specialty")
+        {
+            $rootScope.SpecialtyLoader = true;
+        }
         $rootScope.$broadcast(tabName);
         if (tabName == 'DocumentationCheckList') {
             $("#tabname").text("Document CheckList");

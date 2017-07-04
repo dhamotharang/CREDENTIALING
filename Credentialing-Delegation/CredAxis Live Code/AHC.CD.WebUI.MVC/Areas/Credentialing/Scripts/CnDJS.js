@@ -119,6 +119,10 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
         $rootScope.ShowCompleteButton = false;
 
     }
+
+    $scope.EnambleCompleteButton = function () {
+        $rootScope.ShowCompleteButton = true;
+    }
     sessionStorage.setItem('CredID', credId);
     $scope.CredListIdView = localStorage.getItem("CreListId");
     $scope.testData = [{ Name: 'pritam', Age: '23' }, { Name: 'tannu', Age: '5' }];
@@ -130,6 +134,8 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
         $rootScope.ShowCompleteButton=true;
 
     }
+
+    
 
     $scope.isDroped = false;
     $scope.$on('someEvent', function (event, data) {
@@ -832,6 +838,11 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
             returndate = newdate[1] +"/"+ newdate[2] +"/"+ newdate[0];
         }
         return returndate;
+    }
+
+    $scope.closemaildiv = function ()
+    {
+        $("#CCOList").hide();
     }
 
     //===============================Package Generation start===============================
@@ -1749,7 +1760,7 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
                        completedBy = $scope.users[j].FullName;
                    }
                }
-              if ($rootScope.isrecredentialing == "Credentialing") {
+               if ($rootScope.isrecredentialing == "Credentialing") {                  
                    var completedDate = $rootScope.changeDateTime(new Date());
                    try {
                        var tempactivity = {
@@ -1767,7 +1778,7 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
                    var completedDate = $rootScope.changeDateTime(new Date());
                    try {
                        var tempactivity = {
-                           Activity: $rootScope.providerfullName + " Re-Credentialing Process Completed for " + $rootScope.planNameUniv,
+                           Activity: $rootScope.providerfullName +" "+" Re-Credentialing Process Completed for " + $rootScope.planNameUniv,
                            ActivityByName: completedBy,
                            LastModifiedDate: completedDate
                        };

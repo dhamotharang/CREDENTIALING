@@ -1241,7 +1241,7 @@ namespace AHC.CD.Business.Search
                                                 select ConstructProfileSearchResult(provider)).First();
 
                     result.Add(providerSearchResult);
-                    return result;
+                    return result.Where(p => !p.PersonalDetail.FirstName.Contains("Test_")).ToList();
                 }
 
                 // Search on First Name
@@ -1251,7 +1251,8 @@ namespace AHC.CD.Business.Search
                                                where provider.PersonalDetail.FirstName.ToLower().Contains(firstName.ToLower())
                                                select ConstructProfileSearchResult(provider);
 
-                    return providerSearchResult.ToList<Profile>();
+                    return providerSearchResult.ToList<Profile>().Where(p => !p.PersonalDetail.FirstName.Contains("Test_")).ToList();
+
                 }
 
                 // Search on Last Name
@@ -1261,7 +1262,7 @@ namespace AHC.CD.Business.Search
                                                where provider.PersonalDetail.LastName.ToLower().Contains(lastName.ToLower())
                                                select ConstructProfileSearchResult(provider);
 
-                    return providerSearchResult.ToList<Profile>();
+                    return providerSearchResult.ToList<Profile>().Where(p => !p.PersonalDetail.FirstName.Contains("Test_")).ToList();
                 }
 
                 // Search on Provider Relationship
@@ -1272,7 +1273,7 @@ namespace AHC.CD.Business.Search
                                                 && ci.ContractStatusOption == ContractStatus.Accepted)
                                                select ConstructProfileSearchResult(provider);
 
-                    return providerSearchResult.ToList<Profile>();
+                    return providerSearchResult.ToList<Profile>().Where(p => !p.PersonalDetail.FirstName.Contains("Test_")).ToList();
                 }
 
                 // Search on IPA Group Name
@@ -1282,7 +1283,7 @@ namespace AHC.CD.Business.Search
                                                where provider.ContractInfoes.Any(ci => ci.ContractGroupInfoes.Any(cgi => cgi.PracticingGroup.Group.Name.ToLower() == IPAGroupName.ToLower()))
                                                select ConstructProfileSearchResult(provider);
 
-                    return providerSearchResult.ToList<Profile>();
+                    return providerSearchResult.ToList<Profile>().Where(p => !p.PersonalDetail.FirstName.Contains("Test_")).ToList();
                 }
 
                 // Search on Provider Level
@@ -1292,7 +1293,7 @@ namespace AHC.CD.Business.Search
                                                where provider.PersonalDetail.ProviderLevel.Name == providerLevel
                                                select ConstructProfileSearchResult(provider);
 
-                    return providerSearchResult.ToList<Profile>();
+                    return providerSearchResult.ToList<Profile>().Where(p => !p.PersonalDetail.FirstName.Contains("Test_")).ToList();
                 }
 
                 // Search on Provider Type
@@ -1302,7 +1303,7 @@ namespace AHC.CD.Business.Search
                                                where provider.PersonalDetail.ProviderTitles.Any(ci => ci.ProviderType.Title.ToLower() == providerType.ToLower())
                                                select ConstructProfileSearchResult(provider);
 
-                    return providerSearchResult.ToList<Profile>();
+                    return providerSearchResult.ToList<Profile>().Where(p => !p.PersonalDetail.FirstName.Contains("Test_")).ToList();
                 }
                 else
                 {

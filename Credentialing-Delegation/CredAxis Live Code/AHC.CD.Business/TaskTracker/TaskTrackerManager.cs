@@ -547,5 +547,30 @@ namespace AHC.CD.Business.TaskTracker
                 throw;
             }
         }
+
+        //public Entities.TaskTracker.TaskTracker GetTaskInfo(int TaskID)
+        //{
+        //    try
+        //    {
+        //        return taskRepo.GetTaskById(TaskID);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+        //public string GetUserEmail(string AssignedtoID)
+        //{
+        //    try
+        //    {
+        //        var email = cdUserRepo.Find(a => a.AuthenicateUserId == AssignedtoID).EmailId;
+        //        return email;
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }

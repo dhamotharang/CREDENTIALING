@@ -27,7 +27,7 @@ namespace AHC.CD.WebUI.MVC.CustomHelpers
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             if ((filterContext.ActionDescriptor.ActionName == "ChangePassword" && filterContext.HttpContext.Request.RequestType == "POST") || filterContext.ActionDescriptor.ActionName == "LogOff" && filterContext.HttpContext.Request.RequestType == "POST")
-            {
+            {                
                 return;
             }
             if (!filterContext.ActionDescriptor.IsDefined(typeof(SkipPasswordExpirationCheckAttribute), inherit: true)

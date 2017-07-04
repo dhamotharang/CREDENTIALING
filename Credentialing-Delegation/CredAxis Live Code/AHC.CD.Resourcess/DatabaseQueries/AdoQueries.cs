@@ -457,33 +457,43 @@ where  new.Name='Doctor'";
 
         #region Request For Approval
 
-        public static readonly string UPDATECOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
-                                                            from [dbo].[ProfileUpdatesTrackers]) as result
-                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') and result.[Modification]='Update';";
+        public static readonly string UPDATECOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification],[ProfileId]
+                                                            from [dbo].[ProfileUpdatesTrackers]) as result inner join [dbo].[Profiles] as p on result.ProfileId =p.ProfileID
+															left join [dbo].[PersonalDetails] as pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID
+                                                            where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') and result.[Modification]='Update' and pd.FirstName not like '%Test_%';";
         public static readonly string RENEWALCOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
                                                             from [dbo].[ProfileUpdatesTrackers]) as result
                                                             where result.rownumber=1 and result.ApprovalStatus in('Pending', 'OnHold') and result.[Modification]='Renewal';";
 
-        public static readonly string REQUESTCOUNT = @"SELECT count(*) RequestCount FROM [dbo].[CredentialingRequests]
-                                                        Where [Status] != 'Inactive'";
+        public static readonly string REQUESTCOUNT = @"SELECT count(*) RequestCount FROM [dbo].[CredentialingRequests] as cr 
+                                                        inner join [dbo].[Profiles] as p on cr.ProfileID = p.ProfileID
+                                                        inner join [dbo].[PersonalDetails] as pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID
+                                                        Where cr.[Status] != 'Inactive' and pd.FirstName not like '%Test_%'";
         public static readonly string HISTORYCOUNT = @"select sum(a.HistoryCount) as HistoryCount from (SELECT count(*) as HistoryCount
-                                                        FROM [dbo].[ProfileUpdatesTrackers] 
-                                                        where [ApprovalStatus] in ('Rejected','Approved','Dropped')
+                                                        FROM [dbo].[ProfileUpdatesTrackers] as pu inner join [dbo].[Profiles] as p on pu.ProfileId = p.ProfileID
+														inner join [dbo].[PersonalDetails] as pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID
+                                                        where [ApprovalStatus] in ('Rejected','Approved','Dropped') and pd.FirstName not like '%Test_%'
                                                         union all
                                                         SELECT count(*) as HistoryCount
-                                                        FROM [dbo].[CredentialingRequestTrackers]) as a;";
+                                                        FROM [dbo].[CredentialingRequestTrackers] as c inner join [dbo].[Profiles] as p on c.ProfileId = p.ProfileID
+														inner join [dbo].[PersonalDetails] as pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID where pd.FirstName not like '%Test_%') as a ;";
 
         public static readonly string UPDATE_HISTORY_COUNT = @"SELECT count(*) as HistoryCount
-                                                        FROM [dbo].[ProfileUpdatesTrackers] 
-                                                        where [Modification]='Update' and [ApprovalStatus] in ('Rejected','Approved','Dropped');";
+                                                        FROM [dbo].[ProfileUpdatesTrackers] as pu 
+														inner join [dbo].[Profiles] as p on pu.ProfileId = p.ProfileID
+														inner join [dbo].[PersonalDetails] as pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID
+                                                        where [Modification]='Update' and [ApprovalStatus] in ('Rejected','Approved','Dropped') and pd.FirstName not like '%Test_%';";
 
         public static readonly string RENEWAL_HISTORY_COUNT = @"SELECT count(*) as HistoryCount
-                                                        FROM [dbo].[ProfileUpdatesTrackers] 
-                                                        where [Modification]='Renewal' and [ApprovalStatus] in ('Rejected','Approved','Dropped');";
+                                                        FROM [dbo].[ProfileUpdatesTrackers] as pu 
+														inner join [dbo].[Profiles] as p on pu.ProfileId = p.ProfileID
+														inner join [dbo].[PersonalDetails] as pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID
+                                                        where [Modification]='Renewal' and [ApprovalStatus] in ('Rejected','Approved','Dropped') and pd.FirstName not like '%Test_%';";
 
-        public static readonly string REQUEST_HISTORY_COUNT = @"Select count(*) as RequestCount FROM [dbo].[CredentialingRequestTrackers];";
-
-
+        public static readonly string REQUEST_HISTORY_COUNT = @"Select count(*) as RequestCount FROM [dbo].[CredentialingRequestTrackers] as cr 
+                                                                inner join [dbo].[Profiles] as p on cr.ProfileID = p.ProfileID
+                                                                inner join [dbo].[PersonalDetails] as  pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID
+                                                                where pd.FirstName not like '%Test_%';";
 
         public static readonly string PROVIDERUPDATECOUNT = @"select count(*) from (select ROW_NUMBER() over ( partition by [Section],[SubSection],[Modification],[RespectiveObjectId],[ProfileId] order by  [ProfileId],[LastModifiedDate] desc) rownumber,[ApprovalStatus],[Modification]
                                                             from [dbo].[ProfileUpdatesTrackers] where [ProfileId]=@ID) as result
@@ -544,7 +554,7 @@ where  new.Name='Doctor'";
                                                             from [dbo].[ProfileUpdatesTrackers] as t inner join  
                                                             [dbo].[Profiles] as p on t.[ProfileId] = p.[ProfileId] inner join
                                                             [dbo].[PersonalDetails] as pd on  p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID inner join
-                                                            [dbo].[OtherIdentificationNumbers] as od on p.OtherIdentificationNumber_OtherIdentificationNumberID = od.OtherIdentificationNumberID
+                                                            [dbo].[OtherIdentificationNumbers] as od on p.OtherIdentificationNumber_OtherIdentificationNumberID = od.OtherIdentificationNumberID where pd.FirstName not like '%Test_%'
                                                             ) as result
                                                             where result.ApprovalStatus in('Pending', 'OnHold') order by ProfileUpdatesTrackerId Desc;";
 
@@ -583,13 +593,14 @@ where  new.Name='Doctor'";
 
         public static readonly string CREDREQUEST = @"Select [CredentialingRequestID],[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],[ModifiedDate],[IsSelected] from (SELECT [CredentialingRequestID]
 		                                                ,[NPINumber]
-		                                                ,CONCAT( [FirstName],' ',  [LastName] ) as [ProviderName]
+		                                                ,CONCAT( cr.[FirstName],' ',  cr.[LastName] ) as [ProviderName]
 		                                                ,[PlanID]
 		                                                ,'Pending' as [CurrentStatus]
-		                                                ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+		                                                ,CONVERT(VARCHAR(10), cr.[LastModifiedDate], 110) as [ModifiedDate]
                                                         ,'false' as [IsSelected]
-                                                      FROM [dbo].[CredentialingRequests]
-	                                                  Where [Status] != 'Inactive') as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID order by CredentialingRequestID desc;";
+                                                      FROM [dbo].[CredentialingRequests] as cr inner join [dbo].[Profiles] as p on cr.ProfileID = p.ProfileID
+													  inner join [dbo].[PersonalDetails] as pd on p.PersonalDetail_PersonalDetailID = pd.PersonalDetailID
+	                                                  Where cr.[Status] != 'Inactive' and pd.FirstName not like '%Test_%') as s inner join [dbo].[Plans] as p on s.PlanID=p.PlanID order by CredentialingRequestID desc;";
 
         public static readonly string PROVIDERCREDREQUEST = @"Select [CredentialingRequestID],[NPINumber],[ProviderName],p.PlanName,[CurrentStatus],[ModifiedDate],[IsSelected] from (SELECT [CredentialingRequestID]
 		                                                ,[NPINumber]
@@ -633,12 +644,13 @@ where  new.Name='Doctor'";
                                                               ,[Url]
                                                               ,[UniqueData]
                                                               ,CONVERT(VARCHAR(10), [LastModifiedDate], 110) as [ModifiedDate]
+															  ,[LastModifiedDate]
                                                           FROM [dbo].[ProfileUpdatesTrackers]
                                                           where [ApprovalStatus] in ('Rejected','Approved','Dropped')) as p 
                                                           inner join [dbo].[Profiles] as p2
                                                           on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                           on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
-                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID order by LastModifiedDate Desc;";
+                                                          on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID where p3.FirstName not like '%Test_%' order by p.LastModifiedDate Desc;";
 
 
 
@@ -748,7 +760,7 @@ where  new.Name='Doctor'";
                                                         on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                         on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
                                                         on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID
-                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID order by [orderbyModifiedDate] Desc;";
+                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID where p3.FirstName not like '%Test_%' order by [orderbyModifiedDate] Desc;";
 
         public static readonly string RENEWAL_HISTORY = @"SELECT [ProfileUpdatesTrackerId]
                                                         ,p4.NPINumber
@@ -789,7 +801,7 @@ where  new.Name='Doctor'";
                                                         on p.ProfileId=p2.ProfileID inner join [dbo].[PersonalDetails] as p3 
                                                         on p2.PersonalDetail_PersonalDetailID=p3.PersonalDetailID inner join [dbo].[OtherIdentificationNumbers] as p4 
                                                         on p2.OtherIdentificationNumber_OtherIdentificationNumberID=p4.OtherIdentificationNumberID
-                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID order by OrderbyModifiedDate desc;";
+                                                        left join [dbo].[CDUsers] as usr on p.[LastModifiedBy]=usr.CDUserID where p3.FirstName not like '%Test_%' order by OrderbyModifiedDate desc;";
 
         public static readonly string PROVIDER_UPDATE_HISTORY = @"SELECT [ProfileUpdatesTrackerId]
 	                                                          ,p4.NPINumber
@@ -890,7 +902,7 @@ where  new.Name='Doctor'";
 												                  inner join [dbo].[Profiles] as pf  on s.[ProfileID]=pf.ProfileID
 																  inner join [dbo].[PersonalDetails] as per 
 																  on pf.PersonalDetail_PersonalDetailID=per.PersonalDetailID
-																  left join [dbo].[CDUsers] as usr on s.DecisionMadeBy=usr.CDUserID) as d order by [OrderbyDate] desc";
+																  left join [dbo].[CDUsers] as usr on s.DecisionMadeBy=usr.CDUserID where per.FirstName not like '%Test_%') as d order by [OrderbyDate] desc";
 
 
         public static readonly string PROVIDER_CRED_REQUEST_HISTORY_DATA = @"Select [CredentialingRequestID],[ProfileID],ProfilePhotoPath,[NPINumber], CONCAT([Salutation],' ', [FirstName],' ',  [LastName] ) as [ProviderName],PlanName,[CurrentStatus],[RejectionReason],[ModifiedDate], [DecisionMadeBy] from (SELECT [CredentialingRequestID]

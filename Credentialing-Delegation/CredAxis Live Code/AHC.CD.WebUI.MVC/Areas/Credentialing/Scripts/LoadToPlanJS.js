@@ -73,33 +73,33 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     //  $scope.tomorrow.setDate($scope.tomorrow.getDate() + 1);
     $scope.emailDisable = true;
     $http.get(rootDir + '../../../EmailService/GetAllEmailTemplates').
-       success(function (data, status, headers, config) {
+        success(function (data, status, headers, config) {
 
-           try {
-               if (data != null) {
-                   $scope.templates = data;
-               }
-               for (var i = 0; i < $scope.templates.length; i++) {
-                   $scope.templates[i].LastModifiedDate = $scope.ConvertDateFormat($scope.templates[i].LastModifiedDate);
-               }
-           } catch (e) {
+            try {
+                if (data != null) {
+                    $scope.templates = data;
+                }
+                for (var i = 0; i < $scope.templates.length; i++) {
+                    $scope.templates[i].LastModifiedDate = $scope.ConvertDateFormat($scope.templates[i].LastModifiedDate);
+                }
+            } catch (e) {
 
-           }
+            }
 
-       }).
-       error(function (data, status, headers, config) {
+        }).
+        error(function (data, status, headers, config) {
 
-       });
+        });
 
     $http.get(rootDir + '/EmailService/GetAllEmailIds').
-                 success(function (data, status, headers, config) {
-                     try {
-                         $scope.EmailsIds = angular.copy(data);
-                     } catch (e) {
-                     }
-                 }).
-                 error(function (data, status, headers, config) {
-                 });
+        success(function (data, status, headers, config) {
+            try {
+                $scope.EmailsIds = angular.copy(data);
+            } catch (e) {
+            }
+        }).
+        error(function (data, status, headers, config) {
+        });
 
     $scope.hideDiv = function () {
         $("#templatelist").hide();
@@ -334,12 +334,12 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
                 if ($scope.fileList[i].File[j].UploadDone != true) $scope.fileList[i].File[j].UploadDone = false;
                 if ($scope.fileList[i].File[j].FileStatus == 'Active') {
                     $scope.UploadFileIndividual($scope.fileList[i].File[j].file,
-                                        $scope.fileList[i].File[j].file.name,
-                                        $scope.fileList[i].File[j].file.type,
-                                        $scope.fileList[i].File[j].file.size,
-                                        $scope.fileList[i].File[j].FileListID,
-                                        $scope.fileList[i].File[j].FileID
-                                        );
+                        $scope.fileList[i].File[j].file.name,
+                        $scope.fileList[i].File[j].file.type,
+                        $scope.fileList[i].File[j].file.size,
+                        $scope.fileList[i].File[j].FileListID,
+                        $scope.fileList[i].File[j].FileID
+                    );
                     $scope.fileList[i].File[j].FileStatus = 'Inactive';
                 }
             }
@@ -424,7 +424,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
                 //$('#composeMail').animate({ scrollBottom: 0 }, 'medium');
                 break;
             }
-        }                     
+        }
         if (AttachmentsSize > 15728640) {
             messageAlertEngine.callAlertMessage('warningdiv', 'Files exceeded the size limit!', "info", true);
         }
@@ -433,7 +433,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
         var regx1 = /^[a-z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)?@[a-z][a-zA-Z-0-9]*\.[a-z]+(\.[a-z]+)?$/;
         ResetFormForValidation($("#" + Form_Id));
         var emailids = $('#tags').val().split(';');
-        for (var i = 0; i < emailids.length ; i++) {
+        for (var i = 0; i < emailids.length; i++) {
             if (emailids[i] != "") {
                 $scope.errmsg = false;
                 if (regx1.test(emailids[i].toLowerCase())) {
@@ -460,7 +460,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
         }
         var emailDataCC = $('#tagsCC').val().split(';');
-        for (var i = 0; i < emailDataCC.length;i++) {
+        for (var i = 0; i < emailDataCC.length; i++) {
             if (emailDataCC[i] != "") {
                 if (regx1.test(emailDataCC[i].toLowerCase())) {
                     $scope.errmsgforCC = false;
@@ -649,12 +649,15 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     $scope.ccmStatus = false;
     $scope.credID = sessionStorage.getItem("credentialingInfoId");
     $scope.creddInfo = [];
-    $scope.templateList = [{ name: 'Provider Profile Template 1', code: 'A2HC', check: false }, { name: 'Provider Profile Template 2', code: 'AHC', check: false }, ];
+    $scope.templateList = [{ name: 'Provider Profile Template 1', code: 'A2HC', check: false }, { name: 'Provider Profile Template 2', code: 'AHC', check: false },];
 
     $scope.goToNextTab = function (tab) {
+        $scope.EnambleCompleteButton();
         $('.nav-tabs a[href="#' + tab + '"]').tab('show');
     };
     $scope.creddInfo = JSON.parse(credFilterInfo);
+
+
 
 
     //$scope.credInfos = [];
@@ -999,14 +1002,13 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
             }
 
-            if($scope.LoadedData[i].DocumentPath!=null)
-            {
+            if ($scope.LoadedData[i].DocumentPath != null) {
                 $rootScope.selectallbtn = false;
             }
 
         }
 
-        
+
 
     }
 
@@ -1035,12 +1037,12 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
                 //if ($scope.eTempObject.Report.ReCredentialingDate == '' || $scope.eTempObject.Report.ReCredentialingDate == null) {
                 //    $scope.eTempObject.Report.ReCredentialingDate = $scope.ConvertDateBy3Years($scope.eTempObject.InitialCredentialingDate);
                 //}
-                }
+            }
 
-                //if ($scope.eTempObject.Report.CredentialingApprovalStatusType == '' || $scope.eTempObject.Report.CredentialingApprovalStatusType == null) {
-                //    $scope.eTempObject.Report.CredentialingApprovalStatusType = 'Rejected';
-                //}
-            
+            //if ($scope.eTempObject.Report.CredentialingApprovalStatusType == '' || $scope.eTempObject.Report.CredentialingApprovalStatusType == null) {
+            //    $scope.eTempObject.Report.CredentialingApprovalStatusType = 'Rejected';
+            //}
+
             //else {
             //    $scope.eTempObject.Report.ReCredentialingDate = null;
             //}
@@ -1244,33 +1246,33 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     //});
 
     $http.get(rootDir + '/MasterDataNew/GetAllLOBsOfPlanContractByPlanID?planID=' + $scope.credentialingInfo.PlanID).
-   success(function (data, status, headers, config) {
-       try {
-           $scope.ContractLOBsList = angular.copy(data);
-           $scope.MasterContractLOBslist = data;
-       } catch (e) {
+        success(function (data, status, headers, config) {
+            try {
+                $scope.ContractLOBsList = angular.copy(data);
+                $scope.MasterContractLOBslist = data;
+            } catch (e) {
 
-       }
-   }).
-   error(function (data, status, headers, config) {
+            }
+        }).
+        error(function (data, status, headers, config) {
 
-   });
+        });
 
     // Participating Status List Start
 
     $http.get(rootDir + '/Credentialing/CnD/GetAllParticipatingStatus').
-  success(function (response, status, headers, config) {
-      try {
-          console.log('Participant Status List');
-          console.log(response);
-          $scope.ParticipatingStatusList = angular.copy(response);
-      } catch (e) {
+        success(function (response, status, headers, config) {
+            try {
+                console.log('Participant Status List');
+                console.log(response);
+                $scope.ParticipatingStatusList = angular.copy(response);
+            } catch (e) {
 
-      }
-  }).
-  error(function (response, status, headers, config) {
+            }
+        }).
+        error(function (response, status, headers, config) {
 
-  });
+        });
 
     // Participating Status List End
 
@@ -1301,17 +1303,17 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     //$scope.ContractLocationsList = angular.copy($scope.credentialingInfo.Profile.PracticeLocationDetails);
 
     $http.get(rootDir + '/MasterDataNew/GetAllOrganizationGroupAsync').
-    success(function (data, status, headers, config) {
-        try {
-            $scope.BusinessEntities = angular.copy(data);
-            $scope.MasterBusinessEntities = data;
-        } catch (e) {
+        success(function (data, status, headers, config) {
+            try {
+                $scope.BusinessEntities = angular.copy(data);
+                $scope.MasterBusinessEntities = data;
+            } catch (e) {
 
-        }
-    }).
-    error(function (data, status, headers, config) {
+            }
+        }).
+        error(function (data, status, headers, config) {
 
-    });
+        });
 
     //LOB
     $scope.ContractLOBsList = [];
@@ -1463,26 +1465,26 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
         if ($scope.validFormat == true && $scope.validRequired == true) {
             $http.post(rootDir + '/Credentialing/CnD/QuickSaveReport', $scope.tempSecObject).
-               success(function (data, status, headers, config) {
-                   try {
-                       //data = JSON.parse(data);
-                       data.dataContractGrid.InitialCredentialingDate = $rootScope.ConvertDateFormat(data.dataContractGrid.InitialCredentialingDate);
-                       if (data.dataContractGrid.Report != null) {
-                           data.dataContractGrid.Report.CredentialedDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.CredentialedDate);
-                           data.dataContractGrid.Report.InitiatedDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.InitiatedDate);
-                           data.dataContractGrid.Report.TerminationDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.TerminationDate);
-                           data.dataContractGrid.Report.ReCredentialingDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.ReCredentialingDate);
-                       }
-                       $scope.PlanReportList[index] = angular.copy(data.dataContractGrid);
-                       messageAlertEngine.callAlertMessage('ReportSaveSuccess' + index, "Plan Report Updated Successfully !!!", "success", true);
-                       $scope.SetVisibility('view', index);
-                   } catch (e) {
+                success(function (data, status, headers, config) {
+                    try {
+                        //data = JSON.parse(data);
+                        data.dataContractGrid.InitialCredentialingDate = $rootScope.ConvertDateFormat(data.dataContractGrid.InitialCredentialingDate);
+                        if (data.dataContractGrid.Report != null) {
+                            data.dataContractGrid.Report.CredentialedDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.CredentialedDate);
+                            data.dataContractGrid.Report.InitiatedDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.InitiatedDate);
+                            data.dataContractGrid.Report.TerminationDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.TerminationDate);
+                            data.dataContractGrid.Report.ReCredentialingDate = $rootScope.ConvertDateFormat(data.dataContractGrid.Report.ReCredentialingDate);
+                        }
+                        $scope.PlanReportList[index] = angular.copy(data.dataContractGrid);
+                        messageAlertEngine.callAlertMessage('ReportSaveSuccess' + index, "Plan Report Updated Successfully !!!", "success", true);
+                        $scope.SetVisibility('view', index);
+                    } catch (e) {
 
-                   }
-               }).
-               error(function (data, status, headers, config) {
+                    }
+                }).
+                error(function (data, status, headers, config) {
 
-               });
+                });
             $scope.ClearVisibility();
         }
     };
@@ -1577,7 +1579,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     //    minutes = minutes.length == 1 ? minutes < 10 ? '0' + minutes : minutes : minutes;
     //    var d = returnValue.toString();
     //    var stampDate = d.split(' ');
-        //    var strTime = stampDate[1] + ' ' + stampDate[2] + ' ' + stampDate[3] + ' ' + hours + ':' + minutes + ' ' + ampm;
+    //    var strTime = stampDate[1] + ' ' + stampDate[2] + ' ' + stampDate[3] + ' ' + hours + ':' + minutes + ' ' + ampm;
     //    //minutes = minutes < 9 ? '00' : minutes;
     //    //if (format == true) {
     //    //    var strTime = stampDate[1] + ' ' + stampDate[2] + ' ' + stampDate[3] + ' ' + hours + ':' + minutes + ' ' + ampm;
@@ -1587,7 +1589,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     //    //    var strTime = stampDate + ' ' + hours + ':' + minutes + ' ' + ampm;
     //    //}
     //    return strTime;
-        //}
+    //}
 
     $scope.ShowDetailTable = function (tempObject) {
         $scope.isHasError = false;
@@ -1622,124 +1624,122 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
         if ($scope.isHasError == false) {
             $scope.loadingAjax = true;
             $http.post(rootDir + '/Credentialing/CnD/AddLoadedData?credentialingInfoID=' + credId, tempObject).
-            success(function (data, status, headers, config) {
-                try {
-                    if (data.status == 'true') {
-                        data.dataCredentialingContractRequest.isSelected = false;
-                        $scope.loadingAjax = false;
-                        $rootScope.isLoaded = true;
-                        $rootScope.loadedDate = new Date();
-                        $scope.PlanReportStatus = true;
+                success(function (data, status, headers, config) {
+                    try {
+                        if (data.status == 'true') {
+                            data.dataCredentialingContractRequest.isSelected = false;
+                            $scope.loadingAjax = false;
+                            $rootScope.isLoaded = true;
+                            $rootScope.loadedDate = new Date();
+                            $scope.PlanReportStatus = true;
 
-                        $scope.ContractSpecialityList = [];
-                        $scope.ContractLocationsList = [];
-                        $scope.loadID = data.dataCredentialingContractRequest.ContractGrid[0].CredentialingInfo.InitiatedByID;
-                       //for (var j = 0; j < $scope.users.length; j++) {
-                       //     if ($scope.users[j].CDUserID == $scope.loadID) {
-                       //        if ($scope.users[j].FullName != null) {
-                       //            $rootScope.updatedByForLoading = $scope.users[j].FullName;
-                       //        }
-                       //        else {
-                       //         $rootScope.updatedByForLoading = $scope.users[j].Email;
-                       //        }
+                            $scope.ContractSpecialityList = [];
+                            $scope.ContractLocationsList = [];
+                            $scope.loadID = data.dataCredentialingContractRequest.ContractGrid[0].CredentialingInfo.InitiatedByID;
+                            //for (var j = 0; j < $scope.users.length; j++) {
+                            //     if ($scope.users[j].CDUserID == $scope.loadID) {
+                            //        if ($scope.users[j].FullName != null) {
+                            //            $rootScope.updatedByForLoading = $scope.users[j].FullName;
+                            //        }
+                            //        else {
+                            //         $rootScope.updatedByForLoading = $scope.users[j].Email;
+                            //        }
 
 
-                       //     }
-                        // }
-                        $scope.updatetimeanduserid = true;
-                        for (t = 0; t < $rootScope.timelineActivity.length ; t++)
-                        {
-                            if ($rootScope.timelineActivity[t].Activity.includes("Load to Plan done"))
-                            {
-                                $rootScope.updatedByForLoading = $rootScope.timelineActivity[t].ActivityByName;
-                                $scope.updatetimeanduserid = false;
-                                break;
-                            }
-                            //if(data == $rootScope.timelineActivity.length )
-                            //{
-                            //    break;
-                            //}
-                        }
-                        if ($scope.updatetimeanduserid) {
-                            $rootScope.updatedByForLoading = data.currentuser;
-                            $rootScope.updatedDateForLoading = $rootScope.changeDateTime(data.dataCredentialingContractRequest.ContractGrid[0].LastModifiedDate);
-                        }
-                        try {
-                            var tempactivity = {
-                                Activity: $rootScope.tempActivity,
-                                ActivityByName: $rootScope.updatedByForLoading,
-                                LastModifiedDate: $rootScope.updatedDateForLoading
-                            };
-                            $rootScope.timelineActivity.unshift(tempactivity);
-                            $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
-                        } catch (e) {
-
-                        }
-                        $scope.tempContractSpecialityList = angular.copy($scope.credentialingInfo.Profile.SpecialtyDetails);
-                        for (var i = 0; i < $scope.tempContractSpecialityList.length; i++) {
-                            if ($scope.tempContractSpecialityList[i].Status != 'Inactive') {
-                                $scope.ContractSpecialityList.push($scope.tempContractSpecialityList[i]);
-                            }
-                        }
-                        $scope.tempContractLocationsList = angular.copy($scope.credentialingInfo.Profile.PracticeLocationDetails);
-                        for (var i = 0; i < $scope.tempContractLocationsList.length; i++) {
-                            if ($scope.tempContractLocationsList[i].Status != 'Inactive') {
-                                $scope.ContractLocationsList.push($scope.tempContractLocationsList[i]);
-                            }
-                        }
-                        $scope.BusinessEntities = angular.copy($scope.MasterBusinessEntities);
-                        $scope.ContractLOBsList = angular.copy($scope.MasterContractLOBslist);
-                        $scope.tempObject = angular.copy($scope.MasterTemp);
-                        if (data.dataCredentialingContractRequest.InitialCredentialingDate != null) {
-                            var date = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.InitialCredentialingDate);
-                            data.dataCredentialingContractRequest.InitialCredentialingDate = $filter('date')(new Date(date), 'yyyy-MM-dd');
-                        } else {
-                            data.dataCredentialingContractRequest.InitialCredentialingDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.InitialCredentialingDate);
-                        }
-
-                        for (var i = 0; i < data.dataCredentialingContractRequest.ContractSpecialties.length; i++) {
-                            if (data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail != null) {
-                                if (data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.InitialCertificationDate != null) {
-                                    data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.InitialCertificationDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.InitialCertificationDate);
+                            //     }
+                            // }
+                            $scope.updatetimeanduserid = true;
+                            for (t = 0; t < $rootScope.timelineActivity.length; t++) {
+                                if ($rootScope.timelineActivity[t].Activity.includes("Load to Plan done")) {
+                                    $rootScope.updatedByForLoading = $rootScope.timelineActivity[t].ActivityByName;
+                                    $scope.updatetimeanduserid = false;
+                                    break;
                                 }
-                                if (data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate != null) {
-                                    data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate);
+                                //if(data == $rootScope.timelineActivity.length )
+                                //{
+                                //    break;
+                                //}
+                            }
+                            if ($scope.updatetimeanduserid) {
+                                $rootScope.updatedByForLoading = data.currentuser;
+                                $rootScope.updatedDateForLoading = $rootScope.changeDateTime(data.dataCredentialingContractRequest.ContractGrid[0].LastModifiedDate);
+                            }
+                            try {
+                                var tempactivity = {
+                                    Activity: $rootScope.tempActivity,
+                                    ActivityByName: $rootScope.updatedByForLoading,
+                                    LastModifiedDate: $rootScope.updatedDateForLoading
+                                };
+                                $rootScope.timelineActivity.unshift(tempactivity);
+                                $rootScope.timelineActivity = $rootScope.timelineActivity.unique();
+                            } catch (e) {
+
+                            }
+                            $scope.tempContractSpecialityList = angular.copy($scope.credentialingInfo.Profile.SpecialtyDetails);
+                            for (var i = 0; i < $scope.tempContractSpecialityList.length; i++) {
+                                if ($scope.tempContractSpecialityList[i].Status != 'Inactive') {
+                                    $scope.ContractSpecialityList.push($scope.tempContractSpecialityList[i]);
                                 }
                             }
-
-
-                        }
-
-                        $scope.LoadedData.push(data.dataCredentialingContractRequest);
-                        var TabStatusLTP2 = $scope.LoadedData.length > 0 ? true : false;
-                        $scope.$broadcast('LTPStatus', { StatusLTP: TabStatusLTP2 });
-                        $scope.PlanReportTabStatus = true;
-                        //$scope.init_table();
-
-                        for (var i = 0; i < data.dataCredentialingContractRequest.ContractGrid.length; i++) {
-                            if (data.dataCredentialingContractRequest.ContractGrid[i].Report == null) {
-                                data.dataCredentialingContractRequest.ContractGrid[i].Report = {};
+                            $scope.tempContractLocationsList = angular.copy($scope.credentialingInfo.Profile.PracticeLocationDetails);
+                            for (var i = 0; i < $scope.tempContractLocationsList.length; i++) {
+                                if ($scope.tempContractLocationsList[i].Status != 'Inactive') {
+                                    $scope.ContractLocationsList.push($scope.tempContractLocationsList[i]);
+                                }
                             }
-                            data.dataCredentialingContractRequest.ContractGrid[i].InitialCredentialingDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.InitialCredentialingDate);
-                            //data.dataCredentialingContractRequest.ContractGrid[i].Report.TerminationDate = $scope.ConvertDateBy3Years($scope.LoadedData.InitialCredentialingDate);
-                            //data.dataCredentialingContractRequest.ContractGrid[i].Report.ReCredentialingDate = $scope.ConvertDateBy3Years($scope.LoadedData.InitialCredentialingDate);
-                            $scope.PlanReportList.push(data.dataCredentialingContractRequest.ContractGrid[i]);
+                            $scope.BusinessEntities = angular.copy($scope.MasterBusinessEntities);
+                            $scope.ContractLOBsList = angular.copy($scope.MasterContractLOBslist);
+                            $scope.tempObject = angular.copy($scope.MasterTemp);
+                            if (data.dataCredentialingContractRequest.InitialCredentialingDate != null) {
+                                var date = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.InitialCredentialingDate);
+                                data.dataCredentialingContractRequest.InitialCredentialingDate = $filter('date')(new Date(date), 'yyyy-MM-dd');
+                            } else {
+                                data.dataCredentialingContractRequest.InitialCredentialingDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.InitialCredentialingDate);
+                            }
+
+                            for (var i = 0; i < data.dataCredentialingContractRequest.ContractSpecialties.length; i++) {
+                                if (data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail != null) {
+                                    if (data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.InitialCertificationDate != null) {
+                                        data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.InitialCertificationDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.InitialCertificationDate);
+                                    }
+                                    if (data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate != null) {
+                                        data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.ContractSpecialties[i].ProfileSpecialty.SpecialtyBoardCertifiedDetail.ExpirationDate);
+                                    }
+                                }
+
+
+                            }
+
+                            $scope.LoadedData.push(data.dataCredentialingContractRequest);
+                            var TabStatusLTP2 = $scope.LoadedData.length > 0 ? true : false;
+                            $scope.$broadcast('LTPStatus', { StatusLTP: TabStatusLTP2 });
+                            $scope.PlanReportTabStatus = true;
+                            //$scope.init_table();
+
+                            for (var i = 0; i < data.dataCredentialingContractRequest.ContractGrid.length; i++) {
+                                if (data.dataCredentialingContractRequest.ContractGrid[i].Report == null) {
+                                    data.dataCredentialingContractRequest.ContractGrid[i].Report = {};
+                                }
+                                data.dataCredentialingContractRequest.ContractGrid[i].InitialCredentialingDate = $rootScope.ConvertDateFormat(data.dataCredentialingContractRequest.InitialCredentialingDate);
+                                //data.dataCredentialingContractRequest.ContractGrid[i].Report.TerminationDate = $scope.ConvertDateBy3Years($scope.LoadedData.InitialCredentialingDate);
+                                //data.dataCredentialingContractRequest.ContractGrid[i].Report.ReCredentialingDate = $scope.ConvertDateBy3Years($scope.LoadedData.InitialCredentialingDate);
+                                $scope.PlanReportList.push(data.dataCredentialingContractRequest.ContractGrid[i]);
+                            }
+
+                            //$timeout(function () {
+                            //    $rootScope.$broadcast('CompletebuttonEvent', true);
+                            //}, 1500)
+                            //CompleteButtonSTATUS.changeCompleteButtonStatus(true);
+                            //$rootScope.PlanCompleted = true;
+                            $rootScope.DisableCompleteButton = false;
+                            messageAlertEngine.callAlertMessage('LoadedSuccess', "Contract Request Loaded to Plan Successfully !!!", "success", true);
+
+
                         }
-
-                        //$timeout(function () {
-                        //    $rootScope.$broadcast('CompletebuttonEvent', true);
-                        //}, 1500)
-                        //CompleteButtonSTATUS.changeCompleteButtonStatus(true);
-                        //$rootScope.PlanCompleted = true;
-                        $rootScope.DisableCompleteButton = false;
-                        messageAlertEngine.callAlertMessage('LoadedSuccess', "Contract Request Loaded to Plan Successfully !!!", "success", true);
-
+                    } catch (e) {
 
                     }
-                } catch (e) {
-
-                }
-            }).
+                }).
                 error(function (data, status, headers, config) {
 
                 });
@@ -1892,8 +1892,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
                 for (var i = 0; i < $scope.LoadedData.length; i++) {
                     if ($scope.LoadedData[i].CredentialingContractRequestID == ccrID) {
                         $scope.LoadedData[i].DocumentPath = data;
-                        if ($scope.LoadedData[i].DocumentPath != null && $scope.LoadedData[i].DocumentPath != "")
-                        {
+                        if ($scope.LoadedData[i].DocumentPath != null && $scope.LoadedData[i].DocumentPath != "") {
                             $rootScope.selectallbtn = false;
                         }
                     }
@@ -2024,30 +2023,30 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
     $scope.loadingAjax = true;
     $http.get(rootDir + '/Credentialing/CnD/GetContractGrid?credentialingInfoID=' + credId).
-       success(function (data, status, headers, config) {
-           try {
-               $scope.PlanReportList = angular.copy(data);
-               for (var i = 0; i < $scope.PlanReportList.length; i++) {
-                   $scope.PlanReportList[i].InitialCredentialingDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].InitialCredentialingDate);
-                   //$scope.PlanReportList[i].InitialCredentialingDate = $scope.datesplitter($scope.PlanReportList[i].InitialCredentialingDate);
-                   if ($scope.PlanReportList[i].Report != null) {
-                       $scope.PlanReportList[i].Report.InitiatedDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.InitiatedDate);
-                       $scope.PlanReportList[i].Report.CredentialedDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.CredentialedDate);
-                       //$scope.PlanReportList[i].Report.TerminationDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.TerminationDate);
-                       $scope.PlanReportList[i].Report.ReCredentialingDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.ReCredentialingDate);
-                   }
-               }
-               $scope.loadingAjax = false;
-           } catch (e) {
+        success(function (data, status, headers, config) {
+            try {
+                $scope.PlanReportList = angular.copy(data);
+                for (var i = 0; i < $scope.PlanReportList.length; i++) {
+                    $scope.PlanReportList[i].InitialCredentialingDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].InitialCredentialingDate);
+                    //$scope.PlanReportList[i].InitialCredentialingDate = $scope.datesplitter($scope.PlanReportList[i].InitialCredentialingDate);
+                    if ($scope.PlanReportList[i].Report != null) {
+                        $scope.PlanReportList[i].Report.InitiatedDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.InitiatedDate);
+                        $scope.PlanReportList[i].Report.CredentialedDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.CredentialedDate);
+                        //$scope.PlanReportList[i].Report.TerminationDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.TerminationDate);
+                        $scope.PlanReportList[i].Report.ReCredentialingDate = $rootScope.ConvertDateFormat($scope.PlanReportList[i].Report.ReCredentialingDate);
+                    }
+                }
+                $scope.loadingAjax = false;
+            } catch (e) {
 
-           }
-       }).
-       error(function (data, status, headers, config) {
-       });
+            }
+        }).
+        error(function (data, status, headers, config) {
+        });
 
 
     //----------------------------------
-    $scope.SelectDocument = function (credprofile) {        
+    $scope.SelectDocument = function (credprofile) {
         for (var m = 0; m < $scope.LoadedData.length; m++) {
             $scope.errorTemplate[m] = false;
         }
@@ -2220,31 +2219,31 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
 
 
         $http.get(rootDir + '/Credentialing/DelegationProfileReport/GetDelegationProfileReport?CredContractRequestId=' + CredentialingContractRequestID).
-      success(function (data, status, headers, config) {
+            success(function (data, status, headers, config) {
 
-          try {
-              if (data.status == 'true') {
-                  if (data.profileReports[data.profileReports.length - 1] != null) {
-                      for (var i = 0; i < $scope.LoadedData.length; i++) {
-                          $scope.errorTemplate[i] = false;
-                      }
-                      sessionStorage.setItem('profileReport', JSON.stringify(data.profileReports[data.profileReports.length - 1]));
-                      sessionStorage.setItem('selectDocumentBit', false);
+                try {
+                    if (data.status == 'true') {
+                        if (data.profileReports[data.profileReports.length - 1] != null) {
+                            for (var i = 0; i < $scope.LoadedData.length; i++) {
+                                $scope.errorTemplate[i] = false;
+                            }
+                            sessionStorage.setItem('profileReport', JSON.stringify(data.profileReports[data.profileReports.length - 1]));
+                            sessionStorage.setItem('selectDocumentBit', false);
 
-                      var value = rootDir + '/Credentialing/DelegationProfileReport/Index?profileId=' + credprofile.Profile.ProfileID;
-                      var open_link = window.open('', '_blank');
-                      open_link.location = value;
-                  } else {
-                      $scope.errorTemplate[index] = true;
+                            var value = rootDir + '/Credentialing/DelegationProfileReport/Index?profileId=' + credprofile.Profile.ProfileID;
+                            var open_link = window.open('', '_blank');
+                            open_link.location = value;
+                        } else {
+                            $scope.errorTemplate[index] = true;
 
-                  }
-              }
-          } catch (e) {
+                        }
+                    }
+                } catch (e) {
 
-          }
-      }).
-      error(function (data, status, headers, config) {
-      });
+                }
+            }).
+            error(function (data, status, headers, config) {
+            });
 
 
         //window.location.assign('/Credentialing/DelegationProfileReport/Index?profileId=' + credprofile.Profile.ProfileID);
@@ -2371,7 +2370,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
                 // don't navigate away from the field on tab when selecting an item
                 .bind("keydown", function (event) {
                     if (event.keyCode === $.ui.keyCode.TAB &&
-                            $(this).autocomplete("instance").menu.active) {
+                        $(this).autocomplete("instance").menu.active) {
                         event.preventDefault();
                     }
                 })
@@ -2426,7 +2425,7 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     }
 
 
-  
+
 });
 function ResetFormForValidation(form) {
     form.removeData('validator');

@@ -41,7 +41,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
         {
             try
             {
-                Entities.TaskTracker.TaskTracker task = taskRepo.Find(t => t.TaskTrackerId == taskTracker.TaskTrackerId && t.Status == AHC.CD.Entities.MasterData.Enums.StatusType.Active.ToString());
+                Entities.TaskTracker.TaskTracker task = taskRepo.Find(t => t.TaskTrackerId == taskTracker.TaskTrackerId && ((t.Status == AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.OPEN.ToString()) || (t.Status == AHC.CD.Entities.MasterData.Enums.TaskTrackerStatusType.REOPEN.ToString())));
 
                 task = AutoMapper.Mapper.Map<Entities.TaskTracker.TaskTracker, Entities.TaskTracker.TaskTracker>(taskTracker, task);
 
@@ -49,9 +49,9 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
                 taskRepo.Save();
                 return taskTracker;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -127,7 +127,7 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
 
                 foreach (var profile in profiles)
                 {
-                    if (profile != null)
+                    if (profile != null && !profile.PersonalDetail.FirstName.Contains("Test_"))
                     {
                         if (profile.PersonalDetail != null && profile.PersonalDetail.MiddleName != null)
                             providers.Add(new { ProfileId = profile.ProfileID, Status = profile.Status, FirstName = profile.PersonalDetail.FirstName.Trim(), Name = profile.PersonalDetail.FirstName.Trim() + " " + profile.PersonalDetail.MiddleName.Trim() + " " + profile.PersonalDetail.LastName.Trim() + "-" + profile.OtherIdentificationNumber.NPINumber, HospitalInfo = profile.HospitalPrivilegeInformation });
@@ -167,8 +167,8 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
             {
                 //var tasks = await taskRepo.GetAsync(t => t.Status != AHC.CD.Entities.MasterData.Enums.StatusType.Inactive.ToString(), "AssignedTo,PlanName");
                 //var tasksForUser = tasks.Where(s => s.AssignedTo != null && s.AssignedTo.AuthenicateUserId == userAuthId).ToList();
-                var tasks = (await taskRepo.GetAllAsync("AssignedTo,TaskTrackerHistories,PlanName")).ToList().OrderBy(c => c.NextFollowUpDate);
-                return tasks;
+                var tasks = (await taskRepo.GetAllAsync("AssignedTo,TaskTrackerHistories,PlanName,Provider")).ToList().OrderBy(c => c.NextFollowUpDate);
+                return tasks.Where(t=>(!t.Provider.PersonalDetail.FirstName.Contains("Test_")));
             }
             catch (Exception)
             {

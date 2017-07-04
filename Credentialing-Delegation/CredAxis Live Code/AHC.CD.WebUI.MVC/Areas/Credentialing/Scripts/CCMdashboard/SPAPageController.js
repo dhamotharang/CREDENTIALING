@@ -35,7 +35,7 @@
             if ($("#CCMAction").valid() == false && $("#selectedOptionforSign").val() == "upload")
                 $scope.errormessageforuploadsignature = true;
 
-            if ($("#CCMAction").valid()) {
+            if ($("#CCMAction").valid() && ($scope.image != null || $rootScope.SignaturePath != null)) {
                 $scope.errormessageforuploadsignature = false;
                 $('#StatusAction').modal({
                     backdrop: 'static'

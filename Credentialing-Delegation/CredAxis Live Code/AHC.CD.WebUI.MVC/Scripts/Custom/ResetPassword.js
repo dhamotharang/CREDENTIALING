@@ -293,7 +293,7 @@ userApp.controller("ResetPasswordController", ['$scope', '$http', '$rootScope', 
         $http.get(rootDir + "/Account/PasswordReset", { params: { "Email": Email } })
             .success(function (data) {
                 $scope.showLoading = false;
-                toaster.pop('Success', "Success", 'Password has been resetted successfully');
+                toaster.pop('Success', "Success", 'Password has been reset successfully');
             })
             .error(function (data, status, headers, config) {
                 toaster.pop('error', "", 'Error occured while resetting Password.. Please try after sometime');

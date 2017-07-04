@@ -199,6 +199,7 @@ namespace AHC.CD.Business.Credentialing.CnD
                     credentialingActivityLog.ActivityByID = userID;
                     credentialingActivityLog.ActivityType = CD.Entities.MasterData.Enums.ActivityType.Closure;
                     credentialingActivityLog.ActivityStatusType = CD.Entities.MasterData.Enums.ActivityStatusType.Completed;
+                    credentialingActivityLog.LastModifiedDate = DateTime.Now;
                     latestCredentialingLog.CredentialingActivityLogs.Add(credentialingActivityLog);
                 }
                 credInfoRepo.Update(resultSet);

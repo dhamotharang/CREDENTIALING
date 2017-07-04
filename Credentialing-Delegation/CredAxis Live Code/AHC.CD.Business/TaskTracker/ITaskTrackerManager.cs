@@ -23,5 +23,10 @@ namespace AHC.CD.Business.TaskTracker
         Task<bool> DismissReminder(int taskID, string userAuthID);
         Task<bool> DismissAllReminder(int[] taskIDs, string userAuthID);
         Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, string userAuthID);
+
+        //AHC.CD.Entities.TaskTracker.TaskTracker GetTaskInfo(int TaskID);
+
+        //string GetUserEmail(string AssignedtoID);
+
     }
 }
