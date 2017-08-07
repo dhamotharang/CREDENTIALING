@@ -3639,6 +3639,7 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         });
     };
 
+    
     //Set the Date time for task reminder
     $scope.SetReminder = function () {
         $scope.showSetReminder = false;

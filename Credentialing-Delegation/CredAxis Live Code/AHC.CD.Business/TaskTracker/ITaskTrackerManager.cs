@@ -22,7 +22,7 @@ namespace AHC.CD.Business.TaskTracker
         Task<List<TaskReminder>> GetReminders(string userAuthID);
         Task<bool> DismissReminder(int taskID, string userAuthID);
         Task<bool> DismissAllReminder(int[] taskIDs, string userAuthID);
-        Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, string userAuthID);
+        Task<bool> RescheduleReminder(int taskID, double scheduledDateTime, string userAuthID);
 
         //AHC.CD.Entities.TaskTracker.TaskTracker GetTaskInfo(int TaskID);
 

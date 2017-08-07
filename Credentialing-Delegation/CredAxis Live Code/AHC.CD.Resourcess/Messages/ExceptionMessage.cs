@@ -230,6 +230,7 @@ namespace AHC.CD.Resources.Messages
         public static string LANGUAGE_INFO_UPDATE_EXCEPTION = "Unable to update language information to the profile";
         public static string DRIVING_LICENSE_EXIST_EXCEPTION = "The given driving license is used";
         public static string NATIONAL_ID_NUMEBR_EXIST_EXCEPTION = "The given national id number is used";
+        public static string DRIVING_AND_SSN_DUPLICATE_Exeption = "Both SSN and DL are duplicates";
        
         public static string HOME_NUMBER_EXISTS_EXCEPTION = "The given home number {0} is already used";
         public static string FAX_NUMBER_EXISTS_EXCEPTION = "The given fax number {0} is already used";

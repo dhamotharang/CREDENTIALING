@@ -24,6 +24,6 @@ namespace AHC.CD.Data.Repository.TaskTracker
         Task<bool> DismissReminder(int taskID, int scheduledByID);
         Task<bool> DismissAllReminder(int[] taskIDs, int scheduledByID);
 
-        Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, int scheduledByID);
+        Task<bool> RescheduleReminder(int taskID, double scheduledDateTime, int scheduledByID);
     }
 }

@@ -518,7 +518,7 @@ namespace AHC.CD.Business.TaskTracker
         }
 
 
-        public async Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, string userAuthID)
+        public async Task<bool> RescheduleReminder(int taskID, double scheduledDateTime, string userAuthID)
         {
             try
             {

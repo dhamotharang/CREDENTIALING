@@ -32,7 +32,7 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
     //------------------------------------Initializing variables to for display and fetch from database---------------------------------------
     $scope.Specialties = [];
     $scope.practiceInterest = {};
-    $rootScope.SpecialtyLoaded = false;
+    $rootScope.SpecialtyLoaded = true;
     $scope.masterSpecialties = [];
     $scope.masterSpecialtyBoards = [];
 
@@ -575,11 +575,13 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
             }
         }
     }
-    $rootScope.SpecialtyLoaded = false;
+    $rootScope.SpecialtyLoaded = true;
     $scope.dataLoaded = false;
 
     $scope.masterSpecialtyBoards = {}
     $rootScope.$on('Specialty', function () {
+
+        $rootScope.SpecialtyLoaded = false;
 
         $http({
             method: 'GET',
@@ -612,6 +614,9 @@ profileApp.controller('SpecialtyController', ['$scope', '$rootScope', '$http', '
                         $rootScope.SpecialtyLoaded = true;
                     });
                     $scope.dataLoaded = true;
+                }
+                else {
+                    $rootScope.SpecialtyLoaded = true;
                 }
 
 

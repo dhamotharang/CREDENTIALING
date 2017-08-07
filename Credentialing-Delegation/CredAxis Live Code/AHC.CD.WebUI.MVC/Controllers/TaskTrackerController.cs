@@ -310,7 +310,7 @@ namespace AHC.CD.WebUI.MVC.Controllers
             {
                 var reminders = await taskTrackerManager.GetReminders(GetUserAuthId());
                 string responseView = RenderPartialToString(this.ControllerContext, "~/Views/Prototypes/Reminders/_reminderNotification.cshtml", null);
-               return  Json(new { reminders = reminders, responseView = responseView },JsonRequestBehavior.AllowGet);
+                return Json(new { reminders = reminders, responseView = responseView }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -349,12 +349,13 @@ namespace AHC.CD.WebUI.MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<bool> RescheduleReminder(int taskID, string scheduledDateTime)
+        public async Task<bool> RescheduleReminder(int taskID, double scheduledDateTime)
         {
             try
             {
-                DateTime _scheduledDateTime = Convert.ToDateTime(scheduledDateTime);
-                var status = await taskTrackerManager.RescheduleReminder(taskID, _scheduledDateTime, GetUserAuthId());
+                //DateTime _scheduledDateTime = Convert.ToDateTime(scheduledDateTime);
+                //DateTime _scheduledDateTime = DateTime.Now.AddMilliseconds(scheduledDateTime);
+                var status = await taskTrackerManager.RescheduleReminder(taskID, scheduledDateTime, GetUserAuthId());
 
                 return status;
             }

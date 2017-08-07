@@ -242,12 +242,12 @@ namespace AHC.CD.Data.EFRepository.TaskTracker
         }
 
 
-        public async Task<bool> RescheduleReminder(int taskID, DateTime scheduledDateTime, int scheduledByID)
+        public async Task<bool> RescheduleReminder(int taskID, double scheduledDateTime, int scheduledByID)
         {
             try
             {
                 var taskReminder = await reminderRepo.FindAsync(m => m.TaskReminderID == taskID && m.ScheduledByID == scheduledByID);
-                taskReminder.ScheduledDateTime = scheduledDateTime;
+                taskReminder.ScheduledDateTime = (taskReminder.ScheduledDateTime.AddMilliseconds((DateTime.Now- taskReminder.ScheduledDateTime).TotalMilliseconds)).AddMilliseconds(scheduledDateTime);
                 reminderRepo.Update(taskReminder);
                 reminderRepo.Save();
                 return true;

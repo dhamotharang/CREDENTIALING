@@ -967,12 +967,18 @@ namespace AHC.CD.Business.Email
         public async Task<EmailInfo> StopFollowUpEmailAsync(int emailInfoID)
         {
             var emailServiceRepository = uow.GetGenericRepository<EmailInfo>();
+            //var emailreccurrenceDetailRepository = uow.GetGenericRepository<EmailRecurrenceDetail>();
             EmailInfo emailToBeStopped = await emailServiceRepository.FindAsync(e => e.EmailInfoID == emailInfoID, "EmailRecipients.EmailTracker, EmailRecurrenceDetail");
+            //EmailRecurrenceDetail reccurrenceEmailtobeStopped = await emailreccurrenceDetailRepository.FindAsync(e => e.EmailRecurrenceDetailID == emailToBeStopped.EmailRecurrenceDetail.EmailRecurrenceDetailID);
             try
             {
                 emailToBeStopped.StatusType = Entities.MasterData.Enums.StatusType.Inactive;
                 emailServiceRepository.Update(emailToBeStopped);
                 await emailServiceRepository.SaveAsync();
+
+                //reccurrenceEmailtobeStopped.IsRecurrenceScheduledYesNoOption = YesNoOption.NO;
+                //emailreccurrenceDetailRepository.Update(reccurrenceEmailtobeStopped);
+                //await emailreccurrenceDetailRepository.SaveAsync();
             }
             catch (Exception ex)
             {

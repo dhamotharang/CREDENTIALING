@@ -749,18 +749,33 @@ namespace AHC.CD.Business
         {
             try
             {
+                var DLException = false;
+                var SSNExeption = false;
                 if (personalIdentification.DL != null &&
                     await profileRepository.AnyAsync(p => p.ProfileID != profileId && p.PersonalIdentification.DL.Equals(personalIdentification.DL)))
                 {
-                    throw new DuplicateDLNumberException(ExceptionMessage.DRIVING_LICENSE_EXIST_EXCEPTION);
+                    DLException = true;
+                    //throw new DuplicateDLNumberException(ExceptionMessage.DRIVING_LICENSE_EXIST_EXCEPTION);
                 }
 
                 if (personalIdentification.SSN != null &&
                     await profileRepository.AnyAsync(p => p.ProfileID != profileId && p.PersonalIdentification.SocialSecurityNumber.Equals(personalIdentification.SocialSecurityNumber)))
                 {
+                    SSNExeption = true;
+                    //throw new DuplicateSSNNumberException(ExceptionMessage.SSN_EXISTS);
+                }
+                if(DLException==true && SSNExeption==true)
+                {
+                    throw new DuplicateSSNANDDLException(ExceptionMessage.DRIVING_AND_SSN_DUPLICATE_Exeption);
+                }
+                else if(DLException == true)
+                {
+                    throw new DuplicateDLNumberException(ExceptionMessage.DRIVING_LICENSE_EXIST_EXCEPTION);
+                }
+                else if(SSNExeption == true)
+                {
                     throw new DuplicateSSNNumberException(ExceptionMessage.SSN_EXISTS);
                 }
-
 
                 string oldDLCertificatePath = personalIdentification.DLCertificatePath;
                 personalIdentification.DLCertificatePath = AddUpdateDocument(DocumentRootPath.DL_PATH, personalIdentification.DLCertificatePath, DocumentTitle.DL, null, dlDocument, profileId);

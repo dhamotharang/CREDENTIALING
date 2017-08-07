@@ -31,8 +31,8 @@ namespace AHC.CD.Business.Profiles
                 //Save and add document
                 if (document.InputStream != null)
                 {
-                    //docPath = DocumentManager.SaveDocument(document, document.DocRootPath);
-                    docPath = DocumentManager.SaveDocumentWithoutUniqueKey(document, document.DocRootPath);
+                    docPath = DocumentManager.SaveDocument(document, document.DocRootPath);
+                    //docPath = DocumentManager.SaveDocumentWithoutUniqueKey(document, document.DocRootPath);
                 }
 
                 return docPath;

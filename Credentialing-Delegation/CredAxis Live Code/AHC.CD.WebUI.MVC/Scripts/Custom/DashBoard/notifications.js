@@ -659,14 +659,12 @@ var GetTheTaskTime = function (DateTime) {
     if (hours > 12) {
         hours = hours - 12;
     }
-    if (hours == 0)
-    {
+    if (hours == 0) {
         hours = 12;
     }
 
     var minutes = dt.getMinutes();
-    if (minutes < 10)
-    {
+    if (minutes < 10) {
         minutes = 0 + "" + minutes;
     }
     //var output = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
@@ -811,7 +809,7 @@ var Snoozereminder = function () {
     var dataToShow = date.getUTCFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     $.ajax({
         url: rootDir + '/TaskTracker/RescheduleReminder',
-        data: JSON.stringify({ 'taskID': taskObj.TaskReminderID, 'scheduledDateTime': dataToShow }),
+        data: JSON.stringify({ 'taskID': taskObj.TaskReminderID, 'scheduledDateTime': parseInt(snoozeTime) }),
         type: "POST",
         contentType: "application/json",
         success: function (response) {
@@ -872,7 +870,7 @@ function DismissSingleTask() {
         error: function (error) {
             //alert("Sorry, there is some problem!");
         }
-    });   
+    });
 
 };
 

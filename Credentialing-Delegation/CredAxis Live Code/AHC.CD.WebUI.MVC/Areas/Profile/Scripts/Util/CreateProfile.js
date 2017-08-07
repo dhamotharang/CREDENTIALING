@@ -21,10 +21,10 @@ profileApp.controller('tabController', ['$scope', '$rootScope', '$http', 'messag
 
         });
     $scope.getTabData = function (tabName) {
-        if (tabName == "Specialty")
-        {
-            $rootScope.SpecialtyLoader = true;
-        }
+        //if (tabName == "Specialty")
+        //{
+        //    $rootScope.SpecialtyLoader = true;
+        //}
         $rootScope.$broadcast(tabName);
         if (tabName == 'DocumentationCheckList') {
             $("#tabname").text("Document CheckList");

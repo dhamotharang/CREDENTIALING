@@ -502,6 +502,12 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
         if ($("#" + Form_Id).valid()) {
 
             var $form = $("#ProfilePic")[0];
+            //var file = $('#ProfilePictureFile').get(0).files[0];
+            //var s = file.name.split('.')[0] + "new.jpg";
+            //var formData = new FormData($form);
+            //formData.append('ProfilePictureFile', file); 
+
+            //var name = formData.get('ProfilePictureFile');
 
             $.ajax({
                 url: rootDir + '/Profile/Demographic/FileUploadAsync?profileId=' + profileId,
@@ -1467,6 +1473,8 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
     })
 
     //========================== Personal Identification Save Method ======================
+    $scope.duplicateDL = false;
+    $scope.duplicateSSN = false;
     $scope.DemographicsPersonalIdentificationSave = function (Form_Id, PersonalIdentificationID) {
         var validCount = 0;
         var url;
@@ -1508,6 +1516,20 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
                 success: function (data) {
 
                     try {
+                        if (data.status == "Both SSN and DL are duplicates")
+                        {
+                            $scope.duplicateDL = true;
+                            $scope.duplicateSSN = true;
+                        }
+                        if (data.status == "The given driving license is used")
+                        {
+                            $scope.duplicateDL = true;
+                        }
+
+                        if (data.status == "This SSN no already exists")
+                        {
+                            $scope.duplicateSSN = true;
+                        }
                         if (data.status == "true") {
 
                             if (UserRole == "PRO" && PersonalIdentificationID!=0 && PersonalIdentificationID!=undefined) {
@@ -1552,6 +1574,22 @@ function ($scope, $rootScope, $http, $filter, masterDataService, locationService
 
         $rootScope.$broadcast('UpdatePersonalIdentification', myData);
     };
+
+
+    $scope.removevalidation = function ()
+    {
+        if ($scope.duplicateDL == true)
+        {
+            $scope.duplicateDL = false;
+        }
+    }
+
+    $scope.removevalidationforSSN = function () {
+        if ($scope.duplicateSSN == true) {
+            $scope.duplicateSSN = false;
+        }
+    }
+
     //--------------------------- end ------------------------------
     //-------------------------------- Save Birth Information Function --------------------------------
 

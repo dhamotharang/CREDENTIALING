@@ -652,7 +652,8 @@ Cred_SPA_App.controller('LoadToPlanController', function ($scope, $rootScope, $h
     $scope.templateList = [{ name: 'Provider Profile Template 1', code: 'A2HC', check: false }, { name: 'Provider Profile Template 2', code: 'AHC', check: false },];
 
     $scope.goToNextTab = function (tab) {
-        $scope.EnambleCompleteButton();
+        if (tab == "PlanReport")
+            $scope.EnambleCompleteButton();
         $('.nav-tabs a[href="#' + tab + '"]').tab('show');
     };
     $scope.creddInfo = JSON.parse(credFilterInfo);
