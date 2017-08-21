@@ -485,8 +485,8 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
            //$scope.tempObject.Country = $scope.ProviderData.providers.HomeAddresses[0].Country;
            //$scope.tempObject.County = $scope.ProviderData.providers.HomeAddresses[0].County;
            //$scope.tempObject.Telephone = $scope.ProviderData.providers.ContactDetail.PhoneDetails.Telephone;
-           
-           if ($scope.ProviderData.providers.PracticeLocationDetails[$scope.ProviderData.providers.PracticeLocationDetails.length - 1].Facility != null) {
+
+           if ($scope.ProviderData.providers.PracticeLocationDetails.length!=0 && $scope.ProviderData.providers.PracticeLocationDetails[$scope.ProviderData.providers.PracticeLocationDetails.length - 1].Facility != null) {
                $scope.tempObject.Street = $scope.ProviderData.providers.PracticeLocationDetails[$scope.ProviderData.providers.PracticeLocationDetails.length - 1].Facility.Street;
                $scope.tempObject.Building = $scope.ProviderData.providers.PracticeLocationDetails[$scope.ProviderData.providers.PracticeLocationDetails.length - 1].Facility.Building;
                $scope.tempObject.City = $scope.ProviderData.providers.PracticeLocationDetails[$scope.ProviderData.providers.PracticeLocationDetails.length - 1].Facility.City;
@@ -499,6 +499,8 @@ profileApp.controller('ProfessionalReference', ['$scope', '$rootScope', '$http',
                $scope.tempObject.Fax = $scope.ProviderData.providers.PracticeLocationDetails[$scope.ProviderData.providers.PracticeLocationDetails.length - 1].Facility.Fax;
                $scope.tempObject.FaxCountryCode = $scope.ProviderData.providers.PracticeLocationDetails[$scope.ProviderData.providers.PracticeLocationDetails.length - 1].Facility.CountryCodeFax;
            }
+
+           if ($scope.ProviderData.providers.ContactDetail.EmailIDs[0].EmailAddress != undefined)
            $scope.tempObject.Email = $scope.ProviderData.providers.ContactDetail.EmailIDs[0].EmailAddress;
            $scope.tempObject.ProviderTypeID = $scope.ProviderData.providers.PersonalDetail.ProviderTitles[$scope.ProviderData.providers.PersonalDetail.ProviderTitles.length -1].ProviderType.ProviderTypeID;
 

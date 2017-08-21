@@ -619,6 +619,11 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
 
     $rootScope.tabName = function (name) {
         $rootScope.tabNames = name;
+
+        if ($rootScope.tabNames == 'ClosedTasks')
+        {
+            $rootScope.deepu = false;
+        }
         if (name == "History") {
             $scope.showOnClose = false;
         }
@@ -1004,6 +1009,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
         count++;
     }
     $scope.closeHistory = function () {
+        $scope.showOnClose = false;
+        //$scope.selTask.length = 1;
         //console.log($(this).parent().prevObject);
         ////console.log($(this).parent().find(".nav nav-tabs").attr("class"));
         //console.log($(this).parent().find(".tab"));
@@ -2477,6 +2484,8 @@ trackerApp.controller('TrackerCtrl', function ($scope, $rootScope, $anchorScroll
                     opened = $scope.ClosedTasks.splice($scope.ClosedTasks.indexOf($scope.ClosedTasks.filter(function (tasks) { return tasks.TaskTrackerId == $scope.TemporaryTask.TaskTrackerId })[0]), 1);
                     //Added By Manideep Innamuri
                     opened[0].AssignedTo = opened[0].LastUpdatedBy;
+                    opened[0].SetReminder = false;
+                    $scope.showOnClose = false;
                     $scope.TasksAssigned.push(opened[0]);
                     $scope.RemainingTasks.push(opened[0]);
                     for (var j in $scope.TasksAssigned) {

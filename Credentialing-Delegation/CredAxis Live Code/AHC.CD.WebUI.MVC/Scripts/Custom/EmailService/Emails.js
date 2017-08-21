@@ -1003,6 +1003,7 @@ EmailServiceApp.controller("EmailServiceController", function ($rootScope, $time
             for (i = 0; i < emailData.length; i++) {
                 if (emailData[i] != "") {
                     try {
+                        if ($scope.EmailsIds != undefined)
                         var Tores = jQuery.grep($scope.EmailsIds, function (ele) { return ele.toLowerCase() == emailData[0].toLowerCase(); });
                     } catch (e) {
                         throw e;

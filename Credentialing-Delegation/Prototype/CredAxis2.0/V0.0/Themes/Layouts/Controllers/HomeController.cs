@@ -33,5 +33,10 @@ namespace Layouts.Controllers
         {
             return View();
         }
+
+        public ActionResult SPA()
+        {
+            return View();
+        }
     }
 }

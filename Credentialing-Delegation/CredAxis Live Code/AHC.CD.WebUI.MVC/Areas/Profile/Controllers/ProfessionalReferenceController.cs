@@ -257,8 +257,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
             {
                 AHC.CD.Entities.MasterProfile.Profile providers = profileManager.GetProviderInformation(profileId);
                 providers.ContactDetail.EmailIDs = providers.ContactDetail.EmailIDs.Where(p => p.PreferenceType == PreferenceType.Primary).ToList();
-                if ((providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary).ToList().Count)!=0)
-                providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary && p.Status=="Active").ToList();
+                if ((providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary).ToList().Count) != 0)
+                    providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Primary && p.Status == "Active").ToList();
                 else
                     providers.SpecialtyDetails = providers.SpecialtyDetails.Where(p => p.PreferenceType == PreferenceType.Secondary && p.Status == "Active").ToList();
 
@@ -267,7 +267,7 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                     providers.PracticeLocationDetails = providers.PracticeLocationDetails.ToList().Where(p => p.IsPrimary == "YES").ToList();
                     providers.PracticeLocationDetails.ToList().Last().Facility = profileManager.GetFacilityDetail(providers.PracticeLocationDetails.ToList().Last().Facility.FacilityID);
                 }
-                else if (providers.PracticeLocationDetails.ToList().Where(p => p.IsPrimary == "NO") != null)
+                else if (providers.PracticeLocationDetails.ToList().Where(p => p.IsPrimary == "NO") != null && (providers.PracticeLocationDetails.Count != 0))
                 {
                     providers.PracticeLocationDetails = providers.PracticeLocationDetails.ToList().Where(p => p.IsPrimary == "NO").ToList();
                     providers.PracticeLocationDetails.ToList().Last().Facility = profileManager.GetFacilityDetail(providers.PracticeLocationDetails.ToList().Last().FacilityId);
@@ -275,7 +275,8 @@ namespace AHC.CD.WebUI.MVC.Areas.Profile.Controllers
                 var EducationDetails = new List<Entities.MasterProfile.EducationHistory.EducationDetail>();
                 if (providers.EducationDetails.Count != 0)
                     EducationDetails = providers.EducationDetails.ToList();
-                    providers.EducationDetails = new List<Entities.MasterProfile.EducationHistory.EducationDetail>();
+                providers.EducationDetails = new List<Entities.MasterProfile.EducationHistory.EducationDetail>();
+                if (EducationDetails != null && EducationDetails.Count != 0)
                     providers.EducationDetails.Add(EducationDetails.Where(p => p.GraduationType == "Graduate").FirstOrDefault());
                 return Json(new { providers }, JsonRequestBehavior.AllowGet);
             }

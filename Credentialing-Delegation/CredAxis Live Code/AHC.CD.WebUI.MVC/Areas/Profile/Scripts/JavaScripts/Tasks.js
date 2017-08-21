@@ -490,12 +490,14 @@ profileApp.controller('ProviderTasksController', ['$scope', '$http', '$q', '$roo
         $scope.VisibilityControl = "";
         $scope.progressbar = false;
         $scope.Tempfollowup = [];
+        currentTask.SelectStatus = false;
         $scope.task = angular.copy(currentTask);
-        for (var i in $scope.DailyTasks) {
-            if (currentTask.TaskTrackerId == $scope.DailyTasks[i].TaskTrackerId) {
-                $scope.DailyTasks[i] = angular.copy(currentTask);
+        for (var i in $scope.Tasks) {
+            if (currentTask.TaskTrackerId == $scope.Tasks[i].TaskTrackerId) {
+                $scope.Tasks[i] = angular.copy(currentTask);
             }
         }
+        $rootScope.$broadcast("ProviderTasks");
         $scope.Followup = angular.copy($scope.FollowupHelper);
         $scope.addView = false;
         $scope.TableView = true;

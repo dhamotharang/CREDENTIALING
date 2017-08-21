@@ -1749,7 +1749,6 @@ Cred_SPA_App.controller('Cred_SPA_Ctrl', function ($scope, $http, $location, $fi
         $http.post(rootDir + '/Credentialing/CnD/SubmitSPA?CredentialingInfoID=' + credId).
        success(function (data, status, headers, config) {
            try {
-
                $scope.ViewOnlyMode = data.status == 'true' ? false : true;
                sessionStorage.setItem('ViewOnlyMode', $scope.ViewOnlyMode);
                var statusfortimeline = data.status;

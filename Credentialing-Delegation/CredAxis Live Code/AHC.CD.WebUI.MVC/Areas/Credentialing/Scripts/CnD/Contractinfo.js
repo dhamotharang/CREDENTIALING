@@ -618,6 +618,13 @@ ContractInfo.controller("ContractinfoController", function ($scope, $window, $ro
 
     }
 
+    $scope.closeParticipatingStatus = function () {
+        $('#statuslist').hide();
+        $('#statuslist_new').hide();
+    }
+
+
+
     $scope.SaveReport = function () {
         $scope.TerStatus = true;
         var validationStatus = true;
