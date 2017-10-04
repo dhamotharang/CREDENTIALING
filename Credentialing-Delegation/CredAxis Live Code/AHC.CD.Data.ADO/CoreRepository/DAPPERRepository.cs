@@ -96,7 +96,7 @@ namespace AHC.CD.Data.ADO.CoreRepository
             {
                 try
                 {
-                    var result = await connection.QueryAsync<T>(Query,DP);
+                    var result = await connection.QueryAsync<T>(Query, DP);
                     return result;
                 }
 
@@ -188,7 +188,7 @@ namespace AHC.CD.Data.ADO.CoreRepository
             {
                 try
                 {
-                    var result = await connection.QueryAsync<T>(Query,DP);
+                    var result = await connection.QueryAsync<T>(Query, DP);
                     return result.ToList();
                 }
                 catch (ArgumentNullException ex)
@@ -232,7 +232,7 @@ namespace AHC.CD.Data.ADO.CoreRepository
             {
                 try
                 {
-                    var result = connection.Query<T>(Query,DP);
+                    var result = connection.Query<T>(Query, DP);
                     return result.ToList();
                 }
 
@@ -324,7 +324,7 @@ namespace AHC.CD.Data.ADO.CoreRepository
             {
                 try
                 {
-                    var result = connection.Query<T>(Query,DP);
+                    var result = connection.Query<T>(Query, DP);
                     return result.ToList();
                 }
 
@@ -341,8 +341,8 @@ namespace AHC.CD.Data.ADO.CoreRepository
 
             }
         }
-        
-        
+
+
         public List<T> ExecuteQueryForASPNETUsers<T>(string Query)
         {
             using (IDbConnection connection = OpenConnectionForASPNETUsers())
@@ -423,6 +423,34 @@ namespace AHC.CD.Data.ADO.CoreRepository
             }
         }
 
+        public async Task<T> QueryMultipleAsync<T>(string Query, Func<SqlMapper.GridReader, T> ObjectMapping, bool isStoredProcedure, DynamicParameters dp = null)
+        {
+            using (IDbConnection connection = OpenConnection())
+            {
+                SqlMapper.GridReader result = await connection.QueryMultipleAsync(Query, param: dp, commandType: isStoredProcedure ? CommandType.StoredProcedure : CommandType.Text);
+                return ObjectMapping(result);
+            }
+        }
+        public async Task<IEnumerable<T>> ExecuteStoredProcedureAsync<T>(string spName, DynamicParameters DP)
+        {
+            using (IDbConnection connection = OpenConnection())
+            {
+                try
+                {
+                    var result = await connection.QueryAsync<T>(spName, DP, commandType: CommandType.StoredProcedure);
+                    return result;
+                }
+                catch (ArgumentException ex)
+                {
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
         public SqlMapper.GridReader QueryMultiple(string Query, DynamicParameters dp)
         {
             using (IDbConnection connection = OpenConnection())
@@ -432,6 +460,6 @@ namespace AHC.CD.Data.ADO.CoreRepository
             }
         }
 
-        
+
     }
 }

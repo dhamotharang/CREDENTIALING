@@ -1,0 +1,228 @@
+﻿<style>
+    .selected {
+        background-color: #ccc;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-12">
+        <div ng-show="PartialViewControl == 'Table'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" style="border-top: 1px solid #eee; padding-top: 00px;">
+            <div class="progress col-lg-12" ng-if="progressbar" ng-cloak>
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    Loading...Please wait...
+                </div>
+            </div>
+            <div>
+                <div ng-show="historyMsg && Tasks.length == 0">
+                    <label>No Histories</label>
+                </div>
+                <div ng-show="Tasks.length == 0">
+                    <label>No Tasks Assigned.</label>
+                </div>
+                <table ng-show="Tasks.length != 0" class='table table-bordered customtbodyStyle medium wrap-words' st-pipe="mc.callServer" st-persist="mc.displayed" st-table="mc.displayed" st-safe-src="SafeSourceTasks">
+                    <thead>
+                        <tr>
+                            <th st-sort="ProviderName" st-ratio="12">
+                                Provider Name
+                            </th>
+                            <th st-sort="Subject" st-ratio="9">
+                                Subject
+                            </th>
+                            <th st-sort="SubSectionName" st-ratio="9">
+                                Sub Section Name
+                            </th>
+                            <th st-sort="NextFollowUpDate" st-ratio="9" ng-if="CurrentTabConfig.Columns.NextFollowUpDate">
+                                Next FollowUp Date
+                            </th>
+                            <th st-sort="DaysLeft" st-ratio="6" ng-if="CurrentTabConfig.Columns.DaysLeft">
+                                Days Left
+                            </th>
+                            <th st-sort="AssignedTo" st-ratio="8" ng-if="CurrentTabConfig.Columns.Assigned">
+                                Assigned To
+                            </th>
+                            <th st-sort="AssignedBy" st-ratio="12 " ng-if="CurrentTabConfig.Columns.Assignedby">
+                                Assigned By
+                            </th>
+                            <th st-sort="ElapsedTime" st-ratio="10" ng-if="CurrentTabConfig.Columns.TimeElapsed">
+                                Time Elapsed
+                            </th>
+                            <th st-sort-default="false" st-sort="LastModifiedDate" ng-if="CurrentTabConfig.Columns.updatedOn" st-ratio="8">
+                                Updated On
+                            </th>
+                            <th st-sort="LastUpdatedBy" st-ratio="12" ng-if="CurrentTabConfig.Columns.updatedby">
+                                Updated By
+                            </th>
+                            <th st-sort="PlanName" st-ratio="8" ng-if="CurrentTabConfig.Columns.PlanName">
+                                Plan Name
+                            </th>
+                            <th st-ratio="3" ng-if="CurrentTabConfig.Columns.followup">
+                                Mode Of Follow Up
+                            </th>
+                            <th st-ratio="12">Action </th>
+                            @*<th st-ratio="12" class="ActionButton" ng-show="!(selTask.length<1)">
+                                    <button id="" style="width: 90px;height: 29px;" class="btn btn-xs btn-primary SetRemButton"
+                                            ng-click="SetReminderModal()" data-toggle="tooltip" data-placement="top" title="Click to set reminder" data-original-title="Click to set reminder">
+                                        Set Reminder
+                                    </button>
+                                </th>*@
+                        </tr>
+                        <tr>
+                            <td st-ratio="12"><input st-search="ProviderName" type="text" placeholder="Provider Name" class="form-control input-sm"></td>
+                            <td st-ratio="9"><input st-search="Subject" type="text" placeholder="Subject" class="form-control input-sm" /></td>
+                            <td st-ratio="9"><input st-search="SubSectionName" type="text" placeholder="Sub Section Name" class="form-control input-sm" /></td>
+                            <td st-ratio="9" ng-if="CurrentTabConfig.Columns.NextFollowUpDate"><input st-search="NextFollowUpDate" type="text" placeholder="Next FollowUp Date" class="form-control input-sm" /></td>
+                            <td st-ratio="2" ng-if="CurrentTabConfig.Columns.DaysLeft"><input st-search="DaysLeft" type="text" placeholder="Days Left" class="form-control input-sm" /></td>
+                            <td st-ratio="8" ng-if="CurrentTabConfig.Columns.Assigned"><input st-search="AssignedTo" type="text" placeholder="Assigned To" class="form-control input-sm" /></td>
+                            <td st-ratio="12" ng-if="CurrentTabConfig.Columns.Assignedby"><input st-search="AssignedBy" type="text" placeholder="Assigned By" class="form-control input-sm" /></td>
+                            <td st-ratio="10" ng-if="CurrentTabConfig.Columns.TimeElapsed"><input st-search="ElapsedTime" type="text" placeholder="Time Elapsed" class="form-control input-sm" /></td>
+                            <td st-ratio="8" ng-if="CurrentTabConfig.Columns.updatedOn"><input st-search="LastModifiedDate" type="text" placeholder="Updated On" class="form-control input-sm" /></td>
+                            <td st-ratio="12" ng-if="CurrentTabConfig.Columns.updatedby"><input st-search="LastUpdatedBy" type="text" placeholder="Updated By" class="form-control input-sm" /></td>
+                            <td st-ratio="8" ng-if="CurrentTabConfig.Columns.PlanName"><input st-search=" PlanName" type="text" placeholder="Plan Name" class="form-control input-sm" /></td>
+                            <td st-ratio="6" ng-if="CurrentTabConfig.Columns.followup"><input st-search="ModeOfFollowUp" type="text" placeholder="Follow Up Mode" class="form-control input-sm" /></td>
+                            <td st-ratio="12"></td>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!mc.IsTableLoading" class="bodyClassSelector">
+                        <tr ng-repeat="c in mc.displayed "
+                            ng-click="selectRemTask($event,c)"
+                            ng-style="c.SelectStatus ?{'background-color':'rgb(102, 135, 162)',color:'white' } : {'background-color':'white',color:'black'}"
+                            ng-class="{danger:(c.DaysLeft < 0) && c.CompleteStatus!='Closed' && !c.SelectStatus && DangerStyle}">
+                            <td>
+                                <span ng-show="c.SetReminder&&showOnClose" style="color:#004e92" class="">
+                                    <i data-toggle="popover" data-trigger="hover" data-content="Some content" class="fa fa-calendar"></i>
+                                </span>
+                                {{c.ProviderName}}
+                            </td>
+                            <td>{{c.Subject}}</td>
+                            <td>{{c.SubSectionName}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.NextFollowUpDate">{{c.NextFollowUpDate}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.DaysLeft">{{c.DaysLeft}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.Assigned">{{c.AssignedTo}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.Assignedby">{{c.AssignedBy}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.TimeElapsed">{{c.ElapsedTime}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.updatedOn">{{c.LastModifiedDate}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.updatedby">{{c.LastUpdatedBy}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.PlanName">{{c.PlanName || 'Not Available'}}</td>
+                            <td ng-if="CurrentTabConfig.Columns.followup"><p ng-repeat="m in c.ModeOfFollowUp"><span class="label label-info">{{m.Name}}</span></p></td>
+                            <td>
+                                <a class="btn btn-xs btn-warning" href='@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Profile/MasterProfile/ProviderProfile/{{c.ProfileId}}' tooltip data-toggle="tooltip" data-placement="top" title="Profile" ng-if="CurrentTabConfig.navigateProfilebtn"><i class="glyphicon glyphicon-forward"></i></a>
+                                <button class="btn btn-xs btn-default" ng-click="ViewTaskById(c.TaskTrackerID);" tooltip data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-xs btn-primary" ng-click="showeditView(c,'editViewforTab')" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-if="CurrentTabConfig.editBtn && !IsAdmin"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-xs btn-danger" data-toggle="tooltip" ng-hide="c.CompleteStatus=='CLOSED'" data-placement="top" title="Close" ng-click="QuickRemove(c);" tooltip ng-if="CurrentTabConfig.removeBtn && !IsAdmin"><i class="fa fa-remove"></i></button>
+                                <button class="btn btn-xs btn-warning" ng-click="ViewAllHistoriesOfATask(c.TaskTrackerID)" tooltip data-toggle="tooltip" data-placement="top" title="Task Update History" ng-if="CurrentTabConfig.historyBtn"><i class="fa fa-clock-o"></i></button>
+                                <button class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Re-Open" ng-click="Quickreopen(c);" tooltip ng-if="CurrentTabConfig.quickReopenbtn && !IsAdmin"><i class="fa fa-repeat"></i></button>
+                                <span ng-show="c.SelectStatus" class="">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="mc.IsTableLoading">
+                        <tr>
+                            <td colspan="{{CurrentTabColsCount}}" class="text-center">
+                                <div class="loading-indicator"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot style="cursor:pointer">
+                        <tr>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" colspan="11"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div ng-if="PartialViewControl == 'Edit'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style">
+            <fieldset>
+                <legend>
+                    Edit Task
+                </legend>
+                <div ng-show="mc.IsTableLoading" class="row" ng-cloak>
+                    <div style="margin:5%;">
+                        <div class="loading-indicator"></div>
+                    </div>
+                </div>
+                <div ng-show="!mc.IsTableLoading">
+                    <div class="legend2 pull-right">
+                        <button ng-click="cancelEditViewforTab1()" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="close"><i class="fa fa-close"></i></button>
+                    </div>
+                    <div id="editFormDiv">
+                        @Html.Partial("~/Views/Tasks/_AddEditTask.cshtml")
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div ng-if="PartialViewControl == 'View'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style">
+            <fieldset>
+                <legend>
+                    View Task
+                </legend>
+                <div ng-show="mc.IsTableLoading" class="row" ng-cloak>
+                    <div style="margin:5%;">
+                        <div class="loading-indicator"></div>
+                    </div>
+                </div>
+                <div ng-show="!mc.IsTableLoading">
+                    <div class="legend2 pull-right">
+                        <button class="btn btn-xs btn-primary" ng-click="showeditView(selectedTask,'editViewforTab');" ng-hide="selectedTask.CompleteStatus=='CLOSED'" tooltip data-toggle="tooltip" data-placement="top" title="Edit" ng-if="CurrentTabConfig.editBtn"><i class="fa fa-edit"></i></button>
+                        <button ng-click="DOMManager.ViewHandler('Table')" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="close"><i class="fa fa-close"></i></button>
+                    </div>
+                    <div id="detailFormDiv">
+                        @Html.Partial("~/Views/Tasks/_ViewTask.cshtml")
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div ng-init="GetAllMasterData();"></div>
+</div>
+<div class="modal fade" id="inactiveWarningModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="removeTask">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                </div>
+                <div class="col-lg-12 text-center" ng-show="isRemoved">
+                    <div style="margin-top:2%;">
+                        <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                    </div>
+                </div>
+                <div class="modal-body" ng-show="!isRemoved">
+                    Do you really want to Close the Task ?
+                    <input type="hidden" name="TaskTrackerId" value="{{task.TaskTrackerId}}" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" ng-click="removeTask();cancelForRemoveTask()" data-dismiss="modal">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reactiveWarningModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="removeTask">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                </div>
+                <div class="col-lg-12 text-center" ng-show="isRemoved">
+                    <div style="margin-top:2%;">
+                        <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                    </div>
+                </div>
+                <div class="modal-body" ng-show="!isRemoved">
+                    Do you really want to re-open the Task ?
+                    <input type="hidden" name="TaskTrackerId" value="{{task.TaskTrackerId}}" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" ng-click="reopenTask();cancelForReopenTask()" data-dismiss="modal">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

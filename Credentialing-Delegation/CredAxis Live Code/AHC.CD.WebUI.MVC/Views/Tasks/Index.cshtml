@@ -1,0 +1,198 @@
+﻿@model AHC.CD.Entities.TaskTracker.TaskTracker
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = null;
+}
+<script>
+    var ViewBagObj = @Html.Raw(Newtonsoft.Json.JsonConvert.DeserializeObject(ViewBag.Tasks));
+    var Tasks = ViewBagObj.Tasks;
+    var isAdmin = @Html.Raw(@Json.Encode(ViewBag.IsAdmin));
+    var currentUserCdUserId = ViewBagObj.CDUserID;
+    var LoggedInUserName = @Html.Raw(@Json.Encode(ViewBag.LoggedInUserName));
+    console.log(ViewBagObj);
+</script>
+<style>
+    /* styles for validation helpers */
+    .field-validation-error {
+        color: #b94a48;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    input.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    select.input-validation-error {
+        border: 1px solid #b94a48;
+    }
+
+    input[type="checkbox"].input-validation-error {
+        border: 0 none;
+    }
+
+    .validation-summary-errors {
+        color: #b94a48;
+    }
+
+    .validation-summary-valid {
+        display: none;
+    }
+
+    .emptyData {
+        color: #E27B7B;
+    }
+
+    /*Provider Type Style*/
+    .label-provider-type {
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        /*padding: 4px 4px 5px 7px;*/
+    }
+
+        .label-provider-type > i {
+            padding-left: 10px;
+            color: #b94a48;
+        }
+
+        .label-provider-type:hover {
+            background-color: #eee;
+            text-decoration: none;
+        }
+
+    .select-page {
+        width: 50px;
+        text-align: center;
+    }
+
+    .st-selected {
+        cursor: pointer !important;
+        background-color: rgb(102, 135, 162) !important;
+        color: white !important;
+    }
+</style>
+@section AddToHead{
+    <link href="~/Content/SharedCss/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Jquery/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/Lib/Bootstrap/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Lib/CDN%20Service/angular-strap.min.js"></script>
+    <script src="~/Scripts/Lib/Angular/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="~/Scripts/Custom/Tasks/TaskHelpers.js"></script>
+    <script src="~/Scripts/Custom/Tasks/TaskTracker.js"></script>
+    <script src="~/Scripts/Lib/Angular/smart-table.js"></script>
+    <link href="~/Content/SharedCss/SmartTable.css" rel="stylesheet" />
+    <script src="~/Scripts/Lib/Moment/moment.js"></script>
+}
+
+<div id="page-wrapper" ng-app="TrackerApp">
+    <div id="maintrackerdiv" class="container-fluid" ng-controller="TrackerCtrl as mc">
+        <div class="row">
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i>  <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Dashboard/Index">Dashboard</a>
+                </li>
+            </ol>
+        </div>
+        <div id="tasktrackerdiv">
+            <div class="panel panel-body form-style">
+                <fieldset>
+                    <legend>
+                        Tasks Overview
+                    </legend>
+                    <div ng-if="!IsAdmin" class="legend2  pull-right">
+                        <span id="addButton" class="">
+                            <button ng-click="OpenAddScreen();" class="btn btn-xs btn-primary" id="NewwAdd" tooltip data-toggle="tooltip" data-placement="top" title="Add New"><i class="fa fa-plus"></i></button>
+                        </span>
+
+                        <div id="showingDateTimePicker" ng-show="showSetReminder" ng-cloak>
+                            @Html.Partial("~/Views/Prototypes/Reminders/_setReminder.cshtml")
+                        </div>
+                    </div>
+                    <div ng-show="PartialViewControl != 'Add'" class="col-lg-12" ng-cloak>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="active"><a id="tabs1" data-toggle="tab" ng-click="TabFacade('MyDailyTasks');" href="#tab1">My Daily Tasks</a></li>
+                            <li><a id="tabs5" data-toggle="tab" ng-click="TabFacade('AllTaskForAdmin');" ng-if="IsAdmin" href="#tab1">All Tasks</a></li>
+                            <li><a id="tabs3" data-toggle="tab" ng-click="TabFacade('AllTasks');" ng-if="!IsAdmin" href="#tab1">All Tasks</a></li>
+                            <li><a id="tabs4" data-toggle="tab" ng-click="TabFacade('ClosedTasks');" href="#tab1">Closed Tasks</a></li>
+                            <li>
+                                <a id="tabs6" style="float:left" data-toggle="tab" ng-click="TabFacade('HistoryTasks');" href="#tab1" ng-show="showHistoryTab">Task History</a>
+                                <label tooltip data-toggle="tooltip" data-placement="top" title="Close" ng-show="showHistoryTab && !mc.IsTableLoading" style="color:red;cursor:pointer" class="fa fa-close" ng-click="ControlHistoryTab(false);"></label>
+                            </li>
+                        </ul>
+                        @*<div class="clearfix"></div>*@
+                        @*<div class="pull-right" style="color:red;" ng-show="selTask.length<1&&showOnClose&&!mc.displayed.length==0">
+                                *Please select the Task(s) to Set Reminder
+                            </div>*@
+                        <div class="col-lg-12 zero-padding-left-right-div" hidden>
+                            <div ng-show="activeMessageDiv=='successfullySaved'" class="alert alert-success" role="alert">
+                                <button ng-click="closeAlertMessage('')" class="close"><span>&times;</span></button>
+                                {{messageDesc}}
+                            </div>
+                            <div ng-show="activeMessageDiv=='errorInitiated'" class="col-lg-12">
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    <span>{{messageDesc}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div id="tab1" class="tab-pane fade in active">@Html.Partial("_DailyTasks")</div>
+                        </div>
+                    </div>
+                    <div ng-show="PartialViewControl == 'Add'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 zero-padding-left-right-div form-style" ng-cloak>
+                        <fieldset>
+                            <legend>
+                                Add New Task
+                            </legend>
+                            <div class="legend2 pull-right">
+                                <button ng-click="ResetForm();DOMManager.ViewHandler('Table');" class="btn btn-xs btn-default" tooltip data-toggle="tooltip" data-placement="top" title="close"><i class="fa fa-close"></i></button>
+                            </div>
+                            <div ng-show="mc.IsTableLoading" class="row" ng-cloak>
+                                <div style="margin:5%;">
+                                    <div class="loading-indicator"></div>
+                                </div>
+                            </div>
+                            <div id="newFormDiv" ng-show="!mc.IsTableLoading">
+                                @Html.Partial("~/Views/Tasks/_AddEditTask.cshtml")
+                            </div>
+                        </fieldset>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="modal fade" id="inactiveWarningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="removeTask">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Warning!!!!</h4>
+                        </div>
+                        <div class="col-lg-12 text-center" ng-show="isRemoved">
+                            <div style="margin-top:2%;">
+                                <img src="~/Content/Images/ajax-loader.gif" style="width:50px;" /> Please Wait..
+                            </div>
+                        </div>
+                        <div class="modal-body" ng-show="!isRemoved">
+                            Do you really want to Close the Task ?
+                            <input type="hidden" name="TaskTrackerId" value="{{task.TaskTrackerId}}" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="CloseTask();cancelForRemoveTask()" data-dismiss="modal">Continue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

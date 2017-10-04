@@ -1,0 +1,252 @@
+﻿@model AHC.CD.WebUI.MVC.Models.TaskTracker.TaskTrackerViewModel
+<style>
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .input-validation-error {
+        border: 1px solid silver !important;
+    }
+
+    .borderless tbody tr td, .borderless tbody tr th {
+        font-size: smaller;
+        border: none;
+    }
+
+    .Width {
+        width: 97.5%;
+    }
+
+    .notesTable tr:nth-child(even) {
+        background-color: rgba(100, 149, 237, 0.08);
+    }
+
+    .notesTable thead {
+        color: white;
+        background-color: rgba(100, 149, 237, 0.78);
+    }
+
+    .notesTable tr:hover {
+        background-color: rgba(100, 149, 237, 0.05);
+    }
+
+    #followUp {
+        background-color: white;
+        cursor: default;
+    }
+</style>
+<form id="newTaskFormDiv" name="newTaskFormDiv">
+    <div>
+        <div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <span ng-if="CurrentTask.TaskTrackerId">
+                    <input type="hidden" name="TaskTrackerId" ng-model="CurrentTask.TaskTrackerId" value="{{CurrentTask.TaskTrackerId}}" />
+                </span>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Provider *</label>
+                    <input type="hidden" name="ProfileID" data-val="true" data-val-required="Please select the Provider Name" value="{{CurrentTask.ProfileID}}" />
+                    <input class="form-control input-sm TaskFormValidator" name="ProviderName" autocomplete="off" ng-model="CurrentTask.ProviderName" ng-focus="searchCumDropDown('ProviderList')" />
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="ProviderList">
+                        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr ng-repeat="provider in filteredProvidersResults = (Providers | filter:CurrentTask.ProviderName)" ng-click="AddSelectedValue(['ProfileID','ProviderName'],[provider.ProfileId,provider.Name], 'ProviderNameError');" class="pointer">
+                                    <td>{{provider.Name}}</td>
+                                </tr>
+                                <tr ng-if="Providers.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="Providers.length > 0 && filteredProvidersResults.length == 0">
+                                    <td>Provider not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Sub Section *</label>
+                    <input type="hidden" data-val="true" data-val-required="Please select the Sub Section Name" name="SubSectionName" value="{{CurrentTask.SubSectionName}}" />
+                    <input class="form-control input-sm TaskFormValidator" name="SubSectionName" autocomplete="off" ng-model="CurrentTask.SubSectionName" ng-click="searchCumDropDown('SubSectionList')" placeholder="Select Sub Section" />
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="SubSectionList">
+                        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr ng-repeat="subSection in filteredSubSectionsResults = (SubSections | filter:CurrentTask.SubSectionName)" ng-click="AddSelectedValue(['SubSectionName'],[subSection.SubSectionName], 'SubSectionNameError');" class="pointer">
+                                    <td>{{subSection.SubSectionName}}</td>
+                                </tr>
+                                <tr ng-if="SubSections.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="SubSections.length > 0 && filteredSubSectionsResults.length == 0">
+                                    <td>Sub Section not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Subject *</label>
+                    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control input-sm", data_ng_model = "CurrentTask.Subject" })
+                    @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Next Followup *</label>
+                    @Html.TextBoxFor(model => model.NextFollowUpDate, new { @id = "modeofflwup", @class = "form-control input-sm", autocomplete =false, placeholder = "mm/dd/yyyy", data_val_date = "Please enter date in mm/dd/yyyy format", data_ng_model = "CurrentTask.NextFollowUpDate", data_provide = "datepicker", ng_click = "$('.ProviderTypeSelectAutoList').hide();" })
+                    @Html.ValidationMessageFor(model => model.NextFollowUpDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Mode Of Followup *</label>
+                    <input type="hidden" name="ModeOfFollowUp" data-val="true" ng-value="StringifiedFollowUps" />
+                    <input class="form-control input-sm TaskFormValidator" name="FollowUpMode" autocomplete="off" ng-model="CurrentTask.FollowUp" ng-focus="searchCumDropDown('FollowupList')" placeholder="Select Mode Of Followup" />
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="FollowupList">
+                        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr ng-repeat="followup in filteredFollowupsResults = (Followups | filter:CurrentTask.FollowUp) track by $index" ng-click="ManageFollowUps(followup, false)" class="pointer">
+                                    <td>{{followup.Name}}</td>
+                                </tr>
+                                <tr ng-if="Followups.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="Followups.length > 0 && filteredFollowupsResults.length == 0">
+                                    <td>Mode of follow up not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <span ng-repeat="followup in Tempfollowup">
+                        <span class="label label-provider-type">
+                            {{followup.Name}}
+                            <i class="fa fa-close pointer" ng-click="ManageFollowUps(followup, true);"></i>
+                        </span>
+                    </span>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Assign To *</label>
+                    <input type="hidden" name="AssignedToAuthId" data-val="true" data-val-required="Please select the Assign To User" value="{{CurrentTask.AssignedToId}}" />
+                    <input class="form-control input-sm TaskFormValidator" name="AssignedTo" autocomplete="off" ng-model="CurrentTask.AssignedTo" ng-focus="searchCumDropDown('UserList')" placeholder="Select User" />
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="UserList">
+                        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr ng-repeat="user in filteredUsersResults = (Users | filter:CurrentTask.AssignedTo)" ng-click="AddSelectedValue(['AssignedToId','AssignedTo'],[user.AuthenicateUserId,user.UserName], 'AssignedToError');" class="pointer">
+                                    <td>{{user.FullName}}-{{user.UserName}}</td>
+                                </tr>
+                                <tr ng-if="Users.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="Users.length > 0 && filteredUsersResults.length == 0">
+                                    <td>User not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Hospital</label>
+                    <input type="hidden" name="HospitalID" value="{{CurrentTask.HospitalID}}" />
+                    <input class="form-control input-sm TaskFormValidator" name="HospitalName" autocomplete="off" ng-model="CurrentTask.Hospital" ng-focus="searchCumDropDown('HospitalList')" placeholder="Select Hospital" />
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" ng-hide="hideHospitalSearchDiv" id="HospitalList">
+                        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr ng-repeat="hospital in filteredHospitalsResults = (Hospitals | filter:CurrentTask.Hospital)" ng-click="AddSelectedValue(['HospitalID','Hospital'],[hospital.HospitalID,hospital.HospitalName], 'HospitalNameError');" class="pointer">
+                                    <td>{{hospital.HospitalName}}</td>
+                                </tr>
+                                <tr ng-if="Hospitals.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="Hospitals.length > 0 && filteredHospitalsResults.length == 0">
+                                    <td>Hospital not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4 form-group">
+                    <label class="control-label small">Plan Name</label>
+                    <input type="hidden" name="PlanName" value="{{CurrentTask.PlanName}}" />
+                    <input class="form-control input-sm TaskFormValidator" name="PlanName" autocomplete="off" ng-model="CurrentTask.PlanName" ng-focus="searchCumDropDown('InsuranceList')" placeholder="Select Plan Name" />
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in" role="tooltip" id="InsuranceList">
+                        <table class="table table-striped table-bordered table-hover table-condensed" style="margin-bottom: 0px;">
+                            <tbody>
+                                <tr ng-repeat="insurance in filteredInsuranceResults = (PlanNames | filter:CurrentTask.PlanName)" ng-click="AddSelectedValue(['PlanID','PlanName'],[insurance.PlanID,insurance.PlanName], 'PlanNameError');" class="pointer">
+                                    <td>{{insurance.PlanName}}</td>
+                                </tr>
+                                <tr ng-if="PlanNames.length == 0">
+                                    <td>No data..... </td>
+                                </tr>
+                                <tr ng-if="PlanNames.length > 0 && filteredInsuranceResults.length == 0">
+                                    <td>Name not found..... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-lg-12 form-group">
+                    <label class="control-label small">Notes</label>
+                    <div class="clearfix"></div>
+                    <input type="hidden" name="Notes" value="{{TempNotes}} {{CurrentTask.Notes}}">
+                    <textarea id="textareaappend" style="border-bottom:none;background-color:white;" name="Notes" class="form-control input-sm hideDropDown" ng-model="CurrentTask.Notes" ng-focus="searchCumDropDown('ForNotes');"></textarea>
+                    <div class="ProviderTypeSelectAutoList popover fade bottom in Width" role="tooltip" id="ForNotes" style="margin-top: 6%;" ng-hide="(CurrentTask.Notes.length > 0 && filterNotesData.length==0) || hidenotesdiv">
+                        <table class="table table-striped table-bordered table-hover table-condensed">
+                            <tbody>
+                                <tr ng-repeat="temp in filterNotesData=(NotesTemplates|filter:CurrentTask.Notes) track by $index" ng-click="AddSelectedValue(['Notes'],[temp.Description], 'NotesError');" class="pointer">
+                                    <td>{{temp.Code}}-{{temp.Description}}</td>
+                                </tr>
+                                <tr ng-if="NotesTemplates.length==0 ">
+                                    <td>No  Data  Found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="height:30px">
+                        <table class="table table-bordered borderless" style="margin-top: 0px;">
+                            <tr><td><span class="label-provider-type">{{TempNotes}}</span></td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <br />
+                &nbsp;
+            </div>
+            <div class="col-lg-12 zero-padding-left-right-div">
+                <div class="col-md-12 form-group">
+                    <button type="button" ng-if="PartialViewControl == 'Add'" class="btn btn-warning btn-sm" ng-click="ResetForm();DOMManager.ViewHandler('Table');">Cancel</button>
+                    <button type="submit" ng-if="PartialViewControl == 'Add'" class="btn btn-primary btn-sm pull-right" ng-click="validateForm()">Add</button>
+                    <button type="button" ng-if="PartialViewControl == 'Edit'" class="btn btn-warning btn-sm" ng-click="cancelEditViewforTab1()">Cancel</button>
+                    <button type="submit" ng-if="VisibilityControl == 'editViewforTab3'|| VisibilityControl == 'editViewforTab2'|| VisibilityControl == 'editViewforTab'" class="btn btn-primary btn-sm pull-right" ng-click="editTask();">Update</button>
+                    <button type="submit" ng-if="VisibilityControl == 'editViewforTab3'|| VisibilityControl == 'editViewforTab2'|| VisibilityControl == 'editViewforTab'" class="btn btn-primary btn-sm " ng-click="inactiveWarning(task)">Save and Close Task</button>
+                </div>
+            </div>
+            <div ng-show="visible=='edit'" class="col-lg-12 zero-padding-left-right-div" id="Notes">
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-condensed table-hover notesTable" id="notesTable">
+                        <thead style="background-color:cornflowerblue">
+                            <tr>
+                                <th>Date Time</th>
+                                <th>User Name</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="note in temp1 track by $index" class="pointer">
+                                <td>{{note.modifiedDate}}</td>
+                                <td>{{note.By||"-"}}</td>
+                                <td class="wrap-words">{{note.stamp}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <br />
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</form>
